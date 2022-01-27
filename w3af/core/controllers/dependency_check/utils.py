@@ -31,16 +31,9 @@ def verify_python_version():
         if minor != 7:
             msg = 'Error: Python 2.%s found but Python 2.7 required.'
             print(msg % minor)
-    elif major > 2:
-        msg = ('It seems that you are running w3af using Python3, which is not'
-               ' officially supported by the w3af team.\nTo force w3af to be'
-               ' run using python2.7 run it as follows (depending on your OS):'
-               '\n\n'
-               ' * python2.7 w3af_console\n'
-               ' * python2 w3af_console\n'
-               '\n'
-               'To make this change permanent modify the shebang line in the'
-               ' w3af_console, w3af_gui and w3af_api scripts.')
+    elif major > 3:
+        msg = ('It seems that you are running w3af using Python4, which is not'
+               ' officially supported by the w3af team.\n')
         print(msg)
         sys.exit(1)
 

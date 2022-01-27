@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro 
 
 from .ubuntu1204 import Ubuntu1204
 
@@ -29,5 +29,5 @@ class Debian78(Ubuntu1204):
 
     @staticmethod
     def is_current_platform():
-        dist_name, dist_version, _ = platform.dist()
+        dist_name, dist_version, _ = distro.linux_distribution()
         return 'debian' == dist_name and '7.8' == dist_version

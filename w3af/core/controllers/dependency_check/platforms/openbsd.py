@@ -61,7 +61,7 @@ class OpenBSD5(Platform):
         msg = 'Before running pkg_add remember to specify the package path using:\n'\
               '    export PKG_PATH=ftp://ftp.openbsd.org/pub/OpenBSD/`uname'\
               ' -r`/packages/`machine -a`/'
-        print msg
+        print(msg)
 
     @staticmethod
     def is_current_platform():

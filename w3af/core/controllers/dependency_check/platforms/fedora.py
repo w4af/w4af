@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro
 import subprocess
 
 from .base_platform import Platform
@@ -65,4 +65,4 @@ class Fedora(Platform):
 
     @staticmethod
     def is_current_platform():
-        return 'fedora' in platform.dist()
+        return 'fedora' in distro.linux_distribution()

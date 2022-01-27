@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
-import ConfigParser
+import configparser
 
 from datetime import datetime, date, timedelta
 
@@ -49,7 +49,7 @@ class StartUpConfig(object):
         self._start_cfg_file = cfg_file
         self._start_section = 'STARTUP_CONFIG'
 
-        self._config = ConfigParser.ConfigParser()
+        self._config = configparser.ConfigParser()
         configs = self._load_cfg()
 
         (self._autoupd, self._freq, self._lastupd, self._last_commit_id,
