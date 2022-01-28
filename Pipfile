@@ -36,6 +36,13 @@ pyyaml = "*"
 tldextract = "*"
 pebble = "*"
 acora = "*"
+diff-match-patch = "*"
+bravado-core = "*"
+lz4 = "*"
+vulners = "*"
+ipaddresses = "*"
+subprocess32 = "*"
+xdot = "*"
 
 [dev-packages]
 

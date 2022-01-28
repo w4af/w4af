@@ -46,7 +46,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('cluster', 'cluster', '1.4.1.post3'),
                      PIPDependency('msgpack', 'msgpack', '1.0.3'),
                      PIPDependency('ntlm', 'python-ntlm3', '1.0.2'),
-                     PIPDependency('Halberd', 'halberd', '0.2.4'),
+                     PIPDependency('Halberd', 'halberd', '0.2.5'),
                      PIPDependency('darts.lib.utils', 'darts.util.lru', '0.5'),
                      PIPDependency('jinja2', 'Jinja2', '3.0.3'),
                      PIPDependency('vulndb', 'vulndb', '0.1.3'),
@@ -82,16 +82,16 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('acora', 'acora', '2.3'),
 
                      # String diff by Google
-                     PIPDependency('diff_match_patch', 'diff-match-patch', '20121119'),
+                     PIPDependency('diff_match_patch', 'diff-match-patch', '20200713'),
 
                      # OpenAPI documentation parser
-                     PIPDependency('bravado_core', 'bravado-core', '5.15.0'),
+                     PIPDependency('bravado_core', 'bravado-core', '5.17.0'),
 
                      # Fast compression library
-                     PIPDependency('lz4', 'lz4', '1.1.0'),
+                     PIPDependency('lz4', 'lz4', '3.1.10'),
 
                      # Vulners API plugin needs this lib
-                     PIPDependency('vulners', 'vulners', '1.3.0'),
+                     PIPDependency('vulners', 'vulners', '2.0.0'),
 
                      PIPDependency('ipaddresses', 'ipaddresses', '0.0.2'),
 
@@ -102,7 +102,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
 
                      ]
 
-GUI_PIP_EXTRAS = [PIPDependency('xdot', 'xdot', '0.6')]
+GUI_PIP_EXTRAS = [PIPDependency('xdot', 'xdot', '1.2')]
 
 GUI_PIP_PACKAGES = CORE_PIP_PACKAGES[:]
 GUI_PIP_PACKAGES.extend(GUI_PIP_EXTRAS)
