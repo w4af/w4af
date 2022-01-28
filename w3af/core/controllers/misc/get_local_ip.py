@@ -43,3 +43,5 @@ def get_local_ip(target=None):
         return None
     else:
         return local_address
+    finally:
+        sock.close()

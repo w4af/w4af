@@ -47,8 +47,8 @@ SP = ' '
 CONTENT_TYPE = 'content-type'
 STATUS_LINE = 'HTTP/1.1 %s %s' + CRLF
 
-CHARSET_EXTRACT_RE = re.compile('charset=\s*?([\w-]+)')
-CHARSET_META_RE = re.compile('<meta.*?content=".*?charset=\s*?([\w-]+)".*?>')
+CHARSET_EXTRACT_RE = re.compile(r'charset=\s*?([\w-]+)')
+CHARSET_META_RE = re.compile(r'<meta.*?content=".*?charset=\s*?([\w-]+)".*?>')
 DEFAULT_WAIT_TIME = 0.2
 
 

@@ -18,7 +18,7 @@ import w3af.core.controllers.output_manager as om
 
 
 # from https://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters
-URL_RE = re.compile('^([a-z]|[A-Z]|[0-9]|\.|-|_|~|\[|\]|#|\'|\(|\)|;|:|@|&|=|\+|\$|,|\*|!|\/|\?)+$')
+URL_RE = re.compile(r'^([a-z]|[A-Z]|[0-9]|\.|-|_|~|\[|\]|#|\'|\(|\)|;|:|@|&|=|\+|\$|,|\*|!|\/|\?)+$')
 
 
 USAGE_DOC = """

@@ -63,7 +63,7 @@ class CachedDiskDict(object):
         try:
             return self[key]
         except KeyError:
-            if default is not -456:
+            if default != -456:
                 return default
 
         raise KeyError()

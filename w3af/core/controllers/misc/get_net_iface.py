@@ -66,5 +66,7 @@ def get_net_iface():
             else:
                 if internet_ip == interface_ip:
                     break
+            finally:
+                s.close()
 
     return ifname
