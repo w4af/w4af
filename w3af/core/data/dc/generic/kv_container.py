@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from functools import partial
 
-from ruamel.ordereddict import ordereddict as OrderedDict
+from collections import OrderedDict
 
 from w3af.core.data.misc.encoding import smart_unicode
 from w3af.core.data.dc.generic.data_container import DataContainer

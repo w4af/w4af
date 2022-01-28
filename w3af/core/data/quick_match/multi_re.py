@@ -20,11 +20,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
-import esmre
 
 from acora import AcoraBuilder
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
-
+from w3af.core.data.quick_match import esmre
 
 class MultiRE(object):
 
@@ -124,7 +123,7 @@ class MultiRE(object):
         :param target_str: The target string where the keywords need to be match
         :yield: (match_obj, re_str_N, compiled_regex)
         """
-        if isinstance(target_str, unicode):
+        if isinstance(target_str, str):
             target_str = target_str.encode(DEFAULT_ENCODING)
 
         #
@@ -134,7 +133,7 @@ class MultiRE(object):
         seen = set()
         target_str = target_str.lower()
 
-        for match, position in self._acora.finditer(target_str):
+        for match, position in self._acora.finditer(target_str.decode(DEFAULT_ENCODING)):
             if match in seen:
                 continue
 

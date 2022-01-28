@@ -28,7 +28,7 @@ import urllib
 import urlparse
 
 from functools import wraps
-from ruamel.ordereddict import ordereddict as OrderedDict
+from collections import OrderedDict
 from tldextract import TLDExtract
 
 from w3af.core.controllers.misc.is_ip_address import is_ip_address
