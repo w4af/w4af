@@ -44,8 +44,8 @@ class analyze_cookies(GrepPlugin):
 
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
-    SECURE_RE = re.compile('; *?secure([\s;, ]|$)', re.I)
-    HTTPONLY_RE = re.compile('; *?httponly([\s;, ]|$)', re.I)
+    SECURE_RE = re.compile(r'; *?secure([\s;, ]|$)', re.I)
+    HTTPONLY_RE = re.compile(r'; *?httponly([\s;, ]|$)', re.I)
 
     def __init__(self):
         GrepPlugin.__init__(self)

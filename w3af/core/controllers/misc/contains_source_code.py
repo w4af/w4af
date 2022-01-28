@@ -37,9 +37,9 @@ GROOVY = 'Groovy'
 
 
 SOURCE_CODE = (
-    ('<\?php .*?\?>', {PHP}),
-    ('<\?php\n.*?\?>', {PHP}),       # These two are required for perf #2129
-    ('<\?php\r.*?\?>', {PHP}),       # and are repeated over the list
+    (r'<\?php .*?\?>', {PHP}),
+    (r'<\?php\n.*?\?>', {PHP}),       # These two are required for perf #2129
+    (r'<\?php\r.*?\?>', {PHP}),       # and are repeated over the list
 
     # Need to review how to re-add these in the future
     # https://github.com/andresriancho/w3af/issues/2129
@@ -48,43 +48,43 @@ SOURCE_CODE = (
     #('<\?\n.*?\?>', {PHP}),
     #('<\?\r.*?\?>', {PHP}),
 
-    ('<% .*?%>', {ASP, JSP}),
-    ('<%\n.*?%>', {ASP, JSP}),
-    ('<%\r.*?%>', {ASP, JSP}),
+    (r'<% .*?%>', {ASP, JSP}),
+    (r'<%\n.*?%>', {ASP, JSP}),
+    (r'<%\r.*?%>', {ASP, JSP}),
 
-    ('<%@ .*?%>', {ASPX}),          # http://goo.gl/zEjHA4
-    ('<%@\n.*?%>', {ASPX}),
-    ('<%@\r.*?%>', {ASPX}),
+    (r'<%@ .*?%>', {ASPX}),          # http://goo.gl/zEjHA4
+    (r'<%@\n.*?%>', {ASPX}),
+    (r'<%@\r.*?%>', {ASPX}),
 
-    ('<asp:.*?%>', {ASPX}),
-    ('<jsp:.*?>', {JSP}),
+    (r'<asp:.*?%>', {ASPX}),
+    (r'<jsp:.*?>', {JSP}),
 
-    ('<%! .*%>', {JSP}),
-    ('<%!\n.*%>', {JSP}),
-    ('<%!\r.*%>', {JSP}),
-    ('<%=.*%>', {JSP, PHP, RUBY}),
+    (r'<%! .*%>', {JSP}),
+    (r'<%!\n.*%>', {JSP}),
+    (r'<%!\r.*%>', {JSP}),
+    (r'<%=.*%>', {JSP, PHP, RUBY}),
 
-    ('<!--\s*%.*?%(--)?>', {PHP}),
-    ('<!--\s*\?.*?\?(--)?>', {ASP, JSP}),
-    ('<!--\s*jsp:.*?(--)?>', {JSP}),
+    (r'<!--\s*%.*?%(--)?>', {PHP}),
+    (r'<!--\s*\?.*?\?(--)?>', {ASP, JSP}),
+    (r'<!--\s*jsp:.*?(--)?>', {JSP}),
 
-    ('#include <', {UNKNOWN}),
+    (r'#include <', {UNKNOWN}),
 
-    ('#!/usr/', {SHELL}),
-    ('#!/opt/', {SHELL}),
-    ('#!/bin/', {SHELL}),
+    (r'#!/usr/', {SHELL}),
+    (r'#!/opt/', {SHELL}),
+    (r'#!/bin/', {SHELL}),
 
-    ('(^|\W)import java\.', {JAVA}),
-    ('(^|\W)public class \w{1,60}\s?\{\s.*\Wpublic', {JAVA}),
-    ('(^|\W)package\s\w+\;', {JAVA}),
+    (r'(^|\W)import java\.', {JAVA}),
+    (r'(^|\W)public class \w{1,60}\s?\{\s.*\Wpublic', {JAVA}),
+    (r'(^|\W)package\s\w+\;', {JAVA}),
 
-    ('<!--g:render', {GROOVY}),
+    (r'<!--g:render', {GROOVY}),
 
     # Python
-    ('(^|\W)def .*?\(.*?\):(\n|\r)', {PYTHON}),
+    (r'(^|\W)def .*?\(.*?\):(\n|\r)', {PYTHON}),
 
     # Ruby
-    ('(^|\W)class \w{1,60}\s*<?\s*[a-zA-Z0-9_:]{0,90}.*?\W(def|validates)\s.*?\send($|\W)', {RUBY}),
+    (r'(^|\W)class \w{1,60}\s*<?\s*[a-zA-Z0-9_:]{0,90}.*?\W(def|validates)\s.*?\send($|\W)', {RUBY}),
 )
 
 BLACKLIST = {'xml', 'xpacket'}
