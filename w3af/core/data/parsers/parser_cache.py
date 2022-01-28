@@ -74,7 +74,7 @@ class ParserCache(CacheStats):
         mp_doc_parser.stop_workers()
 
         # Make sure the parsers clear all resources
-        for parser in self._cache.values():
+        for parser in self._cache.itervalues():
             if hasattr(parser, 'clear'):
                 parser.clear()
 

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e99c99cec91ce9e64727b8b8409615f5e32e150ac61cb391c0a8fddccf490aa9"
+            "sha256": "fbcca568529810f1d5eb6d4d5486fa8320e3f6ceff896ff8bcd777379669dfc6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -277,13 +277,6 @@
                 "sha256:f44d141b8c4ea5eb4dbc9b3ad992d45580c1d22bf5e24363f2fbf50c2d7ae8a7"
             ],
             "version": "==3.4.8"
-        },
-        "darts.util.lru": {
-            "hashes": [
-                "sha256:58c50fea1e2f7a6419964781c78a77452012ab71a32d81796e2038e99a38488a"
-            ],
-            "index": "pypi",
-            "version": "==0.5"
         },
         "deprecated": {
             "hashes": [
