@@ -66,7 +66,7 @@ class credit_cards(GrepPlugin):
     def __init__(self):
         GrepPlugin.__init__(self)
 
-        cc_regex = '((^|\s)\d{4}[- ]?(\d{4}[- ]?\d{4}|\d{6})[- ]?(\d{5}|\d{4})($|\s))'
+        cc_regex = r'((^|\s)\d{4}[- ]?(\d{4}[- ]?\d{4}|\d{6})[- ]?(\d{5}|\d{4})($|\s))'
         #    (^|[^\d])                        Match the start of the string, or something that's NOT a digit
         #    \d{4}[- ]?                       Match four digits, and then (optionally) a "-" or a space
         #    (\d{4}[- ]?\d{4}|\d{6})          Match one of the following:

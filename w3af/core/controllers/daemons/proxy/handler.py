@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import threading
 import traceback
 
-from netlib.odict import ODictCaseless
+from nocasedict import NocaseDict
 from libmproxy.controller import Master
 from libmproxy.protocol.http import HTTPResponse as LibMITMProxyHTTPResponse
 
@@ -32,7 +32,6 @@ from w3af.core.data.url.HTTPResponse import HTTPResponse
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.misc.encoding import smart_str
 from w3af.core.controllers.daemons.proxy.templates.utils import render
-
 
 class ProxyHandler(Master):
     """
@@ -86,7 +85,7 @@ class ProxyHandler(Master):
             header_value = smart_str(header_value, charset, errors='ignore')
             header_items.append((header_name, header_value))
 
-        headers = ODictCaseless(header_items)
+        headers = NocaseDict(header_items)
 
         # This is an important step! The ExtendedUrllib will gunzip the body
         # for us, which is great, but we need to change the content-encoding

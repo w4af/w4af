@@ -46,9 +46,9 @@ class NonRepeatKeyValueContainer(DataContainer, OrderedDict):
 
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
-    def __init__(self, init_val=(), encoding=UTF8, relaxed_order=False):
+    def __init__(self, init_val=(), encoding=UTF8):
         DataContainer.__init__(self, encoding=encoding)
-        OrderedDict.__init__(self, relax=relaxed_order)
+        OrderedDict.__init__(self)
 
         if isinstance(init_val, NonRepeatKeyValueContainer):
             self.update(init_val)

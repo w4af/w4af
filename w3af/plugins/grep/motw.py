@@ -40,7 +40,7 @@ class motw(GrepPlugin):
     def __init__(self):
         GrepPlugin.__init__(self)
 
-        self._motw_re = re.compile('<!--\s*saved from url=\((\d\d\d\d)\)(.*?)\s*-->')
+        self._motw_re = re.compile(r'<!--\s*saved from url=\((\d\d\d\d)\)(.*?)\s*-->')
 
     def grep(self, request, response):
         """

@@ -46,8 +46,8 @@ class xssed_dot_com(InfrastructurePlugin):
     #
     UNFIXED = 'UNFIXED'
     XSSED_URL = URL('http://www.xssed.com')
-    XSSED_URL_RE = re.compile('URL: (.*?)</th>')
-    XSSED_DOMAIN_RE = re.compile("<a href='(/mirror/\d*/)' target='_blank'>")
+    XSSED_URL_RE = re.compile(r'URL: (.*?)</th>')
+    XSSED_DOMAIN_RE = re.compile(r"<a href='(/mirror/\d*/)' target='_blank'>")
 
     @runonce(exc_class=RunOnce)
     def discover(self, fuzzable_request, debugging_id):

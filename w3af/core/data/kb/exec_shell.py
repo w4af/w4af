@@ -320,7 +320,7 @@ class ExecShell(Shell):
             self._rSystem = self.execute('uname -o -r -n -m -s').strip()
             self._rSystemName = self.execute('uname -n').strip()
         elif self._rOS == 'windows':
-            self._rUser = self.execute('echo %USERDOMAIN%\%USERNAME%').strip()
+            self._rUser = self.execute('echo %USERDOMAIN%\\%USERNAME%').strip()
             self._rSystem = self.execute(
                 'echo %COMPUTERNAME% - %OS% - %PROCESSOR_IDENTIFIER%').strip()
             self._rSystemName = self.execute('echo %COMPUTERNAME%').strip()

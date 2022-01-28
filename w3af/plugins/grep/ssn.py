@@ -36,8 +36,8 @@ class ssn(GrepPlugin):
     :author: dliz <dliz !at! users.sourceforge.net>
     """
     # match numbers of the form: 'nnn-nn-nnnn' with some extra restrictions
-    regex = ('(?:^|[^\d-])(?!(000|666))([0-6]\d{2}|7([0-6]\d|7[012]))'
-             ' ?-? ?(?!00)(\d{2}) ?-? ?(?!0000)(\d{4})(?:^|[^\d-])')
+    regex = (r'(?:^|[^\d-])(?!(000|666))([0-6]\d{2}|7([0-6]\d|7[012]))'
+             r' ?-? ?(?!00)(\d{2}) ?-? ?(?!0000)(\d{4})(?:^|[^\d-])')
     ssn_regex = re.compile(regex)
 
     def __init__(self):

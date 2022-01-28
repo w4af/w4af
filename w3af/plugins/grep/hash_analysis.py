@@ -39,7 +39,7 @@ class hash_analysis(GrepPlugin):
         self._already_reported = ScalableBloomFilter()
 
         # regex to split between words
-        self._split_re = re.compile('[^\w]')
+        self._split_re = re.compile(r'[^\w]')
 
     def grep(self, request, response):
         """

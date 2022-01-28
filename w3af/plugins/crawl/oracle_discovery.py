@@ -49,7 +49,7 @@ class oracle_discovery(CrawlPlugin):
         # Example strings:
         # Reports Servlet Omgevingsvariabelen 9.0.4.2.0
         # Reports Servlet Variables de Entorno 9.0.4.0.33
-        '(Reports Servlet) [\w ]* ([\d\.]*?)',
+        r'(Reports Servlet) [\w ]* ([\d\.]*?)',
     )
 
     ORACLE_RE = [re.compile(regex) for regex in ORACLE_RE]

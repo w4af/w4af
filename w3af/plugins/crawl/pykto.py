@@ -333,7 +333,7 @@ class NiktoTestParser(object):
         self.url = url
         
         self._kb_server = None
-        self._junk_re = re.compile('JUNK\((.*?)\)')
+        self._junk_re = re.compile(r'JUNK\((.*?)\)')
         self.ignored = []
     
     def test_generator(self):

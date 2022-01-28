@@ -122,7 +122,7 @@ class detect_reverse_proxy(InfrastructurePlugin):
         """
         response_body = response.get_body().upper()
         #remove duplicated spaces from body
-        whitespace = re.compile('\s+')
+        whitespace = re.compile(r'\s+')
         response_body = re.sub(whitespace, ' ', response_body)
 
         for proxy_header in self._proxy_header_list:

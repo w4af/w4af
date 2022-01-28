@@ -157,7 +157,7 @@ class wordpress_fingerprint(CrawlPlugin):
         response = self._uri_opener.GET(wp_readme_url, cache=True)
 
         # Find the string in the response html
-        find = '<br /> Version (\d\.\d\.?\d?)'
+        find = r'<br /> Version (\d\.\d\.?\d?)'
         m = re.search(find, response.get_body())
 
         # If string found, group version
@@ -187,7 +187,7 @@ class wordpress_fingerprint(CrawlPlugin):
         response = self._uri_opener.GET(wp_index_url, cache=True)
 
         # Find the string in the response html
-        find = '<meta name="generator" content="[Ww]ord[Pp]ress (\d\.\d\.?\d?)" />'
+        find = r'<meta name="generator" content="[Ww]ord[Pp]ress (\d\.\d\.?\d?)" />'
         m = re.search(find, response.get_body())
 
         # If string found, group version

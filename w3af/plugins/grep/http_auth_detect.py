@@ -42,7 +42,7 @@ class http_auth_detect(GrepPlugin):
     def __init__(self):
         GrepPlugin.__init__(self)
 
-        self._auth_uri_regex = re.compile('.*://[\w%]*?:[\w%]*?@[\w\.]{3,40}')
+        self._auth_uri_regex = re.compile(r'.*://[\w%]*?:[\w%]*?@[\w\.]{3,40}')
 
     def grep(self, request, response):
         """

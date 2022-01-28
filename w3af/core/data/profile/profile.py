@@ -63,7 +63,7 @@ class profile(object):
             profname = self.get_real_profile_path(profname, workdir)
             with codecs.open(profname, "rb", UTF8) as fp:
                 try:
-                    self._config.readfp(fp)
+                    self._config.read_file(fp)
                 except configparser.Error as cpe:
                     msg = 'ConfigParser error in profile: "%s". Exception: "%s"'
                     raise BaseFrameworkException(msg % (profname, cpe))

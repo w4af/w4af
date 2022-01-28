@@ -48,7 +48,7 @@ class serialized_object(GrepPlugin):
 
     SERIALIZED_OBJECT_RE = {
         'PHP': [
-            re.compile('^(a|O):\d{1,3}:({[sai]|")'),
+            re.compile(r'^(a|O):\d{1,3}:({[sai]|")'),
         ]
     }
 

@@ -43,7 +43,7 @@ class archive_dot_org(CrawlPlugin):
     """
 
     ARCHIVE_START_URL = 'http://web.archive.org/web/*/%s'
-    INTERESTING_URLS_RE = '<a href="(http://web\.archive\.org/web/\d*?/https?://%s/.*?)"'
+    INTERESTING_URLS_RE = r'<a href="(http://web\.archive\.org/web/\d*?/https?://%s/.*?)"'
     NOT_IN_ARCHIVE = '<p>Wayback Machine doesn&apos;t have that page archived.</p>'
 
     def __init__(self):

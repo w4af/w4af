@@ -497,8 +497,8 @@ class ConsoleUI(object):
         
         messages_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                      'exitmessages.txt')
-        f = file(messages_file, 'r')
-        lines = f.readlines()
-        idx = random.randrange(len(lines))
-        line = lines[idx]
-        return '\n' + line
+        with open(messages_file, 'r') as f:
+            lines = f.readlines()
+            idx = random.randrange(len(lines))
+            line = lines[idx]
+            return '\n' + line

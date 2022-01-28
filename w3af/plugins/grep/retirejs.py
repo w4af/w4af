@@ -492,11 +492,10 @@ class retirejs(GrepPlugin):
         """
         :return: Path to the retirejs binary
         """
-        paths_to_retire = which('retire')
 
         # The dependency check script guarantees that there will always be
         # at least one installation of the retirejs command.
-        return paths_to_retire[0]
+        return "npx retire"
 
     def get_options(self):
         """

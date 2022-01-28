@@ -34,7 +34,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('chardet', 'chardet', '4.0.0'),
                      PIPDependency('tblib', 'tblib', '1.7.0'),
                      PIPDependency('pdfminer', 'pdfminer', '20191125'),
-                     PIPDependency('OpenSSL', 'pyOpenSSL', '20.0.1'),
+                     PIPDependency('OpenSSL', 'pyOpenSSL', '21.0.0'),
                      PIPDependency('ndg', 'ndg-httpsclient', '0.5.1'),
 
                      # We need 0.1.8 because of mitmproxy
@@ -63,7 +63,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('termcolor', 'termcolor', '1.1.0'),
 
                      # We "outsource" the HTTP proxy feature to mitmproxy
-                     PIPDependency('mitmproxy', 'mitmproxy', '7.0.4'),
+                     PIPDependency('mitmproxy', 'mitmproxy', '0.13'),
 
                      # Only used by the REST API, but in the future the console
                      # and GUI will consume it so it's ok to put this here
@@ -98,8 +98,9 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      # subprocess32 "it is guaranteed to be reliable when used
                      # in threaded applications". Needed this to fix issues in
                      # retirejs that spawns processes from threads
-                     PIPDependency('subprocess32', 'subprocess32', '3.5.4')
+                     PIPDependency('subprocess32', 'subprocess32', '3.5.4'),
 
+                     PIPDependency('nocasedict', 'nocasedict', '1.0.2')
                      ]
 
 GUI_PIP_EXTRAS = [PIPDependency('xdot', 'xdot', '1.2')]

@@ -82,7 +82,7 @@ class zone_h(InfrastructurePlugin):
 
         # This is the string I have to parse:
         # in the zone_h response, they are two like this, the first has to be ignored!
-        regex = 'Total notifications: <b>(\d*)</b> of which <b>(\d*)</b> single ip and <b>(\d*)</b> mass'
+        regex = r'Total notifications: <b>(\d*)</b> of which <b>(\d*)</b> single ip and <b>(\d*)</b> mass'
         regex_result = re.findall(regex, response.get_body())
 
         try:

@@ -33,8 +33,8 @@ class InterceptProxy(Proxy):
     interface to perform all its magic ;)
     """
 
-    DEFAULT_NO_TRAP = '.*\.(gif|jpg|png|css|js|ico|swf|axd|tif)$'
-    DEFAULT_TRAP = '.*'
+    DEFAULT_NO_TRAP = r'.*\.(gif|jpg|png|css|js|ico|swf|axd|tif)$'
+    DEFAULT_TRAP = r'.*'
 
     def __init__(self, ip, port, url_opener):
         """

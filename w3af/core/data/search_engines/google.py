@@ -269,7 +269,7 @@ class GStandardSearch(GoogleAPISearch):
     GOOGLE_SEARCH_URL = 'http://www.google.com/search?'
 
     # TODO: Update this, it changes!!
-    REGEX_STRING = 'class="r"><a href="/url\?q=(.*?)&amp;sa=U'
+    REGEX_STRING = r'class="r"><a href="/url\?q=(.*?)&amp;sa=U'
 
     # Used to find out if google will return more items
     NEXT_PAGE_STR = '<strong>Next</strong></a></td>'
@@ -361,7 +361,7 @@ class GMobileSearch(GStandardSearch):
 
     # Used to extract URLs from Google responses
     # Keep me updated!
-    REGEX_STRING = 'class="r"><a href="/url\?q=(.*?)&amp;sa=U'
+    REGEX_STRING = r'class="r"><a href="/url\?q=(.*?)&amp;sa=U'
 
     # Used to find out if google will return more items.
     # Keep me updated!

@@ -19,11 +19,15 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+from functools import cmp_to_key
+
 import w3af.core.controllers.output_manager as om
 
 from w3af.core.ui.console.io.console import terminal_width
 from w3af.core.ui.console.util import formatParagraph
 
+def cmp(a, b):
+    return (a > b) - (a < b)
 
 class table(object):
     """
@@ -87,7 +91,7 @@ class table(object):
         shifts = [w - mw for mw, w in zip(minLengths, self._widthes)]
         #length = len(shifts)
         borrow = list(zip(self._colsRange, shifts))
-        borrow.sort(lambda a, b: cmp(a[1], b[1]))
+        borrow.sort(key=cmp_to_key(lambda a, b: cmp(a[1], b[1])))
         delta = [0] * self._colsNum
 
         donorIdx = self._colsNum - 1

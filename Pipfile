@@ -30,7 +30,6 @@ Markdown = "*"
 psutil = "*"
 ds-store = "*"
 termcolor = "*"
-mitmproxy = "*"
 PyYAML = "*"
 tldextract = "*"
 Pebble = "*"
@@ -42,6 +41,7 @@ vulners = "*"
 ipaddresses = "*"
 subprocess32 = "*"
 xdot = "*"
+nocasedict = "*"
 
 [dev-packages]
 

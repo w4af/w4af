@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from html.parser import HTMLParser, HTMLParseError
+from html.parser import HTMLParser
 
 from w3af.core.data.context.constants import CONTEXT_DETECTOR
 from .html import (HtmlAttrSingleQuote, HtmlAttrDoubleQuote,
@@ -62,12 +62,7 @@ def get_context_iter(data, payload):
 
     # Parse!
     context_detector = ContextDetectorHTMLParser(payload)
-    try:
-        context_detector.feed(data)
-    except HTMLParseError:
-        # HTMLParser is able to handle broken markup, but in some cases it might
-        # raise this exception when it encounters an error while parsing.
-        return
+    context_detector.feed(data)
 
     for context in context_detector.contexts:
         yield context

