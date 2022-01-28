@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import codecs
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import chardet
 import logging
 
@@ -44,7 +44,7 @@ def _return_html_encoded(encodingexc):
     en = encodingexc.end
     hex_encoded = "".join(hex(ord(c))[2:] for c in encodingexc.object[st:en])
 
-    return unicode('&#x' + hex_encoded), en
+    return str('&#x' + hex_encoded), en
 
 
 def _return_escaped_char(encodingexc):
@@ -55,7 +55,7 @@ def _return_escaped_char(encodingexc):
     en = encodingexc.end
 
     slash_x_XX = repr(encodingexc.object[st:en])[1:-1]
-    return unicode(slash_x_XX), en
+    return str(slash_x_XX), en
 
 
 def _percent_encode(encodingexc):
@@ -66,7 +66,7 @@ def _percent_encode(encodingexc):
     en = encodingexc.end
 
     return (
-        u'%s' % (urllib.quote(encodingexc.object[st:en].encode('utf8')),),
+        '%s' % (urllib.parse.quote(encodingexc.object[st:en].encode('utf8')),),
         en
     )
 
@@ -83,7 +83,7 @@ def smart_unicode(s,
 
                   # http://jamesls.com/micro-optimizations-in-python-code-speeding-up-lookups.html
                   _isinstance=isinstance,
-                  _unicode=unicode,
+                  _unicode=str,
                   _str=str
                   ):
     """
@@ -140,7 +140,7 @@ def smart_str(s,
 
               # http://jamesls.com/micro-optimizations-in-python-code-speeding-up-lookups.html
               _isinstance=isinstance,
-              _unicode=unicode,
+              _unicode=str,
               _str=str):
     """
     Return a byte-string version of 's', encoded as specified in 'encoding'.

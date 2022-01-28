@@ -436,5 +436,5 @@ class TestOpenAPIFuzzURLParts(PluginTest):
         self.assertEqual(len(vulns), 1)
 
         vuln = vulns[0]
-        self.assertEquals(vuln.get_method(), 'GET')
-        self.assertEquals(vuln.get_url().url_string, TestOpenAPIFuzzURLParts.vulnerable_url)
+        self.assertEqual(vuln.get_method(), 'GET')
+        self.assertEqual(vuln.get_url().url_string, TestOpenAPIFuzzURLParts.vulnerable_url)

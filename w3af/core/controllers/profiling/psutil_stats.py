@@ -45,8 +45,8 @@ if user_wants_psutil():
     try:
         # User's don't need this module
         import psutil
-    except ImportError, ie:
-        print('Failed to import psutil: %s' % ie)
+    except ImportError as ie:
+        print(('Failed to import psutil: %s' % ie))
         sys.exit(-1)
 
 
@@ -87,7 +87,7 @@ def dump_psutil():
         except psutil.NoSuchProcess:
             pass
         else:
-            for info_name, info_data in pinfo.iteritems():
+            for info_name, info_data in pinfo.items():
                 if hasattr(info_data, '_asdict'):
                     pinfo[info_name] = dict(info_data._asdict())
                 else:
@@ -96,12 +96,12 @@ def dump_psutil():
             process_info[pinfo['pid']] = pinfo
 
     netinfo = psutil.net_io_counters(pernic=True)
-    for key, value in netinfo.iteritems():
+    for key, value in netinfo.items():
         netinfo[key] = value._asdict()
 
     # Get the memory usage from ps_mem
     pids_to_show = []
-    for pid, pinfo in process_info.iteritems():
+    for pid, pinfo in process_info.items():
         exe = str(pinfo['exe'])
         if 'python' in exe and 'w3af' in exe:
             pids_to_show.append(pid)

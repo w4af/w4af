@@ -68,7 +68,7 @@ class TestTwoScans(XpresserUnittest):
     def run_scan_2(self):
         self.double_click('previous_target')
         self.type(['<Home>'], False)
-        for _ in xrange(len(self.TARGET_1)): self.type(['<Delete>'], False)
+        for _ in range(len(self.TARGET_1)): self.type(['<Delete>'], False)
 
         # This type() seems to trigger the same bug I get in prompt.py:
         # https://github.com/andresriancho/w3af/issues/228

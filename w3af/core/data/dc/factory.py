@@ -116,7 +116,7 @@ def _create_instance_from_json_string(data_container_cls, params):
 def _create_instance_from_form_params(data_container_cls, params):
     form_params = FormParameters()
 
-    for param_name, param_value in params.iteritems():
+    for param_name, param_value in params.items():
         form_params.add_field_by_attrs({'name': param_name, 'value': param_value})
 
     return data_container_cls(form_params)

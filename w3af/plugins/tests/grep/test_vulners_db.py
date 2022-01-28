@@ -73,10 +73,10 @@ class TestVulnersDB(PluginTest):
         self.assertEqual(vuln.get_name(), 'CVE-2012-2531')
         self.assertEqual(vuln.get_url().url_string, 'http://httpretty/')
 
-        expected_desc = (u'Vulners plugin detected software with known vulnerabilities.'
-                         u' The identified vulnerability is "CVE-2012-2531".\n'
-                         u'\n'
-                         u' The first ten URLs where vulnerable software was detected are:\n'
-                         u' - http://httpretty/\n')
+        expected_desc = ('Vulners plugin detected software with known vulnerabilities.'
+                         ' The identified vulnerability is "CVE-2012-2531".\n'
+                         '\n'
+                         ' The first ten URLs where vulnerable software was detected are:\n'
+                         ' - http://httpretty/\n')
         self.assertEqual(vuln.get_desc(with_id=False), expected_desc)
 

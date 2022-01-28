@@ -19,12 +19,12 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import base64
 
 
-class FastHTTPBasicAuthHandler(urllib2.AbstractBasicAuthHandler,
-                               urllib2.BaseHandler):
+class FastHTTPBasicAuthHandler(urllib.request.AbstractBasicAuthHandler,
+                               urllib.request.BaseHandler):
     """
     The AbstractBasicAuthHandler only sends the basic HTTP credentials after
     receiving a 401 which makes scans much slower (1 returns 401, 1 with the

@@ -48,19 +48,19 @@ class TestXPATH(PluginTest):
         # Assert the general results
         expected_vuln_number = 4
         vulns = self.kb.get('xpath', 'xpath')
-        self.assertEquals(expected_vuln_number, len(vulns), vulns)
+        self.assertEqual(expected_vuln_number, len(vulns), vulns)
         
         vtitle = "XPATH injection vulnerability"
         all_titles = all([vtitle == vuln.get_name() for vuln in vulns])
         self.assertTrue(all_titles, vulns)
 
         # Verify the specifics about the vulnerabilities
-        expected = [(u'xpath-attr-double.py', 'text'),
-                    (u'xpath-attr-tag.py', 'text'),
-                    (u'xpath-attr-or.py', 'text'),
-                    (u'xpath-attr-single.py', 'text')]
+        expected = [('xpath-attr-double.py', 'text'),
+                    ('xpath-attr-tag.py', 'text'),
+                    ('xpath-attr-or.py', 'text'),
+                    ('xpath-attr-single.py', 'text')]
 
         found = [(v.get_url().get_file_name(),
                   v.get_mutant().get_token_name()) for v in vulns]
 
-        self.assertEquals(set(expected), set(found))
+        self.assertEqual(set(expected), set(found))

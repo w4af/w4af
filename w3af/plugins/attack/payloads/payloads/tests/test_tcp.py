@@ -30,7 +30,7 @@ class TestTCP(PayloadTestHelper):
         result = exec_payload(self.shell, 'tcp', use_api=True)
 
         local_addresses = []
-        for key, conn_data in result.iteritems():
+        for key, conn_data in result.items():
             local_addresses.append(conn_data['local_address'])
 
         local_addresses = set(local_addresses)

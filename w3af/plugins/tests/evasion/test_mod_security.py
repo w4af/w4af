@@ -34,7 +34,7 @@ class TestEvasion(unittest.TestCase):
         u = URL('http://www.w3af.com/')
         r = HTTPRequest( u )
         self.assertEqual(modsec.modify_request( r ).url_object.url_string,
-                         u'http://www.w3af.com/')
+                         'http://www.w3af.com/')
 
     def test_no_post_data(self):
         modsec = mod_security()

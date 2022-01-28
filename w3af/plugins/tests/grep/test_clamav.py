@@ -108,7 +108,7 @@ class TestClamAV(unittest.TestCase):
         self.plugin._report_result = lambda x: 42
         start_time = time.time()
         
-        for i in xrange(3):
+        for i in range(3):
             body = ''
             url = URL('http://www.w3af.com/%s' % i)
             headers = Headers([('content-type', 'text/html')])

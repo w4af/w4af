@@ -76,7 +76,7 @@ class SWFParser(BaseParser):
         compressed_data = swf_document[8:]
         try:
             uncompressed_data = zlib.decompress(compressed_data)
-        except zlib.error, e:
+        except zlib.error as e:
             raise ValueError('Failed to inflate: ' + str(e))
         else:
             # TODO: Strings in SWF are NULL-Byte delimited. Maybe we can
@@ -177,7 +177,7 @@ class SWFParser(BaseParser):
                             self._re_urls.add(url)
 
     def get_clear_text_body(self):
-        return u''
+        return ''
 
     def get_references(self):
         """

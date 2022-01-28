@@ -46,7 +46,7 @@ class TestURLListTxt(PluginTest):
         info = infos[0]
 
         self.assertTrue(info.get_name().startswith('urllist.txt file'))
-        self.assertEquals(info.get_url().url_string, 'http://moth/urllist.txt')
+        self.assertEqual(info.get_url().url_string, 'http://moth/urllist.txt')
 
         urls = self.kb.get_all_known_urls()
 

@@ -50,9 +50,9 @@ class APIScanTest(IntegrationTest):
                                  verify=False)
 
         scan_id = response.json()['id']
-        self.assertEqual(response.json(), {u'message': u'Success',
-                                           u'href': u'/scans/%s' % scan_id,
-                                           u'id': scan_id})
+        self.assertEqual(response.json(), {'message': 'Success',
+                                           'href': '/scans/%s' % scan_id,
+                                           'id': scan_id})
         self.assertEqual(response.status_code, 201)
 
         #
@@ -61,11 +61,11 @@ class APIScanTest(IntegrationTest):
         response = self.wait_until_running()
 
         self.assertEqual(response.status_code, 200, response.text)
-        list_response = {u'items': [{u'href': u'/scans/%s' % scan_id,
-                                     u'id': scan_id,
-                                     u'status': u'Running',
-                                     u'errors': False,
-                                     u'target_urls': [target_url]}]}
+        list_response = {'items': [{'href': '/scans/%s' % scan_id,
+                                     'id': scan_id,
+                                     'status': 'Running',
+                                     'errors': False,
+                                     'target_urls': [target_url]}]}
         self.assertEqual(response.json(), list_response)
 
         #
@@ -114,8 +114,8 @@ class APIScanTest(IntegrationTest):
         self.assertEqual(vuln_info['fix_effort'], 50)
         self.assertEqual(vuln_info['cwe_ids'], ['89'])
         self.assertEqual(vuln_info['severity'], 'High')
-        self.assertEqual(vuln_info['tags'], [u'web', u'sql', u'injection',
-                                             u'database', u'error'])
+        self.assertEqual(vuln_info['tags'], ['web', 'sql', 'injection',
+                                             'database', 'error'])
 
         #
         # Get the HTTP traffic for this vulnerability
@@ -145,7 +145,7 @@ class APIScanTest(IntegrationTest):
         self.assertEqual(log_data['next_url'], None)
 
         zero_entry = log_data['entries'][0]
-        self.assertEqual(zero_entry['message'], u'Called w3afCore.start()')
+        self.assertEqual(zero_entry['message'], 'Called w3afCore.start()')
         self.assertEqual(zero_entry['severity'], None)
         self.assertEqual(zero_entry['type'], 'debug')
         self.assertIsNotNone(zero_entry['id'])
@@ -157,7 +157,7 @@ class APIScanTest(IntegrationTest):
         response = requests.delete('%s/scans/%s' % (self.api_url, scan_id),
                                    auth=self.api_auth,
                                    verify=False)
-        self.assertEqual(response.json(), {u'message': u'Success'})
+        self.assertEqual(response.json(), {'message': 'Success'})
 
         return scan_id
 
@@ -171,9 +171,9 @@ class APIScanTest(IntegrationTest):
                                  headers=self.headers,
                                  verify=False)
 
-        self.assertEqual(response.json(), {u'message': u'Success',
-                                           u'href': u'/scans/0',
-                                           u'id': 0})
+        self.assertEqual(response.json(), {'message': 'Success',
+                                           'href': '/scans/0',
+                                           'id': 0})
         self.assertEqual(response.status_code, 201)
 
         #
@@ -187,7 +187,7 @@ class APIScanTest(IntegrationTest):
         response = requests.get('%s/scans/0/stop' % self.api_url, 
                                 auth=self.api_auth,
                                 verify=False)
-        self.assertEqual(response.json(), {u'message': u'Stopping scan'})
+        self.assertEqual(response.json(), {'message': 'Stopping scan'})
 
         # Wait for it...
         self.wait_until_finish()

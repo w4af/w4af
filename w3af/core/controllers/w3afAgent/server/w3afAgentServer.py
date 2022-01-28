@@ -79,7 +79,7 @@ class ConnectionManager(Process):
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.sock.bind((self._ip_address, self._port))
             self.sock.listen(5)
-        except Exception, e:
+        except Exception as e:
             msg = '[w3afAgentServer] Failed to bind to %s:%s' % (
                 self._ip_address, self._port)
             msg += '. Error: "%s".' % e
@@ -89,7 +89,7 @@ class ConnectionManager(Process):
         while self._keep_running:
             try:
                 newsock, address = self.sock.accept()
-            except KeyboardInterrupt, k:
+            except KeyboardInterrupt as k:
                 om.out.console('Exiting.')
                 break
             except socket.error:
@@ -255,14 +255,14 @@ class w3afAgentServer(Process):
         try:
             self._cm = ConnectionManager(self._ip_address, self._listen_port)
             self._cm.start()
-        except BaseFrameworkException, w3:
+        except BaseFrameworkException as w3:
             self._error = 'Failed to start connection manager inside w3afAgentServer, exception: ' + str(w3)
         else:
             try:
                 self._TCPRelay = TCPRelay(
                     self._ip_address, self._socks_port, self._cm)
                 self._TCPRelay.start()
-            except BaseFrameworkException, w3:
+            except BaseFrameworkException as w3:
                 self._error = 'Failed to start TCPRelay inside w3afAgentServer, exception: "%s"' % w3
                 self._cm.stop()
             else:
@@ -290,10 +290,10 @@ if __name__ == '__main__':
     sys.path.append('../../../../')
 
     if len(sys.argv) != 3:
-        print
-        print 'w3afAgent usage:'
-        print 'python w3afAgentServer.py <bind-address> <bind-port>'
-        print
+        print()
+        print('w3afAgent usage:')
+        print('python w3afAgentServer.py <bind-address> <bind-port>')
+        print()
         sys.exit(-1)
 
     ip_address = sys.argv[1]
@@ -302,4 +302,4 @@ if __name__ == '__main__':
     try:
         agent.run()
     except KeyboardInterrupt:
-        print 'bye.'
+        print('bye.')

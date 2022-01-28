@@ -31,7 +31,7 @@ class test_iis_root_directory(PayloadTestHelper):
 
     def test_iis_root_directory(self):
         result = exec_payload(self.shell, 'iis_root_directory', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)
 
     @attr('ci_fails')
     def test_a_positive_test(self):

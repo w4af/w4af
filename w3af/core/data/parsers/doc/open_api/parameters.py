@@ -40,8 +40,8 @@ class ParameterHandler(object):
                               'integer': 42,
                               'float': 4.2,
                               'double': 4.2,
-                              'date': datetime.date(2017, 06, 30),
-                              'date-time': datetime.datetime(2017, 06, 30, 23, 59, 45),
+                              'date': datetime.date(2017, 0o6, 30),
+                              'date-time': datetime.datetime(2017, 0o6, 30, 23, 59, 45),
                               'boolean': True}
 
     def __init__(self, spec, operation):
@@ -68,7 +68,7 @@ class ParameterHandler(object):
                                         self.operation.http_method,
                                         self.operation.op_spec)
 
-        for parameter_name, parameter in operation.params.iteritems():
+        for parameter_name, parameter in operation.params.items():
             # We make sure that all parameters have a fill attribute
             parameter.fill = None
 
@@ -83,7 +83,7 @@ class ParameterHandler(object):
         """
         :return: True if the operation has optional parameters
         """
-        for parameter_name, parameter in self.operation.params.iteritems():
+        for parameter_name, parameter in self.operation.params.items():
             if not parameter.required:
                 return True
 
@@ -123,7 +123,7 @@ class ParameterHandler(object):
 
         :return: None
         """
-        for parameter_name, parameter in self.operation.params.iteritems():
+        for parameter_name, parameter in self.operation.params.items():
 
             param_format = parameter.param_spec.get('format', None)
             param_type = parameter.param_spec.get('type', None)
@@ -155,7 +155,7 @@ class ParameterHandler(object):
         """
         invalid_formats = ['int32', 'int64', 'float', 'double', '']
 
-        for parameter_name, parameter in self.operation.params.iteritems():
+        for parameter_name, parameter in self.operation.params.items():
 
             param_format = parameter.param_spec.get('format', None)
             param_type = parameter.param_spec.get('type', None)
@@ -187,7 +187,7 @@ class ParameterHandler(object):
         """
         fix_formats = ['double', 'float', 'int32', 'int64']
 
-        for parameter_name, parameter in self.operation.params.iteritems():
+        for parameter_name, parameter in self.operation.params.items():
 
             param_format = parameter.param_spec.get('format', None)
             param_default = parameter.param_spec.get('default', None)
@@ -195,7 +195,7 @@ class ParameterHandler(object):
             if param_format not in fix_formats:
                 continue
 
-            if not isinstance(param_default, basestring):
+            if not isinstance(param_default, str):
                 continue
 
             if param_default.isdigit():
@@ -227,7 +227,7 @@ class ParameterHandler(object):
         """
         fix_formats = ['double', 'float', 'int32', 'int64']
 
-        for parameter_name, parameter in self.operation.params.iteritems():
+        for parameter_name, parameter in self.operation.params.items():
 
             param_format = parameter.param_spec.get('format', None)
             param_example = parameter.param_spec.get('example', None)
@@ -235,7 +235,7 @@ class ParameterHandler(object):
             if param_format not in fix_formats:
                 continue
 
-            if not isinstance(param_example, basestring):
+            if not isinstance(param_example, str):
                 continue
 
             if param_example.isdigit():
@@ -516,7 +516,7 @@ class ParameterHandler(object):
                     merged['required'].append(required)
 
             if 'properties' in object_definition:
-                for property_name, property_def in object_definition['properties'].iteritems():
+                for property_name, property_def in object_definition['properties'].items():
                     merged['properties'][property_name] = property_def
 
         return merged
@@ -583,7 +583,7 @@ class ParameterHandler(object):
 
         created_object = {}
 
-        for property_name, property_data in param_spec.get('properties', {}).iteritems():
+        for property_name, property_data in param_spec.get('properties', {}).items():
 
             # This helps us choose a better value for filling the parameter
             if 'name' not in property_data:

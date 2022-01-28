@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from w3af.core.data.url.tests.helpers.http_daemon import HTTPDaemon
 
@@ -43,7 +43,7 @@ class TestHTTPDaemon(unittest.TestCase):
     
     def test_simple_GET(self):
         url = 'http://%s:%s/hello' % ('127.0.0.1', self.http_daemon.get_port())
-        response_body = urllib2.urlopen(url).read()
+        response_body = urllib.request.urlopen(url).read()
         
         self.assertEqual(response_body, 'ABCDEF\n')
         self.assertEqual(len(self.requests), 1)

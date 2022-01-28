@@ -67,7 +67,7 @@ class TestSerializedObject(unittest.TestCase):
 
             self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 2)
 
     def test_php_serialized_objects_query_string_b64(self):
@@ -81,7 +81,7 @@ class TestSerializedObject(unittest.TestCase):
 
         self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 1)
 
     def test_php_serialized_objects_headers(self):
@@ -90,7 +90,7 @@ class TestSerializedObject(unittest.TestCase):
 
         self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 1)
 
     def test_php_serialized_objects_cookies(self):
@@ -100,7 +100,7 @@ class TestSerializedObject(unittest.TestCase):
 
         self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 1)
 
     def test_php_serialized_objects_post_data(self):
@@ -112,7 +112,7 @@ class TestSerializedObject(unittest.TestCase):
 
         self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 1)
 
     def test_not_php_serialized_objects(self):
@@ -125,7 +125,7 @@ class TestSerializedObject(unittest.TestCase):
 
         self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 0)
 
     def test_mutated_request(self):
@@ -140,7 +140,7 @@ class TestSerializedObject(unittest.TestCase):
         for mutant in mutants:
             self.plugin.grep(mutant, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 1)
 
 
@@ -183,9 +183,9 @@ class TestSerializedObjectIntegration(PluginTest):
                             'serialized_object')
 
         expected_vulns = {('Serialized object',
-                           u'A total of 1 HTTP requests contained a serialized object'
-                           u' in the parameter with name "viewstate". The first ten'
-                           u' matching URLs are:\n - http://mock/form\n')}
+                           'A total of 1 HTTP requests contained a serialized object'
+                           ' in the parameter with name "viewstate". The first ten'
+                           ' matching URLs are:\n - http://mock/form\n')}
 
         vulns_set = set()
 

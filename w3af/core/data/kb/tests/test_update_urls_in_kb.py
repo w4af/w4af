@@ -36,8 +36,8 @@ class TestUpdateURLs(unittest.TestCase):
         r1 = FuzzableRequest(u1, method='GET')
         kb.kb.add_fuzzable_request(r1)
         result = kb.kb.get_all_known_urls()
-        self.assertEquals(len(result), 1)
-        self.assertEquals("http://w3af.org/", list(result)[0].url_string)
+        self.assertEqual(len(result), 1)
+        self.assertEqual("http://w3af.org/", list(result)[0].url_string)
 
         u2 = URL('http://w3af.org/blog/')
         r2 = FuzzableRequest(u2, method='GET')
@@ -48,7 +48,7 @@ class TestUpdateURLs(unittest.TestCase):
         kb.kb.add_fuzzable_request(r3)
 
         result = kb.kb.get_all_known_urls()
-        self.assertEquals(len(result), 2)
+        self.assertEqual(len(result), 2)
         expected_set = set(["http://w3af.org/", "http://w3af.org/blog/"])
         self.assertEqual(expected_set,
                          set([u.url_string for u in result]))

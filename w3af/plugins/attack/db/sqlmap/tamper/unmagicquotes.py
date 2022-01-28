@@ -35,7 +35,7 @@ def tamper(payload, **kwargs):
         found = False
         retVal = ""
 
-        for i in xrange(len(payload)):
+        for i in range(len(payload)):
             if payload[i] == '\'' and not found:
                 retVal += "%bf%27"
                 found = True

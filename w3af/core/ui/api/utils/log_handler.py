@@ -79,7 +79,7 @@ class RESTAPIOutput(OutputPlugin):
         return str(self._log_id)
 
     def get_entries(self, start, end):
-        for log_id in xrange(start, end):
+        for log_id in range(start, end):
             log_id = str(log_id)
 
             try:

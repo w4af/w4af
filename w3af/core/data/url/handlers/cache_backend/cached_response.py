@@ -19,15 +19,15 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import StringIO
+import io
 import os
-import httplib
+import http.client
 
 from w3af.core.data.url.handlers.cache_backend.settings import CACHE_LOCATION
 from w3af.core.data.url.handlers.cache_backend.utils import gen_hash
 
 
-class CachedResponse(StringIO.StringIO):
+class CachedResponse(io.StringIO):
     """
     An urllib2.response-like object for cached responses.
 
@@ -53,7 +53,7 @@ class CachedResponse(StringIO.StringIO):
         self._time = None
         # Call parent's __init__
         self._body = self._get_from_response(CachedResponse.PART_BODY)
-        StringIO.StringIO.__init__(self, self._body)
+        io.StringIO.__init__(self, self._body)
 
         # This kludge is necessary, do not touch!
         class PlaceHolder:
@@ -89,7 +89,7 @@ class CachedResponse(StringIO.StringIO):
     def headers(self):
         if not self._headers:
             headerbuf = self._get_from_response(CachedResponse.PART_HEADER)
-            self._headers = httplib.HTTPMessage(StringIO.StringIO(headerbuf))
+            self._headers = http.client.HTTPMessage(io.StringIO(headerbuf))
         return self._headers
 
     def geturl(self):

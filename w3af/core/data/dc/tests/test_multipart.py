@@ -140,14 +140,14 @@ class TestMultipartContainer(unittest.TestCase):
         self.assertEqual(mpc.get_file_name('b'), 'hello.txt')
 
     def test_multipart_3570(self):
-        headers = Headers([(u'Content-length', u'557'),
-                           (u'Accept-encoding', u'gzip, deflate'),
-                           (u'Accept', u'*/*'),
-                           (u'User-agent', u'Mozilla/4.0'),
-                           (u'Host', u'www.webscantest.com'),
-                           (u'Cookie', u'SESSIONID_VULN_SITE=k4no98smgdkun2eqme5k2btgb5'),
-                           (u'Referer', u'http://www.webscantest.com/'),
-                           (u'Content-type', u'multipart/form-data; boundary=db36a3a8bb45ec40c22301ffcaa98e05')])
+        headers = Headers([('Content-length', '557'),
+                           ('Accept-encoding', 'gzip, deflate'),
+                           ('Accept', '*/*'),
+                           ('User-agent', 'Mozilla/4.0'),
+                           ('Host', 'www.webscantest.com'),
+                           ('Cookie', 'SESSIONID_VULN_SITE=k4no98smgdkun2eqme5k2btgb5'),
+                           ('Referer', 'http://www.webscantest.com/'),
+                           ('Content-type', 'multipart/form-data; boundary=db36a3a8bb45ec40c22301ffcaa98e05')])
 
         test_dir = os.path.dirname(os.path.realpath(__file__))
         post_data_file = os.path.join(test_dir, 'samples', 'post-data-3570')

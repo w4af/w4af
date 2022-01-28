@@ -45,7 +45,7 @@ class Fingerprint(GenericFingerprint):
             if result:
                 major = version
 
-        for version in xrange(0, 10):
+        for version in range(0, 10):
             result = inject.checkBooleanExpression("%d=(SELECT MINORVERSION FROM SYSINFO.VERSION)" % version)
 
             if result:

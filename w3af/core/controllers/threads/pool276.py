@@ -39,11 +39,11 @@ __all__ = ['Pool']
 #
 
 import threading
-import Queue
+import queue
 import itertools
 import collections
 import time
-import cPickle
+import pickle
 
 from multiprocessing import Process, cpu_count, TimeoutError
 from multiprocessing.util import Finalize, debug
@@ -64,7 +64,7 @@ job_counter = itertools.count()
 
 
 def mapstar(args):
-    return map(*args)
+    return list(map(*args))
 
 #
 # Code run by worker processes
@@ -129,7 +129,7 @@ def worker(inqueue, outqueue, initializer=None, initargs=(), maxtasks=None):
         job, i, func, args, kwds = task
         try:
             result = (True, func(*args, **kwds))
-        except Exception, e:
+        except Exception as e:
             result = (False, e)
 
         try:
@@ -153,7 +153,7 @@ def create_detailed_pickling_error(exception, instance):
 
     def can_pickle(data):
         try:
-            cPickle.dumps(v)
+            pickle.dumps(v)
         except:
             return False
         else:
@@ -161,14 +161,14 @@ def create_detailed_pickling_error(exception, instance):
 
     if hasattr(instance, '__dict__'):
         # Objects have dicts with all the attributes
-        for k, v in instance.__dict__.iteritems():
+        for k, v in instance.__dict__.items():
             if not can_pickle(v):
                 attribute = k
                 break
 
     elif isinstance(instance, dict):
         # Similar to the above but we don't have __dict__
-        for k, v in instance.iteritems():
+        for k, v in instance.items():
             if not can_pickle(v):
                 attribute = k
                 break
@@ -196,7 +196,7 @@ class Pool(object):
     def __init__(self, processes=None, initializer=None, initargs=(),
                  maxtasksperchild=None):
         self._setup_queues()
-        self._taskqueue = Queue.Queue()
+        self._taskqueue = queue.Queue()
         self._cache = {}
         self._state = RUN
         self._maxtasksperchild = maxtasksperchild
@@ -286,7 +286,7 @@ class Pool(object):
         their specified lifetime.  Returns True if any workers were cleaned up.
         """
         cleaned = False
-        for i in reversed(range(len(self._pool))):
+        for i in reversed(list(range(len(self._pool)))):
             worker = self._pool[i]
             if worker.exitcode is not None:
                 # worker exited
@@ -610,7 +610,7 @@ class Pool(object):
         # workers because we don't want workers to be restarted behind our back.
         debug('joining worker handler')
         if threading.current_thread() is not worker_handler:
-            worker_handler.join(1e100)
+            worker_handler.join(threading.TIMEOUT_MAX)
 
         # Terminate workers which haven't already finished.
         if pool and hasattr(pool[0], 'terminate'):
@@ -625,11 +625,11 @@ class Pool(object):
 
         debug('joining task handler')
         if threading.current_thread() is not task_handler:
-            task_handler.join(1e100)
+            task_handler.join(threading.TIMEOUT_MAX)
 
         debug('joining result handler')
         if threading.current_thread() is not result_handler:
-            result_handler.join(1e100)
+            result_handler.join(threading.TIMEOUT_MAX)
 
         if pool and hasattr(pool[0], 'terminate'):
             debug('joining pool workers')
@@ -647,7 +647,7 @@ class ApplyResult(object):
 
     def __init__(self, cache, callback):
         self._cond = threading.Condition(threading.Lock())
-        self._job = job_counter.next()
+        self._job = next(job_counter)
         self._cache = cache
         self._ready = False
         self._callback = callback
@@ -746,7 +746,7 @@ class IMapIterator(object):
 
     def __init__(self, cache):
         self._cond = threading.Condition(threading.Lock())
-        self._job = job_counter.next()
+        self._job = next(job_counter)
         self._cache = cache
         self._items = collections.deque()
         self._index = 0
@@ -837,8 +837,8 @@ class ThreadPool(Pool):
         Pool.__init__(self, processes, initializer, initargs)
 
     def _setup_queues(self):
-        self._inqueue = Queue.Queue()
-        self._outqueue = Queue.Queue()
+        self._inqueue = queue.Queue()
+        self._outqueue = queue.Queue()
         self._quick_put = self._inqueue.put
         self._quick_get = self._outqueue.get
 

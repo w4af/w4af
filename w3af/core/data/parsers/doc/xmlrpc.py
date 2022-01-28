@@ -106,7 +106,7 @@ class XmlRpcWriteHandler(ContentHandler):
         self._fuzzed_parameters = []
 
         # Flatten the OrderedDict to easily iterate it with startElement
-        for key, value_list in data_container.items():
+        for key, value_list in list(data_container.items()):
             for value in value_list:
                 self._fuzzed_parameters.append((key, value))
 

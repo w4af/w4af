@@ -40,7 +40,7 @@ def prepare_email(content):
     msg = MIMEMultipart()
     msg["Subject"] = SUBJECT
     msg["From"] = FROM
-    msg["To"] = TO if isinstance(TO, basestring) else ','.join(TO)
+    msg["To"] = TO if isinstance(TO, str) else ','.join(TO)
 
     msg.attach(MIMEText(content))
 
@@ -56,8 +56,8 @@ def send_email(msg):
         s.sendmail(FROM, TO, msg.as_string())
         s.quit()
     # Catch all for SMTP exceptions
-    except smtplib.SMTPException, e:
-        print "Failure to send email: %s" % str(e)
+    except smtplib.SMTPException as e:
+        print("Failure to send email: %s" % str(e))
 
 def failure_email(msg):
     msg = prepare_email(msg)
@@ -140,7 +140,7 @@ def main():
 
         msg = prepare_email(content)
 
-        for test_count, attachment in attachments.items():
+        for test_count, attachment in list(attachments.items()):
             attachment = MIMEText(attachment)
             attachment.add_header("Content-Disposition", "attachment", filename="test_case_%d_console_output.txt" % test_count)
             msg.attach(attachment)
@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
     try:
         main()
-    except Exception, e:
+    except Exception as e:
         log_fd.write("An exception has occurred:\n%s" % str(traceback.format_exc()))
 
     log_fd.write("Regression test finished at %s\n\n" % time.strftime("%H:%M:%S %d-%m-%Y", time.gmtime()))

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import os
-import cPickle
+import pickle
 import tempfile
 
 import msgpack
@@ -118,7 +118,7 @@ def write_object_to_temp_file(obj):
     :return: The name of the file
     """
     temp = get_temp_file('parser')
-    cPickle.dump(obj, temp, cPickle.HIGHEST_PROTOCOL)
+    pickle.dump(obj, temp, pickle.HIGHEST_PROTOCOL)
     temp.close()
     return temp.name
 
@@ -132,7 +132,7 @@ def load_object_from_temp_file(filename, remove=True):
     :return: The object instance
     """
     try:
-        result = cPickle.load(file(filename, 'rb'))
+        result = pickle.load(file(filename, 'rb'))
     except:
         if remove:
             remove_file_if_exists(filename)

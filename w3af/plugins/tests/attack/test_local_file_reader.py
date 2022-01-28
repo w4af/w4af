@@ -43,11 +43,11 @@ class TestFileReadShell(ReadExploitTest):
 
         # Assert the general results
         vulns = self.kb.get('lfi', 'lfi')
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
         
         vuln = vulns[0]
         
-        self.assertEquals(vuln.get_name(), "Local file inclusion vulnerability")
+        self.assertEqual(vuln.get_name(), "Local file inclusion vulnerability")
         
         vuln_to_exploit_id = vuln.get_id()
         self._exploit_vuln(vuln_to_exploit_id, 'local_file_reader')

@@ -140,7 +140,7 @@ class sed(ManglePlugin):
 
             try:
                 regex = re.compile(regex_str)
-            except re.error, re_err:
+            except re.error as re_err:
                 msg = 'Regular expression compilation error at "%s", the'\
                       ' original exception was "%s".'
                 raise BaseFrameworkException(msg % (regex_str, re_err))

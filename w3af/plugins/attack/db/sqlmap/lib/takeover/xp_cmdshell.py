@@ -229,7 +229,7 @@ class XP_cmdshell:
                 _ = ""
                 lines = [line for line in flattenValue(output) if line is not None]
 
-                for i in xrange(len(lines)):
+                for i in range(len(lines)):
                     line = lines[i] or ""
                     if line is None or i in (0, len(lines) - 1) and not line.strip():
                         continue

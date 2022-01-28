@@ -66,7 +66,7 @@ class TestPHPEggs(PluginTest):
         self.assertEqual(len(php_version), 1, php_version)
 
         php_version = php_version[0]
-        self.assertEqual(php_version['version'], [u'5.3.2', u'5.3.1'])
+        self.assertEqual(php_version['version'], ['5.3.2', '5.3.1'])
 
 
 @attr('smoke')

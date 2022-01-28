@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 import w3af.core.data.parsers.parser_cache as parser_cache
 import w3af.core.data.constants.severity as severity
@@ -145,8 +145,8 @@ class strange_parameters(GrepPlugin):
         """
         :return: True if the parameter value is strange
         """
-        decoded_value = urllib.unquote(value)
-        decoded_parameter = urllib.unquote(parameter)
+        decoded_value = urllib.parse.unquote(value)
+        decoded_parameter = urllib.parse.unquote(parameter)
 
         #
         # Parameters holding URLs will always be flagged as "strange" because

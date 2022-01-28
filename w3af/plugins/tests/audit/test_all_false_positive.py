@@ -59,7 +59,7 @@ class TestAllFP(PluginTest):
 
             msg_i = 'audit.%s found a vulnerability in "%s"' % (audit_plugin,
                                                                 ','.join(infos))
-            self.assertEquals(len(infos), 0, msg_i)
+            self.assertEqual(len(infos), 0, msg_i)
 
             # I tried to do this in the right way, with nosetests test
             # generators, but they have a bug with unittest.TestCase

@@ -31,7 +31,7 @@ class test_running_honeypot(PayloadTestHelper):
 
     def test_running_honeypot(self):
         result = exec_payload(self.shell, 'running_honeypot', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)
 
     @attr('ci_fails')
     def test_a_positive_test(self):

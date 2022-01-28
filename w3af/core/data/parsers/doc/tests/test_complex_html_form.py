@@ -74,6 +74,6 @@ class TestComplexHTMLForm(unittest.TestCase):
         self.assertEqual(len([fv for fv in form_params.get_variants(mode)]),
                          form_params.TOP_VARIANTS + 1)
 
-        self.assertEqual(len(form_params.meta.keys()), 31)
-        self.assertEqual(form_params.meta.keys(), self.EXPECTED_PARAMS)
+        self.assertEqual(len(list(form_params.meta.keys())), 31)
+        self.assertEqual(list(form_params.meta.keys()), self.EXPECTED_PARAMS)
 

@@ -74,7 +74,7 @@ class DataToken(object):
         return smart_str(self._value, errors='ignore')
 
     def __unicode__(self):
-        return unicode(self._value)
+        return str(self._value)
 
     def __eq__(self, other):
         if isinstance(other, DataToken):
@@ -82,7 +82,7 @@ class DataToken(object):
                     self.get_value() == other.get_value() and
                     self.get_path() == other.get_path())
 
-        elif isinstance(other, basestring):
+        elif isinstance(other, str):
             return self.get_value() == other
 
         elif other is None:

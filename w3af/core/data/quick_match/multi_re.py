@@ -77,7 +77,7 @@ class MultiRE(object):
                     raise ValueError('Duplicated regex "%s"' % regex)
 
                 self._translator[regex] = item[1:]
-            elif isinstance(item, basestring):
+            elif isinstance(item, str):
                 regex = item.encode(DEFAULT_ENCODING)
                 self._re_cache[regex] = re.compile(regex, self._re_compile_flags)
             else:

@@ -91,7 +91,7 @@ def exceptionHandledFunction(threadFunction, silent=False):
         kb.threadContinue = False
         kb.threadException = True
         raise
-    except Exception, ex:
+    except Exception as ex:
         if not silent:
             logger.error("thread %s: %s" % (threading.currentThread().getName(), ex.message))
 
@@ -140,14 +140,14 @@ def runThreads(numThreads, threadFunction, cleanupFunction=None, forwardExceptio
             return
 
         # Start the threads
-        for numThread in xrange(numThreads):
+        for numThread in range(numThreads):
             thread = threading.Thread(target=exceptionHandledFunction, name=str(numThread), args=[threadFunction])
 
             setDaemon(thread)
 
             try:
                 thread.start()
-            except Exception, ex:
+            except Exception as ex:
                 errMsg = "error occurred while starting new thread ('%s')" % ex.message
                 logger.critical(errMsg)
                 break
@@ -163,8 +163,8 @@ def runThreads(numThreads, threadFunction, cleanupFunction=None, forwardExceptio
                     alive = True
                     time.sleep(0.1)
 
-    except (KeyboardInterrupt, SqlmapUserQuitException), ex:
-        print
+    except (KeyboardInterrupt, SqlmapUserQuitException) as ex:
+        print()
         kb.threadContinue = False
         kb.threadException = True
 
@@ -180,15 +180,15 @@ def runThreads(numThreads, threadFunction, cleanupFunction=None, forwardExceptio
         if forwardException:
             raise
 
-    except (SqlmapConnectionException, SqlmapValueException), ex:
-        print
+    except (SqlmapConnectionException, SqlmapValueException) as ex:
+        print()
         kb.threadException = True
         logger.error("thread %s: %s" % (threading.currentThread().getName(), ex.message))
 
     except:
         from lib.core.common import unhandledExceptionMessage
 
-        print
+        print()
         kb.threadException = True
         errMsg = unhandledExceptionMessage()
         logger.error("thread %s: %s" % (threading.currentThread().getName(), errMsg))
@@ -200,7 +200,7 @@ def runThreads(numThreads, threadFunction, cleanupFunction=None, forwardExceptio
         kb.threadContinue = True
         kb.threadException = False
 
-        for lock in kb.locks.values():
+        for lock in list(kb.locks.values()):
             if lock.locked():
                 try:
                     lock.release()

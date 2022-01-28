@@ -56,7 +56,7 @@ class TestPasswordProfiling(PluginTest):
         collected_passwords = self.kb.raw_read('password_profiling',
                                                'password_profiling')
 
-        collected_passwords = collected_passwords.keys()
+        collected_passwords = list(collected_passwords.keys())
         # pylint: enable=E1103
         collected_passwords.sort(sortfunc)
 

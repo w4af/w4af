@@ -62,7 +62,7 @@ class TestHistoryItem(unittest.TestCase):
         url = URL('http://w3af.org/a/b/foobar.php?foo=123')
         tag_value = rand_alnum(10)
 
-        for i in xrange(0, 500):
+        for i in range(0, 500):
             request = HTTPRequest(url, data='a=1')
             code = 200
             if i == find_id:
@@ -96,7 +96,7 @@ class TestHistoryItem(unittest.TestCase):
         mark_id = 3
         url = URL('http://w3af.org/a/b/c.php')
         
-        for i in xrange(0, 500):
+        for i in range(0, 500):
             request = HTTPRequest(url, data='a=1')
             hdr = Headers([('Content-Type', 'text/html')])
             res = HTTPResponse(200, '<html>', hdr, url, url)
@@ -148,7 +148,7 @@ class TestHistoryItem(unittest.TestCase):
         headers = Headers([('Content-Type', 'text/html')])
         body = '<html>' + LOREM * 20
 
-        for i in xrange(1, force_compression_count):
+        for i in range(1, force_compression_count):
             request = HTTPRequest(url, data='a=%s' % i)
 
             response = HTTPResponse(200, body, headers, url, url)
@@ -170,7 +170,7 @@ class TestHistoryItem(unittest.TestCase):
         _zip = zipfile.ZipFile(compressed_file, mode='r')
         self.assertEqual(_zip.namelist(), expected_files)
 
-        for i in xrange(1, 100):
+        for i in range(1, 100):
             h = HistoryItem()
             h.load(i)
 
@@ -252,7 +252,7 @@ class TestHistoryItem(unittest.TestCase):
         tag_value = rand_alnum(10)
         url = URL('http://w3af.org/a/b/c.php')
 
-        for i in xrange(501, 1000):
+        for i in range(501, 1000):
             request = HTTPRequest(url, data='a=1')
             hdr = Headers([('Content-Type', 'text/html')])
             res = HTTPResponse(200, '<html>', hdr, url, url)

@@ -53,7 +53,7 @@ def get_all_templates():
             
             kls = getattr(module, kls_name)
             
-            if not isinstance(kls, (type, types.ClassType)):
+            if not isinstance(kls, type):
                 continue
             
             if issubclass(kls, BaseTemplate) and kls is not BaseTemplate:

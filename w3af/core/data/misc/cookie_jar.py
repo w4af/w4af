@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import re
 import time
 
-from cookielib import MozillaCookieJar, LoadError, _warn_unhandled_exception, Cookie
+from http.cookiejar import MozillaCookieJar, LoadError, _warn_unhandled_exception, Cookie
 
 
 class ImprovedMozillaCookieJar(MozillaCookieJar):

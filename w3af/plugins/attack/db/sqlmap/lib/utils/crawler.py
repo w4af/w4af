@@ -5,10 +5,10 @@ Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
-import httplib
+import http.client
 import os
 import re
-import urlparse
+import urllib.parse
 import tempfile
 import time
 
@@ -63,14 +63,14 @@ def crawl(target):
                 try:
                     if current:
                         content = Request.getPage(url=current, crawling=True, raise404=False)[0]
-                except SqlmapConnectionException, ex:
+                except SqlmapConnectionException as ex:
                     errMsg = "connection exception detected ('%s'). skipping " % getSafeExString(ex)
                     errMsg += "URL '%s'" % current
                     logger.critical(errMsg)
                 except SqlmapSyntaxException:
                     errMsg = "invalid URL detected. skipping '%s'" % current
                     logger.critical(errMsg)
-                except httplib.InvalidURL, ex:
+                except http.client.InvalidURL as ex:
                     errMsg = "invalid URL detected ('%s'). skipping " % getSafeExString(ex)
                     errMsg += "URL '%s'" % current
                     logger.critical(errMsg)
@@ -78,7 +78,7 @@ def crawl(target):
                 if not kb.threadContinue:
                     break
 
-                if isinstance(content, unicode):
+                if isinstance(content, str):
                     try:
                         match = re.search(r"(?si)<html[^>]*>(.+)</html>", content)
                         if match:
@@ -96,7 +96,7 @@ def crawl(target):
                             if href:
                                 if threadData.lastRedirectURL and threadData.lastRedirectURL[0] == threadData.lastRequestUID:
                                     current = threadData.lastRedirectURL[1]
-                                url = urlparse.urljoin(current, href)
+                                url = urllib.parse.urljoin(current, href)
 
                                 # flag to know if we are dealing with the same target host
                                 _ = checkSameHost(url, target)
@@ -135,10 +135,10 @@ def crawl(target):
             if readInput(message, default='N', boolean=True):
                 found = True
                 items = None
-                url = urlparse.urljoin(target, "/sitemap.xml")
+                url = urllib.parse.urljoin(target, "/sitemap.xml")
                 try:
                     items = parseSitemap(url)
-                except SqlmapConnectionException, ex:
+                except SqlmapConnectionException as ex:
                     if "page not found" in getSafeExString(ex):
                         found = False
                         logger.warn("'sitemap.xml' not found")
@@ -159,7 +159,7 @@ def crawl(target):
             infoMsg += " for target URL '%s'" % target
         logger.info(infoMsg)
 
-        for i in xrange(conf.crawlDepth):
+        for i in range(conf.crawlDepth):
             threadData.shared.count = 0
             threadData.shared.length = len(threadData.shared.unprocessed)
             numThreads = min(conf.threads, len(threadData.shared.unprocessed))

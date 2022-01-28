@@ -44,7 +44,7 @@ def pivotDumpTable(table, colList, count=None, blind=True):
         query = agent.whereQuery(query)
         count = inject.getValue(query, union=False, error=False, expected=EXPECTED.INT, charsetType=CHARSET_TYPE.DIGITS) if blind else inject.getValue(query, blind=False, time=False, expected=EXPECTED.INT)
 
-    if isinstance(count, basestring) and count.isdigit():
+    if isinstance(count, str) and count.isdigit():
         count = int(count)
 
     if count == 0:
@@ -64,7 +64,7 @@ def pivotDumpTable(table, colList, count=None, blind=True):
         lengths[column] = 0
         entries[column] = BigArray()
 
-    colList = filter(None, sorted(colList, key=lambda x: len(x) if x else MAX_INT))
+    colList = [_f for _f in sorted(colList, key=lambda x: len(x) if x else MAX_INT) if _f]
 
     if conf.pivotColumn:
         for _ in colList:
@@ -129,7 +129,7 @@ def pivotDumpTable(table, colList, count=None, blind=True):
         return unArrayizeValue(inject.getValue(query, blind=blind, time=blind, union=not blind, error=not blind))
 
     try:
-        for i in xrange(count):
+        for i in range(count):
             if breakRetrieval:
                 break
 
@@ -138,7 +138,7 @@ def pivotDumpTable(table, colList, count=None, blind=True):
                 if column == colList[0]:
                     if isNoneValue(value):
                         try:
-                            for pivotValue in filter(None, ("  " if pivotValue == " " else None, "%s%s" % (pivotValue[0], unichr(ord(pivotValue[1]) + 1)) if len(pivotValue) > 1 else None, unichr(ord(pivotValue[0]) + 1))):
+                            for pivotValue in [_f for _f in ("  " if pivotValue == " " else None, "%s%s" % (pivotValue[0], chr(ord(pivotValue[1]) + 1)) if len(pivotValue) > 1 else None, chr(ord(pivotValue[0]) + 1)) if _f]:
                                 value = _(column, pivotValue)
                                 if not isNoneValue(value):
                                     break
@@ -172,7 +172,7 @@ def pivotDumpTable(table, colList, count=None, blind=True):
         warnMsg += "will display partial output"
         logger.warn(warnMsg)
 
-    except SqlmapConnectionException, e:
+    except SqlmapConnectionException as e:
         errMsg = "connection exception detected. sqlmap "
         errMsg += "will display partial output"
         errMsg += "'%s'" % e

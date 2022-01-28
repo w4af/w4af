@@ -1,4 +1,4 @@
-import cPickle
+import pickle
 
 
 def cpickle_dumps(obj):
@@ -14,6 +14,6 @@ def cpickle_dumps(obj):
     :return: The pickled version of obj
     """
     if isinstance(obj, dict):
-        return cPickle.dumps(obj, 1)
+        return pickle.dumps(obj, 1)
 
-    return cPickle.dumps(obj, cPickle.HIGHEST_PROTOCOL)
+    return pickle.dumps(obj, pickle.HIGHEST_PROTOCOL)

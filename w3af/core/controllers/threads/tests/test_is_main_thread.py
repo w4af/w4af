@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 import threading
-import Queue
+import queue
 
 from w3af.core.controllers.threads.is_main_thread import is_main_thread
 
@@ -35,7 +35,7 @@ class TestIsMainThread(unittest.TestCase):
         def thread_func(result_queue):
             result_queue.put(is_main_thread())
 
-        result_queue = Queue.Queue()
+        result_queue = queue.Queue()
 
         t = threading.Thread(target=thread_func, args=(result_queue,))
         t.start()

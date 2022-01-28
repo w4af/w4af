@@ -32,7 +32,7 @@ class test_apache_ssl(PayloadTestHelper):
     @attr('ci_fails')
     def test_apache_ssl(self):
         result = exec_payload(self.shell, 'apache_ssl', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)
 
     @attr('ci_fails')
     def test_a_positive_test(self):

@@ -99,19 +99,19 @@ class TestEventValidationGrouping(PluginTest):
 
 
         expected_vulns = {('.NET Event Validation is disabled',
-                           u'The application contains 2 unique URLs which have'
-                           u' .NET Event Validation disabled. This programming'
-                           u' / configuration error should be manually'
-                           u' verified. The first two vulnerable URLs are:\n'
-                           u' - http://mock/2\n - http://mock/1\n'),
+                           'The application contains 2 unique URLs which have'
+                           ' .NET Event Validation disabled. This programming'
+                           ' / configuration error should be manually'
+                           ' verified. The first two vulnerable URLs are:\n'
+                           ' - http://mock/2\n - http://mock/1\n'),
 
                           ('.NET ViewState encryption is disabled',
-                           u'The application contains 2 unique URLs with .NET'
-                           u' ViewState encryption disabled. This programming'
-                           u' / configuration error can be exploited to decode'
-                           u' and inspect the ViewState contents. The first two'
-                           u' vulnerable URLs are:\n - http://mock/2\n'
-                           u' - http://mock/1\n')}
+                           'The application contains 2 unique URLs with .NET'
+                           ' ViewState encryption disabled. This programming'
+                           ' / configuration error can be exploited to decode'
+                           ' and inspect the ViewState contents. The first two'
+                           ' vulnerable URLs are:\n - http://mock/2\n'
+                           ' - http://mock/1\n')}
 
         vulns_set = set()
 

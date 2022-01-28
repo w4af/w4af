@@ -57,7 +57,7 @@ class TestWordnet(PluginTest):
 
         frs = kb.kb.get_all_known_fuzzable_requests()
         
-        self.assertEquals(
+        self.assertEqual(
             set(fr.get_uri().url_string for fr in frs),
             set((self.target_url + end) for end in expected_urls)
         )

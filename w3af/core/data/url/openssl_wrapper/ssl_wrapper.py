@@ -101,7 +101,7 @@ class SSLSocket(object):
 
             try:
                 self.shutdown()
-            except OpenSSL.SSL.Error, ssl_error:
+            except OpenSSL.SSL.Error as ssl_error:
                 message = str(ssl_error)
                 if not message:
                     # We get here when the remote end already closed the
@@ -173,7 +173,7 @@ class SSLSocket(object):
         dns_name = []
         general_names = SubjectAltName()
 
-        for i in xrange(x509.get_extension_count()):
+        for i in range(x509.get_extension_count()):
             ext = x509.get_extension(i)
             ext_name = ext.get_short_name()
 
@@ -186,7 +186,7 @@ class SSLSocket(object):
             for name in decoded_dat:
                 if not isinstance(name, SubjectAltName):
                     continue
-                for entry in xrange(len(name)):
+                for entry in range(len(name)):
                     component = name.getComponentByPosition(entry)
                     if component.getName() != 'dNSName':
                         continue
@@ -240,7 +240,7 @@ def wrap_socket(sock, keyfile=None, certfile=None, server_side=False,
     if ca_certs:
         try:
             ctx.load_verify_locations(ca_certs, None)
-        except OpenSSL.SSL.Error, e:
+        except OpenSSL.SSL.Error as e:
             raise ssl.SSLError('Bad ca_certs: %r' % ca_certs, e)
 
     cnx = OpenSSL.SSL.Connection(ctx, sock)

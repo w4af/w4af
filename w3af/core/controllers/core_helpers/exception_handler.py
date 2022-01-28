@@ -104,11 +104,11 @@ class ExceptionHandler(object):
         # except lines around self.strategy.start(), can decide what to do
         #
         if isinstance(exception, self.NO_HANDLING):
-            raise exception, None, tb
+            raise exception.with_traceback(tb)
 
         stop_on_first_exception = cf.cf.get('stop_on_first_exception')
         if stop_on_first_exception:
-            raise exception, None, tb
+            raise exception.with_traceback(tb)
 
         #
         # Now we really handle the exception that was produced by the plugin in

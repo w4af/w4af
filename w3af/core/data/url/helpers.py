@@ -21,9 +21,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import ssl
 import socket
-import urllib
-import urllib2
-import httplib
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import http.client
 import OpenSSL
 import itertools
 
@@ -287,7 +287,7 @@ def get_clean_body_impl(body, strings_to_replace_list, multi_encode=True,
 
         # unquote, just in case the plugin did an extra encoding of some type.
         # what we want to do here is get the original version of the string
-        unicode_to_repl_unquoted = urllib.unquote_plus(unicode_to_repl)
+        unicode_to_repl_unquoted = urllib.parse.unquote_plus(unicode_to_repl)
 
         unicodes_to_replace_set.add(unicode_to_repl)
         unicodes_to_replace_set.add(unicode_to_repl_unquoted)
@@ -399,7 +399,7 @@ def get_exception_reason(error):
 
     # Exceptions may be of type httplib.HTTPException or socket.error
     # We're interested on handling them in different ways
-    if isinstance(error, urllib2.URLError):
+    if isinstance(error, urllib.error.URLError):
         reason_err = error.reason
 
         if isinstance(reason_err, socket.error):
@@ -423,10 +423,10 @@ def get_exception_reason(error):
     if isinstance(error, HTTPRequestException):
         return error.value
 
-    if isinstance(error, httplib.BadStatusLine):
+    if isinstance(error, http.client.BadStatusLine):
         return 'Bad HTTP response status line: %s' % error.line
 
-    if isinstance(error, httplib.HTTPException):
+    if isinstance(error, http.client.HTTPException):
         #
         # Here we catch:
         #

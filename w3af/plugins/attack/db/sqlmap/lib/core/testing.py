@@ -71,7 +71,7 @@ def smokeTest():
                 try:
                     __import__(path)
                     module = sys.modules[path]
-                except Exception, msg:
+                except Exception as msg:
                     retVal = False
                     dataToStdout("\r")
                     errMsg = "smoke test failed at importing module '%s' (%s):\n%s" % (path, os.path.join(root, filename), msg)
@@ -96,8 +96,8 @@ def smokeTest():
     return retVal
 
 def adjustValueType(tagName, value):
-    for family in optDict.keys():
-        for name, type_ in optDict[family].items():
+    for family in list(optDict.keys()):
+        for name, type_ in list(optDict[family].items()):
             if type(type_) == tuple:
                 type_ = type_[0]
             if tagName == name:
@@ -250,7 +250,7 @@ def initCase(switches, count):
     cmdLineOptions = cmdLineParser()
 
     if switches:
-        for key, value in switches.items():
+        for key, value in list(switches.items()):
             if key in cmdLineOptions.__dict__:
                 cmdLineOptions.__dict__[key] = value
 
@@ -271,9 +271,9 @@ def runCase(parse):
         result = start()
     except KeyboardInterrupt:
         pass
-    except SqlmapBaseException, e:
+    except SqlmapBaseException as e:
         handled_exception = e
-    except Exception, e:
+    except Exception as e:
         unhandled_exception = e
     finally:
         sys.stdout.seek(0)

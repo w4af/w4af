@@ -67,7 +67,7 @@ class Enumeration(GenericEnumeration):
                     user = None
                     roles = set()
 
-                    for count in xrange(0, len(value or [])):
+                    for count in range(0, len(value or [])):
                         # The first column is always the username
                         if count == 0:
                             user = value[count]
@@ -159,7 +159,7 @@ class Enumeration(GenericEnumeration):
             errMsg += "for the database users"
             raise SqlmapNoneDataException(errMsg)
 
-        for user, privileges in kb.data.cachedUsersRoles.items():
+        for user, privileges in list(kb.data.cachedUsersRoles.items()):
             if isAdminFromPrivileges(privileges):
                 areAdmins.add(user)
 

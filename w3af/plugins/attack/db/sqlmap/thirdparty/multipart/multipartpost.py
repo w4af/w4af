@@ -24,10 +24,10 @@ import mimetools
 import mimetypes
 import os
 import stat
-import StringIO
+import io
 import sys
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 
 from lib.core.exception import SqlmapDataException
 
@@ -41,8 +41,8 @@ class Callable:
 doseq = 1
 
 
-class MultipartPostHandler(urllib2.BaseHandler):
-    handler_order = urllib2.HTTPHandler.handler_order - 10 # needs to run first
+class MultipartPostHandler(urllib.request.BaseHandler):
+    handler_order = urllib.request.HTTPHandler.handler_order - 10 # needs to run first
 
     def http_request(self, request):
         data = request.get_data()
@@ -52,17 +52,17 @@ class MultipartPostHandler(urllib2.BaseHandler):
             v_vars = []
 
             try:
-                for(key, value) in data.items():
-                    if isinstance(value, file) or hasattr(value, "file") or isinstance(value, StringIO.StringIO):
+                for(key, value) in list(data.items()):
+                    if isinstance(value, file) or hasattr(value, "file") or isinstance(value, io.StringIO):
                         v_files.append((key, value))
                     else:
                         v_vars.append((key, value))
             except TypeError:
                 systype, value, traceback = sys.exc_info()
-                raise SqlmapDataException, "not a valid non-string sequence or mapping object", traceback
+                raise SqlmapDataException("not a valid non-string sequence or mapping object").with_traceback(traceback)
 
             if len(v_files) == 0:
-                data = urllib.urlencode(v_vars, doseq)
+                data = urllib.parse.urlencode(v_vars, doseq)
             else:
                 boundary, data = self.multipart_encode(v_vars, v_files)
                 contenttype = "multipart/form-data; boundary=%s" % boundary
@@ -100,7 +100,7 @@ class MultipartPostHandler(urllib2.BaseHandler):
             # buf += "Content-Length: %s\r\n" % file_size
             fd.seek(0)
 
-            buf = str(buf) if not isinstance(buf, unicode) else buf.encode("utf8")
+            buf = str(buf) if not isinstance(buf, str) else buf.encode("utf8")
             buf += "\r\n%s\r\n" % fd.read()
 
         buf += "--%s--\r\n\r\n" % boundary

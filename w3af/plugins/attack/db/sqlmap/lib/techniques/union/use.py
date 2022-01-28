@@ -58,6 +58,7 @@ from lib.core.unescaper import unescaper
 from lib.request.connect import Connect as Request
 from lib.utils.progress import ProgressBar
 from thirdparty.odict.odict import OrderedDict
+from functools import reduce
 
 def _oneShotUnionUse(expression, unpack=True, limited=False):
     retVal = hashDBRetrieve("%s%s" % (conf.hexConvert or False, expression), checkConf=True)  # as UNION data is stored raw unconverted
@@ -162,7 +163,7 @@ def _oneShotUnionUse(expression, unpack=True, limited=False):
 
 def configUnion(char=None, columns=None):
     def _configUnionChar(char):
-        if not isinstance(char, basestring):
+        if not isinstance(char, str):
             return
 
         kb.uChar = char
@@ -171,7 +172,7 @@ def configUnion(char=None, columns=None):
             kb.uChar = char.replace("[CHAR]", conf.uChar if conf.uChar.isdigit() else "'%s'" % conf.uChar.strip("'"))
 
     def _configUnionCols(columns):
-        if not isinstance(columns, basestring):
+        if not isinstance(columns, str):
             return
 
         columns = columns.replace(" ", "")
@@ -266,7 +267,7 @@ def unionUse(expression, unpack=True, dump=False):
                     infoMsg += "%d entries" % stopLimit
                     logger.info(infoMsg)
 
-            elif count and (not isinstance(count, basestring) or not count.isdigit()):
+            elif count and (not isinstance(count, str) or not count.isdigit()):
                 warnMsg = "it was not possible to count the number "
                 warnMsg += "of entries for the SQL query provided. "
                 warnMsg += "sqlmap will assume that it returns only "
@@ -288,7 +289,7 @@ def unionUse(expression, unpack=True, dump=False):
                 threadData = getCurrentThreadData()
 
                 try:
-                    threadData.shared.limits = iter(xrange(startLimit, stopLimit))
+                    threadData.shared.limits = iter(range(startLimit, stopLimit))
                 except OverflowError:
                     errMsg = "boundary limits (%d,%d) are too large. Please rerun " % (startLimit, stopLimit)
                     errMsg += "with switch '--fresh-queries'"
@@ -319,7 +320,7 @@ def unionUse(expression, unpack=True, dump=False):
                                 try:
                                     valueStart = time.time()
                                     threadData.shared.counter += 1
-                                    num = threadData.shared.limits.next()
+                                    num = next(threadData.shared.limits)
                                 except StopIteration:
                                     break
 
@@ -354,10 +355,10 @@ def unionUse(expression, unpack=True, dump=False):
                                                     key = re.sub(r"[^A-Za-z0-9]", "", item).lower()
                                                     if key not in filtered or re.search(r"[^A-Za-z0-9]", item):
                                                         filtered[key] = item
-                                                items = filtered.values()
+                                                items = list(filtered.values())
                                             items = [items]
                                         index = None
-                                        for index in xrange(1 + len(threadData.shared.buffered)):
+                                        for index in range(1 + len(threadData.shared.buffered)):
                                             if index < len(threadData.shared.buffered) and threadData.shared.buffered[index][0] >= num:
                                                 break
                                         threadData.shared.buffered.insert(index or 0, (num, items))
@@ -365,7 +366,7 @@ def unionUse(expression, unpack=True, dump=False):
                                         index = None
                                         if threadData.shared.showEta:
                                             threadData.shared.progress.progress(time.time() - valueStart, threadData.shared.counter)
-                                        for index in xrange(1 + len(threadData.shared.buffered)):
+                                        for index in range(1 + len(threadData.shared.buffered)):
                                             if index < len(threadData.shared.buffered) and threadData.shared.buffered[index][0] >= num:
                                                 break
                                         threadData.shared.buffered.insert(index or 0, (num, None))
@@ -379,7 +380,7 @@ def unionUse(expression, unpack=True, dump=False):
                                         del threadData.shared.buffered[0]
 
                                 if conf.verbose == 1 and not (threadData.resumed and kb.suppressResumeInfo) and not threadData.shared.showEta:
-                                    _ = ','.join("\"%s\"" % _ for _ in flattenValue(arrayizeValue(items))) if not isinstance(items, basestring) else items
+                                    _ = ','.join("\"%s\"" % _ for _ in flattenValue(arrayizeValue(items))) if not isinstance(items, str) else items
                                     status = "[%s] [INFO] %s: %s" % (time.strftime("%X"), "resumed" if threadData.resumed else "retrieved", _ if kb.safeCharEncode else safecharencode(_))
 
                                     if len(status) > width:

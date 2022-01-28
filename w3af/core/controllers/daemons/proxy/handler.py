@@ -68,7 +68,7 @@ class ProxyHandler(Master):
 
         return HTTPRequest(URL(url),
                            data=request.content,
-                           headers=request.headers.items(),
+                           headers=list(request.headers.items()),
                            method=request.method)
 
     def _to_libmproxy_response(self, request, response):
@@ -81,7 +81,7 @@ class ProxyHandler(Master):
         body = smart_str(response.body, charset, errors='ignore')
 
         header_items = []
-        for header_name, header_value in response.headers.items():
+        for header_name, header_value in list(response.headers.items()):
             header_name = smart_str(header_name, charset, errors='ignore')
             header_value = smart_str(header_value, charset, errors='ignore')
             header_items.append((header_name, header_value))
@@ -185,7 +185,7 @@ class ProxyHandler(Master):
         try:
             # Send the request to the remote webserver
             http_response = self._send_http_request(http_request)
-        except Exception, e:
+        except Exception as e:
             trace = str(traceback.format_exc())
             http_response = self._create_error_response(http_request, None, e,
                                                         trace=trace)

@@ -172,7 +172,7 @@ class Users:
         else:
             users = []
 
-        users = filter(None, users)
+        users = [_f for _f in users if _f]
 
         if any(isTechniqueAvailable(_) for _ in (PAYLOAD.TECHNIQUE.UNION, PAYLOAD.TECHNIQUE.ERROR, PAYLOAD.TECHNIQUE.QUERY)) or conf.direct:
             if Backend.isDbms(DBMS.MSSQL) and Backend.isVersionWithin(("2005", "2008")):
@@ -193,7 +193,7 @@ class Users:
                 retVal = pivotDumpTable("(%s) AS %s" % (query, randStr), ['%s.name' % randStr, '%s.password' % randStr], blind=False)
 
                 if retVal:
-                    for user, password in filterPairValues(zip(retVal[0]["%s.name" % randStr], retVal[0]["%s.password" % randStr])):
+                    for user, password in filterPairValues(list(zip(retVal[0]["%s.name" % randStr], retVal[0]["%s.password" % randStr]))):
                         if user not in kb.data.cachedUsersPasswords:
                             kb.data.cachedUsersPasswords[user] = [password]
                         else:
@@ -234,7 +234,7 @@ class Users:
                 retVal = pivotDumpTable("(%s) AS %s" % (query, randStr), ['%s.name' % randStr, '%s.password' % randStr], blind=True)
 
                 if retVal:
-                    for user, password in filterPairValues(zip(retVal[0]["%s.name" % randStr], retVal[0]["%s.password" % randStr])):
+                    for user, password in filterPairValues(list(zip(retVal[0]["%s.name" % randStr], retVal[0]["%s.password" % randStr]))):
                         password = "0x%s" % hexencode(password, conf.encoding).upper()
 
                         if user not in kb.data.cachedUsersPasswords:
@@ -356,7 +356,7 @@ class Users:
         else:
             users = []
 
-        users = filter(None, users)
+        users = [_f for _f in users if _f]
 
         # Set containing the list of DBMS administrators
         areAdmins = set()
@@ -393,7 +393,7 @@ class Users:
                     user = None
                     privileges = set()
 
-                    for count in xrange(0, len(value or [])):
+                    for count in range(0, len(value or [])):
                         # The first column is always the username
                         if count == 0:
                             user = value[count]
@@ -439,7 +439,7 @@ class Users:
 
                                     for priv in privs:
                                         if priv.upper() in ("Y", "G"):
-                                            for position, db2Priv in DB2_PRIVS.items():
+                                            for position, db2Priv in list(DB2_PRIVS.items()):
                                                 if position == i:
                                                     privilege += ", " + db2Priv
 
@@ -544,7 +544,7 @@ class Users:
 
                         for priv in privs:
                             if priv.isdigit() and int(priv) == 1:
-                                for position, pgsqlPriv in PGSQL_PRIVS.items():
+                                for position, pgsqlPriv in list(PGSQL_PRIVS.items()):
                                     if position == i:
                                         privileges.add(pgsqlPriv)
 
@@ -564,7 +564,7 @@ class Users:
 
                         for priv in privs:
                             if priv.upper() == 'Y':
-                                for position, mysqlPriv in MYSQL_PRIVS.items():
+                                for position, mysqlPriv in list(MYSQL_PRIVS.items()):
                                     if position == i:
                                         privileges.add(mysqlPriv)
 
@@ -589,7 +589,7 @@ class Users:
 
                         for priv in privs:
                             if priv.upper() in ('Y', 'G'):
-                                for position, db2Priv in DB2_PRIVS.items():
+                                for position, db2Priv in list(DB2_PRIVS.items()):
                                     if position == i:
                                         privilege += ", " + db2Priv
 
@@ -617,7 +617,7 @@ class Users:
             errMsg += "for the database users"
             raise SqlmapNoneDataException(errMsg)
 
-        for user, privileges in kb.data.cachedUsersPrivileges.items():
+        for user, privileges in list(kb.data.cachedUsersPrivileges.items()):
             if isAdminFromPrivileges(privileges):
                 areAdmins.add(user)
 

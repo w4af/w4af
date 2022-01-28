@@ -194,7 +194,7 @@ class GetAverageRTTForMutant(object):
         """
         rtts = []
 
-        for _ in xrange(count):
+        for _ in range(count):
             resp = self._url_opener.send_mutant(mutant,
                                                 cache=False,
                                                 grep=False,

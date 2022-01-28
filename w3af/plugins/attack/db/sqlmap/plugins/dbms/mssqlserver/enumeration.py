@@ -82,10 +82,10 @@ class Enumeration(GenericEnumeration):
         for db in dbs:
             dbs[dbs.index(db)] = safeSQLIdentificatorNaming(db)
 
-        dbs = filter(None, dbs)
+        dbs = [_f for _f in dbs if _f]
 
         infoMsg = "fetching tables for database"
-        infoMsg += "%s: %s" % ("s" if len(dbs) > 1 else "", ", ".join(db if isinstance(db, basestring) else db[0] for db in sorted(dbs)))
+        infoMsg += "%s: %s" % ("s" if len(dbs) > 1 else "", ", ".join(db if isinstance(db, str) else db[0] for db in sorted(dbs)))
         logger.info(infoMsg)
 
         rootQuery = queries[DBMS.MSSQL].tables
@@ -105,7 +105,7 @@ class Enumeration(GenericEnumeration):
                         break
 
                 if not isNoneValue(value):
-                    value = filter(None, arrayizeValue(value))
+                    value = [_f for _f in arrayizeValue(value) if _f]
                     value = [safeSQLIdentificatorNaming(unArrayizeValue(_), True) for _ in value]
                     kb.data.cachedTables[db] = value
 
@@ -136,7 +136,7 @@ class Enumeration(GenericEnumeration):
 
                 tables = []
 
-                for index in xrange(int(count)):
+                for index in range(int(count)):
                     _ = safeStringFormat((rootQuery.blind.query if query == rootQuery.blind.count else rootQuery.blind.query2 if query == rootQuery.blind.count2 else rootQuery.blind.query3).replace("%s", db), index)
 
                     table = inject.getValue(_, union=False, error=False)
@@ -156,7 +156,7 @@ class Enumeration(GenericEnumeration):
             errMsg = "unable to retrieve the tables for any database"
             raise SqlmapNoneDataException(errMsg)
         else:
-            for db, tables in kb.data.cachedTables.items():
+            for db, tables in list(kb.data.cachedTables.items()):
                 kb.data.cachedTables[db] = sorted(tables) if tables else tables
 
         return kb.data.cachedTables
@@ -194,7 +194,7 @@ class Enumeration(GenericEnumeration):
             tblQuery = "%s%s" % (tblCond, tblCondParam)
             tblQuery = tblQuery % unsafeSQLIdentificatorNaming(tbl)
 
-            for db in foundTbls.keys():
+            for db in list(foundTbls.keys()):
                 db = safeSQLIdentificatorNaming(db)
 
                 if conf.excludeSysDbs and db in self.excludeDbsList:
@@ -209,7 +209,7 @@ class Enumeration(GenericEnumeration):
                     values = inject.getValue(query, blind=False, time=False)
 
                     if not isNoneValue(values):
-                        if isinstance(values, basestring):
+                        if isinstance(values, str):
                             values = [values]
 
                         for foundTbl in values:
@@ -250,7 +250,7 @@ class Enumeration(GenericEnumeration):
                         kb.hintValue = tbl
                         foundTbls[db].append(tbl)
 
-        for db, tbls in foundTbls.items():
+        for db, tbls in list(foundTbls.items()):
             if len(tbls) == 0:
                 foundTbls.pop(db)
 
@@ -328,7 +328,7 @@ class Enumeration(GenericEnumeration):
             colQuery = "%s%s" % (colCond, colCondParam)
             colQuery = colQuery % unsafeSQLIdentificatorNaming(column)
 
-            for db in filter(None, dbs.keys()):
+            for db in [_f for _f in list(dbs.keys()) if _f]:
                 db = safeSQLIdentificatorNaming(db)
 
                 if conf.excludeSysDbs and db in self.excludeDbsList:
@@ -341,7 +341,7 @@ class Enumeration(GenericEnumeration):
                     values = inject.getValue(query, blind=False, time=False)
 
                     if not isNoneValue(values):
-                        if isinstance(values, basestring):
+                        if isinstance(values, str):
                             values = [values]
 
                         for foundTbl in values:

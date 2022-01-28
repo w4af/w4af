@@ -46,9 +46,9 @@ class test_file_upload(unittest.TestCase):
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
 
-        self.assertEquals(len(kb.kb.get('file_upload', 'file_upload')), 1)
+        self.assertEqual(len(kb.kb.get('file_upload', 'file_upload')), 1)
         i = kb.kb.get('file_upload', 'file_upload')[0]
-        self.assertEquals(i.get_name(), 'File upload form')
+        self.assertEqual(i.get_name(), 'File upload form')
 
     def test_complex(self):
         body = 'header <form><Input type="File"></form> footer'
@@ -58,9 +58,9 @@ class test_file_upload(unittest.TestCase):
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
 
-        self.assertEquals(len(kb.kb.get('file_upload', 'file_upload')), 1)
+        self.assertEqual(len(kb.kb.get('file_upload', 'file_upload')), 1)
         i = kb.kb.get('file_upload', 'file_upload')[0]
-        self.assertEquals(i.get_name(), 'File upload form')
+        self.assertEqual(i.get_name(), 'File upload form')
 
     def test_none(self):
         body = 'header <form><noinput type="file"></form> footer'
@@ -70,4 +70,4 @@ class test_file_upload(unittest.TestCase):
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
 
-        self.assertEquals(len(kb.kb.get('file_upload', 'file_upload')), 0)
+        self.assertEqual(len(kb.kb.get('file_upload', 'file_upload')), 0)

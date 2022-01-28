@@ -75,7 +75,7 @@ class Fingerprint(GenericFingerprint):
                     # TODO: add test for Firebird 2.5
                  )
 
-        for i in xrange(len(table)):
+        for i in range(len(table)):
             version, checks = table[i]
             failed = False
             check = checks[randomRange(0, len(checks) - 1)].replace("%d", getUnicode(randomRange(1, 100)))

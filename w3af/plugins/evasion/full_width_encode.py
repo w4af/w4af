@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from w3af.core.controllers.plugins.evasion_plugin import EvasionPlugin
 from w3af.core.data.parsers.doc.url import parse_qs
@@ -67,7 +67,7 @@ class full_width_encode(EvasionPlugin):
         return new_req
 
     def _mutate(self, to_mutate):
-        to_mutate = urllib.unquote(to_mutate)
+        to_mutate = urllib.parse.unquote(to_mutate)
         mutant = ''
 
         for char in to_mutate:

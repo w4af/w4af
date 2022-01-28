@@ -59,7 +59,7 @@ class ApiScanLogTest(APIUnitTest):
                          '/scans/%s/log?page=1' % scan_id)
 
         zero_entry = log_data_page_0['entries'][0]
-        self.assertEqual(zero_entry['message'], u'Called w3afCore.start()')
+        self.assertEqual(zero_entry['message'], 'Called w3afCore.start()')
         self.assertEqual(zero_entry['severity'], None)
         self.assertEqual(zero_entry['type'], 'debug')
         self.assertIsInstance(zero_entry['id'], int)
@@ -87,7 +87,7 @@ class ApiScanLogTest(APIUnitTest):
                          '/scans/%s/log?id=200' % scan_id)
 
         zero_entry = log_data_page_0['entries'][0]
-        self.assertEqual(zero_entry['message'], u'Called w3afCore.start()')
+        self.assertEqual(zero_entry['message'], 'Called w3afCore.start()')
         self.assertEqual(zero_entry['severity'], None)
         self.assertEqual(zero_entry['type'], 'debug')
         self.assertEqual(zero_entry['id'], 0)

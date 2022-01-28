@@ -25,11 +25,11 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 class test_apache_root_directory(PayloadTestHelper):
 
-    EXPECTED_RESULT = {'apache_root_directory': [u'/var/www/',
-                                                 u'/var/www/moth/']}
+    EXPECTED_RESULT = {'apache_root_directory': ['/var/www/',
+                                                 '/var/www/moth/']}
 
     @attr('ci_fails')
     def test_apache_root_directory(self):
         result = exec_payload(
             self.shell, 'apache_root_directory', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

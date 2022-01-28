@@ -56,7 +56,7 @@ class TestSQLMapShell(ReadExploitTest):
 
         # Assert the general results
         vulns = self.kb.get('sqli', 'sqli')
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
         self.assertTrue(all(["SQL injection" == v.get_name() for v in vulns]))
 
         # Verify the specifics about the vulnerabilities
@@ -65,7 +65,7 @@ class TestSQLMapShell(ReadExploitTest):
         found_vulns = [(v.get_url().get_file_name(),
                         v.get_mutant().get_token_name()) for v in vulns]
 
-        self.assertEquals(set(EXPECTED),
+        self.assertEqual(set(EXPECTED),
                           set(found_vulns))
 
         vuln_to_exploit_id = [v.get_id() for v in vulns
@@ -81,12 +81,12 @@ class TestSQLMapShell(ReadExploitTest):
         # Assert the general results
         vulns = self.kb.get('blind_sqli', 'blind_sqli')
         
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         vuln = vulns[0]
 
-        self.assertEquals('Blind SQL injection vulnerability', vuln.get_name())
-        self.assertEquals('id', vuln.get_mutant().get_token_name())
-        self.assertEquals('get_int_noerror.php', vuln.get_url().get_file_name())
+        self.assertEqual('Blind SQL injection vulnerability', vuln.get_name())
+        self.assertEqual('id', vuln.get_mutant().get_token_name())
+        self.assertEqual('get_int_noerror.php', vuln.get_url().get_file_name())
         
         vuln_to_exploit_id = vuln.get_id()
         self._exploit_vuln(vuln_to_exploit_id, 'sqlmap')
@@ -119,12 +119,12 @@ class TestSQLMapShell(ReadExploitTest):
         # Assert the general results
         vulns = self.kb.get('blind_sqli', 'blind_sqli')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         vuln = vulns[0]
 
-        self.assertEquals("Blind SQL injection vulnerability", vuln.get_name())
-        self.assertEquals('q', vuln.get_mutant().get_token_name())
-        self.assertEquals('blind_where_integer_form_get.py',
+        self.assertEqual("Blind SQL injection vulnerability", vuln.get_name())
+        self.assertEqual('q', vuln.get_mutant().get_token_name())
+        self.assertEqual('blind_where_integer_form_get.py',
                           vuln.get_url().get_file_name())
 
         vuln_to_exploit_id = vuln.get_id()

@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import SocketServer
+import socketserver
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 from w3af.core.data.url.tests.helpers.upper_daemon import ThreadingUpperDaemon
@@ -82,7 +82,7 @@ class TestFindVhostsInHTML(PluginTest):
         self.assertEqual(expected, {i.get_name() for i in infos})
 
 
-class MultipleVHostsHandler(SocketServer.BaseRequestHandler):
+class MultipleVHostsHandler(socketserver.BaseRequestHandler):
     RESPONSE = ('HTTP/1.0 200 Ok\r\n'
                 'Connection: Close\r\n'
                 'Content-Length: %s\r\n'

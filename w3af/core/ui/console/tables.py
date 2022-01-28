@@ -38,7 +38,7 @@ class table(object):
         """
         self._rows = rows
         self._colsNum = len(self._rows[0])
-        self._colsRange = range(self._colsNum)
+        self._colsRange = list(range(self._colsNum))
         self._separator = '|'
 
     def draw(self, termWidth=terminal_width(), header=False, group=None, transf=None):
@@ -65,7 +65,7 @@ class table(object):
         space = termWidth - self._colsNum * (ls + 2) - ls  # Useful space
 
         #maximal length of content for every column
-        maxLengths = [max([max(map(len, row[i].split('\n'))) for row in self._rows if len(row) > 0])
+        maxLengths = [max([max(list(map(len, row[i].split('\n')))) for row in self._rows if len(row) > 0])
                       for i in self._colsRange]
         sumMaxLen = sum(maxLengths)
 
@@ -82,11 +82,11 @@ class table(object):
         This function acts as Robin Hood: it takes excess of space from the "richest" column and gives it
         to the poorest ones.
         """
-        minLengths = [max([max(map(len, row[i].split() + [''])) for row in self._rows if len(row) > 0])
+        minLengths = [max([max(list(map(len, row[i].split() + ['']))) for row in self._rows if len(row) > 0])
                       for i in range(self._colsNum)]
         shifts = [w - mw for mw, w in zip(minLengths, self._widthes)]
         #length = len(shifts)
-        borrow = zip(self._colsRange, shifts)
+        borrow = list(zip(self._colsRange, shifts))
         borrow.sort(lambda a, b: cmp(a[1], b[1]))
         delta = [0] * self._colsNum
 
@@ -127,7 +127,7 @@ class table(object):
         columns = [formatParagraph(col, w) for col, w in zip(row,
                                                              self._widthes)]
         emptyLines = [' ' * w for w in self._widthes]
-        maxHeight = max(map(len, columns))
+        maxHeight = max(list(map(len, columns)))
         columns = [col + [er] * (maxHeight - len(col)) for (col,
                                                             er) in zip(columns, emptyLines)]
 

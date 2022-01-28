@@ -28,13 +28,13 @@ class TestFuzzerUtils(unittest.TestCase):
     
     def test_rand_number(self):
         x = rand_number(length=1)
-        self.assertIn(int(x), range(10))
+        self.assertIn(int(x), list(range(10)))
 
         x = rand_number(length=2)
-        self.assertIn(int(x), range(100))
+        self.assertIn(int(x), list(range(100)))
     
         x = rand_number(length=3)
-        self.assertIn(int(x), range(1000))
+        self.assertIn(int(x), list(range(1000)))
 
         x = rand_number(length=5)
         y = rand_number(length=5)

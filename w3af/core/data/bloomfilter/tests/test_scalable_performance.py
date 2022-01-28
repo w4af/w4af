@@ -29,22 +29,22 @@ class TestScalablePerformance(unittest.TestCase):
     def test_bloom_filter(self):
         f = ScalableBloomFilter()
 
-        for i in xrange(20000):
+        for i in range(20000):
             data = (i, i)
             f.add(data)
 
-        for i in xrange(20000):
+        for i in range(20000):
             data = (i, i)
             data in f
 
     def test_disk_set(self):
         ds = DiskSet()
 
-        for i in xrange(20000):
+        for i in range(20000):
             data = (i, i)
             ds.add(data)
 
-        for i in xrange(20000):
+        for i in range(20000):
             data = (i, i)
             data in ds
 

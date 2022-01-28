@@ -63,12 +63,12 @@ class TestTextFile(PluginTest):
         
         self.assertEqual(len(kb_vulns), 1, kb_vulns)
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_url() for v in kb_vulns])),
             set(sorted([v.get_url() for v in file_vulns]))
         )
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_method() for v in kb_vulns])),
             set(sorted([v.get_method() for v in file_vulns]))
         )

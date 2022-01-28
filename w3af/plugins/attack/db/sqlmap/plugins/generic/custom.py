@@ -37,7 +37,7 @@ class Custom:
         query = query.rstrip(';')
 
         try:
-            for sqlTitle, sqlStatements in SQL_STATEMENTS.items():
+            for sqlTitle, sqlStatements in list(SQL_STATEMENTS.items()):
                 for sqlStatement in sqlStatements:
                     if query.lower().startswith(sqlStatement):
                         sqlType = sqlTitle
@@ -70,7 +70,7 @@ class Custom:
 
                 output = NULL
 
-        except SqlmapNoneDataException, ex:
+        except SqlmapNoneDataException as ex:
             logger.warn(ex)
 
         return output
@@ -86,14 +86,14 @@ class Custom:
             query = None
 
             try:
-                query = raw_input("sql-shell> ")
+                query = input("sql-shell> ")
                 query = getUnicode(query, encoding=sys.stdin.encoding)
             except KeyboardInterrupt:
-                print
+                print()
                 errMsg = "user aborted"
                 logger.error(errMsg)
             except EOFError:
-                print
+                print()
                 errMsg = "exit"
                 logger.error(errMsg)
                 break
@@ -127,8 +127,8 @@ class Custom:
 
             snippet = getSQLSnippet(Backend.getDbms(), filename)
 
-            if snippet and all(query.strip().upper().startswith("SELECT") for query in filter(None, snippet.split(';' if ';' in snippet else '\n'))):
-                for query in filter(None, snippet.split(';' if ';' in snippet else '\n')):
+            if snippet and all(query.strip().upper().startswith("SELECT") for query in [_f for _f in snippet.split(';' if ';' in snippet else '\n') if _f]):
+                for query in [_f for _f in snippet.split(';' if ';' in snippet else '\n') if _f]:
                     query = query.strip()
                     if query:
                         conf.dumper.query(query, self.sqlQuery(query))

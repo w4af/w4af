@@ -2,7 +2,7 @@ import socket
 import os
 
 from multiprocessing.dummy import Process
-from SocketServer import ThreadingMixIn
+from socketserver import ThreadingMixIn
 from werkzeug._internal import _log
 from werkzeug.serving import ForkingWSGIServer, BaseWSGIServer
 from flask import Flask

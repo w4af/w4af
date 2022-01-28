@@ -423,7 +423,7 @@ def get_memory_usage( pids_to_show, split_args, include_self=False, only_self=Fa
         cmds[cmd] = cmds[cmd] + shareds[cmd]
         total += cmds[cmd] #valid if PSS available
 
-    sorted_cmds = sorted(cmds.items(), key=lambda x:x[1])
+    sorted_cmds = sorted(list(cmds.items()), key=lambda x:x[1])
     sorted_cmds = [x for x in sorted_cmds if x[1]]
 
     return sorted_cmds, shareds, count, total

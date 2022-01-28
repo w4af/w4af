@@ -25,13 +25,13 @@ class Fingerprint(GenericFingerprint):
     def _versionCheck(self):
         minor, major = None, None
 
-        for version in reversed(xrange(5, 15)):
+        for version in reversed(range(5, 15)):
             result = inject.checkBooleanExpression("(SELECT COUNT(*) FROM sysibm.sysversions WHERE versionnumber BETWEEN %d000000 AND %d999999)>0" % (version, version))
 
             if result:
                 major = version
 
-                for version in reversed(xrange(0, 20)):
+                for version in reversed(range(0, 20)):
                     result = inject.checkBooleanExpression("(SELECT COUNT(*) FROM sysibm.sysversions WHERE versionnumber BETWEEN %d%02d0000 AND %d%02d9999)>0" % (major, version, major, version))
                     if result:
                         minor = version
@@ -135,7 +135,7 @@ class Fingerprint(GenericFingerprint):
                 "NT": ("4.0", (6, 5, 4, 3, 2, 1)) }
 
             # Get back-end DBMS underlying operating system version
-            for version, data in versions.items():
+            for version, data in list(versions.items()):
                 query = "(SELECT LENGTH(OS_VERSION) FROM SYSIBMADM.ENV_SYS_INFO WHERE OS_VERSION = '%s')>0" % data[0]
                 result = inject.checkBooleanExpression(query)
 

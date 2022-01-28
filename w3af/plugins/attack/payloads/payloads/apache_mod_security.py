@@ -95,7 +95,7 @@ class apache_mod_security(Payload):
             rows.append(['Description', 'Value'])
             rows.append([])
             for key_name in api_result:
-                for k, v in api_result[key_name].items():
+                for k, v in list(api_result[key_name].items()):
                     rows.append([key_name, k])
             result_table = table(rows)
             result_table.draw(90)

@@ -109,11 +109,11 @@ class BaseTemplate(Configurable):
         try:
             self.create_vuln()
             
-        except RuntimeError, rte:
+        except RuntimeError as rte:
             # https://github.com/andresriancho/w3af/issues/4310
             raise ValueError('%s' % rte)
 
-        except KeyError, ke:
+        except KeyError as ke:
             # https://github.com/andresriancho/w3af/issues/4310
             raise ValueError('The vulnerable parameter "%s" was not found' % ke)
 

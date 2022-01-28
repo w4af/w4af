@@ -32,7 +32,7 @@ def tamper(payload, **kwargs):
         retVal = ""
         quote, doublequote, firstspace = False, False, False
 
-        for i in xrange(len(payload)):
+        for i in range(len(payload)):
             if not firstspace:
                 if payload[i].isspace():
                     firstspace = True

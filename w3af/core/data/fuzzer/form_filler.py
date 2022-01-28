@@ -38,7 +38,7 @@ PARAM_NAME_KNOWLEDGE = {
               'nachname'],
 
     'FrAmE30.': ['pass', 'word', 'pswd', 'pwd', 'auth', 'password', 'passwort',
-                 u'contraseña', 'senha', 'key', 'hash', 'pword', 'passe'],
+                 'contraseña', 'senha', 'key', 'hash', 'pword', 'passe'],
 
     'w3af@email.com': ['mail', 'email', 'e-mail', 'correo', 'correio', 'to',
                        'cc', 'bcc'],
@@ -46,33 +46,33 @@ PARAM_NAME_KNOWLEDGE = {
                              'web', 'url', 'page', 'homepage'],
 
     'AK': ['state', 'estado'],
-    'Argentina': ['location', 'country', 'pais', u'país', 'land'],
+    'Argentina': ['location', 'country', 'pais', 'país', 'land'],
     'English': ['language', 'lang', 'idioma'],
     'Buenos Aires': ['city', 'ciudad', 'cidade', 'stadt'],
-    'Bonsai Street 123': ['addr', 'address', 'residence', u'dirección', 'direccion',
-                          'residencia', u'endereço', 'endereco', u'residência',
+    'Bonsai Street 123': ['addr', 'address', 'residence', 'dirección', 'direccion',
+                          'residencia', 'endereço', 'endereco', 'residência',
                           'addresse', 'wohnsitz', 'wohnort', 'street', 'calle'],
 
     'Bonsai': ['company', 'empresa', 'companhia', 'unternehmen'],
-    'Manager': ['position', 'jon', 'cargo', u'posição', 'unternehmung', 'position'],
+    'Manager': ['position', 'jon', 'cargo', 'posição', 'unternehmung', 'position'],
 
     '90210': ['postal', 'zip', 'postleitzahl', 'plz', 'postais'],
     '3419': ['pin', 'id', 'suffix'],
     '22': ['floor', 'age', 'piso', 'edad', 'stock', 'alter', 'port', 'puerto',
-           'number', 'numero', u'número', 'int', 'integer', 'entero'],
+           'number', 'numero', 'número', 'int', 'integer', 'entero'],
     '7.8': ['float', 'long', 'decimal'],
     '555': ['area', 'prefijo', 'prefix'],
     '55550178': ['phone', 'fax', 'code', 'telefono',
-                 u'código', 'codigo', 'telefon', 'tel', 'code', 'nummer', 'call',
+                 'código', 'codigo', 'telefon', 'tel', 'code', 'nummer', 'call',
                  'llamar', 'passport', 'pasaporte'],
     '987654320': ['ssn', 'social'],
     'C00001234': ['passport'],
-    '7': ['month', 'day', 'birthday', 'birthmonth', 'mes', 'dia', u'día', 'monat', 'tag',
-          'geburts', u'mês', 'amount', 'cantidad', 'precio', 'price', 'value',
+    '7': ['month', 'day', 'birthday', 'birthmonth', 'mes', 'dia', 'día', 'monat', 'tag',
+          'geburts', 'mês', 'amount', 'cantidad', 'precio', 'price', 'value',
           'type', 'tipo', 'article', 'score', 'puntos', 'hour', 'hora', 'minute',
           'minuto', 'second', 'segundo', 'weight', 'peso', 'largo', 'length',
           'height', 'altura', 'step', 'pageid'],
-    '1982': ['year', 'birthyear', u'año', 'ano', 'jahr', 'since', 'desde'],
+    '1982': ['year', 'birthyear', 'año', 'ano', 'jahr', 'since', 'desde'],
 
     'Hello World': ['content', 'text', 'words', 'query', 'search', 'keyword',
                     'title', 'desc', 'data', 'payload', 'answer', 'respuesta',
@@ -142,7 +142,7 @@ def smart_fill(variable_name, db=PARAM_NAME_KNOWLEDGE, default='56'):
 
     possible_results = []
 
-    for filled_value, variable_name_list in db.items():
+    for filled_value, variable_name_list in list(db.items()):
 
         for variable_name_db in variable_name_list:
 

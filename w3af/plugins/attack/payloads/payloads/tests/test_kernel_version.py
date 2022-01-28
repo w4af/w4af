@@ -27,7 +27,7 @@ class test_kernel_version(PayloadTestHelper):
 
     # Not using the whole thing since its not really useful and will
     # stop working after the first kernel update
-    EXPECTED_RESULT = {'kernel_version': u'3.2.0-27-generic (buildd@allspice)'}
+    EXPECTED_RESULT = {'kernel_version': '3.2.0-27-generic (buildd@allspice)'}
 
     @attr('ci_fails')
     def test_kernel_version(self):

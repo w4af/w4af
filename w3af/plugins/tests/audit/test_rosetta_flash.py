@@ -55,14 +55,14 @@ class TestRosettaFlash(PluginTest):
         self._scan(self.target_url, CONFIG)
         vulns = self.kb.get('rosetta_flash', 'rosetta_flash')
 
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
 
-        self.assertEquals('callback', vuln.get_token_name())
-        self.assertEquals('Rosetta Flash', vuln.get_name())
-        self.assertEquals(URL(self.target_url).uri2url().url_string,
+        self.assertEqual('callback', vuln.get_token_name())
+        self.assertEqual('Rosetta Flash', vuln.get_name())
+        self.assertEqual(URL(self.target_url).uri2url().url_string,
                           vuln.get_url().url_string)
 
 
@@ -95,4 +95,4 @@ class TestRosettaFlashFixed(PluginTest):
         self._scan(self.target_url, CONFIG)
         vulns = self.kb.get('rosetta_flash', 'rosetta_flash')
 
-        self.assertEquals(0, len(vulns), vulns)
+        self.assertEqual(0, len(vulns), vulns)

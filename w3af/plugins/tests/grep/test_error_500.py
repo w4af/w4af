@@ -43,10 +43,10 @@ class TestError500(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('error_500', 'error_500')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         vuln = vulns[0]
 
-        self.assertEquals(
+        self.assertEqual(
             vuln.get_name(), 'Unhandled error in web application')
-        self.assertEquals(vuln.get_url().get_file_name(), '500.py')
+        self.assertEqual(vuln.get_url().get_file_name(), '500.py')

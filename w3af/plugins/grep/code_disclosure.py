@@ -70,12 +70,12 @@ class code_disclosure(GrepPlugin):
         if response_is_404 and self._report_404_match:
             self._report_404_match = False
 
-            desc = (u'The URL: "%s" has a %s code disclosure'
-                    u' vulnerability in the customized 404 script.')
-            name = u'Code disclosure vulnerability in 404 page'
+            desc = ('The URL: "%s" has a %s code disclosure'
+                    ' vulnerability in the customized 404 script.')
+            name = 'Code disclosure vulnerability in 404 page'
         else:
-            desc = u'The URL: "%s" has a %s code disclosure vulnerability.'
-            name = u'Code disclosure vulnerability'
+            desc = 'The URL: "%s" has a %s code disclosure vulnerability.'
+            name = 'Code disclosure vulnerability'
 
         # Report the vulnerability
         desc %= (response.get_url(), ' or '.join(list(lang)))

@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
 def is_ip_address(address):
-    if not isinstance(address, basestring):
+    if not isinstance(address, str):
         return False
     
     parts = address.split(".")

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import json
 import copy
-import cPickle
+import pickle
 import unittest
 
 from nose.plugins.attrib import attr
@@ -45,9 +45,9 @@ BLIND_SQLI_REFS = [{"url": "http://capec.mitre.org/data/definitions/7.html",
                     "title": "OWASP"}]
 
 BLIND_SQLI_TOP10_REFS = [
-   {u'link': u'https://www.owasp.org/index.php/Top_10_2013-A1',
-    u'owasp_version': u'2013',
-    u'risk_id': 1}
+   {'link': 'https://www.owasp.org/index.php/Top_10_2013-A1',
+    'owasp_version': '2013',
+    'risk_id': 1}
 ]
 
 
@@ -74,25 +74,25 @@ class TestInfo(unittest.TestCase):
         inf = MockInfo()
 
         res = inf._convert_to_range_wrapper([1, 2, 3, 4, 5, 6])
-        self.assertEquals('1 to 6', res)
+        self.assertEqual('1 to 6', res)
 
         res = inf._convert_to_range_wrapper([1, 2, 3, 6])
-        self.assertEquals('1 to 3 and 6', res)
+        self.assertEqual('1 to 3 and 6', res)
 
         res = inf._convert_to_range_wrapper([1, 2, 3, 6, 7, 8])
-        self.assertEquals('1 to 3, 6 to 8', res)
+        self.assertEqual('1 to 3, 6 to 8', res)
 
         res = inf._convert_to_range_wrapper([1, 2, 3, 6, 7, 8, 10])
-        self.assertEquals('1 to 3, 6 to 8 and 10', res)
+        self.assertEqual('1 to 3, 6 to 8 and 10', res)
 
         res = inf._convert_to_range_wrapper([1, 2, 3, 10, 20, 30])
-        self.assertEquals('1 to 3, 10, 20 and 30', res)
+        self.assertEqual('1 to 3, 10, 20 and 30', res)
 
         res = inf._convert_to_range_wrapper([1, 3, 10, 20, 30])
-        self.assertEquals('1, 3, 10, 20 and 30', res)
+        self.assertEqual('1, 3, 10, 20 and 30', res)
 
-        res = len(inf._convert_to_range_wrapper(range(0, 30000, 2)).split())
-        self.assertEquals(15001, res)
+        res = len(inf._convert_to_range_wrapper(list(range(0, 30000, 2))).split())
+        self.assertEqual(15001, res)
 
     def test_set_uri(self):
         i = MockInfo()
@@ -133,7 +133,7 @@ class TestInfo(unittest.TestCase):
         self.assertIn('\n\nThis information was', i.get_desc())
 
     def test_pickleable(self):
-        cPickle.dumps(MockInfo())
+        pickle.dumps(MockInfo())
 
     def test_data_container_default(self):
         """
@@ -224,8 +224,8 @@ class TestInfo(unittest.TestCase):
 
         self.assertTrue(i.has_db_details())
         self.assertEqual(i.get_vulndb_id(), 17)
-        self.assertIsInstance(i.get_long_description(), basestring)
-        self.assertIsInstance(i.get_fix_guidance(), basestring)
+        self.assertIsInstance(i.get_long_description(), str)
+        self.assertIsInstance(i.get_fix_guidance(), str)
         self.assertEqual(i.get_fix_effort(), 50)
         self.assertEqual(i.get_tags(), ['web', 'file', 'inclusion', 'error',
                                         'injection'])
@@ -233,10 +233,10 @@ class TestInfo(unittest.TestCase):
         self.assertEqual(list(i.get_wasc_urls()), [])
         self.assertEqual(list(i.get_cwe_urls()),
                          ['https://cwe.mitre.org/data/definitions/98.html'])
-        self.assertEqual(i.get_cwe_ids(), [u'98'])
+        self.assertEqual(i.get_cwe_ids(), ['98'])
         self.assertEqual(i.get_references(), expected_references)
         self.assertEqual(list(i.get_owasp_top_10_references()),
-                         [(u'2013', 1,
+                         [('2013', 1,
                            'https://www.owasp.org/index.php/Top_10_2013-A1')])
         self.assertIsInstance(i.get_vuln_info_from_db(), DBVuln)
 
@@ -255,19 +255,19 @@ class TestInfo(unittest.TestCase):
 
         self.assertTrue(i.has_db_details())
         self.assertEqual(i.get_vulndb_id(), 46)
-        self.assertIsInstance(i.get_long_description(), basestring)
-        self.assertIsInstance(i.get_fix_guidance(), basestring)
+        self.assertIsInstance(i.get_long_description(), str)
+        self.assertIsInstance(i.get_fix_guidance(), str)
         self.assertEqual(i.get_fix_effort(), 50)
-        self.assertEqual(i.get_tags(), [u'web', u'sql', u'blind',
-                                        u'injection', u'database'])
+        self.assertEqual(i.get_tags(), ['web', 'sql', 'blind',
+                                        'injection', 'database'])
         self.assertEqual(i.get_wasc_ids(), [])
         self.assertEqual(list(i.get_wasc_urls()), [])
         self.assertEqual(list(i.get_cwe_urls()),
-                         [u'https://cwe.mitre.org/data/definitions/89.html'])
-        self.assertEqual(i.get_cwe_ids(), [u'89'])
+                         ['https://cwe.mitre.org/data/definitions/89.html'])
+        self.assertEqual(i.get_cwe_ids(), ['89'])
         self.assertEqual(i.get_references(), expected_references)
         self.assertEqual(list(i.get_owasp_top_10_references()),
-                         [(u'2013', 1,
+                         [('2013', 1,
                            'https://www.owasp.org/index.php/Top_10_2013-A1')])
         self.assertIsInstance(i.get_vuln_info_from_db(), DBVuln)
 

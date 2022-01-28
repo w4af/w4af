@@ -102,7 +102,7 @@ def suggest(tree, part, skipList=[]):
     :author: Alexander Berezhnoy (alexander.berezhnoy |at| gmail.com)
     """
     try:
-        list = tree.keys()
+        list = list(tree.keys())
         dir = True
     except:
         dir = False
@@ -188,7 +188,7 @@ def formatParagraphLine(text, width):
 
 
 def groupBy(array, fun):
-    print str(array)
+    print(str(array))
     result = {}
     for a in array:
         tag = fun(a)

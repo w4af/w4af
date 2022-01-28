@@ -8,9 +8,9 @@ See the file 'LICENSE' for copying permission
 import os
 import posixpath
 import re
-import StringIO
+import io
 import tempfile
-import urlparse
+import urllib.parse
 
 from extra.cloak.cloak import decloak
 from lib.core.agent import agent
@@ -96,7 +96,7 @@ class Web:
                     content = f.read()
 
         if content is not None:
-            stream = StringIO.StringIO(content)  # string content
+            stream = io.StringIO(content)  # string content
 
         return self._webFileStreamUpload(stream, destFileName, directory)
 
@@ -177,7 +177,7 @@ class Web:
         message = "which web application language does the web server "
         message += "support?\n"
 
-        for count in xrange(len(choices)):
+        for count in range(len(choices)):
             ext = choices[count]
             message += "[%d] %s%s\n" % (count + 1, ext.upper(), (" (default)" if default == ext else ""))
 
@@ -256,7 +256,7 @@ class Web:
         directories.extend(getAutoDirectories())
         directories = list(oset(directories))
 
-        path = urlparse.urlparse(conf.url).path or '/'
+        path = urllib.parse.urlparse(conf.url).path or '/'
         if path != '/':
             _ = []
             for directory in directories:
@@ -294,7 +294,7 @@ class Web:
 
             for match in re.finditer('/', directory):
                 self.webBaseUrl = "%s://%s:%d%s/" % (conf.scheme, conf.hostname, conf.port, directory[match.start():].rstrip('/'))
-                self.webStagerUrl = urlparse.urljoin(self.webBaseUrl, stagerName)
+                self.webStagerUrl = urllib.parse.urljoin(self.webBaseUrl, stagerName)
                 debugMsg = "trying to see if the file is accessible from '%s'" % self.webStagerUrl
                 logger.debug(debugMsg)
 
@@ -331,7 +331,7 @@ class Web:
 
                     for match in re.finditer('/', directory):
                         self.webBaseUrl = "%s://%s:%d%s/" % (conf.scheme, conf.hostname, conf.port, directory[match.start():].rstrip('/'))
-                        self.webStagerUrl = urlparse.urljoin(self.webBaseUrl, stagerName)
+                        self.webStagerUrl = urllib.parse.urljoin(self.webBaseUrl, stagerName)
 
                         debugMsg = "trying to see if the file is accessible from '%s'" % self.webStagerUrl
                         logger.debug(debugMsg)

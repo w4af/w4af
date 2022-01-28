@@ -38,7 +38,7 @@ def tamper(payload, **kwargs):
             depth = 1
             comma, end = None, None
 
-            for i in xrange(index + len("IFNULL("), len(payload)):
+            for i in range(index + len("IFNULL("), len(payload)):
                 if depth == 1 and payload[i] == ',':
                     comma = i
 

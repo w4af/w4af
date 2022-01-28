@@ -46,12 +46,12 @@ class TestOSCommandingShell(ExecExploitTest):
 
         # Assert the general results
         vulns = self.kb.get('os_commanding', 'os_commanding')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         
         vuln = vulns[0]
-        self.assertEquals(vuln.get_name(), 'OS commanding vulnerability')
-        self.assertEquals(vuln.get_url().get_file_name(), 'trivial_osc.py')
-        self.assertEquals(vuln.get_mutant().get_token_name(), 'cmd')
+        self.assertEqual(vuln.get_name(), 'OS commanding vulnerability')
+        self.assertEqual(vuln.get_url().get_file_name(), 'trivial_osc.py')
+        self.assertEqual(vuln.get_mutant().get_token_name(), 'cmd')
 
         vuln_to_exploit_id = vuln.get_id()
 

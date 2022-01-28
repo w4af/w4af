@@ -81,7 +81,7 @@ class TestRubyExport(unittest.TestCase):
                        'Foo: bar\n' \
                        '\n'
         ruby_code = ruby_export(http_request)
-        self.assertEquals(ruby_code, EXPECTED_SIMPLE)
+        self.assertEqual(ruby_code, EXPECTED_SIMPLE)
 
     def test_export_POST(self):
         http_request = 'POST http://www.w3af.org/ HTTP/1.1\n' \
@@ -91,7 +91,7 @@ class TestRubyExport(unittest.TestCase):
                        '\n' \
                        'a=1'
         ruby_code = ruby_export(http_request)
-        self.assertEquals(ruby_code, EXPECTED_POST)
+        self.assertEqual(ruby_code, EXPECTED_POST)
 
     def test_export_POST_repeated(self):
         http_request = 'POST http://www.w3af.org/ HTTP/1.1\n' \
@@ -103,7 +103,7 @@ class TestRubyExport(unittest.TestCase):
                        '\n' \
                        'a=1&a=2'
         ruby_code = ruby_export(http_request)
-        self.assertEquals(ruby_code, EXPECTED_POST_REPEATED)
+        self.assertEqual(ruby_code, EXPECTED_POST_REPEATED)
 
     def test_export_inject(self):
         http_request = 'POST http://www.w3af.org/ HTTP/1.1\n' \

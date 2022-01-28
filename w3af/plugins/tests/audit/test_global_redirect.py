@@ -159,7 +159,7 @@ class TestGlobalRedirectUnitExtractScript(TestCase):
         code = plugin._extract_script_code(resp)
         code = [c for c in code]
 
-        self.assertEqual(code, [u'var x=1', u'var y=2'])
+        self.assertEqual(code, ['var x=1', 'var y=2'])
 
     def test_extract_script_code_new_line(self):
         plugin = global_redirect()
@@ -172,7 +172,7 @@ class TestGlobalRedirectUnitExtractScript(TestCase):
         code = plugin._extract_script_code(resp)
         code = [c for c in code]
 
-        self.assertEqual(code, [u'var x=1', u'var y=2', u'alert(1)'])
+        self.assertEqual(code, ['var x=1', 'var y=2', 'alert(1)'])
 
 
 class TestGlobalRedirectUnitJSRedirect(TestCase):

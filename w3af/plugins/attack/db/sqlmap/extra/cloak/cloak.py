@@ -16,7 +16,7 @@ from optparse import OptionParser
 
 def hideAscii(data):
     retVal = ""
-    for i in xrange(len(data)):
+    for i in range(len(data)):
         if ord(data[i]) < 128:
             retVal += chr(ord(data[i]) ^ 127)
         else:
@@ -38,7 +38,7 @@ def decloak(inputFile=None, data=None):
     try:
         data = zlib.decompress(hideAscii(data))
     except:
-        print 'ERROR: the provided input file \'%s\' does not contain valid cloaked content' % inputFile
+        print('ERROR: the provided input file \'%s\' does not contain valid cloaked content' % inputFile)
         sys.exit(1)
     finally:
         f.close()
@@ -59,11 +59,11 @@ def main():
         if not args.inputFile:
             parser.error('Missing the input file, -h for help')
 
-    except (OptionError, TypeError), e:
+    except (OptionError, TypeError) as e:
         parser.error(e)
 
     if not os.path.isfile(args.inputFile):
-        print 'ERROR: the provided input file \'%s\' is non existent' % args.inputFile
+        print('ERROR: the provided input file \'%s\' is non existent' % args.inputFile)
         sys.exit(1)
 
     if not args.decrypt:

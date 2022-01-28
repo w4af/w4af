@@ -39,7 +39,7 @@ def do_ultrajson(obj):
 def measure(funct, times, *args):
     start = time.time()
     
-    for _ in xrange(times):
+    for _ in range(times):
         funct(*args)
         
     return time.time() - start 
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     import time
     import msgpack
     import json
-    import cPickle
+    import pickle
     import ujson
 
     for serializator_name, serializator_func in tests:
@@ -74,13 +74,13 @@ if __name__ == '__main__':
         for test_object_name, test_object in test_objects:
             time_spent = measure(serializator_func, 10000, test_object)
             total_time += time_spent
-            print '%s took %s seconds to complete %s' % (serializator_name,
+            print('%s took %s seconds to complete %s' % (serializator_name,
                                                          time_spent,
-                                                         test_object_name)
+                                                         test_object_name))
             
-        print '%s took %s seconds to complete all tests.' % (serializator_name,
-                                                             total_time)
-        print
+        print('%s took %s seconds to complete all tests.' % (serializator_name,
+                                                             total_time))
+        print()
     
     """
     msgpack is *very fast*:

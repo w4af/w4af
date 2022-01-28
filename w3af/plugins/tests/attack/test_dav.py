@@ -46,10 +46,10 @@ class TestDAVShell(ExecExploitTest):
 
         # Assert the general results
         vulns = self.kb.get('dav', 'dav')
-        self.assertEquals(len(vulns), 2, vulns)
+        self.assertEqual(len(vulns), 2, vulns)
 
         vuln = vulns[0]
-        self.assertEquals('Insecure DAV configuration', vuln.get_name())
+        self.assertEqual('Insecure DAV configuration', vuln.get_name())
 
         vuln_to_exploit_id = vuln.get_id()
         self._exploit_vuln(vuln_to_exploit_id, 'dav')

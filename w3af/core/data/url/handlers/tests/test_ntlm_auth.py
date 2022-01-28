@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from nose.plugins.attrib import attr
 
@@ -32,47 +32,47 @@ class TestNTLMHandler(unittest.TestCase):
     @attr('ci_fails')
     def test_auth_valid_creds(self):
         url = "http://moth/w3af/core/ntlm_auth/ntlm_v1/"
-        user = u'moth\\admin'
+        user = 'moth\\admin'
         password = 'admin'
     
-        passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+        passman = urllib.request.HTTPPasswordMgrWithDefaultRealm()
         passman.add_password(None, url, user, password)
         auth_NTLM = HTTPNtlmAuthHandler(passman)
     
-        opener = urllib2.build_opener(auth_NTLM)
+        opener = urllib.request.build_opener(auth_NTLM)
     
-        urllib2.install_opener(opener)
+        urllib.request.install_opener(opener)
     
-        response = urllib2.urlopen(url).read()
+        response = urllib.request.urlopen(url).read()
         self.assertTrue(response.startswith('You are admin from MOTH/'), response)
     
     def test_auth_invalid_creds(self):
         url = "http://moth/w3af/core/ntlm_auth/ntlm_v1/"
-        user = u'moth\\invalid'
+        user = 'moth\\invalid'
         password = 'invalid'
     
-        passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+        passman = urllib.request.HTTPPasswordMgrWithDefaultRealm()
         passman.add_password(None, url, user, password)
         auth_NTLM = HTTPNtlmAuthHandler(passman)
     
-        opener = urllib2.build_opener(auth_NTLM)
+        opener = urllib.request.build_opener(auth_NTLM)
     
-        urllib2.install_opener(opener)
+        urllib.request.install_opener(opener)
     
-        self.assertRaises(urllib2.URLError, urllib2.urlopen, url)
+        self.assertRaises(urllib.error.URLError, urllib.request.urlopen, url)
 
     def test_auth_invalid_proto(self):
         url = "http://moth/w3af/core/ntlm_auth/ntlm_v2/"
-        user = u'moth\\admin'
+        user = 'moth\\admin'
         password = 'admin'
     
-        passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+        passman = urllib.request.HTTPPasswordMgrWithDefaultRealm()
         passman.add_password(None, url, user, password)
         auth_NTLM = HTTPNtlmAuthHandler(passman)
     
-        opener = urllib2.build_opener(auth_NTLM)
+        opener = urllib.request.build_opener(auth_NTLM)
     
-        urllib2.install_opener(opener)
+        urllib.request.install_opener(opener)
     
-        self.assertRaises(urllib2.URLError, urllib2.urlopen, url)
+        self.assertRaises(urllib.error.URLError, urllib.request.urlopen, url)
     

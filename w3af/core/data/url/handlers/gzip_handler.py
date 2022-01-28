@@ -19,16 +19,16 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import gzip
 import zlib
 
-from cStringIO import StringIO
+from io import StringIO
 
 from w3af.core.data.url.handlers.cache import SQLCachedResponse
 
 
-class HTTPGzipProcessor(urllib2.BaseHandler):
+class HTTPGzipProcessor(urllib.request.BaseHandler):
 
     # response processing before HTTPEquivProcessor
     handler_order = 200

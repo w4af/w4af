@@ -50,7 +50,7 @@ class Enumeration(GenericEnumeration):
             retVal = pivotDumpTable("(%s) AS %s" % (query, randStr), ['%s.name' % randStr], blind=blind)
 
             if retVal:
-                kb.data.cachedUsers = retVal[0].values()[0]
+                kb.data.cachedUsers = list(retVal[0].values())[0]
                 break
 
         return kb.data.cachedUsers
@@ -106,7 +106,7 @@ class Enumeration(GenericEnumeration):
             retVal = pivotDumpTable("(%s) AS %s" % (query, randStr), ['%s.name' % randStr], blind=blind)
 
             if retVal:
-                kb.data.cachedDbs = retVal[0].values()[0]
+                kb.data.cachedDbs = list(retVal[0].values())[0]
                 break
 
         if kb.data.cachedDbs:
@@ -131,10 +131,10 @@ class Enumeration(GenericEnumeration):
         for db in dbs:
             dbs[dbs.index(db)] = safeSQLIdentificatorNaming(db)
 
-        dbs = filter(None, dbs)
+        dbs = [_f for _f in dbs if _f]
 
         infoMsg = "fetching tables for database"
-        infoMsg += "%s: %s" % ("s" if len(dbs) > 1 else "", ", ".join(db if isinstance(db, basestring) else db[0] for db in sorted(dbs)))
+        infoMsg += "%s: %s" % ("s" if len(dbs) > 1 else "", ", ".join(db if isinstance(db, str) else db[0] for db in sorted(dbs)))
         logger.info(infoMsg)
 
         if any(isTechniqueAvailable(_) for _ in (PAYLOAD.TECHNIQUE.UNION, PAYLOAD.TECHNIQUE.ERROR, PAYLOAD.TECHNIQUE.QUERY)) or conf.direct:
@@ -151,14 +151,14 @@ class Enumeration(GenericEnumeration):
                 retVal = pivotDumpTable("(%s) AS %s" % (query, randStr), ['%s.name' % randStr], blind=blind)
 
                 if retVal:
-                    for table in retVal[0].values()[0]:
+                    for table in list(retVal[0].values())[0]:
                         if db not in kb.data.cachedTables:
                             kb.data.cachedTables[db] = [table]
                         else:
                             kb.data.cachedTables[db].append(table)
                     break
 
-        for db, tables in kb.data.cachedTables.items():
+        for db, tables in list(kb.data.cachedTables.items()):
             kb.data.cachedTables[db] = sorted(tables) if tables else tables
 
         return kb.data.cachedTables
@@ -200,7 +200,7 @@ class Enumeration(GenericEnumeration):
             self.getTables()
 
             if len(kb.data.cachedTables) > 0:
-                tblList = kb.data.cachedTables.values()
+                tblList = list(kb.data.cachedTables.values())
 
                 if isinstance(tblList[0], (set, tuple, list)):
                     tblList = tblList[0]
@@ -286,8 +286,8 @@ class Enumeration(GenericEnumeration):
                     table = {}
                     columns = {}
 
-                    for name, type_ in filterPairValues(zip(retVal[0]["%s.name" % randStr], retVal[0]["%s.usertype" % randStr])):
-                        columns[name] = SYBASE_TYPES.get(int(type_) if isinstance(type_, basestring) and type_.isdigit() else type_, type_)
+                    for name, type_ in filterPairValues(list(zip(retVal[0]["%s.name" % randStr], retVal[0]["%s.usertype" % randStr]))):
+                        columns[name] = SYBASE_TYPES.get(int(type_) if isinstance(type_, str) and type_.isdigit() else type_, type_)
 
                     table[safeSQLIdentificatorNaming(tbl)] = columns
                     kb.data.cachedColumns[safeSQLIdentificatorNaming(conf.db)] = table

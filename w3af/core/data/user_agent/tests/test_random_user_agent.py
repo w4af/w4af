@@ -28,7 +28,7 @@ class TestRandomUserAgent(unittest.TestCase):
     def test_get_random_ua(self):
         EXPECTED = ('Mozilla', 'Windows', 'MSIE', 'Opera')
         
-        for _ in xrange(100):
+        for _ in range(100):
             rnd_ua = get_random_user_agent()
             
             for estr in EXPECTED:

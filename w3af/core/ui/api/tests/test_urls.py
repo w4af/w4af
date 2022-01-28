@@ -53,8 +53,8 @@ class URLTest(APIUnitTest):
         url_items = json.loads(response.data)['items']
 
         expected_urls = [target_url,
-                         u'%s/where_integer_qs.py' % target_url[:-1],
-                         u'%s/where_string_single_qs.py' % target_url[:-1],
-                         u'%s/where_integer_form.py' % target_url[:-1]]
+                         '%s/where_integer_qs.py' % target_url[:-1],
+                         '%s/where_string_single_qs.py' % target_url[:-1],
+                         '%s/where_integer_form.py' % target_url[:-1]]
         self.assertEqual(set(url_items), set(expected_urls))
 

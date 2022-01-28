@@ -25,7 +25,7 @@ from w3af.core.controllers.auto_update.ui_wrapper import UIUpdater
 
 
 def ask(msg):
-    return raw_input(msg + ' [y/N] ').lower() in ('y', 'yes')
+    return input(msg + ' [y/N] ').lower() in ('y', 'yes')
 
 
 class ConsoleUIUpdater(UIUpdater):

@@ -52,7 +52,7 @@ class PayloadTestHelper(PluginTest):
 
         # Assert the general results
         vulns = self.kb.get('lfi', 'lfi')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         vuln = vulns[0]
         vuln_to_exploit_id = vuln.get_id()

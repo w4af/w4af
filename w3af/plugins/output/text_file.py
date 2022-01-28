@@ -77,11 +77,11 @@ class text_file(OutputPlugin):
         
         try:
             self._log = open(self._output_file_name,  'w')
-        except IOError, io:
+        except IOError as io:
             msg = 'Can\'t open report file "%s" for writing, error: %s.'
             args = (os.path.abspath(self._output_file_name), io.strerror)
             raise BaseFrameworkException(msg % args)
-        except Exception, e:
+        except Exception as e:
             msg = 'Can\'t open report file "%s" for writing, error: %s.'
             args = (os.path.abspath(self._output_file_name), e)
             raise BaseFrameworkException(msg % args)
@@ -94,11 +94,11 @@ class text_file(OutputPlugin):
             # Images aren't ascii, so this file that logs every request/response,
             # will be binary.
             self._http = open(self._http_file_name, 'wb')
-        except IOError, io:
+        except IOError as io:
             msg = 'Can\'t open HTTP report file "%s" for writing, error: %s.'
             args = (os.path.abspath(self._http_file_name), io.strerror)
             raise BaseFrameworkException(msg % args)
-        except Exception, e:
+        except Exception as e:
             msg = 'Can\'t open HTTP report file "%s" for writing, error: %s.'
             args = (os.path.abspath(self._http_file_name), e)
             raise BaseFrameworkException(msg % args)
@@ -114,7 +114,7 @@ class text_file(OutputPlugin):
         
         try:
             self._log.write(msg)
-        except Exception, e:
+        except Exception as e:
             self._log = None
             msg = ('An exception was raised while trying to write to the output'
                    ' file "%s", error: "%s". Disabling output to this file.')
@@ -136,7 +136,7 @@ class text_file(OutputPlugin):
         
         try:
             self._http.write(msg)
-        except Exception, e:
+        except Exception as e:
             self._http = None
             msg = ('An exception was raised while trying to write to the output'
                    ' file "%s", error: "%s". Disabling output to this file.')

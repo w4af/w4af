@@ -230,7 +230,7 @@ class PromptView(gtk.TextView, MessageConsumer):
     def _proc(self, text):
         """Process the user input."""
         result = self.procfunc(text)
-        if result is not None and isinstance(result, basestring):
+        if result is not None and isinstance(result, str):
             iterl = self.textbuffer.get_end_iter()
             self.textbuffer.insert(iterl, result + "\n")
             self.scroll_to_mark(self.textbuffer.get_insert(), 0)

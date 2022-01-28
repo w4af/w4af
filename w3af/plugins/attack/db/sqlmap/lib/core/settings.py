@@ -411,7 +411,7 @@ DEFAULT_MSSQL_SCHEMA = "dbo"
 HASH_MOD_ITEM_DISPLAY = 11
 
 # Maximum integer value
-MAX_INT = sys.maxint
+MAX_INT = sys.maxsize
 
 # Options that need to be restored in multiple targets run mode
 RESTORE_MERGED_OPTIONS = ("col", "db", "dnsDomain", "privEsc", "tbl", "regexp", "string", "textOnly", "threads", "timeSec", "tmpPath", "uChar", "user")
@@ -473,7 +473,7 @@ HTML_TITLE_REGEX = "<title>(?P<result>[^<]+)</title>"
 # Table used for Base64 conversion in WordPress hash cracking routine
 ITOA64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
-PICKLE_REDUCE_WHITELIST = (types.BooleanType, types.DictType, types.FloatType, types.IntType, types.ListType, types.LongType, types.NoneType, types.StringType, types.TupleType, types.UnicodeType, types.XRangeType, type(AttribDict()), type(set()))
+PICKLE_REDUCE_WHITELIST = (bool, dict, float, int, list, int, type(None), bytes, tuple, str, range, type(AttribDict()), type(set()))
 
 # Chars used to quickly distinguish if the user provided tainted parameter values
 DUMMY_SQL_INJECTION_CHARS = ";()'"

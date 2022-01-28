@@ -37,12 +37,12 @@ class TestDiskDict(unittest.TestCase):
     def test_int(self):
         disk_dict = DiskDict()
         
-        for i in xrange(100):
+        for i in range(100):
             disk_dict[i] = i
         
         # Do it twice to test that it works as expected (not creating a new)
         # row in the table, but modifying the value
-        for i in xrange(100):
+        for i in range(100):
             disk_dict[i] = i
         
         self.assertEqual(len(disk_dict), 100)
@@ -92,12 +92,12 @@ class TestDiskDict(unittest.TestCase):
     def test_len_performance(self):
         disk_dict = DiskDict()
 
-        for i in xrange(100000):
+        for i in range(100000):
             disk_dict[i] = i
 
         start = time.time()
 
-        for i in xrange(10000):
+        for i in range(10000):
             len(disk_dict)
 
         end = time.time()
@@ -110,7 +110,7 @@ class TestDiskDict(unittest.TestCase):
         items_to_add = 1000
         very_large_string = 'random_very_large_string' * 321
 
-        for i in xrange(items_to_add):
+        for i in range(items_to_add):
             disk_dict[i] = very_large_string
 
         self.assertEqual(len(disk_dict), items_to_add)
@@ -122,7 +122,7 @@ class TestDiskDict(unittest.TestCase):
         disk_dict['b'] = 'abc'
         disk_dict['c'] = 'abc'
 
-        self.assertEqual(set(disk_dict.iterkeys()), set(['a', 'b', 'c']))
+        self.assertEqual(set(disk_dict.keys()), set(['a', 'b', 'c']))
 
     def test_remove_table(self):
         disk_dict = DiskDict()

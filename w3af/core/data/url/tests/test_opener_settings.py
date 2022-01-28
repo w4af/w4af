@@ -46,11 +46,11 @@ class TestOpenerSettings(unittest.TestCase):
 
             # Just verify that this doesn't crash and that the types
             # are correct
-            self.assertIsInstance(opt.get_name(), basestring)
-            self.assertIsInstance(opt.get_desc(), basestring)
-            self.assertIsInstance(opt.get_type(), basestring)
-            self.assertIsInstance(opt.get_help(), basestring)
-            self.assertIsInstance(opt.get_value_str(), basestring)
+            self.assertIsInstance(opt.get_name(), str)
+            self.assertIsInstance(opt.get_desc(), str)
+            self.assertIsInstance(opt.get_type(), str)
+            self.assertIsInstance(opt.get_help(), str)
+            self.assertIsInstance(opt.get_value_str(), str)
 
     def test_desc(self):
         self.os.get_desc()

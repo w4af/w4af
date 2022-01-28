@@ -147,7 +147,7 @@ class Speedometer(gtk.DrawingArea):
             # I have to rotate left (-)
             self.rot -= (self._old_speed - self._current_speed) * step
 
-        print self.rot
+        print(self.rot)
 
         # Now mess with scale too
         self.sx += 0  # Change to 0 to see if rotation is working...

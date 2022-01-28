@@ -20,10 +20,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import os
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import unittest
 import tempfile
-import cookielib
+import http.cookiejar
 
 import httpretty
 
@@ -68,7 +68,7 @@ class TestCookieHandler(unittest.TestCase):
                                self.URL_CHECK_COOKIE,
                                body=self.request_callback)
 
-        opener = urllib2.build_opener(CookieHandler)
+        opener = urllib.request.build_opener(CookieHandler)
 
         # With this request the CookieHandler should store a cookie in its
         # cookiejar
@@ -105,11 +105,11 @@ class TestCookieHandler(unittest.TestCase):
         tmp_file.write(cj_contents)
         tmp_file.close()
         
-        cj = cookielib.MozillaCookieJar()
+        cj = http.cookiejar.MozillaCookieJar()
         cj.load(tmp_file.name, ignore_discard=True, ignore_expires=True)
 
         cookie_handler = CookieHandler(cj)
-        opener = urllib2.build_opener(cookie_handler)
+        opener = urllib.request.build_opener(cookie_handler)
 
         # Verify cookie from cookie jar is sent
         with_cookie_req = HTTPRequest(URL(self.URL_CHECK_COOKIE), cookies=True)

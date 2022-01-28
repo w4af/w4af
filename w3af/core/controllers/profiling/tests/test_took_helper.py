@@ -42,7 +42,7 @@ class TestTookHelper(unittest.TestCase):
             self.assertEqual(om_mock.debug.call_count, 1)
             sent_message = om_mock.debug.call_args[0][0]
 
-            self.assertRegexpMatches(sent_message,
+            self.assertRegex(sent_message,
                                      'plugin_name.method_name\(test="yes",did="ML7aEYsa"\)'
                                      ' took .*? seconds to run \(.*? seconds / .*?% consuming CPU cycles\)')
 
@@ -64,7 +64,7 @@ class TestTookHelper(unittest.TestCase):
             self.assertEqual(om_mock.debug.call_count, 1)
             sent_message = om_mock.debug.call_args[0][0]
 
-            self.assertRegexpMatches(sent_message,
+            self.assertRegex(sent_message,
                                      'plugin_name.method_name\(test="yes",did="ML7aEYsa"\)'
                                      ' took .*? seconds to run \(1.80 seconds / .*?% sending HTTP requests,'
                                      ' .*? seconds / .*?% consuming CPU cycles\)')

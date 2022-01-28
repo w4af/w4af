@@ -15,6 +15,7 @@ import sys
 
 from optparse import OptionError
 from optparse import OptionParser
+from functools import reduce
 
 # Regex used for recognition of hex encoded characters
 HEX_ENCODED_CHAR_REGEX = r"(?P<result>\\x[0-9A-Fa-f]{2})"
@@ -23,7 +24,7 @@ HEX_ENCODED_CHAR_REGEX = r"(?P<result>\\x[0-9A-Fa-f]{2})"
 SAFE_ENCODE_SLASH_REPLACEMENTS = "\t\n\r\x0b\x0c"
 
 # Characters that don't need to be safe encoded
-SAFE_CHARS = "".join(filter(lambda _: _ not in SAFE_ENCODE_SLASH_REPLACEMENTS, string.printable.replace('\\', '')))
+SAFE_CHARS = "".join([_ for _ in string.printable.replace('\\', '') if _ not in SAFE_ENCODE_SLASH_REPLACEMENTS])
 
 # Prefix used for hex encoded values
 HEX_ENCODED_PREFIX = r"\x"
@@ -46,7 +47,7 @@ def safecharencode(value):
 
     retVal = value
 
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         if any([_ not in SAFE_CHARS for _ in value]):
             retVal = retVal.replace(HEX_ENCODED_PREFIX, HEX_ENCODED_PREFIX_MARKER)
             retVal = retVal.replace('\\', SLASH_MARKER)
@@ -54,12 +55,12 @@ def safecharencode(value):
             for char in SAFE_ENCODE_SLASH_REPLACEMENTS:
                 retVal = retVal.replace(char, repr(char).strip('\''))
 
-            retVal = reduce(lambda x, y: x + (y if (y in string.printable or isinstance(value, unicode) and ord(y) >= 160) else '\\x%02x' % ord(y)), retVal, (unicode if isinstance(value, unicode) else str)())
+            retVal = reduce(lambda x, y: x + (y if (y in string.printable or isinstance(value, str) and ord(y) >= 160) else '\\x%02x' % ord(y)), retVal, (str if isinstance(value, str) else str)())
 
             retVal = retVal.replace(SLASH_MARKER, "\\\\")
             retVal = retVal.replace(HEX_ENCODED_PREFIX_MARKER, HEX_ENCODED_PREFIX)
     elif isinstance(value, list):
-        for i in xrange(len(value)):
+        for i in range(len(value)):
             retVal[i] = safecharencode(value[i])
 
     return retVal
@@ -70,13 +71,13 @@ def safechardecode(value, binary=False):
     """
 
     retVal = value
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         retVal = retVal.replace('\\\\', SLASH_MARKER)
 
         while True:
             match = re.search(HEX_ENCODED_CHAR_REGEX, retVal)
             if match:
-                retVal = retVal.replace(match.group("result"), (unichr if isinstance(value, unicode) else chr)(ord(binascii.unhexlify(match.group("result").lstrip("\\x")))))
+                retVal = retVal.replace(match.group("result"), (chr if isinstance(value, str) else chr)(ord(binascii.unhexlify(match.group("result").lstrip("\\x")))))
             else:
                 break
 
@@ -86,11 +87,11 @@ def safechardecode(value, binary=False):
         retVal = retVal.replace(SLASH_MARKER, '\\')
 
         if binary:
-            if isinstance(retVal, unicode):
+            if isinstance(retVal, str):
                 retVal = retVal.encode("utf8")
 
     elif isinstance(value, (list, tuple)):
-        for i in xrange(len(value)):
+        for i in range(len(value)):
             retVal[i] = safechardecode(value[i])
 
     return retVal
@@ -108,11 +109,11 @@ def main():
         if not args.inputFile:
             parser.error('Missing the input file, -h for help')
 
-    except (OptionError, TypeError), e:
+    except (OptionError, TypeError) as e:
         parser.error(e)
 
     if not os.path.isfile(args.inputFile):
-        print 'ERROR: the provided input file \'%s\' is not a regular file' % args.inputFile
+        print('ERROR: the provided input file \'%s\' is not a regular file' % args.inputFile)
         sys.exit(1)
 
     f = open(args.inputFile, 'r')

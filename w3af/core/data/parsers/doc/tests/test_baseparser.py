@@ -47,30 +47,30 @@ class TestBaseParser(unittest.TestCase):
 
     def test_decode_url_simple(self):
         u = URL('http://www.w3af.com/')
-        response = HTTPResponse(200, u'', Headers(), u, u, charset='latin1')
+        response = HTTPResponse(200, '', Headers(), u, u, charset='latin1')
         bp_inst = BaseParser(response)
         bp_inst._encoding = 'latin1'
 
-        decoded_url = bp_inst._decode_url(u'http://www.w3af.com/index.html')
-        self.assertEqual(decoded_url, u'http://www.w3af.com/index.html')
+        decoded_url = bp_inst._decode_url('http://www.w3af.com/index.html')
+        self.assertEqual(decoded_url, 'http://www.w3af.com/index.html')
 
     def test_decode_url_url_encoded(self):
         u = URL('http://www.w3af.com/')
-        response = HTTPResponse(200, u'', Headers(), u, u, charset='latin1')
+        response = HTTPResponse(200, '', Headers(), u, u, charset='latin1')
         bp_inst = BaseParser(response)
         bp_inst._encoding = 'latin1'
 
-        decoded_url = bp_inst._decode_url(u'http://www.w3af.com/ind%E9x.html')
-        self.assertEqual(decoded_url, u'http://www.w3af.com/ind\xe9x.html')
+        decoded_url = bp_inst._decode_url('http://www.w3af.com/ind%E9x.html')
+        self.assertEqual(decoded_url, 'http://www.w3af.com/ind\xe9x.html')
 
     def test_decode_url_skip_safe_chars(self):
         u = URL('http://www.w3af.com/')
-        response = HTTPResponse(200, u'', Headers(), u, u, charset='latin1')
+        response = HTTPResponse(200, '', Headers(), u, u, charset='latin1')
         bp_inst = BaseParser(response)
         bp_inst._encoding = 'latin1'
 
-        test_url = u'http://w3af.com/search.php?a=%00x&b=2%20c=3%D1'
-        expected = u'http://w3af.com/search.php?a=%00x&b=2 c=3\xd1'
+        test_url = 'http://w3af.com/search.php?a=%00x&b=2%20c=3%D1'
+        expected = 'http://w3af.com/search.php?a=%00x&b=2 c=3\xd1'
 
         decoded_url = bp_inst._decode_url(test_url)
 
@@ -78,12 +78,12 @@ class TestBaseParser(unittest.TestCase):
 
     def test_decode_url_ignore_errors(self):
         u = URL('http://www.w3af.com/')
-        response = HTTPResponse(200, u'', Headers(), u, u, charset='latin1')
+        response = HTTPResponse(200, '', Headers(), u, u, charset='latin1')
         bp_inst = BaseParser(response)
         bp_inst._encoding = 'utf-8'
 
-        test_url = u'http://w3af.com/blah.jsp?p=SQU-300&bgc=%FFAAAA'
-        expected = u'http://w3af.com/blah.jsp?p=SQU-300&bgc=AAAA'
+        test_url = 'http://w3af.com/blah.jsp?p=SQU-300&bgc=%FFAAAA'
+        expected = 'http://w3af.com/blah.jsp?p=SQU-300&bgc=AAAA'
 
         decoded_url = bp_inst._decode_url(test_url)
 

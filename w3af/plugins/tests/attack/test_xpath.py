@@ -53,11 +53,11 @@ class TestXPathShell(PluginTest):
 
         # Assert the general results
         vulns = self.kb.get('xpath', 'xpath')
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
         
         vuln = vulns[0]
         
-        self.assertEquals(vuln.get_name(), "XPATH injection vulnerability")
+        self.assertEqual(vuln.get_name(), "XPATH injection vulnerability")
         
         vuln_to_exploit_id = vuln.get_id()
         self._exploit_xpath(vuln_to_exploit_id)

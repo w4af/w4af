@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import gobject
-import Queue
+import queue
 
 from w3af.core.ui.gui.output.gtk_output import subscribe_to_messages
 from w3af.core.ui.gui.output.gtk_output import Message
@@ -35,8 +35,8 @@ class MessageConsumer(object):
 
         # get the messages
         subscribe_to_messages(self._message_observer)
-        self.messages = Queue.Queue()
-        gobject.idle_add(self._process_queue().next)
+        self.messages = queue.Queue()
+        gobject.idle_add(self._process_queue().__next__)
         
     def _message_observer(self, message):
         self.messages.put(message)
@@ -55,7 +55,7 @@ class MessageConsumer(object):
             try:
                 # Sleeping here prevents the GUI from running at 100% cpu
                 msg = self.messages.get(timeout=0.01)
-            except Queue.Empty:
+            except queue.Empty:
                 continue
             else:
                 if msg is None:

@@ -55,7 +55,7 @@ class Filesystem(GenericFilesystem):
         inject.goStacked("SELECT lo_create(%d)" % self.oid)
         inject.goStacked("DELETE FROM pg_largeobject WHERE loid=%d" % self.oid)
 
-        for offset in xrange(0, wFileSize, LOBLKSIZE):
+        for offset in range(0, wFileSize, LOBLKSIZE):
             fcEncodedList = self.fileContentEncode(content[offset:offset + LOBLKSIZE], "base64", False)
             sqlQueries = self.fileToSqlQueries(fcEncodedList)
 

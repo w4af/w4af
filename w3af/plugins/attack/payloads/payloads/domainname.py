@@ -26,7 +26,7 @@ class domainname(Payload):
             rows = []
             rows.append(['Domain name', ])
             rows.append([])
-            for domain in api_result.values():
+            for domain in list(api_result.values()):
                 rows.append([domain, ])
 
             result_table = table(rows)

@@ -51,7 +51,7 @@ class QueryString(KeyValueContainer):
             raise TypeError(ERR_MSG % value)
 
         for sub_val in value:
-            if not isinstance(sub_val, (basestring, DataToken)):
+            if not isinstance(sub_val, (str, DataToken)):
                 raise TypeError(ERR_MSG % value)
 
         super(QueryString, self).__setitem__(key, value)

@@ -68,7 +68,7 @@ class apache_config_files(Payload):
             rows.append(['Apache configuration files'])
             rows.append([])
             for key_name in api_result:
-                for filename, file_content in api_result[key_name].items():
+                for filename, file_content in list(api_result[key_name].items()):
                     rows.append([filename, ])
             result_table = table(rows)
             result_table.draw(80)

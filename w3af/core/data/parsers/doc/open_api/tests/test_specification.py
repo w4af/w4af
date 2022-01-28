@@ -91,8 +91,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'findPets')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -160,8 +160,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'findPets')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -190,8 +190,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'findPets')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -220,8 +220,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'addTags')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -250,8 +250,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'addTags')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -280,8 +280,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'addPet')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -291,7 +291,7 @@ class TestSpecification(unittest.TestCase):
         self.assertEqual(param.param_spec['required'], True)
         self.assertEqual(param.param_spec['in'], 'body')
         self.assertIn('schema', param.param_spec)
-        self.assertEqual(param.fill, {u'count': 42})
+        self.assertEqual(param.fill, {'count': 42})
 
     def test_model_with_string_param_json(self):
         specification_as_string = StringParamJson().get_specification()
@@ -310,8 +310,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'addPet')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -321,7 +321,7 @@ class TestSpecification(unittest.TestCase):
         self.assertEqual(param.param_spec['required'], True)
         self.assertEqual(param.param_spec['in'], 'body')
         self.assertIn('schema', param.param_spec)
-        self.assertEqual(param.fill, {u'tag': '7', u'name': 'John'})
+        self.assertEqual(param.fill, {'tag': '7', 'name': 'John'})
 
     def test_no_model_json_object_with_int_param_in_body(self):
         specification_as_string = IntParamNoModelJson().get_specification()
@@ -340,8 +340,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'addPet')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -351,7 +351,7 @@ class TestSpecification(unittest.TestCase):
         self.assertEqual(param.param_spec['required'], True)
         self.assertEqual(param.param_spec['in'], 'body')
         self.assertIn('schema', param.param_spec)
-        self.assertEqual(param.fill, {u'age': 42, u'name': 'John'})
+        self.assertEqual(param.fill, {'age': 42, 'name': 'John'})
 
     def test_no_model_json_object_complex_nested_in_body(self):
         specification_as_string = ComplexDereferencedNestedModel().get_specification()
@@ -370,8 +370,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'post_pets')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -382,15 +382,15 @@ class TestSpecification(unittest.TestCase):
         self.assertEqual(param.param_spec['in'], 'body')
         self.assertIn('schema', param.param_spec)
 
-        expected_value = {u'birthdate': datetime.date(2017, 6, 30),
-                          u'name': 'John',
-                          u'owner': {u'address': {u'city': 'Buenos Aires',
-                                                  u'postalCode': '90210',
-                                                  u'state': 'AK',
-                                                  u'street1': 'Bonsai Street 123',
-                                                  u'street2': 'Bonsai Street 123'},
-                                     u'name': {u'first': '56', u'last': 'Smith'}},
-                          u'type': u'cat'}
+        expected_value = {'birthdate': datetime.date(2017, 6, 30),
+                          'name': 'John',
+                          'owner': {'address': {'city': 'Buenos Aires',
+                                                  'postalCode': '90210',
+                                                  'state': 'AK',
+                                                  'street1': 'Bonsai Street 123',
+                                                  'street2': 'Bonsai Street 123'},
+                                     'name': {'first': '56', 'last': 'Smith'}},
+                          'type': 'cat'}
         self.assertEqual(param.fill, expected_value)
 
     def test_array_with_model_items_param_in_json(self):
@@ -410,8 +410,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'addMultiplePets')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -422,7 +422,7 @@ class TestSpecification(unittest.TestCase):
         self.assertEqual(param.param_spec['in'], 'body')
         self.assertIn('schema', param.param_spec)
 
-        expected_value = [{u'name': 'John', u'tag': '7'}]
+        expected_value = [{'name': 'John', 'tag': '7'}]
         self.assertEqual(param.fill, expected_value)
 
     def test_model_param_nested_allOf_in_json(self):
@@ -442,11 +442,11 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'findPets')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json',
-                                              u'application/xml',
-                                              u'text/xml',
-                                              u'text/html'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json',
+                                              'application/xml',
+                                              'text/xml',
+                                              'text/html'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -457,7 +457,7 @@ class TestSpecification(unittest.TestCase):
         self.assertEqual(param.param_spec['in'], 'body')
         self.assertIn('schema', param.param_spec)
 
-        expected_value = {u'tag': '7', u'name': 'John', u'id': 42}
+        expected_value = {'tag': '7', 'name': 'John', 'id': 42}
         self.assertEqual(param.fill, expected_value)
 
     def test_model_param_nested_loop_in_json(self):
@@ -476,8 +476,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'findPets')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json', u'application/xml', u'text/xml', u'text/html'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json', 'application/xml', 'text/xml', 'text/html'])
         self.assertEqual(operation.path_name, '/pets')
 
     def test_dereferenced_pet_store(self):
@@ -499,8 +499,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'get_pets_name')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets/{name}')
 
         # Now we check the parameters for the operation
@@ -522,8 +522,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'get_pets')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -538,8 +538,8 @@ class TestSpecification(unittest.TestCase):
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'post_pets')
-        self.assertEqual(operation.consumes, [u'application/json'])
-        self.assertEqual(operation.produces, [u'application/json'])
+        self.assertEqual(operation.consumes, ['application/json'])
+        self.assertEqual(operation.produces, ['application/json'])
         self.assertEqual(operation.path_name, '/pets')
 
         # Now we check the parameters for the operation
@@ -550,13 +550,13 @@ class TestSpecification(unittest.TestCase):
         self.assertEqual(param.param_spec['in'], 'body')
         self.assertIn('schema', param.param_spec)
 
-        expected_value = {u'owner': {u'name': {u'last': 'Smith', u'first': '56'},
-                                     u'address': {u'postalCode': '90210',
-                                                  u'street1': 'Bonsai Street 123',
-                                                  u'street2': 'Bonsai Street 123',
-                                                  u'state': 'AK',
-                                                  u'city': 'Buenos Aires'}},
-                          u'type': 'cat', u'name': 'John', u'birthdate': datetime.date(2017, 6, 30)}
+        expected_value = {'owner': {'name': {'last': 'Smith', 'first': '56'},
+                                     'address': {'postalCode': '90210',
+                                                  'street1': 'Bonsai Street 123',
+                                                  'street2': 'Bonsai Street 123',
+                                                  'state': 'AK',
+                                                  'city': 'Buenos Aires'}},
+                          'type': 'cat', 'name': 'John', 'birthdate': datetime.date(2017, 6, 30)}
         self.assertEqual(param.fill, expected_value)
 
     def test_parameter_handler_no_params(self):
@@ -600,11 +600,11 @@ class TestSpecification(unittest.TestCase):
         self.assertIsNotNone(data)
         self.assertIsNotNone(spec_handler.spec)
 
-        for api_resource_name, resource in spec_handler.spec.resources.items():
-            for operation_name, operation in resource.operations.items():
+        for api_resource_name, resource in list(spec_handler.spec.resources.items()):
+            for operation_name, operation in list(resource.operations.items()):
 
                 # Make sure that the parameter doesn't have a value yet
-                for parameter_name, parameter in operation.params.iteritems():
+                for parameter_name, parameter in operation.params.items():
                     self.assertFalse(hasattr(parameter, 'fill'))
 
                 parameter_handler = ParameterHandler(spec_handler.spec, operation)
@@ -618,9 +618,9 @@ class TestSpecification(unittest.TestCase):
     def assertOperation(self, operation, updated_operation):
 
         # Make sure that the parameter now has a value
-        for parameter_name, parameter in updated_operation.params.iteritems():
+        for parameter_name, parameter in updated_operation.params.items():
             self.assertTrue(hasattr(parameter, 'fill'))
 
         # Make sure that the original operation doesn't get updated
         # after set_operation_params() call
-        self.assertNotEquals(operation, updated_operation)
+        self.assertNotEqual(operation, updated_operation)

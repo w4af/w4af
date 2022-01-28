@@ -38,7 +38,7 @@ class TestOpenAPIFuzzing(unittest.TestCase):
 
     def test_fuzing_on_invalid_token_path(self):
         body = file(self.INVALID_TOKEN_PATH).read()
-        headers = Headers({'Content-Type': 'application/json'}.items())
+        headers = Headers(list({'Content-Type': 'application/json'}.items()))
         response = HTTPResponse(200, body, headers,
                                 URL('http://moth/swagger.json'),
                                 URL('http://moth/swagger.json'),

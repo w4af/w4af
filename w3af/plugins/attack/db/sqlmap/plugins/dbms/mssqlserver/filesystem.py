@@ -42,7 +42,7 @@ class Filesystem(GenericFilesystem):
         fileLines.append("%x" % fileSize)
         fileLines.append("f 0100 %x 00" % fileSize)
 
-        for fileLine in xrange(0, len(fileContent), lineLen):
+        for fileLine in range(0, len(fileContent), lineLen):
             scrString = ""
 
             for lineChar in fileContent[fileLine:fileLine + lineLen]:
@@ -181,7 +181,7 @@ class Filesystem(GenericFilesystem):
 
         logger.debug("uploading the base64-encoded file to %s, please wait.." % encodedBase64FilePath)
 
-        for i in xrange(0, wFileSize, chunkMaxSize):
+        for i in range(0, wFileSize, chunkMaxSize):
             wEncodedChunk = encodedFileContent[i:i + chunkMaxSize]
             self.xpCmdshellWriteFile(wEncodedChunk, tmpPath, encodedBase64File)
 
@@ -230,7 +230,7 @@ class Filesystem(GenericFilesystem):
             debugMsg += "on the server, please wait.."
             logger.debug(debugMsg)
 
-            for i in xrange(0, wFileSize, debugSize):
+            for i in range(0, wFileSize, debugSize):
                 wFileChunk = wFileContent[i:i + debugSize]
                 chunkName = self._updateDestChunk(wFileChunk, tmpPath)
 
@@ -349,7 +349,7 @@ class Filesystem(GenericFilesystem):
 
         encodedFileContent = base64encode(wFileContent)
 
-        splittedEncodedFileContent = '\n'.join([encodedFileContent[i:i+chunkMaxSize] for i in xrange(0, len(encodedFileContent), chunkMaxSize)])
+        splittedEncodedFileContent = '\n'.join([encodedFileContent[i:i+chunkMaxSize] for i in range(0, len(encodedFileContent), chunkMaxSize)])
 
         logger.debug("uploading the file base64-encoded content to %s, please wait.." % randFilePath)
 

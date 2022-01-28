@@ -57,7 +57,7 @@ class form_cleartext_password(GrepPlugin):
             action = form.get_action()
             action_proto = action.get_protocol()
 
-            for p in form.keys():
+            for p in list(form.keys()):
                 input_type = form.get_parameter_type(p)
                 if input_type != INPUT_TYPE_PASSWD:
                     continue

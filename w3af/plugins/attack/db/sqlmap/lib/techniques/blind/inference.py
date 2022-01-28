@@ -65,7 +65,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
 
     abortedFlag = False
     showEta = False
-    partialValue = u""
+    partialValue = ""
     finalValue = None
     retrievedLength = 0
 
@@ -112,20 +112,20 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
             firstChar = len(partialValue)
         elif re.search(r"(?i)\b(LENGTH|LEN)\(", expression):
             firstChar = 0
-        elif (kb.fileReadMode or dump) and conf.firstChar is not None and (isinstance(conf.firstChar, int) or (isinstance(conf.firstChar, basestring) and conf.firstChar.isdigit())):
+        elif (kb.fileReadMode or dump) and conf.firstChar is not None and (isinstance(conf.firstChar, int) or (isinstance(conf.firstChar, str) and conf.firstChar.isdigit())):
             firstChar = int(conf.firstChar) - 1
             if kb.fileReadMode:
                 firstChar <<= 1
-        elif isinstance(firstChar, basestring) and firstChar.isdigit() or isinstance(firstChar, int):
+        elif isinstance(firstChar, str) and firstChar.isdigit() or isinstance(firstChar, int):
             firstChar = int(firstChar) - 1
         else:
             firstChar = 0
 
         if re.search(r"(?i)\b(LENGTH|LEN)\(", expression):
             lastChar = 0
-        elif dump and conf.lastChar is not None and (isinstance(conf.lastChar, int) or (isinstance(conf.lastChar, basestring) and conf.lastChar.isdigit())):
+        elif dump and conf.lastChar is not None and (isinstance(conf.lastChar, int) or (isinstance(conf.lastChar, str) and conf.lastChar.isdigit())):
             lastChar = int(conf.lastChar)
-        elif isinstance(lastChar, basestring) and lastChar.isdigit() or isinstance(lastChar, int):
+        elif isinstance(lastChar, str) and lastChar.isdigit() or isinstance(lastChar, int):
             lastChar = int(lastChar)
         else:
             lastChar = 0
@@ -138,7 +138,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
         else:
             expressionUnescaped = unescaper.escape(expression)
 
-        if isinstance(length, basestring) and length.isdigit() or isinstance(length, int):
+        if isinstance(length, str) and length.isdigit() or isinstance(length, int):
             length = int(length)
         else:
             length = None
@@ -347,14 +347,14 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                             charTbl = charTbl[position:]
                         else:
                             # xrange() - extended virtual charset used for memory/space optimization
-                            charTbl = xrange(charTbl[position], charTbl[-1] + 1)
+                            charTbl = range(charTbl[position], charTbl[-1] + 1)
                     else:
                         maxValue = posValue
 
                         if not isinstance(charTbl, xrange):
                             charTbl = charTbl[:position]
                         else:
-                            charTbl = xrange(charTbl[0], charTbl[position])
+                            charTbl = range(charTbl[0], charTbl[position])
 
                     if len(charTbl) == 1:
                         if maxValue == 1:
@@ -368,8 +368,8 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                             # elements we use a xrange, which is a virtual
                             # list
                             if expand and shiftTable:
-                                charTbl = xrange(maxChar + 1, (maxChar + 1) << shiftTable.pop())
-                                originalTbl = xrange(charTbl)
+                                charTbl = range(maxChar + 1, (maxChar + 1) << shiftTable.pop())
+                                originalTbl = range(charTbl)
                                 maxChar = maxValue = charTbl[-1]
                                 minChar = minValue = charTbl[0]
                             else:
@@ -428,7 +428,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                             candidate >>= 1
                             bit += 1
 
-                    choice = sorted(bits.items(), key=lambda _: abs(_[1]))[0][0]
+                    choice = sorted(list(bits.items()), key=lambda _: abs(_[1]))[0][0]
                     mask = 1 << choice
 
                     forgedPayload = safeStringFormat(payload.replace(INFERENCE_GREATER_CHAR, "&%d%s" % (mask, INFERENCE_GREATER_CHAR)), (expressionUnescaped, idx, 0))
@@ -487,7 +487,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                                 startCharIndex = 0
                                 endCharIndex = 0
 
-                                for i in xrange(length):
+                                for i in range(length):
                                     if currentValue[i] is not None:
                                         endCharIndex = max(endCharIndex, i)
 
@@ -498,10 +498,10 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
 
                                 count = threadData.shared.start
 
-                                for i in xrange(startCharIndex, endCharIndex + 1):
+                                for i in range(startCharIndex, endCharIndex + 1):
                                     output += '_' if currentValue[i] is None else currentValue[i]
 
-                                for i in xrange(length):
+                                for i in range(length):
                                     count += 1 if currentValue[i] is not None else 0
 
                                 if startCharIndex > 0:

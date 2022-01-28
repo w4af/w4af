@@ -51,7 +51,7 @@ class TestServerHeader(PluginTest):
         self.assertIsInstance(pow_by_str_lst, list)
         
         pow_by_str = pow_by_str_lst[0]
-        self.assertIsInstance(pow_by_str, basestring)
+        self.assertIsInstance(pow_by_str, str)
         self.assertIn('PHP', pow_by_str)
         self.assertIn('ubuntu', pow_by_str)
         

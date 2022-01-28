@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import os
 
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 from nose.plugins.attrib import attr
 
 from w3af import ROOT_PATH
@@ -65,7 +65,7 @@ class TestCoreProfiles(unittest.TestCase):
         audit = audit[:-1]
         self.core.plugins.set_plugins(audit, 'audit')
         enabled = self.core.plugins.get_enabled_plugins('audit')
-        self.assertEquals(set(enabled), set(audit))
+        self.assertEqual(set(enabled), set(audit))
         self.assertTrue(disabled_plugin not in enabled)
 
         new_profile_name = 'save-current-new'
@@ -74,7 +74,7 @@ class TestCoreProfiles(unittest.TestCase):
         # Get a new, clean instance of the core.
         clean_core = w3afCore()
         audit = clean_core.plugins.get_enabled_plugins('audit')
-        self.assertEquals(audit, [])
+        self.assertEqual(audit, [])
 
         clean_core.profiles.use_profile(new_profile_name)
         enabled_plugins = clean_core.plugins.get_all_enabled_plugins()
@@ -144,7 +144,7 @@ class TestCoreProfiles(unittest.TestCase):
         """
         valid, _ = self.core.profiles.get_profile_list('.')
 
-        for _ in xrange(10):
+        for _ in range(10):
             for profile_inst in valid:
                 profile_name = profile_inst.get_name()
 

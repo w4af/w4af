@@ -145,7 +145,7 @@ class clamav(GrepPlugin):
         try:
             cd = self._get_connection()
             result_dict = cd.scan_stream(body)
-        except Exception, e:
+        except Exception as e:
             msg = ('The ClamAV plugin failed to connect to clamd using'
                    ' the provided unix socket: "%s". Please verify your'
                    ' configuration and try again. The exception was: "%s".')
@@ -157,7 +157,7 @@ class clamav(GrepPlugin):
 
         return response, result
     
-    def _report_result(self, (response, scan_result)):
+    def _report_result(self, xxx_todo_changeme):
         """
         This method stores the scan result in the KB, called as a callback for
         the _scan_http_response method.
@@ -166,6 +166,7 @@ class clamav(GrepPlugin):
         :param scan_result: The result object from _scan_http_response
         :return: None
         """
+        (response, scan_result) = xxx_todo_changeme
         if scan_result is None:
             return
 

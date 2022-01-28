@@ -1,6 +1,6 @@
 #!/usr/bin/python -u
 
-from __future__ import print_function
+
 
 import requests
 import time

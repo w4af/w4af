@@ -5,7 +5,7 @@ Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
-import httplib
+import http.client
 import re
 
 from lib.core.common import readInput
@@ -30,9 +30,9 @@ def parseSitemap(url, retVal=None):
 
         try:
             content = Request.getPage(url=url, raise404=True)[0] if not abortedFlag else ""
-        except httplib.InvalidURL:
+        except http.client.InvalidURL:
             errMsg = "invalid URL given for sitemap ('%s')" % url
-            raise SqlmapSyntaxException, errMsg
+            raise SqlmapSyntaxException(errMsg)
 
         for match in re.finditer(r"<loc>\s*([^<]+)", content or ""):
             if abortedFlag:

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.constants.severity as severity
@@ -64,7 +64,7 @@ class xssed_dot_com(InfrastructurePlugin):
 
         try:
             response = self._uri_opener.GET(check_url)
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = ('An exception was raised while running xssed_dot_com'
                    ' plugin. Exception: "%s".')
             om.out.debug(msg % e)
@@ -84,7 +84,7 @@ class xssed_dot_com(InfrastructurePlugin):
 
             try:
                 xss_report_response = self._uri_opener.GET(mirror_url)
-            except BaseFrameworkException, e:
+            except BaseFrameworkException as e:
                 msg = ('An exception was raised while running xssed_dot_com'
                        ' plugin. Exception: "%s".')
                 om.out.debug(msg % e)
@@ -110,7 +110,7 @@ class xssed_dot_com(InfrastructurePlugin):
             # Ugly but required because of how xssed.com writes stuff
             xss_url = xss_url.replace('<br>', '')
             xss_url = htmldecode(xss_url)
-            xss_url = urllib2.unquote(xss_url)
+            xss_url = urllib.parse.unquote(xss_url)
             xss_url = URL(xss_url)
 
             if self.UNFIXED in xss_report_response.get_body():

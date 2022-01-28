@@ -228,7 +228,7 @@ class TestAutocompleteAuthenticationFailure(unittest.TestCase):
         plugin = autocomplete()
         kb.kb.cleanup()
 
-        for i in xrange(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT - 1):
+        for i in range(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT - 1):
             plugin._log_debug(str(i))
             plugin._handle_authentication_failure()
 
@@ -258,7 +258,7 @@ class TestAutocompleteAuthenticationFailure(unittest.TestCase):
         plugin = autocomplete()
         kb.kb.cleanup()
 
-        for i in xrange(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT):
+        for i in range(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT):
             plugin._log_debug(str(i))
             plugin._handle_authentication_failure()
             plugin._handle_authentication_success(Mock())
@@ -275,7 +275,7 @@ class TestAutocompleteAuthenticationFailure(unittest.TestCase):
         plugin = autocomplete()
         kb.kb.cleanup()
 
-        for i in xrange(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT):
+        for i in range(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT):
             plugin._log_debug(str(i))
 
             plugin._handle_authentication_failure()

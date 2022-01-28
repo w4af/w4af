@@ -19,9 +19,9 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import SimpleHTTPServer
+import http.server
 import threading
-import SocketServer
+import socketserver
 import time
 
 
@@ -38,7 +38,7 @@ class LoggedRequest(object):
                                              self.request_version)
 
 
-class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class ServerHandler(http.server.SimpleHTTPRequestHandler):
 
     requests = []
     
@@ -63,7 +63,7 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         # TODO: Add support for reading self.rfile
         request_body = None
         
-        SimpleHTTPServer.SimpleHTTPRequestHandler.handle_one_request(self)
+        http.server.SimpleHTTPRequestHandler.handle_one_request(self)
         self.requests.append(LoggedRequest(self.command, self.path,
                                            self.request_version, self.headers,
                                            request_body))
@@ -82,7 +82,7 @@ class HTTPDaemon(threading.Thread):
         
     def run(self):
         # Zero in the port means: bind to any free port
-        self.server = SocketServer.TCPServer(('127.0.0.1', 0),
+        self.server = socketserver.TCPServer(('127.0.0.1', 0),
                                              ServerHandler)
     
         self.server.serve_forever()

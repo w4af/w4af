@@ -55,7 +55,7 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     def test_cache_control_images(self):
         """
@@ -72,7 +72,7 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     def test_cache_control_empty_body(self):
         """
@@ -89,7 +89,7 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
         
     def test_cache_control_correct_headers(self):
         """
@@ -107,7 +107,7 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     def test_cache_control_correct_meta(self):
         """
@@ -128,7 +128,7 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     def test_cache_control_incorrect_headers(self):
         """
@@ -147,7 +147,7 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
         
     def test_cache_control_no_headers(self):
         """
@@ -163,7 +163,7 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
         
         info = infos[0]
         self.assertEqual(info.get_name(), 'Missing cache control for HTTPS content')

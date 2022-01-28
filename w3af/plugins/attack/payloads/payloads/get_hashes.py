@@ -43,7 +43,7 @@ class get_hashes(Payload):
             rows = []
             rows.append(['User', 'Hash'])
             rows.append([])
-            for user, uhash in api_result.items():
+            for user, uhash in list(api_result.items()):
                 rows.append([user, uhash])
 
             result_table = table(rows)

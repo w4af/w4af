@@ -56,7 +56,7 @@ def python_export(request_string):
 
     res += 'headers = {\n'
     headers = http_request.get_headers()
-    for header_name, header_value in headers.iteritems():
+    for header_name, header_value in headers.items():
         header_value = python_escape_string(header_value)
         header_name = python_escape_string(header_name)
         res += '    "' + header_name + '" : "' + header_value + '",\n'

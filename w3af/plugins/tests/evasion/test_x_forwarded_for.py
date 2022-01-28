@@ -41,7 +41,7 @@ class TestXForwardedFor(unittest.TestCase):
         
         self.assertIn('X-forwarded-for', modified_headers)
         self.assertEqual(modified_headers['X-forwarded-for'],
-                         u'127.0.0.1', modified_headers)
+                         '127.0.0.1', modified_headers)
 
     def test_add_header(self):
         xff = x_forwarded_for()
@@ -54,4 +54,4 @@ class TestXForwardedFor(unittest.TestCase):
         
         self.assertIn('X-forwarded-for', modified_headers)
         self.assertEqual(modified_headers['X-forwarded-for'],
-                         u'163.7.70.57', modified_headers)
+                         '163.7.70.57', modified_headers)

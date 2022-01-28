@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import threading
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import base64
 import hashlib
 import random
@@ -38,7 +38,7 @@ class SimpleTextView(gtk.TextView):
     def __init__(self):
         gtk.TextView.__init__(self)
         self.buffer = self.get_buffer()
-        self.buffer.set_text(u"")
+        self.buffer.set_text("")
 
     def clear(self):
         """Clears the pane."""
@@ -81,7 +81,7 @@ class SimpleTextView(gtk.TextView):
             newtext = newtext.replace('\0', '\\x00')
 
             try:
-                newtext = unicode(newtext)
+                newtext = str(newtext)
             except:
                 newtext = repr(newtext)[1:-1]
 
@@ -160,7 +160,7 @@ class EncodeDecode(entries.RememberingWindow):
         :param func: the processing function.
         """
         # clear the output text, this will introduce a small blink
-        out.set_text(u"")
+        out.set_text("")
         # go busy
         busy = gtk.gdk.Window(self.window, gtk.gdk.screen_width(),
                               gtk.gdk.screen_height(), gtk.gdk.WINDOW_CHILD,
@@ -222,7 +222,7 @@ class ThreadedProc(threading.Thread):
         try:
             self.result = self.func(self.text)
             self.ok = True
-        except Exception, e:
+        except Exception as e:
             self.exception = e
             self.ok = False
         finally:
@@ -318,7 +318,7 @@ def urlencode(t):
     >>> urlencode("Hola mundo")
     'Hola%20mundo'
     """
-    return urllib.quote(t)
+    return urllib.parse.quote(t)
 
 
 def urldecode(t):
@@ -327,7 +327,7 @@ def urldecode(t):
     >>> urldecode("Hola%20mundo")
     'Hola mundo'
     """
-    return urllib.unquote(t)
+    return urllib.parse.unquote(t)
 
 
 def html_escape(t):
@@ -364,7 +364,7 @@ def double_urlencode(t):
     >>> double_urlencode("Hola mundo")
     'Hola%2520mundo'
     """
-    return urllib.quote(urllib.quote(t))
+    return urllib.parse.quote(urllib.parse.quote(t))
 
 
 def double_urldecode(t):
@@ -373,7 +373,7 @@ def double_urldecode(t):
     >>> double_urldecode("Hola%2520mundo")
     'Hola mundo'
     """
-    return urllib.unquote(urllib.unquote(t))
+    return urllib.parse.unquote(urllib.parse.unquote(t))
 
 
 def hex_encoding(t):

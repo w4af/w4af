@@ -30,4 +30,4 @@ class test_mail_config_files(PayloadTestHelper):
     @attr('ci_fails')
     def test_mail_config_files(self):
         result = exec_payload(self.shell, 'mail_config_files', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, set(result.keys()))
+        self.assertEqual(self.EXPECTED_RESULT, set(result.keys()))

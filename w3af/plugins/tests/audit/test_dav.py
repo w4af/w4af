@@ -47,11 +47,11 @@ class TestDav(PluginTest):
 
         EXPECTED_NAMES = set(['Insecure DAV configuration'] * 2)
 
-        self.assertEquals(EXPECTED_NAMES,
+        self.assertEqual(EXPECTED_NAMES,
                           set([v.get_name() for v in vulns])
                           )
 
-        self.assertEquals(set(['PUT', 'PROPFIND']),
+        self.assertEqual(set(['PUT', 'PROPFIND']),
                           set([v.get_method() for v in vulns]))
 
         self.assertTrue(all([self.target_vuln_all == str(
@@ -68,7 +68,7 @@ class TestDav(PluginTest):
 
         vulns = self.kb.get('dav', 'dav')
 
-        self.assertEquals(len(vulns), 2, vulns)
+        self.assertEqual(len(vulns), 2, vulns)
 
         iname = 'DAV incorrect configuration'
         info_no_privs = [i for i in vulns if i.get_name() == iname][0]
@@ -79,8 +79,8 @@ class TestDav(PluginTest):
         info_url =  str(info_no_privs.get_url().get_domain_path())
         vuln_url =  str(vuln_propfind.get_url().get_domain_path())
         
-        self.assertEquals(self.target_no_privs, info_url)
-        self.assertEquals(self.target_no_privs, vuln_url)
+        self.assertEqual(self.target_no_privs, info_url)
+        self.assertEqual(self.target_no_privs, vuln_url)
 
     @attr('ci_fails')
     def test_not_found_dav(self):
@@ -88,4 +88,4 @@ class TestDav(PluginTest):
         self._scan(self.target_safe_all, cfg['plugins'])
 
         vulns = self.kb.get('dav', 'dav')
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))

@@ -44,7 +44,7 @@ class XmlRpcContainer(KeyValueContainer):
         """
         KeyValueContainer.__init__(self, init_val=[], encoding=encoding)
 
-        if not isinstance(xml_post_data, basestring):
+        if not isinstance(xml_post_data, str):
             raise TypeError(ERR_MSG % xml_post_data)
 
         self._xml_post_data = xml_post_data
@@ -71,12 +71,12 @@ class XmlRpcContainer(KeyValueContainer):
             raise ValueError(ERR_MSG % xml_post_data[:50])
         else:
             # Tried to do this with self.update but it was failing :S
-            for k, v in read_handler.get_data_container().items():
+            for k, v in list(read_handler.get_data_container().items()):
                 self[k] = v
 
     @staticmethod
     def is_xmlrpc(post_data):
-        return all(map(lambda stop: stop in post_data.lower(), XMLRPC_WORDS))
+        return all([stop in post_data.lower() for stop in XMLRPC_WORDS])
 
     @staticmethod
     def content_type_matches(headers):

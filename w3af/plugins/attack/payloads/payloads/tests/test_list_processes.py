@@ -35,7 +35,7 @@ class test_list_processes(PayloadTestHelper):
             self.shell, 'list_processes', args=(2000,), use_api=True)
 
         cmds = []
-        for _, pid_data in result.iteritems():
+        for _, pid_data in result.items():
             cmds.append(pid_data['cmd'])
 
         for expected in self.EXPECTED_RESULT:

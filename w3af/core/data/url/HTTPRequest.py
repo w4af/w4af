@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import copy
 import socket
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.dc.utils.token import DataToken
@@ -30,7 +30,7 @@ from w3af.core.data.request.request_mixin import RequestMixIn
 from w3af.core.data.url.constants import MAX_HTTP_RETRIES
 
 
-class HTTPRequest(RequestMixIn, urllib2.Request):
+class HTTPRequest(RequestMixIn, urllib.request.Request):
 
     def __init__(self, url,
                  data=None,
@@ -85,7 +85,7 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
         headers = dict(headers)
 
         # Call the base class constructor
-        urllib2.Request.__init__(self, url.url_encode(), data,
+        urllib.request.Request.__init__(self, url.url_encode(), data,
                                  headers, origin_req_host, unverifiable)
         RequestMixIn.__init__(self)
     
@@ -135,8 +135,8 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
         self.url_object = url_object
     
     def get_headers(self):
-        headers = Headers(self.headers.items())
-        headers.update(self.unredirected_hdrs.items())
+        headers = Headers(list(self.headers.items()))
+        headers.update(list(self.unredirected_hdrs.items()))
         return headers
 
     def set_headers(self, headers):
@@ -215,7 +215,7 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
         debugging_id = udict['debugging_id']
         binary_response = udict['binary_response']
 
-        headers_inst = Headers(headers.items())
+        headers_inst = Headers(list(headers.items()))
         url = URL(uri)
         
         return cls(url, data=data, headers=headers_inst,

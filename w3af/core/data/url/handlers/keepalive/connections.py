@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import threading
 import binascii
-import httplib
-import urllib
+import http.client
+import urllib.request, urllib.parse, urllib.error
 import socket
 import ssl
 import os
@@ -57,12 +57,12 @@ class UniqueID(object):
         return '<%s(id:%s, req_count:%s, timeout:%s)>' % args
 
 
-class _HTTPConnection(httplib.HTTPConnection, UniqueID):
+class _HTTPConnection(http.client.HTTPConnection, UniqueID):
 
     def __init__(self, host, port=None, strict=None,
                  timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         UniqueID.__init__(self)
-        httplib.HTTPConnection.__init__(self, host, port, strict,
+        http.client.HTTPConnection.__init__(self, host, port, strict,
                                         timeout=timeout)
         self.is_fresh = True
         self.host_port = '%s:%s' % (self.host, self.port)
@@ -139,13 +139,13 @@ class ProxyHTTPConnection(_HTTPConnection):
     def proxy_setup(self, url):
         # request is called before connect, so can interpret url and get
         # real host/port to be used to make CONNECT request to proxy
-        proto, rest = urllib.splittype(url)
+        proto, rest = urllib.parse.splittype(url)
         if proto is None:
             raise ValueError('Unknown URL type: %s' % url)
 
         # get host and port
-        host_port, rest = urllib.splithost(rest)
-        host, port = urllib.splitport(host_port)
+        host_port, rest = urllib.parse.splithost(rest)
+        host, port = urllib.parse.splitport(host_port)
         self._real_host = host
 
         # if port is not defined try to get from proto
@@ -169,7 +169,7 @@ class ProxyHTTPConnection(_HTTPConnection):
                            'Connection': 'keep-alive',
                            'Host': host_port}
 
-        for header_name, header_value in connect_headers.items():
+        for header_name, header_value in list(connect_headers.items()):
             self.send('%s: %s%s' % (header_name, header_value, new_line))
 
         self.send(new_line)
@@ -205,7 +205,7 @@ _protocols = [OpenSSL.SSL.SSLv3_METHOD,
 _protocols_lock = threading.RLock()
 
 
-class SSLNegotiatorConnection(httplib.HTTPSConnection, UniqueID):
+class SSLNegotiatorConnection(http.client.HTTPSConnection, UniqueID):
     """
     Connection class that enables usage of newer SSL protocols.
 
@@ -216,7 +216,7 @@ class SSLNegotiatorConnection(httplib.HTTPSConnection, UniqueID):
     """
     def __init__(self, *args, **kwargs):
         UniqueID.__init__(self)
-        httplib.HTTPSConnection.__init__(self, *args, **kwargs)
+        http.client.HTTPSConnection.__init__(self, *args, **kwargs)
         self.host_port = '%s:%s' % (self.host, self.port)
 
     def connect(self):
@@ -256,14 +256,14 @@ class SSLNegotiatorConnection(httplib.HTTPSConnection, UniqueID):
                                    ssl_version=protocol,
                                    server_hostname=self.host,
                                    timeout=self.timeout)
-        except ssl.SSLError, ssl_exc:
+        except ssl.SSLError as ssl_exc:
             msg = "SSL connection error occurred with protocol %s: '%s'"
             debug(msg % (protocol, ssl_exc.__class__.__name__))
 
             # Always close the tcp/ip connection on error
             sock.close()
 
-        except Exception, e:
+        except Exception as e:
             msg = "Unexpected exception occurred with protocol %s: '%s'"
             debug(msg % (protocol, e))
 

@@ -29,7 +29,7 @@ def get_should_grep_data(scan_log_filename, scan):
         try:
             stats_dict = to_dict(match.group(1))
         except:
-            print('Warning: %s is not valid JSON' % match.group(1))
+            print(('Warning: %s is not valid JSON' % match.group(1)))
             continue
         else:
             should_grep_data.append(stats_dict)
@@ -54,14 +54,14 @@ def draw_should_grep(scan_log_filename, scan):
     last_data = should_grep_data[-1]
 
     print('should_grep() stats')
-    print('    Latest should_grep() count: %r' % last_data)
+    print(('    Latest should_grep() count: %r' % last_data))
 
     # Calculate %
     last_data = should_grep_data[-1]
-    total = sum(v for k, v in last_data.iteritems())
+    total = sum(v for k, v in last_data.items())
     total = float(total)
-    data_percent = dict((k, round((v / total) * 100)) for k, v in last_data.iteritems())
-    print('    Latest should_grep() percentages: %r' % data_percent)
+    data_percent = dict((k, round((v / total) * 100)) for k, v in last_data.items())
+    print(('    Latest should_grep() percentages: %r' % data_percent))
     print('')
 
     fig = plotille.Figure()
@@ -75,22 +75,22 @@ def draw_should_grep(scan_log_filename, scan):
     fig.set_x_limits(min_=0, max_=spent_time_epoch)
     fig.set_y_limits(min_=0, max_=None)
 
-    for key in should_grep_data[-1].keys():
+    for key in list(should_grep_data[-1].keys()):
         key_slice = []
 
         for data_point in should_grep_data:
-            total = sum(v for k, v in data_point.iteritems())
+            total = sum(v for k, v in data_point.items())
             total = float(total)
             if total == 0:
                 key_slice.append(0)
                 continue
 
-            data_percent = dict((k, (v / total) * 100) for k, v in data_point.iteritems())
+            data_percent = dict((k, (v / total) * 100) for k, v in data_point.items())
             key_slice.append(data_percent[key])
 
         fig.plot(should_grep_timestamps,
                  key_slice,
                  label=key)
 
-    print(fig.show(legend=True))
+    print((fig.show(legend=True)))
     print('')

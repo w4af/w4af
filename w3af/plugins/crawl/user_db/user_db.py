@@ -41,7 +41,7 @@ def get_users_from_csv(ident):
 
     while True:
         try:
-            csv_row = reader.next()
+            csv_row = next(reader)
         except StopIteration:
             break
         except csv.Error:

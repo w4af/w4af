@@ -45,25 +45,25 @@ class TestStrangeReason(unittest.TestCase):
         response = HTTPResponse(200, '', self.headers, self.url, self.url,
                                 _id=1, msg='Ok')
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_reason', 'strange_reason')), 0)
+        self.assertEqual(len(kb.kb.get('strange_reason', 'strange_reason')), 0)
 
     def test_strange_reason_large(self):
         response = HTTPResponse(300, 'A' * 4096, self.headers, self.url,
                                 self.url, _id=1, msg='Multiple Choices')
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_reason', 'strange_reason')), 0)
+        self.assertEqual(len(kb.kb.get('strange_reason', 'strange_reason')), 0)
 
     def test_strange_reason_found_200(self):
         response = HTTPResponse(200, 'A' * 4096, self.headers, self.url,
                                 self.url, _id=1, msg='Foo!')
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_reason', 'strange_reason')), 1)
+        self.assertEqual(len(kb.kb.get('strange_reason', 'strange_reason')), 1)
 
     def test_strange_reason_found_300(self):
         response = HTTPResponse(300, 'A' * 2 ** 10, self.headers,
                                 self.url, self.url, _id=1, msg='Multiple')
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_reason', 'strange_reason')), 1)
+        self.assertEqual(len(kb.kb.get('strange_reason', 'strange_reason')), 1)
 
     def test_group_by_reason(self):
         response = HTTPResponse(200, '', self.headers, self.url, self.url,
@@ -75,13 +75,13 @@ class TestStrangeReason(unittest.TestCase):
         self.plugin.grep(self.request, response)
 
         info_sets = kb.kb.get('strange_reason', 'strange_reason')
-        self.assertEquals(len(info_sets), 1)
+        self.assertEqual(len(info_sets), 1)
 
-        expected_desc = u'The remote web server sent 1 HTTP responses with ' \
-                        u'the uncommon status message "Foos", manual ' \
-                        u'inspection is recommended. The first ten URLs ' \
-                        u'which sent the uncommon message are:\n' \
-                        u' - http://www.w3af.com/\n'
+        expected_desc = 'The remote web server sent 1 HTTP responses with ' \
+                        'the uncommon status message "Foos", manual ' \
+                        'inspection is recommended. The first ten URLs ' \
+                        'which sent the uncommon message are:\n' \
+                        ' - http://www.w3af.com/\n'
         info_set = info_sets[0]
         self.assertEqual(info_set.get_id(), [1, 3])
         self.assertEqual(info_set.get_desc(), expected_desc)
@@ -96,4 +96,4 @@ class TestStrangeReason(unittest.TestCase):
         self.plugin.grep(self.request, response)
 
         info_sets = kb.kb.get('strange_reason', 'strange_reason')
-        self.assertEquals(len(info_sets), 2)
+        self.assertEqual(len(info_sets), 2)

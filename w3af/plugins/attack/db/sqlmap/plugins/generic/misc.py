@@ -167,7 +167,7 @@ class Miscellaneous:
             if udfDict is None:
                 udfDict = self.sysUdfs
 
-            for udf, inpRet in udfDict.items():
+            for udf, inpRet in list(udfDict.items()):
                 message = "do you want to remove UDF '%s'? [Y/n] " % udf
 
                 if readInput(message, default='Y', boolean=True):

@@ -54,7 +54,7 @@ class TestCrossDomainJS(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
 
         info_sets = self.kb.get('cross_domain_js', 'cross_domain_js')
-        self.assertEquals(2, len(info_sets), info_sets)
+        self.assertEqual(2, len(info_sets), info_sets)
 
         self.assertEqual(set([i.get_attribute('domain') for i in info_sets]),
                          {'moth', 'www.w3af.org'})
@@ -93,7 +93,7 @@ class TestCrossDomainJSRaw(unittest.TestCase):
         self.plugin.end()
 
         infos = kb.kb.get('cross_domain_js', 'cross_domain_js')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     def test_cross_domain_third_party_is_insecure(self):
         body = '<script src="https://cdn.akamai-wannabe.net/foo.js"></script>'
@@ -106,7 +106,7 @@ class TestCrossDomainJSRaw(unittest.TestCase):
         self.plugin.end()
 
         infos = kb.kb.get('cross_domain_js', 'cross_domain_js')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
 
     def test_cross_domain_third_party_is_insecure_group_info_set(self):
         body = '<script src="https://cdn.akamai-wannabe.net/foo.js"></script>'
@@ -121,14 +121,14 @@ class TestCrossDomainJSRaw(unittest.TestCase):
         self.plugin.grep(request, resp_2)
         self.plugin.end()
 
-        expected_desc = u'The application contains 2 different URLs with a' \
-                        u' script tag which includes JavaScript source from' \
-                        u' the potentially insecure "cdn.akamai-wannabe.net"' \
-                        u' third party site. This practice is not recommended' \
-                        u' because it delegates the security of the site to' \
-                        u' an external entity. The first two vulnerable URLs' \
-                        u' are:\n - http://www.w3af.com/2\n' \
-                        u' - http://www.w3af.com/1\n'
+        expected_desc = 'The application contains 2 different URLs with a' \
+                        ' script tag which includes JavaScript source from' \
+                        ' the potentially insecure "cdn.akamai-wannabe.net"' \
+                        ' third party site. This practice is not recommended' \
+                        ' because it delegates the security of the site to' \
+                        ' an external entity. The first two vulnerable URLs' \
+                        ' are:\n - http://www.w3af.com/2\n' \
+                        ' - http://www.w3af.com/1\n'
 
         # pylint: disable=E1103
         info_set = kb.kb.get_one('cross_domain_js', 'cross_domain_js')

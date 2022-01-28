@@ -59,5 +59,5 @@ def draw_parser_process_memory_limit(scan_log_filename, scan):
              memory_limit,
              label='Memory limit')
 
-    print(fig.show())
+    print((fig.show()))
     print('')

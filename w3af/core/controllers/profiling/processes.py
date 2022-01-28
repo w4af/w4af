@@ -79,7 +79,7 @@ def dump_processes():
             else:
                 child_data['args'].append(arg)
 
-        for key, value in child._kwargs.iteritems():
+        for key, value in child._kwargs.items():
             try:
                 json.dumps(value)
             except (TypeError, UnicodeDecodeError):

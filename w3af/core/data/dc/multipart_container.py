@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import cgi
-import StringIO
+import io
 
 from w3af.core.data.dc.generic.form import Form
 from w3af.core.data.dc.utils.multipart import get_boundary, encode_as_multipart
@@ -58,7 +58,7 @@ class MultipartContainer(Form):
         environ = {'REQUEST_METHOD': 'POST'}
 
         try:
-            fs = cgi.FieldStorage(fp=StringIO.StringIO(post_data),
+            fs = cgi.FieldStorage(fp=io.StringIO(post_data),
                                   headers=headers.to_dict(),
                                   environ=environ)
         except ValueError:
@@ -127,4 +127,4 @@ class MultipartContainer(Form):
 
         Is not going to work.
         """
-        return self.items() == other.items()
+        return list(self.items()) == list(other.items())

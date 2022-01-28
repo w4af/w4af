@@ -56,7 +56,7 @@ class Fingerprint(GenericFingerprint):
         # MSysAccessXML is not a reliable system table because it doesn't always exist
         # ("Access through Access", p6, should be "normally doesn't exist" instead of "is normally empty")
 
-        for version, tables in sysTables.items():
+        for version, tables in list(sysTables.items()):
             exist = True
 
             for table in tables:

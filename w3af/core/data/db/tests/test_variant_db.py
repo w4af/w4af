@@ -55,7 +55,7 @@ class TestVariantDB(unittest.TestCase):
     def test_db_int(self):
         url_fmt = 'http://w3af.org/foo.htm?id=%s'
 
-        for i in xrange(PARAMS_MAX_VARIANTS):
+        for i in range(PARAMS_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -65,7 +65,7 @@ class TestVariantDB(unittest.TestCase):
     def test_db_int_int(self):
         url_fmt = 'http://w3af.org/foo.htm?id=%s&bar=1'
 
-        for i in xrange(PARAMS_MAX_VARIANTS):
+        for i in range(PARAMS_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -75,7 +75,7 @@ class TestVariantDB(unittest.TestCase):
     def test_db_int_int_var(self):
         url_fmt = 'http://w3af.org/foo.htm?id=%s&bar=%s'
 
-        for i in xrange(PARAMS_MAX_VARIANTS):
+        for i in range(PARAMS_MAX_VARIANTS):
             url = URL(url_fmt % (i, i))
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -85,7 +85,7 @@ class TestVariantDB(unittest.TestCase):
     def test_db_int_str(self):
         url_fmt = 'http://w3af.org/foo.htm?id=%s&bar=%s'
 
-        for i in xrange(PARAMS_MAX_VARIANTS):
+        for i in range(PARAMS_MAX_VARIANTS):
             url = URL(url_fmt % (i, 'abc' * i))
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -97,12 +97,12 @@ class TestVariantDB(unittest.TestCase):
         url_fmt = 'http://w3af.org/foo.htm?id=%s&bar=%s'
 
         # Add (int, str)
-        for i in xrange(PARAMS_MAX_VARIANTS):
+        for i in range(PARAMS_MAX_VARIANTS):
             url = URL(url_fmt % (i, 'abc' * i))
             self.assertTrue(self.vdb.append(fr(url)))
 
         # Add (int, int)
-        for i in xrange(PARAMS_MAX_VARIANTS):
+        for i in range(PARAMS_MAX_VARIANTS):
             url = URL(url_fmt % (i, i))
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -115,61 +115,61 @@ class TestVariantDB(unittest.TestCase):
     def test_clean_fuzzable_request_simple(self):
         u = 'http://w3af.org/'
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/'
+        e = '(GET)-http://w3af.org/'
         self.assertEqual(s, e)
 
     def test_clean_fuzzable_request_file(self):
         u = 'http://w3af.org/index.php'
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/%s.php' % FILENAME_TOKEN
+        e = '(GET)-http://w3af.org/%s.php' % FILENAME_TOKEN
         self.assertEqual(s, e)
 
     def test_clean_fuzzable_request_directory_file(self):
         u = 'http://w3af.org/foo/index.php'
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/foo/%s.php' % FILENAME_TOKEN
+        e = '(GET)-http://w3af.org/foo/%s.php' % FILENAME_TOKEN
         self.assertEqual(s, e)
 
     def test_clean_fuzzable_request_directory_file_int(self):
         u = 'http://w3af.org/foo/index.php?id=2'
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/foo/index.php?id=number'
+        e = '(GET)-http://w3af.org/foo/index.php?id=number'
         self.assertEqual(s, e)
 
     def test_clean_fuzzable_request_int(self):
         u = 'http://w3af.org/index.php?id=2'
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/index.php?id=number'
+        e = '(GET)-http://w3af.org/index.php?id=number'
         self.assertEqual(s, e)
 
     def test_clean_fuzzable_request_int_str(self):
         u = 'http://w3af.org/index.php?id=2&foo=bar'
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/index.php?id=number&foo=string'
+        e = '(GET)-http://w3af.org/index.php?id=number&foo=string'
         self.assertEqual(s, e)
 
     def test_clean_fuzzable_request_int_str_empty(self):
         u = 'http://w3af.org/index.php?id=2&foo=bar&spam='
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/index.php?id=number&foo=string&spam=string'
+        e = '(GET)-http://w3af.org/index.php?id=number&foo=string&spam=string'
         self.assertEqual(s, e)
 
     def test_clean_fuzzable_request_directory_file_no_params(self):
         u = 'http://w3af.org/foo/index.php'
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/foo/%s.php' % FILENAME_TOKEN
+        e = '(GET)-http://w3af.org/foo/%s.php' % FILENAME_TOKEN
         self.assertEqual(s, e)
 
     def test_clean_fuzzable_request_directory(self):
         u = 'http://w3af.org/foo/'
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/%s/' % PATH_TOKEN
+        e = '(GET)-http://w3af.org/%s/' % PATH_TOKEN
         self.assertEqual(s, e)
 
     def test_clean_fuzzable_request_directory_parent_path(self):
         u = 'http://w3af.org/spam/foo/'
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/spam/%s/' % PATH_TOKEN
+        e = '(GET)-http://w3af.org/spam/%s/' % PATH_TOKEN
         self.assertEqual(s, e)
 
     def test_clean_fuzzable_request_json(self):
@@ -178,7 +178,7 @@ class TestVariantDB(unittest.TestCase):
                              method='PUT',
                              post_data=JSONContainer('{"key": "value", "second_key": ["abc", 3, 2.1]}'))
 
-        expected = u'(PUT)-http://www.w3af.com/!object-second_key-list-0-string=string&object-key-string=string'
+        expected = '(PUT)-http://www.w3af.com/!object-second_key-list-0-string=string&object-key-string=string'
         self.assertEqual(clean_fuzzable_request(fr), expected)
 
     def test_clean_fuzzable_request_json_array_null(self):
@@ -187,7 +187,7 @@ class TestVariantDB(unittest.TestCase):
                              method='POST',
                              post_data=JSONContainer('["abc", null, null]'))
 
-        expected = u'(POST)-http://www.w3af.com/!list-0-string=string&list-1-null=none&list-2-null=none'
+        expected = '(POST)-http://www.w3af.com/!list-0-string=string&list-1-null=none&list-2-null=none'
         self.assertEqual(clean_fuzzable_request(fr), expected)
 
     def test_clean_fuzzable_request_json_null_field(self):
@@ -196,7 +196,7 @@ class TestVariantDB(unittest.TestCase):
                              method='POST',
                              post_data=JSONContainer('{"key": null}'))
 
-        expected = u'(POST)-http://www.w3af.com/!object-key-null=none'
+        expected = '(POST)-http://www.w3af.com/!object-key-null=none'
         self.assertEqual(clean_fuzzable_request(fr), expected)
 
     def test_clean_form_fuzzable_request(self):
@@ -205,7 +205,7 @@ class TestVariantDB(unittest.TestCase):
                              method='POST',
                              post_data=KeyValueContainer(init_val=[('data', ['23'])]))
 
-        expected = u'(POST)-http://www.w3af.com/!data=number'
+        expected = '(POST)-http://www.w3af.com/!data=number'
         self.assertEqual(clean_fuzzable_request(fr), expected)
 
     def test_clean_form_fuzzable_request_form(self):
@@ -219,14 +219,14 @@ class TestVariantDB(unittest.TestCase):
 
         fr = FuzzableRequest.from_form(form)
 
-        expected = u'(POST)-http://example.com/' \
-                   u'?id=number!username=string&address=string'
+        expected = '(POST)-http://example.com/' \
+                   '?id=number!username=string&address=string'
         self.assertEqual(clean_fuzzable_request(fr), expected)
 
     def test_db_many_files_in_root(self):
         url_fmt = 'http://w3af.org/foo%s.htm'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -236,7 +236,7 @@ class TestVariantDB(unittest.TestCase):
     def test_db_many_files_in_root_without_extension(self):
         url_fmt = 'http://w3af.org/foo%s'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -246,7 +246,7 @@ class TestVariantDB(unittest.TestCase):
     def test_db_many_files_different_extensions_in_root(self):
         url_fmt = 'http://w3af.org/foo%s.htm'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -258,7 +258,7 @@ class TestVariantDB(unittest.TestCase):
         #
         url_fmt = 'http://w3af.org/foo%s.jpeg'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -268,7 +268,7 @@ class TestVariantDB(unittest.TestCase):
     def test_db_many_paths_in_root(self):
         url_fmt = 'http://w3af.org/foo%s/'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -278,7 +278,7 @@ class TestVariantDB(unittest.TestCase):
     def test_db_many_paths_in_other_directories(self):
         url_fmt = 'http://w3af.org/foo/bar%s/'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -290,7 +290,7 @@ class TestVariantDB(unittest.TestCase):
         #
         url_fmt = 'http://w3af.org/spam/bar%s/'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -300,7 +300,7 @@ class TestVariantDB(unittest.TestCase):
     def test_db_many_files_other_directories(self):
         url_fmt = 'http://w3af.org/spam/foo%s.htm'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -312,7 +312,7 @@ class TestVariantDB(unittest.TestCase):
         #
         url_fmt = 'http://w3af.org/eggs/foo%s.htm'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -322,7 +322,7 @@ class TestVariantDB(unittest.TestCase):
     def test_db_many_files_different_path_length_directories(self):
         url_fmt = 'http://w3af.org/spam/foo%s.htm'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -335,7 +335,7 @@ class TestVariantDB(unittest.TestCase):
         #   Note the /bar/ here! This is what makes this test different
         url_fmt = 'http://w3af.org/eggs/bar/foo%s.htm'
 
-        for i in xrange(PATH_MAX_VARIANTS):
+        for i in range(PATH_MAX_VARIANTS):
             url = URL(url_fmt % i)
             self.assertTrue(self.vdb.append(fr(url)))
 
@@ -355,25 +355,25 @@ class TestVariantDB(unittest.TestCase):
         self.assertFalse(self.vdb.append(fr(url)))
 
     def test_encoding_issues_se(self):
-        u = u'http://w3af.org/vård.png'
+        u = 'http://w3af.org/vård.png'
         s = clean_fuzzable_request(fr(URL(u)))
-        e = u'(GET)-http://w3af.org/file-5692fef3f5dcd97.png'
+        e = '(GET)-http://w3af.org/file-5692fef3f5dcd97.png'
         self.assertEqual(s, e)
 
     def test_encoding_issues_se_with_qs(self):
-        u = u'http://w3af.org/vård.png?id=1'
+        u = 'http://w3af.org/vård.png?id=1'
         s = clean_fuzzable_request(fr(URL(u)))
         e = '(GET)-http://w3af.org/vård.png?id=number'
         self.assertEqual(s, e)
 
     def test_encoding_issues_se_filename(self):
-        u = u'http://w3af.org/x.vård'
+        u = 'http://w3af.org/x.vård'
         s = clean_fuzzable_request(fr(URL(u)))
         e = '(GET)-http://w3af.org/file-5692fef3f5dcd97.vård'
         self.assertEqual(s, e)
 
     def test_encoding_issues_se_path(self):
-        u = u'http://w3af.org/vård/xyz.html'
+        u = 'http://w3af.org/vård/xyz.html'
         s = clean_fuzzable_request(fr(URL(u)))
         e = '(GET)-http://w3af.org/vård/file-5692fef3f5dcd97.html'
         self.assertEqual(s, e)
@@ -398,7 +398,7 @@ class TestVariantDB(unittest.TestCase):
         self.assertGreater(PARAMS_MAX_VARIANTS, MAX_EQUAL_FORM_VARIANTS)
         self.assertGreater(PATH_MAX_VARIANTS, MAX_EQUAL_FORM_VARIANTS)
 
-        for i in xrange(MAX_EQUAL_FORM_VARIANTS):
+        for i in range(MAX_EQUAL_FORM_VARIANTS):
             fri = create_fuzzable_request(i)
             self.assertTrue(self.vdb.append(fri))
 
@@ -409,7 +409,7 @@ class TestVariantDB(unittest.TestCase):
 
         def create_fuzzable_request(_id):
             path_count = _id * 5
-            paths = [rand_alnum(9) for _ in xrange(path_count)]
+            paths = [rand_alnum(9) for _ in range(path_count)]
             url = 'http://example.com/%s' % '/'.join(paths)
 
             form_params = FormParameters()
@@ -422,7 +422,7 @@ class TestVariantDB(unittest.TestCase):
 
             return FuzzableRequest.from_form(form)
 
-        for i in xrange(MAX_EQUAL_FORM_VARIANTS):
+        for i in range(MAX_EQUAL_FORM_VARIANTS):
             fri = create_fuzzable_request(i)
             self.assertTrue(self.vdb.append(fri))
 
@@ -444,7 +444,7 @@ class TestVariantDB(unittest.TestCase):
 
             return FuzzableRequest.from_form(form)
 
-        for i in xrange(MAX_EQUAL_FORM_VARIANTS * 2):
+        for i in range(MAX_EQUAL_FORM_VARIANTS * 2):
             fri = create_fuzzable_request(i)
             self.assertTrue(self.vdb.append(fri))
 
@@ -463,7 +463,7 @@ class TestVariantDB(unittest.TestCase):
 
             return FuzzableRequest.from_form(form)
 
-        for i in xrange(MAX_EQUAL_FORM_VARIANTS * 2):
+        for i in range(MAX_EQUAL_FORM_VARIANTS * 2):
             fri = create_fuzzable_request(i)
             self.assertTrue(self.vdb.append(fri))
 
@@ -481,6 +481,6 @@ class TestVariantDB(unittest.TestCase):
 
             return FuzzableRequest.from_form(form)
 
-        for i in xrange(MAX_EQUAL_FORM_VARIANTS * 2):
+        for i in range(MAX_EQUAL_FORM_VARIANTS * 2):
             fri = create_fuzzable_request(i)
             self.assertTrue(self.vdb.append(fri))

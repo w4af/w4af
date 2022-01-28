@@ -266,7 +266,7 @@ def _goInferenceProxy(expression, fromUser=False, batch=False, unpack=True, char
 
                 try:
                     try:
-                        for num in xrange(startLimit, stopLimit):
+                        for num in range(startLimit, stopLimit):
                             output = _goInferenceFields(expression, expressionFields, expressionFieldsList, payload, num=num, charsetType=charsetType, firstChar=firstChar, lastChar=lastChar, dump=dump)
                             outputs.append(output)
                     except OverflowError:
@@ -275,7 +275,7 @@ def _goInferenceProxy(expression, fromUser=False, batch=False, unpack=True, char
                         raise SqlmapDataException(errMsg)
 
                 except KeyboardInterrupt:
-                    print
+                    print()
                     warnMsg = "user aborted during dumping phase"
                     logger.warn(warnMsg)
 
@@ -330,7 +330,7 @@ def _goUnion(expression, unpack=True, dump=False):
 
     output = unionUse(expression, unpack=unpack, dump=dump)
 
-    if isinstance(output, basestring):
+    if isinstance(output, str):
         output = parseUnionPage(output)
 
     return output
@@ -419,7 +419,7 @@ def getValue(expression, blind=True, union=True, error=True, time=True, fromUser
                     found = (value is not None) or (value is None and expectingNone) or count >= MAX_TECHNIQUES_PER_VALUE
 
                 if found and conf.dnsDomain:
-                    _ = "".join(filter(None, (key if isTechniqueAvailable(value) else None for key, value in {'E': PAYLOAD.TECHNIQUE.ERROR, 'Q': PAYLOAD.TECHNIQUE.QUERY, 'U': PAYLOAD.TECHNIQUE.UNION}.items())))
+                    _ = "".join([_f for _f in (key if isTechniqueAvailable(value) else None for key, value in list({'E': PAYLOAD.TECHNIQUE.ERROR, 'Q': PAYLOAD.TECHNIQUE.QUERY, 'U': PAYLOAD.TECHNIQUE.UNION}.items())) if _f])
                     warnMsg = "option '--dns-domain' will be ignored "
                     warnMsg += "as faster techniques are usable "
                     warnMsg += "(%s) " % _

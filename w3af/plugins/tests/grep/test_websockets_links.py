@@ -163,11 +163,11 @@ class TestWebsocketsLinks(unittest.TestCase):
         self.assertEqual(len(ws_info_sets), 1)
 
         info_set = ws_info_sets[0]
-        expected_desc = u'The application uses the HTML5 WebSocket URL' \
-                        u' "ws://www.example.com:8080/socketserver" in' \
-                        u' 2 different URLs. The first ten URLs are:\n' \
-                        u' - https://www.w3af.com/1\n' \
-                        u' - https://www.w3af.com/2\n'
+        expected_desc = 'The application uses the HTML5 WebSocket URL' \
+                        ' "ws://www.example.com:8080/socketserver" in' \
+                        ' 2 different URLs. The first ten URLs are:\n' \
+                        ' - https://www.w3af.com/1\n' \
+                        ' - https://www.w3af.com/2\n'
         self.assertEqual(len(info_set.infos), 2)
         self.assertEqual(info_set.get_id(), [1, 2])
         self.assertEqual(info_set.get_desc(), expected_desc)

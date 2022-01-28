@@ -24,8 +24,8 @@ def is_black_image(img_inst):
     """:return: True if the image is completely black"""
     img_width, img_height = img_inst.size
 
-    for x in xrange(img_width):
-        for y in xrange(img_height):
+    for x in range(img_width):
+        for y in range(img_height):
             # 0 means black color
             if img_inst.getpixel((x, y)) != 0:
                 return False

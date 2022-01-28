@@ -62,7 +62,7 @@ class TestFormAutocomplete(PluginTest):
         filenames.sort()
         expected_results.sort()
 
-        self.assertEquals(expected_results, filenames)
+        self.assertEqual(expected_results, filenames)
 
 
 class TestFormAutocompleteRaw(unittest.TestCase):
@@ -87,12 +87,12 @@ class TestFormAutocompleteRaw(unittest.TestCase):
         self.plugin.grep(request, resp_2)
         self.plugin.end()
 
-        expected_desc = (u'The application contains 2 different URLs with a'
-                         u' <form> element which has auto-complete enabled'
-                         u' for password fields. The first two vulnerable'
-                         u' URLs are:\n'
-                         u' - http://www.w3af.com/2\n'
-                         u' - http://www.w3af.com/1\n')
+        expected_desc = ('The application contains 2 different URLs with a'
+                         ' <form> element which has auto-complete enabled'
+                         ' for password fields. The first two vulnerable'
+                         ' URLs are:\n'
+                         ' - http://www.w3af.com/2\n'
+                         ' - http://www.w3af.com/1\n')
 
         # pylint: disable=E1103
         info_set = kb.kb.get_one('form_autocomplete', 'form_autocomplete')

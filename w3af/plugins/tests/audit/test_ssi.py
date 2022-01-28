@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from jinja2 import Template
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
@@ -42,7 +42,7 @@ class TestSSI(PluginTest):
 
     class SSIMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
             seeds = re.findall('[1-9]{5}', uri)
 
             if len(seeds) == 2:
@@ -59,14 +59,14 @@ class TestSSI(PluginTest):
         self._scan(self.target_url, test_config)
         vulns = self.kb.get('ssi', 'ssi')
 
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
 
-        self.assertEquals('message', vuln.get_token_name())
-        self.assertEquals('Server side include vulnerability', vuln.get_name())
-        self.assertEquals(URL(self.target_url).uri2url().url_string,
+        self.assertEqual('message', vuln.get_token_name())
+        self.assertEqual('Server side include vulnerability', vuln.get_name())
+        self.assertEqual(URL(self.target_url).uri2url().url_string,
                           vuln.get_url().url_string)
 
 
@@ -76,7 +76,7 @@ class TestJinja2SSI(PluginTest):
 
     class SSIMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
             template = Template('Hello' + uri)
             body = template.render()
             return self.status, response_headers, body
@@ -88,13 +88,13 @@ class TestJinja2SSI(PluginTest):
         self._scan(self.target_url, test_config)
         vulns = self.kb.get('ssi', 'ssi')
 
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
 
-        self.assertEquals('message', vuln.get_token_name())
-        self.assertEquals('Server side include vulnerability', vuln.get_name())
-        self.assertEquals(URL(self.target_url).uri2url().url_string,
+        self.assertEqual('message', vuln.get_token_name())
+        self.assertEqual('Server side include vulnerability', vuln.get_name())
+        self.assertEqual(URL(self.target_url).uri2url().url_string,
                           vuln.get_url().url_string)
 

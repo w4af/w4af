@@ -49,11 +49,11 @@ class TestRFI(ExecExploitTest):
 
         # Assert the general results
         vulns = self.kb.get('rfi', 'rfi')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         vuln = vulns[0]
-        self.assertEquals(vuln.get_name(), 'Remote code execution')
-        self.assertEquals(vuln.get_url().url_string, self.target_url)
+        self.assertEqual(vuln.get_name(), 'Remote code execution')
+        self.assertEqual(vuln.get_url().url_string, self.target_url)
 
         vuln_to_exploit_id = vuln.get_id()
         self._exploit_vuln(vuln_to_exploit_id, 'rfi')

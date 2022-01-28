@@ -75,11 +75,11 @@ class TestFileUpload(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
 
         fu_vulns = self.kb.get('file_upload', 'file_upload')
-        self.assertEquals(1, len(fu_vulns))
+        self.assertEqual(1, len(fu_vulns))
 
         v = fu_vulns[0]
-        self.assertEquals(v.get_name(), 'Insecure file upload')
-        self.assertEquals(str(v.get_url().get_domain_path()),
+        self.assertEqual(v.get_name(), 'Insecure file upload')
+        self.assertEqual(str(v.get_url().get_domain_path()),
                           self.file_upload_url)
 
     def test_reported_file_uploads_issue_534(self):
@@ -92,12 +92,12 @@ class TestFileUpload(PluginTest):
 
         EXPECTED_FILES = {'uploader.php', 'uploader.534'}
         found_files = set(v.get_url().get_file_name() for v in fu_vulns)
-        self.assertEquals(EXPECTED_FILES, found_files)
+        self.assertEqual(EXPECTED_FILES, found_files)
 
 
 class TestParseOutputFromUpload(PluginTest):
 
-    target_url = u'http://w3af.org/'
+    target_url = 'http://w3af.org/'
 
     FORM = """\
           <form enctype="multipart/form-data" action="upload" method="POST">
@@ -157,16 +157,16 @@ class TestParseOutputFromUpload(PluginTest):
             self._scan(cfg['target'], cfg['plugins'])
 
         fu_vulns = self.kb.get('file_upload', 'file_upload')
-        self.assertEquals(1, len(fu_vulns))
+        self.assertEqual(1, len(fu_vulns))
 
         v = fu_vulns[0]
-        self.assertEquals(v.get_name(), 'Insecure file upload')
-        self.assertEquals(str(v.get_url().get_domain_path()), self.target_url)
+        self.assertEqual(v.get_name(), 'Insecure file upload')
+        self.assertEqual(str(v.get_url().get_domain_path()), self.target_url)
 
 
 class TestRegexOutputFromUpload(TestParseOutputFromUpload):
 
-    target_url = u'http://w3af.org/'
+    target_url = 'http://w3af.org/'
 
     FORM = """\
           <form enctype="multipart/form-data" action="upload" method="POST">
@@ -211,8 +211,8 @@ class TestRegexOutputFromUpload(TestParseOutputFromUpload):
                 self._scan(cfg['target'], cfg['plugins'])
 
         fu_vulns = self.kb.get('file_upload', 'file_upload')
-        self.assertEquals(1, len(fu_vulns))
+        self.assertEqual(1, len(fu_vulns))
 
         v = fu_vulns[0]
-        self.assertEquals(v.get_name(), 'Insecure file upload')
-        self.assertEquals(str(v.get_url().get_domain_path()), self.target_url)
+        self.assertEqual(v.get_name(), 'Insecure file upload')
+        self.assertEqual(str(v.get_url().get_domain_path()), self.target_url)

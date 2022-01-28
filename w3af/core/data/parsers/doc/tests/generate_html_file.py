@@ -24,7 +24,7 @@ def main():
     #
     #   Long
     #
-    for i in xrange(5000):
+    for i in range(5000):
         write('<p>')
         write(SOME_TEXT)
         write('</p>')
@@ -45,7 +45,7 @@ def main():
     #
     #   Long II
     #
-    for i in xrange(5000):
+    for i in range(5000):
         write('<div>')
         write('<img src="/img-%s" />' % i)
         write('<a href="mailto:andres%s@test.com">%s</a>' % (i, SOME_TEXT))
@@ -54,11 +54,11 @@ def main():
     #
     #   Deep
     #
-    for i in xrange(5000):
+    for i in range(5000):
         write('<div id="id-%s">' % i)
         write('<a href="/deep-div-%s">%s</a>' % (i, SOME_TEXT))
 
-    for i in xrange(5000):
+    for i in range(5000):
         write('<p>')
         write(SOME_TEXT)
         write('</p>')
@@ -67,7 +67,7 @@ def main():
     #
     #   Some scripts at the end
     #
-    for i in xrange(50):
+    for i in range(50):
         write('<script><!-- code(); --></script>')
 
     write('</body>')

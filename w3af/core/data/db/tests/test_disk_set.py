@@ -48,7 +48,7 @@ class TestDiskSet(unittest.TestCase):
 
         self.assertEqual(list(ds), [1, 2, 3])
         self.assertEqual(len(ds), 3)
-        self.assertEqual(unicode(ds), u'<DiskSet [1, 2, 3]>')
+        self.assertEqual(str(ds), '<DiskSet [1, 2, 3]>')
 
     def test_add_urlobject(self):
         ds = DiskSet()
@@ -109,16 +109,16 @@ class TestDiskSet(unittest.TestCase):
         threads = []
         _min = 0
         add_dups = False
-        for _max in xrange(0, 1100, 100):
+        for _max in range(0, 1100, 100):
 
-            th = threading.Thread(target=worker, args=(xrange(_min, _max),))
+            th = threading.Thread(target=worker, args=(range(_min, _max),))
             threads.append(th)
 
             # For testing the uniqueness of DiskSets
             add_dups = not add_dups
             if add_dups:
                 th = threading.Thread(
-                    target=worker, args=(xrange(_min, _max),))
+                    target=worker, args=(range(_min, _max),))
                 threads.append(th)
 
             _min = _max
@@ -129,14 +129,14 @@ class TestDiskSet(unittest.TestCase):
         for th in threads:
             th.join()
 
-        for i in xrange(0, 1000):
+        for i in range(0, 1000):
             self.assertTrue(i in ds, i)
 
         ds_as_list = list(ds)
         self.assertEqual(len(ds_as_list), len(set(ds_as_list)))
 
         ds_as_list.sort()
-        self.assertEqual(ds_as_list, range(1000))
+        self.assertEqual(ds_as_list, list(range(1000)))
     
     def test_remove_table(self):
         disk_set = DiskSet()

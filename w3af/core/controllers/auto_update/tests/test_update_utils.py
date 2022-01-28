@@ -40,7 +40,7 @@ class TestGitUtils(unittest.TestCase):
         latest_commit = get_latest_commit()
         
         self.assertEqual(len(latest_commit), 40)
-        self.assertIsInstance(latest_commit, basestring)
+        self.assertIsInstance(latest_commit, str)
         
     def test_get_latest_commit_negative(self):
         self.assertRaises(git.exc.InvalidGitRepositoryError, get_latest_commit, '/etc/')

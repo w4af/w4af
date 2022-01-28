@@ -52,22 +52,22 @@ class TestPHPSCA(unittest.TestCase):
         analyzer = PhpSCA(code)
         # Get all vars
         vars = analyzer.get_vars(usr_controlled=False)
-        self.assertEquals(5, len(vars))
+        self.assertEqual(5, len(vars))
         # Get user controlled vars
         usr_cont_vars = analyzer.get_vars(usr_controlled=True)
-        self.assertEquals(3, len(usr_cont_vars))
+        self.assertEqual(3, len(usr_cont_vars))
         # Test $foo
         foovar = usr_cont_vars[0]
-        self.assertEquals('$foo', foovar.name)
+        self.assertEqual('$foo', foovar.name)
         self.assertTrue(foovar.controlled_by_user)
         self.assertFalse(foovar.is_root)
         self.assertTrue(foovar.parent)
         # Test $spam
         spamvar = usr_cont_vars[1]
-        self.assertEquals('$spam', spamvar.name)
+        self.assertEqual('$spam', spamvar.name)
         # Test $spam
         yyvar = usr_cont_vars[2]
-        self.assertEquals('$yy', yyvar.name)
+        self.assertEqual('$yy', yyvar.name)
 
     def test_override_var(self):
         code = """
@@ -120,12 +120,12 @@ class TestPHPSCA(unittest.TestCase):
         x1deps, x2deps, x3deps, ydeps, y2deps, zdeps = \
             [[vd.name for vd in v.deps()] for v in vars]
 
-        self.assertEquals([], x1deps)
-        self.assertEquals(['$x1'], x2deps)
-        self.assertEquals(['$x2', '$x1'], x3deps)
-        self.assertEquals(['$_COOKIES'], ydeps)
-        self.assertEquals(['$y', '$_COOKIES'], y2deps)
-        self.assertEquals(['$x2', '$x1'], zdeps)
+        self.assertEqual([], x1deps)
+        self.assertEqual(['$x1'], x2deps)
+        self.assertEqual(['$x2', '$x1'], x3deps)
+        self.assertEqual(['$_COOKIES'], ydeps)
+        self.assertEqual(['$y', '$_COOKIES'], y2deps)
+        self.assertEqual(['$x2', '$x1'], zdeps)
 
     def test_var_comp_operators(self):
         code = """
@@ -212,7 +212,7 @@ class TestPHPSCA(unittest.TestCase):
         analyzer = PhpSCA(code)
         sys1, sys2 = analyzer.get_func_calls()
         # First system call
-        self.assertEquals(0, len(sys1.vulntypes))
+        self.assertEqual(0, len(sys1.vulntypes))
         # Second system call
         self.assertTrue('OS_COMMANDING' in sys2.vulntypes)
 
@@ -247,9 +247,9 @@ class TestPHPSCA(unittest.TestCase):
         analyzer = PhpSCA(code)
         syscall1, syscall2, syscall3 = analyzer.get_func_calls()
         # Both must be SAFE!
-        self.assertEquals(0, len(syscall1.vulntypes))
-        self.assertEquals(0, len(syscall2.vulntypes))
-        self.assertEquals(0, len(syscall3.vulntypes))
+        self.assertEqual(0, len(syscall1.vulntypes))
+        self.assertEqual(0, len(syscall2.vulntypes))
+        self.assertEqual(0, len(syscall3.vulntypes))
 
     def test_vuln_functions_4(self):
         code = """
@@ -267,7 +267,7 @@ class TestPHPSCA(unittest.TestCase):
         """
         analyzer = PhpSCA(code)
         sys1, echo, sys2 = analyzer.get_func_calls()
-        self.assertEquals([], sys1.vulntypes)
+        self.assertEqual([], sys1.vulntypes)
         self.assertTrue('XSS' in echo.vulntypes)
         self.assertTrue('OS_COMMANDING' in sys2.vulntypes)
 
@@ -300,7 +300,7 @@ class TestScope(unittest.TestCase):
         self.scope = Scope(None, parent_scope=None)
 
     def test_has_builtin_container(self):
-        self.assertEquals(
+        self.assertEqual(
             dict, type(getattr(self.scope, '_builtins', None)))
 
     def test_add_var(self):

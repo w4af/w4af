@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
-import commands
+import subprocess
 
 from mock import MagicMock
 
@@ -32,7 +32,7 @@ from w3af.core.controllers.intrusion_tools.execMethodHelpers import (
 class TestExecHelpers(unittest.TestCase):
 
     def test_os_detection_exec_linux(self):
-        exec_method = commands.getoutput
+        exec_method = subprocess.getoutput
         os = os_detection_exec(exec_method)
         self.assertEqual(os, 'linux')
 
@@ -51,7 +51,7 @@ class TestExecHelpers(unittest.TestCase):
         self.assertRaises(BaseFrameworkException, os_detection_exec, exec_method)
 
     def test_get_remote_temp_file_linux(self):
-        exec_method = commands.getoutput
+        exec_method = subprocess.getoutput
         tempfile = get_remote_temp_file(exec_method)
         self.assertTrue(tempfile.startswith('/tmp/'))
 

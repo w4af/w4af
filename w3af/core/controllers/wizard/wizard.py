@@ -57,7 +57,7 @@ class wizard:
             res.append(question_inst)
         return res
 
-    def next(self):
+    def __next__(self):
         """
         The user interface calls this method until it returns None.
 

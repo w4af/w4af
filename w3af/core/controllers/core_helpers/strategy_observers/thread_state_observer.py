@@ -208,7 +208,7 @@ class ThreadStateObserver(StrategyObserver):
         #
         #   Find the workers in the thread list
         #
-        for thread_id, frame in sys._current_frames().items():
+        for thread_id, frame in list(sys._current_frames().items()):
             thread = self.get_thread_from_thread_id(thread_id)
 
             if thread is None:

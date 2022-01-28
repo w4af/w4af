@@ -54,6 +54,7 @@ from lib.core.threads import runThreads
 from lib.core.unescaper import unescaper
 from lib.request.connect import Connect as Request
 from lib.utils.progress import ProgressBar
+from functools import reduce
 
 def _oneShotErrorUse(expression, field=None, chunkTest=False):
     offset = 1
@@ -193,7 +194,7 @@ def _oneShotErrorUse(expression, field=None, chunkTest=False):
 
         retVal = decodeHexValue(retVal) if conf.hexConvert else retVal
 
-        if isinstance(retVal, basestring):
+        if isinstance(retVal, str):
             retVal = htmlunescape(retVal).replace("<br>", "\n")
 
         retVal = _errorReplaceChars(retVal)
@@ -236,7 +237,7 @@ def _errorFields(expression, expressionFields, expressionFieldsList, num=None, e
 
         if not suppressOutput:
             if kb.fileReadMode and output and output.strip():
-                print
+                print()
             elif output is not None and not (threadData.resumed and kb.suppressResumeInfo) and not (emptyFields and field in emptyFields):
                 status = "[%s] [INFO] %s: %s" % (time.strftime("%X"), "resumed" if threadData.resumed else "retrieved", output if kb.safeCharEncode else safecharencode(output))
 
@@ -269,7 +270,7 @@ def _formatPartialContent(value):
     Prepares (possibly hex-encoded) partial content for safe console output
     """
 
-    if value and isinstance(value, basestring):
+    if value and isinstance(value, str):
         try:
             value = hexdecode(value)
         except:
@@ -365,7 +366,7 @@ def errorUse(expression, dump=False):
                 threadData = getCurrentThreadData()
 
                 try:
-                    threadData.shared.limits = iter(xrange(startLimit, stopLimit))
+                    threadData.shared.limits = iter(range(startLimit, stopLimit))
                 except OverflowError:
                     errMsg = "boundary limits (%d,%d) are too large. Please rerun " % (startLimit, stopLimit)
                     errMsg += "with switch '--fresh-queries'"
@@ -403,7 +404,7 @@ def errorUse(expression, dump=False):
                                 try:
                                     valueStart = time.time()
                                     threadData.shared.counter += 1
-                                    num = threadData.shared.limits.next()
+                                    num = next(threadData.shared.limits)
                                 except StopIteration:
                                     break
 
@@ -419,7 +420,7 @@ def errorUse(expression, dump=False):
                                 index = None
                                 if threadData.shared.showEta:
                                     threadData.shared.progress.progress(time.time() - valueStart, threadData.shared.counter)
-                                for index in xrange(1 + len(threadData.shared.buffered)):
+                                for index in range(1 + len(threadData.shared.buffered)):
                                     if index < len(threadData.shared.buffered) and threadData.shared.buffered[index][0] >= num:
                                         break
                                 threadData.shared.buffered.insert(index or 0, (num, output))
@@ -444,7 +445,7 @@ def errorUse(expression, dump=False):
     if not value and not abortedFlag:
         value = _errorFields(expression, expressionFields, expressionFieldsList)
 
-    if value and isListLike(value) and len(value) == 1 and isinstance(value[0], basestring):
+    if value and isListLike(value) and len(value) == 1 and isinstance(value[0], str):
         value = value[0]
 
     duration = calculateDeltaSeconds(start)

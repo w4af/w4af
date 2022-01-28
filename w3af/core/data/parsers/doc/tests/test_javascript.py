@@ -36,7 +36,7 @@ class TestJavaScriptParser(unittest.TestCase):
     def parse(self, filename):
         body = file(os.path.join(self.DATA_PATH, filename)).read()
         js_mime = 'text/javascript'
-        hdrs = Headers({'Content-Type': js_mime}.items())
+        hdrs = Headers(list({'Content-Type': js_mime}.items()))
         response = HTTPResponse(200, body, hdrs,
                                 URL('http://moth/xyz/'),
                                 URL('http://moth/xyz/'),

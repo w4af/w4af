@@ -117,7 +117,7 @@ class TestSQLMapWrapper(unittest.TestCase):
         self.assertIsInstance(process.stdout, file)
         self.assertIsInstance(process.stderr, file)
         self.assertIsInstance(process.stdin, file)
-        self.assertIsInstance(cmd, basestring)
+        self.assertIsInstance(cmd, str)
         
         self.assertIn('sqlmap.py', cmd)
         

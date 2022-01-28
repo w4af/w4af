@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urlparse
+import urllib.parse
 
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.dc.headers import Headers
@@ -61,7 +61,7 @@ def check_uri_syntax(uri, host=None):
              raise an exception.
     """
     supported_schemes = ['http', 'https']
-    scheme, domain, path, params, qs, fragment = urlparse.urlparse(uri)
+    scheme, domain, path, params, qs, fragment = urllib.parse.urlparse(uri)
     scheme = scheme.lower()
 
     if not scheme:
@@ -76,7 +76,7 @@ def check_uri_syntax(uri, host=None):
         msg += ' and the host. Invalid URI: %s.'
         raise BaseFrameworkException(msg % uri)
 
-    res = urlparse.urlunparse((scheme, domain, path, params, qs, fragment))
+    res = urllib.parse.urlunparse((scheme, domain, path, params, qs, fragment))
     return res
 
 
@@ -156,7 +156,7 @@ def http_request_parser(head, postdata):
     
     try:
         uri = URL(check_uri_syntax(uri, host))
-    except ValueError, ve:
+    except ValueError as ve:
         raise BaseFrameworkException(str(ve))
 
     return FuzzableRequest.from_parts(uri, method, postdata, headers_inst)

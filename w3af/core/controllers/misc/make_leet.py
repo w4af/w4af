@@ -19,8 +19,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-LEET_LETTERS = dict(zip("aAeEiIoO", "44331100"))
-LEET_LETTERS_OPTIONALS = dict(zip("sStT", "5577"))
+LEET_LETTERS = dict(list(zip("aAeEiIoO", "44331100")))
+LEET_LETTERS_OPTIONALS = dict(list(zip("sStT", "5577")))
 
 
 def basic_leet(string, LEETERS):

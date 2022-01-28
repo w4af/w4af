@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-HTML_DOC = u"""
+HTML_DOC = """
 <html>
     <head>
         %(head)s
@@ -30,41 +30,41 @@ HTML_DOC = u"""
 </html>
 """
 
-META_REFRESH = u"""<meta http-equiv="refresh" content="600">"""
-META_REFRESH_WITH_URL = u"""
+META_REFRESH = """<meta http-equiv="refresh" content="600">"""
+META_REFRESH_WITH_URL = """
 <meta http-equiv="refresh" content="2;url=http://crawler.w3af.com/">"""
-META_REFRESH_WITH_URL_AND_QUOTES = u"""
+META_REFRESH_WITH_URL_AND_QUOTES = """
 <meta http-equiv="refresh" content="2;url='http://crawler.w3af.com/'">"""
 
 # Other templates
-BASE_TAG = u"""
+BASE_TAG = """
 <base href="http://www.w3afbase.com">
 <base target="_blank">
 """
 
 # Form templates
-FORM_METHOD_GET = u"""
+FORM_METHOD_GET = """
 <form method="GET" action="/index.php">
     %(form_content)s
 </form>
 """
-FORM_METHOD_POST = u"""
+FORM_METHOD_POST = """
 <form method="POST" action="/index.php">
     %(form_content)s
 </form>
 """
-FORM_WITHOUT_METHOD = u"""
+FORM_WITHOUT_METHOD = """
 <form action="/index.php">
     %(form_content)s
 </form>
 """
-FORM_WITHOUT_ACTION = u"""
+FORM_WITHOUT_ACTION = """
 <form method="POST">
     %(form_content)s
 </form>
 """
 
-FORM_MULTILINE_TAGS = u"""
+FORM_MULTILINE_TAGS = """
 <form  class="form-horizontal" method="post" ><input type='hidden' name='csrfmiddlewaretoken' value='UN2BDAoRUTtlWlFtNCTFtjLZsLRYQQ1E' /> <div id="div_id_input" class="control-group"><label for="id_input" class="control-label requiredField">
                 What is your favorite food?<span class="asteriskField">*</span></label><div class="controls"><input class="form-control input-sm textinput textInput" id="id_input" maxlength="40" name="input" type="text" value="Burgers" /> </div></div><div
       style="padding: 10px;"><i class="icon-leaf"></i> Hint: <code>&lt;script&gt;alert(1)&lt;/script&gt;</code></div><div class="form-actions"><input type="submit"
@@ -79,28 +79,28 @@ FORM_MULTILINE_TAGS = u"""
 """
 
 # Textarea templates
-TEXTAREA_WITH_NAME_AND_DATA = u"""\
+TEXTAREA_WITH_NAME_AND_DATA = """\
 <textarea name="sample_name">sample_value</textarea>"""
 
-TEXTAREA_WITH_ID_AND_DATA = u"""\
+TEXTAREA_WITH_ID_AND_DATA = """\
 <textarea id="sample_id">sample_value</textarea>"""
 
-TEXTAREA_WITH_NAME_ID_AND_DATA = u"""\
+TEXTAREA_WITH_NAME_ID_AND_DATA = """\
 <textarea name="sample_name" id="sample_id">sample_value</textarea>"""
 
-TEXTAREA_WITH_NAME_EMPTY = u'<textarea name=""></textarea>'
+TEXTAREA_WITH_NAME_EMPTY = '<textarea name=""></textarea>'
 
 # Input templates
-INPUT_TEXT_WITH_NAME = u'<input name="foo1" type="text" value="bar">'
-INPUT_TEXT_WITH_ID = u'<input id="foo2" type="text" value="bar">'
-INPUT_FILE_WITH_NAME = u'<input name="foo3" type="file" value="bar">'
-INPUT_SUBMIT_WITH_NAME = u'<input name="foo4" type="submit">'
-INPUT_RADIO_WITH_NAME = u'<input name="foo5" type="radio" checked>'
-INPUT_CHECKBOX_WITH_NAME = u'<input name="foo6" type="checkbox" checked="true">'
-INPUT_HIDDEN = u'<input name="foo7" type="hidden" value="bar">'
+INPUT_TEXT_WITH_NAME = '<input name="foo1" type="text" value="bar">'
+INPUT_TEXT_WITH_ID = '<input id="foo2" type="text" value="bar">'
+INPUT_FILE_WITH_NAME = '<input name="foo3" type="file" value="bar">'
+INPUT_SUBMIT_WITH_NAME = '<input name="foo4" type="submit">'
+INPUT_RADIO_WITH_NAME = '<input name="foo5" type="radio" checked>'
+INPUT_CHECKBOX_WITH_NAME = '<input name="foo6" type="checkbox" checked="true">'
+INPUT_HIDDEN = '<input name="foo7" type="hidden" value="bar">'
 
 # Select templates
-SELECT_WITH_NAME = u"""
+SELECT_WITH_NAME = """
 <select name="vehicle">
     <option value=""></option>
     <option value="car"/>
@@ -109,7 +109,7 @@ SELECT_WITH_NAME = u"""
     </option>
 </select>"""
 
-SELECT_WITH_ID = u"""
+SELECT_WITH_ID = """
 <select id="vehicle">
     <option value="car"/>
     <option value="plane"></option>
@@ -117,6 +117,6 @@ SELECT_WITH_ID = u"""
 </select>"""
 
 # Anchor templates
-A_LINK_RELATIVE = u'<a href="/index.php">XXX</a>'
-A_LINK_ABSOLUTE = u'<a href="http://w3af.com/home.php">XXX</a>'
-A_LINK_FRAGMENT = u'<a href="#mark">XXX</a>'
+A_LINK_RELATIVE = '<a href="/index.php">XXX</a>'
+A_LINK_ABSOLUTE = '<a href="http://w3af.com/home.php">XXX</a>'
+A_LINK_FRAGMENT = '<a href="#mark">XXX</a>'

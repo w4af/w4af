@@ -19,20 +19,20 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 
-class ErrorHandler(urllib2.HTTPDefaultErrorHandler):
+class ErrorHandler(urllib.request.HTTPDefaultErrorHandler):
     """
     A simple handler that assigns IDs to errors.
     """
     def http_error_default(self, req, resp, code, msg, hdrs):
-        err = urllib2.HTTPError(req.get_full_url(), code, msg, hdrs, resp)
+        err = urllib.error.HTTPError(req.get_full_url(), code, msg, hdrs, resp)
         err.id = req.id
         raise err
 
 
-class NoOpErrorHandler(urllib2.HTTPErrorProcessor):
+class NoOpErrorHandler(urllib.request.HTTPErrorProcessor):
     """
     no-op, we want to handle HTTP errors (which for urllib2 are the ones
     which have 200 <= code < 300) the same way we handle the rest of the

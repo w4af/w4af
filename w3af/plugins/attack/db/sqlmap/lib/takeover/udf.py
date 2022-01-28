@@ -135,7 +135,7 @@ class UDF:
     def udfInjectCore(self, udfDict):
         written = False
 
-        for udf in udfDict.keys():
+        for udf in list(udfDict.keys()):
             if udf in self.createdUdf:
                 continue
 
@@ -162,7 +162,7 @@ class UDF:
         else:
             return True
 
-        for udf, inpRet in udfDict.items():
+        for udf, inpRet in list(udfDict.items()):
             if udf in self.udfToCreate and udf not in self.createdUdf:
                 self.udfCreateFromSharedLib(udf, inpRet)
 
@@ -249,7 +249,7 @@ class UDF:
             else:
                 logger.warn("invalid value, only digits are allowed")
 
-        for x in xrange(0, udfCount):
+        for x in range(0, udfCount):
             while True:
                 msg = "what is the name of the UDF number %d? " % (x + 1)
                 udfName = readInput(msg)
@@ -280,7 +280,7 @@ class UDF:
                 else:
                     logger.warn("invalid value, only digits >= 0 are allowed")
 
-            for y in xrange(0, parCount):
+            for y in range(0, parCount):
                 msg = "what is the data-type of input parameter "
                 msg += "number %d? (default: %s) " % ((y + 1), defaultType)
 
@@ -300,7 +300,7 @@ class UDF:
             while True:
                 retType = readInput(msg, default=defaultType)
 
-                if isinstance(retType, basestring) and retType.isdigit():
+                if isinstance(retType, str) and retType.isdigit():
                     logger.warn("you need to specify the data-type of the return value")
                 else:
                     self.udfs[udfName]["return"] = retType
@@ -327,7 +327,7 @@ class UDF:
             udfList = []
             msg = "which UDF do you want to call?"
 
-            for udf in self.udfs.keys():
+            for udf in list(self.udfs.keys()):
                 udfList.append(udf)
                 msg += "\n[%d] %s" % (len(udfList), udf)
 
@@ -338,7 +338,7 @@ class UDF:
 
                 if choice == 'Q':
                     break
-                elif isinstance(choice, basestring) and choice.isdigit() and int(choice) > 0 and int(choice) <= len(udfList):
+                elif isinstance(choice, str) and choice.isdigit() and int(choice) > 0 and int(choice) <= len(udfList):
                     choice = int(choice)
                     break
                 elif isinstance(choice, int) and choice > 0 and choice <= len(udfList):

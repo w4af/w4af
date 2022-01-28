@@ -55,9 +55,9 @@ class TestAuditPlugin(unittest.TestCase):
         self.assertEqual(len(vulns), 1, vulns)
         
         vuln = vulns[0]
-        self.assertEquals("syntax error", vuln['error'])
-        self.assertEquals("Unknown database", vuln['db'])
-        self.assertEquals(target_url, str(vuln.get_url()))        
+        self.assertEqual("syntax error", vuln['error'])
+        self.assertEqual("Unknown database", vuln['db'])
+        self.assertEqual(target_url, str(vuln.get_url()))        
         
         self.assertEqual(plugin_inst._store_kb_vulns, False)
 

@@ -90,7 +90,7 @@ class StartUpConfig(object):
         return self._last_commit_id
 
     def set_last_commit_id(self, commit_id):
-        if not isinstance(commit_id, basestring):
+        if not isinstance(commit_id, str):
             raise TypeError('Expected string got %s instead.' % type(commit_id))
         
         self._last_commit_id = commit_id
@@ -154,7 +154,7 @@ class StartUpConfig(object):
         """
         Saves current values to cfg file
         """
-        with open(self._start_cfg_file, 'wb') as configfile:
+        with open(self._start_cfg_file, 'w') as configfile:
             self._config.write(configfile)
     
     ### PROPERTIES #

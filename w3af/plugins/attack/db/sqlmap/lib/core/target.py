@@ -13,7 +13,7 @@ import subprocess
 import sys
 import tempfile
 import time
-import urlparse
+import urllib.parse
 
 from lib.core.common import Backend
 from lib.core.common import getSafeExString
@@ -273,7 +273,7 @@ def _setRequestParams():
 
             if not kb.processUserMarks:
                 if place == PLACE.URI:
-                    query = urlparse.urlsplit(value).query
+                    query = urllib.parse.urlsplit(value).query
                     if query:
                         parameters = conf.parameters[PLACE.GET] = query
                         paramDict = paramToDict(PLACE.GET, parameters)
@@ -295,17 +295,17 @@ def _setRequestParams():
                 conf.paramDict[place] = OrderedDict()
 
                 if place == PLACE.CUSTOM_HEADER:
-                    for index in xrange(len(conf.httpHeaders)):
+                    for index in range(len(conf.httpHeaders)):
                         header, value = conf.httpHeaders[index]
                         if kb.customInjectionMark in re.sub(PROBLEMATIC_CUSTOM_INJECTION_PATTERNS, "", value):
                             parts = value.split(kb.customInjectionMark)
-                            for i in xrange(len(parts) - 1):
-                                conf.paramDict[place]["%s #%d%s" % (header, i + 1, kb.customInjectionMark)] = "%s,%s" % (header, "".join("%s%s" % (parts[j], kb.customInjectionMark if i == j else "") for j in xrange(len(parts))))
+                            for i in range(len(parts) - 1):
+                                conf.paramDict[place]["%s #%d%s" % (header, i + 1, kb.customInjectionMark)] = "%s,%s" % (header, "".join("%s%s" % (parts[j], kb.customInjectionMark if i == j else "") for j in range(len(parts))))
                             conf.httpHeaders[index] = (header, value.replace(kb.customInjectionMark, ""))
                 else:
                     parts = value.split(kb.customInjectionMark)
 
-                    for i in xrange(len(parts) - 1):
+                    for i in range(len(parts) - 1):
                         name = None
                         if kb.postHint:
                             for ending, _ in hintNames:
@@ -314,7 +314,7 @@ def _setRequestParams():
                                     break
                         if name is None:
                             name = "%s#%s%s" % (("%s " % kb.postHint) if kb.postHint else "", i + 1, kb.customInjectionMark)
-                        conf.paramDict[place][name] = "".join("%s%s" % (parts[j], kb.customInjectionMark if i == j else "") for j in xrange(len(parts)))
+                        conf.paramDict[place][name] = "".join("%s%s" % (parts[j], kb.customInjectionMark if i == j else "") for j in range(len(parts)))
 
                     if place == PLACE.URI and PLACE.GET in conf.paramDict:
                         del conf.paramDict[PLACE.GET]
@@ -418,7 +418,7 @@ def _setHashDB():
             try:
                 os.remove(conf.hashDBFile)
                 logger.info("flushing session file")
-            except OSError, msg:
+            except OSError as msg:
                 errMsg = "unable to flush the session file (%s)" % msg
                 raise SqlmapFilePathException(errMsg)
 
@@ -448,9 +448,9 @@ def _resumeHashDBValues():
         if isinstance(injection, InjectionDict) and injection.place in conf.paramDict and \
             injection.parameter in conf.paramDict[injection.place]:
 
-            if not conf.tech or intersect(conf.tech, injection.data.keys()):
-                if intersect(conf.tech, injection.data.keys()):
-                    injection.data = dict(_ for _ in injection.data.items() if _[0] in conf.tech)
+            if not conf.tech or intersect(conf.tech, list(injection.data.keys())):
+                if intersect(conf.tech, list(injection.data.keys())):
+                    injection.data = dict(_ for _ in list(injection.data.items()) if _[0] in conf.tech)
 
                 if injection not in kb.injections:
                     kb.injections.append(injection)
@@ -479,7 +479,7 @@ def _resumeDBMS():
 
     if conf.dbms:
         check = True
-        for aliases, _, _, _ in DBMS_DICT.values():
+        for aliases, _, _, _ in list(DBMS_DICT.values()):
             if conf.dbms.lower() in aliases and dbms not in aliases:
                 check = False
                 break
@@ -546,7 +546,7 @@ def _setResultsFile():
         conf.resultsFilename = os.path.join(paths.SQLMAP_OUTPUT_PATH, time.strftime(RESULTS_FILE_FORMAT).lower())
         try:
             conf.resultsFP = openFile(conf.resultsFilename, "a", UNICODE_ENCODING, buffering=0)
-        except (OSError, IOError), ex:
+        except (OSError, IOError) as ex:
             try:
                 warnMsg = "unable to create results file '%s' ('%s'). " % (conf.resultsFilename, getUnicode(ex))
                 handle, conf.resultsFilename = tempfile.mkstemp(prefix=MKSTEMP_PREFIX.RESULTS, suffix=".csv")
@@ -554,7 +554,7 @@ def _setResultsFile():
                 conf.resultsFP = openFile(conf.resultsFilename, "w+", UNICODE_ENCODING, buffering=0)
                 warnMsg += "Using temporary file '%s' instead" % conf.resultsFilename
                 logger.warn(warnMsg)
-            except IOError, _:
+            except IOError as _:
                 errMsg = "unable to write to the temporary directory ('%s'). " % _
                 errMsg += "Please make sure that your disk is not full and "
                 errMsg += "that you have sufficient write permissions to "
@@ -577,8 +577,8 @@ def _createFilesDir():
 
     if not os.path.isdir(conf.filePath):
         try:
-            os.makedirs(conf.filePath, 0755)
-        except OSError, ex:
+            os.makedirs(conf.filePath, 0o755)
+        except OSError as ex:
             tempDir = tempfile.mkdtemp(prefix="sqlmapfiles")
             warnMsg = "unable to create files directory "
             warnMsg += "'%s' (%s). " % (conf.filePath, getUnicode(ex))
@@ -599,8 +599,8 @@ def _createDumpDir():
 
     if not os.path.isdir(conf.dumpPath):
         try:
-            os.makedirs(conf.dumpPath, 0755)
-        except OSError, ex:
+            os.makedirs(conf.dumpPath, 0o755)
+        except OSError as ex:
             tempDir = tempfile.mkdtemp(prefix="sqlmapdump")
             warnMsg = "unable to create dump directory "
             warnMsg += "'%s' (%s). " % (conf.dumpPath, getUnicode(ex))
@@ -620,7 +620,7 @@ def _createTargetDirs():
 
     try:
         if not os.path.isdir(paths.SQLMAP_OUTPUT_PATH):
-            os.makedirs(paths.SQLMAP_OUTPUT_PATH, 0755)
+            os.makedirs(paths.SQLMAP_OUTPUT_PATH, 0o755)
 
         _ = os.path.join(paths.SQLMAP_OUTPUT_PATH, randomStr())
         open(_, "w+b").close()
@@ -629,10 +629,10 @@ def _createTargetDirs():
         if conf.outputDir:
             warnMsg = "using '%s' as the output directory" % paths.SQLMAP_OUTPUT_PATH
             logger.warn(warnMsg)
-    except (OSError, IOError), ex:
+    except (OSError, IOError) as ex:
         try:
             tempDir = tempfile.mkdtemp(prefix="sqlmapoutput")
-        except Exception, _:
+        except Exception as _:
             errMsg = "unable to write to the temporary directory ('%s'). " % _
             errMsg += "Please make sure that your disk is not full and "
             errMsg += "that you have sufficient write permissions to "
@@ -650,11 +650,11 @@ def _createTargetDirs():
 
     try:
         if not os.path.isdir(conf.outputPath):
-            os.makedirs(conf.outputPath, 0755)
-    except (OSError, IOError, TypeError), ex:
+            os.makedirs(conf.outputPath, 0o755)
+    except (OSError, IOError, TypeError) as ex:
         try:
             tempDir = tempfile.mkdtemp(prefix="sqlmapoutput")
-        except Exception, _:
+        except Exception as _:
             errMsg = "unable to write to the temporary directory ('%s'). " % _
             errMsg += "Please make sure that your disk is not full and "
             errMsg += "that you have sufficient write permissions to "
@@ -675,7 +675,7 @@ def _createTargetDirs():
             f.write("  # %s" % getUnicode(subprocess.list2cmdline(sys.argv), encoding=sys.stdin.encoding))
             if conf.data:
                 f.write("\n\n%s" % getUnicode(conf.data))
-    except IOError, ex:
+    except IOError as ex:
         if "denied" in getUnicode(ex):
             errMsg = "you don't have enough permissions "
         else:
@@ -718,7 +718,7 @@ def initTargetEnv():
         _setDBMS()
 
     if conf.data:
-        class _(unicode):
+        class _(str):
             pass
 
         kb.postUrlEncode = True

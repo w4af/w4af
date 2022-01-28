@@ -30,6 +30,7 @@ from w3af.core.controllers.misc.get_file_list import get_file_list
 from w3af.core.controllers.misc.factory import factory
 from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af import ROOT_PATH
+import importlib
 
 
 class CorePlugins(object):
@@ -233,7 +234,7 @@ class CorePlugins(object):
             msg = 'Tried to reload a plugin that was never imported! (%s.%s)'
             om.out.debug(msg % (plugin_type, plugin_name))
         else:
-            reload(amodule)
+            importlib.reload(amodule)
 
     def get_plugin_type_desc(self, plugin_type):
         """
@@ -284,7 +285,7 @@ class CorePlugins(object):
         plugin_inst.set_worker_pool(self._w3af_core.worker_pool)
         plugin_inst.set_w3af_core(self._w3af_core)
         
-        if plugin_name in self._plugins_options[plugin_type].keys():
+        if plugin_name in list(self._plugins_options[plugin_type].keys()):
             custom_options = self._plugins_options[plugin_type][plugin_name]
             plugin_inst.set_options(custom_options)
 
@@ -299,7 +300,7 @@ class CorePlugins(object):
         return factory(plugin_module)
 
     def expand_all(self):
-        for plugin_type, enabled_plugins in self._plugins_names_dict.iteritems():
+        for plugin_type, enabled_plugins in self._plugins_names_dict.items():
             if 'all' in enabled_plugins:
                 file_list = [f for f in os.listdir(
                     os.path.join(ROOT_PATH, 'plugins', plugin_type))]
@@ -313,14 +314,14 @@ class CorePlugins(object):
                 self._plugins_names_dict[plugin_type] = enabled_plugins
 
     def remove_exclusions(self):
-        for plugin_type, enabled_plugins in self._plugins_names_dict.iteritems():
+        for plugin_type, enabled_plugins in self._plugins_names_dict.items():
             for plugin_name in enabled_plugins[:]:
                 if plugin_name.startswith('!'):
                     enabled_plugins.remove(plugin_name)
                     enabled_plugins.remove(plugin_name.replace('!', ''))
 
     def resolve_dependencies(self):
-        for plugin_type, enabled_plugins in self._plugins_names_dict.iteritems():
+        for plugin_type, enabled_plugins in self._plugins_names_dict.items():
             for plugin_name in enabled_plugins:
 
                 plugin_inst = self.get_quick_instance(plugin_type, plugin_name)
@@ -351,7 +352,7 @@ class CorePlugins(object):
         """
         plugin_names = self._plugins_names_dict
 
-        for plugin_type, enabled_plugins in plugin_names.iteritems():
+        for plugin_type, enabled_plugins in plugin_names.items():
             for plugin_name in enabled_plugins:
                 plugin_inst = self.get_quick_instance(plugin_type, plugin_name)
 
@@ -385,7 +386,7 @@ class CorePlugins(object):
                     plugin_names[plugin_type][dependency_index] = plugin_name
 
     def create_instances(self):
-        for plugin_type, enabled_plugins in self._plugins_names_dict.iteritems():
+        for plugin_type, enabled_plugins in self._plugins_names_dict.items():
             for plugin_name in enabled_plugins:
                 plugin_instance = self.get_plugin_inst(plugin_type,
                                                        plugin_name)
@@ -395,7 +396,7 @@ class CorePlugins(object):
                     # Ensure that the latest settings are applied to the instance
                     # that will be used for execution
                     for existing_inst in self.plugins[plugin_type]:
-                        if existing_inst.get_name() == plugin_name and plugin_name in self._plugins_options[plugin_type].keys():
+                        if existing_inst.get_name() == plugin_name and plugin_name in list(self._plugins_options[plugin_type].keys()):
                             custom_options = self._plugins_options[plugin_type][plugin_name]
                             existing_inst.set_options(custom_options)
 

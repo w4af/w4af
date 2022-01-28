@@ -82,7 +82,7 @@ class cache_control(GrepPlugin):
         """
         res = []
 
-        cache_control_headers = self.SAFE_CONFIG.keys()
+        cache_control_headers = list(self.SAFE_CONFIG.keys())
         headers = response.get_headers()
         
         for _type in cache_control_headers:

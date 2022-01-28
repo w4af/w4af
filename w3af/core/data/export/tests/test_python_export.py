@@ -81,7 +81,7 @@ class TestPythonExport(unittest.TestCase):
         python_code = python_export(http_request)
         self.assertTrue(
             compiler.compile(python_code, 'python_export.tmp', 'exec'))
-        self.assertEquals(python_code, EXPECTED_SIMPLE)
+        self.assertEqual(python_code, EXPECTED_SIMPLE)
 
     def test_export_POST(self):
         http_request = 'POST http://www.w3af.org/ HTTP/1.1\n' \
@@ -93,7 +93,7 @@ class TestPythonExport(unittest.TestCase):
         python_code = python_export(http_request)
         self.assertTrue(
             compiler.compile(python_code, 'python_export.tmp', 'exec'))
-        self.assertEquals(python_code, EXPECTED_POST)
+        self.assertEqual(python_code, EXPECTED_POST)
 
     def test_export_POST_repeated(self):
         http_request = 'POST http://www.w3af.org/ HTTP/1.1\n' \
@@ -107,7 +107,7 @@ class TestPythonExport(unittest.TestCase):
         python_code = python_export(http_request)
         self.assertTrue(
             compiler.compile(python_code, 'python_export.tmp', 'exec'))
-        self.assertEquals(python_code, EXPECTED_POST_REPEATED)
+        self.assertEqual(python_code, EXPECTED_POST_REPEATED)
 
     def test_export_inject(self):
         http_request = 'POST http://www.w3af.org/ HTTP/1.1\n' \

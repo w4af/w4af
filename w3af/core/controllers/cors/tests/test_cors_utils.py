@@ -49,7 +49,7 @@ class TestUtils(unittest.TestCase):
 
         cors = provides_cors_features(fr, url_opener_mock, None)
 
-        call_header = Headers({'Origin': 'www.w3af.org'}.items())
+        call_header = Headers(list({'Origin': 'www.w3af.org'}.items()))
         url_opener_mock.GET.assert_called_with(url, headers=call_header)
 
         self.assertFalse(cors)
@@ -58,7 +58,7 @@ class TestUtils(unittest.TestCase):
         url = URL('http://moth/')
         fr = FuzzableRequest(url)
 
-        hdrs = {'Access-Control-Allow-Origin': 'http://www.w3af.org/'}.items()
+        hdrs = list({'Access-Control-Allow-Origin': 'http://www.w3af.org/'}.items())
         cors_headers = Headers(hdrs)
         http_response = HTTPResponse(200, '', cors_headers, url, url)
 
@@ -75,7 +75,7 @@ class TestUtils(unittest.TestCase):
         url = URL('http://moth/')
 
         w3af_url = 'http://www.w3af.org/'
-        hrds = {'Access-Control-Allow-Origin': w3af_url}.items()
+        hrds = list({'Access-Control-Allow-Origin': w3af_url}.items())
         cors_headers = Headers(hrds)
         http_response = HTTPResponse(200, '', cors_headers, url, url)
 
@@ -87,7 +87,7 @@ class TestUtils(unittest.TestCase):
     def test_retrieve_cors_header_false(self):
         url = URL('http://moth/')
 
-        cors_headers = Headers({'Access-Control': 'Allow-Origin'}.items())
+        cors_headers = Headers(list({'Access-Control': 'Allow-Origin'}.items()))
         http_response = HTTPResponse(200, '', cors_headers, url, url)
 
         value = retrieve_cors_header(http_response,
@@ -100,16 +100,16 @@ class TestUtils(unittest.TestCase):
 
         fr = build_cors_request(url, 'http://foo.com/')
 
-        self.assertEquals(fr.get_url(), url)
-        self.assertEquals(fr.get_method(), 'GET')
-        self.assertEquals(fr.get_headers(),
-                          Headers({'Origin': 'http://foo.com/'}.items()))
+        self.assertEqual(fr.get_url(), url)
+        self.assertEqual(fr.get_method(), 'GET')
+        self.assertEqual(fr.get_headers(),
+                          Headers(list({'Origin': 'http://foo.com/'}.items())))
 
     def test_build_cors_request_false(self):
         url = URL('http://moth/')
 
         fr = build_cors_request(url, None)
 
-        self.assertEquals(fr.get_url(), url)
-        self.assertEquals(fr.get_method(), 'GET')
-        self.assertEquals(fr.get_headers(), Headers())
+        self.assertEqual(fr.get_url(), url)
+        self.assertEqual(fr.get_method(), 'GET')
+        self.assertEqual(fr.get_headers(), Headers())

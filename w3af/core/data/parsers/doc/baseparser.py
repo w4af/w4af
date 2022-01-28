@@ -20,7 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from w3af.core.data.constants.encodings import UTF8
 from w3af.core.data.misc.encoding import is_known_encoding
@@ -89,10 +89,10 @@ class BaseParser(object):
         """
         enc = self._encoding
 
-        if isinstance(url_string, unicode):
+        if isinstance(url_string, str):
             url_string = url_string.encode(enc)
 
-        dec_url = urllib.unquote(url_string)
+        dec_url = urllib.parse.unquote(url_string)
         for sch, repl in self.SAFE_CHARS:
             dec_url = dec_url.replace(sch, repl)
 

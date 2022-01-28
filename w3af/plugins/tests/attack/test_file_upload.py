@@ -52,11 +52,11 @@ class TestFileUploadShell(ExecExploitTest):
 
         # Assert the general results
         vulns = self.kb.get('file_upload', 'file_upload')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         
         vuln = vulns[0]
         
-        self.assertEquals("Insecure file upload", vuln.get_name())
+        self.assertEqual("Insecure file upload", vuln.get_name())
 
         vuln_to_exploit_id = vuln.get_id()
         self._exploit_vuln(vuln_to_exploit_id, 'file_upload')

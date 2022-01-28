@@ -55,7 +55,7 @@ class TestW3afCorePlugins(unittest.TestCase):
         plugin_types = self.core.plugins.get_plugin_types()
         expected = {'grep', 'output', 'mangle', 'audit', 'crawl', 'evasion',
                     'bruteforce', 'auth', 'infrastructure'}
-        self.assertEquals(set(plugin_types), expected)
+        self.assertEqual(set(plugin_types), expected)
 
     def test_get_plugin_list_audit(self):
         plugin_list = self.core.plugins.get_plugin_list('audit')
@@ -72,20 +72,20 @@ class TestW3afCorePlugins(unittest.TestCase):
     def test_get_plugin_inst(self):
         plugin_inst = self.core.plugins.get_plugin_inst('audit', 'sqli')
 
-        self.assertEquals(plugin_inst.get_name(), 'sqli')
+        self.assertEqual(plugin_inst.get_name(), 'sqli')
 
     def test_get_plugin_inst_all(self):
         for plugin_type in itertools.chain(self.core.plugins.get_plugin_types(), ['attack']):
             for plugin_name in self.core.plugins.get_plugin_list(plugin_type):
                 plugin_inst = self.core.plugins.get_plugin_inst(
                     plugin_type, plugin_name)
-                self.assertEquals(plugin_inst.get_name(), plugin_name)
+                self.assertEqual(plugin_inst.get_name(), plugin_name)
 
     def test_set_plugins(self):
         enabled = ['sqli', ]
         self.core.plugins.set_plugins(enabled, 'audit')
         retrieved = self.core.plugins.get_enabled_plugins('audit')
-        self.assertEquals(enabled, retrieved)
+        self.assertEqual(enabled, retrieved)
 
     def test_set_plugins_negative(self):
         enabled = ['fake', ]
@@ -106,8 +106,8 @@ class TestW3afCorePlugins(unittest.TestCase):
 
         all_enabled = self.core.plugins.get_all_enabled_plugins()
 
-        self.assertEquals(enabled_audit, all_enabled['audit'])
-        self.assertEquals(enabled_grep, all_enabled['grep'])
+        self.assertEqual(enabled_audit, all_enabled['audit'])
+        self.assertEqual(enabled_grep, all_enabled['grep'])
 
     def test_plugin_options(self):
         plugin_inst = self.core.plugins.get_plugin_inst('crawl', 'web_spider')
@@ -116,7 +116,7 @@ class TestW3afCorePlugins(unittest.TestCase):
         self.core.plugins.set_plugin_options('crawl', 'web_spider', options_1)
         options_2 = self.core.plugins.get_plugin_options('crawl', 'web_spider')
 
-        self.assertEquals(options_1, options_2)
+        self.assertEqual(options_1, options_2)
 
     def test_plugin_options_invalid(self):
         self.assertRaises(TypeError, self.core.plugins.set_plugin_options,
@@ -160,21 +160,21 @@ class TestW3afCorePlugins(unittest.TestCase):
         self.core.plugins.set_plugins(enabled, 'crawl')
         self.core.plugins.init_plugins()
 
-        self.assertEquals(len(self.core.plugins.plugins['crawl']), 1,
+        self.assertEqual(len(self.core.plugins.plugins['crawl']), 1,
                           self.core.plugins.plugins['crawl'])
 
         plugin_inst = list(self.core.plugins.plugins['crawl'])[0]
-        self.assertEquals(plugin_inst.get_name(), 'web_spider')
+        self.assertEqual(plugin_inst.get_name(), 'web_spider')
 
     def test_enable_all(self):
         enabled = ['all']
         self.core.plugins.set_plugins(enabled, 'crawl')
         self.core.plugins.init_plugins()
 
-        self.assertEquals(set(self.core.plugins.get_enabled_plugins('crawl')),
+        self.assertEqual(set(self.core.plugins.get_enabled_plugins('crawl')),
                           set(self.core.plugins.get_plugin_list('crawl')))
 
-        self.assertEquals(len(set(self.core.plugins.get_enabled_plugins('crawl'))),
+        self.assertEqual(len(set(self.core.plugins.get_enabled_plugins('crawl'))),
                           len(set(self.core.plugins.get_plugin_list('crawl'))))
 
     def test_enable_all_but_web_spider(self):
@@ -186,7 +186,7 @@ class TestW3afCorePlugins(unittest.TestCase):
         all_plugins = all_plugins[:]
         all_plugins.remove('web_spider')
 
-        self.assertEquals(set(self.core.plugins.get_enabled_plugins('crawl')),
+        self.assertEqual(set(self.core.plugins.get_enabled_plugins('crawl')),
                           set(all_plugins))
 
     def test_enable_all_but_two(self):
@@ -199,7 +199,7 @@ class TestW3afCorePlugins(unittest.TestCase):
         all_plugins.remove('web_spider')
         all_plugins.remove('archive_dot_org')
 
-        self.assertEquals(set(self.core.plugins.get_enabled_plugins('crawl')),
+        self.assertEqual(set(self.core.plugins.get_enabled_plugins('crawl')),
                           set(all_plugins))
 
     def test_enable_not_web_spider_all(self):
@@ -211,7 +211,7 @@ class TestW3afCorePlugins(unittest.TestCase):
         all_plugins = all_plugins[:]
         all_plugins.remove('web_spider')
 
-        self.assertEquals(set(self.core.plugins.get_enabled_plugins('crawl')),
+        self.assertEqual(set(self.core.plugins.get_enabled_plugins('crawl')),
                           set(all_plugins))
 
     def test_enable_dependency_same_type(self):
@@ -221,7 +221,7 @@ class TestW3afCorePlugins(unittest.TestCase):
 
         enabled_infra.append('server_header')
 
-        self.assertEquals(
+        self.assertEqual(
             set(self.core.plugins.get_enabled_plugins('infrastructure')),
             set(enabled_infra))
 
@@ -248,10 +248,10 @@ class TestW3afCorePlugins(unittest.TestCase):
 
         self.core.plugins.init_plugins()
 
-        self.assertEquals(set(self.core.plugins.get_enabled_plugins('crawl')),
+        self.assertEqual(set(self.core.plugins.get_enabled_plugins('crawl')),
                           set(enabled_crawl))
 
-        self.assertEquals(
+        self.assertEqual(
             set(self.core.plugins.get_enabled_plugins('infrastructure')),
             set(enabled_infra))
 

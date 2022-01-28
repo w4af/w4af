@@ -37,7 +37,7 @@ class TestEvasion(unittest.TestCase):
         r = HTTPRequest( u )
         
         self.assertEqual(sosibd.modify_request( r ).url_object.url_string,
-                         u'http://www.w3af.com/')
+                         'http://www.w3af.com/')
 
     def test_add_when_dotdot(self):
         sosibd = shift_out_in_between_dots()
@@ -46,7 +46,7 @@ class TestEvasion(unittest.TestCase):
         r = HTTPRequest( u )
         
         self.assertEqual(sosibd.modify_request( r ).url_object.url_string,
-                         u'http://www.w3af.com/.%0E%0F./')
+                         'http://www.w3af.com/.%0E%0F./')
 
     def test_add_path_filename(self):
         sosibd = shift_out_in_between_dots()
@@ -55,8 +55,8 @@ class TestEvasion(unittest.TestCase):
         r = HTTPRequest( u )
         
         self.assertEqual(sosibd.modify_request( r ).url_object.url_string,
-                         u'http://www.w3af.com/abc/def/.%0E%0F././jkl.htm')
+                         'http://www.w3af.com/abc/def/.%0E%0F././jkl.htm')
         #
         #    The plugins should not modify the original request
         #
-        self.assertEqual(u.url_string, u'http://www.w3af.com/abc/def/.././jkl.htm')
+        self.assertEqual(u.url_string, 'http://www.w3af.com/abc/def/.././jkl.htm')

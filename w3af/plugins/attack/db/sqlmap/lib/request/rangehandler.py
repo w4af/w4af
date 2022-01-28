@@ -5,12 +5,12 @@ Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 
 from lib.core.exception import SqlmapConnectionException
 
-class HTTPRangeHandler(urllib2.BaseHandler):
+class HTTPRangeHandler(urllib.request.BaseHandler):
     """
     Handler that enables HTTP Range headers.
 

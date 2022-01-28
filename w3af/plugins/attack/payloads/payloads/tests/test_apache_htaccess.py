@@ -26,10 +26,10 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 class test_apache_htaccess(PayloadTestHelper):
 
     EXPECTED_RESULT = {'htaccess_files':
-                       {u'/var/www/.htaccess': u'#Completely useless, just to be found by the apache_htaccess payload.'}
+                       {'/var/www/.htaccess': '#Completely useless, just to be found by the apache_htaccess payload.'}
                        }
 
     @attr('ci_fails')
     def test_apache_htaccess(self):
         result = exec_payload(self.shell, 'apache_htaccess', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

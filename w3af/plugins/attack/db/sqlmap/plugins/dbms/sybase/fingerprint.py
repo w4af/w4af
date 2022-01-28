@@ -102,7 +102,7 @@ class Fingerprint(GenericFingerprint):
             if result and result.isdigit():
                 Backend.setVersion(str(result))
             else:
-                for version in xrange(12, 16):
+                for version in range(12, 16):
                     result = inject.checkBooleanExpression("PATINDEX('%%/%d[./]%%',@@VERSION)>0" % version)
 
                     if result:

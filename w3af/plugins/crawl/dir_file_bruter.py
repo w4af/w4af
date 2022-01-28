@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 
-from itertools import repeat, izip
+from itertools import repeat
 
 import w3af.core.controllers.output_manager as om
 
@@ -97,7 +97,7 @@ class dir_file_bruter(CrawlPlugin):
         """
         url_generator = self._url_generator(base_path)
         base_path_repeater = repeat(base_path)
-        arg_iter = izip(base_path_repeater, url_generator)
+        arg_iter = zip(base_path_repeater, url_generator)
 
         self.worker_pool.map_multi_args(self._send_and_check,
                                         arg_iter,
@@ -145,18 +145,19 @@ class dir_file_bruter(CrawlPlugin):
 
             try:
                 new_url = base_path.url_join(line)
-            except ValueError, ve:
+            except ValueError as ve:
                 msg = 'The "%s" line at "%s" generated an invalid URL: %s'
                 om.out.debug(msg % (line, file_name, ve))
             else:
                 yield line, new_url
 
-    def _send_and_check(self, base_path, (file_or_path, new_url)):
+    def _send_and_check(self, base_path, xxx_todo_changeme):
         """
         Performs a GET and verifies that the response is not a 404.
 
         :return: None, data is stored in self.output_queue
         """
+        (file_or_path, new_url) = xxx_todo_changeme
         http_response = self._uri_opener.GET(new_url, cache=False)
 
         if is_404(http_response):

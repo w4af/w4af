@@ -201,8 +201,8 @@ class CachedDiskDict(object):
             yield key
 
     def iteritems(self):
-        for key, value in self._in_memory.iteritems():
+        for key, value in self._in_memory.items():
             yield key, value
 
-        for key, value in self._disk_dict.iteritems():
+        for key, value in self._disk_dict.items():
             yield key, value

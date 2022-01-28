@@ -54,7 +54,7 @@ def build_ws_upgrade_request(web_socket_url, extra_headers=None,
     request_headers = Headers()
     request_headers['Sec-WebSocket-Key'] = gen_ws_sec_key()
 
-    for key, value in WEBSOCKET_UPGRADE_HEADERS.items():
+    for key, value in list(WEBSOCKET_UPGRADE_HEADERS.items()):
         request_headers[key] = value
 
     if extra_headers is not None:

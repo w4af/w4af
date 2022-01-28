@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import time
 import unittest
-import SocketServer
+import socketserver
 
 from mock import Mock, patch, call
 from nose.plugins.attrib import attr
@@ -76,12 +76,12 @@ class TestXUrllibDelayOnError(unittest.TestCase):
 
         # Now check the delays
         with patch('w3af.core.data.url.extended_urllib.time.sleep') as sleepm:
-            for i in xrange(loops):
+            for i in range(loops):
                 try:
                     self.uri_opener.GET(url, cache=False)
                 except HTTPRequestException:
                     http_exception_count += 1
-                except Exception, e:
+                except Exception as e:
                     msg = 'Not expecting: "%s"'
                     self.assertTrue(False, msg % e.__class__.__name__)
                 else:
@@ -117,7 +117,7 @@ class TestXUrllibDelayOnError(unittest.TestCase):
                 self.assertTrue(False, 'Expected HTTPRequestException')
 
             # The log was cleared, all values should be False
-            self.assertTrue(all([not v for v in self.uri_opener._sleep_log.values()]))
+            self.assertTrue(all([not v for v in list(self.uri_opener._sleep_log.values())]))
 
     def test_error_handling_disable_per_request(self):
         upper_daemon = UpperDaemon(TimeoutTCPHandler)
@@ -159,24 +159,24 @@ class TestXUrllibDelayOnError(unittest.TestCase):
         loops = 100
 
         # Loop until we reach a must stop exception
-        for i in xrange(loops):
+        for i in range(loops):
             try:
                 self.uri_opener.GET(url, cache=False)
             except HTTPRequestException:
                 http_exception_count += 1
-            except ScanMustStopByKnownReasonExc, smse:
+            except ScanMustStopByKnownReasonExc as smse:
                 break
-            except Exception, e:
+            except Exception as e:
                 msg = 'Not expecting: "%s"'
                 self.assertTrue(False, msg % e.__class__.__name__)
             else:
                 self.assertTrue(False, 'Expecting an exception')
 
         # We quickly reach this state, which is good since the server is down
-        self.assertEquals(http_exception_count, 9)
+        self.assertEqual(http_exception_count, 9)
 
         # After reaching this state we will always yield ScanMustStopByKnownReasonExc
-        for i in xrange(loops):
+        for i in range(loops):
             self.assertRaises(ScanMustStopByKnownReasonExc,
                               self.uri_opener.GET, url, cache=False)
 
@@ -259,7 +259,7 @@ class TestXUrllibErrorHandling(PluginTest):
         self.assertTrue(self.w3afcore.uri_opener.clear.called)
 
 
-class MultipleTimeoutsTCPHandler(SocketServer.BaseRequestHandler):
+class MultipleTimeoutsTCPHandler(socketserver.BaseRequestHandler):
     RESPONSE = ('HTTP/1.0 200 Ok\r\n'
                 'Connection: Close\r\n'
                 'Content-Length: %s\r\n'

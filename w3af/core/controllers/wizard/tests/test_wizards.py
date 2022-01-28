@@ -67,7 +67,7 @@ class test_wizards(object):
         assert len(wizard_inst.get_wizard_description()) > 30
 
         while True:
-            question = wizard_inst.next()
+            question = next(wizard_inst)
             if question is None:
                 break
             else:
@@ -83,7 +83,7 @@ class test_wizards(object):
         """
         while True:
 
-            question = wizard_inst.next()
+            question = next(wizard_inst)
 
             if question is None:
                 break

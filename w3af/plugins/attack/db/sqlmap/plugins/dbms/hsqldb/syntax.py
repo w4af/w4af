@@ -19,6 +19,6 @@ class Syntax(GenericSyntax):
         """
 
         def escaper(value):
-            return "||".join("CHAR(%d)" % ord(value[i]) for i in xrange(len(value)))
+            return "||".join("CHAR(%d)" % ord(value[i]) for i in range(len(value)))
 
         return Syntax._escape(expression, quote, escaper)

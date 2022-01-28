@@ -92,7 +92,7 @@ class http_vs_https_dist(InfrastructurePlugin):
         # usage (which is specially big in scapy module, just when importing)
         try:
             from scapy.all import traceroute
-        except ImportError, ie:
+        except ImportError as ie:
             om.out.debug('There was an error importing scapy.all: "%s"' % ie)
             return
 
@@ -105,7 +105,7 @@ class http_vs_https_dist(InfrastructurePlugin):
             http_troute = traceroute(domain, dport=http_port)[0].get_trace()
 
             # pylint: enable=E1124,E1136
-        except Exception, e:
+        except Exception as e:
             # I've seen numerous bug reports with the following exception:
             # "error: illegal IP address string passed to inet_aton"
             # that come from this part of the code. It seems that in some cases
@@ -119,9 +119,9 @@ class http_vs_https_dist(InfrastructurePlugin):
         if not (https_troute and http_troute):
             return
 
-        https_ip_tuples = https_troute.values()[0].values()
+        https_ip_tuples = list(https_troute.values())[0].values()
         last_https_ip = https_ip_tuples[-1]
-        http_ip_tuples = http_troute.values()[0].values()
+        http_ip_tuples = list(http_troute.values())[0].values()
         last_http_ip = http_ip_tuples[-1]
 
         # Last IP should be True; otherwise the dest wasn't reached

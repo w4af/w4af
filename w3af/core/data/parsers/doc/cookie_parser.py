@@ -20,7 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import Cookie
+import http.cookies
 import sys
 
 # Cookie pickling bug is fixed in Python 2.7.9 and Python 3.4.3+
@@ -33,7 +33,7 @@ COOKIE_PICKLES_PROPERLY = (
 COOKIE_HEADERS = ('set-cookie', 'cookie', 'cookie2')
 
 
-class SerializableSimpleCookie(Cookie.SimpleCookie):
+class SerializableSimpleCookie(http.cookies.SimpleCookie):
     """
     Had to sub-class in order to be able to correctly serialize cookies
 
@@ -44,7 +44,7 @@ class SerializableSimpleCookie(Cookie.SimpleCookie):
         def __setitem__(self, key, value):
             # Apply the fix from http://bugs.python.org/issue22775 where
             # it's not fixed in Python itself
-            if isinstance(value, Cookie.Morsel):
+            if isinstance(value, http.cookies.Morsel):
                 # allow assignment of constructed Morsels (e.g. for pickling)
                 dict.__setitem__(self, key, value)
             else:

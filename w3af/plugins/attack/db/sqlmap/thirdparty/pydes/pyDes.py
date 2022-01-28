@@ -229,7 +229,7 @@ class _baseDes(object):
 		# Only accept byte strings or ascii unicode values, otherwise
 		# there is no way to correctly decode the data into bytes.
 		if _pythonMajorVersion < 3:
-			if isinstance(data, unicode):
+			if isinstance(data, str):
 				raise ValueError("pyDes can only work with bytes, not Unicode strings.")
 		else:
 			if isinstance(data, str):
@@ -453,7 +453,7 @@ class des(_baseDes):
 
 	def __permutate(self, table, block):
 		"""Permutate this block with the specified table"""
-		return list(map(lambda x: block[x], table))
+		return list([block[x] for x in table])
 
 	# Transform the secret key, so that it is ready for data processing
 	# Create the 16 subkeys, K[1] - K[16]

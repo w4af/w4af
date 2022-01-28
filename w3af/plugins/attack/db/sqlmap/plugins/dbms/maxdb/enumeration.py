@@ -48,7 +48,7 @@ class Enumeration(GenericEnumeration):
         retVal = pivotDumpTable("(%s) AS %s" % (query, randStr), ['%s.schemaname' % randStr], blind=True)
 
         if retVal:
-            kb.data.cachedDbs = retVal[0].values()[0]
+            kb.data.cachedDbs = list(retVal[0].values())[0]
 
         if kb.data.cachedDbs:
             kb.data.cachedDbs.sort()
@@ -69,11 +69,11 @@ class Enumeration(GenericEnumeration):
         else:
             dbs = self.getDbs()
 
-        for db in filter(None, dbs):
+        for db in [_f for _f in dbs if _f]:
             dbs[dbs.index(db)] = safeSQLIdentificatorNaming(db)
 
         infoMsg = "fetching tables for database"
-        infoMsg += "%s: %s" % ("s" if len(dbs) > 1 else "", ", ".join(db if isinstance(db, basestring) else db[0] for db in sorted(dbs)))
+        infoMsg += "%s: %s" % ("s" if len(dbs) > 1 else "", ", ".join(db if isinstance(db, str) else db[0] for db in sorted(dbs)))
         logger.info(infoMsg)
 
         rootQuery = queries[DBMS.MAXDB].tables
@@ -84,13 +84,13 @@ class Enumeration(GenericEnumeration):
             retVal = pivotDumpTable("(%s) AS %s" % (query, randStr), ['%s.tablename' % randStr], blind=True)
 
             if retVal:
-                for table in retVal[0].values()[0]:
+                for table in list(retVal[0].values())[0]:
                     if db not in kb.data.cachedTables:
                         kb.data.cachedTables[db] = [table]
                     else:
                         kb.data.cachedTables[db].append(table)
 
-        for db, tables in kb.data.cachedTables.items():
+        for db, tables in list(kb.data.cachedTables.items()):
             kb.data.cachedTables[db] = sorted(tables) if tables else tables
 
         return kb.data.cachedTables
@@ -132,7 +132,7 @@ class Enumeration(GenericEnumeration):
             self.getTables()
 
             if len(kb.data.cachedTables) > 0:
-                tblList = kb.data.cachedTables.values()
+                tblList = list(kb.data.cachedTables.values())
 
                 if isinstance(tblList[0], (set, tuple, list)):
                     tblList = tblList[0]

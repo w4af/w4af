@@ -50,5 +50,5 @@ class TestWSDLFinder(PluginTest):
         info = infos[0]
 
         self.assertIn('WSDL resource', info.get_name())
-        self.assertEquals(info.get_url().url_string,
+        self.assertEqual(info.get_url().url_string,
                           self.base_url + 'web_service_server.php')

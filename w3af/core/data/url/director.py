@@ -1,7 +1,7 @@
-import httplib
+import http.client
 import socket
 
-from urllib2 import (OpenerDirector, ProxyHandler, UnknownHandler, HTTPHandler,
+from urllib.request import (OpenerDirector, ProxyHandler, UnknownHandler, HTTPHandler,
                      HTTPDefaultErrorHandler, HTTPRedirectHandler,
                      HTTPErrorProcessor, HTTPSHandler, Request)
 
@@ -13,7 +13,7 @@ class CustomOpenerDirector(OpenerDirector):
         override my own HTTPRequest.timeout attribute.
         """
         # accept a URL or a Request object
-        if isinstance(full_url, basestring):
+        if isinstance(full_url, str):
             req = Request(full_url, data)
         else:
             req = full_url
@@ -53,7 +53,7 @@ def build_opener(director_klass, handlers):
     import types
 
     def isclass(obj):
-        return isinstance(obj, (types.ClassType, type))
+        return isinstance(obj, type)
 
     opener = director_klass()
     default_classes = [ProxyHandler, UnknownHandler, HTTPHandler,

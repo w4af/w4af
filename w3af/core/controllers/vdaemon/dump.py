@@ -6,4 +6,4 @@ if __name__ == "__main__":
         res += '\\x' + hex(ord(i))[2:].zfill(2)
 
     res += "'"
-    print res
+    print(res)

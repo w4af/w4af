@@ -117,8 +117,8 @@ def write_instructions_to_console(platform, failed_deps, os_packages, script_pat
         msg += ('On %s systems please install the following operating'
                 ' system packages before running the pip installer:\n'
                 '    %s %s\n')
-        print(msg % (platform.SYSTEM_NAME, platform.PKG_MANAGER_CMD,
-                     missing_pkgs))
+        print((msg % (platform.SYSTEM_NAME, platform.PKG_MANAGER_CMD,
+                     missing_pkgs)))
 
     #
     #    Report all missing python modules
@@ -156,14 +156,14 @@ def write_instructions_to_console(platform, failed_deps, os_packages, script_pat
         print('External programs used by w3af are not installed or were not found.'
               'Run these commands to install them on your system:\n')
         for cmd in external_commands:
-            print('    %s' % cmd)
+            print(('    %s' % cmd))
 
         print('')
 
     platform.after_hook()
 
     msg = 'A script with these commands has been created for you at %s'
-    print(msg % script_path)
+    print((msg % script_path))
 
 
 def dependency_check(dependency_set=CORE, exit_on_failure=True):

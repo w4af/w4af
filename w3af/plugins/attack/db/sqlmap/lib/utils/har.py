@@ -6,11 +6,11 @@ See the file 'LICENSE' for copying permission
 """
 
 import base64
-import BaseHTTPServer
+import http.server
 import datetime
-import httplib
+import http.client
 import re
-import StringIO
+import io
 import time
 
 from lib.core.bigarray import BigArray
@@ -114,7 +114,7 @@ class Request:
             "httpVersion": self.httpVersion,
             "method": self.method,
             "url": self.url,
-            "headers": [dict(name=key.capitalize(), value=value) for key, value in self.headers.items()],
+            "headers": [dict(name=key.capitalize(), value=value) for key, value in list(self.headers.items())],
             "cookies": [],
             "queryString": [],
             "headersSize": -1,
@@ -149,7 +149,7 @@ class Response:
         comment = ""
 
         if altered.startswith("HTTP response [") or altered.startswith("HTTP redirect ["):
-            io = StringIO.StringIO(raw)
+            io = io.StringIO(raw)
             first_line = io.readline()
             parts = cls.extract_status.search(first_line)
             status_line = "HTTP/1.0 %s %s" % (parts.group(1), parts.group(2))
@@ -157,12 +157,12 @@ class Response:
             altered = status_line + "\r\n" + remain
             comment = first_line
 
-        response = httplib.HTTPResponse(FakeSocket(altered))
+        response = http.client.HTTPResponse(FakeSocket(altered))
         response.begin()
 
         try:
             content = response.read(-1)
-        except httplib.IncompleteRead:
+        except http.client.IncompleteRead:
             content = raw[raw.find("\r\n\r\n") + 4:].rstrip("\r\n")
 
         return cls(httpVersion="HTTP/1.1" if response.version == 11 else "HTTP/1.0",
@@ -189,7 +189,7 @@ class Response:
             "httpVersion": self.httpVersion,
             "status": self.status,
             "statusText": self.statusText,
-            "headers": [dict(name=key.capitalize(), value=value) for key, value in self.headers.items() if key.lower() != "uri"],
+            "headers": [dict(name=key.capitalize(), value=value) for key, value in list(self.headers.items()) if key.lower() != "uri"],
             "cookies": [],
             "content": content,
             "headersSize": -1,
@@ -203,18 +203,18 @@ class FakeSocket:
     # https://stackoverflow.com/questions/24728088/python-parse-http-response-string
 
     def __init__(self, response_text):
-        self._file = StringIO.StringIO(response_text)
+        self._file = io.StringIO(response_text)
 
     def makefile(self, *args, **kwargs):
         return self._file
 
-class HTTPRequest(BaseHTTPServer.BaseHTTPRequestHandler):
+class HTTPRequest(http.server.BaseHTTPRequestHandler):
     # Original source:
     # https://stackoverflow.com/questions/4685217/parse-raw-http-headers
 
     def __init__(self, request_text):
         self.comment = None
-        self.rfile = StringIO.StringIO(request_text)
+        self.rfile = io.StringIO(request_text)
         self.raw_requestline = self.rfile.readline()
 
         if self.raw_requestline.startswith("HTTP request ["):

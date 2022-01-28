@@ -40,7 +40,7 @@ class TestEncoding(unittest.TestCase):
 
     def test_escaped_char_no_error(self):
         decoded = 'ábc'.decode('utf-8', errors=ESCAPED_CHAR)
-        self.assertEqual(decoded, u'ábc')
+        self.assertEqual(decoded, 'ábc')
 
     def test_escaped_char_error_escape_char(self):
         decoded = '\xff'.decode('utf-8', errors=ESCAPED_CHAR)
@@ -51,4 +51,4 @@ class TestEncoding(unittest.TestCase):
         self.assertEqual(decoded, '&#xff')
 
     def test_atilde(self):
-        self.assertEquals(smart_unicode('á'), u'á')
+        self.assertEqual(smart_unicode('á'), 'á')

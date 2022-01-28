@@ -32,7 +32,7 @@ class TestW3afConsole(unittest.TestCase):
         try:
             compiler.compile(file('w3af_console').read(),
                              '/tmp/foo.tmp', 'exec')
-        except SyntaxError, se:
+        except SyntaxError as se:
             self.assertTrue(False, 'Error in w3af_console code "%s"' % se)
 
     def test_get_prompt(self):

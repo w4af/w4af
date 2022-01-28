@@ -19,9 +19,9 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
-import urlparse
-import cookielib
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
+import http.cookiejar
 
 import w3af.core.controllers.output_manager as om
 
@@ -187,7 +187,7 @@ class OpenerSettings(Configurable):
 
         try:
             cj.load(cookiejar_file)
-        except cookielib.LoadError, cle:
+        except http.cookiejar.LoadError as cle:
             # pylint: disable=E1101
             if cle.message.startswith('invalid Netscape format cookies file'):
                 docs_url = ('http://docs.w3af.org/en/latest/'
@@ -298,7 +298,7 @@ class OpenerSettings(Configurable):
 
         proxy_url = 'http://%s:%s' % (ip, port)
         proxy_map = {'http': proxy_url}
-        self._proxy_handler = urllib2.ProxyHandler(proxy_map)
+        self._proxy_handler = urllib.request.ProxyHandler(proxy_map)
 
     def get_proxy(self):
         return cfg.get('proxy_address') + ':' + str(cfg.get('proxy_port'))
@@ -319,7 +319,7 @@ class OpenerSettings(Configurable):
         else:
             if self._password_mgr is None:
                 # Create a new password manager
-                self._password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+                self._password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
 
             # Add the username and password
             domain = url.get_domain()
@@ -335,7 +335,7 @@ class OpenerSettings(Configurable):
 
     def get_basic_auth(self):
         basic_auth_domain = cfg.get('basic_auth_domain')
-        scheme, domain, path, x1, x2, x3 = urlparse.urlparse(basic_auth_domain)
+        scheme, domain, path, x1, x2, x3 = urllib.parse.urlparse(basic_auth_domain)
 
         fmt = '%s://%s:%s@%s/'
 
@@ -352,7 +352,7 @@ class OpenerSettings(Configurable):
 
         if self._password_mgr is None:
             # create a new password manager
-            self._password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+            self._password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
 
         # HTTPNtmlAuthHandler expects username to have the domain name
         # separated with a '\', so that's what we do here:

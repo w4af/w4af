@@ -91,7 +91,7 @@ class TestCachedQueue(unittest.TestCase):
         self.assertRaises(Exception, q.get, block=False)
 
         q.put(1)
-        self.assertEquals(q.get(), 1)
+        self.assertEqual(q.get(), 1)
 
     def test_simple_rpm_speed(self):
         q = CachedQueue()
@@ -99,7 +99,7 @@ class TestCachedQueue(unittest.TestCase):
         self.assertEqual(0.0, q.get_input_rpm())
         self.assertEqual(0.0, q.get_output_rpm())
 
-        for i in xrange(4):
+        for i in range(4):
             q.put(i)
             # 20 RPM
             time.sleep(3)
@@ -109,7 +109,7 @@ class TestCachedQueue(unittest.TestCase):
         self.assertGreater(q.get_input_rpm(), 19)
         self.assertLess(q.get_input_rpm(), 20)
 
-        for i in xrange(4):
+        for i in range(4):
             q.get()
             # 60 RPM
             time.sleep(1)

@@ -28,8 +28,8 @@ import subprocess32 as subprocess
 
 from xml.etree import ElementTree
 
-from xunit import parse_xunit
-from xunit import normalize_test_names
+from .xunit import parse_xunit
+from .xunit import normalize_test_names
 from nose.tools import nottest
 
 from w3af.core.controllers.ci.nosetests_wrapper.constants import (ARTIFACT_DIR,
@@ -136,7 +136,7 @@ def get_test_ids(nose_selector):
                  'TestGitAutoUpdate.test_is_git_repo'),
     """
     nose_ids = pickle.load(file(ID_FILE))
-    return nose_ids['ids'].keys()
+    return list(nose_ids['ids'].keys())
 
 
 @nottest

@@ -46,7 +46,7 @@ class SQLAlchemy(GenericConnector):
             try:
                 if not self.port and self.db:
                     if not os.path.exists(self.db):
-                        raise SqlmapFilePathException, "the provided database file '%s' does not exist" % self.db
+                        raise SqlmapFilePathException("the provided database file '%s' does not exist" % self.db)
 
                     _ = conf.direct.split("//", 1)
                     conf.direct = "%s////%s" % (_[0], os.path.abspath(self.db))
@@ -69,7 +69,7 @@ class SQLAlchemy(GenericConnector):
                 raise
             except SqlmapFilePathException:
                 raise
-            except Exception, msg:
+            except Exception as msg:
                 raise SqlmapConnectionException("SQLAlchemy connection issue ('%s')" % msg[0])
 
             self.printConnected()
@@ -80,16 +80,16 @@ class SQLAlchemy(GenericConnector):
             for row in self.cursor.fetchall():
                 retVal.append(tuple(row))
             return retVal
-        except _sqlalchemy.exc.ProgrammingError, msg:
+        except _sqlalchemy.exc.ProgrammingError as msg:
             logger.log(logging.WARN if conf.dbmsHandler else logging.DEBUG, "(remote) %s" % msg.message if hasattr(msg, "message") else msg)
             return None
 
     def execute(self, query):
         try:
             self.cursor = self.connector.execute(query)
-        except (_sqlalchemy.exc.OperationalError, _sqlalchemy.exc.ProgrammingError), msg:
+        except (_sqlalchemy.exc.OperationalError, _sqlalchemy.exc.ProgrammingError) as msg:
             logger.log(logging.WARN if conf.dbmsHandler else logging.DEBUG, "(remote) %s" % msg.message if hasattr(msg, "message") else msg)
-        except _sqlalchemy.exc.InternalError, msg:
+        except _sqlalchemy.exc.InternalError as msg:
             raise SqlmapConnectionException(msg[1])
 
     def select(self, query):

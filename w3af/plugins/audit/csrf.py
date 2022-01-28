@@ -209,7 +209,7 @@ class csrf(AuditPlugin):
         :see: https://github.com/andresriancho/w3af/issues/120
         :return: True if the CSRF token is NOT verified by the web application
         """
-        token_pname_lst = token.keys()
+        token_pname_lst = list(token.keys())
         token_value = token[token_pname_lst[0]]
         
         # This will generate mutants for the original fuzzable request using
@@ -238,7 +238,7 @@ class csrf(AuditPlugin):
 
         entropy = 0
 
-        for x in xrange(256):
+        for x in range(256):
             p_x = float(data.count(chr(x)))/len(data)
             if p_x > 0:
                 entropy += - p_x * log(p_x, 2)

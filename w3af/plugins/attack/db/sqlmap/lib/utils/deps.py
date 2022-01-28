@@ -13,7 +13,7 @@ from lib.core.settings import IS_WIN
 def checkDependencies():
     missing_libraries = set()
 
-    for dbmsName, data in DBMS_DICT.items():
+    for dbmsName, data in list(DBMS_DICT.items()):
         if data[1] is None:
             continue
 

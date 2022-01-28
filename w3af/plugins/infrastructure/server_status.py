@@ -60,7 +60,7 @@ class server_status(InfrastructurePlugin):
         server_status_url = base_url.url_join('server-status')
         response = self._uri_opener.GET(server_status_url, cache=True)
 
-        if not is_404(response) and response.get_code() not in range(400, 404):
+        if not is_404(response) and response.get_code() not in list(range(400, 404)):
 
             if 'apache' in response.get_body().lower():
                 msg = 'Apache server-status module is enabled and accessible.'

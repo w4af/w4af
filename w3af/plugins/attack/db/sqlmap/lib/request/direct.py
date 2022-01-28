@@ -37,7 +37,7 @@ def direct(query, content=True):
     if Backend.isDbms(DBMS.ORACLE) and query.upper().startswith("SELECT ") and " FROM " not in query.upper():
         query = "%s FROM DUAL" % query
 
-    for sqlTitle, sqlStatements in SQL_STATEMENTS.items():
+    for sqlTitle, sqlStatements in list(SQL_STATEMENTS.items()):
         for sqlStatement in sqlStatements:
             if query.lower().startswith(sqlStatement) and sqlTitle != "SQL SELECT statement":
                 select = False

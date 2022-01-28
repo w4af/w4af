@@ -17,7 +17,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement
+
 
 import os
 import re
@@ -125,7 +125,7 @@ class user_defined_regex(GrepPlugin):
 
             try:
                 f = file(self._regex_file_path)
-            except Exception, e:
+            except Exception as e:
                 msg = 'Unable to open file "%s", error: "%s".'
                 raise BaseFrameworkException(msg % (self._regex_file_path, e))
             else:

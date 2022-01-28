@@ -72,7 +72,7 @@ class private_ip(GrepPlugin):
         self._analyze_html(request, response)
 
     def _get_header_name(self, response, ip_address, regex):
-        for header_name, header_value in response.get_headers().iteritems():
+        for header_name, header_value in response.get_headers().items():
             for header_ip_address in regex.findall(header_value):
                 header_ip_address = header_ip_address.strip()
                 if header_ip_address == ip_address:

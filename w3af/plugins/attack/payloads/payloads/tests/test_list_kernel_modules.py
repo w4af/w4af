@@ -31,4 +31,4 @@ class test_list_kernel_modules(PayloadTestHelper):
     def test_list_kernel_modules(self):
         result = exec_payload(self.shell, 'list_kernel_modules', use_api=True)
         self.assertTrue(set(
-            result.keys()).issuperset(self.EXPECTED_RESULT), result.keys())
+            result.keys()).issuperset(self.EXPECTED_RESULT), list(result.keys()))

@@ -38,7 +38,7 @@ class TestParserCache(unittest.TestCase):
     
     def setUp(self):
         self.url = URL('http://w3af.com')
-        self.headers = Headers([(u'content-type', u'text/html')])
+        self.headers = Headers([('content-type', 'text/html')])
         self.dpc = ParserCache()
 
     def tearDown(self):
@@ -72,7 +72,7 @@ class TestParserCache(unittest.TestCase):
     
     def test_issue_188_invalid_url(self):
         # https://github.com/andresriancho/w3af/issues/188
-        all_chars = ''.join([chr(i) for i in xrange(0, 255)])
+        all_chars = ''.join([chr(i) for i in range(0, 255)])
         response = HTTPResponse(200, all_chars, self.headers, self.url, self.url)
         self.dpc.get_document_parser_for(response)
 
@@ -93,7 +93,7 @@ class TestParserCache(unittest.TestCase):
             # Trigger the timeout
             #
             html = '<html>DelayedParser!</html>'
-            http_resp = _build_http_response(html, u'text/html')
+            http_resp = _build_http_response(html, 'text/html')
 
             timeout_mock.return_value = 1
             max_workers_mock.return_value = 1
@@ -101,7 +101,7 @@ class TestParserCache(unittest.TestCase):
 
             try:
                 self.dpc.get_document_parser_for(http_resp)
-            except BaseFrameworkException, bfe:
+            except BaseFrameworkException as bfe:
                 self._is_timeout_exception_message(bfe, http_resp)
             else:
                 self.assertTrue(False)
@@ -117,12 +117,12 @@ class TestParserCache(unittest.TestCase):
             #
             try:
                 self.dpc.get_document_parser_for(http_resp)
-            except BaseFrameworkException, bfe:
+            except BaseFrameworkException as bfe:
                 self.assertIn('Exceeded timeout while parsing', str(bfe))
 
     def _is_timeout_exception_message(self, toe, http_resp):
         msg = 'Reached timeout parsing "http://w3af.com/".'
-        self.assertEquals(str(toe), msg)
+        self.assertEqual(str(toe), msg)
 
     def test_get_tags_by_filter_simple(self):
         html = '<a href="/def">abc</a>'

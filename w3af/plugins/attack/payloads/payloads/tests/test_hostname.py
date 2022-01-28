@@ -32,4 +32,4 @@ class test_hostname(PayloadTestHelper):
     @attr('ci_fails')
     def test_hostname(self):
         result = exec_payload(self.shell, 'hostname', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

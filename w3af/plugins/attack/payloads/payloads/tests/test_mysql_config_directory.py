@@ -30,4 +30,4 @@ class TestMySQLConfigDirectory(PayloadTestHelper):
         result = exec_payload(self.shell,
                               'mysql_config_directory',
                               use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

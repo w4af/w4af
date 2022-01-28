@@ -19,7 +19,6 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import string
 import difflib
 import diff_match_patch as dmp_module
 
@@ -37,7 +36,7 @@ MAX_DIFF_TIME = 20
 # the string to split has null bytes, but that is acceptable due to the performance
 # improvement gains
 #
-TRANSLATION_TABLE = string.maketrans('\n\t\r"\'<',
+TRANSLATION_TABLE = str.maketrans('\n\t\r"\'<',
                                      '\0\0\0\0\0\0')
 
 
@@ -196,7 +195,7 @@ def split_by_sep(sequence):
     # [0] https://github.com/andresriancho/w3af/blob/2ded693c959c91dc3e4daca276460d6c64ada479/w3af/core/controllers/misc/diff.py#L173
     #
     try:
-        translated_seq = string.translate(sequence, TRANSLATION_TABLE)
+        translated_seq = str.translate(sequence, TRANSLATION_TABLE)
     except UnicodeDecodeError:
-        translated_seq = string.translate(sequence.encode('utf-8'), TRANSLATION_TABLE)
+        translated_seq = str.translate(sequence.encode('utf-8'), TRANSLATION_TABLE)
     return translated_seq.split('\0')

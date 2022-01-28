@@ -76,7 +76,7 @@ def dump_thread_stack():
     output_file = PROFILING_OUTPUT_FMT % get_filename_fmt()
     data = {}
 
-    for thread, frame in sys._current_frames().items():
+    for thread, frame in list(sys._current_frames().items()):
         # Actually saving it as a list makes it more human readable
         trace = traceback.format_stack(frame)
 

@@ -31,4 +31,4 @@ class test_rootkit_hunter(PayloadTestHelper):
     @attr('ci_fails')
     def test_rootkit_hunter(self):
         result = exec_payload(self.shell, 'rootkit_hunter', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

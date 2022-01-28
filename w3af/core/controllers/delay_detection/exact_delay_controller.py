@@ -149,24 +149,24 @@ class ExactDelayController(object):
         return True, responses
 
     def _log_success(self, delay, response):
-        msg = (u'[did: %s] [id: %s] Successfully controlled HTTP response delay for'
-               u' URL %s - parameter "%s" for %s seconds using %r, response'
-               u' wait time was: %s seconds and response ID: %s.')
+        msg = ('[did: %s] [id: %s] Successfully controlled HTTP response delay for'
+               ' URL %s - parameter "%s" for %s seconds using %r, response'
+               ' wait time was: %s seconds and response ID: %s.')
         self._log_generic(msg, delay, response)
 
     def _log_failure(self, delay, response):
-        msg = (u'[did: %s] [id: %s] Failed to control HTTP response delay for'
-               u' URL %s - parameter "%s" for %s seconds using %r, response'
-               u' wait time was: %s seconds and response ID: %s.')
+        msg = ('[did: %s] [id: %s] Failed to control HTTP response delay for'
+               ' URL %s - parameter "%s" for %s seconds using %r, response'
+               ' wait time was: %s seconds and response ID: %s.')
         self._log_generic(msg, delay, response)
 
     def _log_failure_with_reverse(self, delay, response):
-        msg = (u'[did: %s] [id: %s] Successfully controlled the HTTP response'
-               u' delay using the reverse payload, this is a false positive test'
-               u' and should have failed. The previous delay was most likely'
-               u' generated because of the server being under heavy load.'
-               u' URL %s - parameter "%s" delayed for %s seconds using %r,'
-               u' response wait time was: %s seconds and response ID: %s.')
+        msg = ('[did: %s] [id: %s] Successfully controlled the HTTP response'
+               ' delay using the reverse payload, this is a false positive test'
+               ' and should have failed. The previous delay was most likely'
+               ' generated because of the server being under heavy load.'
+               ' URL %s - parameter "%s" delayed for %s seconds using %r,'
+               ' response wait time was: %s seconds and response ID: %s.')
         self._log_generic(msg, delay, response)
 
     def _log_generic(self, msg, delay, response):
@@ -261,8 +261,8 @@ class ExactDelayController(object):
             #     response so much that it triggers the timeout
             #
             args = (id(self), upper_bound, lower_bound, delay, upper_bound)
-            msg = (u'[id: %s] HTTP response delay was %.2f.'
-                   u' (lower, expected, upper): %.2f, %.2f, %.2f.')
+            msg = ('[id: %s] HTTP response delay was %.2f.'
+                   ' (lower, expected, upper): %.2f, %.2f, %.2f.')
             out.debug(msg % args)
 
             return True, new_no_content_resp(self.mutant.get_uri())
@@ -271,8 +271,8 @@ class ExactDelayController(object):
         # have a working delay. This is most of the cases I've seen.
         current_response_wait_time = response.get_wait_time()
         args = (id(self), current_response_wait_time, lower_bound, delay, upper_bound)
-        msg = (u'[id: %s] HTTP response delay was %.2f.'
-               u' (lower, expected, upper): %.2f, %.2f, %.2f.')
+        msg = ('[id: %s] HTTP response delay was %.2f.'
+               ' (lower, expected, upper): %.2f, %.2f, %.2f.')
         out.debug(msg % args)
 
         if current_response_wait_time > lower_bound:

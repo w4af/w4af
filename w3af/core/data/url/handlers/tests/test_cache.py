@@ -20,7 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import unittest
 
 from mock import patch, Mock, _Call
@@ -76,7 +76,7 @@ class TestCacheHandler(unittest.TestCase):
         self.assertEqual(cached_response.code, response.code)
         self.assertEqual(cached_response.msg, response.msg)
         self.assertEqual(cached_response.read(), response.read())
-        self.assertEqual(Headers(cached_response.info().items()), response.info())
+        self.assertEqual(Headers(list(cached_response.info().items())), response.info())
         self.assertEqual(cached_response.geturl(), response.geturl())
 
     def test_no_cache(self):
@@ -108,7 +108,7 @@ class CacheIntegrationTest(unittest.TestCase):
             # If there is a response we should store it, even if it is a 404
             try:
                 response = opener.open(request)
-            except urllib2.HTTPError:
+            except urllib.error.HTTPError:
                 pass
 
             # Make sure the right call was made

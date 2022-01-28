@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import re
-from cStringIO import StringIO
+from io import StringIO
 
 from lxml import etree
 
@@ -72,7 +72,7 @@ class TestHTMLOutput(PluginTest):
 
         self.assertGreaterEqual(len(xss_vulns), 2)
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_url() for v in xss_vulns])),
             set(sorted([v.get_url() for v in file_vulns]))
         )

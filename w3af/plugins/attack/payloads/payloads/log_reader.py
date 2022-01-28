@@ -62,7 +62,7 @@ class log_reader(Payload):
         logs.append('/var/log/tomcat6/localhost.')
         logs.append('/var/log/tomcat6/catalina.')
 
-        for i in xrange(10):
+        for i in range(10):
             ext = '.gz'
             if i == 1:
                 ext = ''

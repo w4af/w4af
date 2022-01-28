@@ -206,7 +206,7 @@ class extrusionScanner(object):
         remoteFilename += '.' + extension
 
         # do the transfer
-        apply(self._transferHandler.transfer, (extrusionClient,
+        self._transferHandler.transfer(*(extrusionClient,
               remoteFilename))
 
         return interpreter, remoteFilename
@@ -216,7 +216,7 @@ class extrusionScanner(object):
         A wrapper for executing commands
         """
         om.out.debug('Executing: ' + command)
-        response = apply(self._exec_method, (command,))
+        response = self._exec_method(*(command,))
         om.out.debug('"' + command + '" returned: ' + response)
         return response
 

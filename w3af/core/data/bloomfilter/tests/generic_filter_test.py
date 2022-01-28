@@ -42,7 +42,7 @@ class GenericFilterTest(unittest.TestCase):
 
     @only_if_subclass
     def test_bloom_int(self):
-        for i in xrange(0, self.CAPACITY):
+        for i in range(0, self.CAPACITY):
             self.filter.add(i)
             
         # After understanding a little bit more about how bloom filters work,
@@ -53,10 +53,10 @@ class GenericFilterTest(unittest.TestCase):
         # useless it just means that it's false positive rate is going up.
         #self.assertEqual( len(self.filter), self.CAPACITY)
 
-        for i in xrange(0, self.CAPACITY):
+        for i in range(0, self.CAPACITY):
             self.assertIn(i, self.filter)
 
-        for i in xrange(0, self.CAPACITY / 2):
+        for i in range(0, self.CAPACITY / 2):
             r = random.randint(self.CAPACITY, self.CAPACITY * 2)
             self.assertNotIn(r, self.filter)
 
@@ -64,8 +64,8 @@ class GenericFilterTest(unittest.TestCase):
     def test_bloom_string(self):
         randomly_generated_strings = []
 
-        for _ in xrange(0, self.CAPACITY):
-            rnd = ''.join(random.choice(string.letters) for i in xrange(40))
+        for _ in range(0, self.CAPACITY):
+            rnd = ''.join(random.choice(string.letters) for i in range(40))
             randomly_generated_strings.append(rnd)
             self.filter.add(rnd)
 
@@ -80,7 +80,7 @@ class GenericFilterTest(unittest.TestCase):
 
     @only_if_subclass
     def test_bloom_url_objects(self):        
-        for i in xrange(0, self.CAPACITY):
+        for i in range(0, self.CAPACITY):
             url_num = URL('http://moth/index%s.html' % i)
             self.filter.add(url_num)
 
@@ -90,13 +90,13 @@ class GenericFilterTest(unittest.TestCase):
             url_char = URL('http://moth/index%s.html' % i)
             self.assertNotIn(url_char, self.filter)
 
-        for i in xrange(self.CAPACITY, self.CAPACITY * 2):
+        for i in range(self.CAPACITY, self.CAPACITY * 2):
             url_char = URL('http://moth/index%s.html' % i)
             self.assertNotIn(url_char, self.filter)
 
     @only_if_subclass
     def test_unicode_string(self):
-        unicode_string = u'¡'
+        unicode_string = '¡'
         self.filter.add(unicode_string)
         
         self.assertIn(unicode_string, self.filter)
@@ -107,7 +107,7 @@ class GenericFilterTest(unittest.TestCase):
             return
         
         count = 12500
-        for i in xrange(0, count):
+        for i in range(0, count):
             self.filter.add(i)
         
         self.assertGreater(self.filter.capacity, count)

@@ -47,7 +47,7 @@ class test_ssn(unittest.TestCase):
         response = HTTPResponse(200, body, headers, self.url, self.url, _id=1)
         self.plugin._already_inspected = set()
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('ssn', 'ssn')), 0)
+        self.assertEqual(len(kb.kb.get('ssn', 'ssn')), 0)
 
     def test_ssn_separated(self):
         body = 'header 771-12-9876 footer'
@@ -85,7 +85,7 @@ class test_ssn(unittest.TestCase):
         headers = Headers([('content-type', 'text/html')])
         response = HTTPResponse(200, body, headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('ssn', 'ssn')), 1)
+        self.assertEqual(len(kb.kb.get('ssn', 'ssn')), 1)
 
     def test_ssn_extra_number(self):
         body = 'header 7711298761 footer'

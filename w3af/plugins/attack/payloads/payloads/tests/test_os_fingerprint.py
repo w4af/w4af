@@ -28,4 +28,4 @@ class test_os_fingerprint(PayloadTestHelper):
 
     def test_os_fingerprint(self):
         result = exec_payload(self.shell, 'os_fingerprint', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

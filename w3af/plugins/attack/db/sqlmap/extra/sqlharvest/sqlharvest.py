@@ -5,13 +5,13 @@ Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
-import cookielib
+import http.cookiejar
 import re
 import socket
 import sys
-import urllib
-import urllib2
-import ConfigParser
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import configparser
 
 from operator import itemgetter
 
@@ -27,15 +27,15 @@ REGEX_RESULT = r'(?i)CREATE TABLE\s*(/\*.*\*/)?\s*(IF NOT EXISTS)?\s*(?P<result>
 
 def main():
     tables = dict()
-    cookies = cookielib.CookieJar()
-    cookie_processor = urllib2.HTTPCookieProcessor(cookies)
-    opener = urllib2.build_opener(cookie_processor)
+    cookies = http.cookiejar.CookieJar()
+    cookie_processor = urllib.request.HTTPCookieProcessor(cookies)
+    opener = urllib.request.build_opener(cookie_processor)
     opener.addheaders = [("User-Agent", USER_AGENT)]
 
     conn = opener.open(SEARCH_URL)
     page = conn.read()  # set initial cookie values
 
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
 
     if not config.has_section("options"):
@@ -47,7 +47,7 @@ def main():
 
     try:
         with open(TABLES_FILE, 'r') as f:
-            for line in f.xreadlines():
+            for line in f:
                 if len(line) > 0 and ',' in line:
                     temp = line.split(',')
                     tables[temp[0]] = int(temp[1])
@@ -67,7 +67,7 @@ def main():
                 conn = opener.open("%s&q=%s&start=%d&sa=N" % (SEARCH_URL, QUERY.replace(' ', '+'), i * 10))
                 page = conn.read()
                 for match in re.finditer(REGEX_URLS, page):
-                    files.append(urllib.unquote(match.group(1)))
+                    files.append(urllib.parse.unquote(match.group(1)))
                     if len(files) >= 10:
                         break
                 abort = (files == old_files)
@@ -75,8 +75,8 @@ def main():
             except KeyboardInterrupt:
                 raise
 
-            except Exception, msg:
-                print msg
+            except Exception as msg:
+                print(msg)
 
             if abort:
                 break
@@ -86,11 +86,11 @@ def main():
             sys.stdout.write("---------------\n")
 
             for sqlfile in files:
-                print sqlfile
+                print(sqlfile)
 
                 try:
-                    req = urllib2.Request(sqlfile)
-                    response = urllib2.urlopen(req)
+                    req = urllib.request.Request(sqlfile)
+                    response = urllib.request.urlopen(req)
 
                     if "Content-Length" in response.headers:
                         if int(response.headers.get("Content-Length")) > MAX_FILE_SIZE:
@@ -118,8 +118,8 @@ def main():
                 except KeyboardInterrupt:
                     raise
 
-                except Exception, msg:
-                    print msg
+                except Exception as msg:
+                    print(msg)
 
             else:
                 i += 1
@@ -129,7 +129,7 @@ def main():
 
     finally:
         with open(TABLES_FILE, 'w+') as f:
-            tables = sorted(tables.items(), key=itemgetter(1), reverse=True)
+            tables = sorted(list(tables.items()), key=itemgetter(1), reverse=True)
             for table, count in tables:
                 f.write("%s,%d\n" % (table, count))
 

@@ -26,7 +26,7 @@ from datetime import datetime, date
 
 from git.cmd import Git, GitCommandError
 
-ALLOWED = string.digits + string.letters + '/.-_'
+ALLOWED = string.digits + string.ascii_letters + '/.-_'
 
 
 def replace_file_special_chars(filename_path):

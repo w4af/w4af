@@ -207,7 +207,7 @@ class Shell(ExploitResult):
                 payload = payload_handler.get_payload_instance(
                     payload_name, self)
                 result = payload.get_desc()
-            except ValueError, ve:
+            except ValueError as ve:
                 # We get here when one of the parameters provided by the user is
                 # not of the correct type, or something like that.
                 result = str(ve)

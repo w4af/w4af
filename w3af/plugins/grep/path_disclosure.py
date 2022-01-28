@@ -208,7 +208,7 @@ class path_disclosure(GrepPlugin):
             return: False
         """
         for tag in parser_cache.dpc.get_tags_by_filter(response, None):
-            for value in tag.attrib.itervalues():
+            for value in tag.attrib.values():
                 if path_disclosure_string in value:
                     return True
 

@@ -67,7 +67,7 @@ class TestGrepConsumer(unittest.TestCase):
             grep_consumer.should_grep(request, response)
 
             if count % self.CACHE_TEST_EVERY == 0:
-                for _ in xrange(self.CACHE_TESTS):
+                for _ in range(self.CACHE_TESTS):
                     grep_consumer.should_grep(request, response)
 
             if count >= self.MAX_REQUEST_RESPONSE:

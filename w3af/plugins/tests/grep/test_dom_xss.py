@@ -50,12 +50,12 @@ class TestDOMXSS(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('dom_xss', 'dom_xss')
 
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
 
         v = vulns[0]
-        self.assertEquals(severity.LOW, v.get_severity())
-        self.assertEquals('DOM Cross site scripting', v.get_name())
-        self.assertEquals(len(v.get_id()), 1)
+        self.assertEqual(severity.LOW, v.get_severity())
+        self.assertEqual('DOM Cross site scripting', v.get_name())
+        self.assertEqual(len(v.get_id()), 1)
         self.assertTrue('document.URL' in v.get_desc())
         self.assertEqual(
             self.dom_xss_url + 'dom-xss.html', v.get_url().url_string)

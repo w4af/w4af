@@ -28,4 +28,4 @@ class TestApacheRunGroup(PayloadTestHelper):
 
     def test_apache_run_group(self):
         result = exec_payload(self.shell, 'apache_run_group', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

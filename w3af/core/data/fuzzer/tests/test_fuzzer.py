@@ -235,10 +235,10 @@ class TestFuzzer(unittest.TestCase):
         freq = FuzzableRequest(url, cookie=cookie)
         mutants = create_mutants(freq, self.payloads)
 
-        expected_urls = [u'http://moth/?id=abc',
-                         u'http://moth/?id=def',
-                         u'http://moth/?id=1',
-                         u'http://moth/?id=1']
+        expected_urls = ['http://moth/?id=abc',
+                         'http://moth/?id=def',
+                         'http://moth/?id=1',
+                         'http://moth/?id=1']
 
         generated_urls = [m.get_uri().url_string for m in mutants]
 
@@ -273,12 +273,12 @@ class TestFuzzer(unittest.TestCase):
         freq = FuzzableRequest(url)
         generated_mutants = create_mutants(freq, self.payloads)
 
-        expected_urls = [u'http://moth/foo.htm?id=abc',
-                         u'http://moth/foo.htm?id=def',
-                         u'http://moth/abc.htm',
-                         u'http://moth/def.htm',
-                         u'http://moth/foo.abc',
-                         u'http://moth/foo.def',
+        expected_urls = ['http://moth/foo.htm?id=abc',
+                         'http://moth/foo.htm?id=def',
+                         'http://moth/abc.htm',
+                         'http://moth/def.htm',
+                         'http://moth/foo.abc',
+                         'http://moth/foo.def',
                          ]
 
         generated_urls = [m.get_uri().url_string for m in generated_mutants]

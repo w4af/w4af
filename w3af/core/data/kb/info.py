@@ -127,7 +127,7 @@ class Info(dict):
         inst._mutant = other_info.get_mutant()
         inst._uniq_id = other_info.get_uniq_id()
 
-        for k in other_info.keys():
+        for k in list(other_info.keys()):
             inst[k] = other_info[k]
 
         return inst
@@ -153,7 +153,7 @@ class Info(dict):
         references = None
         owasp_top_10_references = None
 
-        for k, v in self.iteritems():
+        for k, v in self.items():
             attributes[str(k)] = str(v)
 
         if self.has_db_details():
@@ -265,7 +265,7 @@ class Info(dict):
         return self._mutant.get_method()
 
     def set_desc(self, desc):
-        if not isinstance(desc, basestring):
+        if not isinstance(desc, str):
             raise TypeError('Descriptions need to be strings.')
         
         if len(desc) <= 15:
@@ -626,7 +626,7 @@ class Info(dict):
 
     def add_to_highlight(self, *str_match):
         for s in str_match:
-            if not isinstance(s, basestring):
+            if not isinstance(s, str):
                 raise TypeError('Only able to highlight strings.')
             
             self._string_matches.add(s)

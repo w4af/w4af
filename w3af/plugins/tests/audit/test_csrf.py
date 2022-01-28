@@ -76,7 +76,7 @@ class TestCSRF(PluginTest):
         # Assert the general results
         vulns = self.kb.get('csrf', 'csrf')
         
-        self.assertEquals(set(expected),
+        self.assertEqual(set(expected),
                           set([v.get_url().get_path() for v in vulns]))
         self.assertTrue(
             all(['CSRF vulnerability' == v.get_name() for v in vulns]))
@@ -260,7 +260,7 @@ class TestLowLevelCSRF(unittest.TestCase):
         self.assertFalse(self.csrf_plugin.is_csrf_token('secret', 'áÄé'))
 
     def test_is_csrf_token_false_unicode(self):
-        self.assertFalse(self.csrf_plugin.is_csrf_token('secret', u'áÄé'))
+        self.assertFalse(self.csrf_plugin.is_csrf_token('secret', 'áÄé'))
 
     def test_is_csrf_token_false_case05(self):
         self.assertTrue(self.csrf_plugin.is_csrf_token('secret', LOREM))

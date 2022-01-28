@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import unittest
 import tempfile
 import os
@@ -38,7 +38,7 @@ class TestWebserver(unittest.TestCase):
     def setUp(self):
         self.tempdir = tempfile.gettempdir()
         
-        for port in xrange(self.PORT, self.PORT + 15):
+        for port in range(self.PORT, self.PORT + 15):
             try:
                 self.server = start_webserver(self.IP, port, self.tempdir)
             except:
@@ -49,7 +49,7 @@ class TestWebserver(unittest.TestCase):
 
     def test_GET_404(self):
         # Raises a 404
-        self.assertRaises(urllib2.HTTPError, urllib2.urlopen,
+        self.assertRaises(urllib.error.HTTPError, urllib.request.urlopen,
                           'http://%s:%s' % (self.IP, self.PORT))
 
     def _create_file(self):
@@ -67,7 +67,7 @@ class TestWebserver(unittest.TestCase):
         self._create_file()
 
         url = 'http://%s:%s/foofile.txt' % (self.IP, self.PORT)
-        response_body = urllib2.urlopen(url).read()
+        response_body = urllib.request.urlopen(url).read()
         
         self.assertEqual(response_body, self.TESTSTRING)
     
@@ -76,6 +76,6 @@ class TestWebserver(unittest.TestCase):
         _, port = start_webserver_any_free_port(self.IP, self.tempdir)
         
         url = 'http://%s:%s/foofile.txt' % (self.IP, port)
-        response_body = urllib2.urlopen(url).read()
+        response_body = urllib.request.urlopen(url).read()
         
         self.assertEqual(response_body, self.TESTSTRING)

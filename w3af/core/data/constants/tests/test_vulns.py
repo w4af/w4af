@@ -38,7 +38,7 @@ class TestVulnsConstants(unittest.TestCase):
     def get_all_vulnerability_names(self):
         # Just skip the entire license header
         vulns_file = file(self.LOCATION)
-        for _ in xrange(21):
+        for _ in range(21):
             vulns_file.readline()
 
         return re.findall('[\'"](.*?)[\'"] ?:', vulns_file.read())
@@ -109,7 +109,7 @@ class TestVulnsConstants(unittest.TestCase):
         return all_plugin_sources
 
     def test_all_vulnerability_names_from_db_are_used(self):
-        vuln_names = VULNS.keys()
+        vuln_names = list(VULNS.keys())
         all_plugin_sources = self.get_all_plugins_source()
         missing_ignore = {'TestCase',
                           'Target redirect',
@@ -123,7 +123,7 @@ class TestVulnsConstants(unittest.TestCase):
             self.assertIn(vuln_name, all_plugin_sources, msg)
 
     def test_all_vulnerability_names_from_source_in_db(self):
-        vuln_names = VULNS.keys()
+        vuln_names = list(VULNS.keys())
         vuln_names_re = ' (Info|Vuln)\\(["\'](.*?)["\'] ?,.*?\\)'
         all_plugin_sources = self.get_all_plugins_source()
         vuln_names_in_source = re.findall(vuln_names_re, all_plugin_sources,
@@ -143,7 +143,7 @@ class TestVulnsConstants(unittest.TestCase):
 
     def test_vulns_dict_points_to_existing_vulndb_data_id(self):
         invalid = []
-        for vuln_name, _id in VULNS.iteritems():
+        for vuln_name, _id in VULNS.items():
             if _id is None:
                 continue
 

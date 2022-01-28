@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import commands
+import subprocess
 import unittest
 import tempfile
 
@@ -29,7 +29,7 @@ from w3af.core.controllers.payload_transfer.echo_linux import EchoLinux
 class TestEchoLinux(unittest.TestCase):
 
     def test_upload_file(self):
-        exec_method = commands.getoutput
+        exec_method = subprocess.getoutput
         os = 'linux'
         echo_linux = EchoLinux(exec_method, os)
 

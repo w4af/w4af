@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import threading
 
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
@@ -43,9 +43,9 @@ class TestProxy(XpresserUnittest):
         self.http_daemon.wait_for_start()
 
         proxy_url = '127.0.0.1:8080'
-        proxy_support = urllib2.ProxyHandler({'http': proxy_url,
+        proxy_support = urllib.request.ProxyHandler({'http': proxy_url,
                                               'https': proxy_url})
-        self.opener = urllib2.build_opener(proxy_support)
+        self.opener = urllib.request.build_opener(proxy_support)
         
     def tearDown(self):
         self.click('close-with-cross')

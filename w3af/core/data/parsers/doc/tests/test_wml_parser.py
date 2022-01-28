@@ -49,7 +49,7 @@ class TestWMLParser(unittest.TestCase):
         form = forms[0]
         
         self.assertEqual(form.get_action().url_string,
-                         u'http://www.w3af.com/post.php')
+                         'http://www.w3af.com/post.php')
         
         self.assertIn('clave', form)
         self.assertIn('cuenta', form)
@@ -64,5 +64,5 @@ class TestWMLParser(unittest.TestCase):
         
         # TODO: Shouldn't this be the other way around?!
         self.assertEqual(len(parsed), 0)
-        self.assertEqual(u'http://www.w3af.com/index.aspx', re[0].url_string)
+        self.assertEqual('http://www.w3af.com/index.aspx', re[0].url_string)
 

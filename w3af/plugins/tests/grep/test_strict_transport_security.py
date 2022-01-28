@@ -48,7 +48,7 @@ class TestSTSSecurity(unittest.TestCase):
         resp = HTTPResponse(200, body, headers, url, url, _id=1)
 
         self.plugin.grep(request, resp)
-        self.assertEquals(len(kb.kb.get('strict_transport_security',
+        self.assertEqual(len(kb.kb.get('strict_transport_security',
                                         'strict_transport_security')), 0)
 
     def test_https_with_sts(self):
@@ -61,7 +61,7 @@ class TestSTSSecurity(unittest.TestCase):
         resp = HTTPResponse(200, body, headers, url, url, _id=1)
 
         self.plugin.grep(request, resp)
-        self.assertEquals(len(kb.kb.get('strict_transport_security',
+        self.assertEqual(len(kb.kb.get('strict_transport_security',
                                         'strict_transport_security')), 0)
 
     def test_https_without_sts(self):
@@ -75,13 +75,13 @@ class TestSTSSecurity(unittest.TestCase):
 
         findings = kb.kb.get('strict_transport_security',
                              'strict_transport_security')
-        self.assertEquals(len(findings), 1, findings)
+        self.assertEqual(len(findings), 1, findings)
 
         info_set = findings[0]
-        expected_desc = u'The remote web server sent 1 HTTPS responses which' \
-                        u' do not contain the Strict-Transport-Security' \
-                        u' header. The first ten URLs which did not send the' \
-                        u' header are:\n - https://www.w3af.com/\n'
+        expected_desc = 'The remote web server sent 1 HTTPS responses which' \
+                        ' do not contain the Strict-Transport-Security' \
+                        ' header. The first ten URLs which did not send the' \
+                        ' header are:\n - https://www.w3af.com/\n'
 
         self.assertEqual(info_set.get_id(), [1])
         self.assertEqual(info_set.get_desc(), expected_desc)
@@ -107,14 +107,14 @@ class TestSTSSecurity(unittest.TestCase):
 
         findings = kb.kb.get('strict_transport_security',
                              'strict_transport_security')
-        self.assertEquals(len(findings), 1, findings)
+        self.assertEqual(len(findings), 1, findings)
 
         info_set = findings[0]
-        expected_desc = u'The remote web server sent 2 HTTPS responses which' \
-                        u' do not contain the Strict-Transport-Security' \
-                        u' header. The first ten URLs which did not send the' \
-                        u' header are:\n - https://www.w3af.com/1\n' \
-                        u' - https://www.w3af.com/2\n'
+        expected_desc = 'The remote web server sent 2 HTTPS responses which' \
+                        ' do not contain the Strict-Transport-Security' \
+                        ' header. The first ten URLs which did not send the' \
+                        ' header are:\n - https://www.w3af.com/1\n' \
+                        ' - https://www.w3af.com/2\n'
 
         self.assertEqual(info_set.get_id(), [1, 2])
         self.assertEqual(info_set.get_desc(), expected_desc)

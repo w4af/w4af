@@ -25,9 +25,9 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 class test_gcc_version(PayloadTestHelper):
 
-    EXPECTED_RESULT = {'gcc_version': u'4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5)'}
+    EXPECTED_RESULT = {'gcc_version': '4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5)'}
 
     @attr('ci_fails')
     def test_gcc_version(self):
         result = exec_payload(self.shell, 'gcc_version', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

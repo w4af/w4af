@@ -38,7 +38,7 @@ def draw_queue_size_grep(scan_log_filename, scan):
         return
 
     print('Grep consumer queue size')
-    print('    Latest queue size value: %s' % grep_queue_sizes[-1])
+    print(('    Latest queue size value: %s' % grep_queue_sizes[-1]))
     print('')
 
     fig = plotille.Figure()
@@ -56,5 +56,5 @@ def draw_queue_size_grep(scan_log_filename, scan):
              grep_queue_sizes,
              label='Grep')
 
-    print(fig.show())
+    print((fig.show()))
     print('')

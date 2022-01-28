@@ -23,7 +23,7 @@ import hashlib
 import json
 import os.path
 
-from itertools import repeat, izip
+from itertools import repeat
 from collections import namedtuple
 
 import w3af.core.controllers.output_manager as om
@@ -127,7 +127,8 @@ class php_eggs(InfrastructurePlugin):
         HTTP GET the URLs for PHP Eggs
         :return: A list with the HTTP response objects
         """
-        def http_get(fuzzable_request, (egg_url, egg_desc)):
+        def http_get(fuzzable_request, xxx_todo_changeme):
+            (egg_url, egg_desc) = xxx_todo_changeme
             egg_url = fuzzable_request.get_url().uri2url().url_join(egg_url)
             response = self._uri_opener.GET(egg_url, cache=True, grep=False)
             return response, egg_url, egg_desc
@@ -137,7 +138,7 @@ class php_eggs(InfrastructurePlugin):
 
         http_get = one_to_many(http_get)
         fr_repeater = repeat(fuzzable_request)
-        args_iterator = izip(fr_repeater, self.PHP_EGGS)
+        args_iterator = zip(fr_repeater, self.PHP_EGGS)
         pool_results = self.worker_pool.imap_unordered(http_get, args_iterator)
 
         for response, egg_URL, egg_desc in pool_results:
@@ -243,7 +244,7 @@ class php_eggs(InfrastructurePlugin):
                 powered_by_headers = kb.kb.raw_read('server_header',
                                                     'powered_by_string')
                 for v in powered_by_headers:
-                    if not isinstance(v, basestring):
+                    if not isinstance(v, str):
                         continue
 
                     if 'php' not in v.lower():
@@ -288,7 +289,7 @@ class php_eggs(InfrastructurePlugin):
 
 
 def md5_hash(body):
-    if isinstance(body, unicode):
+    if isinstance(body, str):
         body = body.encode('utf-8')
     return hashlib.md5(body).hexdigest()
 

@@ -8,8 +8,8 @@ See the file 'LICENSE' for copying permission
 import codecs
 import os
 import re
-import urllib2
-import urlparse
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 
 from xml.dom.minidom import Document
 
@@ -22,24 +22,24 @@ MSSQL_VERSIONS_URL = "http://www.sqlsecurity.com/FAQs/SQLServerVersionDatabase/t
 def updateMSSQLXML():
     if not os.path.exists(MSSQL_XML):
         errMsg = "[ERROR] file '%s' does not exist. Please run the script from its parent directory" % MSSQL_XML
-        print errMsg
+        print(errMsg)
         return
 
     infoMsg = "[INFO] retrieving data from '%s'" % MSSQL_VERSIONS_URL
-    print infoMsg
+    print(infoMsg)
 
     try:
-        req = urllib2.Request(MSSQL_VERSIONS_URL)
-        f = urllib2.urlopen(req)
+        req = urllib.request.Request(MSSQL_VERSIONS_URL)
+        f = urllib.request.urlopen(req)
         mssqlVersionsHtmlString = f.read()
         f.close()
-    except urllib2.URLError:
-        __mssqlPath = urlparse.urlsplit(MSSQL_VERSIONS_URL)
+    except urllib.error.URLError:
+        __mssqlPath = urllib.parse.urlsplit(MSSQL_VERSIONS_URL)
         __mssqlHostname = __mssqlPath[1]
 
         warnMsg = "[WARNING] sqlmap was unable to connect to %s," % __mssqlHostname
         warnMsg += " check your Internet connection and retry"
-        print warnMsg
+        print(warnMsg)
 
         return
 
@@ -53,7 +53,7 @@ def updateMSSQLXML():
     root = doc.createElement("root")
     doc.appendChild(root)
 
-    for index in xrange(0, releasesCount):
+    for index in range(0, releasesCount):
         release = releases[index]
 
         # Skip Microsoft SQL Server 6.5 because the HTML
@@ -131,7 +131,7 @@ def updateMSSQLXML():
     mssqlXml.close()
 
     infoMsg = "[INFO] done. retrieved data parsed and saved into '%s'" % MSSQL_XML
-    print infoMsg
+    print(infoMsg)
 
 if __name__ == "__main__":
     updateMSSQLXML()

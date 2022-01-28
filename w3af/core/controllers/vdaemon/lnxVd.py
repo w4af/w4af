@@ -40,7 +40,7 @@ class lnxVd(vdaemon):
         """
         Removes the created file and the crontab entry.
         """
-        apply(self._exec_method, ('/bin/rm ' + self._remote_filename,))
+        self._exec_method(*('/bin/rm ' + self._remote_filename,))
 
     def _exec_payload(self, remote_filename):
         """

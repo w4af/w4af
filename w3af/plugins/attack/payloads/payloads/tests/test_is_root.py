@@ -28,4 +28,4 @@ class TestIsRoot(PayloadTestHelper):
 
     def test_is_root(self):
         result = exec_payload(self.shell, 'is_root', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

@@ -38,9 +38,9 @@ MemcacheInjection = namedtuple('MemcacheInjection',
 
 class memcachei(AuditPlugin):
 
-    OK = u'key1 0 30 1\r\n1\r\nset injected 0 10 10\r\n1234567890\r\n'
-    ERROR_1 = u'key1 0 f 1\r\n1\r\n'
-    ERROR_2 = u'key1 0 30 0\r\n1\r\n'
+    OK = 'key1 0 30 1\r\n1\r\nset injected 0 10 10\r\n1234567890\r\n'
+    ERROR_1 = 'key1 0 f 1\r\n1\r\n'
+    ERROR_2 = 'key1 0 30 0\r\n1\r\n'
 
     def __init__(self):
         AuditPlugin.__init__(self)

@@ -142,7 +142,7 @@ class xpath(AttackPlugin):
         try:
             false_resp = self._uri_opener.send_mutant(mutant_false)
             true_resp = self._uri_opener.send_mutant(mutant_true)
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             return 'Error "%s".' % e
         else:
             if (is_error_resp(false_resp.get_body())
@@ -177,7 +177,7 @@ class xpath(AttackPlugin):
             try:
                 true_resp = self._uri_opener.send_mutant(mutant_true)
                 false_resp = self._uri_opener.send_mutant(mutant_false)
-            except BaseFrameworkException, e:
+            except BaseFrameworkException as e:
                 om.out.debug('Error "%s"' % e)
             else:
                 if (is_error_resp(false_resp.get_body())
@@ -205,14 +205,14 @@ class xpath(AttackPlugin):
         try:
             base_res = self._uri_opener.send_mutant(mutant)
 
-            for _ in xrange(count):
+            for _ in range(count):
                 req_x = self._uri_opener.send_mutant(mutant)
                 diff_ratio += difflib.SequenceMatcher(None, base_res.get_body(),
                                                       req_x.get_body()).ratio()
 
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             om.out.debug('Error "%s"' % e)
-        except RuntimeError, rte:
+        except RuntimeError as rte:
             issue = 'https://github.com/andresriancho/w3af/issues/5278'
 
             msg = ('An unhandled exception occurred while trying to setup'
@@ -314,13 +314,13 @@ class XPathReader(Shell):
         """
         try:
             data_len = self._get_data_len()
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             return 'Error found during data length extraction: "%s"' % e
 
         if data_len is not None:
             try:
                 data = self.get_data(data_len)
-            except BaseFrameworkException, e:
+            except BaseFrameworkException as e:
                 return 'Error found during data extraction: "%s"' % e
             else:
                 return data
@@ -403,7 +403,7 @@ class XPathReader(Shell):
         
         mod_get_char = return_args(self.get_char_in_pos)
         imap_unordered = self.worker_pool.imap_unordered
-        len_iter = xrange(data_len)
+        len_iter = range(data_len)
         
         for (pos,), char in imap_unordered(mod_get_char, len_iter):
             data[pos] = char
@@ -428,7 +428,7 @@ class XPathReader(Shell):
         """
         mutant = self.get_mutant()
 
-        for c in xrange(32, 127):
+        for c in range(32, 127):
 
             orig_value = mutant.get_token_original_value()
             skip_len = len(orig_value) + len(self.STR_DELIM) + len(' ')

@@ -47,7 +47,7 @@ def tamper(payload, **kwargs):
                 while True:
                     _ = ""
 
-                    for i in xrange(len(word)):
+                    for i in range(len(word)):
                         _ += word[i].upper() if randomRange(0, 1) else word[i].lower()
 
                     if len(_) > 1 and _ not in (_.lower(), _.upper()):

@@ -7,7 +7,7 @@ See the file 'LICENSE' for copying permission
 """
 
 import contextlib
-import httplib
+import http.client
 import logging
 import os
 import re
@@ -17,7 +17,7 @@ import sqlite3
 import sys
 import tempfile
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from lib.core.common import dataToStdout
 from lib.core.common import getSafeExString
@@ -94,7 +94,7 @@ class Database(object):
                     self.cursor.execute(statement, arguments)
                 else:
                     self.cursor.execute(statement)
-            except sqlite3.OperationalError, ex:
+            except sqlite3.OperationalError as ex:
                 if not "locked" in getSafeExString(ex):
                     raise
             else:
@@ -135,7 +135,7 @@ class Task(object):
         self.options = AttribDict()
 
         for _ in optDict:
-            for name, type_ in optDict[_].items():
+            for name, type_ in list(optDict[_].items()):
                 type_ = unArrayizeValue(type_)
                 self.options[name] = _defaults.get(name, datatype[type_])
 
@@ -239,7 +239,7 @@ class StdDbOut(object):
             # Delete partial output from IPC database if we have got a complete output
             if status == CONTENT_STATUS.COMPLETE:
                 if len(output) > 0:
-                    for index in xrange(len(output)):
+                    for index in range(len(output)):
                         conf.databaseCursor.execute("DELETE FROM data WHERE id = ?", (output[index][0],))
 
                 conf.databaseCursor.execute("INSERT INTO data VALUES(NULL, ?, ?, ?, ?)", (self.taskid, status, content_type, jsonize(value)))
@@ -277,8 +277,8 @@ def setRestAPILog():
         try:
             conf.databaseCursor = Database(conf.database)
             conf.databaseCursor.connect("client")
-        except sqlite3.OperationalError, ex:
-            raise SqlmapConnectionException, "%s ('%s')" % (ex, conf.database)
+        except sqlite3.OperationalError as ex:
+            raise SqlmapConnectionException("%s ('%s')" % (ex, conf.database))
 
         # Set a logging handler that writes log messages to a IPC database
         logger.removeHandler(LOGGER_HANDLER)
@@ -474,7 +474,7 @@ def option_set(taskid):
         logger.warning("[%s] Invalid JSON options provided to option_set()" % taskid)
         return jsonize({"success": False, "message": "Invalid JSON options"})
 
-    for option, value in request.json.items():
+    for option, value in list(request.json.items()):
         DataStore.tasks[taskid].set_option(option, value)
 
     logger.debug("[%s] Requested to set options" % taskid)
@@ -496,7 +496,7 @@ def scan_start(taskid):
         return jsonize({"success": False, "message": "Invalid JSON options"})
 
     # Initialize sqlmap engine's options with user's provided options, if any
-    for option, value in request.json.items():
+    for option, value in list(request.json.items()):
         DataStore.tasks[taskid].set_option(option, value)
 
     # Launch sqlmap engine in a separate process
@@ -700,7 +700,7 @@ def server(host=RESTAPI_DEFAULT_ADDRESS, port=RESTAPI_DEFAULT_PORT, adapter=REST
             eventlet.monkey_patch()
         logger.debug("Using adapter '%s' to run bottle" % adapter)
         run(host=host, port=port, quiet=True, debug=True, server=adapter)
-    except socket.error, ex:
+    except socket.error as ex:
         if "already in use" in getSafeExString(ex):
             logger.error("Address already in use ('%s:%s')" % (host, port))
         else:
@@ -725,8 +725,8 @@ def _client(url, options=None):
         if DataStore.username or DataStore.password:
             headers["Authorization"] = "Basic %s" % base64encode("%s:%s" % (DataStore.username or "", DataStore.password or ""))
 
-        req = urllib2.Request(url, data, headers)
-        response = urllib2.urlopen(req)
+        req = urllib.request.Request(url, data, headers)
+        response = urllib.request.urlopen(req)
         text = response.read()
     except:
         if options:
@@ -754,8 +754,8 @@ def client(host=RESTAPI_DEFAULT_ADDRESS, port=RESTAPI_DEFAULT_PORT, username=Non
 
     try:
         _client(addr)
-    except Exception, ex:
-        if not isinstance(ex, urllib2.HTTPError) or ex.code == httplib.UNAUTHORIZED:
+    except Exception as ex:
+        if not isinstance(ex, urllib.error.HTTPError) or ex.code == http.client.UNAUTHORIZED:
             errMsg = "There has been a problem while connecting to the "
             errMsg += "REST-JSON API server at '%s' " % addr
             errMsg += "(%s)" % ex
@@ -767,10 +767,10 @@ def client(host=RESTAPI_DEFAULT_ADDRESS, port=RESTAPI_DEFAULT_PORT, username=Non
 
     while True:
         try:
-            command = raw_input("api%s> " % (" (%s)" % taskid if taskid else "")).strip()
+            command = input("api%s> " % (" (%s)" % taskid if taskid else "")).strip()
             command = re.sub(r"\A(\w+)", lambda match: match.group(1).lower(), command)
         except (EOFError, KeyboardInterrupt):
-            print
+            print()
             break
 
         if command in ("data", "log", "status", "stop", "kill"):
@@ -806,7 +806,7 @@ def client(host=RESTAPI_DEFAULT_ADDRESS, port=RESTAPI_DEFAULT_PORT, username=Non
 
             try:
                 argv = ["sqlmap.py"] + shlex.split(command)[1:]
-            except Exception, ex:
+            except Exception as ex:
                 logger.error("Error occurred while parsing arguments ('%s')" % ex)
                 taskid = None
                 continue

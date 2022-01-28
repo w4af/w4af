@@ -60,7 +60,7 @@ class FileDataToken(DataToken):
         # The last "not isinstance" is important due to the fact that
         # NamedStringIO is a basestring subclass
         #
-        if isinstance(value, basestring) and not isinstance(value, NamedStringIO):
+        if isinstance(value, str) and not isinstance(value, NamedStringIO):
             _, file_content, fname = get_template_with_payload(self._extension,
                                                                value)
 

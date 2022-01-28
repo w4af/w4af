@@ -19,14 +19,14 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from w3af.core.data.url.HTTPResponse import HTTPResponse
 from w3af.core.data.url.handlers.keepalive import HTTPResponse as kaHTTPResponse
 from w3af.core.data.url.handlers.output_manager import OutputManagerHandler
 
 
-class MangleHandler(urllib2.BaseHandler):
+class MangleHandler(urllib.request.BaseHandler):
     """
     Call mangle plugins for each request and response.
     """

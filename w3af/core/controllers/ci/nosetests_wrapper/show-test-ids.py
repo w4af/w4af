@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
+
 
 import os
 import sys
-import cPickle
+import pickle
 
 # Need this hack in order to be able to re-add the current path to the
 # python-path, since running a script seems to change it (?)
@@ -20,9 +20,9 @@ def nose_strategy():
     """
     # This will generate the ID_FILE
     get_test_ids(NOSE_RUN_SELECTOR)
-    nose_data = cPickle.load(file(ID_FILE))
+    nose_data = pickle.load(file(ID_FILE))
 
-    for key, value in nose_data['ids'].iteritems():
+    for key, value in nose_data['ids'].items():
         _, _, test_class_method = value
         print('%s:%s' % (key, test_class_method))
 

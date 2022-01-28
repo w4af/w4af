@@ -21,18 +21,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import time
 import uuid
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import socket
 import OpenSSL
-import urllib2
-import httplib
+import urllib.request, urllib.error, urllib.parse
+import http.client
 import threading
 import traceback
 import functools
 
 from contextlib import contextmanager
 from collections import deque
-from httplib import BadStatusLine
+from http.client import BadStatusLine
 
 # pylint: disable=E0401
 from darts.lib.utils.lru import SynchronizedLRUDict
@@ -40,7 +40,7 @@ from darts.lib.utils.lru import SynchronizedLRUDict
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.config as cf
-import opener_settings
+from . import opener_settings
 
 from w3af.core.controllers.exceptions import (BaseFrameworkException,
                                               ConnectionPoolException,
@@ -416,7 +416,7 @@ class ExtendedUrllib(object):
         self._sleep_log = {}
 
         step = ACCEPTABLE_ERROR_RATE * 2
-        data = [(i, False) for i in xrange(0, 110, step)]
+        data = [(i, False) for i in range(0, 110, step)]
 
         self._sleep_log.update(data)
 
@@ -922,7 +922,7 @@ class ExtendedUrllib(object):
         for h, v in self.settings.header_list:
             req.add_header(h, v)
 
-        for h, v in headers.iteritems():
+        for h, v in headers.items():
             req.add_header(h, v)
 
         if self.settings.rand_user_agent is True:
@@ -958,7 +958,7 @@ class ExtendedUrllib(object):
         
         try:
             res = self._opener.open(req)
-        except urllib2.HTTPError, e:
+        except urllib.error.HTTPError as e:
             # We usually get here when response codes in [404, 403, 401,...]
             return self._handle_send_success(req, e, grep, original_url,
                                              original_url_inst)
@@ -969,10 +969,10 @@ class ExtendedUrllib(object):
                 OpenSSL.SSL.Error,
                 OpenSSL.SSL.SysCallError,
                 OpenSSL.SSL.ZeroReturnError,
-                BadStatusLine), e:
+                BadStatusLine) as e:
             return self._handle_send_socket_error(req, e, grep, original_url)
         
-        except (urllib2.URLError, httplib.HTTPException, HTTPRequestException), e:
+        except (urllib.error.URLError, http.client.HTTPException, HTTPRequestException) as e:
             return self._handle_send_urllib_error(req, e, grep, original_url)
         
         else:
@@ -1106,8 +1106,8 @@ class ExtendedUrllib(object):
         
     def _generic_send_error_handler(self, req, exception, grep, original_url):
         if not req.error_handling:
-            msg = (u'Raising HTTP error "%s" "%s" failed reason: "%s".'
-                   u' Error handling was disabled for this request (did:%s).')
+            msg = ('Raising HTTP error "%s" "%s" failed reason: "%s".'
+                   ' Error handling was disabled for this request (did:%s).')
             args = (req.get_method(), original_url, exception, req.debugging_id)
             om.out.debug(msg % args)
 
@@ -1142,14 +1142,14 @@ class ExtendedUrllib(object):
 
         if not rdata:
             args = (req.get_method(),
-                    urllib.unquote_plus(original_url),
+                    urllib.parse.unquote_plus(original_url),
                     res.code)
 
             msg = '%s %s returned HTTP code "%s"'
             msg %= args
 
         else:
-            printable_data = urllib.unquote_plus(rdata)
+            printable_data = urllib.parse.unquote_plus(rdata)
             if len(rdata) > 75:
                 printable_data = '%s...' % printable_data[:75]
                 printable_data = printable_data.replace('\n', ' ')
@@ -1245,7 +1245,7 @@ class ExtendedUrllib(object):
         :param exception: Exception object.
         """
         # Log the exception
-        msg = u'Failed to HTTP "%s" "%s". Reason: "%s", going to retry (did:%s)'
+        msg = 'Failed to HTTP "%s" "%s". Reason: "%s", going to retry (did:%s)'
 
         original_url = smart_unicode(original_url)
         args = (request.get_method(), original_url, exception, request.debugging_id)
@@ -1394,11 +1394,11 @@ class ExtendedUrllib(object):
 
         try:
             self.send(req, grep=False)
-        except HTTPRequestException, e:
+        except HTTPRequestException as e:
             msg = 'Remote URL %s is UNREACHABLE due to: "%s"'
             om.out.debug(msg % (root_url, e))
             return False
-        except Exception, e:
+        except Exception as e:
             msg = 'Internal error makes URL %s UNREACHABLE due to: "%s"'
             om.out.debug(msg % (root_url, e))
             return False
@@ -1500,7 +1500,7 @@ class ExtendedUrllib(object):
         for eplugin in self._evasion_plugins:
             try:
                 request = eplugin.modify_request(request)
-            except BaseFrameworkException, e:
+            except BaseFrameworkException as e:
                 msg = 'Evasion plugin "%s" failed to modify the request: "%s"'
                 args = (eplugin.get_name(), e)
                 om.out.error(msg % args)

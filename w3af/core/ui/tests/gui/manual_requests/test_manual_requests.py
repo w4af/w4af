@@ -123,7 +123,7 @@ class TestManualRequests(XpresserUnittest):
         self.assertEqual(http_request.get_url().get_path(), request.path)
         self.assertEqual(http_request.get_method(), request.command)
         
-        for header_name, header_value in http_request.get_headers().iteritems():
+        for header_name, header_value in http_request.get_headers().items():
             self.assertIn(header_name.lower(), request.headers)
             self.assertEqual(header_value, request.headers[header_name.lower()])
             
@@ -175,7 +175,7 @@ class TestManualRequests(XpresserUnittest):
         self.assertEqual(http_request.get_url().get_path(), request.path)
         self.assertEqual('POST', request.command)
         
-        for header_name, header_value in http_request.get_headers().iteritems():
+        for header_name, header_value in http_request.get_headers().items():
             self.assertIn(header_name.lower(), request.headers)
             self.assertEqual(header_value, request.headers[header_name.lower()])
         

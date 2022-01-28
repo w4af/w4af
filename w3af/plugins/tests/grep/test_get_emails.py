@@ -59,10 +59,10 @@ class TestGetEmails(PluginTest):
         target_emails = self.kb.get('emails', 'emails')
         self.assertEqual(len(target_emails), 0)
 
-        expected = {u'one@moth.com',
-                    u'two@moth.com',
-                    u'three@moth.com',
-                    u'four@moth.com'}
+        expected = {'one@moth.com',
+                    'two@moth.com',
+                    'three@moth.com',
+                    'four@moth.com'}
 
         all_email_info_sets = self.kb.get('emails', 'external_emails')
         self.assertEqual(len(all_email_info_sets), len(expected))
@@ -96,12 +96,12 @@ class RawTestGetEmail(unittest.TestCase):
         self.plugin.grep(request_2, resp_2)
 
         info_sets = kb.kb.get('emails', 'emails')
-        self.assertEquals(len(info_sets), 1)
+        self.assertEqual(len(info_sets), 1)
 
-        expected_desc = u'The application discloses the "one@w3af.com" email' \
-                        u' address in 2 different HTTP responses. The first' \
-                        u' ten URLs which sent the email are:\n' \
-                        u' - http://www.w3af.com/2\n - http://www.w3af.com/1\n'
+        expected_desc = 'The application discloses the "one@w3af.com" email' \
+                        ' address in 2 different HTTP responses. The first' \
+                        ' ten URLs which sent the email are:\n' \
+                        ' - http://www.w3af.com/2\n - http://www.w3af.com/1\n'
 
         info_set = info_sets[0]
         self.assertEqual(info_set.get_id(), [1, 2])

@@ -33,9 +33,9 @@ class test_portscan(PayloadTestHelperExec):
         result = exec_payload(self.shell, 'portscan',
                               args=('localhost', '22'),
                               use_api=True)
-        self.assertEquals(self.RESULT_22, result)
+        self.assertEqual(self.RESULT_22, result)
 
         result = exec_payload(self.shell, 'portscan',
                               args=('localhost', '23'),
                               use_api=True)
-        self.assertEquals(self.RESULT_23, result)
+        self.assertEqual(self.RESULT_23, result)

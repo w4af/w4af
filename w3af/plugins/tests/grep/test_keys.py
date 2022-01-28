@@ -52,8 +52,8 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
         
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 1)
-        self.assertEquals(type(data[0]), Vuln)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(type(data[0]), Vuln)
 
     def test_public_key(self):
         body = '-----BEGIN PUBLIC KEY-----'
@@ -64,8 +64,8 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
 
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 1)
-        self.assertEquals(type(data[0]), Info)        
+        self.assertEqual(len(data), 1)
+        self.assertEqual(type(data[0]), Info)        
 
     def test_xml_key(self):
         body = '<RSAKeyValue>'
@@ -76,7 +76,7 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
 
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 1)  
+        self.assertEqual(len(data), 1)  
 
     def test_public_ecdsa_key(self):
         body = 'ecdsa-sha2-nistp256'
@@ -87,8 +87,8 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
 
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 1)
-        self.assertEquals(type(data[0]), Info)        
+        self.assertEqual(len(data), 1)
+        self.assertEqual(type(data[0]), Info)        
 
     def test_multi_match(self):
         body = """
@@ -102,7 +102,7 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
 
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 3)
+        self.assertEqual(len(data), 3)
 
     def test_no_match(self):
         body = '-----BEGIN-----ssh----- BEGIN PRIVATE PUBLIC KEY'
@@ -113,4 +113,4 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
 
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 0)
+        self.assertEqual(len(data), 0)

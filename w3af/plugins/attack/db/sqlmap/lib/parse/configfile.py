@@ -39,7 +39,7 @@ def configFileProxy(section, option, datatype):
                 value = config.getfloat(section, option) if config.get(section, option) else 0.0
             else:
                 value = config.get(section, option)
-        except ValueError, ex:
+        except ValueError as ex:
             errMsg = "error occurred while processing the option "
             errMsg += "'%s' in provided configuration file ('%s')" % (option, getUnicode(ex))
             raise SqlmapSyntaxException(errMsg)
@@ -71,7 +71,7 @@ def configFileParser(configFile):
     try:
         config = UnicodeRawConfigParser()
         config.readfp(configFP)
-    except Exception, ex:
+    except Exception as ex:
         errMsg = "you have provided an invalid and/or unreadable configuration file ('%s')" % getSafeExString(ex)
         raise SqlmapSyntaxException(errMsg)
 
@@ -91,7 +91,7 @@ def configFileParser(configFile):
         errMsg += "(direct, url, logFile, bulkFile, googleDork, requestFile, sitemapUrl or wizard)"
         raise SqlmapMissingMandatoryOptionException(errMsg)
 
-    for family, optionData in optDict.items():
-        for option, datatype in optionData.items():
+    for family, optionData in list(optDict.items()):
+        for option, datatype in list(optionData.items()):
             datatype = unArrayizeValue(datatype)
             configFileProxy(family, option, datatype)

@@ -239,7 +239,7 @@ class Mutant(DiskItem):
                     dc_copy.smart_fill()
 
                 if append:
-                    if not isinstance(payload, basestring):
+                    if not isinstance(payload, str):
                         # This prevents me from flattening the special type to
                         # a string in a couple of lines below where I apply the
                         # string formatting

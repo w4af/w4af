@@ -46,7 +46,7 @@ def purge(directory):
         try:
             filesize = os.path.getsize(filepath)
             with open(filepath, "w+b") as f:
-                f.write("".join(chr(random.randint(0, 255)) for _ in xrange(filesize)))
+                f.write("".join(chr(random.randint(0, 255)) for _ in range(filesize)))
         except:
             pass
 
@@ -79,5 +79,5 @@ def purge(directory):
 
     try:
         shutil.rmtree(directory)
-    except OSError, ex:
+    except OSError as ex:
         logger.error("problem occurred while removing directory '%s' ('%s')" % (directory, getSafeExString(ex)))

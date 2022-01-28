@@ -67,8 +67,8 @@ class TestHTMLCommentsIntegration(PluginTest):
         infos_interesting = self.kb.get('html_comments',
                                         'interesting_comments')
 
-        self.assertEquals(1, len(infos_html), infos_html)
-        self.assertEquals(1, len(infos_interesting), infos_interesting)
+        self.assertEqual(1, len(infos_html), infos_html)
+        self.assertEqual(1, len(infos_interesting), infos_interesting)
 
         html_info = infos_html[0]
         interesting_info = infos_interesting[0]
@@ -97,7 +97,7 @@ class TestHTMLCommentsUnit(unittest.TestCase):
         self.plugin.grep(request, response)
 
         info_sets = kb.kb.get('html_comments', 'interesting_comments')
-        self.assertEquals(len(info_sets), 1)
+        self.assertEqual(len(info_sets), 1)
 
     def test_html_comment_profiling(self):
         body = '<!-- secret password123 -->'
@@ -107,8 +107,8 @@ class TestHTMLCommentsUnit(unittest.TestCase):
 
         response = HTTPResponse(200, body, headers, url, url, _id=1)
 
-        for _ in xrange(500):
+        for _ in range(500):
             self.plugin.grep(request, response)
 
         info_sets = kb.kb.get('html_comments', 'interesting_comments')
-        self.assertEquals(len(info_sets), 1)
+        self.assertEqual(len(info_sets), 1)

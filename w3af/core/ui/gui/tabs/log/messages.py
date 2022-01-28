@@ -158,9 +158,9 @@ class Messages(gtk.VBox, Searchable):
         # the scrolling lines
         sw_mess = gtk.ScrolledWindow()
         sw_mess.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        newfilter = [k for k, v in self.filters.items() if v]
+        newfilter = [k for k, v in list(self.filters.items()) if v]
         self.sclines = _LineScroller(sw_mess.get_vscrollbar(),
-                                     newfilter, self.filters.keys())
+                                     newfilter, list(self.filters.keys()))
         sw_mess.add(self.sclines)
         sw_mess.show()
         self.pack_start(sw_mess, expand=True, fill=True)
@@ -173,7 +173,7 @@ class Messages(gtk.VBox, Searchable):
     def type_filter(self, button, ptype):
         """Applies the filter selected through the checkboxes."""
         self.filters[ptype] = button.get_active()
-        active_types = [k for k, v in self.filters.items() if v]
+        active_types = [k for k, v in list(self.filters.items()) if v]
 
         # TODO: It might be a good idea to run this in a different thread?
         self.sclines.filter(active_types)

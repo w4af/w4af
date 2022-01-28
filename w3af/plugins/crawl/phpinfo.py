@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import re
 
-from itertools import repeat, izip
+from itertools import repeat
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.knowledge_base as kb
@@ -144,7 +144,7 @@ class phpinfo(CrawlPlugin):
             self._analyzed_dirs.add(domain_path)
 
             url_repeater = repeat(domain_path)
-            args = izip(url_repeater, self._get_potential_phpinfos())
+            args = zip(url_repeater, self._get_potential_phpinfos())
 
             self.worker_pool.map_multi_args(self._check_and_analyze, args)
 
@@ -161,7 +161,7 @@ class phpinfo(CrawlPlugin):
         # pylint: disable=E1103
         identified_os = kb.kb.raw_read('fingerprint_os', 'operating_system_str')
 
-        if not isinstance(identified_os, basestring):
+        if not isinstance(identified_os, str):
             identified_os = cf.cf.get('target_os')
 
         identified_os = identified_os.lower()

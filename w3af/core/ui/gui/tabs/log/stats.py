@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from __future__ import division
+
 
 import gtk
 import gobject
@@ -76,7 +76,7 @@ class StatsViewer(gtk.VBox):
         self.build_default()
         
         # Refresh the content
-        gobject.timeout_add(200, self.update().next)
+        gobject.timeout_add(200, self.update().__next__)
         
         self.show()
 
@@ -123,7 +123,7 @@ class StatsViewer(gtk.VBox):
             value = item.default_value if value is None or default else value
 
         # https://github.com/andresriancho/w3af/issues/2679
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             value = value.replace('\0', '')
             
         text = '%s: %s' % (item.title, value)

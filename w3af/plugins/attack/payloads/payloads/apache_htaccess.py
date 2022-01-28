@@ -19,7 +19,7 @@ class apache_htaccess(Payload):
                 return ''
 
         apache_config_dict = self.exec_payload('apache_config_files')
-        apache_config = apache_config_dict['apache_config'].values()
+        apache_config = list(apache_config_dict['apache_config'].values())
         htaccess = '.htaccess'
         if apache_config:
             for file in apache_config:
@@ -53,7 +53,7 @@ class apache_htaccess(Payload):
             rows.append(['Apache htaccess files'])
             rows.append([])
             for key_name in api_result:
-                for filename, file_content in api_result[key_name].items():
+                for filename, file_content in list(api_result[key_name].items()):
                     rows.append([filename, ])
             result_table = table(rows)
             result_table.draw(80)

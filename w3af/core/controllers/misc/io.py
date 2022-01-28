@@ -18,10 +18,9 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from StringIO import StringIO
+from io import StringIO, IOBase
 
-
-class NamedStringIO(StringIO, str):
+class NamedStringIO(StringIO):
     """
     A file-like string.
     """
@@ -37,12 +36,5 @@ class NamedStringIO(StringIO, str):
     def name(self):
         return self._name
 
-
-FILE_ATTRS = ('read', 'write', 'name', 'seek', 'closed')
-
-
 def is_file_like(f):
-    # TODO: When w3af migrates to Python 3k this function will likely
-    # disappear as it'll be possible to do this check:
-    # >>> isinstance(f, io.IOBase)
-    return all(hasattr(f, at) for at in FILE_ATTRS)
+    return isinstance(f, IOBase)

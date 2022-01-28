@@ -23,7 +23,7 @@ import os
 import sys
 import time
 
-from Queue import Empty
+from queue import Empty
 from functools import wraps
 from multiprocessing.dummy import Process
 
@@ -175,7 +175,7 @@ class BaseConsumer(Process):
             if work_unit == POISON_PILL:
                 try:
                     self._process_poison_pill()
-                except Exception, e:
+                except Exception as e:
                     msg = 'An exception was found while processing poison pill: "%s"'
                     om.out.debug(msg % e)
                 finally:
@@ -258,7 +258,7 @@ class BaseConsumer(Process):
 
         try:
             pool.close()
-        except Exception, e:
+        except Exception as e:
             args = ('closing', self.get_name(), e)
             om.out.debug(msg_fmt % args)
 
@@ -267,7 +267,7 @@ class BaseConsumer(Process):
 
         try:
             pool.join()
-        except Exception, e:
+        except Exception as e:
             args = ('joining', self.get_name(), e)
             om.out.debug(msg_fmt % args)
 
@@ -275,7 +275,7 @@ class BaseConsumer(Process):
             # tasks to complete. If that fails, then call terminate()
             try:
                 pool.terminate()
-            except Exception, e:
+            except Exception as e:
                 args = ('terminating', self.get_name(), e)
                 om.out.debug(msg_fmt % args)
             else:
@@ -289,7 +289,7 @@ class BaseConsumer(Process):
         # Finish this consumer and everyone consuming the output
         try:
             self._teardown()
-        except Exception, e:
+        except Exception as e:
             msg = 'Exception found while calling teardown() in %s consumer: "%s"'
             args = (self.get_name(), e)
             om.out.debug(msg % args)

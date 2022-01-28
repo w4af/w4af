@@ -70,17 +70,17 @@ class TestCSVFile(PluginTest):
         xss_vulns = self.kb.get('xss', 'xss')
         file_vulns = self._from_csv_get_vulns()
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_url() for v in xss_vulns])),
             set(sorted([v.get_url() for v in file_vulns]))
         )
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_method() for v in xss_vulns])),
             set(sorted([v.get_method() for v in file_vulns]))
         )
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_id()[0] for v in xss_vulns])),
             set(sorted([v.get_id()[0] for v in file_vulns]))
         )

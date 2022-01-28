@@ -66,13 +66,13 @@ class TestToken(unittest.TestCase):
         invalid_utf8 = '\xf3'
         token = DataToken(self.NAME, invalid_utf8, self.PATH)
 
-        self.assertRaises(UnicodeDecodeError, unicode, token)
+        self.assertRaises(UnicodeDecodeError, str, token)
 
         encoded_token = smart_unicode(token)
-        self.assertEqual(encoded_token, u'\xf3')
+        self.assertEqual(encoded_token, '\xf3')
 
     def test_unicodeencodeerror(self):
-        _unicode = u'í'
+        _unicode = 'í'
         token = DataToken(self.NAME, _unicode, self.PATH)
 
         self.assertEqual(str(token), 'í')

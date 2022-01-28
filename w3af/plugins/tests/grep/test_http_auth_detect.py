@@ -33,7 +33,7 @@ class test_http_auth_detect(unittest.TestCase):
 
     def setUp(self):
         self.url = URL('http://www.w3af.com/')
-        self.headers = Headers({'content-type': 'text/html'}.items())
+        self.headers = Headers(list({'content-type': 'text/html'}.items()))
         self.request = FuzzableRequest(self.url, method='GET')
         self.plugin = http_auth_detect()
         kb.kb.cleanup()
@@ -74,7 +74,7 @@ class test_http_auth_detect(unittest.TestCase):
     def test_http_auth_detect_simple(self):
         body = ''
         hdrs = {'content-type': 'text/html', 'www-authenticate': 'realm-w3af'}
-        hdrs = Headers(hdrs.items())
+        hdrs = Headers(list(hdrs.items()))
         response = HTTPResponse(401, body, hdrs, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
         self.assertEqual(len(kb.kb.get('http_auth_detect', 'auth')), 1)

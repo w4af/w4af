@@ -107,7 +107,7 @@ class TestDBMS(unittest.TestCase):
 
         start_time = time.time()
 
-        for i in xrange(10000):
+        for i in range(10000):
             result = db.execute('UPDATE TEST SET data = ? WHERE id = ?', ('%s' % i, 1)).result()
             self.assertEqual(result.rowcount, 1)
 

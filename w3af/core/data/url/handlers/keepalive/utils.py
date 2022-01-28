@@ -9,7 +9,7 @@ KA_DEBUG = os.environ.get('KA_DEBUG', '0') == '1'
 
 
 def to_utf8_raw(unicode_or_str):
-    if isinstance(unicode_or_str, unicode):
+    if isinstance(unicode_or_str, str):
         # TODO: Is 'ignore' the best option here?
         return unicode_or_str.encode('utf-8', 'ignore')
     return unicode_or_str

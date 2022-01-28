@@ -94,7 +94,7 @@ class PhpSCA(object):
         # Code AST
         try:
             self._ast_code = parser.parse(code, lexer=lexer)
-        except SyntaxError, se:
+        except SyntaxError as se:
             raise CodeSyntaxError("Error while parsing the code")
 
         # Convenient definition of new node type
@@ -153,7 +153,7 @@ class PhpSCA(object):
         self._start()
         filter_tainted = (lambda v: v.controlled_by_user) if usr_controlled \
             else (lambda v: 1)
-        all_vars = filter(filter_tainted, self._scopes[0].get_all_vars())
+        all_vars = list(filter(filter_tainted, self._scopes[0].get_all_vars()))
 
         return all_vars
 
@@ -161,7 +161,7 @@ class PhpSCA(object):
         self._start()
         filter_vuln = (lambda f: len(f.vulntypes)) if vuln \
             else (lambda f: True)
-        return filter(filter_vuln, self._functions)
+        return list(filter(filter_vuln, self._functions))
 
     def _visitor(self, node):
         """
@@ -212,7 +212,7 @@ class PhpSCA(object):
 
         # Debug it?
         if self.debugmode and newobj:
-            print newobj
+            print(newobj)
 
         return stoponthis
 
@@ -489,8 +489,8 @@ class FuncCall(NodeRep):
             vulnsrcs = self._vulnsources = []
             # It has to be vulnerable; otherwise we got nothing to do.
             if self.vulntypes:
-                map(vulnsrcs.append, (p.var.taint_source for p in self._params
-                                      if p.var and p.var.taint_source))
+                list(map(vulnsrcs.append, (p.var.taint_source for p in self._params
+                                      if p.var and p.var.taint_source)))
         return vulnsrcs
 
     @property
@@ -505,7 +505,7 @@ class FuncCall(NodeRep):
 
         :param fname: Function name
         """
-        for vulnty, pvfnames in FuncCall.PVFDB.iteritems():
+        for vulnty, pvfnames in FuncCall.PVFDB.items():
             if any(fname == pvfn for pvfn in pvfnames):
                 return vulnty
         return None
@@ -517,7 +517,7 @@ class FuncCall(NodeRep):
 
         :param sfname: Securing function name
         """
-        for vulnty, sfnames in FuncCall.SFDB.iteritems():
+        for vulnty, sfnames in FuncCall.SFDB.items():
             if any(sfname == sfn for sfn in sfnames):
                 return vulnty
         return None
@@ -591,7 +591,7 @@ class Scope(object):
         return var
 
     def get_all_vars(self):
-        return self._vars.values()
+        return list(self._vars.values())
 
     def __repr__(self):
         return "<Scope [%s]>" % ', '.join(v.name for v in self.get_all_vars())

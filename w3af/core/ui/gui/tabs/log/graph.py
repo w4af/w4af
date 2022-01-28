@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from __future__ import division
+
 
 import gtk
 import gobject
@@ -89,7 +89,7 @@ class LogGraph(gtk.DrawingArea, MessageConsumer):
             if self._redraw_gen is None:
                 self._redraw_gen = self._redraw_all()
 
-            reset = self._redraw_gen.next()
+            reset = next(self._redraw_gen)
             if reset:
                 self._redraw_gen = None
         

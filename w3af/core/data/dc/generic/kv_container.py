@@ -65,7 +65,7 @@ class KeyValueContainer(DataContainer, OrderedDict):
                     raise TypeError(ERR_MSG % init_val)
 
                 for sub_val in val:
-                    if not isinstance(sub_val, (basestring, DataToken)):
+                    if not isinstance(sub_val, (str, DataToken)):
                         raise TypeError(ERR_MSG % init_val)
 
                 self[key] = val
@@ -74,7 +74,7 @@ class KeyValueContainer(DataContainer, OrderedDict):
         """
         :return: Return state information for pickling
         """
-        init_val = self.items()
+        init_val = list(self.items())
         encoding = self.encoding
         token = self.token
 
@@ -98,7 +98,7 @@ class KeyValueContainer(DataContainer, OrderedDict):
         """
         Return unicode representation
         """
-        return self._to_str_with_separators(u'=', u'&', errors='percent_encode')
+        return self._to_str_with_separators('=', '&', errors='percent_encode')
 
     def iter_setters(self):
         """
@@ -109,7 +109,7 @@ class KeyValueContainer(DataContainer, OrderedDict):
                     * The setter to modify the value
         """
         # pylint: disable=E1133
-        for k, v in self.iteritems():
+        for k, v in self.items():
             for idx, ele in enumerate(v):
 
                 token_path = (k, idx)
@@ -126,10 +126,10 @@ class KeyValueContainer(DataContainer, OrderedDict):
         lst = []
 
         # pylint: disable=E1133
-        for key, value_list in self.items():
+        for key, value_list in list(self.items()):
             for value in value_list:
                 value = smart_unicode(value, encoding=UTF8, errors=errors)
-                to_app = u'%s%s%s' % (key, key_val_sep, value)
+                to_app = '%s%s%s' % (key, key_val_sep, value)
                 lst.append(to_app)
         # pylint: enable=E1133
 
@@ -147,7 +147,7 @@ class KeyValueContainer(DataContainer, OrderedDict):
         if self.get_token() is not None:
             # I want to show the token variable and value in the output
             # pylint: disable=E1133
-            for k, v in self.items():
+            for k, v in list(self.items()):
                 for ele in v:
                     if isinstance(ele, DataToken):
                         dt_str = '%s=%s' % (filter_non_printable(ele.get_name()),

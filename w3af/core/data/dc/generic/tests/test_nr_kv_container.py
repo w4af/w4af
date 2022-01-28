@@ -20,7 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import copy
 
 from w3af.core.data.dc.generic.nr_kv_container import NonRepeatKeyValueContainer
@@ -29,7 +29,7 @@ from w3af.core.data.dc.generic.nr_kv_container import NonRepeatKeyValueContainer
 class TestNoRepeatKeyValueContainer(unittest.TestCase):
 
     def test_basic(self):
-        dc = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
+        dc = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
 
         self.assertIn('a', dc)
         self.assertIn('b', dc)
@@ -38,28 +38,28 @@ class TestNoRepeatKeyValueContainer(unittest.TestCase):
         self.assertEqual(dc['b'], '2')
 
     def test_str(self):
-        dc = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
+        dc = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
         str_dc = str(dc)
         self.assertEqual(str_dc, 'a=1&b=2')
         self.assertIsInstance(str_dc, str)
 
-        dc = NonRepeatKeyValueContainer([(u'a', u'')])
+        dc = NonRepeatKeyValueContainer([('a', '')])
         self.assertEqual(str(dc), 'a=')
 
     def test_str_special_chars(self):
-        dc = NonRepeatKeyValueContainer([(u'a', u'Ú-ú-Ü-ü')], 'latin-1')
-        decoded_str = urllib.unquote(str(dc)).decode('latin-1')
-        self.assertEquals(u'a=Ú-ú-Ü-ü', decoded_str)
+        dc = NonRepeatKeyValueContainer([('a', 'Ú-ú-Ü-ü')], 'latin-1')
+        decoded_str = urllib.parse.unquote(str(dc)).decode('latin-1')
+        self.assertEqual('a=Ú-ú-Ü-ü', decoded_str)
 
     def test_unicode(self):
-        dc = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
-        udc = unicode(dc)
+        dc = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
+        udc = str(dc)
 
-        self.assertEqual(udc, u'a=1&b=2')
-        self.assertIsInstance(udc, unicode)
+        self.assertEqual(udc, 'a=1&b=2')
+        self.assertIsInstance(udc, str)
 
     def test_iter_tokens(self):
-        dc = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
+        dc = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
         tokens = [t for t in dc.iter_tokens()]
 
         EXPECTED_TOKENS = [('a', '1'), ('b', '2')]
@@ -67,7 +67,7 @@ class TestNoRepeatKeyValueContainer(unittest.TestCase):
         self.assertEqual(EXPECTED_TOKENS, token_data)
 
     def test_iter_bound_tokens(self):
-        dc = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
+        dc = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
         dcc_tokens = [(dcc, t) for dcc, t in dc.iter_bound_tokens()]
 
         EXPECTED_TOKENS = [('a', '1'), ('b', '2')]
@@ -76,7 +76,7 @@ class TestNoRepeatKeyValueContainer(unittest.TestCase):
 
         for dcc, _ in dcc_tokens:
             self.assertIsInstance(dcc, NonRepeatKeyValueContainer)
-            self.assertEquals(dcc, dc)
+            self.assertEqual(dcc, dc)
 
         self.assertEqual(str(dcc), 'a=1&b=2')
 
@@ -92,7 +92,7 @@ class TestNoRepeatKeyValueContainer(unittest.TestCase):
         self.assertEqual(str(dcc), 'a=1&b=5')
 
     def test_iter_setters(self):
-        dc = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
+        dc = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
         kv_setter = [(k, v, p, s) for (k, v, p, s) in dc.iter_setters()]
 
         EXPECTED_KEY_VALUES = [('a', '1', ('a',)), ('b', '2', ('b',))]
@@ -112,38 +112,38 @@ class TestNoRepeatKeyValueContainer(unittest.TestCase):
         self.assertEqual(str(dc), 'a=x&b=y')
 
     def test_set_token(self):
-        dc = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
+        dc = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
 
         token = dc.set_token(('b',))
         self.assertEqual(token.get_name(), 'b')
         self.assertEqual(token, dc['b'])
 
     def test_is_variant_of_eq_keys_eq_value_types(self):
-        dc1 = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
-        dc2 = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
+        dc1 = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
+        dc2 = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
 
         self.assertTrue(dc1.is_variant_of(dc2))
 
     def test_is_variant_of_neq_keys_eq_value_types(self):
-        dc1 = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
-        dc2 = NonRepeatKeyValueContainer([(u'a', u'1'), (u'c', u'2')])
+        dc1 = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
+        dc2 = NonRepeatKeyValueContainer([('a', '1'), ('c', '2')])
 
         self.assertFalse(dc1.is_variant_of(dc2))
 
     def test_is_variant_of_neq_num_keys_eq_values(self):
-        dc1 = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
-        dc2 = NonRepeatKeyValueContainer([(u'a', u'1')])
+        dc1 = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
+        dc2 = NonRepeatKeyValueContainer([('a', '1')])
 
         self.assertFalse(dc1.is_variant_of(dc2))
 
     def test_is_variant_of_eq_keys_neq_value_types(self):
-        dc1 = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'2')])
-        dc2 = NonRepeatKeyValueContainer([(u'a', u'1'), (u'b', u'cc')])
+        dc1 = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
+        dc2 = NonRepeatKeyValueContainer([('a', '1'), ('b', 'cc')])
 
         self.assertFalse(dc1.is_variant_of(dc2))
 
     def test_copy_with_token(self):
-        dc = NonRepeatKeyValueContainer([(u'a', '1'), (u'b', '2')])
+        dc = NonRepeatKeyValueContainer([('a', '1'), ('b', '2')])
 
         dc.set_token(('a',))
         dc_copy = copy.deepcopy(dc)

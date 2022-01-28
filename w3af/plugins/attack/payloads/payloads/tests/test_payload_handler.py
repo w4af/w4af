@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import commands
+import subprocess
 import unittest
 import os
 
@@ -78,7 +78,7 @@ class TestPayloadHandler(unittest.TestCase):
         all_payloads = get_payload_list()
         all_but_exceptions = set(all_payloads) - EXCEPTIONS
 
-        self.assertEquals(
+        self.assertEqual(
             set(runnable),
             all_but_exceptions
         )
@@ -101,12 +101,12 @@ class TestPayloadHandler(unittest.TestCase):
     def test_exec_payload_exec(self):
         shell = FakeExecShell()
         result = exec_payload(shell, 'os_fingerprint', use_api=True)
-        self.assertEquals({'os': 'Linux'}, result)
+        self.assertEqual({'os': 'Linux'}, result)
 
     def test_exec_payload_read(self):
         shell = FakeReadShell()
         result = exec_payload(shell, 'os_fingerprint', use_api=True)
-        self.assertEquals({'os': 'Linux'}, result)
+        self.assertEqual({'os': 'Linux'}, result)
 
         result = exec_payload(shell, 'cpu_info', use_api=True)
         # On my box the result is:
@@ -134,7 +134,7 @@ class FakeExecShell(ExecShell):
         super(FakeExecShell, self).__init__(vuln, None, None)
     
     def execute(self, command):
-        return commands.getoutput(command)
+        return subprocess.getoutput(command)
 
     def end(self):
         pass

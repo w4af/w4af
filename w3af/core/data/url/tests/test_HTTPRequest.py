@@ -52,8 +52,8 @@ class TestHTTPRequest(unittest.TestCase):
         loaded_req = HTTPRequest.from_dict(loaded_dict)
 
         self.assertEqual(req, loaded_req)
-        self.assertEqual(req.__dict__.values(),
-                         loaded_req.__dict__.values())
+        self.assertEqual(list(req.__dict__.values()),
+                         list(loaded_req.__dict__.values()))
 
     def test_to_dict_msgpack_with_data_token(self):
         token = DataToken('Host', 'www.w3af.com', ('Host',))
@@ -76,10 +76,10 @@ class TestHTTPRequest(unittest.TestCase):
         self.assertEqual(req.dump(), expected)
 
     def test_dump_case02(self):
-        expected = u'\r\n'.join([u'GET http://w3af.com/a/b/c.php HTTP/1.1',
-                                 u'Hola: Múndo',
-                                 u'',
-                                 u''])
+        expected = '\r\n'.join(['GET http://w3af.com/a/b/c.php HTTP/1.1',
+                                 'Hola: Múndo',
+                                 '',
+                                 ''])
         u = URL('http://w3af.com/a/b/c.php')
         headers = Headers([('Hola', 'Múndo')])
         req = HTTPRequest(u, headers=headers)

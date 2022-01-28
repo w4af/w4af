@@ -197,7 +197,7 @@ class AttackPlugin(Plugin, CommonAttackMethods):
                 om.out.debug(msg % (self.get_name(), vuln.get_id()))
                 continue
 
-            if not isinstance(vuln.get_method(), basestring):
+            if not isinstance(vuln.get_method(), str):
                 msg = '%s plugin can NOT exploit vulnerability with id "%s" as'\
                       ' it doesn\'t have an HTTP method.'
                 om.out.debug(msg % (self.get_name(), vuln.get_id()))

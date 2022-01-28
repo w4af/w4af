@@ -64,9 +64,9 @@ class TestFileContentMutant(unittest.TestCase):
         m = self.create_simple_filecontent_mutant(MultipartContainer)
         self.assertEqual(m.get_url().url_string, 'http://moth/')
 
-        expected_found_at = u'"http://moth/", using HTTP method POST. The'\
-            u' sent post-data was: "...file=abc..."'\
-            u' which modified the uploaded file content.'
+        expected_found_at = '"http://moth/", using HTTP method POST. The'\
+            ' sent post-data was: "...file=abc..."'\
+            ' which modified the uploaded file content.'
         generated_found_at = m.found_at()
 
         self.assertEqual(generated_found_at, expected_found_at)
@@ -87,7 +87,7 @@ class TestFileContentMutant(unittest.TestCase):
         self.assertEqual(ofr.get_method(), cfr.get_method())
         self.assertEqual(ofr.get_uri(), cfr.get_uri())
         self.assertEqual(ofr.get_raw_data(), cfr.get_raw_data())
-        self.assertEqual(ofr.get_headers().keys(), cfr.get_headers().keys())
+        self.assertEqual(list(ofr.get_headers().keys()), list(cfr.get_headers().keys()))
 
         # Not doing this because of the previous comment
         #self.assertEqual(ofr, cfr)

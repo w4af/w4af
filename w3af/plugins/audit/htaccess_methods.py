@@ -70,7 +70,7 @@ class htaccess_methods(AuditPlugin):
         for method in ['GET', 'POST', 'ABCD', 'HEAD']:
             method_functor = getattr(self._uri_opener, method)
             try:
-                response = apply(method_functor, (url,), {'debugging_id': debugging_id})
+                response = method_functor(*(url,), **{'debugging_id': debugging_id})
                 code = response.get_code()
             except:
                 pass

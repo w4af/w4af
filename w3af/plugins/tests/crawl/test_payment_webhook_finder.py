@@ -34,7 +34,7 @@ def fill_kb_with_cgi_urls(target_url, add_url):
     :param add_url: The method to use to write to the KB
     :return: None
     """
-    for i in xrange(payment_webhook_finder.MIN_URL_COUNT_FOR_EXTENSION_FILTER + 1):
+    for i in range(payment_webhook_finder.MIN_URL_COUNT_FOR_EXTENSION_FILTER + 1):
         url_str = '%s%s.cgi' % (target_url, i)
         url = URL(url_str)
         add_url(url)

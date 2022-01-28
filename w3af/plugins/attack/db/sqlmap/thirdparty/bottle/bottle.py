@@ -13,7 +13,7 @@ Copyright (c) 2014, Marcel Hellkamp.
 License: MIT (see LICENSE for details)
 """
 
-from __future__ import with_statement
+
 import sys
 
 __author__ = 'Marcel Hellkamp'
@@ -83,7 +83,7 @@ try:
     def getargspec(func):
         params = signature(func).parameters
         args, varargs, keywords, defaults = [], None, None, []
-        for name, param in params.items():
+        for name, param in list(params.items()):
             if param.kind == param.VAR_POSITIONAL:
                 varargs = name
             elif param.kind == param.VAR_KEYWORD:
@@ -144,8 +144,8 @@ if py3k:
     import pickle
     from io import BytesIO
     from configparser import ConfigParser, Error as ConfigParserError
-    basestring = str
-    unicode = str
+    str = str
+    str = str
     json_loads = lambda s: json_lds(touni(s))
     callable = lambda x: hasattr(x, '__call__')
     imap = map
@@ -153,15 +153,15 @@ if py3k:
     def _raise(*a):
         raise a[0](a[1]).with_traceback(a[2])
 else:  # 2.x
-    import httplib
-    import thread
-    from urlparse import urljoin, SplitResult as UrlSplitResult
-    from urllib import urlencode, quote as urlquote, unquote as urlunquote
-    from Cookie import SimpleCookie
-    from itertools import imap
-    import cPickle as pickle
-    from StringIO import StringIO as BytesIO
-    from ConfigParser import SafeConfigParser as ConfigParser, \
+    import http.client
+    import _thread
+    from urllib.parse import urljoin, SplitResult as UrlSplitResult
+    from urllib.parse import urlencode, quote as urlquote, unquote as urlunquote
+    from http.cookies import SimpleCookie
+    
+    import pickle as pickle
+    from io import StringIO as BytesIO
+    from configparser import SafeConfigParser as ConfigParser, \
                              Error as ConfigParserError
     if py25:
         msg = "Python 2.5 support may be dropped in future versions of Bottle."
@@ -169,26 +169,26 @@ else:  # 2.x
         from UserDict import DictMixin
 
         def next(it):
-            return it.next()
+            return next(it)
 
         bytes = str
     else:  # 2.6, 2.7
         from collections import MutableMapping as DictMixin
-    unicode = unicode
+    str = str
     json_loads = json_lds
     eval(compile('def _raise(*a): raise a[0], a[1], a[2]', '<py3fix>', 'exec'))
 
 
 # Some helpers for string/byte handling
 def tob(s, enc='utf8'):
-    return s.encode(enc) if isinstance(s, unicode) else bytes(s)
+    return s.encode(enc) if isinstance(s, str) else bytes(s)
 
 
 def touni(s, enc='utf8', err='strict'):
     if isinstance(s, bytes):
         return s.decode(enc, err)
     else:
-        return unicode(s or ("" if s is None else s))
+        return str(s or ("" if s is None else s))
 
 
 tonat = touni if py3k else tob
@@ -610,8 +610,7 @@ class Route(object):
             # in case of decorators with multiple arguments
             if not isinstance(func, FunctionType):
                 # pick first FunctionType instance from multiple arguments
-                func = filter(lambda x: isinstance(x, FunctionType),
-                              map(lambda x: x.cell_contents, attributes))
+                func = [x for x in [x.cell_contents for x in attributes] if isinstance(x, FunctionType)]
                 func = list(func)[0]  # py3 support
         return func
 
@@ -875,7 +874,7 @@ class Bottle(object):
         skiplist = makelist(skip)
 
         def decorator(callback):
-            if isinstance(callback, basestring): callback = load(callback)
+            if isinstance(callback, str): callback = load(callback)
             for rule in makelist(path) or yieldroutes(callback):
                 for verb in makelist(method):
                     verb = verb.upper()
@@ -973,10 +972,10 @@ class Bottle(object):
             return []
         # Join lists of byte or unicode strings. Mixed lists are NOT supported
         if isinstance(out, (tuple, list))\
-        and isinstance(out[0], (bytes, unicode)):
+        and isinstance(out[0], (bytes, str)):
             out = out[0][0:0].join(out)  # b'abc'[0:0] -> b''
         # Encode unicode strings
-        if isinstance(out, unicode):
+        if isinstance(out, str):
             out = out.encode(response.charset)
         # Byte Strings are just returned
         if isinstance(out, bytes):
@@ -1022,9 +1021,9 @@ class Bottle(object):
             return self._cast(first)
         elif isinstance(first, bytes):
             new_iter = itertools.chain([first], iout)
-        elif isinstance(first, unicode):
+        elif isinstance(first, str):
             encoder = lambda x: x.encode(response.charset)
-            new_iter = imap(encoder, itertools.chain([first], iout))
+            new_iter = map(encoder, itertools.chain([first], iout))
         else:
             msg = 'Unsupported response type: %s' % type(first)
             return self._cast(HTTPError(500, msg))
@@ -1142,7 +1141,7 @@ class BaseRequest(object):
     def cookies(self):
         """ Cookies parsed into a :class:`FormsDict`. Signed cookies are NOT
             decoded. Use :meth:`get_cookie` if you expect signed cookies. """
-        cookies = SimpleCookie(self.environ.get('HTTP_COOKIE', '')).values()
+        cookies = list(SimpleCookie(self.environ.get('HTTP_COOKIE', '')).values())
         return FormsDict((c.key, c.value) for c in cookies)
 
     def get_cookie(self, key, default=None, secret=None):
@@ -1479,7 +1478,7 @@ class BaseRequest(object):
         return len(self.environ)
 
     def keys(self):
-        return self.environ.keys()
+        return list(self.environ.keys())
 
     def __setitem__(self, key, value):
         """ Change an environ value and clear all caches that depend on it. """
@@ -1581,11 +1580,11 @@ class BaseResponse(object):
         self.status = status or self.default_status
         if headers:
             if isinstance(headers, dict):
-                headers = headers.items()
+                headers = list(headers.items())
             for name, value in headers:
                 self.add_header(name, value)
         if more_headers:
-            for name, value in more_headers.items():
+            for name, value in list(more_headers.items()):
                 self.add_header(name, value)
 
     def copy(self, cls=None):
@@ -1594,7 +1593,7 @@ class BaseResponse(object):
         assert issubclass(cls, BaseResponse)
         copy = cls()
         copy.status = self.status
-        copy._headers = dict((k, v[:]) for (k, v) in self._headers.items())
+        copy._headers = dict((k, v[:]) for (k, v) in list(self._headers.items()))
         if self._cookies:
             copy._cookies = SimpleCookie()
             copy._cookies.load(self._cookies.output(header=''))
@@ -1660,7 +1659,7 @@ class BaseResponse(object):
         return self._headers[_hkey(name)][-1]
 
     def __setitem__(self, name, value):
-        self._headers[_hkey(name)] = [value if isinstance(value, unicode) else
+        self._headers[_hkey(name)] = [value if isinstance(value, str) else
                                       str(value)]
 
     def get_header(self, name, default=None):
@@ -1671,13 +1670,13 @@ class BaseResponse(object):
     def set_header(self, name, value):
         """ Create a new response header, replacing any previously defined
             headers with the same name. """
-        self._headers[_hkey(name)] = [value if isinstance(value, unicode)
+        self._headers[_hkey(name)] = [value if isinstance(value, str)
                                             else str(value)]
 
     def add_header(self, name, value):
         """ Add an additional response header, not removing duplicates. """
         self._headers.setdefault(_hkey(name), []).append(
-            value if isinstance(value, unicode) else str(value))
+            value if isinstance(value, str) else str(value))
 
     def iter_headers(self):
         """ Yield (header, value) tuples, skipping headers that are not
@@ -1696,12 +1695,12 @@ class BaseResponse(object):
             headers = [h for h in headers if h[0] not in bad_headers]
         out += [(name, val) for (name, vals) in headers for val in vals]
         if self._cookies:
-            for c in self._cookies.values():
+            for c in list(self._cookies.values()):
                 out.append(('Set-Cookie', c.OutputString()))
         if py3k:
             return [(k, v.encode('utf8').decode('latin1')) for (k, v) in out]
         else:
-            return [(k, v.encode('utf8') if isinstance(v, unicode) else v)
+            return [(k, v.encode('utf8') if isinstance(v, str) else v)
                     for (k, v) in out]
 
     content_type = HeaderProperty('Content-Type')
@@ -1756,7 +1755,7 @@ class BaseResponse(object):
 
         if secret:
             value = touni(cookie_encode((name, value), secret))
-        elif not isinstance(value, basestring):
+        elif not isinstance(value, str):
             raise TypeError('Secret key missing for non-string Cookie.')
 
         # Cookie size plus options must not exceed 4kb.
@@ -1765,7 +1764,7 @@ class BaseResponse(object):
 
         self._cookies[name] = value
 
-        for key, value in options.items():
+        for key, value in list(options.items()):
             if key == 'max_age':
                 if isinstance(value, timedelta):
                     value = value.seconds + value.days * 24 * 3600
@@ -1967,7 +1966,7 @@ class MultiDict(DictMixin):
     """
 
     def __init__(self, *a, **k):
-        self.dict = dict((k, [v]) for (k, v) in dict(*a, **k).items())
+        self.dict = dict((k, [v]) for (k, v) in list(dict(*a, **k).items()))
 
     def __len__(self):
         return len(self.dict)
@@ -1988,18 +1987,18 @@ class MultiDict(DictMixin):
         self.append(key, value)
 
     def keys(self):
-        return self.dict.keys()
+        return list(self.dict.keys())
 
     if py3k:
 
         def values(self):
-            return (v[-1] for v in self.dict.values())
+            return (v[-1] for v in list(self.dict.values()))
 
         def items(self):
-            return ((k, v[-1]) for k, v in self.dict.items())
+            return ((k, v[-1]) for k, v in list(self.dict.items()))
 
         def allitems(self):
-            return ((k, v) for k, vl in self.dict.items() for v in vl)
+            return ((k, v) for k, vl in list(self.dict.items()) for v in vl)
 
         iterkeys = keys
         itervalues = values
@@ -2009,25 +2008,25 @@ class MultiDict(DictMixin):
     else:
 
         def values(self):
-            return [v[-1] for v in self.dict.values()]
+            return [v[-1] for v in list(self.dict.values())]
 
         def items(self):
-            return [(k, v[-1]) for k, v in self.dict.items()]
+            return [(k, v[-1]) for k, v in list(self.dict.items())]
 
         def iterkeys(self):
-            return self.dict.iterkeys()
+            return iter(self.dict.keys())
 
         def itervalues(self):
-            return (v[-1] for v in self.dict.itervalues())
+            return (v[-1] for v in self.dict.values())
 
         def iteritems(self):
-            return ((k, v[-1]) for k, v in self.dict.iteritems())
+            return ((k, v[-1]) for k, v in self.dict.items())
 
         def iterallitems(self):
-            return ((k, v) for k, vl in self.dict.iteritems() for v in vl)
+            return ((k, v) for k, vl in self.dict.items() for v in vl)
 
         def allitems(self):
-            return [(k, v) for k, vl in self.dict.iteritems() for v in vl]
+            return [(k, v) for k, vl in self.dict.items() for v in vl]
 
     def get(self, key, default=None, index=-1, type=None):
         """ Return the most recent value for a key.
@@ -2078,7 +2077,7 @@ class FormsDict(MultiDict):
     recode_unicode = True
 
     def _fix(self, s, encoding=None):
-        if isinstance(s, unicode) and self.recode_unicode:  # Python 3 WSGI
+        if isinstance(s, str) and self.recode_unicode:  # Python 3 WSGI
             return s.encode('latin1').decode(encoding or self.input_encoding)
         elif isinstance(s, bytes):  # Python 2 WSGI
             return s.decode(encoding or self.input_encoding)
@@ -2103,7 +2102,7 @@ class FormsDict(MultiDict):
         except (UnicodeError, KeyError):
             return default
 
-    def __getattr__(self, name, default=unicode()):
+    def __getattr__(self, name, default=str()):
         # Without this guard, pickle generates a cryptic TypeError:
         if name.startswith('__') and name.endswith('__'):
             return super(FormsDict, self).__getattr__(name)
@@ -2128,15 +2127,15 @@ class HeaderDict(MultiDict):
         return self.dict[_hkey(key)][-1]
 
     def __setitem__(self, key, value):
-        self.dict[_hkey(key)] = [value if isinstance(value, unicode) else
+        self.dict[_hkey(key)] = [value if isinstance(value, str) else
                                  str(value)]
 
     def append(self, key, value):
         self.dict.setdefault(_hkey(key), []).append(
-            value if isinstance(value, unicode) else str(value))
+            value if isinstance(value, str) else str(value))
 
     def replace(self, key, value):
-        self.dict[_hkey(key)] = [value if isinstance(value, unicode) else
+        self.dict[_hkey(key)] = [value if isinstance(value, str) else
                                  str(value)]
 
     def getall(self, key):
@@ -2182,7 +2181,7 @@ class WSGIHeaderDict(DictMixin):
     def __getitem__(self, key):
         val = self.environ[self._ekey(key)]
         if py3k:
-            if isinstance(val, unicode):
+            if isinstance(val, str):
                 val = val.encode('latin1').decode('utf8')
             else:
                 val = val.decode('utf8')
@@ -2205,7 +2204,7 @@ class WSGIHeaderDict(DictMixin):
         return [x for x in self]
 
     def __len__(self):
-        return len(self.keys())
+        return len(list(self.keys()))
 
     def __contains__(self, key):
         return self._ekey(key) in self.environ
@@ -2262,8 +2261,8 @@ class ConfigDict(dict):
             >>> c.load_dict({'some': {'namespace': {'key': 'value'} } })
             {'some.namespace.key': 'value'}
         """
-        for key, value in source.items():
-            if isinstance(key, basestring):
+        for key, value in list(source.items()):
+            if isinstance(key, str):
                 nskey = (namespace + '.' + key).strip('.')
                 if isinstance(value, dict):
                     self.load_dict(value, namespace=nskey)
@@ -2278,10 +2277,10 @@ class ConfigDict(dict):
             namespace. Apart from that it works just as the usual dict.update().
             Example: ``update('some.namespace', key='value')`` """
         prefix = ''
-        if a and isinstance(a[0], basestring):
+        if a and isinstance(a[0], str):
             prefix = a[0].strip('.') + '.'
             a = a[1:]
-        for key, value in dict(*a, **ka).items():
+        for key, value in list(dict(*a, **ka).items()):
             self[prefix + key] = value
 
     def setdefault(self, key, value):
@@ -2290,7 +2289,7 @@ class ConfigDict(dict):
         return self[key]
 
     def __setitem__(self, key, value):
-        if not isinstance(key, basestring):
+        if not isinstance(key, str):
             raise TypeError('Key has type %r (not a string)' % type(key))
         value = self.meta_get(key, 'filter', lambda x: x)(value)
         if key in self and self[key] is value:
@@ -2315,7 +2314,7 @@ class ConfigDict(dict):
 
     def meta_list(self, key):
         """ Return an iterable of meta field names defined for a key. """
-        return self._meta.get(key, {}).keys()
+        return list(self._meta.get(key, {}).keys())
 
 
 class AppStack(list):
@@ -2475,7 +2474,7 @@ class FileUpload(object):
             or dashes are removed. The filename is limited to 255 characters.
         """
         fname = self.raw_filename
-        if not isinstance(fname, unicode):
+        if not isinstance(fname, str):
             fname = fname.decode('utf8', 'ignore')
         fname = normalize('NFKD', fname)
         fname = fname.encode('ASCII', 'ignore').decode('ASCII')
@@ -2501,7 +2500,7 @@ class FileUpload(object):
             :param overwrite: If True, replace existing files. (default: False)
             :param chunk_size: Bytes to read at a time. (default: 64kb)
         """
-        if isinstance(destination, basestring):  # Except file-likes here
+        if isinstance(destination, str):  # Except file-likes here
             if os.path.isdir(destination):
                 destination = os.path.join(destination, self.filename)
             if not overwrite and os.path.exists(destination):
@@ -2639,7 +2638,7 @@ def http_date(value):
         value = value.utctimetuple()
     elif isinstance(value, (int, float)):
         value = time.gmtime(value)
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         value = time.strftime("%a, %d %b %Y %H:%M:%S GMT", value)
     return value
 
@@ -2851,7 +2850,7 @@ class ServerAdapter(object):
 
     def __repr__(self):
         args = ', '.join(['%s=%s' % (k, repr(v))
-                          for k, v in self.options.items()])
+                          for k, v in list(self.options.items())])
         return "%s(%s)" % (self.__class__.__name__, args)
 
 
@@ -3291,13 +3290,13 @@ def run(app=None,
     try:
         if debug is not None: _debug(debug)
         app = app or default_app()
-        if isinstance(app, basestring):
+        if isinstance(app, str):
             app = load_app(app)
         if not callable(app):
             raise ValueError("Application is not callable: %r" % app)
 
         for plugin in plugins or []:
-            if isinstance(plugin, basestring):
+            if isinstance(plugin, str):
                 plugin = load(plugin)
             app.install(plugin)
 
@@ -3306,7 +3305,7 @@ def run(app=None,
 
         if server in server_names:
             server = server_names.get(server)
-        if isinstance(server, basestring):
+        if isinstance(server, str):
             server = load(server)
         if isinstance(server, type):
             server = server(host=host, port=port, **kargs)
@@ -3367,11 +3366,11 @@ class FileCheckerThread(threading.Thread):
             if not exists(self.lockfile)\
             or mtime(self.lockfile) < time.time() - self.interval - 5:
                 self.status = 'error'
-                thread.interrupt_main()
+                _thread.interrupt_main()
             for path, lmtime in list(files.items()):
                 if not exists(path) or mtime(path) > lmtime:
                     self.status = 'reload'
-                    thread.interrupt_main()
+                    _thread.interrupt_main()
                     break
             time.sleep(self.interval)
 
@@ -3696,8 +3695,8 @@ class StplParser(object):
         self._tokens = syntax.split()
         if not syntax in self._re_cache:
             names = 'block_start block_close line_start inline_start inline_end'
-            etokens = map(re.escape, self._tokens)
-            pattern_vars = dict(zip(names.split(), etokens))
+            etokens = list(map(re.escape, self._tokens))
+            pattern_vars = dict(list(zip(names.split(), etokens)))
             patterns = (self._re_split, self._re_tok, self._re_inl)
             patterns = [re.compile(p % pattern_vars) for p in patterns]
             self._re_cache[syntax] = patterns
@@ -3886,14 +3885,14 @@ DEBUG = False
 NORUN = False  # If set, run() does nothing. Used by load_app()
 
 #: A dict to map HTTP status codes (e.g. 404) to phrases (e.g. 'Not Found')
-HTTP_CODES = httplib.responses.copy()
+HTTP_CODES = http.client.responses.copy()
 HTTP_CODES[418] = "I'm a teapot"  # RFC 2324
 HTTP_CODES[428] = "Precondition Required"
 HTTP_CODES[429] = "Too Many Requests"
 HTTP_CODES[431] = "Request Header Fields Too Large"
 HTTP_CODES[511] = "Network Authentication Required"
 _HTTP_STATUS_LINES = dict((k, '%d %s' % (k, v))
-                          for (k, v) in HTTP_CODES.items())
+                          for (k, v) in list(HTTP_CODES.items()))
 
 #: The default template used for error pages. Override with @error()
 ERROR_PAGE_TEMPLATE = """

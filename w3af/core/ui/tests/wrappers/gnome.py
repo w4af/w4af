@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import tempfile
-import commands
+import subprocess
 
 from w3af import ROOT_PATH
 from w3af.core.ui.tests.wrappers.xvfb_server import XVFBServer
@@ -51,7 +51,7 @@ class Gnome(XVFBServer):
     def start_sync(self):
         # Kill all previously running instances of "gnome"
         # TODO: This is a little bit rough, huh?
-        commands.getoutput("pkill -f %s" % self.XINITRC)
+        subprocess.getoutput("pkill -f %s" % self.XINITRC)
         
         assert os.path.exists(self.XINITRC), 'gnome.xinitrc is required.'
         

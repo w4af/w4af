@@ -61,7 +61,7 @@ class TestJSONAllFiltered(PluginTest):
         cfg = RUN_CONFIG['cfg']
         self._scan(self.target_url, cfg['plugins'])
         vulns = self.kb.get('rfd', 'rfd')
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestJSON(PluginTest):
@@ -89,7 +89,7 @@ class TestJSON(PluginTest):
         cfg = RUN_CONFIG['cfg']
         self._scan(self.target_url, cfg['plugins'])
         vulns = self.kb.get('rfd', 'rfd')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
 
 class TestJSONDobleQuotesFiltered(PluginTest):
@@ -117,7 +117,7 @@ class TestJSONDobleQuotesFiltered(PluginTest):
         cfg = RUN_CONFIG['cfg']
         self._scan(self.target_url, cfg['plugins'])
         vulns = self.kb.get('rfd', 'rfd')
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestJSONP(PluginTest):
@@ -143,4 +143,4 @@ class TestJSONP(PluginTest):
         cfg = RUN_CONFIG['cfg']
         self._scan(self.target_url, cfg['plugins'])
         vulns = self.kb.get('rfd', 'rfd')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))

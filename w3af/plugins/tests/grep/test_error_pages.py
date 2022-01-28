@@ -52,12 +52,12 @@ class TestErrorPages(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
 
         infos = self.kb.get('error_pages', 'error_page')
-        self.assertEquals(1, len(infos))
+        self.assertEqual(1, len(infos))
         info = infos[0]
 
-        self.assertEquals(1, len(infos), infos)
-        self.assertEquals(self.target_url, str(info.get_url()))
-        self.assertEquals(severity.INFORMATION, info.get_severity())
+        self.assertEqual(1, len(infos), infos)
+        self.assertEqual(self.target_url, str(info.get_url()))
+        self.assertEqual(severity.INFORMATION, info.get_severity())
         self.assertTrue(info.get_name().startswith('Descriptive error page'))
 
     def setUp(self):
@@ -69,9 +69,9 @@ class TestErrorPages(PluginTest):
         plugin = error_pages()
 
         body = plugin.ERROR_PAGES[5]
-        headers = Headers({'content-type': 'text/html'}.items())
+        headers = Headers(list({'content-type': 'text/html'}.items()))
 
-        for i in xrange(plugin.MAX_REPORTED_PER_MSG * 2):
+        for i in range(plugin.MAX_REPORTED_PER_MSG * 2):
             url = URL('http://www.w3af.com/%s' % i)
             request = FuzzableRequest(url, method='GET')
             response = HTTPResponse(200, body, headers, url, url, _id=1)
@@ -88,9 +88,9 @@ class TestErrorPages(PluginTest):
         plugin = error_pages()
 
         body = plugin.ERROR_PAGES[5]
-        headers = Headers({'content-type': 'text/html'}.items())
+        headers = Headers(list({'content-type': 'text/html'}.items()))
 
-        for i in xrange(plugin.MAX_REPORTED_PER_MSG * 2):
+        for i in range(plugin.MAX_REPORTED_PER_MSG * 2):
             url = URL('http://www.w3af.com/%s' % i)
             request = FuzzableRequest(url, method='GET')
             response = HTTPResponse(200, body, headers, url, url, _id=1)

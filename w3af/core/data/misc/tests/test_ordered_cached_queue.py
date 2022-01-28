@@ -68,7 +68,7 @@ class TestOrderedCachedQueue(unittest.TestCase):
         q = OrderedCachedQueue(maxsize=2)
         hash_list = []
 
-        for i in xrange(5):
+        for i in range(5):
             fr = create_simple_fuzzable_request(i)
             hash_list.append(fr.get_hash())
             q.put(fr)
@@ -78,7 +78,7 @@ class TestOrderedCachedQueue(unittest.TestCase):
 
         self.assertNotEqual(unordered_hash_list, hash_list)
 
-        for i in xrange(4):
+        for i in range(4):
             fr = q.get()
             self.assertEqual(fr.get_hash(), hash_list[i])
 
@@ -145,7 +145,7 @@ class TestOrderedCachedQueue(unittest.TestCase):
         self.assertRaises(Exception, q.get, block=False)
 
         q.put(create_simple_fuzzable_request(1))
-        self.assertEquals(read_fuzzable_request_parameter(q.get()), 1)
+        self.assertEqual(read_fuzzable_request_parameter(q.get()), 1)
 
     def test_simple_rpm_speed(self):
         q = OrderedCachedQueue()
@@ -153,7 +153,7 @@ class TestOrderedCachedQueue(unittest.TestCase):
         self.assertEqual(0.0, q.get_input_rpm())
         self.assertEqual(0.0, q.get_output_rpm())
 
-        for i in xrange(4):
+        for i in range(4):
             q.put(create_simple_fuzzable_request(i))
             # 20 RPM
             time.sleep(3)
@@ -163,7 +163,7 @@ class TestOrderedCachedQueue(unittest.TestCase):
         self.assertGreater(q.get_input_rpm(), 19)
         self.assertLess(q.get_input_rpm(), 20)
 
-        for i in xrange(4):
+        for i in range(4):
             q.get()
             # 60 RPM
             time.sleep(1)
@@ -230,7 +230,7 @@ def create_simple_fuzzable_request(unique_id):
     unique_id = str(unique_id)
 
     url = URL('http://w3af.com/')
-    headers = Headers([(u'Hello', u'World')])
+    headers = Headers([('Hello', 'World')])
     post_data = KeyValueContainer(init_val=[('a', [unique_id])])
 
     return FuzzableRequest(url,

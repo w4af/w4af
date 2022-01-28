@@ -197,7 +197,7 @@ class SQLMapWrapper(object):
                                        shell=False,
                                        universal_newlines=True,
                                        cwd=cwd)
-        except OSError, os_err:
+        except OSError as os_err:
             # https://github.com/andresriancho/w3af/issues/10186
             # OSError: [Errno 12] Cannot allocate memory
             if os_err.errno == errno.ENOMEM:
@@ -267,7 +267,7 @@ class SQLMapWrapper(object):
     
     def direct(self, params):
         
-        if isinstance(params, basestring):
+        if isinstance(params, str):
             extra_params = shlex.split(params)
         else:
             extra_params = params
@@ -351,7 +351,7 @@ class Target(object):
             fmt = 'Invalid type %s for uri parameter in Target ctor.'
             raise TypeError(fmt % type(uri))
 
-        if post_data is not None and not isinstance(post_data, basestring):
+        if post_data is not None and not isinstance(post_data, str):
             fmt = 'Invalid type %s for post_data parameter in Target ctor.'
             raise TypeError(fmt % type(post_data))
         

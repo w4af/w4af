@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from itertools import repeat, izip
+from itertools import repeat
 
 import w3af.core.data.kb.knowledge_base as kb
 import w3af.core.data.constants.severity as severity
@@ -81,7 +81,7 @@ class find_jboss(InfrastructurePlugin):
         """
         base_url = fuzzable_request.get_url().base_url()
 
-        args_iter = izip(repeat(base_url), self.JBOSS_VULNS)
+        args_iter = zip(repeat(base_url), self.JBOSS_VULNS)
         otm_send_request = one_to_many(self.send_request)
         response_pool = self.worker_pool.imap_unordered(otm_send_request,
                                                         args_iter)

@@ -50,12 +50,12 @@ class TestHTAccess(PluginTest):
         self._scan(self.target_url, cfg['plugins'])
         vulns = self.kb.get('htaccess_methods', 'auth')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEquals('Misconfigured access control', vuln.get_name())
-        self.assertEquals(self.target_url, str(vuln.get_url()))
+        self.assertEqual('Misconfigured access control', vuln.get_name())
+        self.assertEqual(self.target_url, str(vuln.get_url()))
 
 
 class TestHTAccessFalsePositiveGeneric(PluginTest):
@@ -72,7 +72,7 @@ class TestHTAccessFalsePositiveGeneric(PluginTest):
         self._scan(self.target_url, cfg['plugins'])
         vulns = self.kb.get('htaccess_methods', 'auth')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestHTaccessCheck1915_1(TestHTAccessFalsePositiveGeneric):

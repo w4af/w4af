@@ -52,4 +52,4 @@ class TestBingSpider(PluginTest):
         found_urls = set(str(u) for u in urls),
         expected_urls = set((self.target_url + end) for end in self.EXPECTED_URLS)
         
-        self.assertEquals(found_urls, expected_urls)
+        self.assertEqual(found_urls, expected_urls)

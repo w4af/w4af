@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement
+
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.constants.severity as severity
@@ -114,7 +114,7 @@ class response_splitting(AuditPlugin):
         """
         headers = response.get_headers()
 
-        for header, value in headers.iteritems():
+        for header, value in headers.items():
             if HEADER_NAME not in header.lower():
                 continue
 

@@ -51,7 +51,7 @@ class TestAcoraPerformanceVsESM(unittest.TestCase):
 
         i = 0
 
-        for j in xrange(self.ITERATIONS):
+        for j in range(self.ITERATIONS):
             for end_index, (insert_order, original_value) in autom.iter(HTTP_RESPONSE):
                 i += 1
 
@@ -67,7 +67,7 @@ class TestAcoraPerformanceVsESM(unittest.TestCase):
         #
         # This takes around 0.6 seconds in my workstation.
         #
-        for j in xrange(self.ITERATIONS):
+        for j in range(self.ITERATIONS):
             for _ in ac.finditer(HTTP_RESPONSE):
                 i += 1
 
@@ -83,7 +83,7 @@ class TestAcoraPerformanceVsESM(unittest.TestCase):
         #
         # This takes around 9 seconds in my workstation.
         #
-        for j in xrange(self.ITERATIONS):
+        for j in range(self.ITERATIONS):
             for _ in ac.finditer(HTTP_RESPONSE):
                 i += 1
 
@@ -102,7 +102,7 @@ class TestAcoraPerformanceVsESM(unittest.TestCase):
         #
         # This takes around 5 seconds in my workstation.
         #
-        for j in xrange(self.ITERATIONS):
+        for j in range(self.ITERATIONS):
             for _ in index.query(HTTP_RESPONSE):
                 i += 1
 

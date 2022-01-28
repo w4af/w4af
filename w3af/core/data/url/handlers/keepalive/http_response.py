@@ -1,9 +1,9 @@
-import httplib
+import http.client
 
 try:
-    from cStringIO import StringIO
+    from io import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 from .utils import debug
 from w3af.core.data.constants.response_codes import NO_CONTENT
@@ -18,13 +18,13 @@ def close_on_error(read_meth):
     def new_read_meth(inst):
         try:
             return read_meth(inst)
-        except httplib.HTTPException:
+        except http.client.HTTPException:
             inst.close()
             raise
     return new_read_meth
 
 
-class HTTPResponse(httplib.HTTPResponse):
+class HTTPResponse(http.client.HTTPResponse):
     # we need to subclass HTTPResponse in order to
     #
     # 1) add readline() and readlines() methods
@@ -47,7 +47,7 @@ class HTTPResponse(httplib.HTTPResponse):
     # modification from socket.py
 
     def __init__(self, sock, debuglevel=0, strict=0, method=None):
-        httplib.HTTPResponse.__init__(self, sock, debuglevel, strict=strict,
+        http.client.HTTPResponse.__init__(self, sock, debuglevel, strict=strict,
                                       method=method)
         self.fileno = sock.fileno
         self.code = None
@@ -133,18 +133,18 @@ class HTTPResponse(httplib.HTTPResponse):
         # read until we get a non-100 response
         while True:
             version, status, reason = self._read_status()
-            if status != httplib.CONTINUE:
+            if status != http.client.CONTINUE:
                 break
             # skip the header from the 100 response
             while True:
-                skip = self.fp.readline(httplib._MAXLINE + 1)
-                if len(skip) > httplib._MAXLINE:
-                    raise httplib.LineTooLong("header line")
+                skip = self.fp.readline(http.client._MAXLINE + 1)
+                if len(skip) > http.client._MAXLINE:
+                    raise http.client.LineTooLong("header line")
                 skip = skip.strip()
                 if not skip:
                     break
                 if self.debuglevel > 0:
-                    print "header:", skip
+                    print("header:", skip)
 
         self.status = status
         self.reason = reason.strip()
@@ -155,19 +155,19 @@ class HTTPResponse(httplib.HTTPResponse):
         elif version == 'HTTP/0.9':
             self.version = 9
         else:
-            raise httplib.UnknownProtocol(version)
+            raise http.client.UnknownProtocol(version)
 
         if self.version == 9:
             self.length = None
             self.chunked = 0
             self.will_close = 1
-            self.msg = httplib.HTTPMessage(StringIO())
+            self.msg = http.client.HTTPMessage(StringIO())
             return
 
-        self.msg = httplib.HTTPMessage(self.fp, 0)
+        self.msg = http.client.HTTPMessage(self.fp, 0)
         if self.debuglevel > 0:
             for hdr in self.msg.headers:
-                print "header:", hdr,
+                print("header:", hdr, end=' ')
 
         # don't let the msg keep an fp
         self.msg.fp = None
@@ -198,7 +198,7 @@ class HTTPResponse(httplib.HTTPResponse):
             self.length = None
 
         # does the body have a fixed length? (of zero)
-        if (status == NO_CONTENT or status == httplib.NOT_MODIFIED or
+        if (status == NO_CONTENT or status == http.client.NOT_MODIFIED or
             100 <= status < 200 or      # 1xx codes
             self._method == 'HEAD'):
             self.length = 0
@@ -236,7 +236,7 @@ class HTTPResponse(httplib.HTTPResponse):
 
     def close(self):
         # First call parent's close()
-        httplib.HTTPResponse.close(self)
+        http.client.HTTPResponse.close(self)
         if self._handler:
             self._handler._request_closed(self._connection)
 

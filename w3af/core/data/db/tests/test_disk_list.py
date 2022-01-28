@@ -46,14 +46,14 @@ class TestDiskList(unittest.TestCase):
     def test_int(self):
         dl = DiskList()
 
-        for i in xrange(0, 1000):
+        for i in range(0, 1000):
             _ = dl.append(i)
 
-        for i in xrange(0, 1000 / 2):
+        for i in range(0, 1000 / 2):
             r = random.randint(0, 1000 - 1)
             self.assertEqual(r in dl, True)
 
-        for i in xrange(0, 1000 / 2):
+        for i in range(0, 1000 / 2):
             r = random.randint(1000, 1000 * 2)
             self.assertEqual(r in dl, False)
 
@@ -63,14 +63,14 @@ class TestDiskList(unittest.TestCase):
         dl.append(2)
         dl.append(3)
         
-        self.assertEqual(unicode(dl), u'<DiskList [1, 2, 3]>')
+        self.assertEqual(str(dl), '<DiskList [1, 2, 3]>')
             
     @attr('smoke')
     def test_string(self):
         dl = DiskList()
 
-        for i in xrange(0, 1000):
-            rnd = ''.join(random.choice(string.letters) for i in xrange(40))
+        for i in range(0, 1000):
+            rnd = ''.join(random.choice(string.letters) for i in range(40))
             _ = dl.append(rnd)
 
         self.assertEqual(rnd in dl, True)
@@ -83,13 +83,13 @@ class TestDiskList(unittest.TestCase):
     def test_unicode(self):
         dl = DiskList()
 
-        dl.append(u'à')
-        dl.append(u'המלצת השבוע')
-        dl.append([u'à', ])
+        dl.append('à')
+        dl.append('המלצת השבוע')
+        dl.append(['à', ])
 
-        self.assertEqual(dl[0], u'à')
-        self.assertEqual(dl[1], u'המלצת השבוע')
-        self.assertEqual(dl[2], [u'à', ])
+        self.assertEqual(dl[0], 'à')
+        self.assertEqual(dl[1], 'המלצת השבוע')
+        self.assertEqual(dl[2], ['à', ])
 
     @attr('smoke')
     def test_urlobject(self):
@@ -129,7 +129,7 @@ class TestDiskList(unittest.TestCase):
     def test_len(self):
         dl = DiskList()
 
-        for i in xrange(0, 100):
+        for i in range(0, 100):
             _ = dl.append(i)
 
         self.assertEqual(len(dl), 100)
@@ -246,8 +246,8 @@ class TestDiskList(unittest.TestCase):
 
         threads = []
         _min = 0
-        for _max in xrange(0, 1100, 100):
-            th = threading.Thread(target=worker, args=(xrange(_min, _max),))
+        for _max in range(0, 1100, 100):
+            th = threading.Thread(target=worker, args=(range(_min, _max),))
             threads.append(th)
             _min = _max
 
@@ -257,14 +257,14 @@ class TestDiskList(unittest.TestCase):
         for th in threads:
             th.join()
 
-        for i in xrange(0, 1000):
+        for i in range(0, 1000):
             self.assertTrue(i in dl, i)
 
         dl_as_list = list(dl)
         self.assertEqual(len(dl_as_list), len(set(dl_as_list)))
 
         dl_as_list.sort()
-        self.assertEqual(dl_as_list, range(1000))
+        self.assertEqual(dl_as_list, list(range(1000)))
 
     def test_remove_table(self):
         disk_list = DiskList()
@@ -314,7 +314,7 @@ class TestDiskList(unittest.TestCase):
         all_instances = []
         amount = 200
         
-        for _ in xrange(amount):
+        for _ in range(amount):
             disk_list = DiskList()
             all_instances.append(disk_list)
         
@@ -357,7 +357,7 @@ class TestDiskList(unittest.TestCase):
         count = 30000
         dl = DiskList()
 
-        for i in xrange(0, count):
+        for i in range(0, count):
             i_str = str(i)
 
             # This tests the serialization
@@ -377,7 +377,7 @@ class TestDiskList(unittest.TestCase):
         dl = DiskList(load=lambda x: x,
                       dump=lambda x: x)
 
-        for i in xrange(0, count):
+        for i in range(0, count):
             i_str = str(i)
 
             # This tests the serialization
@@ -398,7 +398,7 @@ class TestDiskList(unittest.TestCase):
         count = 30000
         dl = DiskList()
 
-        for i in xrange(0, count):
+        for i in range(0, count):
             # This tests the serialization
             dl.append(response)
 
@@ -425,7 +425,7 @@ class TestDiskList(unittest.TestCase):
         count = 30000
         dl = DiskList(dump=dump, load=load)
 
-        for i in xrange(0, count):
+        for i in range(0, count):
             # This tests the serialization
             dl.append(response)
 

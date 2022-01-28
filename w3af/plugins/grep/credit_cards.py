@@ -99,7 +99,7 @@ class credit_cards(GrepPlugin):
         found_cards = self._find_card(clear_text_body)
 
         for card in found_cards:
-            desc = u'The URL: "%s" discloses the credit card number: "%s"'
+            desc = 'The URL: "%s" discloses the credit card number: "%s"'
             desc %= (response.get_url(), card)
 
             v = Vuln('Credit card number disclosure', desc,

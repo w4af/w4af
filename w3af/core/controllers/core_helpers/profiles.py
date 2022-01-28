@@ -143,7 +143,7 @@ class CoreProfiles(object):
         # Set the misc and http settings
         try:
             profile_misc_settings = profile_inst.get_misc_settings()
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = ('Setting the framework misc-settings raised an exception'
                    ' due to unknown or invalid configuration parameters. %s')
             error_messages.append(msg % e)
@@ -161,7 +161,7 @@ class CoreProfiles(object):
 
         try:
             http_settings = profile_inst.get_http_settings()
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = ('Setting the framework http-settings raised an exception'
                    ' due to unknown or invalid configuration parameters. %s')
             error_messages.append(msg % e)
@@ -221,7 +221,7 @@ class CoreProfiles(object):
                     self._w3af_core.plugins.set_plugin_options(plugin_type,
                                                                plugin_name,
                                                                plugin_options)
-                except BaseFrameworkException, w3e:
+                except BaseFrameworkException as w3e:
                     msg = ('Setting the options for plugin "%s.%s" raised an'
                            ' exception due to unknown or invalid configuration'
                            ' parameters. %s')

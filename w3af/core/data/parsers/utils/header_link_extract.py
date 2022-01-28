@@ -107,7 +107,7 @@ def extract_link_from_set_cookie_header(http_response, header_name, header_value
     except:
         raise StopIteration
 
-    for key in cookie.keys():
+    for key in list(cookie.keys()):
         try:
             path = cookie[key]['path']
         except KeyError:
@@ -147,7 +147,7 @@ def headers_url_generator(resp, fuzzable_req):
     """
     resp_headers = resp.get_headers()
 
-    for parser, header_names in URL_HEADERS.iteritems():
+    for parser, header_names in URL_HEADERS.items():
         for header_name in header_names:
 
             header_value, _ = resp_headers.iget(header_name, None)

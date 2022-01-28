@@ -40,7 +40,7 @@ def get_response_unique_id(http_response, prepend=None):
     uri_str = http_response.get_uri().url_string.encode('utf-8')
 
     body_str = http_response.body or ''
-    if isinstance(body_str, unicode):
+    if isinstance(body_str, str):
         body_str = body_str.encode('utf-8', 'replace')
 
     _to_hash = body_str + uri_str
@@ -69,7 +69,7 @@ def get_body_unique_id(http_response, prepend=None):
              working parsers
     """
     body_str = http_response.body
-    if isinstance(body_str, unicode):
+    if isinstance(body_str, str):
         body_str = body_str.encode('utf-8', 'replace')
 
     _to_hash = body_str

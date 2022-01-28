@@ -60,7 +60,7 @@ class MultiIn(object):
                 self._translator[keyword] = item[1:]
 
                 builder.add(keyword)
-            elif isinstance(item, basestring):
+            elif isinstance(item, str):
                 keyword = item.encode(DEFAULT_ENCODING)
                 builder.add(keyword)
             else:
@@ -75,7 +75,7 @@ class MultiIn(object):
         :param target_str: The target string where the keywords need to be match
         :yield: The matches (see __init__)
         """
-        if isinstance(target_str, unicode):
+        if isinstance(target_str, str):
             target_str = target_str.encode(DEFAULT_ENCODING)
 
         seen = set()

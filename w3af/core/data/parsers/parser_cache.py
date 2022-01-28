@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement, print_function
+
 
 import atexit
 import threading
@@ -74,7 +74,7 @@ class ParserCache(CacheStats):
         mp_doc_parser.stop_workers()
 
         # Make sure the parsers clear all resources
-        for parser in self._cache.itervalues():
+        for parser in self._cache.values():
             if hasattr(parser, 'clear'):
                 parser.clear()
 
@@ -207,7 +207,7 @@ class ParserCache(CacheStats):
                 # Act just like when there is no parser
                 msg = 'Reached memory usage limit parsing "%s".' % http_response.get_url()
                 raise BaseFrameworkException(msg)
-            except ScanMustStopException, e:
+            except ScanMustStopException as e:
                 msg = 'The document parser is in an invalid state! %s'
                 raise ScanMustStopException(msg % e)
             except:
@@ -340,10 +340,10 @@ class ParserCache(CacheStats):
                 # Act just like when there is no parser
                 self._log_return_empty(http_response, 'Reached memory usage limit')
                 return []
-            except ScanMustStopException, e:
+            except ScanMustStopException as e:
                 msg = 'The document parser is in an invalid state! %s'
                 raise ScanMustStopException(msg % e)
-            except Exception, e:
+            except Exception as e:
                 # Act just like when there is no parser
                 msg = 'Unhandled exception running get_tags_by_filter("%s"): %s'
                 args = (http_response.get_url(), e)

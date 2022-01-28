@@ -99,12 +99,12 @@ class TestXSSProtectionHeader(unittest.TestCase):
         info_sets = kb.kb.get('xss_protection_header', 'xss_protection_header')
         self.assertEqual(len(info_sets), 1)
 
-        expected_desc = u'The remote web server sent 2 HTTP responses with' \
-                        u' the X-XSS-Protection header with a value of "0",' \
-                        u' which disables Internet Explorer\'s XSS filter.' \
-                        u' The first ten URLs which sent the insecure header' \
-                        u' are:\n - http://www.w3af.com/2\n' \
-                        u' - http://www.w3af.com/1\n'
+        expected_desc = 'The remote web server sent 2 HTTP responses with' \
+                        ' the X-XSS-Protection header with a value of "0",' \
+                        ' which disables Internet Explorer\'s XSS filter.' \
+                        ' The first ten URLs which sent the insecure header' \
+                        ' are:\n - http://www.w3af.com/2\n' \
+                        ' - http://www.w3af.com/1\n'
 
         info_set = info_sets[0]
         self.assertEqual(info_set.get_id(), [1, 3])

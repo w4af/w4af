@@ -48,7 +48,7 @@ def drop_outliers(data_points, offset=1.0):
         if abs(i - _mean) <= _std_dev * offset:
             return i
 
-    return filter(_drop_outliers, data_points)
+    return list(filter(_drop_outliers, data_points))
 
 
 def outliers_modified_z_score(ys):

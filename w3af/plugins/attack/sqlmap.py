@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import copy
-import Queue
+import queue
 import select
 import textwrap
 
@@ -187,7 +187,7 @@ class RunFunctor(Process):
         
         self.functor = functor
         self.params = params
-        self.user_input = Queue.Queue()
+        self.user_input = queue.Queue()
         
         class FakeProcess(object):
             def poll(self):
@@ -195,7 +195,7 @@ class RunFunctor(Process):
         self.process = FakeProcess()
         
     def run(self):
-        cmd, process = apply(self.functor, self.params)
+        cmd, process = self.functor(*self.params)
 
         if process is None:
             # Something really bad happen with sqlmap
@@ -292,7 +292,7 @@ class SQLMapShell(ReadShell):
         """
         try:
             self._rOS = read_os_detection(self.read)
-        except OSDetectionException, osde:
+        except OSDetectionException as osde:
             om.out.debug('%s' % osde)
             self._rOS = 'unknown'
         

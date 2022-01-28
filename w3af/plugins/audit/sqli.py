@@ -158,13 +158,13 @@ class sqli(AuditPlugin):
     # Note that these payloads are similar but they do generate different errors
     # depending on the SQL query context they are used. Removing one or the
     # other will lower our SQLMap testenv coverage
-    SQLI_STRINGS = (u"a'b\"c'd\"",
-                    u"1'2\"3")
+    SQLI_STRINGS = ("a'b\"c'd\"",
+                    "1'2\"3")
 
-    SQLI_MESSAGE = (u'A SQL error was found in the response supplied by '
-                    u'the web application, the error is (only a fragment is '
-                    u'shown): "%s". The error was found on response with id'
-                    u' %s.')
+    SQLI_MESSAGE = ('A SQL error was found in the response supplied by '
+                    'the web application, the error is (only a fragment is '
+                    'shown): "%s". The error was found on response with id'
+                    ' %s.')
 
     def __init__(self):
         AuditPlugin.__init__(self)

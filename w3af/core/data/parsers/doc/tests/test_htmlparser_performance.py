@@ -55,7 +55,7 @@ class TestHTMLParserPerformance(unittest.TestCase):
 
         parsers = []
 
-        for _ in xrange(40):
+        for _ in range(40):
             p = HTMLParser(response)
             p.parse()
             #parsers.append(p)
@@ -78,20 +78,20 @@ class TestHTMLParserPerformance(unittest.TestCase):
         om.remove_expensive_references()
         summary = om.summarize()
 
-        print summary
+        print(summary)
 
         #print('runsnakemem %s' % self.MEMORY_DUMP)
 
         usage = resource.getrusage(resource.RUSAGE_SELF)
-        print 'maximum resident set size', usage.ru_maxrss
-        print 'shared memory size', usage.ru_ixrss
-        print 'unshared memory size', usage.ru_idrss
-        print 'unshared stack size', usage.ru_isrss
+        print('maximum resident set size', usage.ru_maxrss)
+        print('shared memory size', usage.ru_ixrss)
+        print('unshared memory size', usage.ru_idrss)
+        print('unshared stack size', usage.ru_isrss)
 
         import psutil
         self_pid = psutil.Process()
         # pylint: disable=E1101
-        print self_pid.memory_info()
+        print(self_pid.memory_info())
 
 
 def test():

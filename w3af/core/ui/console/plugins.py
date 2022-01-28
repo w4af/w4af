@@ -102,7 +102,7 @@ class pluginsMenu(menu):
     def _para_list(self, params, part):
         l = len(params)
         if l == 0:
-            return suggest(self._children.keys(), part)
+            return suggest(list(self._children.keys()), part)
         if l == 1:
             return suggest(['all', 'enabled', 'disabled'], part)
         return []
@@ -121,7 +121,7 @@ class pluginsTypeMenu(menu):
             try:
                 options = self._w3af.plugins.get_plugin_inst(
                     self._name, p).get_options()
-            except Exception, e:
+            except Exception as e:
                 om.out.error('Error while reading plugin options: "%s"' % e)
                 sys.exit(-8)
             else:
@@ -129,7 +129,7 @@ class pluginsTypeMenu(menu):
         self._configs = {}
 
     def suggest_commands(self, part, *skip):
-        return suggest(self._plugins.keys() + ['all'], part.lstrip('!')) + \
+        return suggest(list(self._plugins.keys()) + ['all'], part.lstrip('!')) + \
             suggest(self.get_commands(), part)
 
     def suggest_params(self, command, params, part):
@@ -138,7 +138,7 @@ class pluginsTypeMenu(menu):
 
         alreadySel = [s.lstrip('!') for s in [command] + params]
 
-        plugins = self._plugins.keys()
+        plugins = list(self._plugins.keys())
         return suggest(plugins, part.lstrip('!'), alreadySel)
 
     def get_commands(self):
@@ -176,7 +176,7 @@ class pluginsTypeMenu(menu):
                 elif plugin in enabled:
                     enabled.remove(plugin)
             elif plugin == 'all':
-                enabled = self._plugins.keys()
+                enabled = list(self._plugins.keys())
             elif plugin not in enabled:
                 enabled.append(plugin)
 
@@ -220,13 +220,13 @@ class pluginsTypeMenu(menu):
         if len(params) > 0:
             return []
 
-        return suggest(self._plugins.keys(), part)
+        return suggest(list(self._plugins.keys()), part)
 
     def _list(self, params):
         #print 'list : ' + str(params)
         filter = len(params) > 0 and params[0] or 'all'
 
-        all = self._plugins.keys()
+        all = list(self._plugins.keys())
         enabled = self._w3af.plugins.get_enabled_plugins(self._name)
 
         if filter == 'all':
@@ -284,7 +284,7 @@ class pluginsTypeMenu(menu):
         if len(params) > 0:
             return []
 
-        return suggest([p for p in self._plugins.keys()
+        return suggest([p for p in list(self._plugins.keys())
                         if self._plugins[p] > 0], part)
 
     def _para_list(self, params, part=''):

@@ -6,7 +6,7 @@ See the file 'LICENSE' for copying permission
 """
 
 import copy
-import httplib
+import http.client
 import logging
 import os
 import random
@@ -449,7 +449,7 @@ def checkSqlInjection(place, parameter, value):
                     # Perform the test's request and check whether or not the
                     # payload was successful
                     # Parse test's <response>
-                    for method, check in test.response.items():
+                    for method, check in list(test.response.items()):
                         check = agent.cleanupPayload(check, origValue=value if place not in (PLACE.URI, PLACE.CUSTOM_POST, PLACE.CUSTOM_HEADER) else None)
 
                         # In case of boolean-based blind SQL injection
@@ -536,7 +536,7 @@ def checkSqlInjection(place, parameter, value):
                                         falseSet = set(extractTextTagContent(falseRawResponse))
                                         falseSet = falseSet.union(__ for _ in falseSet for __ in _.split())
 
-                                        candidates = filter(None, (_.strip() if _.strip() in trueRawResponse and _.strip() not in falseRawResponse else None for _ in (trueSet - falseSet)))
+                                        candidates = [_f for _f in (_.strip() if _.strip() in trueRawResponse and _.strip() not in falseRawResponse else None for _ in (trueSet - falseSet)) if _f]
 
                                         if candidates:
                                             candidates = sorted(candidates, key=lambda _: len(_))
@@ -550,7 +550,7 @@ def checkSqlInjection(place, parameter, value):
                                             logger.info(infoMsg)
 
                                         if not any((conf.string, conf.notString)):
-                                            candidates = filter(None, (_.strip() if _.strip() in falseRawResponse and _.strip() not in trueRawResponse else None for _ in (falseSet - trueSet)))
+                                            candidates = [_f for _f in (_.strip() if _.strip() in falseRawResponse and _.strip() not in trueRawResponse else None for _ in (falseSet - trueSet)) if _f]
 
                                             if candidates:
                                                 candidates = sorted(candidates, key=lambda _: len(_))
@@ -575,7 +575,7 @@ def checkSqlInjection(place, parameter, value):
                                 page, headers, _ = Request.queryPage(reqPayload, place, content=True, raise404=False)
                                 output = extractRegexResult(check, page, re.DOTALL | re.IGNORECASE) \
                                         or extractRegexResult(check, threadData.lastHTTPError[2] if wasLastResponseHTTPError() else None, re.DOTALL | re.IGNORECASE) \
-                                        or extractRegexResult(check, listToStrValue((headers[key] for key in headers.keys() if key.lower() != URI_HTTP_HEADER.lower()) if headers else None), re.DOTALL | re.IGNORECASE) \
+                                        or extractRegexResult(check, listToStrValue((headers[key] for key in list(headers.keys()) if key.lower() != URI_HTTP_HEADER.lower()) if headers else None), re.DOTALL | re.IGNORECASE) \
                                         or extractRegexResult(check, threadData.lastRedirectMsg[1] if threadData.lastRedirectMsg and threadData.lastRedirectMsg[0] == threadData.lastRequestUID else None, re.DOTALL | re.IGNORECASE)
 
                                 if output:
@@ -587,7 +587,7 @@ def checkSqlInjection(place, parameter, value):
 
                                         injectable = True
 
-                            except SqlmapConnectionException, msg:
+                            except SqlmapConnectionException as msg:
                                 debugMsg = "problem occurred most likely because the "
                                 debugMsg += "server hasn't recovered as expected from the "
                                 debugMsg += "error-based payload used ('%s')" % msg
@@ -661,7 +661,7 @@ def checkSqlInjection(place, parameter, value):
                             # Test for UNION query SQL injection
                             reqPayload, vector = unionTest(comment, place, parameter, value, prefix, suffix)
 
-                            if isinstance(reqPayload, basestring):
+                            if isinstance(reqPayload, str):
                                 infoMsg = "%s parameter '%s' is '%s' injectable" % (paramType, parameter, title)
                                 logger.info(infoMsg)
 
@@ -695,7 +695,7 @@ def checkSqlInjection(place, parameter, value):
 
                         # Feed with test details every time a test is successful
                         if hasattr(test, "details"):
-                            for key, value in test.details.items():
+                            for key, value in list(test.details.items()):
                                 if key == "dbms":
                                     injection.dbms = value
 
@@ -871,9 +871,9 @@ def checkFalsePositives(injection):
 
         kb.injection = injection
 
-        for i in xrange(conf.level):
+        for i in range(conf.level):
             while True:
-                randInt1, randInt2, randInt3 = (_() for j in xrange(3))
+                randInt1, randInt2, randInt3 = (_() for j in range(3))
 
                 randInt1 = min(randInt1, randInt2, randInt3)
                 randInt3 = max(randInt1, randInt2, randInt3)
@@ -1390,7 +1390,7 @@ def identifyWaf():
         try:
             logger.debug("checking for WAF/IPS/IDS product '%s'" % product)
             found = function(_)
-        except Exception, ex:
+        except Exception as ex:
             errMsg = "exception occurred while running "
             errMsg += "WAF script for '%s' ('%s')" % (product, getSafeExString(ex))
             logger.critical(errMsg)
@@ -1474,7 +1474,7 @@ def checkNullConnection():
                     infoMsg = "NULL connection is supported with 'skip-read' method"
                     logger.info(infoMsg)
 
-    except SqlmapConnectionException, ex:
+    except SqlmapConnectionException as ex:
         errMsg = getSafeExString(ex)
         raise SqlmapConnectionException(errMsg)
 
@@ -1492,7 +1492,7 @@ def checkConnection(suppressOutput=False):
         except socket.gaierror:
             errMsg = "host '%s' does not exist" % conf.hostname
             raise SqlmapConnectionException(errMsg)
-        except socket.error, ex:
+        except socket.error as ex:
             errMsg = "problem occurred while "
             errMsg += "resolving a host name '%s' ('%s')" % (conf.hostname, getSafeExString(ex))
             raise SqlmapConnectionException(errMsg)
@@ -1523,7 +1523,7 @@ def checkConnection(suppressOutput=False):
         else:
             kb.errorIsNone = True
 
-    except SqlmapConnectionException, ex:
+    except SqlmapConnectionException as ex:
         if conf.ipv6:
             warnMsg = "check connection to a provided "
             warnMsg += "IPv6 address with a tool like ping6 "
@@ -1532,7 +1532,7 @@ def checkConnection(suppressOutput=False):
             warnMsg += "any addressing issues"
             singleTimeWarnMessage(warnMsg)
 
-        if any(code in kb.httpErrorCodes for code in (httplib.NOT_FOUND, )):
+        if any(code in kb.httpErrorCodes for code in (http.client.NOT_FOUND, )):
             errMsg = getSafeExString(ex)
             logger.critical(errMsg)
 

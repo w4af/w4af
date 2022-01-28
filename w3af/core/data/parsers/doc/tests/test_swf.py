@@ -43,7 +43,7 @@ class TestSWFParser(unittest.TestCase):
     def parse(self, filename):
         body = file(filename).read()
         swf_mime = 'application/x-shockwave-flash'
-        hdrs = Headers({'Content-Type': swf_mime}.items())
+        hdrs = Headers(list({'Content-Type': swf_mime}.items()))
         response = HTTPResponse(200, body, hdrs,
                                 URL('http://moth/xyz/'),
                                 URL('http://moth/xyz/'),

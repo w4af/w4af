@@ -55,5 +55,5 @@ class TestThreadStateObserver(unittest.TestCase):
 
         message_re = ('Worker with ID .*? has been running job .*? for .*? seconds.'
                       ' The job is: .*?(.*?, kwargs=.*?)')
-        self.assertRegexpMatches(messages[0], message_re)
+        self.assertRegex(messages[0], message_re)
         self.assertEqual(messages[1], '0% of WorkerThread workers are idle.')

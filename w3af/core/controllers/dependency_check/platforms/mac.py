@@ -116,7 +116,7 @@ class MacOSX(Platform):
             # that python site-packages directory
             pass
         else:
-            print(TWO_PYTHON_MSG % sys.executable)
+            print((TWO_PYTHON_MSG % sys.executable))
 
         #check if scapy is correctly installed/working on OSX
         try:

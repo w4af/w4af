@@ -105,7 +105,7 @@ class TestFingerprint404Perf(unittest.TestCase):
             fingerprint_404._is_404_complex(response)
 
             if count % self.CACHE_TEST_EVERY == 0:
-                for _ in xrange(self.CACHE_TESTS):
+                for _ in range(self.CACHE_TESTS):
                     fingerprint_404._is_404_complex(response)
 
             if count >= self.MAX_REQUEST_RESPONSE:

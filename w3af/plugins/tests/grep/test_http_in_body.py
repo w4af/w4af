@@ -46,19 +46,19 @@ class TestHttpInBody(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
 
         infos = self.kb.get('http_in_body', 'request')
-        self.assertEquals(1, len(infos), infos)
+        self.assertEqual(1, len(infos), infos)
         
         info = infos[0]
-        self.assertEquals(get_moth_http('/grep/http_in_body/http_request.html'),
+        self.assertEqual(get_moth_http('/grep/http_in_body/http_request.html'),
                           str(info.get_url()))
-        self.assertEquals(severity.INFORMATION, info.get_severity())
-        self.assertEquals('HTTP Request in HTTP body', info.get_name())
+        self.assertEqual(severity.INFORMATION, info.get_severity())
+        self.assertEqual('HTTP Request in HTTP body', info.get_name())
 
         infos = self.kb.get('http_in_body', 'response')
-        self.assertEquals(1, len(infos), infos)
+        self.assertEqual(1, len(infos), infos)
         
         info = infos[0]
-        self.assertEquals(get_moth_http('/grep/http_in_body/http_response.html'),
+        self.assertEqual(get_moth_http('/grep/http_in_body/http_response.html'),
                           str(info.get_url()))
-        self.assertEquals(severity.INFORMATION, info.get_severity())
-        self.assertEquals('HTTP Response in HTTP body', info.get_name())
+        self.assertEqual(severity.INFORMATION, info.get_severity())
+        self.assertEqual('HTTP Response in HTTP body', info.get_name())

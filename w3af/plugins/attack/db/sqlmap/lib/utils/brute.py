@@ -278,7 +278,7 @@ def columnExists(columnFile, regex=None):
 
         kb.data.cachedColumns[conf.db] = {conf.tbl: columns}
 
-        for _ in ((conf.db, conf.tbl, item[0], item[1]) for item in columns.items()):
+        for _ in ((conf.db, conf.tbl, item[0], item[1]) for item in list(columns.items())):
             if _ not in kb.brute.columns:
                 kb.brute.columns.append(_)
 

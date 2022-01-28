@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import unittest
 import httpretty
 
@@ -54,14 +54,14 @@ class TestRedirectHandlerLowLevel(unittest.TestCase):
                                body=self.OK_BODY, status=FOUND)
 
         redirect_url = URL(self.REDIR_SRC)
-        opener = urllib2.build_opener(HTTP30XHandler)
+        opener = urllib.request.build_opener(HTTP30XHandler)
         
-        request = urllib2.Request(redirect_url.url_string)
+        request = urllib.request.Request(redirect_url.url_string)
 
         # This is because the 30x handler doesn't implement default error handling
         # which is in another part of the w3af framework and this is just a urllib2
         # level test
-        self.assertRaises(urllib2.HTTPError, opener.open, request)
+        self.assertRaises(urllib.error.HTTPError, opener.open, request)
 
     @httpretty.activate
     def test_handler_order(self):

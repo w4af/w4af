@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import gtk
-import Queue
+import queue
 import threading
 import gobject
 
@@ -66,14 +66,14 @@ class bug_report_worker(threading.Thread):
         
         self.bug_report_function = bug_report_function
         self.bugs_to_report = bugs_to_report
-        self.output = Queue.Queue()
+        self.output = queue.Queue()
 
     def run(self):
         """
         The thread's main method, where all the magic happens.
         """
         for bug in self.bugs_to_report:
-            result = apply(self.bug_report_function, bug)
+            result = self.bug_report_function(*bug)
             self.output.put(result)
 
         self.output.put(self.FINISHED)
@@ -185,7 +185,7 @@ class report_bug_show_result(gtk.MessageDialog):
         # The links to the reported tickets
         try:
             bug_report_result = self.worker.output.get(block=False)
-        except Queue.Empty:
+        except queue.Empty:
             # The worker is reporting stuff to the network and doesn't
             # have any results at this moment. Call me in some seconds.
             return True

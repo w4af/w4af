@@ -25,7 +25,7 @@ import socket
 import select
 import threading
 import mimetypes
-import BaseHTTPServer
+import http.server
 
 import w3af.core.controllers.output_manager as om
 
@@ -51,13 +51,13 @@ def _get_inst(ip, port):
     return _servers.get((ip, port), None)
 
 
-class HTTPServer(BaseHTTPServer.HTTPServer):
+class HTTPServer(http.server.HTTPServer):
     """
     Most of the behavior added here is included in
     """
 
     def __init__(self, server_address, webroot, RequestHandlerClass):
-        BaseHTTPServer.HTTPServer.__init__(self, server_address,
+        http.server.HTTPServer.__init__(self, server_address,
                                            RequestHandlerClass)
         self.webroot = webroot
         self.__is_shut_down = threading.Event()
@@ -104,7 +104,7 @@ class HTTPServer(BaseHTTPServer.HTTPServer):
 
     def server_bind(self):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        BaseHTTPServer.HTTPServer.server_bind(self)
+        http.server.HTTPServer.server_bind(self)
 
     def get_port(self):
         try:
@@ -117,7 +117,7 @@ class HTTPServer(BaseHTTPServer.HTTPServer):
             time.sleep(0.5)
 
 
-class WebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class WebHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
 
@@ -129,7 +129,7 @@ class WebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             except IOError:
                 try:
                     self.send_error(404, 'File Not Found: %s' % self.path)
-                except Exception, e:
+                except Exception as e:
                     om.out.debug('[webserver] Exception: ' + str(e))
             else:
                 try:
@@ -144,7 +144,7 @@ class WebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                         self.send_header('Content-type', 'text/html')
                     self.end_headers()
                     self.wfile.write(f.read())
-                except Exception, e:
+                except Exception as e:
                     om.out.debug('[webserver] Exception: ' + str(e))
 
                 f.close()

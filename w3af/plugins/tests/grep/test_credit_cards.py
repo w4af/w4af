@@ -48,7 +48,7 @@ class TestCreditCards(unittest.TestCase):
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('credit_cards', 'credit_cards')), 1)
+        self.assertEqual(len(kb.kb.get('credit_cards', 'credit_cards')), 1)
 
     def test_find_credit_card_spaces(self):
         body = '3566 0020 2036 0505'
@@ -57,7 +57,7 @@ class TestCreditCards(unittest.TestCase):
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('credit_cards', 'credit_cards')), 1)
+        self.assertEqual(len(kb.kb.get('credit_cards', 'credit_cards')), 1)
 
     def test_find_credit_card_html(self):
         body = '<a> 378282246310005</a>'
@@ -66,7 +66,7 @@ class TestCreditCards(unittest.TestCase):
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('credit_cards', 'credit_cards')), 1)
+        self.assertEqual(len(kb.kb.get('credit_cards', 'credit_cards')), 1)
 
     def test_not_find_credit_cards(self):
         invalid_cards = ('b71449635402848',  # Start with a letter
@@ -85,7 +85,7 @@ class TestCreditCards(unittest.TestCase):
             response = HTTPResponse(200, body, headers, url, url, _id=1)
             request = FuzzableRequest(url, method='GET')
             self.plugin.grep(request, response)
-            self.assertEquals(
+            self.assertEqual(
                 len(kb.kb.get('credit_cards', 'credit_cards')), 0)
             kb.kb.clear('credit_cards', 'credit_cards')
 
@@ -96,7 +96,7 @@ class TestCreditCards(unittest.TestCase):
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('credit_cards', 'credit_cards')), 0)
+        self.assertEqual(len(kb.kb.get('credit_cards', 'credit_cards')), 0)
 
     def test_find_credit_card_performance_true(self):
         credit_card = '3566 0020 2036 0505'
@@ -110,7 +110,7 @@ class TestCreditCards(unittest.TestCase):
         response = HTTPResponse(200, html, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
 
-        for _ in xrange(5000):
+        for _ in range(5000):
             self.plugin.grep(request, response)
 
-        self.assertEquals(len(kb.kb.get('credit_cards', 'credit_cards')), 1)
+        self.assertEqual(len(kb.kb.get('credit_cards', 'credit_cards')), 1)

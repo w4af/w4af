@@ -126,15 +126,15 @@ class find_backdoors(CrawlPlugin):
         if signature is None:
             return
 
-        desc = (u'An HTTP response matching the web backdoor signature'
-                u' "%s" was found at: "%s"; this could indicate that the'
-                u' server has been compromised.')
+        desc = ('An HTTP response matching the web backdoor signature'
+                ' "%s" was found at: "%s"; this could indicate that the'
+                ' server has been compromised.')
         desc %= (signature, response.get_url())
 
         # It's probability is higher if we found a long signature
         _severity = severity.HIGH if len(signature) > 8 else severity.MEDIUM
 
-        v = Vuln(u'Potential web backdoor', desc, _severity,
+        v = Vuln('Potential web backdoor', desc, _severity,
                  response.id, self.get_name())
         v.set_url(response.get_url())
 

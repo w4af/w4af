@@ -40,7 +40,7 @@ from hashlib import sha224
 from hashlib import sha256
 from hashlib import sha384
 from hashlib import sha512
-from Queue import Queue
+from queue import Queue
 
 from lib.core.common import Backend
 from lib.core.common import checkFile
@@ -132,11 +132,11 @@ def postgres_passwd(password, username, uppercase=False):
     """
 
 
-    if isinstance(username, unicode):
-        username = unicode.encode(username, UNICODE_ENCODING)
+    if isinstance(username, str):
+        username = str.encode(username, UNICODE_ENCODING)
 
-    if isinstance(password, unicode):
-        password = unicode.encode(password, UNICODE_ENCODING)
+    if isinstance(password, str):
+        password = str.encode(password, UNICODE_ENCODING)
 
     retVal = "md5%s" % md5(password + username).hexdigest()
 
@@ -221,11 +221,11 @@ def oracle_old_passwd(password, username, uppercase=True):  # prior to version '
 
     IV, pad = "\0" * 8, "\0"
 
-    if isinstance(username, unicode):
-        username = unicode.encode(username, UNICODE_ENCODING)
+    if isinstance(username, str):
+        username = str.encode(username, UNICODE_ENCODING)
 
-    if isinstance(password, unicode):
-        password = unicode.encode(password, UNICODE_ENCODING)
+    if isinstance(password, str):
+        password = str.encode(password, UNICODE_ENCODING)
 
     unistr = "".join("\0%s" % c for c in (username + password).upper())
 
@@ -363,14 +363,14 @@ def unix_md5_passwd(password, salt, magic="$1$", **kwargs):
 
         return output
 
-    if isinstance(password, unicode):
+    if isinstance(password, str):
         password = password.encode(UNICODE_ENCODING)
 
     salt = salt[:8]
     ctx = password + magic + salt
     final = md5(password + salt + password).digest()
 
-    for pl in xrange(len(password),0,-16):
+    for pl in range(len(password),0,-16):
         if pl > 16:
             ctx = ctx + final[:16]
         else:
@@ -386,7 +386,7 @@ def unix_md5_passwd(password, salt, magic="$1$", **kwargs):
 
     final = md5(ctx).digest()
 
-    for i in xrange(1000):
+    for i in range(1000):
         ctx1 = ""
 
         if i & 1:
@@ -497,14 +497,14 @@ def wordpress_passwd(password, salt, count, prefix, **kwargs):
 
         return output
 
-    if isinstance(password, unicode):
+    if isinstance(password, str):
         password = password.encode(UNICODE_ENCODING)
 
     cipher = md5(salt)
     cipher.update(password)
     hash_ = cipher.digest()
 
-    for i in xrange(count):
+    for i in range(count):
         _ = md5(hash_)
         _.update(password)
         hash_ = _.digest()
@@ -567,7 +567,7 @@ def storeHashesToFile(attack_dict):
     items = set()
 
     with open(filename, "w+") as f:
-        for user, hashes in attack_dict.items():
+        for user, hashes in list(attack_dict.items()):
             for hash_ in hashes:
                 hash_ = hash_.split()[0] if hash_ and hash_.strip() else hash_
                 if hash_ and hash_ != NULL and hashRecognition(hash_):
@@ -589,8 +589,8 @@ def attackCachedUsersPasswords():
         for (_, hash_, password) in results:
             lut[hash_.lower()] = password
 
-        for user in kb.data.cachedUsersPasswords.keys():
-            for i in xrange(len(kb.data.cachedUsersPasswords[user])):
+        for user in list(kb.data.cachedUsersPasswords.keys()):
+            for i in range(len(kb.data.cachedUsersPasswords[user])):
                 if (kb.data.cachedUsersPasswords[user][i] or "").strip():
                     value = kb.data.cachedUsersPasswords[user][i].lower().split()[0]
                     if value in lut:
@@ -599,7 +599,7 @@ def attackCachedUsersPasswords():
 def attackDumpedTable():
     if kb.data.dumpedTable:
         table = kb.data.dumpedTable
-        columns = table.keys()
+        columns = list(table.keys())
         count = table["__infos__"]["count"]
 
         if not count:
@@ -618,7 +618,7 @@ def attackDumpedTable():
                 col_user = column
                 break
 
-        for i in xrange(count):
+        for i in range(count):
             if not found and i > HASH_RECOGNITION_QUIT_THRESHOLD:
                 break
 
@@ -669,7 +669,7 @@ def attackDumpedTable():
             debugMsg = "post-processing table dump"
             logger.debug(debugMsg)
 
-            for i in xrange(count):
+            for i in range(count):
                 for column in columns:
                     if not (column == col_user or column == '__infos__' or len(table[column]['values']) <= i):
                         value = table[column]['values'][i]
@@ -683,7 +683,7 @@ def hashRecognition(value):
 
     isOracle, isMySQL = Backend.isDbms(DBMS.ORACLE), Backend.isDbms(DBMS.MYSQL)
 
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         for name, regex in getPublicTypeMembers(HASH):
             # Hashes for Oracle and old MySQL look the same hence these checks
             if isOracle and regex == HASH.MYSQL_OLD:
@@ -714,7 +714,7 @@ def _bruteProcessVariantA(attack_info, hash_regex, suffix, retVal, proc_id, proc
             if not attack_info:
                 break
 
-            if not isinstance(word, basestring):
+            if not isinstance(word, str):
                 continue
 
             if suffix:
@@ -762,7 +762,7 @@ def _bruteProcessVariantA(attack_info, hash_regex, suffix, retVal, proc_id, proc
             except (UnicodeEncodeError, UnicodeDecodeError):
                 pass  # ignore possible encoding problems caused by some words in custom dictionaries
 
-            except Exception, e:
+            except Exception as e:
                 warnMsg = "there was a problem while hashing entry: %s (%s). " % (repr(word), e)
                 warnMsg += "Please report by e-mail to '%s'" % DEV_EMAIL_ADDRESS
                 logger.critical(warnMsg)
@@ -792,7 +792,7 @@ def _bruteProcessVariantB(user, hash_, kwargs, hash_regex, suffix, retVal, found
             current = __functions__[hash_regex](password=word, uppercase=False, **kwargs)
             count += 1
 
-            if not isinstance(word, basestring):
+            if not isinstance(word, str):
                 continue
 
             if suffix:
@@ -836,7 +836,7 @@ def _bruteProcessVariantB(user, hash_, kwargs, hash_regex, suffix, retVal, found
             except (UnicodeEncodeError, UnicodeDecodeError):
                 pass  # ignore possible encoding problems caused by some words in custom dictionaries
 
-            except Exception, e:
+            except Exception as e:
                 warnMsg = "there was a problem while hashing entry: %s (%s). " % (repr(word), e)
                 warnMsg += "Please report by e-mail to '%s'" % DEV_EMAIL_ADDRESS
                 logger.critical(warnMsg)
@@ -859,7 +859,7 @@ def dictionaryAttack(attack_dict):
     processException = False
     foundHash = False
 
-    for (_, hashes) in attack_dict.items():
+    for (_, hashes) in list(attack_dict.items()):
         for hash_ in hashes:
             if not hash_:
                 continue
@@ -869,14 +869,14 @@ def dictionaryAttack(attack_dict):
 
             if regex and regex not in hash_regexes:
                 hash_regexes.append(regex)
-                infoMsg = "using hash method '%s'" % __functions__[regex].func_name
+                infoMsg = "using hash method '%s'" % __functions__[regex].__name__
                 logger.info(infoMsg)
 
     for hash_regex in hash_regexes:
         keys = set()
         attack_info = []
 
-        for (user, hashes) in attack_dict.items():
+        for (user, hashes) in list(attack_dict.items()):
             for hash_ in hashes:
                 if not hash_:
                     continue
@@ -972,7 +972,7 @@ def dictionaryAttack(attack_dict):
                     else:
                         logger.info("using default dictionary")
 
-                    dictPaths = filter(None, dictPaths)
+                    dictPaths = [_f for _f in dictPaths if _f]
 
                     for dictPath in dictPaths:
                         checkFile(dictPath)
@@ -987,7 +987,7 @@ def dictionaryAttack(attack_dict):
 
                     kb.wordlists = dictPaths
 
-                except Exception, ex:
+                except Exception as ex:
                     warnMsg = "there was a problem while loading dictionaries"
                     warnMsg += " ('%s')" % getSafeExString(ex)
                     logger.critical(warnMsg)
@@ -997,7 +997,7 @@ def dictionaryAttack(attack_dict):
             if readInput(message, default='N', boolean=True):
                 suffix_list += COMMON_PASSWORD_SUFFIXES
 
-        infoMsg = "starting dictionary-based cracking (%s)" % __functions__[hash_regex].func_name
+        infoMsg = "starting dictionary-based cracking (%s)" % __functions__[hash_regex].__name__
         logger.info(infoMsg)
 
         for item in attack_info:
@@ -1030,7 +1030,7 @@ def dictionaryAttack(attack_dict):
                         retVal = _multiprocessing.Queue()
                         count = _multiprocessing.Value('i', _multiprocessing.cpu_count())
 
-                        for i in xrange(_multiprocessing.cpu_count()):
+                        for i in range(_multiprocessing.cpu_count()):
                             process = _multiprocessing.Process(target=_bruteProcessVariantA, args=(attack_info, hash_regex, suffix, retVal, i, count, kb.wordlists, custom_wordlist, conf.api))
                             processes.append(process)
 
@@ -1050,7 +1050,7 @@ def dictionaryAttack(attack_dict):
                         _bruteProcessVariantA(attack_info, hash_regex, suffix, retVal, 0, 1, kb.wordlists, custom_wordlist, conf.api)
 
                 except KeyboardInterrupt:
-                    print
+                    print()
                     processException = True
                     warnMsg = "user aborted during dictionary-based attack phase (Ctrl+C was pressed)"
                     logger.warn(warnMsg)
@@ -1071,7 +1071,7 @@ def dictionaryAttack(attack_dict):
 
                         while not retVal.empty():
                             user, hash_, word = item = retVal.get(block=False)
-                            attack_info = filter(lambda _: _[0][0] != user or _[0][1] != hash_, attack_info)
+                            attack_info = [_ for _ in attack_info if _[0][0] != user or _[0][1] != hash_]
                             hashDBWrite(hash_, word)
                             results.append(item)
 
@@ -1114,7 +1114,7 @@ def dictionaryAttack(attack_dict):
                             found_ = _multiprocessing.Value('i', False)
                             count = _multiprocessing.Value('i', _multiprocessing.cpu_count())
 
-                            for i in xrange(_multiprocessing.cpu_count()):
+                            for i in range(_multiprocessing.cpu_count()):
                                 process = _multiprocessing.Process(target=_bruteProcessVariantB, args=(user, hash_, kwargs, hash_regex, suffix, retVal, found_, i, count, kb.wordlists, custom_wordlist, conf.api))
                                 processes.append(process)
 
@@ -1144,7 +1144,7 @@ def dictionaryAttack(attack_dict):
                             found = found_.value
 
                     except KeyboardInterrupt:
-                        print
+                        print()
                         processException = True
                         warnMsg = "user aborted during dictionary-based attack phase (Ctrl+C was pressed)"
                         logger.warn(warnMsg)

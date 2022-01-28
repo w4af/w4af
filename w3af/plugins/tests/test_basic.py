@@ -89,11 +89,11 @@ class TestBasic(unittest.TestCase):
 
                     # Just verify that this doesn't crash and that the types
                     # are correct
-                    self.assertIsInstance(opt.get_name(), basestring)
-                    self.assertIsInstance(opt.get_desc(), basestring)
-                    self.assertIsInstance(opt.get_type(), basestring)
-                    self.assertIsInstance(opt.get_help(), basestring)
-                    self.assertIsInstance(opt.get_value_str(), basestring)
+                    self.assertIsInstance(opt.get_name(), str)
+                    self.assertIsInstance(opt.get_desc(), str)
+                    self.assertIsInstance(opt.get_type(), str)
+                    self.assertIsInstance(opt.get_help(), str)
+                    self.assertIsInstance(opt.get_value_str(), str)
 
     def test_plugin_deps(self):
         for plugin_type in self.plugins:
@@ -102,7 +102,7 @@ class TestBasic(unittest.TestCase):
                 self.assertTrue(isinstance(dependencies, list))
 
                 for dep in dependencies:
-                    self.assertTrue(isinstance(dep, basestring))
+                    self.assertTrue(isinstance(dep, str))
                     plugin_type, plugin_name = dep.split('.')
 
                     self.assertTrue(plugin_type in self.w3afcore.plugins.get_plugin_types())
@@ -119,7 +119,7 @@ class TestBasic(unittest.TestCase):
                 self.assertTrue(isinstance(plugin.get_plugin_deps(), list))
 
                 
-                self.assertTrue(isinstance(plugin.get_desc(), basestring))
+                self.assertTrue(isinstance(plugin.get_desc(), str))
                 msg = 'Description "%s" (len:%s) for %s.%s is too short'
                 self.assertGreaterEqual(len(plugin.get_desc()), 20,
                                         msg % (plugin.get_desc(),
@@ -127,7 +127,7 @@ class TestBasic(unittest.TestCase):
                                                plugin_type,
                                                plugin.get_name()))
                 
-                self.assertTrue(isinstance(plugin.get_long_desc(), basestring))
+                self.assertTrue(isinstance(plugin.get_long_desc(), str))
                 
                 msg = 'Long description "%s" for %s.%s is too short'
                 self.assertGreater(len(plugin.get_long_desc()), 50,

@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import cPickle
+import pickle
 
 from w3af.core.data.misc.cpickle_dumps import cpickle_dumps
 from w3af.core.data.fuzzer.utils import rand_alpha
@@ -63,7 +63,7 @@ class DiskDict(object):
         result_list = [] 
         
         for r in pickled_keys:
-            result_list.append(cPickle.loads(r[0]))
+            result_list.append(pickle.loads(r[0]))
         
         return result_list
 
@@ -71,13 +71,13 @@ class DiskDict(object):
         pickled_keys = self.db.select('SELECT key FROM %s' % self.table_name)
         
         for r in pickled_keys:
-            yield cPickle.loads(r[0])
+            yield pickle.loads(r[0])
 
     def iteritems(self):
         pickled_keys = self.db.select('SELECT key, value FROM %s' % self.table_name)
 
         for r in pickled_keys:
-            yield cPickle.loads(r[0]), cPickle.loads(r[1])
+            yield pickle.loads(r[0]), pickle.loads(r[1])
 
     def __contains__(self, key):
         """
@@ -119,7 +119,7 @@ class DiskDict(object):
             args = (key, self.table_name)
             raise KeyError('%s not in %s.' % args)
 
-        return cPickle.loads(r[0][0])
+        return pickle.loads(r[0][0])
 
     def __len__(self):
         query = 'SELECT count(*) FROM %s' % self.table_name

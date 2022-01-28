@@ -40,9 +40,9 @@ class TestMemcachei(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
 
         vulns = self.kb.get('memcachei', 'memcachei')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         vuln = vulns[0]
 
         # Now some tests around specific details of the found vuln
-        self.assertEquals('Memcache injection vulnerability', vuln.get_name())
-        self.assertEquals(self.target_url, str(vuln.get_url()))
+        self.assertEqual('Memcache injection vulnerability', vuln.get_name())
+        self.assertEqual(self.target_url, str(vuln.get_url()))

@@ -148,7 +148,7 @@ class TestStrategy(unittest.TestCase):
         
         try:
             strategy.start()
-        except ScanMustStopException, wmse:
+        except ScanMustStopException as wmse:
             message = str(wmse)
             self.assertIn('Please verify your target configuration', message)
         else:

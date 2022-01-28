@@ -14,7 +14,7 @@ def cachedmethod(f, cache={}):
 
     def _(*args, **kwargs):
         try:
-            key = hash((f, tuple(args), frozenset(kwargs.items())))
+            key = hash((f, tuple(args), frozenset(list(kwargs.items()))))
             if key not in cache:
                 cache[key] = f(*args, **kwargs)
         except:

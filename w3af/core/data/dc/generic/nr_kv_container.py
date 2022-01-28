@@ -65,7 +65,7 @@ class NonRepeatKeyValueContainer(DataContainer, OrderedDict):
                 if key in self:
                     raise TypeError(ERR_MSG_NO_REP % init_val)
 
-                if not isinstance(val, (basestring, DataToken)):
+                if not isinstance(val, (str, DataToken)):
                     raise TypeError(ERR_MSG_NO_REP % init_val)
 
                 self[key] = val
@@ -95,8 +95,8 @@ class NonRepeatKeyValueContainer(DataContainer, OrderedDict):
         lst = []
 
         # pylint: disable=E1133
-        for k, v in self.items():
-            to_app = u'%s%s%s' % (k, key_val_sep,
+        for k, v in list(self.items()):
+            to_app = '%s%s%s' % (k, key_val_sep,
                                   smart_unicode(v, encoding=UTF8))
             lst.append(to_app)
         # pylint: enable=E1133
@@ -112,7 +112,7 @@ class NonRepeatKeyValueContainer(DataContainer, OrderedDict):
                     * The setter to modify the value
         """
         # pylint: disable=E1133
-        for k, v in self.items():
+        for k, v in list(self.items()):
             if self.token_filter((k,), v):
                 yield k, v, (k,), partial(self.__setitem__, k)
         # pylint: enable=E1133
@@ -129,7 +129,7 @@ class NonRepeatKeyValueContainer(DataContainer, OrderedDict):
         """
         Return unicode representation
         """
-        return self._to_str_with_separators(u'=', u'&')
+        return self._to_str_with_separators('=', '&')
 
     def get_short_printable_repr(self):
         """
@@ -141,7 +141,7 @@ class NonRepeatKeyValueContainer(DataContainer, OrderedDict):
         if self.get_token() is not None:
             # I want to show the token variable and value in the output
             # pylint: disable=E1133
-            for k, v in self.items():
+            for k, v in list(self.items()):
                 if isinstance(v, DataToken):
                     dt_str = '%s=%s' % (filter_non_printable(v.get_name()),
                                         filter_non_printable(v.get_value()))

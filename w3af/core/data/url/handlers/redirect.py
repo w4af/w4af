@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.url.HTTPRequest import HTTPRequest
@@ -35,7 +35,7 @@ LOCATION = 'location'
 URI = 'uri'
 
 
-class HTTP30XHandler(urllib2.HTTPRedirectHandler):
+class HTTP30XHandler(urllib.request.HTTPRedirectHandler):
     """
     A simple handler that handles 30x HTTP responses when the request has
     `follow_redirects` set to True.
@@ -55,7 +55,7 @@ class HTTP30XHandler(urllib2.HTTPRedirectHandler):
         original object and setting the target URL to the one received in the
         30x response.
         """
-        new_headers = dict((k, v) for k, v in request.headers.items()
+        new_headers = dict((k, v) for k, v in list(request.headers.items())
                            if k.lower() not in REMOVE_ON_REDIRECT)
 
         orig_method = request.get_method()

@@ -66,7 +66,7 @@ class TestHttpRequestParser(unittest.TestCase):
         fr = http_request_parser(http_request, '')
         exp_headers = Headers([('Host', 'www.w3af.org'), ('Foo', 'bar')])
 
-        self.assertEquals(fr.get_headers(), exp_headers)
+        self.assertEqual(fr.get_headers(), exp_headers)
         self.assertEqual(fr.get_url().get_domain(), 'www.w3af.org')
         self.assertEqual(fr.get_data(), '')
 
@@ -78,7 +78,7 @@ class TestHttpRequestParser(unittest.TestCase):
         fr = http_request_parser(http_request, '')
         exp_headers = Headers([('Host', 'www.w3af.org'), ('Foo', 'bar')])
 
-        self.assertEquals(fr.get_headers(), exp_headers)
+        self.assertEqual(fr.get_headers(), exp_headers)
         self.assertEqual(fr.get_url().get_domain(), 'www.w3af.org')
         self.assertEqual(fr.get_data(), '')
 
@@ -98,7 +98,7 @@ class TestHttpRequestParser(unittest.TestCase):
                                ('Foo', 'spam, eggs')])
 
         self.assertEqual(fr.get_headers(), exp_headers)
-        self.assertEquals(fr.get_data(), post_data)
+        self.assertEqual(fr.get_data(), post_data)
 
     def test_check_version_syntax(self):
         self.assertTrue(check_version_syntax('HTTP/1.0'))

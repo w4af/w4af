@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import threading
 import unittest
-import urllib2
-import Queue
+import urllib.request, urllib.error, urllib.parse
+import queue
 import time
 
 from nose.plugins.attrib import attr
@@ -52,10 +52,10 @@ class TestInterceptProxy(unittest.TestCase):
 
         # Build the proxy opener
         proxy_url = 'http://%s:%s' % (self.IP, port)
-        proxy_handler = urllib2.ProxyHandler({'http': proxy_url,
+        proxy_handler = urllib.request.ProxyHandler({'http': proxy_url,
                                               'https': proxy_url})
-        self.proxy_opener = urllib2.build_opener(proxy_handler,
-                                                 urllib2.HTTPHandler)
+        self.proxy_opener = urllib.request.build_opener(proxy_handler,
+                                                 urllib.request.HTTPHandler)
     
     def tearDown(self):
         self._proxy.stop()
@@ -79,14 +79,14 @@ class TestInterceptProxy(unittest.TestCase):
         def send_request(proxy_opener, result_queue):
             try:
                 proxy_opener.open(get_moth_http())
-            except urllib2.HTTPError, he:
+            except urllib.error.HTTPError as he:
                 # Catch the 403 from the local proxy when the user
                 # drops the HTTP request.
                 result_queue.put(he)
         
         self._proxy.set_trap(True)
         
-        result_queue = Queue.Queue()
+        result_queue = queue.Queue()
         send_thread = threading.Thread(target=send_request, args=(self.proxy_opener,
                                                                   result_queue))
         send_thread.start()
@@ -108,7 +108,7 @@ class TestInterceptProxy(unittest.TestCase):
         def send_request(proxy_opener, result_queue):
             try:
                 response = proxy_opener.open(get_moth_http())
-            except urllib2.HTTPError, he:
+            except urllib.error.HTTPError as he:
                 # Catch the 403 from the local proxy when the user
                 # drops the HTTP request.
                 result_queue.put(he)
@@ -117,7 +117,7 @@ class TestInterceptProxy(unittest.TestCase):
 
         self._proxy.set_trap(True)
         
-        result_queue = Queue.Queue()
+        result_queue = queue.Queue()
         send_thread = threading.Thread(target=send_request, args=(self.proxy_opener,
                                                                   result_queue))
         send_thread.start()
@@ -143,23 +143,23 @@ class TestInterceptProxy(unittest.TestCase):
 
             try:
                 response = proxy_opener.open(url, timeout=10)
-            except urllib2.HTTPError, he:
+            except urllib.error.HTTPError as he:
                 # Catch the 403 from the local proxy when the user
                 # drops the HTTP request.
                 results.put(he)
-            except KeyboardInterrupt, k:
+            except KeyboardInterrupt as k:
                 exceptions.put(k)
-            except Exception, e:
+            except Exception as e:
                 exceptions.put(e)
             else:
                 results.put(response)
 
         self._proxy.set_trap(True)
 
-        result_queue = Queue.Queue()
-        exceptions_queue = Queue.Queue()
+        result_queue = queue.Queue()
+        exceptions_queue = queue.Queue()
 
-        for i in xrange(3):
+        for i in range(3):
             args = (i, self.proxy_opener, result_queue, exceptions_queue)
             send_thread = threading.Thread(target=send_request, args=args)
             send_thread.start()
@@ -234,7 +234,7 @@ class TestInterceptProxy(unittest.TestCase):
     def assertNoExceptionInQueue(self, exceptions_queue):
         try:
             exception = exceptions_queue.get(block=False)
-        except Queue.Empty:
+        except queue.Empty:
             pass
         else:
             self.assertIsNone(exception)

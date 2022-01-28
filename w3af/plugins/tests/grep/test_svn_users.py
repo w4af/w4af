@@ -46,10 +46,10 @@ class TestSVNUsers(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('svn_users', 'users')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         v = vulns[0]
-        self.assertEquals(severity.LOW, v.get_severity())
-        self.assertEquals('SVN user disclosure vulnerability', v.get_name())
+        self.assertEqual(severity.LOW, v.get_severity())
+        self.assertEqual('SVN user disclosure vulnerability', v.get_name())
         self.assertEqual(self.svn_users_url + 'index.html',
                          v.get_url().url_string)

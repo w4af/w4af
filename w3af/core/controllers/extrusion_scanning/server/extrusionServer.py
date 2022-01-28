@@ -165,7 +165,7 @@ class extrusionServer(object):
         # report the list of ports
         def sortfunc(x, y):
             return cmp(x[1], y[1])
-        items = possible_hosts.items()
+        items = list(possible_hosts.items())
         items.sort(sortfunc)
 
         # Now I report the ports for the hosts with more connections

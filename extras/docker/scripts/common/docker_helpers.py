@@ -27,8 +27,8 @@ def start_container(tag, command=DOCKER_RUN):
 
     try:
         container_id = subprocess.check_output(docker_run, shell=True)
-    except subprocess.CalledProcessError, cpe:
-        print('w3af container failed to start: "%s"' % cpe)
+    except subprocess.CalledProcessError as cpe:
+        print(('w3af container failed to start: "%s"' % cpe))
         sys.exit(1)
     else:
         # Let the container start the ssh daemon
@@ -42,8 +42,8 @@ def stop_container(container_id):
     """
     try:
         subprocess.check_output('docker stop %s' % container_id, shell=True)
-    except subprocess.CalledProcessError, cpe:
-        print('w3af container failed to stop: "%s"' % cpe)
+    except subprocess.CalledProcessError as cpe:
+        print(('w3af container failed to stop: "%s"' % cpe))
         sys.exit(1)
 
 
@@ -69,7 +69,7 @@ def connect_to_container(container_id, cmd, extra_ssh_flags=()):
         cont_data = subprocess.check_output('docker inspect %s' % container_id,
                                             shell=True)
     except subprocess.CalledProcessError:
-        print('Failed to inspect container with id %s' % container_id)
+        print(('Failed to inspect container with id %s' % container_id))
         sys.exit(1)
 
     try:

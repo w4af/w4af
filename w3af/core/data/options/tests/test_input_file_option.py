@@ -74,7 +74,7 @@ class TestInputFileOption(unittest.TestCase):
         opt = opt_factory('name', self.INPUT_FILE, 'desc',
                           INPUT_FILE, 'help', 'tab')
 
-        self.assertEquals(opt.get_value(), self.INPUT_FILE)
+        self.assertEqual(opt.get_value(), self.INPUT_FILE)
 
     def test_relative_path_full_path_input(self):
         full_path = os.path.join(ROOT_PATH, 'core', 'data',
@@ -85,7 +85,7 @@ class TestInputFileOption(unittest.TestCase):
         opt = opt_factory('name', full_path, 'desc',
                           INPUT_FILE, 'help', 'tab')
 
-        self.assertEquals(opt.get_value(), relative_path)
+        self.assertEqual(opt.get_value(), relative_path)
 
     def test_relative_path_when_cwd_is_root(self):
         # Change the CWD to root
@@ -100,7 +100,7 @@ class TestInputFileOption(unittest.TestCase):
         opt = opt_factory('name', full_path, 'desc',
                           INPUT_FILE, 'help', 'tab')
 
-        self.assertEquals(opt.get_value(), relative_path)
+        self.assertEqual(opt.get_value(), relative_path)
 
         # Restore the previous CWD
         os.chdir(old_cwd)

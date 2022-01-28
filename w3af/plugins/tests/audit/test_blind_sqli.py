@@ -37,14 +37,14 @@ class TestDjangoBlindSQLI(PluginTest):
         self._scan(target_url + qs, CONFIG)
 
         vulns = self.kb.get('blind_sqli', 'blind_sqli')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEquals('Blind SQL injection vulnerability', vuln.get_name())
+        self.assertEqual('Blind SQL injection vulnerability', vuln.get_name())
         self.assertFalse('time delays' in vuln.get_desc())
-        self.assertEquals("numeric", vuln['type'])
-        self.assertEquals(target_url, str(vuln.get_url()))
+        self.assertEqual("numeric", vuln['type'])
+        self.assertEqual(target_url, str(vuln.get_url()))
 
     def test_single_quote(self):
         target_url = get_moth_http('/audit/blind_sqli/where_string_single_qs.py')
@@ -60,14 +60,14 @@ class TestDjangoBlindSQLI(PluginTest):
         self._scan(target_url + qs, CONFIG)
 
         vulns = self.kb.get('blind_sqli', 'blind_sqli')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEquals('Blind SQL injection vulnerability', vuln.get_name())
+        self.assertEqual('Blind SQL injection vulnerability', vuln.get_name())
         self.assertFalse('time delays' in vuln.get_desc())
-        self.assertEquals('string_single', vuln['type'])
-        self.assertEquals(target_url, str(vuln.get_url()))
+        self.assertEqual('string_single', vuln['type'])
+        self.assertEqual(target_url, str(vuln.get_url()))
 
     def test_found_exploit_blind_sqli_form(self):
         # Run the scan
@@ -77,12 +77,12 @@ class TestDjangoBlindSQLI(PluginTest):
         # Assert the general results
         vulns = self.kb.get('blind_sqli', 'blind_sqli')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         vuln = vulns[0]
 
-        self.assertEquals('Blind SQL injection vulnerability', vuln.get_name())
-        self.assertEquals('text', vuln.get_mutant().get_token_name())
-        self.assertEquals('blind_where_integer_form.py',
+        self.assertEqual('Blind SQL injection vulnerability', vuln.get_name())
+        self.assertEqual('text', vuln.get_mutant().get_token_name())
+        self.assertEqual('blind_where_integer_form.py',
                           vuln.get_url().get_file_name())
 
     def test_found_exploit_blind_sqli_form_GET(self):
@@ -93,12 +93,12 @@ class TestDjangoBlindSQLI(PluginTest):
         # Assert the general results
         vulns = self.kb.get('blind_sqli', 'blind_sqli')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         vuln = vulns[0]
 
-        self.assertEquals('Blind SQL injection vulnerability', vuln.get_name())
-        self.assertEquals('q', vuln.get_mutant().get_token_name())
-        self.assertEquals('blind_where_integer_form_get.py',
+        self.assertEqual('Blind SQL injection vulnerability', vuln.get_name())
+        self.assertEqual('q', vuln.get_mutant().get_token_name())
+        self.assertEqual('blind_where_integer_form_get.py',
                           vuln.get_url().get_file_name())
 
 
@@ -111,7 +111,7 @@ class TestReflectedXSSFalsePositive(PluginTest):
         self._scan(target_url, CONFIG)
 
         vulns = self.kb.get('blind_sqli', 'blind_sqli')
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestOldMothBlindSQLI(PluginTest):
@@ -129,28 +129,28 @@ class TestOldMothBlindSQLI(PluginTest):
 
     def test_found_blind_sqli_old_moth(self):
         expected_path_param = {
-            (u'bsqli_string.php', u'email'),
-            (u'bsqli_integer.php', u'id'),
-            (u'forms/data_receptor.php', u'user'),
-            (u'completely_bsqli_single.php', u'email'),
-            (u'bsqli_string_rnd.php', u'email'),
-            (u'completely_bsqli_double.php', u'email'),
-            (u'completely_bsqli_integer.php', u'id'),
+            ('bsqli_string.php', 'email'),
+            ('bsqli_integer.php', 'id'),
+            ('forms/data_receptor.php', 'user'),
+            ('completely_bsqli_single.php', 'email'),
+            ('bsqli_string_rnd.php', 'email'),
+            ('completely_bsqli_double.php', 'email'),
+            ('completely_bsqli_integer.php', 'id'),
         }
 
         ok_to_miss = {
             # Just the HTML to have a form
-            u'forms/',
-            u'forms/test_forms.html',
+            'forms/',
+            'forms/test_forms.html',
 
             # False positive tests, these must NOT be detected by blind_sqli
-            u'random_500_lines.php',
-            u'random_500_lines_static.php',
-            u'random_50_lines.php',
-            u'random_50_lines_static.php',
-            u'random_5_lines.php',
-            u'random_5_lines_static.php',
-            u'delay_random.php',
+            'random_500_lines.php',
+            'random_500_lines_static.php',
+            'random_50_lines.php',
+            'random_50_lines_static.php',
+            'random_5_lines.php',
+            'random_5_lines_static.php',
+            'delay_random.php',
         }
         skip_startwith = set()
         kb_addresses = {('blind_sqli', 'blind_sqli')}

@@ -51,7 +51,7 @@ class BasicShellShockTest(PluginTest):
         cfg = RUN_CONFIG['cfg']
         self._scan(self.target_url, cfg['plugins'])
         vulns = self.kb.get('shell_shock', 'shell_shock')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
 
 class BasicNegativeShellShockTest(PluginTest):
@@ -68,4 +68,4 @@ class BasicNegativeShellShockTest(PluginTest):
         cfg = RUN_CONFIG['cfg']
         self._scan(self.target_url, cfg['plugins'])
         vulns = self.kb.get('shell_shock', 'shell_shock')
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))

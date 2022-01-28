@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import StringIO
+import io
 
 from pdfminer.converter import HTMLConverter
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
@@ -109,7 +109,7 @@ def pdf_to_text(pdf_string):
     :return: A string with the content of the PDF file.
     """
     rsrcmgr = PDFResourceManager(caching=True)
-    output = StringIO.StringIO()
+    output = io.StringIO()
 
     # According to https://github.com/euske/pdfminer/issues/61 it is a good idea
     # to set laparams to None, which will speed-up parsing
@@ -118,7 +118,7 @@ def pdf_to_text(pdf_string):
                                  laparams=None, imagewriter=None,
                                  showpageno=False)
 
-    document_io = StringIO.StringIO(pdf_string)
+    document_io = io.StringIO(pdf_string)
     pagenos = set()
     try:
         interpreter = PDFPageInterpreter(rsrcmgr, device)
@@ -127,7 +127,7 @@ def pdf_to_text(pdf_string):
             page.rotate = (page.rotate + 0) % 360
             interpreter.process_page(page)
     except PDFSyntaxError:
-        return u''
+        return ''
     
     device.close()
     output.seek(0)

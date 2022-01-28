@@ -19,7 +19,7 @@ ROOT_PATH = os.path.realpath(os.path.join(__file__, '../../../../../'))
 sys.path.append(ROOT_PATH)
 
 from w3af.core.controllers.core_helpers.status import CoreStatus, Adjustment
-from scan_log_analysis import (get_first_timestamp,
+from .scan_log_analysis import (get_first_timestamp,
                                get_line_epoch,
                                CRAWL_INFRA_FINISHED,
                                JOIN_TIMES)
@@ -229,7 +229,7 @@ def create_eta_table(scan):
     # Print the tables!
     for phase in (GREP, AUDIT, CRAWL):
         print(phase)
-        print('=' * len(phase))
+        print(('=' * len(phase)))
         print('')
 
         table_data = [TABLE_HEADER]
@@ -269,7 +269,7 @@ def create_eta_table(scan):
             table_data.append(data)
 
         table = AsciiTable(table_data)
-        print(table.table)
+        print((table.table))
         print('')
         print('')
 

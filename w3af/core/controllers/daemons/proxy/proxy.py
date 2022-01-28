@@ -145,10 +145,10 @@ class Proxy(Process):
         # Start the proxy server
         try:
             self._server = ProxyServer(self._config)
-        except socket.error, se:
+        except socket.error as se:
             raise ProxyException('Socket error while starting proxy: "%s"'
                                  % se.strerror)
-        except ProxyServerError, pse:
+        except ProxyServerError as pse:
             raise ProxyException('%s' % pse)
         else:
             # This is here to support port == 0, which will bind to the first

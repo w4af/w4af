@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 import w3af.core.data.kb.config as cf
 from w3af.core.controllers.configurable import Configurable
@@ -130,7 +130,7 @@ class CoreTarget(Configurable):
                 
             else:
                 try:
-                    f = urllib2.urlopen(target_url.url_string)
+                    f = urllib.request.urlopen(target_url.url_string)
                 except:
                     msg = 'Cannot open target file: "%s"'
                     raise BaseFrameworkException(msg % target_url)
@@ -210,14 +210,14 @@ class CoreTarget(Configurable):
         if os.lower() in self._operating_systems:
             cf.cf.save('target_os', os.lower())
         else:
-            msg = u'Unknown target operating system: "%s"'
+            msg = 'Unknown target operating system: "%s"'
             raise BaseFrameworkException(msg % os)
 
         pf = options_list['target_framework'].get_value_str()
         if pf.lower() in self._programming_frameworks:
             cf.cf.save('target_framework', pf.lower())
         else:
-            msg = u'Unknown target programming framework: "%s"'
+            msg = 'Unknown target programming framework: "%s"'
             raise BaseFrameworkException(msg % pf)
 
     def get_name(self):

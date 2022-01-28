@@ -42,10 +42,10 @@ class TestFormatString(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
 
         vulns = self.kb.get('format_string', 'format_string')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEquals('Format string vulnerability', vuln.get_name())
-        self.assertEquals(self.target_url, str(vuln.get_url()))
-        self.assertEquals('id', vuln.get_token_name())
+        self.assertEqual('Format string vulnerability', vuln.get_name())
+        self.assertEqual(self.target_url, str(vuln.get_url()))
+        self.assertEqual('id', vuln.get_token_name())

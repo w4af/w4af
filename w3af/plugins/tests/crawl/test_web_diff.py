@@ -61,25 +61,25 @@ class TestWebDiff(PluginTest):
                 call.information('The following files exist in the local'
                                  ' directory and in the remote server:'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/456.html'),
+                    '- http://moth/w3af/crawl/web_diff/456.html'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/exclude.php'),
+                    '- http://moth/w3af/crawl/web_diff/exclude.php'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/123.html'),
+                    '- http://moth/w3af/crawl/web_diff/123.html'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/index.html'),
+                    '- http://moth/w3af/crawl/web_diff/index.html'),
                 call.information('The following files exist in the local'
                                  ' directory and in the remote server and'
                                  ' their contents match:'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/123.html'),
+                    '- http://moth/w3af/crawl/web_diff/123.html'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/index.html'),
+                    '- http://moth/w3af/crawl/web_diff/index.html'),
                 call.information("The following files exist in the local"
                                  " directory and in the remote server but"
                                  " their contents don't match:"),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/456.html'),
+                    '- http://moth/w3af/crawl/web_diff/456.html'),
                 call.information('Match files: 4 of 4'),
                 call.information('Match contents: 2 of 3')
             ]

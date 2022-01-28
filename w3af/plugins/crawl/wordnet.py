@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from itertools import chain, repeat, izip
+from itertools import chain, repeat
 
 from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
 from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
@@ -58,7 +58,7 @@ class wordnet(CrawlPlugin):
 
         mutants = self._generate_mutants(fuzzable_request)
 
-        args = izip(original_response_repeat, mutants)
+        args = zip(original_response_repeat, mutants)
 
         #   Send the requests using threads:
         self.worker_pool.map_multi_args(self._check_existance, args)

@@ -1042,7 +1042,7 @@ class ConfigOptions(gtk.VBox, Preferences):
 
     def _init_optionsView(self):
 
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             frame = gtk.Frame()
             label = gtk.Label('<b>%s</b>' % self.sections[section])
             label.set_use_markup(True)
@@ -1115,7 +1115,7 @@ class ConfigOptions(gtk.VBox, Preferences):
         """
         # check if all widgets are valid
         invalid = []
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             for opt in optList:
                 if hasattr(opt.widg, "is_valid"):
                     if not opt.widg.is_valid():
@@ -1132,11 +1132,11 @@ class ConfigOptions(gtk.VBox, Preferences):
             return
 
         # Get the value from the GTK widget and set it to the option object
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             for opt in optList:
                 opt.set_value(opt.widg.get_value())
 
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             for opt in optList:
                 opt.widg.save()
         self.w3af.mainwin.sb(_("Configuration saved successfully"))

@@ -44,12 +44,12 @@ class TestEvalShell(ExecExploitTest):
 
         # Assert the general results
         vulns = self.kb.get('eval', 'eval')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         
         vuln = vulns[0]
         
-        self.assertEquals("eval() input injection vulnerability", vuln.get_name())
-        self.assertEquals('eval_double.py', vuln.get_url().get_file_name())
+        self.assertEqual("eval() input injection vulnerability", vuln.get_name())
+        self.assertEqual('eval_double.py', vuln.get_url().get_file_name())
 
         vuln_to_exploit_id = vuln.get_id()
         self._exploit_vuln(vuln_to_exploit_id, 'eval')

@@ -45,7 +45,7 @@ class TestQSMutant(unittest.TestCase):
 
         created_dcs = [str(i.get_dc()) for i in created_mutants]
 
-        self.assertEquals(expected_dcs, created_dcs)
+        self.assertEqual(expected_dcs, created_dcs)
 
         token_0 = created_mutants[0].get_token()
         self.assertIsInstance(token_0, DataToken)
@@ -73,7 +73,7 @@ class TestQSMutant(unittest.TestCase):
 
         created_dcs = [str(i.get_dc()) for i in created_mutants]
 
-        self.assertEquals(expected_dcs, created_dcs)
+        self.assertEqual(expected_dcs, created_dcs)
 
         token_0 = created_mutants[0].get_token()
         self.assertIsInstance(token_0, DataToken)

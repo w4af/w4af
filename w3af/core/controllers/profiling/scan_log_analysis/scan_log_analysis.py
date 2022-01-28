@@ -9,8 +9,8 @@ except ImportError:
     print('Missing dependency, please run:\n    pip install plotille')
     sys.exit(1)
 
-from main.main import generate_console_output, generate_json_output
-from main.watch import watch
+from .main.main import generate_console_output, generate_json_output
+from .main.watch import watch
 
 
 HELP = '''\

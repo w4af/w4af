@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import sys
-import cPickle
+import pickle
 import unittest
 import threading
 
@@ -54,7 +54,7 @@ class TestExceptionHandler(unittest.TestCase):
 
         try:
             raise Exception('unittest')
-        except Exception, e:
+        except Exception as e:
             exec_info = sys.exc_info()
             enabled_plugins = ''
             self.exception_handler.handle(self.status,
@@ -73,23 +73,23 @@ class TestExceptionHandler(unittest.TestCase):
 
         self.assertTrue(edata.get_summary().startswith(self.EXCEPT_START))
         self.assertTrue('traceback' in edata.get_details())
-        self.assertEquals(edata.plugin, 'plugin')
-        self.assertEquals(edata.phase, 'phase')
-        self.assertEquals(edata.fuzzable_request, 'http://www.w3af.org/')
-        self.assertEquals(edata.filename, 'test_exception_handler.py')
-        self.assertEquals(edata.exception_msg, str(e))
-        self.assertEquals(edata.exception_class, e.__class__.__name__)
+        self.assertEqual(edata.plugin, 'plugin')
+        self.assertEqual(edata.phase, 'phase')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w3af.org/')
+        self.assertEqual(edata.filename, 'test_exception_handler.py')
+        self.assertEqual(edata.exception_msg, str(e))
+        self.assertEqual(edata.exception_class, e.__class__.__name__)
         # This is very very very dependant on changes to this file, but it was
         # the only way to do it without much effort
-        self.assertEquals(edata.lineno, 50)
+        self.assertEqual(edata.lineno, 50)
 
     @attr('smoke')
     def test_handle_multiple(self):
 
-        for _ in xrange(10):
+        for _ in range(10):
             try:
                 raise Exception('unittest')
-            except Exception, e:
+            except Exception as e:
                 exec_info = sys.exc_info()
                 enabled_plugins = ''
                 self.exception_handler.handle(self.status, e, exec_info,
@@ -105,17 +105,17 @@ class TestExceptionHandler(unittest.TestCase):
 
         self.assertTrue(edata.get_summary().startswith(self.EXCEPT_START))
         self.assertTrue('traceback' in edata.get_details())
-        self.assertEquals(edata.plugin, 'plugin')
-        self.assertEquals(edata.phase, 'phase')
-        self.assertEquals(edata.fuzzable_request, 'http://www.w3af.org/')
-        self.assertEquals(edata.filename, 'test_exception_handler.py')
+        self.assertEqual(edata.plugin, 'plugin')
+        self.assertEqual(edata.phase, 'phase')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w3af.org/')
+        self.assertEqual(edata.filename, 'test_exception_handler.py')
 
     def test_get_unique_exceptions(self):
 
-        for _ in xrange(10):
+        for _ in range(10):
             try:
                 raise Exception('unittest')
-            except Exception, e:
+            except Exception as e:
                 exec_info = sys.exc_info()
                 enabled_plugins = ''
                 self.exception_handler.handle(self.status, e, exec_info,
@@ -132,10 +132,10 @@ class TestExceptionHandler(unittest.TestCase):
 
         self.assertTrue(edata.get_summary().startswith(self.EXCEPT_START))
         self.assertTrue('traceback' in edata.get_details())
-        self.assertEquals(edata.plugin, 'plugin')
-        self.assertEquals(edata.phase, 'phase')
-        self.assertEquals(edata.fuzzable_request, 'http://www.w3af.org/')
-        self.assertEquals(edata.filename, 'test_exception_handler.py')
+        self.assertEqual(edata.plugin, 'plugin')
+        self.assertEqual(edata.phase, 'phase')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w3af.org/')
+        self.assertEqual(edata.filename, 'test_exception_handler.py')
 
     def test_handle_threads_calls(self):
         
@@ -145,7 +145,7 @@ class TestExceptionHandler(unittest.TestCase):
         def test(ehandler):
             try:
                 test2()
-            except Exception, e:
+            except Exception as e:
                 exec_info = sys.exc_info()
                 enabled_plugins = ''
                 ehandler.handle(self.status, e, exec_info, enabled_plugins)
@@ -162,13 +162,13 @@ class TestExceptionHandler(unittest.TestCase):
 
         self.assertTrue(edata.get_summary().startswith(self.EXCEPT_START))
         self.assertTrue('traceback' in edata.get_details())
-        self.assertEquals(edata.plugin, 'plugin')
-        self.assertEquals(edata.phase, 'phase')
-        self.assertEquals(edata.fuzzable_request, 'http://www.w3af.org/')
-        self.assertEquals(edata.filename, 'test_exception_handler.py')
+        self.assertEqual(edata.plugin, 'plugin')
+        self.assertEqual(edata.phase, 'phase')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w3af.org/')
+        self.assertEqual(edata.filename, 'test_exception_handler.py')
         # This is very very very dependant on changes to this file, but it was
         # the only way to do it without much effort
-        self.assertEquals(edata.lineno, 137)
+        self.assertEqual(edata.lineno, 137)
 
     def test_handle_multi_calls(self):
 
@@ -181,7 +181,7 @@ class TestExceptionHandler(unittest.TestCase):
         def test(ehandler):
             try:
                 test2()
-            except Exception, e:
+            except Exception as e:
                 exec_info = sys.exc_info()
                 enabled_plugins = ''
                 ehandler.handle(self.status, e, exec_info, enabled_plugins)
@@ -195,7 +195,7 @@ class TestExceptionHandler(unittest.TestCase):
 
         # This is very very very dependant on changes to this file, but it was
         # the only way to do it without much effort
-        self.assertEquals(edata.lineno, 170)
+        self.assertEqual(edata.lineno, 170)
 
 
 class FakeStatus(CoreStatus):
@@ -205,7 +205,7 @@ class FakeStatus(CoreStatus):
 class TestExceptionData(unittest.TestCase):
 
     def get_fuzzable_request(self):
-        headers = Headers([(u'Hello', u'World')])
+        headers = Headers([('Hello', 'World')])
         post_data = KeyValueContainer(init_val=[('a', ['b'])])
         url = URL('http://w3af.org')
         return FuzzableRequest(url, method='GET', post_data=post_data,
@@ -228,8 +228,8 @@ class TestExceptionData(unittest.TestCase):
                                        enabled_plugins,
                                        store_tb=False)
 
-        pickled_ed = cPickle.dumps(exception_data)
-        unpickled_ed = cPickle.loads(pickled_ed)
+        pickled_ed = pickle.dumps(exception_data)
+        unpickled_ed = pickle.loads(pickled_ed)
 
         self.assertEqual(exception_data.to_json(),
                          unpickled_ed.to_json())
@@ -237,7 +237,7 @@ class TestExceptionData(unittest.TestCase):
     def test_serialize_deserialize(self):
         try:
             raise KeyError
-        except Exception, e:
+        except Exception as e:
             except_type, except_class, tb = sys.exc_info()
             enabled_plugins = '{}'
 
@@ -254,8 +254,8 @@ class TestExceptionData(unittest.TestCase):
                                            enabled_plugins,
                                            store_tb=False)
 
-            pickled_ed = cPickle.dumps(exception_data)
-            unpickled_ed = cPickle.loads(pickled_ed)
+            pickled_ed = pickle.dumps(exception_data)
+            unpickled_ed = pickle.loads(pickled_ed)
 
             self.assertEqual(exception_data.to_json(),
                              unpickled_ed.to_json())
@@ -263,7 +263,7 @@ class TestExceptionData(unittest.TestCase):
     def test_fail_traceback_serialize(self):
         try:
             raise KeyError
-        except Exception, e:
+        except Exception as e:
             except_type, except_class, tb = sys.exc_info()
             enabled_plugins = '{}'
 
@@ -280,4 +280,4 @@ class TestExceptionData(unittest.TestCase):
                                            enabled_plugins,
                                            store_tb=True)
 
-            self.assertRaises(TypeError, cPickle.dumps, exception_data)
+            self.assertRaises(TypeError, pickle.dumps, exception_data)

@@ -91,12 +91,12 @@ class TestGeneric(PluginTest):
 
         vulns = self.kb.get('xss', 'xss')
 
-        self.assertEquals(len(vulns), 1, vulns)
+        self.assertEqual(len(vulns), 1, vulns)
 
         vuln = vulns[0]
-        self.assertEquals(vuln.get_name(), 'Cross site scripting vulnerability')
-        self.assertEquals(vuln.get_token_name(), 'text')
-        self.assertEquals(vuln.get_url().get_path(),
+        self.assertEqual(vuln.get_name(), 'Cross site scripting vulnerability')
+        self.assertEqual(vuln.get_token_name(), 'text')
+        self.assertEqual(vuln.get_url().get_path(),
                           '/auth/auth_1/post_auth_xss.py')
 
     @attr('internet')

@@ -31,7 +31,7 @@ class Syntax(GenericSyntax):
 
         retVal = Syntax._escape(expression, quote, escaper)
 
-        for _ in excluded.items():
+        for _ in list(excluded.items()):
             retVal = retVal.replace(_[1], _[0])
 
         return retVal

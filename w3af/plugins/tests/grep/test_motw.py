@@ -51,9 +51,9 @@ class TestValidMOTW(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         infos = self.kb.get('motw', 'motw')
 
-        self.assertEquals(1, len(infos), infos)
+        self.assertEqual(1, len(infos), infos)
 
-        self.assertEquals(set([severity.INFORMATION] * 2),
+        self.assertEqual(set([severity.INFORMATION] * 2),
                           set([v.get_severity() for v in infos]))
 
         self.assertEqual(v.get_name(), 'Mark of the web')
@@ -87,4 +87,4 @@ class TestInvalidMOTW(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         infos = self.kb.get('motw', 'motw')
 
-        self.assertEquals(0, len(infos), infos)
+        self.assertEqual(0, len(infos), infos)

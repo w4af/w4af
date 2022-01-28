@@ -28,11 +28,11 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 class test_arp_cache(PayloadTestHelper):
 
     # Not used because I want to be less specific in this case
-    EXPECTED_RESULT = {u'192.168.56.1': (u'0a:00:27:00:00:00', u'eth1'), }
+    EXPECTED_RESULT = {'192.168.56.1': ('0a:00:27:00:00:00', 'eth1'), }
 
     def test_arp_cache(self):
         result = exec_payload(self.shell, 'arp_cache', use_api=True)
-        for ip_address, (mac, iface) in result.iteritems():
-            self.assertEquals(ip_address.count('.'), 3)
-            self.assertEquals(mac.count(':'), 5)
+        for ip_address, (mac, iface) in result.items():
+            self.assertEqual(ip_address.count('.'), 3)
+            self.assertEqual(mac.count(':'), 5)
             self.assertTrue(iface.startswith('eth'))

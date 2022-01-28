@@ -193,7 +193,7 @@ def get_profiling_results(self, max_items=50):
         return []
 
     else:
-        items = kb_data.items()
+        items = list(kb_data.items())
         items.sort(sortfunc)
 
         xlen = min(max_items, len(items))

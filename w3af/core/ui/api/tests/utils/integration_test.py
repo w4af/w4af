@@ -69,7 +69,7 @@ class IntegrationTest(unittest.TestCase):
         Wait until the scan is in Running state
         :return: The HTTP response
         """
-        for _ in xrange(10):
+        for _ in range(10):
             time.sleep(0.5)
 
             response = requests.get('%s/scans/' % self.api_url, 
@@ -87,7 +87,7 @@ class IntegrationTest(unittest.TestCase):
         Wait until the scan is in Stopped state
         :return: The HTTP response
         """
-        for _ in xrange(wait_loops):
+        for _ in range(wait_loops):
             time.sleep(0.5)
 
             response = requests.get('%s/scans/' % self.api_url, 

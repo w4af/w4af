@@ -44,7 +44,7 @@ def tamper(payload, **kwargs):
 
             if indexes:
                 first, last = 0, 0
-                for i in xrange(1, len(indexes)):
+                for i in range(1, len(indexes)):
                     if ' ' in retVal[indexes[0]:indexes[i]]:
                         break
                     else:
@@ -73,7 +73,7 @@ def tamper(payload, **kwargs):
 
                     count = 0
                     chars = [char for char in part]
-                    for i in xrange(1, len(chars)):
+                    for i in range(1, len(chars)):
                         if i - 1 in indexes:
                             if count == 0:
                                 chars[i] = ','

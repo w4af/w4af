@@ -63,7 +63,7 @@ class QuestOptions(gtk.VBox):
             #       To get more info:
             try:
                 opt.widg
-            except Exception, e:
+            except Exception as e:
                 raise Exception(str(e) + ' || ' + opt.get_name())
             # end of debugging code
 
@@ -148,7 +148,7 @@ class Wizard(entries.RememberingWindow):
 
         # fill it
         self.nextbtn = gtk.Button("  Next  ")
-        quest = self.wizard.next()
+        quest = next(self.wizard)
 
         self._firstQuestion = quest
         self._buildWindow(quest)
@@ -198,7 +198,7 @@ class Wizard(entries.RememberingWindow):
             return
         if not self.panel.save_options():
             return
-        quest = self.wizard.next()
+        quest = next(self.wizard)
         self.prevbtn.set_sensitive(True)
         if quest is None:
             self._buildFinal()

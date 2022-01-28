@@ -45,6 +45,7 @@ from lib.core.settings import PAYLOAD_DELIMITER
 from lib.core.settings import REPLACEMENT_MARKER
 from lib.core.settings import SLEEP_TIME_MARKER
 from lib.core.unescaper import unescaper
+from functools import reduce
 
 class Agent(object):
     """
@@ -103,7 +104,7 @@ class Agent(object):
             if place == PLACE.URI:
                 origValue = origValue.split(kb.customInjectionMark)[0]
             else:
-                origValue = filter(None, (re.search(_, origValue.split(BOUNDED_INJECTION_MARKER)[0]) for _ in (r"\w+\Z", r"[^\"'><]+\Z", r"[^ ]+\Z")))[0].group(0)
+                origValue = [_f for _f in (re.search(_, origValue.split(BOUNDED_INJECTION_MARKER)[0]) for _ in (r"\w+\Z", r"[^\"'><]+\Z", r"[^ ]+\Z")) if _f][0].group(0)
             origValue = origValue[origValue.rfind('/') + 1:]
             for char in ('?', '=', ':', ','):
                 if char in origValue:
@@ -552,7 +553,7 @@ class Agent(object):
             table = table.split(conf.db)[-1].strip('.')
         try:
             columns = kb.data.cachedColumns[safeSQLIdentificatorNaming(conf.db)][safeSQLIdentificatorNaming(table, True)]
-            for name, type_ in columns.items():
+            for name, type_ in list(columns.items()):
                 if type_ and type_.upper() in DUMP_DATA_PREPROCESS.get(Backend.getDbms(), {}) and name == field:
                     retVal = DUMP_DATA_PREPROCESS[Backend.getDbms()][type_.upper()] % name
                     break
@@ -733,7 +734,7 @@ class Agent(object):
         unionQuery = self.prefixQuery("UNION ALL SELECT ", prefix=prefix)
 
         if limited:
-            unionQuery += ','.join(char if _ != position else '(SELECT %s)' % query for _ in xrange(0, count))
+            unionQuery += ','.join(char if _ != position else '(SELECT %s)' % query for _ in range(0, count))
             unionQuery += fromTable
             unionQuery = self.suffixQuery(unionQuery, comment, suffix)
 
@@ -761,7 +762,7 @@ class Agent(object):
             position = 0
             char = NULL
 
-        for element in xrange(0, count):
+        for element in range(0, count):
             if element > 0:
                 unionQuery += ','
 
@@ -779,7 +780,7 @@ class Agent(object):
         if multipleUnions:
             unionQuery += " UNION ALL SELECT "
 
-            for element in xrange(count):
+            for element in range(count):
                 if element > 0:
                     unionQuery += ','
 

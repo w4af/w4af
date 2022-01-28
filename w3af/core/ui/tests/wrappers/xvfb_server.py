@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import subprocess
-import commands
+import subprocess
 import shutil
 import tempfile
 import threading
@@ -64,12 +64,12 @@ class XVFBServer(threading.Thread):
     
     def verify_required_bins(self):
         for binary in self.REQUIRED_BINS:
-            status, _ = commands.getstatusoutput('which %s' % binary)
+            status, _ = subprocess.getstatusoutput('which %s' % binary)
             if status != 0:
                 raise RuntimeError('Missing binary requirement "%s".' % binary)
 
     def is_installed(self):
-        status, output = commands.getstatusoutput('%s --fake' % self.XVFB_BIN)
+        status, output = subprocess.getstatusoutput('%s --fake' % self.XVFB_BIN)
 
         if status == 256 and 'use: X [:<display>] [option]' in output:
             return True
@@ -152,10 +152,10 @@ class XVFBServer(threading.Thread):
         display_cmd = 'DISPLAY=%s %s' % (display, cmd)
 
         if block:
-            commands.getoutput(display_cmd)
+            subprocess.getoutput(display_cmd)
         else:
             args = (display_cmd,)
-            th = threading.Thread(target=commands.getoutput, args=args)
+            th = threading.Thread(target=subprocess.getoutput, args=args)
             th.daemon = True
             th.name = 'XvfbProcess'
             th.start()
@@ -179,7 +179,7 @@ class XVFBServer(threading.Thread):
                 shutil.copy(xwd_file, temp_file)
                 target_jpeg = temp_file + '.jpeg'
                 convert_cmd = 'convert %s %s' % (temp_file, target_jpeg)
-                _, _ = commands.getstatusoutput(convert_cmd)
+                _, _ = subprocess.getstatusoutput(convert_cmd)
 
                 os.unlink(temp_file)
 
@@ -194,7 +194,7 @@ class XVFBServer(threading.Thread):
         """
         if self.is_running():
             args = ('x11vnc -display %s -shared -forever' % DISPLAY,)
-            th = threading.Thread(target=commands.getoutput, args=args)
+            th = threading.Thread(target=subprocess.getoutput, args=args)
             th.daemon = True
             th.name = 'VNCServer'
             th.start()
@@ -210,7 +210,7 @@ class XVFBServer(threading.Thread):
             time.sleep(3)
 
         args = ('DISPLAY=:0 xvnc4viewer localhost',)
-        th = threading.Thread(target=commands.getoutput, args=args)
+        th = threading.Thread(target=subprocess.getoutput, args=args)
         th.daemon = True
         th.name = 'VNCClient'
         th.start()

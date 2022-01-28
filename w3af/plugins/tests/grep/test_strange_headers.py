@@ -53,14 +53,14 @@ class TestStrangeHeaders(unittest.TestCase):
         self.plugin.grep(request, resp_positive)
 
         info_sets = kb.kb.get('strange_headers', 'strange_headers')
-        self.assertEquals(len(info_sets), 1)
+        self.assertEqual(len(info_sets), 1)
 
         info = info_sets[0]
-        expected_desc = (u'The remote web server sent 1 HTTP responses with'
-                         u' the uncommon response header "hello-world", one'
-                         u' of the received header values is "yes!". The'
-                         u' first ten URLs which sent the uncommon header'
-                         u' are:\n - http://www.w3af.com/\n')
+        expected_desc = ('The remote web server sent 1 HTTP responses with'
+                         ' the uncommon response header "hello-world", one'
+                         ' of the received header values is "yes!". The'
+                         ' first ten URLs which sent the uncommon header'
+                         ' are:\n - http://www.w3af.com/\n')
         self.assertEqual(info.get_name(), 'Strange header')
         self.assertEqual(info.get_url(), url)
         self.assertEqual(info.get_desc(), expected_desc)
@@ -76,7 +76,7 @@ class TestStrangeHeaders(unittest.TestCase):
 
         start = time.time()
 
-        for _ in xrange(5):
+        for _ in range(5):
             self.plugin.grep(request, resp_positive)
 
         spent = time.time() - start
@@ -100,7 +100,7 @@ class TestStrangeHeaders(unittest.TestCase):
         self.plugin.grep(request_2, resp_2)
 
         info_sets = kb.kb.get('strange_headers', 'strange_headers')
-        self.assertEquals(len(info_sets), 2)
+        self.assertEqual(len(info_sets), 2)
 
     def test_strange_headers_group(self):
         body = 'Hello world'
@@ -120,7 +120,7 @@ class TestStrangeHeaders(unittest.TestCase):
         self.plugin.grep(request_2, resp_2)
 
         info_sets = kb.kb.get('strange_headers', 'strange_headers')
-        self.assertEquals(len(info_sets), 1)
+        self.assertEqual(len(info_sets), 1)
 
     def test_strange_headers_negative(self):
         body = 'Hello world'
@@ -133,4 +133,4 @@ class TestStrangeHeaders(unittest.TestCase):
         self.plugin.grep(request, resp_positive)
 
         infos = kb.kb.get('strange_headers', 'strange_headers')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)

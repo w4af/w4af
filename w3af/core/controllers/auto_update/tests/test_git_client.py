@@ -47,7 +47,7 @@ class TestGitClient(unittest.TestCase):
         local_head = client.get_local_head_id()
         
         self.assertEqual(len(local_head), 40)
-        self.assertIsInstance(local_head, basestring)
+        self.assertIsInstance(local_head, str)
         
         # Get the ID using an alternative way for double checking
         proc = subprocess.Popen(['git', 'log', '-n', '1'], stdout=subprocess.PIPE)
@@ -73,7 +73,7 @@ class TestGitClient(unittest.TestCase):
         client.fetch.assert_called_once_with()
                 
         self.assertEqual(len(remote_head), 40)
-        self.assertIsInstance(remote_head, basestring)
+        self.assertIsInstance(remote_head, str)
         
         # Get the ID using an alternative way for double checking
         branch = 'refs/remotes/origin/%s' % get_current_branch()
