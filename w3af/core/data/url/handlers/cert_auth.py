@@ -34,9 +34,9 @@ class certHTTPSConnection(http.client.HTTPSConnection):
     key_file = None
     cert_file = None
 
-    def __init__(self, host, port=None, strict=None):
+    def __init__(self, host, port=None):
         http.client.HTTPSConnection.__init__(
-            self, host, port, self.key_file, self.cert_file, strict)
+            self, host, port, self.key_file, self.cert_file)
         #om.out.debug('Called __init__ of certHTTPSConnection.')
 
 

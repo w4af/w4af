@@ -56,7 +56,7 @@ def generate_404_by_rot3(filename, extension, seed=1):
     plus_three_filename = [c for c in filename]
     mod_filename = ''.join(plus_three_filename)
 
-    letters = string.letters
+    letters = string.ascii_letters
     digits = string.digits
 
     letters_len = len(letters)
@@ -108,7 +108,7 @@ def generate_404_by_flipping_bytes(filename, extension, seed=1):
             mod_filename += y + x
             continue
 
-        if x in string.letters and y in string.letters:
+        if x in string.ascii_letters and y in string.ascii_letters:
             mod_filename += y + x
             continue
 

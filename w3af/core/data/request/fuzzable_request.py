@@ -320,7 +320,7 @@ class FuzzableRequest(RequestMixIn, DiskItem):
 
     def get_hash(self):
         raw_http_request = self.dump()
-        return hashlib.md5(raw_http_request).hexdigest()
+        return hashlib.md5(raw_http_request.encode(DEFAULT_ENCODING)).hexdigest()
 
     def __hash__(self):
         return hash(str(self.get_uri()) + self.get_data())
@@ -346,10 +346,10 @@ class FuzzableRequest(RequestMixIn, DiskItem):
             output = long_fmt % (self.get_method(), self.get_url(),
                                  dc_type, jparams)
 
-        return output.encode(DEFAULT_ENCODING)
+        return output
 
     def __unicode__(self):
-        return str(self).decode(encoding=DEFAULT_ENCODING, errors='ignore')
+        return str(self)
 
     def __repr__(self):
         return '<fuzzable request | %s | %s>' % (self.get_method(),
@@ -533,6 +533,8 @@ class FuzzableRequest(RequestMixIn, DiskItem):
         The data is the string representation of the post data, in most
         cases it will be used as the POSTDATA for requests.
         """
+        if len(self._post_data) == 0:
+            return None
         return str(self._post_data)
 
     def get_raw_data(self):

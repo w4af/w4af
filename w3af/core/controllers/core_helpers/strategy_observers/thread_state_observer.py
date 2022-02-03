@@ -27,7 +27,7 @@ import traceback
 
 import w3af.core.controllers.output_manager as om
 
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_unicode
 from .strategy_observer import StrategyObserver
 
 
@@ -313,9 +313,9 @@ class ThreadStateObserver(StrategyObserver):
                 try:
                     arg_repr = repr(arg)
                 except UnicodeEncodeError:
-                    arg_str = smart_str_ignore(arg)
+                    arg_str = smart_unicode(arg)
                 else:
-                    arg_str = smart_str_ignore(arg_repr)
+                    arg_str = smart_unicode(arg_repr)
 
                 if len(arg_str) > 80:
                     arg_str = arg_str[:80] + "...'"
@@ -329,18 +329,18 @@ class ThreadStateObserver(StrategyObserver):
                 try:
                     value_repr = repr(value)
                 except UnicodeEncodeError:
-                    value_str = smart_str_ignore(value)
+                    value_str = smart_unicode(value)
                 else:
-                    value_str = smart_str_ignore(value_repr)
+                    value_str = smart_unicode(value_repr)
 
                 if len(value_str) > 80:
                     value_str = value_str[:80] + "...'"
 
                 short_kwargs[key] = value_str
 
-            kwargs_str = smart_str_ignore(short_kwargs)
+            kwargs_str = smart_unicode(short_kwargs)
 
-            func_name = smart_str_ignore(worker_state['func_name'])
+            func_name = smart_unicode(worker_state['func_name'])
             func_name = self.clean_function_name(func_name)
 
             message = ('Worker with ID %s(%s) has been running job %s for %.2f seconds.'

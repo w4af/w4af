@@ -181,6 +181,26 @@ class URL(DiskItem):
     RE_DOMAIN = re.compile(DOMAIN_PATTERN)
     SET_DOMAIN_RE = re.compile('[a-z0-9-.]+([a-z0-9-]+)*$')
 
+    __pickle_attributes = (
+                 # URL attributes
+                 '_querystr',
+                 '_fragment',
+                 '_scheme',
+                 '_netloc',
+                 '_path',
+                 '_params',
+
+                 # Internals
+                 '_encoding',
+
+                 # Easy access via properties
+                 'scheme',
+                 'netloc',
+                 'path',
+                 'params',
+                 'querystring',
+                 'fragment',)
+
     def __init__(self, data, encoding=DEFAULT_ENCODING):
         """
         :param data: Either a string representing a URL or a 6-elems tuple
@@ -731,8 +751,7 @@ class URL(DiskItem):
                  encoded characters.
         """
         unquoted_url = urllib.parse.unquote(str(self))
-        enc = self._encoding
-        return URL(unquoted_url.decode(enc, 'ignore'), enc)
+        return URL(unquoted_url)
 
     def url_encode(self):
         """
@@ -846,7 +865,7 @@ class URL(DiskItem):
         """
         :return: A string representation of self
         """
-        urlstr = smart_str(
+        urlstr = smart_unicode(
             self.url_string,
             self._encoding,
             errors=PERCENT_ENCODE
@@ -905,14 +924,16 @@ class URL(DiskItem):
         return ['url_string']
 
     def __getstate__(self):
-        state = {k: getattr(self, k) for k in self.__slots__}
-        state.pop('_cache')
+        state = {k: getattr(self, k) for k in self.__pickle_attributes}
         return state
 
     def __setstate__(self, state):
         self._cache = {}
         for k, v in state.items():
-            setattr(self, k, v)
+            try:
+                setattr(self, k, v)
+            except:
+                pass
 
     def copy(self):
         self._cache = {}

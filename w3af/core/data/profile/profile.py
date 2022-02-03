@@ -61,7 +61,7 @@ class profile(object):
         if profname:
             # Get profile name's complete path
             profname = self.get_real_profile_path(profname, workdir)
-            with codecs.open(profname, "rb", UTF8) as fp:
+            with codecs.open(profname, "r", UTF8) as fp:
                 try:
                     self._config.read_file(fp)
                 except configparser.Error as cpe:
@@ -117,7 +117,7 @@ class profile(object):
 
                 profile_path_file = os.path.join(profile_path, profile_file)
 
-                with codecs.open(profile_path_file, "rb", UTF8) as fp:
+                with codecs.open(profile_path_file, "r", UTF8) as fp:
                     config = configparser.ConfigParser()
                     try:
                         config.readfp(fp)

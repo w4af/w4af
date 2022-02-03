@@ -36,7 +36,7 @@ from w3af.core.controllers.misc.temp_dir import (get_temp_dir,
 
 def get_temp_filename():
     temp_dir = get_temp_dir()
-    fname = ''.join(starmap(choice, repeat((string.letters,), 18)))
+    fname = ''.join(starmap(choice, repeat((string.ascii_letters,), 18)))
     filename = os.path.join(temp_dir, fname + '.w3af.temp_db')
     return filename
 

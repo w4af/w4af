@@ -65,14 +65,14 @@ class GenericFilterTest(unittest.TestCase):
         randomly_generated_strings = []
 
         for _ in range(0, self.CAPACITY):
-            rnd = ''.join(random.choice(string.letters) for i in range(40))
+            rnd = ''.join(random.choice(string.ascii_letters) for i in range(40))
             randomly_generated_strings.append(rnd)
             self.filter.add(rnd)
 
         for saved_str in randomly_generated_strings:
             self.assertIn(saved_str, self.filter)
 
-        for i in string.letters:
+        for i in string.ascii_letters:
             self.assertNotIn(i, self.filter)
 
         for saved_str in randomly_generated_strings:
@@ -86,7 +86,7 @@ class GenericFilterTest(unittest.TestCase):
 
         self.assertIn(url_num, self.filter)
 
-        for i in string.letters:
+        for i in string.ascii_letters:
             url_char = URL('http://moth/index%s.html' % i)
             self.assertNotIn(url_char, self.filter)
 

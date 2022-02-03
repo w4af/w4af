@@ -108,11 +108,10 @@ class Headers(NonRepeatKeyValueContainer):
         :param default: The default value to return if the header_name is not found
         :return: The value for a header given a name (be case insensitive)
         """
-        lower = string.lower
-        lower_header_name = lower(header_name)
+        lower_header_name = header_name.lower()
 
         for stored_header_name, value in self.items():
-            if lower_header_name == lower(stored_header_name):
+            if lower_header_name == stored_header_name.lower():
                 return value, stored_header_name
 
         return default, None
@@ -199,13 +198,10 @@ class Headers(NonRepeatKeyValueContainer):
         if header_str_unicode:
             header_str_unicode += '\r\n'
 
-        return header_str_unicode.encode('utf-8')
+        return header_str_unicode
 
     def __unicode__(self):
         """
         :see: __str__ documentation.
         """
-        headers_unicode = self._to_str_with_separators(': ', '\r\n')
-        if headers_unicode:
-            headers_unicode += '\r\n'
-        return headers_unicode
+        return self.__str__()

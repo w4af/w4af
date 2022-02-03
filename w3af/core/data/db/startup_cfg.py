@@ -19,11 +19,13 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
+import codecs
 import configparser
 
 from datetime import datetime, date, timedelta
 
 from w3af.core.controllers.misc.home_dir import get_home_dir
+from w3af.core.data.constants.encodings import UTF8
 
 
 class StartUpConfig(object):
@@ -126,29 +128,30 @@ class StartUpConfig(object):
                 config.set(startsection, key, defaults[key])
 
         # Read from file
-        config.read(self._start_cfg_file)
+        with codecs.open(self._start_cfg_file, "r", UTF8) as config_file:
+            config.read_file(config_file)
 
-        auto_upd = self._get_bool_val('auto-update')
-        accepted_disclaimer = self._get_bool_val('accepted-disclaimer')
-        skip_dependencies_check = self._get_bool_val('skip-dependencies-check')
+            auto_upd = self._get_bool_val('auto-update')
+            accepted_disclaimer = self._get_bool_val('accepted-disclaimer')
+            skip_dependencies_check = self._get_bool_val('skip-dependencies-check')
 
-        freq = config.get(startsection, 'frequency', raw=True).upper()
-        if freq not in (StartUpConfig.FREQ_DAILY, StartUpConfig.FREQ_WEEKLY,
-                        StartUpConfig.FREQ_MONTHLY):
-            freq = StartUpConfig.FREQ_DAILY
+            freq = config.get(startsection, 'frequency', raw=True).upper()
+            if freq not in (StartUpConfig.FREQ_DAILY, StartUpConfig.FREQ_WEEKLY,
+                            StartUpConfig.FREQ_MONTHLY):
+                freq = StartUpConfig.FREQ_DAILY
 
-        lastupdstr = config.get(startsection, 'last-update', raw=True).upper()
-        # Try to parse it
-        try:
-            lastupd = datetime.strptime(lastupdstr, self.ISO_DATE_FMT).date()
-        except:
-            # Provide default value that enforces the update to happen
-            lastupd = date.today() - timedelta(days=31)
-        try:
-            lastrev = config.get(startsection, 'last-commit')
-        except TypeError:
-            lastrev = 0
-        return (auto_upd, freq, lastupd, lastrev, accepted_disclaimer, skip_dependencies_check)
+            lastupdstr = config.get(startsection, 'last-update', raw=True).upper()
+            # Try to parse it
+            try:
+                lastupd = datetime.strptime(lastupdstr, self.ISO_DATE_FMT).date()
+            except:
+                # Provide default value that enforces the update to happen
+                lastupd = date.today() - timedelta(days=31)
+            try:
+                lastrev = config.get(startsection, 'last-commit')
+            except TypeError:
+                lastrev = 0
+            return (auto_upd, freq, lastupd, lastrev, accepted_disclaimer, skip_dependencies_check)
 
     def save(self):
         """

@@ -149,9 +149,9 @@ class ExceptionHandler(object):
         """
         filename = 'w3af-crash-%s.txt' % rand_alnum(5)
         filename = os.path.join(tempfile.gettempdir(), filename)
-        crash_dump = file(filename, "w")
-        crash_dump.write(edata.get_details())
-        crash_dump.close()
+        with open(filename, "w") as crash_dump:
+            crash_dump.write(edata.get_details())
+            crash_dump.close()
         return filename
 
     def clear(self):

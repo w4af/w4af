@@ -103,7 +103,7 @@ if __name__ == "__main__":
     his = HistorySuggestion(arch)
 
     texts = ["".join(random.choice(
-        string.letters) for x in range(LENGTH)) for y in range(QUANT)]
+        string.ascii_letters) for x in range(LENGTH)) for y in range(QUANT)]
 
     print("Storing the elements:", end=' ')
     tini = time.time()

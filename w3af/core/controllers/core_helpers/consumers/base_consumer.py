@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import codecs
 import os
 import sys
 import time
@@ -45,7 +46,7 @@ def task_decorator(method):
     
     @wraps(method)
     def _wrapper(self, *args, **kwds):
-        rnd_id = os.urandom(32).encode('hex')
+        rnd_id = codecs.encode(os.urandom(32), 'hex_codec')
         function_id = '%s_%s' % (method.__name__, rnd_id)
 
         self._add_task(function_id)

@@ -70,12 +70,12 @@ class TestDiskList(unittest.TestCase):
         dl = DiskList()
 
         for i in range(0, 1000):
-            rnd = ''.join(random.choice(string.letters) for i in range(40))
+            rnd = ''.join(random.choice(string.ascii_letters) for i in range(40))
             _ = dl.append(rnd)
 
         self.assertEqual(rnd in dl, True)
 
-        for i in string.letters:
+        for i in string.ascii_letters:
             self.assertNotIn(i, dl)
 
         self.assertIn(rnd, dl)

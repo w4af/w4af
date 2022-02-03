@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import hashlib
+from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 
 CR = '\r'
 LF = '\n'
@@ -42,7 +43,11 @@ class RequestMixIn(object):
                  by the RFC, and the POST-data (potentially) holding raw bytes
                  such as an image content.
         """
-        data = self.get_data() or ''
+        data = ''
+        if hasattr(self, 'data'):
+            data = self.data
+        elif hasattr(self, 'get_data'):
+            data = self.get_data()
 
         request_head = self.dump_request_head(ignore_headers=ignore_headers)
         request_head = request_head.encode('utf-8')
@@ -53,7 +58,7 @@ class RequestMixIn(object):
         """
         :return: Hash the request (as it would be sent to the wire) and return
         """
-        return hashlib.md5(self.dump(ignore_headers=ignore_headers)).hexdigest()
+        return hashlib.md5(self.dump(ignore_headers=ignore_headers).encode(DEFAULT_ENCODING)).hexdigest()
 
     def get_request_line(self):
         """

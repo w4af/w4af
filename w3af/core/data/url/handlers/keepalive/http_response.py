@@ -1,4 +1,5 @@
 import http.client
+from http.client import parse_headers
 
 try:
     from io import StringIO
@@ -46,12 +47,11 @@ class HTTPResponse(http.client.HTTPResponse):
     # Both readline and readlines have been stolen with almost no
     # modification from socket.py
 
-    def __init__(self, sock, debuglevel=0, strict=0, method=None):
-        http.client.HTTPResponse.__init__(self, sock, debuglevel, strict=strict,
-                                      method=method)
+    def __init__(self, sock, debuglevel=0, method=None):
+        http.client.HTTPResponse.__init__(self, sock, debuglevel, method=method)
         self.fileno = sock.fileno
         self.code = None
-        self._rbuf = ''
+        self._rbuf = b""
         self._rbufsize = 8096
         self._handler = None     # inserted by the handler later
         self._host = None        # (same)
@@ -88,42 +88,39 @@ class HTTPResponse(http.client.HTTPResponse):
         fetched, and throw an exception in case it is too big.
         """
         if self.fp is None:
-            return ''
+            return b""
 
         max_file_size = cf.get('max_file_size') or None
-        if max_file_size:
-            if self.length > max_file_size:
+        if max_file_size is not None:
+            if self.length is not None and self.length > max_file_size:
                 self.status = NO_CONTENT
                 self.reason = 'No Content'  # Reason-Phrase
                 self.close()
-                return ''
+                return b""
 
-        if self.chunked:
-            return self._read_chunked(amt)
+        if amt is not None:
+            # Amount is given, implement using readinto
+            b = bytearray(amt)
+            n = self.readinto(b)
+            return memoryview(b)[:n].tobytes()
+        else:
+            # Amount is not given (unbounded read) so we must check self.length
+            # and self.chunked
 
-        if amt is None:
-            # unbounded read
+            if self.chunked:
+                return self._readall_chunked()
+
             if self.length is None:
                 s = self.fp.read()
             else:
-                s = self._safe_read(self.length)
+                try:
+                    s = self._safe_read(self.length)
+                except IncompleteRead:
+                    self._close_conn()
+                    raise
                 self.length = 0
-            self.close()        # we read everything
+            self._close_conn()        # we read everything
             return s
-
-        if self.length is not None:
-            if amt > self.length:
-                # clip the read to the "end of response"
-                amt = self.length
-
-        # we do not use _safe_read() here because this may be a .will_close
-        # connection, and the user is reading more bytes than will be provided
-        # (for example, reading in 1k chunks)
-        s = self.fp.read(amt)
-        if self.length is not None:
-            self.length -= len(s)
-
-        return s
 
     def begin(self):
         if self.msg is not None:
@@ -164,16 +161,17 @@ class HTTPResponse(http.client.HTTPResponse):
             self.msg = http.client.HTTPMessage(StringIO())
             return
 
-        self.msg = http.client.HTTPMessage(self.fp, 0)
+        self.headers = self.msg = parse_headers(self.fp)
+
         if self.debuglevel > 0:
-            for hdr in self.msg.headers:
+            for hdr in self.msg:
                 print("header:", hdr, end=' ')
 
         # don't let the msg keep an fp
         self.msg.fp = None
 
         # are we using the chunked-style of transfer encoding?
-        tr_enc = self.msg.getheader('transfer-encoding')
+        tr_enc = self.msg.get('transfer-encoding')
         if tr_enc and tr_enc.lower() == "chunked":
             self.chunked = 1
             self.chunk_left = None
@@ -186,7 +184,7 @@ class HTTPResponse(http.client.HTTPResponse):
         # do we have a Content-Length?
         # NOTE: RFC 2616, S4.4, #3 says we ignore this if tr_enc is "chunked"
         length = self._get_content_length()
-        if length and not self.chunked:
+        if length is not None and not self.chunked:
             try:
                 self.length = int(length)
             except (ValueError, TypeError):
@@ -223,7 +221,7 @@ class HTTPResponse(http.client.HTTPResponse):
 
         :return: The content length (as integer)
         """
-        length = self.msg.getheader('content-length')
+        length = self.msg.get('content-length')
 
         if length is None:
             # This is a response where there is no content-length header,
@@ -262,7 +260,7 @@ class HTTPResponse(http.client.HTTPResponse):
             # This like fixes the bug with title "GET is much faster than HEAD".
             # https://sourceforge.net/tracker2/?func=detail&aid=2202532&group_id=170274&atid=853652
             self.close()
-            return ''
+            return b""
 
         if self._multiread is None:
             # read all
@@ -278,7 +276,7 @@ class HTTPResponse(http.client.HTTPResponse):
                 return s
         else:
             s = self._rbuf + self._multiread
-            self._rbuf = ''
+            self._rbuf = b""
             return s
 
     def readline(self, limit=-1):
@@ -330,14 +328,14 @@ class HTTPResponse(http.client.HTTPResponse):
         Overriding to add "max" support
         http://tools.ietf.org/id/draft-thomson-hybi-http-timeout-01.html#p-max
         """
-        keep_alive = self.msg.getheader('keep-alive')
+        keep_alive = self.msg.get('keep-alive')
 
         if keep_alive and keep_alive.lower().endswith('max=1'):
             # We close right before the "max" deadline
             debug('will_close = True due to max=1')
             return True
 
-        conn = self.msg.getheader('connection')
+        conn = self.msg.get('connection')
 
         # Is the remote end saying we need to keep the connection open?
         if conn and 'keep-alive' in conn.lower():
@@ -356,7 +354,7 @@ class HTTPResponse(http.client.HTTPResponse):
             return False
 
         # Proxy-Connection is a netscape hack.
-        pconn = self.msg.getheader('proxy-connection')
+        pconn = self.msg.get('proxy-connection')
         if pconn and 'keep-alive' in pconn.lower():
             return False
 

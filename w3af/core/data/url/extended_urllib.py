@@ -608,7 +608,7 @@ class ExtendedUrllib(object):
 
         # Send it
         function_reference = getattr(self, fuzz_req.get_method())
-        return function_reference(fuzz_req.get_uri(), data=fuzz_req.get_data(),
+        return function_reference(fuzz_req.get_uri(), data=fuzz_req.data,
                                   headers=fuzz_req.get_headers(), cache=False,
                                   grep=False)
 
@@ -636,7 +636,7 @@ class ExtendedUrllib(object):
         # stop working!
         #
         uri = mutant.get_uri()
-        data = mutant.get_data()
+        data = mutant.get_raw_data()
         headers = mutant.get_all_headers()
 
         # Also add the cookie header; this is needed by the CookieMutant
@@ -800,7 +800,7 @@ class ExtendedUrllib(object):
         :return: The file size of the remote file.
         """
         res = self.HEAD(req.get_full_url(), headers=req.headers,
-                        data=req.get_data(), cache=cache)
+                        data=req.data, cache=cache)
 
         content_length, _ = res.get_headers().iget('content-length', None)
 
@@ -1138,7 +1138,7 @@ class ExtendedUrllib(object):
         # Everything went well!
         #
 
-        rdata = req.get_data()
+        rdata = req.data
 
         if not rdata:
             args = (req.get_method(),
@@ -1209,7 +1209,7 @@ class ExtendedUrllib(object):
             # Before sending it again we update the timeout, which could have
             # changed because of the error we just found
             #
-            host = req.get_host()
+            host = req.host
             req.set_timeout(self.get_timeout(host))
 
             #

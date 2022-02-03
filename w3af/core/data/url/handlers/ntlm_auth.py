@@ -67,7 +67,7 @@ class AbstractNtlmAuthHandler(urllib.request.BaseHandler):
                                                    None, headers)
         
     def retry_using_http_NTLM_auth(self, request, auth_header_field, realm, headers):
-        auth_header_value = headers.getheader(auth_header_field, None)
+        auth_header_value = headers.get(auth_header_field, None)
         if auth_header_value is not None:
             server_data = auth_header_value[5:]
             try:

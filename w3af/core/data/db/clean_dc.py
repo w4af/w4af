@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_unicode
 
 FILENAME_TOKEN = 'file-5692fef3f5dcd97'
 PATH_TOKEN = 'path-0fb923a04c358a37c'
@@ -51,7 +51,7 @@ def clean_data_container(data_container):
         else:
             _type = 'string'
 
-        result.append('%s=%s' % (key.encode(DEFAULT_ENCODING), _type))
+        result.append('%s=%s' % (key, _type))
 
     return '&'.join(result)
 
@@ -106,7 +106,7 @@ def clean_fuzzable_request_form(fuzzable_request, dc_handler=clean_data_containe
     else:
         res.append('')
 
-    return '|'.join([smart_str_ignore(s) for s in res])
+    return '|'.join([smart_unicode(s) for s in res])
 
 
 def clean_url(url, dc_handler=clean_data_container):
@@ -120,10 +120,10 @@ def clean_url(url, dc_handler=clean_data_container):
     :param url: URL instance
     :return: A "clean" representation of the URL
     """
-    res = url.base_url().url_string.encode(DEFAULT_ENCODING)
+    res = url.base_url().url_string
 
     if url.has_query_string():
-        res += url.get_path().encode(DEFAULT_ENCODING)[1:]
+        res += url.get_path()[1:]
         res += '?' + dc_handler(url.querystring)
     else:
         res += clean_path_filename(url)
@@ -141,14 +141,14 @@ def clean_path_filename(url):
     :param url: The URL instance
     :return: A clean URL string
     """
-    filename = url.get_file_name().encode(DEFAULT_ENCODING)
-    path = url.get_path_without_file().encode(DEFAULT_ENCODING)
+    filename = url.get_file_name()
+    path = url.get_path_without_file()
 
     if filename:
         res = path[1:]
         res += clean_filename(filename)
     else:
-        res = clean_path(url.get_path().encode(DEFAULT_ENCODING))[1:]
+        res = clean_path(url.get_path())[1:]
 
     return res
 

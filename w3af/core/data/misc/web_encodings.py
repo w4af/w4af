@@ -85,7 +85,7 @@ def generate_url_encoding_functions():
         {chr(c) for c in range(256) if chr(c) not in string.printable},
 
         # All not in digits, letters and dot
-        {chr(c) for c in range(256) if chr(c) not in string.digits + string.letters + '.'},
+        {chr(c) for c in range(256) if chr(c) not in string.digits + string.ascii_letters + '.'},
 
         # All characters are replaced
         HEX_MAP,

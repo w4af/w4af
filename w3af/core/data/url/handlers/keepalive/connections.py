@@ -59,11 +59,9 @@ class UniqueID(object):
 
 class _HTTPConnection(http.client.HTTPConnection, UniqueID):
 
-    def __init__(self, host, port=None, strict=None,
-                 timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+    def __init__(self, host, port=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         UniqueID.__init__(self)
-        http.client.HTTPConnection.__init__(self, host, port, strict,
-                                        timeout=timeout)
+        http.client.HTTPConnection.__init__(self, host, port, timeout=timeout)
         self.is_fresh = True
         self.host_port = '%s:%s' % (self.host, self.port)
 
@@ -130,9 +128,8 @@ class ProxyHTTPConnection(_HTTPConnection):
     """
     _ports = {'http': 80, 'https': 443}
 
-    def __init__(self, host, port=None, strict=None,
-                 timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
-        _HTTPConnection.__init__(self, host, port, strict, timeout=timeout)
+    def __init__(self, host, port=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+        _HTTPConnection.__init__(self, host, port, timeout=timeout)
         self._real_host = None
         self._real_port = None
 
@@ -175,8 +172,7 @@ class ProxyHTTPConnection(_HTTPConnection):
         self.send(new_line)
 
         # expect a HTTP/1.0 200 Connection established
-        response = self.response_class(self.sock, strict=self.strict,
-                                       method=self._method)
+        response = self.response_class(self.sock, method=self._method)
         version, code, message = response._read_status()
 
         # probably here we can handle auth requests...
@@ -294,10 +290,9 @@ class ProxyHTTPSConnection(ProxyHTTPConnection, SSLNegotiatorConnection):
     response_class = HTTPResponse
 
     def __init__(self, host, port=None, key_file=None, cert_file=None,
-                 strict=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+                 timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         UniqueID.__init__(self)
-        ProxyHTTPConnection.__init__(self, host, port, strict=strict,
-                                     timeout=timeout)
+        ProxyHTTPConnection.__init__(self, host, port, timeout=timeout)
         self.key_file = key_file
         self.cert_file = cert_file
 
@@ -319,11 +314,9 @@ class HTTPConnection(_HTTPConnection):
     # use the modified response class
     response_class = HTTPResponse
 
-    def __init__(self, host, port=None, strict=None,
-                 timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+    def __init__(self, host, port=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         _HTTPConnection.__init__(self, host,
                                  port=port,
-                                 strict=strict,
                                  timeout=timeout)
         self.current_request_start = None
         self.connection_manager_move_ts = None
@@ -333,9 +326,8 @@ class HTTPSConnection(SSLNegotiatorConnection):
     response_class = HTTPResponse
 
     def __init__(self, host, port=None, key_file=None, cert_file=None,
-                 strict=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
-        SSLNegotiatorConnection.__init__(self, host, port, key_file, cert_file,
-                                         strict, timeout=timeout)
+                 timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+        SSLNegotiatorConnection.__init__(self, host, port, key_file, cert_file, timeout=timeout)
         self.is_fresh = True
         self.current_request_start = None
         self.connection_manager_move_ts = None

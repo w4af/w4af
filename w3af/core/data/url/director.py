@@ -22,7 +22,7 @@ class CustomOpenerDirector(OpenerDirector):
 
         # This is what I want to remove and the reason to override
         # req.timeout = timeout
-        protocol = req.get_type()
+        protocol = req.type
 
         # pre-process request
         meth_name = protocol+"_request"
@@ -59,7 +59,7 @@ def build_opener(director_klass, handlers):
     default_classes = [ProxyHandler, UnknownHandler, HTTPHandler,
                        HTTPDefaultErrorHandler, HTTPRedirectHandler,
                        HTTPErrorProcessor]
-    if hasattr(httplib, 'HTTPS'):
+    if hasattr(http.client, 'HTTPS'):
         default_classes.append(HTTPSHandler)
     skip = set()
     for klass in default_classes:

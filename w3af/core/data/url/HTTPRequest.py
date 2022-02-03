@@ -62,6 +62,7 @@ class HTTPRequest(RequestMixIn, urllib.request.Request):
         # Save some information for later access in an easier way
         #
         self.url_object = url
+        self._Request__original = url.url_string
         self.cookies = cookies
         self.session = session
         self.get_from_cache = cache
@@ -161,7 +162,7 @@ class HTTPRequest(RequestMixIn, urllib.request.Request):
         sdict['method'] = self.get_method()
         sdict['uri'] = self.get_uri().url_string
         sdict['headers'] = dict(self.get_headers())
-        sdict['data'] = self.get_data()
+        sdict['data'] = self.data
         sdict['cookies'] = self.cookies
         sdict['session'] = self.session
         sdict['cache'] = self.get_from_cache
@@ -183,7 +184,7 @@ class HTTPRequest(RequestMixIn, urllib.request.Request):
                  in the FuzzableRequest passed as parameter
         """
         host = fuzzable_request.get_url().get_domain()
-        data = fuzzable_request.get_data()
+        data = fuzzable_request.data
         headers = fuzzable_request.get_headers()
         headers.tokens_to_value()
 

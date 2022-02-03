@@ -1,5 +1,6 @@
 import hashlib
 
+from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 
 def gen_hash(request):
     """
@@ -17,9 +18,9 @@ def gen_hash(request):
                               safe_str(req.get_full_url()),
                               headers_1,
                               headers_2,
-                              safe_str(req.get_data() or ''))
+                              safe_str(req.data or ''))
 
-    return hashlib.md5(the_str).hexdigest()
+    return hashlib.md5(the_str.encode(DEFAULT_ENCODING)).hexdigest()
 
 
 def safe_str(obj):

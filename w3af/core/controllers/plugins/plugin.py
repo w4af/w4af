@@ -279,6 +279,9 @@ class Plugin(Configurable):
 
         return False, no_content_resp
 
+    def __hash__(self):
+        return hash(self.get_name())
+
 
 class UrlOpenerProxy(object):
     """

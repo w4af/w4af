@@ -220,13 +220,13 @@ class pluginsTypeMenu(menu):
         if len(params) > 0:
             return []
 
-        return suggest(list(self._plugins.keys()), part)
+        return suggest([*self._plugins.keys()], part)
 
     def _list(self, params):
         #print 'list : ' + str(params)
         filter = len(params) > 0 and params[0] or 'all'
 
-        all = list(self._plugins.keys())
+        all = [*self._plugins.keys()]
         enabled = self._w3af.plugins.get_enabled_plugins(self._name)
 
         if filter == 'all':

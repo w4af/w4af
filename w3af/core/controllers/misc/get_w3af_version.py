@@ -34,8 +34,8 @@ VERSION_FILE = os.path.join(ROOT_PATH, 'core', 'data', 'constants',
 
 
 def get_minimalistic_version():
-    return file(VERSION_FILE).read().strip()
-
+    with open(VERSION_FILE) as f:
+        return f.read().strip()
 
 @memoized
 def get_w3af_version_as_dict():

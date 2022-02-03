@@ -50,10 +50,6 @@ EUNKNSERV = -2        # Name or service not known error
 EINVHOSTNAME = -5     # No address associated with hostname
 EUNEXPECTEDEOF = -1   # https://github.com/andresriancho/w3af/issues/10290
 
-KNOWN_SOCKET_ERRORS = (EUNKNSERV, ECONNREFUSED, EHOSTUNREACH, ECONNRESET,
-                       ENETDOWN, ENETUNREACH, EINVHOSTNAME, ETIMEDOUT,
-                       ENOSPC, EUNEXPECTEDEOF)
-
 NO_CONTENT_MSG = 'No Content'
 
 
@@ -381,8 +377,8 @@ def get_socket_exception_reason(error):
     if not isinstance(error, socket.error):
         return
 
-    if error[0] in KNOWN_SOCKET_ERRORS:
-        return str(error)
+    if isinstance(error, ConnectionError):
+        return repr(error)
 
     return
 
@@ -406,13 +402,13 @@ def get_exception_reason(error):
             return get_socket_exception_reason(error)
 
     if isinstance(error, OpenSSL.SSL.SysCallError):
-        if error[0] in KNOWN_SOCKET_ERRORS:
-            return str(error[1])
+        if isinstance(error, ConnectionError):
+            return repr(error)
 
     if isinstance(error, OpenSSL.SSL.ZeroReturnError):
         return 'OpenSSL Error: OpenSSL.SSL.ZeroReturnError'
 
-    if isinstance(error, (ssl.SSLError, socket.sslerror)):
+    if isinstance(error, ssl.SSLError):
         socket_reason = get_socket_exception_reason(error)
         if socket_reason:
             return 'SSL Error: %s' % socket_reason

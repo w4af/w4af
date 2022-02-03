@@ -49,7 +49,7 @@ class GetAverageRTTForMutant(object):
         #
         method = mutant.get_method()
         uri = mutant.get_uri()
-        data = mutant.get_data()
+        data = mutant.data
         headers = mutant.get_all_headers()
 
         cache_key_parts = [method, uri, data, headers]

@@ -112,7 +112,7 @@ class HTTPResponse(DiskItem):
             msg = 'Invalid type %s for HTTPResponse ctor param headers.'
             raise TypeError(msg % type(headers))
         
-        if not isinstance(read, str):
+        if not isinstance(read, (str, bytes)):
             raise TypeError('Invalid type %s for HTTPResponse ctor param read.'
                             % type(read))
 
