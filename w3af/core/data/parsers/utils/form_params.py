@@ -525,7 +525,7 @@ class FormParameters(OrderedDict):
                         # Create new 3-length vector
                         if len(vector) > 3:
                             new_vector = [vector[0],
-                                          vector[len(vector) / 2],
+                                          vector[int(len(vector) / 2)],
                                           vector[-1]]
                             matrix[row] = new_vector
 
@@ -558,7 +558,7 @@ class FormParameters(OrderedDict):
 
         for i in range(len(matrix) - 1):
             base = get_count(i)
-            decoded_path.append(remainder / base)
+            decoded_path.append(int(remainder / base))
             remainder = remainder % base
 
         # Restore state, pop out [1]

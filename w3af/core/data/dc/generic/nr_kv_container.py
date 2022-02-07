@@ -33,7 +33,7 @@ from w3af.core.data.dc.utils.filter_printable import filter_non_printable
 
 
 ERR_MSG_NO_REP = 'Unsupported init_val "%s", expected format is [("b", "2")]'
-
+ERR_MSG_NO_DUPLICATES = 'Unsupported init_val "%s", duplicate values are not allowed'
 
 class NonRepeatKeyValueContainer(DataContainer, OrderedDict):
     """
@@ -63,7 +63,7 @@ class NonRepeatKeyValueContainer(DataContainer, OrderedDict):
                     raise TypeError(ERR_MSG_NO_REP % init_val)
 
                 if key in self:
-                    raise TypeError(ERR_MSG_NO_REP % init_val)
+                    raise TypeError(ERR_MSG_NO_DUPLICATES % init_val)
 
                 if not isinstance(val, (str, DataToken)):
                     raise TypeError(ERR_MSG_NO_REP % init_val)

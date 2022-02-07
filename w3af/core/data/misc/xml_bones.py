@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from lxml import etree
-from io import StringIO
+from io import BytesIO
 
 from w3af.core.data.misc.encoding import smart_str_ignore
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
@@ -58,7 +58,7 @@ def get_xml_bones(document):
                               remove_pis=True)
 
     document = smart_str_ignore(document, encoding=DEFAULT_ENCODING)
-    etree.parse(StringIO(document), parser)
+    etree.parse(BytesIO(document), parser)
 
     # pylint: disable=E1101
     return ''.join(parser.target.bones)
@@ -112,7 +112,7 @@ def get_xml_bones_iterparse(document, _round_N=round_N):
     append = output.append
 
     document = smart_str_ignore(document, encoding=DEFAULT_ENCODING)
-    document_io = StringIO(document)
+    document_io = BytesIO(document)
     events = {'start', 'end'}
 
     context = etree.iterparse(document_io,
