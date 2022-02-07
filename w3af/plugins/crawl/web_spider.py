@@ -270,7 +270,7 @@ class web_spider(CrawlPlugin):
             all_refs = itertools.chain(parsed_refs, re_refs)
             resp_is_404 = is_404(resp)
 
-            for ref in unique_justseen(sorted(all_refs)):
+            for ref in unique_justseen(sorted(all_refs, key=lambda url: url.url_string)):
                 possibly_broken = resp_is_404 or (ref in only_re_refs)
                 yield ref, fuzzable_req, resp, possibly_broken
 

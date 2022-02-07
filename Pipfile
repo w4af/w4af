@@ -42,6 +42,8 @@ ipaddresses = "*"
 subprocess32 = "*"
 xdot = "*"
 nocasedict = "*"
+urllib3 = "*"
+pyopenssl = "==21.0.0"
 
 [dev-packages]
 

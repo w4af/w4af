@@ -321,7 +321,7 @@ def get_clean_body_impl(body, strings_to_replace_list, multi_encode=True,
 
     # uniq sorted by longest len
     encoded_payloads = list(encoded_payloads)
-    encoded_payloads.sort(lambda x, y: cmp(len(y), len(x)))
+    encoded_payloads.sort(key=lambda x: len(x))
     encoded_payloads = [i.lower() for i in encoded_payloads]
 
     for to_replace in encoded_payloads:

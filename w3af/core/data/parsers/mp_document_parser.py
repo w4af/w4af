@@ -81,7 +81,7 @@ class MultiProcessingDocumentParser(object):
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
     DEBUG = core_profiling_is_enabled()
-    MAX_WORKERS = 2 if is_running_on_ci() else (multiprocessing.cpu_count() / 2) or 1
+    MAX_WORKERS = 2 if is_running_on_ci() else int(multiprocessing.cpu_count() / 2) or 1
 
     # Increasing the timeout when profiling is enabled seems to fix issue #9713
     #

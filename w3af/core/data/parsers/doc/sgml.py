@@ -221,8 +221,7 @@ class SGMLParser(BaseParser):
             # body which is empty).
             return
 
-        resp_body = resp_body.encode(DEFAULT_ENCODING, errors=errors)
-        body_io = io.StringIO(resp_body)
+        body_io = io.BytesIO(resp_body.encode(DEFAULT_ENCODING))
         event_map = {'start': self.start,
                      'end': self.end,
                      'comment': self.comment}
@@ -308,7 +307,7 @@ class SGMLParser(BaseParser):
             # Don't even try to parse this response, it's empty anyways.
             return
 
-        body_io = io.StringIO(resp_body.encode(DEFAULT_ENCODING))
+        body_io = io.BytesIO(resp_body.encode(DEFAULT_ENCODING))
 
         # Performance notes, see "_parse_response_body_as_string"
         context = etree.iterparse(body_io,

@@ -210,9 +210,9 @@ class ParserCache(CacheStats):
             except ScanMustStopException as e:
                 msg = 'The document parser is in an invalid state! %s'
                 raise ScanMustStopException(msg % e)
-            except:
+            except Exception as e:
                 # Act just like when there is no parser
-                msg = 'There is no parser for "%s".' % http_response.get_url()
+                msg = 'There is no parser for "%s" (%s).' % (http_response.get_url(), e.msg)
                 raise BaseFrameworkException(msg)
             else:
                 save_to_cache = self.should_cache(http_response) and cache

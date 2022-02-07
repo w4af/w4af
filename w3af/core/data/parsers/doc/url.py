@@ -642,7 +642,7 @@ class URL(DiskItem):
         if is_ip_address(self.netloc):
             return self.netloc
 
-        extract = TLDExtract(suffix_list_url=False, fallback_to_snapshot=True)
+        extract = TLDExtract(fallback_to_snapshot=True)
         extract_result = extract(self.get_domain())
         return '%s.%s' % (extract_result.domain, extract_result.suffix)
 

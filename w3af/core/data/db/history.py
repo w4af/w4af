@@ -238,8 +238,9 @@ class HistoryItem(object):
             raise TraceReadException('Trace file %s does not exist' % file_name)
 
         # The file exists, but the contents might not be all on-disk yet
-        serialized_req_res = open(file_name, 'rb').read()
-        return self._load_from_string(serialized_req_res)
+        with open(file_name, 'rb') as res:
+            serialized_req_res = res.read()
+            return self._load_from_string(serialized_req_res)
 
     def _load_from_string(self, serialized_req_res):
         try:

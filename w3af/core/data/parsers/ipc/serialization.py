@@ -54,8 +54,9 @@ def load_http_response_from_temp_file(filename, remove=True):
     from w3af.core.data.url.HTTPResponse import HTTPResponse
 
     try:
-        data = msgpack.load(file(filename, 'rb'), raw=False)
-        result = HTTPResponse.from_dict(data)
+        with open(filename, 'rb') as f:
+            data = msgpack.load(f, raw=False)
+            result = HTTPResponse.from_dict(data)
     except:
         if remove:
             remove_file_if_exists(filename)
@@ -132,7 +133,8 @@ def load_object_from_temp_file(filename, remove=True):
     :return: The object instance
     """
     try:
-        result = pickle.load(file(filename, 'rb'))
+        with open(filename, 'rb') as f:
+            result = pickle.load(f)
     except:
         if remove:
             remove_file_if_exists(filename)

@@ -538,6 +538,8 @@ class FuzzableRequest(RequestMixIn, DiskItem):
         return str(self._post_data)
 
     def get_raw_data(self):
+        if len(self._post_data) == 0:
+            return None
         return self._post_data
 
     def get_method(self):
@@ -558,6 +560,8 @@ class FuzzableRequest(RequestMixIn, DiskItem):
                  get_headers(), we'll include these. Hopefully this means that
                  the required headers will make it to the wire.
         """
+        if self.get_raw_data() is None:
+            return Headers()
         return Headers(init_val=self.get_raw_data().get_headers())
 
     def get_headers(self):
