@@ -26,7 +26,6 @@ import http.client
 import urllib.request, urllib.error, urllib.parse
 import threading
 
-
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.parsers.parser_cache as parser_cache
 
@@ -36,7 +35,7 @@ from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.db.disk_item import DiskItem
-
+from w3af.core.data.dc.generic.nr_kv_container import RepeatedValueException
 
 DEFAULT_CHARSET = DEFAULT_ENCODING
 CR = '\r'
@@ -48,9 +47,23 @@ CONTENT_TYPE = 'content-type'
 STATUS_LINE = 'HTTP/1.1 %s %s' + CRLF
 
 CHARSET_EXTRACT_RE = re.compile(r'charset=\s*?([\w-]+)')
-CHARSET_META_RE = re.compile(b'<meta.*?content=".*?charset=\s*?([\w-]+)".*?>')
+CHARSET_META_RE = re.compile(b'<meta.*?content=".*?charset=\\s*?([\\w-]+)".*?>')
 DEFAULT_WAIT_TIME = 0.2
 
+def headers_from_response(headers, original_url):
+    try:
+        return Headers(list(headers.items()))
+    except RepeatedValueException as e:
+        original_headers = e.args[0]
+        header_names = set()
+        headers = []
+        for item in original_headers:
+            if item[0] in header_names:
+                om.out.vulnerability("%s: Got repeated HTTP header '%s' with value '%s'" % (original_url, item[0], item[1]))
+            else:
+                header_names.add(item[0])
+                headers.append(item)
+        return Headers(headers)
 
 class HTTPResponse(DiskItem):
 
@@ -175,7 +188,7 @@ class HTTPResponse(DiskItem):
         """
         resp = httplibresp
         code, msg, hdrs, body = (resp.code, resp.msg, resp.info(), resp.read())
-        hdrs = Headers(list(hdrs.items()))
+        hdrs = headers_from_response(hdrs, resp.geturl())
 
         if original_url:
             url_inst = URL(resp.geturl(), original_url.encoding)
