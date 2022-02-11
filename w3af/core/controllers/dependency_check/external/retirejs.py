@@ -31,7 +31,6 @@ def retirejs_is_installed():
     """
     :return: True if retirejs is installed and we were able to parse the version.
     """
-    return True
     try:
         version = subprocess.check_output('npx retire --version', shell=True)
     except subprocess.CalledProcessError:
