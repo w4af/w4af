@@ -702,7 +702,7 @@ class HTTPResponse(DiskItem):
             # Continue with the body's meta tag
             charset_mo = CHARSET_META_RE.search(raw_body, re.IGNORECASE)
             if charset_mo:
-                charset = charset_mo.groups()[0].lower().strip()
+                charset = charset_mo.groups()[0].lower().strip().decode(DEFAULT_CHARSET)
             else:
                 charset = DEFAULT_CHARSET
 
