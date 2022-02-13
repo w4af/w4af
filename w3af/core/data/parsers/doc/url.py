@@ -106,12 +106,12 @@ def parse_qsl(qs, keep_blank_values=0, strict_parsing=0):
 
     Returns a list, as G-d intended.
     """
-    pairs = [s2 for s1 in qs.split('&') for s2 in s1.split(';')]
+    pairs = [s2 for s1 in qs.split(b'&') for s2 in s1.split(b';')]
     r = []
     for name_value in pairs:
         if not name_value and not strict_parsing:
             continue
-        nv = name_value.split('=', 1)
+        nv = name_value.split(b'=', 1)
         if len(nv) != 2:
             if strict_parsing:
                 raise ValueError("bad query field: %r" % name_value)
@@ -121,8 +121,8 @@ def parse_qsl(qs, keep_blank_values=0, strict_parsing=0):
             else:
                 continue
         if len(nv[1]) or keep_blank_values:
-            name = urllib.parse.unquote(nv[0].replace('+', ' '))
-            value = urllib.parse.unquote(nv[1].replace('+', ' '))
+            name = urllib.parse.unquote(nv[0].replace(b'+', b' '))
+            value = urllib.parse.unquote(nv[1].replace(b'+', b' '))
             r.append((name, value))
 
     return r
@@ -158,10 +158,7 @@ def parse_qs(qstr, ignore_exc=True, encoding=DEFAULT_ENCODING):
             if not ignore_exc:
                 raise BaseFrameworkException('Error while parsing "%r"' % qstr)
         else:
-            def decode(item):
-                return (item[0].decode(encoding, 'ignore'),
-                        [e.decode(encoding, 'ignore') for e in item[1]])
-            qs.update((decode(item) for item in list(odict.items())))
+            qs.update(item for item in list(odict.items()))
 
     return qs
 

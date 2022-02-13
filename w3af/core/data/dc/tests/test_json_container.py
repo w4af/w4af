@@ -46,8 +46,8 @@ class TestJSONContainer(unittest.TestCase):
             self.assertIsInstance(token, DataToken)
             self.assertIs(token, dcc.token)
 
-        EXPECTED_TOKENS = [('object-second_key-list-0-string', 'abc'),
-                           ('object-key-string', 'value')]
+        EXPECTED_TOKENS = [('object-key-string', 'value'),
+                           ('object-second_key-list-0-string', 'abc')]
         token_data = [(t.get_name(), t.get_value()) for dcc, t in dcc_tokens]
         self.assertEqual(EXPECTED_TOKENS, token_data)
 
