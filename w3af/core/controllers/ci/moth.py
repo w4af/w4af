@@ -41,12 +41,14 @@ def whereis_moth():
              know which ports are going to be free for the server to bind.
     """
     try:
-        moth = file(HTTP_ADDRESS_FILE).read().strip()
+        with open(HTTP_ADDRESS_FILE) as f:
+            moth = f.read().strip()
     except IOError:
         moth = None
     
     try:
-        moths = file(HTTPS_ADDRESS_FILE).read().strip()
+        with open(HTTPS_ADDRESS_FILE) as f:
+            moths = f.read().strip()
     except IOError:
         moths = None
     

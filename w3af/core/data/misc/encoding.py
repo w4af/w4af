@@ -84,7 +84,7 @@ def smart_unicode(s,
                   # http://jamesls.com/micro-optimizations-in-python-code-speeding-up-lookups.html
                   _isinstance=isinstance,
                   _unicode=str,
-                  _str=str
+                  _str=bytes
                   ):
     """
     Return the unicode representation of 's'. Decodes byte-strings using
@@ -141,7 +141,7 @@ def smart_str(s,
               # http://jamesls.com/micro-optimizations-in-python-code-speeding-up-lookups.html
               _isinstance=isinstance,
               _unicode=str,
-              _str=str):
+              _str=bytes):
     """
     Return a byte-string version of 's', encoded as specified in 'encoding'.
     """
@@ -151,6 +151,9 @@ def smart_str(s,
     # Already a byte-string, nothing to do here
     if _isinstance(s, _str):
         return s
+
+    if hasattr(s, '__bytes__'):
+        return s.__bytes__()
 
     # Handling objects is hard! Each implements __str__ in a different way
     # which might trigger issues

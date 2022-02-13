@@ -18,17 +18,33 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from io import StringIO, IOBase
+from io import StringIO, BytesIO, IOBase
 
 class NamedStringIO(StringIO):
     """
-    A file-like string.
+    A unicode file-like string.
     """
     def __new__(cls, *args, **kwargs):
         return super(NamedStringIO, cls).__new__(cls, args[0])
 
     def __init__(self, the_str, name):
         super(NamedStringIO, self).__init__(the_str)
+        self._name = name
+
+    # pylint: disable=E0202
+    @property
+    def name(self):
+        return self._name
+
+class NamedBytesIO(BytesIO):
+    """
+    A binary file-like string.
+    """
+    def __new__(cls, *args, **kwargs):
+        return super(NamedBytesIO, cls).__new__(cls, args[0])
+
+    def __init__(self, the_bytes, name):
+        super(NamedBytesIO, self).__init__(the_bytes)
         self._name = name
 
     # pylint: disable=E0202

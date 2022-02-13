@@ -12,6 +12,14 @@ including [Cross-Site Scripting](https://github.com/andresriancho/w3af/blob/mast
 [SQL injection](https://github.com/andresriancho/w3af/blob/master/w3af/plugins/audit/sqli.py) and
 [OS commanding](https://github.com/andresriancho/w3af/blob/master/w3af/plugins/audit/os_commanding.py).
 
+## Development
+
+Use `nosetests` to run the unit tests:
+
+```
+$ nosetests
+```
+
 ## Contributing
 
 Pull requests are always welcome! If you're not sure where to start, please take
