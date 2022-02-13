@@ -92,7 +92,8 @@ class TestForm(unittest.TestCase):
 
         str_file = form['file'][0]
         self.assertEqual(str_file.name[-4:], '.gif')
-        self.assertIn('GIF', str_file)
+        contents = str_file.read()
+        self.assertIn(b'GIF', contents)
 
         self.assertIs(form.get_form_params(), form_params)
 

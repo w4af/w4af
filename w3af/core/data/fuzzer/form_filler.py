@@ -25,7 +25,7 @@ import os
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.config as cf
 
-from w3af.core.controllers.misc.io import NamedStringIO
+from w3af.core.controllers.misc.io import NamedBytesIO
 from w3af.core.controllers.misc.decorators import memoized
 from w3af.core.data.constants.file_templates.file_templates import get_file_from_template
 
@@ -179,7 +179,7 @@ def smart_fill(variable_name, db=PARAM_NAME_KNOWLEDGE, default='56'):
 @memoized
 def smart_fill_file(var_name, file_name):
     """
-    This function will return a NamedStringIO, ready to use in multipart forms.
+    This function will return a NamedBytesIO, ready to use in multipart forms.
 
     The contents of the file and its extension are carefully chosen to try to
     go through any form filters the web application might be implementing.
@@ -187,9 +187,9 @@ def smart_fill_file(var_name, file_name):
     extension = guess_extension(var_name, file_name)
     _, file_content, file_name = get_file_from_template(extension)
 
-    # I have to create the NamedStringIO with a "name",
+    # I have to create the NamedBytesIO with a "name",
     # required for MultipartContainer to properly encode this as multipart/post
-    return NamedStringIO(file_content, name=file_name)
+    return NamedBytesIO(file_content, name=file_name)
 
 
 def guess_extension(var_name, file_name):
