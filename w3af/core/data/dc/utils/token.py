@@ -71,7 +71,7 @@ class DataToken(object):
                                              self.get_value())
 
     def __str__(self):
-        return smart_unicode(self._value, errors='ignore')
+        return smart_unicode(self._value, on_error_guess=False)
 
     def __bytes__(self):
         return smart_str_ignore(self._value)

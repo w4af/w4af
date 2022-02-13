@@ -63,7 +63,7 @@ class TestToken(unittest.TestCase):
         self.assertEqual(token.get_path(), self.PATH)
 
     def test_invalid_utf8(self):
-        invalid_utf8 = '\xf3'
+        invalid_utf8 = b'\xf3'
         token = DataToken(self.NAME, invalid_utf8, self.PATH)
 
         self.assertRaises(UnicodeDecodeError, str, token)
