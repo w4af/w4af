@@ -39,7 +39,7 @@ def get_file_from_template(extension):
             file_content = f.read()
         success = True
     else:
-        file_content = rand_alnum(64)
+        file_content = smart_str(rand_alnum(64))
         success = False
 
     return success, file_content, file_name
