@@ -48,7 +48,7 @@ class TestNoRepeatKeyValueContainer(unittest.TestCase):
 
     def test_str_special_chars(self):
         dc = NonRepeatKeyValueContainer([('a', 'Ú-ú-Ü-ü')], 'latin-1')
-        decoded_str = urllib.parse.unquote(str(dc)).decode('latin-1')
+        decoded_str = urllib.parse.unquote(str(dc), 'latin-1')
         self.assertEqual('a=Ú-ú-Ü-ü', decoded_str)
 
     def test_unicode(self):

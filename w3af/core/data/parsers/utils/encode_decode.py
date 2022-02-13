@@ -129,7 +129,7 @@ def urlencode(query, encoding, safe='/<>"\'=:()'):
         k = to_encodable_string(k, encoding)
         k = urllib.parse.quote(k, safe)
 
-        if isinstance(v, str):
+        if isinstance(v, str) or isinstance(v, DataToken):
             v = [v]
         else:
             try:
