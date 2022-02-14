@@ -256,7 +256,7 @@ class ExceptionHandler(object):
         if not self._scan_id:
             hash_data = str(random.randint(1, 50000000) * random.randint(1, 50000000))
 
-            m = hashlib.md5(hash_data)
+            m = hashlib.md5(hash_data.encode("utf-8"))
             self._scan_id = m.hexdigest()[:10]
 
         return self._scan_id
