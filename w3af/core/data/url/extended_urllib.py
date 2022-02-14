@@ -772,7 +772,8 @@ class ExtendedUrllib(object):
         #    since we *never* want to return cached responses for POST
         #    requests.
         #
-        data = str(data)
+        if data is not None:
+            data = bytes(data)
         host = uri.get_domain()
         timeout = self.get_timeout(host) if timeout is None else timeout
 
@@ -1149,7 +1150,7 @@ class ExtendedUrllib(object):
             msg %= args
 
         else:
-            printable_data = urllib.parse.unquote_plus(rdata)
+            printable_data = urllib.parse.unquote_plus(smart_unicode(rdata))
             if len(rdata) > 75:
                 printable_data = '%s...' % printable_data[:75]
                 printable_data = printable_data.replace('\n', ' ')

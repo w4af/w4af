@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from html.parser import HTMLParser
+from html import unescape
 
 from w3af.core.data.context.constants import CONTEXT_DETECTOR
 from .html import (HtmlAttrSingleQuote, HtmlAttrDoubleQuote,
@@ -137,7 +138,7 @@ class ContextDetectorHTMLParser(HTMLParser):
 
         # Since it's the raw text value and the attr_value was unescaped, we
         # need to unescape it too to be able to compare them
-        full_tag_text = self.unescape(full_tag_text)
+        full_tag_text = unescape(full_tag_text)
 
         # Analyze the generic cases
         all_contexts = [HtmlAttrDoubleQuote,

@@ -241,6 +241,9 @@ class DataContainer(DiskItem):
     def all_items(self):
         return str(self)
 
+    def __len__(self):
+        return len(self.all_items)
+
     def get_eq_attrs(self):
         return ['all_items']
 

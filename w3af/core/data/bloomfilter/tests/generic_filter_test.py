@@ -56,7 +56,7 @@ class GenericFilterTest(unittest.TestCase):
         for i in range(0, self.CAPACITY):
             self.assertIn(i, self.filter)
 
-        for i in range(0, self.CAPACITY / 2):
+        for i in range(0, int(self.CAPACITY / 2)):
             r = random.randint(self.CAPACITY, self.CAPACITY * 2)
             self.assertNotIn(r, self.filter)
 

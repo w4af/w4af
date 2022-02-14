@@ -49,11 +49,11 @@ class TestDiskList(unittest.TestCase):
         for i in range(0, 1000):
             _ = dl.append(i)
 
-        for i in range(0, 1000 / 2):
+        for i in range(0, int(1000 / 2)):
             r = random.randint(0, 1000 - 1)
             self.assertEqual(r in dl, True)
 
-        for i in range(0, 1000 / 2):
+        for i in range(0, int(1000 / 2)):
             r = random.randint(1000, 1000 * 2)
             self.assertEqual(r in dl, False)
 
