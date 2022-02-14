@@ -53,6 +53,6 @@ class TestGitUtils(unittest.TestCase):
         current_branch = get_current_branch()
         
         branches = subprocess.check_output(['git', 'branch']).splitlines()
-        parsed_branch = [l.strip()[2:] for l in branches if l.startswith('*')][0]
+        parsed_branch = [l.strip()[2:] for l in branches if l.startswith(b'*')][0].decode('utf-8')
         
         self.assertEqual(current_branch, parsed_branch)

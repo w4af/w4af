@@ -39,16 +39,16 @@ def should_flip(index, seed):
     return rnd.randint(1, 100) % 5 in (0, 1, 2)
 
 
-def generate_404_without_filename():
-    return rand_alnum(5)
+def generate_404_without_filename(seed=1):
+    return rand_alnum(5, seed=seed)
 
 
-def generate_404_without_name(extension):
-    return '%s.%s' % (rand_alnum(5), extension)
+def generate_404_without_name(extension, seed=1):
+    return '%s.%s' % (rand_alnum(5, seed=seed), extension)
 
 
-def generate_404_for_short_filename(filename, extension):
-    mod_filename = '%s%s' % (rand_alnum(4), filename)
+def generate_404_for_short_filename(filename, extension, seed=1):
+    mod_filename = '%s%s' % (rand_alnum(4, seed), filename)
     return append_extension_if_exists(mod_filename, extension)
 
 
@@ -188,7 +188,7 @@ def generate_404_filename(filename, seed=1):
     :return: A mutated filename
     """
     if not filename:
-        return generate_404_without_filename()
+        return generate_404_without_filename(seed=seed)
 
     orig_filename, extension = split_filename(filename)
 
@@ -197,7 +197,7 @@ def generate_404_filename(filename, seed=1):
     # such as .env.
     #
     if not orig_filename:
-        return generate_404_without_name(extension)
+        return generate_404_without_name(extension, seed=seed)
 
     #
     # This handles the case of files which have really short names
@@ -206,7 +206,7 @@ def generate_404_filename(filename, seed=1):
     # or another one that also exists in the path
     #
     if len(orig_filename) in (1, 2):
-        return generate_404_for_short_filename(orig_filename, extension)
+        return generate_404_for_short_filename(orig_filename, extension, seed=seed)
 
     #
     # Flip some bytes to generate a new filename

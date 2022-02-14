@@ -325,7 +325,7 @@ class ThreadStateObserver(StrategyObserver):
             args_str = ', '.join(parts)
 
             short_kwargs = {}
-            for key, value in worker_state['kwargs']:
+            for key, value in worker_state['kwargs'].items():
                 try:
                     value_repr = repr(value)
                 except UnicodeEncodeError:
@@ -338,7 +338,7 @@ class ThreadStateObserver(StrategyObserver):
 
                 short_kwargs[key] = value_str
 
-            kwargs_str = smart_unicode(short_kwargs)
+            kwargs_str = str(short_kwargs)
 
             func_name = smart_unicode(worker_state['func_name'])
             func_name = self.clean_function_name(func_name)

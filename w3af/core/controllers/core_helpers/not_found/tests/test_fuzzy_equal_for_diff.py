@@ -84,7 +84,7 @@ class Test404FuzzyEqualForDiff(unittest.TestCase):
             (50, True),
             (100, True),
             (200, True),
-            (1500, False),
+            (2000, False),
         ]
 
         for num_lines, expected_result in tests:

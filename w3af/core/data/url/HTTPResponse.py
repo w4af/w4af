@@ -647,9 +647,7 @@ class HTTPResponse(DiskItem):
         # Only try to decode <str> strings. Skip <unicode> strings
         if type(raw_body) is str:
             _body = raw_body
-            assert charset is not None, ("HTTPResponse objects containing "
-                                         "unicode body must have an associated "
-                                         "charset")
+
         elif content_type is None:
             _body = raw_body
             charset = DEFAULT_CHARSET

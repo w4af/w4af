@@ -41,12 +41,12 @@ class TestThreadStateObserver(unittest.TestCase):
         def sleep(sleep_time, **kwargs):
             time.sleep(sleep_time)
 
-        args = (2,)
+        args = (15,)
         kwds = {'x': 2}
         worker_pool.apply_async(func=sleep, args=args, kwds=kwds)
 
         # Let the worker get the task
-        time.sleep(0.3)
+        time.sleep(10)
 
         worker_states = worker_pool.inspect_threads()
         tso.inspect_data_to_log(worker_pool, worker_states)
