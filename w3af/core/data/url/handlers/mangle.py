@@ -93,7 +93,7 @@ class MangledKeepAliveHTTPResponse(kaHTTPResponse):
 
         :see: https://github.com/andresriancho/w3af/issues/2172
         """
-        self._rbuf = ''
+        self._rbuf = b''
         self._method = None
 
     def close(self):

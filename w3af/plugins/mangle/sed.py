@@ -55,7 +55,7 @@ class sed(ManglePlugin):
         :param request: This is the request to mangle.
         :return: A mangled version of the request.
         """
-        data = request.get_data()
+        data = request.data
         for regex, string in self._manglers['q']['b']:
             data = regex.sub(string, data)
 
@@ -67,7 +67,7 @@ class sed(ManglePlugin):
         headers_inst = Headers.from_string(header_string)
 
         request.set_headers(headers_inst)
-        request.add_data(data)
+        request.set_data(data)
         return request
 
     def mangle_response(self, response):

@@ -27,7 +27,7 @@ import os
 
 import psutil
 
-from mock import MagicMock, Mock
+from unittest.mock import MagicMock, Mock
 from nose.plugins.attrib import attr
 
 from w3af.core.controllers.ci.moth import get_moth_http
@@ -176,12 +176,12 @@ class TestKeepalive(unittest.TestCase):
         # pylint: disable=E1101
         pid = os.getpid()
         p = psutil.Process(pid)
-        connections_before = p.get_connections()
+        connections_before = p.connections()
         
         keep_alive_http.close_all()
 
         time.sleep(1)
-        connections_after = p.get_connections()
+        connections_after = p.connections()
         # pylint: enable=E1101
         
         self.assertLess(len(connections_after), len(connections_before))

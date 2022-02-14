@@ -9,6 +9,7 @@ except ImportError:
 from .utils import debug
 from w3af.core.data.constants.response_codes import NO_CONTENT
 from w3af.core.data.kb.config import cf
+from w3af.core.data.misc.encoding import smart_str
 
 
 def close_on_error(read_meth):
@@ -280,13 +281,13 @@ class HTTPResponse(http.client.HTTPResponse):
             return s
 
     def readline(self, limit=-1):
-        i = self._rbuf.find('\n')
+        i = self._rbuf.find(b'\n')
 
         while i < 0 and not (0 < limit <= len(self._rbuf)):
             new = self._raw_read(self._rbufsize)
             if not new:
                 break
-            i = new.find('\n')
+            i = new.find(b'\n')
             if i >= 0:
                 i += len(self._rbuf)
             self._rbuf = self._rbuf + new
@@ -321,7 +322,7 @@ class HTTPResponse(http.client.HTTPResponse):
         This was added to make my life a lot simpler while implementing mangle
         plugins
         """
-        self._multiread = data
+        self._multiread = smart_str(data)
 
     def _check_close(self):
         """

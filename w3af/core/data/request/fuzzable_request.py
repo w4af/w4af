@@ -528,6 +528,10 @@ class FuzzableRequest(RequestMixIn, DiskItem):
                             'DataContainer type.' % type(self).__name__)
         self._post_data = post_data
 
+    @property
+    def data(self):
+        return self.get_data()
+
     def get_data(self):
         """
         The data is the string representation of the post data, in most

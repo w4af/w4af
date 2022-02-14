@@ -226,6 +226,8 @@ class KeepAliveHandler(object):
             self._cm.remove_connection(conn, reason='will close')
         elif req.new_connection:
             self._cm.remove_connection(conn, reason='new connection')
+        else:
+            debug("Returning connection to pool")
 
         # We measure time here because it's the best place we know of
         elapsed = time.time() - start
