@@ -109,7 +109,9 @@ class HTTPResponse(http.client.HTTPResponse):
             # and self.chunked
 
             if self.chunked:
-                return self._readall_chunked()
+                s = self._readall_chunked()
+                self.close()
+                return s
 
             if self.length is None:
                 s = self.fp.read()
@@ -117,10 +119,10 @@ class HTTPResponse(http.client.HTTPResponse):
                 try:
                     s = self._safe_read(self.length)
                 except IncompleteRead:
-                    self._close_conn()
+                    self.close()
                     raise
                 self.length = 0
-            self._close_conn()        # we read everything
+            self.close()        # we read everything
             return s
 
     def begin(self):
