@@ -272,6 +272,8 @@ class profile(object):
 
         for option in options:
             value = option.get_value_for_profile(self_contained=self_contained)
+            # Escape unquoted percents
+            value = value.replace('%', '%%')
 
             self._config.set(section,
                              option.get_name(),

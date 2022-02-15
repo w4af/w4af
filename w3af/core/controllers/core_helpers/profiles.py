@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 
+from w3af import ROOT_PATH
 import w3af.core.data.kb.config as cf
 
 from w3af.core.controllers.misc_settings import MiscSettings
@@ -198,7 +199,7 @@ class CoreProfiles(object):
             try:
                 unknown_plugins = core_set_plugins(plugin_names, plugin_type,
                                                    raise_on_error=False)
-            except KeyError:
+            except KeyError as ke:
                 msg = ('The profile references the "%s" plugin type which is'
                        ' unknown to the w3af framework.')
                 error_messages.append(msg % plugin_type)

@@ -266,6 +266,7 @@ class CorePlugins(object):
         rem_from_list('attack', plugin_types)
         rem_from_list('tests', plugin_types)
         rem_from_list('.git', plugin_types)
+        rem_from_list('__pycache__', plugin_types)
         return plugin_types
 
     def get_plugin_list(self, plugin_type):

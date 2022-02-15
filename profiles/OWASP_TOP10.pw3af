@@ -82,7 +82,7 @@ only_forward = False
 
 [audit.ssl_certificate]
 min_expire_days = 30
-ca_file_name = %ROOT_PATH%/plugins/audit/ssl_certificate/ca.pem
+ca_file_name = %%ROOT_PATH%%/plugins/audit/ssl_certificate/ca.pem
 
 [audit.os_commanding]
 
@@ -235,8 +235,6 @@ extensions = gif,html
 
 [audit.redos]
 
-[crawl.web_spider]
-
 [grep.symfony]
 override = False
 
@@ -245,8 +243,3 @@ override = False
 [grep.click_jacking]
 
 [grep.strange_reason]
-
-[infrastructure.allowed_methods]
-
-[infrastructure.server_header]
-

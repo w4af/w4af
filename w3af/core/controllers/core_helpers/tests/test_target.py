@@ -71,10 +71,9 @@ class TestTarget(unittest.TestCase):
         target_file = '/tmp/moth.target'
         target = 'file://%s' % target_file
         
-        target_file_handler = file(target_file, 'w')
-        target_file_handler.write('http://moth/1\n')
-        target_file_handler.write('http://moth/2\n')
-        target_file_handler.close()
+        with open(target_file, 'w') as target_file_handler:
+            target_file_handler.write('http://moth/1\n')
+            target_file_handler.write('http://moth/2\n')
         
         options = ctarget.get_options()
         options['target'].set_value(target)

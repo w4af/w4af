@@ -27,6 +27,7 @@ from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_list import OptionList
+from w3af.core.data.misc.encoding import smart_unicode
 
 cf.cf.save('targets', [])
 cf.cf.save('target_domains', set())
@@ -143,11 +144,11 @@ class CoreTarget(Configurable):
                             continue
 
                         # Comments starting with # are allowed too
-                        if target_in_file.startswith('#'):
+                        if target_in_file.startswith(b'#'):
                             continue
 
                         try:
-                            target_in_file_inst = URL(target_in_file)
+                            target_in_file_inst = URL(smart_unicode(target_in_file))
                         except ValueError as ve:
                             # The URLs specified inside the file might be
                             # invalid, and the pieces of code which consume

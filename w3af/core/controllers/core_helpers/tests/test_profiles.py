@@ -129,7 +129,8 @@ class TestCoreProfiles(unittest.TestCase):
         """
         valid, invalid = self.core.profiles.get_profile_list('.')
 
-        self.assertTrue(len(valid) > 5)
+        self.assertTrue(len(valid) > 3)
+        self.assertEqual("", ", ".join(invalid))
         self.assertEqual(len(invalid), 0)
 
         for profile_inst in valid:
