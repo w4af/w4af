@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import urllib.request, urllib.error, urllib.parse
 import unittest
 
-from mock import patch, Mock, _Call
+from unittest.mock import patch, Mock, _Call
 
 from w3af.core.data.url.HTTPRequest import HTTPRequest
 from w3af.core.data.url.handlers.cache import CacheHandler

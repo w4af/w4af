@@ -23,7 +23,7 @@ import copy
 import uuid
 import unittest
 
-from mock import Mock
+from unittest.mock import Mock
 
 from w3af.core.controllers.threads.threadpool import Pool
 from w3af.core.controllers.exceptions import DBException

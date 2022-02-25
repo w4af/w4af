@@ -25,7 +25,7 @@ from lxml import etree
 from xml import sax
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
-from mock import patch
+from unittest.mock import patch
 
 
 test_config = {

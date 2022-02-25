@@ -24,7 +24,7 @@ import unittest
 from itertools import repeat
 
 import pyclamd
-from mock import patch, Mock
+from unittest.mock import patch, Mock
 
 import w3af.core.data.kb.knowledge_base as kb
 from w3af.plugins.grep.clamav import clamav

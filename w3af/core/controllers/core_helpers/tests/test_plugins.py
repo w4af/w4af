@@ -25,7 +25,7 @@ import itertools
 
 from os import listdir as orig_listdir
 from nose.plugins.attrib import attr
-from mock import patch
+from unittest.mock import patch
 
 from w3af.core.controllers.w3afCore import w3afCore
 from w3af.core.controllers.exceptions import BaseFrameworkException

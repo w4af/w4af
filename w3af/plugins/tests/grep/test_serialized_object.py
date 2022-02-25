@@ -36,8 +36,8 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 
 SERIALIZED_PHP_OBJECTS = [
-    'O:8:"Example1":1:{s:10:"cache_file";s:15:"../../index.php";}',
-    'O:1:"a":1:{s:5:"value";s:3:"100";}',
+    b'O:8:"Example1":1:{s:10:"cache_file";s:15:"../../index.php";}',
+    b'O:1:"a":1:{s:5:"value";s:3:"100";}',
 ]
 
 

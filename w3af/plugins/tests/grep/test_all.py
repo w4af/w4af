@@ -25,7 +25,7 @@ import cProfile
 import random
 from itertools import repeat
 
-from mock import patch
+from unittest.mock import patch
 
 from w3af import ROOT_PATH
 from w3af.core.controllers.w3afCore import w3afCore

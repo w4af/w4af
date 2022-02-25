@@ -250,8 +250,8 @@ class TestRelativePathsIn404(PluginTest):
     TEST_ROOT = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl',
                              'web_spider', '5834')
 
-    GALERIA_HTML = file(os.path.join(TEST_ROOT, 'galeria-root.html')).read()
-    INDEX_HTML = file(os.path.join(TEST_ROOT, 'index.html')).read()
+    GALERIA_HTML = open(os.path.join(TEST_ROOT, 'galeria-root.html')).read()
+    INDEX_HTML = open(os.path.join(TEST_ROOT, 'index.html')).read()
 
     MOCK_RESPONSES = [MockResponse(re.compile('http://mock/galeria/.*'),
                                    GALERIA_HTML),
@@ -299,7 +299,7 @@ class TestDeadLock(PluginTest):
     TEST_ROOT = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl',
                              'web_spider', '5834')
 
-    INDEX_HTML = file(os.path.join(TEST_ROOT, 'index.html')).read()
+    INDEX_HTML = open(os.path.join(TEST_ROOT, 'index.html')).read()
 
     MOCK_RESPONSES = [MockResponse('http://mock/', INDEX_HTML),
                       MockResponse('http://mock/', 'Thanks.', method='POST')]

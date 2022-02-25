@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from mock import patch, Mock
+from unittest.mock import patch, Mock
 
 from w3af.core.ui.console.console_ui import ConsoleUI
 

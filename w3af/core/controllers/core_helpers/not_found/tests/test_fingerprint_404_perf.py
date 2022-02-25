@@ -23,7 +23,7 @@ import time
 import random
 import unittest
 
-from mock import Mock
+from unittest.mock import Mock
 
 
 from w3af import ROOT_PATH

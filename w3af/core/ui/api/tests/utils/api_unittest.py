@@ -31,7 +31,7 @@ from w3af.core.ui.api.db.master import SCANS
 
 class APIUnitTest(unittest.TestCase):
     PASSWORD = 'password'
-    AUTHORIZATION = base64.b64encode('%s:%s' % ('admin', PASSWORD))
+    AUTHORIZATION = base64.b64encode(('%s:%s' % ('admin', PASSWORD)).encode('utf-8'))
     HEADERS = {'Content-type': 'application/json',
                'Accept': 'application/json',
                'Authorization': 'Basic %s' % AUTHORIZATION}

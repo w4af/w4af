@@ -286,7 +286,7 @@ class TestXMLOutputBinary(PluginTest):
 
     MOCK_RESPONSES = [
               MockResponse(url='http://rpm-path-binary/',
-                           body=file(TEST_FILE).read(),
+                           body=open(TEST_FILE, "rb").read(),
                            content_type='text/plain',
                            method='GET', status=200),
     ]
@@ -338,7 +338,7 @@ class TestXML0x0B(PluginTest):
 
     MOCK_RESPONSES = [
               MockResponse(url='http://0x0b-path-binary/',
-                           body=file(TEST_FILE).read(),
+                           body=open(TEST_FILE).read(),
                            content_type='text/plain',
                            method='GET', status=200),
     ]

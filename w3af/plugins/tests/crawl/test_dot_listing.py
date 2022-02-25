@@ -37,7 +37,7 @@ class TestDotListing(PluginTest):
         }
     }
 
-    DOT_LISTING = file(os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl', 'dot_listing', 'listing_test_1.txt')).read()
+    DOT_LISTING = open(os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl', 'dot_listing', 'listing_test_1.txt')).read()
 
     MOCK_RESPONSES = [MockResponse('http://mock/.listing', DOT_LISTING),
                       MockResponse('http://mock/wasadhiya-7.mp3', 'Secret file'),

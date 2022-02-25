@@ -23,7 +23,7 @@ import time
 import unittest
 import socketserver
 
-from mock import Mock, patch, call
+from unittest.mock import Mock, patch, call
 from nose.plugins.attrib import attr
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig

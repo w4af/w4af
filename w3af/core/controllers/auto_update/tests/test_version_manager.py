@@ -23,7 +23,7 @@ import unittest
 import datetime
 
 from nose.plugins.attrib import attr
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 from w3af.core.data.db.startup_cfg import StartUpConfig
 from w3af.core.controllers.auto_update.version_manager import VersionMgr

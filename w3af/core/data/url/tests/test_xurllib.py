@@ -30,7 +30,7 @@ from multiprocessing.dummy import Process
 
 import httpretty
 from nose.plugins.attrib import attr
-from mock import patch
+from unittest.mock import patch
 
 from w3af import ROOT_PATH
 from w3af.core.data.url.extended_urllib import ExtendedUrllib

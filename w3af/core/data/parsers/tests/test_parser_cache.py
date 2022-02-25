@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from mock import patch, PropertyMock
+from unittest.mock import patch, PropertyMock
 
 from w3af.core.data.parsers.doc.html import HTMLParser
 from w3af.core.data.parsers.tests.test_document_parser import _build_http_response

@@ -24,7 +24,7 @@ import unittest
 import socketserver
 
 from nose.plugins.attrib import attr
-from mock import Mock
+from unittest.mock import Mock
 
 from w3af.core.data.url.extended_urllib import ExtendedUrllib
 from w3af.core.data.url.constants import (MAX_ERROR_COUNT,

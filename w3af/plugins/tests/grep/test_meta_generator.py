@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 
 from itertools import repeat
-from mock import patch
+from unittest.mock import patch
 
 import w3af.core.data.kb.knowledge_base as kb
 

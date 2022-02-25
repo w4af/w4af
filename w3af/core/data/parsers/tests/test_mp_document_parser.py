@@ -25,7 +25,7 @@ import random
 import unittest
 import multiprocessing
 
-from mock import patch, PropertyMock
+from unittest.mock import patch, PropertyMock
 from nose.plugins.skip import SkipTest
 from concurrent.futures import TimeoutError
 

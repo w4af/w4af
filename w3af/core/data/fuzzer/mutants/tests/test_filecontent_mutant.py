@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import copy
 
-from mock import patch
+from unittest.mock import patch
 
 from w3af.core.data.constants.file_templates.file_templates import get_template_with_payload
 from w3af.core.data.parsers.doc.url import URL

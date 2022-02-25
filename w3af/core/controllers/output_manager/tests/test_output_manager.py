@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import multiprocessing
 
-from mock import MagicMock, Mock
+from unittest.mock import MagicMock, Mock
 from nose.plugins.attrib import attr
 from tblib.decorators import Error
 

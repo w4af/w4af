@@ -35,7 +35,7 @@ class TestDSStore(PluginTest):
         }
     }
 
-    DS_STORE = file(os.path.join(ROOT_PATH, 'plugins/tests/crawl/ds_store/DS_Store')).read()
+    DS_STORE = open(os.path.join(ROOT_PATH, 'plugins/tests/crawl/ds_store/DS_Store'), "rb").read()
 
     MOCK_RESPONSES = [MockResponse('http://mock/.DS_Store', DS_STORE),
                       MockResponse('http://mock/other', 'Secret directory'),

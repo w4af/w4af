@@ -35,7 +35,7 @@ class TestPHPInfo516(PluginTest):
                                    method='GET',
                                    status=200),
                       MockResponse('http://httpretty/phpversion.php',
-                                   body=file(PHPINFO).read(),
+                                   body=open(PHPINFO).read(),
                                    method='GET',
                                    status=200),
                       ]

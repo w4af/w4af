@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 import unittest
 
-from mock import patch
+from unittest.mock import patch
 
 from w3af.core.controllers.dependency_check.helper_requirements_txt import generate_requirements_txt
 from w3af.core.controllers.dependency_check.pip_dependency import PIPDependency 

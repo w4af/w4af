@@ -41,7 +41,10 @@ class TestBingSpider(PluginTest):
         'blog', 'es/clients/', '',
     )
 
-    MOCK_RESPONSES = [MockResponse(target_url_fmt % eu, 'Response body.') for eu in EXPECTED_URLS]
+    def responses(fmt, expected_urls):
+        return [MockResponse(fmt % eu, 'Response body.') for eu in expected_urls]
+
+    MOCK_RESPONSES = responses(target_url_fmt, EXPECTED_URLS)
 
     def test_found_urls(self):
         cfg = self._run_configs['cfg']

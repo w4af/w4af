@@ -23,7 +23,7 @@ import unittest
 import threading
 import httpretty
 
-from mock import Mock
+from unittest.mock import Mock
 from nose.plugins.attrib import attr
 
 from w3af.core.controllers.ci.moth import get_moth_http

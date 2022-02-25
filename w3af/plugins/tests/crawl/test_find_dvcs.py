@@ -96,7 +96,7 @@ class TestFindDVCS(PluginTest):
 
 class TestSVN(PluginTest):
 
-    WC_DB = file(os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl', 'find_dvcs', 'sample-wc.db')).read()
+    WC_DB = open(os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl', 'find_dvcs', 'sample-wc.db'), "rb").read()
 
     SECRET = 'Secret contents here!'
 

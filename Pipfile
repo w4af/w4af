@@ -45,6 +45,14 @@ nocasedict = "*"
 urllib3 = "*"
 pyopenssl = "==21.0.0"
 nose = "*"
+httpretty = "*"
+xunitparser = "*"
+yolk = "*"
+pylint = "*"
+compiler = "*"
+apispec = "*"
+memory-profiler = "*"
+marshmallow = "*"
 
 [dev-packages]
 
