@@ -19,10 +19,10 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import gtk
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 import queue
 import threading
-import gobject
 
 from w3af.core.ui.gui.helpers import end_threads, Throbber
 from w3af.core.ui.gui.entries import EmailEntry
@@ -37,7 +37,7 @@ from w3af.core.controllers.easy_contribution.github_issues import (GithubIssues,
 
 class SimpleBaseWindow(gtk.Window):
 
-    def __init__(self, type=gtk.WINDOW_TOPLEVEL):
+    def __init__(self, type=gtk.WindowType.TOPLEVEL):
         """
         One simple class to create other windows.
         """

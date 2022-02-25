@@ -36,9 +36,9 @@ class TestGitClient(unittest.TestCase):
         
         # https://github.com/andresriancho/w3af/ provides a list of all the
         # URLs which can be used to clone the repo
-        REPO_URLS = ('git@github.com:andresriancho/w3af.git',
-                     'https://github.com/andresriancho/w3af.git',
-                     'git://github.com/andresriancho/w3af.git')
+        REPO_URLS = ('git@github.com:codders/w3af-python3.git',
+                     'https://github.com/codders/w3af-python3.git',
+                     'git://github.com/codders/w3af-python3.git')
         
         self.assertIn(client.URL, REPO_URLS)
     

@@ -24,7 +24,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import threading
 import queue
 import textwrap
-import gtk
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk as gtk
+from gi.repository import Gdk
 import os
 
 from w3af.core.ui.gui import GUI_DATA_PATH
@@ -313,8 +316,8 @@ class BroadcastWrapper(object):
 # This is a helper for debug, you just should connect the
 # 'event' event to this debugHandler
 
-event_types = [i for i in list(vars(gtk.gdk).values()) if type(i)
-               is gtk.gdk.EventType]
+event_types = [i for i in list(vars(Gdk).values()) if type(i)
+               is Gdk.EventType]
 
 
 def debugHandler(widget, event, *a):
@@ -444,8 +447,8 @@ class DrawingAreaStringRepresentation(gtk.DrawingArea):
 
         self.props.has_tooltip = True
 
-        self.set_events(gtk.gdk.POINTER_MOTION_MASK |
-                        gtk.gdk.POINTER_MOTION_HINT_MASK)
+        self.set_events(Gdk.POINTER_MOTION_MASK |
+                        Gdk.POINTER_MOTION_HINT_MASK)
         self.connect("expose-event", self.area_expose_cb)
         self.connect("query-tooltip", self.query_tooltip)
         self.show()
