@@ -70,8 +70,9 @@ class PasswordBruteforcer(object):
                 yield pwd
 
     def _read_pwd_file(self):
-        for line in file(self.passwd_file):
-            yield line.strip()
+        with open(self.passwd_file) as f:
+            for line in f:
+                yield line.strip()
 
 
 class UserPasswordBruteforcer(object):
@@ -134,9 +135,10 @@ class UserPasswordBruteforcer(object):
                 yield user, pwd
 
     def _user_from_file(self):
-        for line in file(self.users_file):
-            user = line.strip()
-            yield user
+        with open(self.users_file) as f:
+            for line in f:
+                user = line.strip()
+                yield user
 
     def _special_users(self):
         """
@@ -169,13 +171,14 @@ class UserPasswordBruteforcer(object):
         if not self.combo_file:
             return
 
-        for line in file(self.combo_file):
-            try:
-                user, passwd = line.strip().split(self.combo_separator)
-            except ValueError:
-                om.out.debug('Invalid combo entry: "%s"' % line)
-            else:
-                yield user, passwd
+        with open(self.combo_file) as f:
+            for line in f:
+                try:
+                    user, passwd = line.strip().split(self.combo_separator)
+                except ValueError:
+                    om.out.debug('Invalid combo entry: "%s"' % line)
+                else:
+                    yield user, passwd
 
 
 def get_profiling_results(self, max_items=50):
