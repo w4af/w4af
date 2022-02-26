@@ -39,14 +39,15 @@ class TestBaseConsumer(unittest.TestCase):
         try:
             raise Exception()
         except Exception as e:
-            self.bc.handle_exception('audit', 'sqli', fr, e)
+            exception = e
+            self.bc.handle_exception('audit', 'sqli', fr, e, store_tb=True)
 
         exception_data = self.bc.out_queue.get()
 
         self.assertTrue(exception_data.traceback is not None)
         self.assertEqual(exception_data.phase, 'audit')
         self.assertEqual(exception_data.plugin, 'sqli')
-        self.assertEqual(exception_data.exception, e)
+        self.assertEqual(exception_data.exception, exception)
     
     def test_terminate(self):
         self.bc.start()

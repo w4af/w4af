@@ -529,7 +529,7 @@ class BaseConsumer(Process):
     def get_result_nowait(self):
         return self._out_queue.get_nowait()
 
-    def handle_exception(self, phase, plugin_name, fuzzable_request, _exception):
+    def handle_exception(self, phase, plugin_name, fuzzable_request, _exception, store_tb=False):
         """
         Get the exception information, and put it into the output queue
         then, the strategy will get the items from the output queue and
@@ -551,7 +551,7 @@ class BaseConsumer(Process):
                                        _exception,
                                        tb,
                                        enabled_plugins,
-                                       store_tb=False)
+                                       store_tb=store_tb)
         self._out_queue.put(exception_data)
 
     def add_observer(self, observer):

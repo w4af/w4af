@@ -156,7 +156,7 @@ class TestCoreProfiles(unittest.TestCase):
 
         plugin_opts = self.core.plugins.get_plugin_options('audit',
                                                            'ssl_certificate')
-        ca_path = plugin_opts['caFileName'].get_value()
+        ca_path = plugin_opts['ca_file_name'].get_value()
         self.assertEqual(ca_path, self.INPUT_FILE)
 
     def test_load_save_as_no_changes(self):

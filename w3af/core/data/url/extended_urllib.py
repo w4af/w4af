@@ -55,6 +55,7 @@ from w3af.core.data.url.handlers.keepalive import URLTimeoutError
 from w3af.core.data.url.HTTPResponse import HTTPResponse
 from w3af.core.data.url.HTTPRequest import HTTPRequest
 from w3af.core.data.dc.headers import Headers
+from w3af.core.data.dc.generic.data_container import DataContainer
 from w3af.core.data.user_agent.random_user_agent import get_random_user_agent
 from w3af.core.data.misc.encoding import smart_unicode
 from w3af.core.data.url.helpers import get_clean_body, get_exception_reason
@@ -773,7 +774,10 @@ class ExtendedUrllib(object):
         #    requests.
         #
         if data is not None:
-            data = bytes(data)
+            if isinstance(data, DataContainer):
+                data = data.all_items.encode('utf-8')
+            else:
+                data = bytes(data)
         host = uri.get_domain()
         timeout = self.get_timeout(host) if timeout is None else timeout
 

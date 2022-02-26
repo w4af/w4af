@@ -106,7 +106,7 @@ class TestW3afCorePlugins(unittest.TestCase):
 
         all_enabled = self.core.plugins.get_all_enabled_plugins()
 
-        self.assertEqual(enabled_audit, all_enabled['audit'])
+        self.assertEqual(enabled_audit.sort(), all_enabled['audit'].sort())
         self.assertEqual(enabled_grep, all_enabled['grep'])
 
     def test_plugin_options(self):

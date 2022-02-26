@@ -59,6 +59,8 @@ form_id_action = exclude
 path_max_variants = 50
 params_max_variants = 10
 max_equal_form_variants = 5
+max_scan_time = 240
+vulndb_language = en
 
 [infrastructure.fingerprint_os]
 
@@ -79,6 +81,7 @@ result_limit = 300
 follow_regex = .*
 ignore_regex = None
 only_forward = False
+ignore_extensions =
 
 [audit.ssl_certificate]
 min_expire_days = 30
@@ -135,6 +138,7 @@ extensive = False
 
 [infrastructure.hmap]
 gen_fingerprint = False
+threads = 4
 
 [crawl.user_dir]
 

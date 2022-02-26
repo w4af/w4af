@@ -78,5 +78,5 @@ class TestAuditConsumer(unittest.TestCase):
             audit_consumer.terminate()
 
             msg = ('Spent 0.00 seconds running xss.end() until a scan must'
-                   ' stop exception was raised.')
+                   ' stop exception was raised')
             self.assertIn(call.debug(msg), om_mock.mock_calls)
