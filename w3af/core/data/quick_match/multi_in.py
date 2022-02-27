@@ -63,6 +63,8 @@ class MultiIn(object):
             elif isinstance(item, str):
                 keyword = item.encode(DEFAULT_ENCODING)
                 builder.add(keyword)
+            elif isinstance(item, bytes):
+                builder.add(item)
             else:
                 raise ValueError('Can NOT build MultiIn with provided values.')
 

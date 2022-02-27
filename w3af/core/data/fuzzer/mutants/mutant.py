@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import copy
 
 from w3af.core.data.constants.ignored_params import is_in_ignored_parameters
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_unicode
 from w3af.core.data.db.disk_item import DiskItem
 
 
@@ -145,6 +145,12 @@ class Mutant(DiskItem):
     def get_eq_attrs(self):
         return ['_freq', '_original_response_body']
 
+    def __setstate__(self, state):
+        self.__dict__ = state
+
+    def __getstate__(self):
+        return self.__dict__
+
     def __eq__(self, other):
         return (self.get_token() == other.get_token() and
                 self.get_fuzzable_request() == other.get_fuzzable_request())
@@ -160,12 +166,12 @@ class Mutant(DiskItem):
         token = dc.get_token()
 
         msg = '"%s", using HTTP method %s. The sent data was: "%s"'
-        msg %= (smart_str_ignore(self.get_url()),
-                smart_str_ignore(self.get_method()),
-                smart_str_ignore(dc_short))
+        msg %= (smart_unicode(self.get_url()),
+                smart_unicode(self.get_method()),
+                smart_unicode(dc_short))
 
         if token is not None:
-            msg += ' The modified parameter was "%s".' % smart_str_ignore(token.get_name())
+            msg += ' The modified parameter was "%s".' % smart_unicode(token.get_name())
 
         return msg
 

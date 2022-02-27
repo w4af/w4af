@@ -91,7 +91,7 @@ class TestStrategy(unittest.TestCase):
         thread_names_set = set(thread_names)
         expected_names = {'PoolTaskHandler',
                           'PoolResultHandler',
-                          'WorkerThread',
+                          'OutputManagerWorkerThread',
                           'PoolWorkerHandler',
                           'MainThread',
                           'SQLiteExecutor',
