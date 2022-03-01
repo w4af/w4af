@@ -110,7 +110,7 @@ class DataToken(object):
         return self.__dict__
 
     def __setstate__(self, state):
-        self.__dict__ = state
+        self.__dict__.update(state)
 
     def __len__(self):
         return len(str(self))

@@ -76,7 +76,7 @@ class TestJinja2SSI(PluginTest):
 
     class SSIMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.parse.unquote(uri)
+            uri = urllib.parse.unquote_plus(uri)
             template = Template('Hello' + uri)
             body = template.render()
             return self.status, response_headers, body

@@ -146,7 +146,7 @@ class Mutant(DiskItem):
         return ['_freq', '_original_response_body']
 
     def __setstate__(self, state):
-        self.__dict__ = state
+        self.__dict__.update(state)
 
     def __getstate__(self):
         return self.__dict__
