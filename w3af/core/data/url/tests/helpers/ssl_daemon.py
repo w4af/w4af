@@ -28,10 +28,10 @@ import os
 
 from .upper_daemon import UpperDaemon, UpperTCPHandler
 
-HTTP_RESPONSE = "HTTP/1.1 200 Ok\r\n"\
-                "Connection: close\r\n"\
-                "Content-Type: text/html\r\n"\
-                "Content-Length: 3\r\n\r\nabc"
+HTTP_RESPONSE = b"HTTP/1.1 200 Ok\r\n"\
+                b"Connection: close\r\n"\
+                b"Content-Type: text/html\r\n"\
+                b"Content-Length: 3\r\n\r\nabc"
 
 
 class RawSSLDaemon(UpperDaemon):
@@ -63,7 +63,7 @@ class RawSSLDaemon(UpperDaemon):
 
 class SSLServer(threading.Thread):
 
-    def __init__(self, listen, port, certfile, proto=ssl.PROTOCOL_TLSv1,
+    def __init__(self, listen, port, certfile, proto=ssl.PROTOCOL_TLSv1_2,
                  http_response=HTTP_RESPONSE):
         threading.Thread.__init__(self)
         self.daemon = True

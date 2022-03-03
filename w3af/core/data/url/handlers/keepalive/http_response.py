@@ -1,5 +1,5 @@
 import http.client
-from http.client import parse_headers
+from http.client import parse_headers, IncompleteRead
 
 try:
     from io import StringIO

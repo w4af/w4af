@@ -190,12 +190,10 @@ class ProxyHTTPConnection(_HTTPConnection):
                 break
 
 
-_protocols = [OpenSSL.SSL.SSLv3_METHOD,
-              OpenSSL.SSL.TLSv1_METHOD,
-              OpenSSL.SSL.SSLv23_METHOD,
-              OpenSSL.SSL.TLSv1_1_METHOD,
+_protocols = [OpenSSL.SSL.TLS_METHOD,
               OpenSSL.SSL.TLSv1_2_METHOD,
-              OpenSSL.SSL.SSLv2_METHOD]
+              OpenSSL.SSL.TLSv1_1_METHOD,
+              OpenSSL.SSL.TLSv1_METHOD]
 
 # Avoid race conditions
 _protocols_lock = threading.RLock()

@@ -40,6 +40,7 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.url.openssl_wrapper.ssl_wrapper import wrap_socket
 from w3af.core.data.kb.info import Info
 from w3af.core.data.kb.vuln import Vuln
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class ssl_certificate(AuditPlugin):
@@ -142,7 +143,7 @@ class ssl_certificate(AuditPlugin):
 
         self._ssl_connect_specific_protocol(domain,
                                             port,
-                                            ssl_version=OpenSSL.SSL.SSLv2_METHOD,
+                                            ssl_version=OpenSSL.SSL.TLS_METHOD,
                                             on_success=on_success)
 
     def _url_from_parts(self, domain, port):
@@ -187,7 +188,8 @@ class ssl_certificate(AuditPlugin):
         Not all python versions support all SSL protocols.
         :return: The protocol constants that exist in this python version
         """
-        return [OpenSSL.SSL.SSLv3_METHOD,
+        return [OpenSSL.SSL.TLS_METHOD,
+                OpenSSL.SSL.SSLv3_METHOD,
                 OpenSSL.SSL.TLSv1_METHOD,
                 OpenSSL.SSL.SSLv23_METHOD,
                 OpenSSL.SSL.TLSv1_1_METHOD,
@@ -238,7 +240,7 @@ class ssl_certificate(AuditPlugin):
     def _ssl_connect_specific_protocol(self,
                                        domain,
                                        port,
-                                       ssl_version=OpenSSL.SSL.SSLv23_METHOD,
+                                       ssl_version=OpenSSL.SSL.TLS_METHOD,
                                        cert_reqs=ssl.CERT_NONE,
                                        ca_certs=None,
                                        on_certificate_validation_error=None,
@@ -367,7 +369,7 @@ class ssl_certificate(AuditPlugin):
         return r.cert, r.cert_der, r.cipher
 
     def _cert_expiration_analysis(self, domain, port, cert, cert_der, cipher):
-        not_after = cert['notAfter']
+        not_after = smart_unicode(cert['notAfter'])
 
         try:
             exp_date = datetime.strptime(not_after, '%Y%m%d%H%M%SZ')

@@ -32,7 +32,7 @@ class TestSSLCertificate(PluginTest):
     local_target_url = 'https://localhost:%s/'
 
     remote_url = 'https://www.yandex.com/'
-    EXPECTED_STRINGS = ('yandex.ru', 'Moscow', 'RU', 'yandex')
+    EXPECTED_STRINGS = ('yandex.ru', 'yandex')
 
     _run_configs = {
         'cfg': {
