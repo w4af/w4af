@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import urllib.request, urllib.error, urllib.parse
 import base64
 
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 class FastHTTPBasicAuthHandler(urllib.request.AbstractBasicAuthHandler,
                                urllib.request.BaseHandler):
@@ -42,7 +43,7 @@ class FastHTTPBasicAuthHandler(urllib.request.AbstractBasicAuthHandler,
         user, pw = self.passwd.find_user_password(None, request.get_full_url())
         if pw is not None:
             raw = '%s:%s' % (user, pw)
-            auth = 'Basic %s' % base64.b64encode(raw).strip()
+            auth = 'Basic %s' % base64.b64encode(smart_str_ignore(raw)).strip()
             request.add_header('Authorization', auth)
 
         return request

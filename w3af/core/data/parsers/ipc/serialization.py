@@ -88,7 +88,8 @@ def load_tags_from_temp_file(filename, remove=True):
     :return: A list containing tags
     """
     try:
-        data = msgpack.load(file(filename, 'rb'), raw=False)
+        with open(filename, "rb") as f:
+            data = msgpack.load(f, raw=False)
         result = [Tag.from_dict(t) for t in data]
     except:
         if remove:

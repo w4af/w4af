@@ -644,9 +644,10 @@ class HTTPResponse(DiskItem):
         headers = self.get_headers()
         content_type, _ = headers.iget(CONTENT_TYPE, None)
 
-        # Only try to decode <str> strings. Skip <unicode> strings
+        # Only try to decode <bytes> strings. Skip <str> strings
         if type(raw_body) is str:
             _body = raw_body
+            charset = DEFAULT_CHARSET
 
         elif content_type is None:
             _body = raw_body

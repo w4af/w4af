@@ -149,17 +149,17 @@ class Headers(NonRepeatKeyValueContainer):
 
     # pylint: disable=E0102
     def __setitem__(self, k, v):
-        if isinstance(k, str):
+        if isinstance(k, bytes):
             k = smart_unicode(k, encoding=self.encoding)
-        else:
+        elif not isinstance(k, str):
             raise ValueError('Header name must be a string.')
 
-        if isinstance(v, str):
+        if isinstance(v, bytes):
             v = smart_unicode(v, encoding=self.encoding)
         elif isinstance(v, DataToken):
             encoded_str = smart_unicode(v.get_value(), encoding=self.encoding)
             v.set_value(encoded_str)
-        else:
+        elif not isinstance(k, str):
             raise ValueError('Header value must be a string.')
 
         super(Headers, self).__setitem__(k, v)
