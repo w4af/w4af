@@ -25,7 +25,7 @@ import http.client
 
 from w3af.core.data.url.handlers.cache_backend.settings import CACHE_LOCATION
 from w3af.core.data.url.handlers.cache_backend.utils import gen_hash
-
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 class CachedResponse(io.StringIO):
     """
@@ -89,7 +89,7 @@ class CachedResponse(io.StringIO):
     def headers(self):
         if not self._headers:
             headerbuf = self._get_from_response(CachedResponse.PART_HEADER)
-            self._headers = http.client.HTTPMessage(io.StringIO(headerbuf))
+            self._headers = http.client.parse_headers(io.BytesIO(smart_str_ignore(headerbuf)))
         return self._headers
 
     def geturl(self):

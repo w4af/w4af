@@ -171,7 +171,7 @@ class grep(BaseConsumer):
         headers_inst = Headers(request.header_items())
         request = FuzzableRequest.from_parts(request.url_object,
                                              request.get_method(),
-                                             request.get_data() or '',
+                                             request.data or '',
                                              headers_inst)
 
         return request, response
