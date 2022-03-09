@@ -273,7 +273,8 @@ class TestJSONPayloadIsValid(unittest.TestCase):
                     continue
 
                 if file_name.endswith(deserialization.PAYLOAD_EXTENSION):
-                    json_str = file(os.path.join(root, file_name)).read()
+                    with open(os.path.join(root, file_name)) as f:
+                        json_str = f.read()
                     data = json.loads(json_str)
 
                     self.assertIn('1', data, file_name)
@@ -314,8 +315,8 @@ class TestExactDelay(unittest.TestCase):
         payload_1 = ed.get_string_for_delay(1)
         payload_22 = ed.get_string_for_delay(22)
 
-        self.assertEqual(payload['1']['payload'], payload_1)
-        self.assertEqual(payload['2']['payload'], payload_22)
+        self.assertEqual(payload['1']['payload'], payload_1.decode('utf-8'))
+        self.assertEqual(payload['2']['payload'], payload_22.decode('utf-8'))
 
     def test_get_payload_all(self):
         for root, dirs, files in os.walk(deserialization.PAYLOADS):
@@ -331,7 +332,8 @@ class TestExactDelay(unittest.TestCase):
                     continue
 
                 if file_name.endswith(deserialization.PAYLOAD_EXTENSION):
-                    json_str = file(os.path.join(root, file_name)).read()
+                    with open(os.path.join(root, file_name)) as f:
+                        json_str = f.read()
                     payload = json.loads(json_str)
 
                     ed = B64DeserializationExactDelay(payload)
@@ -344,8 +346,5 @@ class TestExactDelay(unittest.TestCase):
                         args = (e, file_name)
                         self.assertTrue(False, msg % args)
 
-                    #file('1', 'w').write(base64.b64decode(payload['1']['payload']))
-                    #file('2', 'w').write(base64.b64decode(payload_1))
-
-                    self.assertEqual(payload['1']['payload'], payload_1, file_name)
-                    self.assertEqual(payload['2']['payload'], payload_22, file_name)
+                    self.assertEqual(payload['1']['payload'], payload_1.decode('utf-8'), file_name)
+                    self.assertEqual(payload['2']['payload'], payload_22.decode('utf-8'), file_name)

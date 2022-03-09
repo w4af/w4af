@@ -38,7 +38,7 @@ from w3af.core.data.serialization.detect import (is_java_serialized_data,
                                                  is_net_serialized_data,
                                                  is_nodejs_serialized_data,
                                                  is_pickled_data)
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 class deserialization(AuditPlugin):
@@ -289,9 +289,9 @@ class DeserializationExactDelay(ExactDelay):
 
         for offset in offsets:
             for i, second_i in enumerate(seconds):
-                payload_lst[offset + i] = second_i
+                payload_lst[offset + i] = ord(second_i)
 
-        return ''.join(payload_lst)
+        return bytes(payload_lst)
 
 
 class B64DeserializationExactDelay(DeserializationExactDelay):
