@@ -65,7 +65,7 @@ class KeyValueContainer(DataContainer, OrderedDict):
                     raise TypeError(ERR_MSG % init_val)
 
                 for sub_val in val:
-                    if not isinstance(sub_val, (str, DataToken)):
+                    if not isinstance(sub_val, (str, bytes, DataToken)):
                         raise TypeError(ERR_MSG % init_val)
 
                 self[key] = val

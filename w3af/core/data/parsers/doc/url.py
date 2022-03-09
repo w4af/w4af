@@ -39,7 +39,7 @@ from w3af.core.data.dc.generic.data_container import DataContainer
 from w3af.core.data.dc.query_string import QueryString
 from w3af.core.data.db.disk_item import DiskItem
 from w3af.core.data.misc.encoding import (smart_str, PERCENT_ENCODE,
-                                          is_known_encoding, smart_unicode)
+                                          is_known_encoding, smart_str_ignore, smart_unicode)
 
 
 def set_changed(meth):
@@ -73,60 +73,12 @@ def memoized(meth):
 
     return cache_wrapper
 
-
-def parse_qsl(qs, keep_blank_values=0, strict_parsing=0):
-    """This was a slightly modified version of the function with the same name
-    that is defined in urlparse.py . I modified it, and then reverted the patch
-    to have different handling of '+':
-
-    -        name = unquote(nv[0].replace('+', ' '))
-    -        value = unquote(nv[1].replace('+', ' '))
-    +        name = unquote(nv[0])
-    +        value = unquote(nv[1])
-
-    Due to this [0] bug: "Proxy (and maybe others) affected by querystring +
-    not being decoded by URL class #9139", I reverted my changes to the function
-    but kept it here for better docs.
-
-    [0] https://github.com/andresriancho/w3af/issues/9139
-
-    Arguments:
-
-    qs: percent-encoded query string to be parsed
-
-    keep_blank_values: flag indicating whether blank values in
-        percent-encoded queries should be treated as blank strings.  A
-        true value indicates that blanks should be retained as blank
-        strings.  The default false value indicates that blank values
-        are to be ignored and treated as if they were  not included.
-
-    strict_parsing: flag indicating what to do with parsing errors. If
-        false (the default), errors are silently ignored. If true,
-        errors raise a ValueError exception.
-
-    Returns a list, as G-d intended.
-    """
-    pairs = [s2 for s1 in qs.split(b'&') for s2 in s1.split(b';')]
-    r = []
-    for name_value in pairs:
-        if not name_value and not strict_parsing:
-            continue
-        nv = name_value.split(b'=', 1)
-        if len(nv) != 2:
-            if strict_parsing:
-                raise ValueError("bad query field: %r" % name_value)
-            # Handle case of a control-name with no equal sign
-            if keep_blank_values:
-                nv.append('')
-            else:
-                continue
-        if len(nv[1]) or keep_blank_values:
-            name = urllib.parse.unquote(nv[0].replace(b'+', b' '))
-            value = urllib.parse.unquote(nv[1].replace(b'+', b' '))
-            r.append((name, value))
-
-    return r
-
+def query_byte_string(string):
+    if isinstance(string, str):
+        string = string.encode('utf-8')
+    if not isinstance(string, bytes):
+        raise TypeError("Unknown type %s for query byte string" % type(string))
+    return re.sub(b'\\\\x(\d\d)', lambda x: bytes.fromhex(x[1].decode('utf-8')), string)
 
 def parse_qs(qstr, ignore_exc=True, encoding=DEFAULT_ENCODING):
     """
@@ -147,14 +99,16 @@ def parse_qs(qstr, ignore_exc=True, encoding=DEFAULT_ENCODING):
 
         try:
             odict = OrderedDict()
-            for name, value in parse_qsl(qstr,
+            for name, value in urllib.parse.parse_qsl(qstr,
                                          keep_blank_values=True,
-                                         strict_parsing=False):
-                if name in odict:
-                    odict[name].append(value)
+                                         strict_parsing=False,
+                                         errors='backslashreplace'):
+                bytes_value = query_byte_string(value)
+                if smart_str_ignore(name) in odict:
+                    odict[smart_str_ignore(name)].append(bytes_value)
                 else:
-                    odict[name] = [value]
-        except Exception:
+                    odict[smart_str_ignore(name)] = [bytes_value]
+        except Exception as e:
             if not ignore_exc:
                 raise BaseFrameworkException('Error while parsing "%r"' % qstr)
         else:

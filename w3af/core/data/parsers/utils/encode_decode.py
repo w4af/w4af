@@ -177,7 +177,7 @@ def to_encodable_string(obj, encoding):
         # be ignored by the server. Thus I just ignore the offending
         # char(s) and continue with the rest of the ele content
         obj = obj.encode(encoding, errors='ignore')
-    else:
-        obj = str(obj)
+    elif not isinstance(obj, bytes):
+        obj = str(obj).encode(encoding, errors='ignore')
 
     return obj

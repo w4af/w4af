@@ -90,6 +90,9 @@ def smart_unicode(s,
     Return the unicode representation of 's'. Decodes byte-strings using
     the 'encoding' codec.
     """
+    if s is None:
+        return None
+
     if _isinstance(s, _unicode):
         return s
     

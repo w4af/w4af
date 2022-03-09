@@ -59,7 +59,7 @@ def dc_from_hdrs_post(headers, post_data):
     else:
         content_type, _ = headers.iget('content-type', 'None')
         msg = 'Unknown post-data. Content-type: "%s" and/or post-data "%s"'
-        om.out.debug(msg % (content_type, post_data[:50]))
+        om.out.debug(msg % (content_type, str(post_data)[:50]))
 
         return PlainContainer.from_postdata(headers, post_data)
 

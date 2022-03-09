@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import string
 
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 INTERESTING_NODEJS_STRINGS = ['\n', '{', '(']
 INTERESTING_JAVA_STRINGS = ['java.util',
@@ -48,13 +49,10 @@ def is_pickled_data(data):
     :param data: Some data that we see on the application
     :return: True if the data looks like a python pickle
     """
-    # pickle is a \n separated format
-    if data.count('\n') > 10:
+    # pickle after version 2 starts with protocol opcode
+    # and ends in '.' : http://formats.kaitai.io/python_pickle/
+    if data.startswith(bytes([0x80])) and data.endswith(b'.'):
         return True
-
-    # which usually ends with these characters
-    return data.endswith('\n.') or data.endswith('\ns.')
-
 
 def is_java_serialized_data(data):
     """
@@ -64,15 +62,15 @@ def is_java_serialized_data(data):
     # All java serialized objects I've seen have non-printable chars
     has_binary = False
 
-    for c in data:
-        if c not in string.printable:
+    for c in smart_str_ignore(data):
+        if chr(c) not in string.printable:
             has_binary = True
             break
 
     if not has_binary:
         return False
 
-    for interesting_string in INTERESTING_JAVA_STRINGS:
+    for interesting_string in [ smart_str_ignore(x) for x in INTERESTING_JAVA_STRINGS ]:
         if interesting_string in data:
             return True
 
@@ -84,7 +82,7 @@ def is_nodejs_serialized_data(data):
     :param data: Some data that we see on the application
     :return: True if the data looks like a nodejs serialized object
     """
-    for interesting_string in INTERESTING_NODEJS_STRINGS:
+    for interesting_string in [ smart_str_ignore(x) for x in INTERESTING_NODEJS_STRINGS ]:
         if interesting_string in data:
             return True
 
@@ -96,7 +94,7 @@ def is_net_serialized_data(data):
     :param data: Some data that we see on the application
     :return: True if the data looks like a .NET serialized object
     """
-    for interesting_string in INTERESTING_NET_STRINGS:
+    for interesting_string in [ smart_str_ignore(x) for x in INTERESTING_NET_STRINGS ]:
         if interesting_string in data:
             return True
 

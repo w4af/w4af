@@ -76,6 +76,8 @@ class XmlRpcContainer(KeyValueContainer):
 
     @staticmethod
     def is_xmlrpc(post_data):
+        if post_data is None:
+            return False
         return all([stop in post_data.lower() for stop in XMLRPC_WORDS])
 
     @staticmethod

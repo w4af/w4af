@@ -36,7 +36,7 @@ from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
 from w3af.core.data.fuzzer.mutants.cookie_mutant import CookieMutant
 from w3af.core.data.dc.urlencoded_form import URLEncodedForm
 from w3af.core.data.parsers.utils.form_params import FormParameters
-
+from w3af.core.data.misc.encoding import smart_unicode
 
 test_config = {
     'audit': (PluginConfig('deserialization'),),
@@ -176,8 +176,8 @@ class TestShouldInject(unittest.TestCase):
         self.assertFalse(self.plugin._should_inject(mutant, 'python'))
 
     def test_should_not_inject_qs_with_b64(self):
-        b64data = base64.b64encode('just some random b64 data here')
-        self.url = URL('http://moth/?id=%s' % b64data)
+        b64data = base64.b64encode('just some random b64 data here'.encode("utf-8"))
+        self.url = URL('http://moth/?id=%s' % b64data.decode('utf-8'))
         freq = FuzzableRequest(self.url)
 
         mutant = QSMutant.create_mutants(freq, self.payloads, [],
@@ -188,7 +188,7 @@ class TestShouldInject(unittest.TestCase):
     def test_should_inject_qs_with_b64_pickle(self):
         b64data = base64.b64encode(pickle.dumps({'data': 'here',
                                                   'cookie': 'A' * 16}))
-        self.url = URL('http://moth/?id=%s' % b64data)
+        self.url = URL('http://moth/?id=%s' % smart_unicode(b64data))
         freq = FuzzableRequest(self.url)
 
         mutant = QSMutant.create_mutants(freq, self.payloads, [],
@@ -198,7 +198,7 @@ class TestShouldInject(unittest.TestCase):
 
     def test_should_not_inject_qs_with_b64_pickle_java(self):
         b64data = base64.b64encode(pickle.dumps(1))
-        self.url = URL('http://moth/?id=%s' % b64data)
+        self.url = URL('http://moth/?id=%s' % b64data.decode('utf-8'))
         freq = FuzzableRequest(self.url)
 
         mutant = QSMutant.create_mutants(freq, self.payloads, [],
@@ -208,7 +208,7 @@ class TestShouldInject(unittest.TestCase):
 
     def test_should_inject_qs_with_pickle(self):
         pickle_data = pickle.dumps(1)
-        self.url = URL('http://moth/?id=%s' % pickle_data)
+        self.url = URL('http://moth/?id=%s' % urllib.parse.quote(pickle_data))
         freq = FuzzableRequest(self.url)
 
         mutant = QSMutant.create_mutants(freq, self.payloads, [],
@@ -238,7 +238,7 @@ class TestShouldInject(unittest.TestCase):
                                                   'cookie': 'A' * 16}))
 
         url = URL('http://moth/')
-        cookie = Cookie('foo=%s' % b64data)
+        cookie = Cookie('foo=%s' % b64data.decode('utf-8'))
         freq = FuzzableRequest(url, cookie=cookie)
 
         mutant = CookieMutant.create_mutants(freq, self.payloads, [],
