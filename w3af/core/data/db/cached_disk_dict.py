@@ -204,5 +204,5 @@ class CachedDiskDict(object):
         for key, value in self._in_memory.items():
             yield key, value
 
-        for key, value in self._disk_dict.items():
+        for key, value in self._disk_dict.iteritems():
             yield key, value

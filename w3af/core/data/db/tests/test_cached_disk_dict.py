@@ -119,16 +119,16 @@ class TestCachedDiskDict(unittest.TestCase):
         self.cdd[1]
         self.cdd[1]
 
-        self.cdd[3]
-        self.cdd[3]
-        self.cdd[3]
+        self.cdd[2]
+        self.cdd[2]
+        self.cdd[2]
 
-        self.cdd[2]
-        self.cdd[2]
-        self.cdd[2]
+        self.cdd[3]
+        self.cdd[3]
+        self.cdd[3]
 
         self.assertEqual(list(self.cdd._in_memory.keys()), [1, 2, 3])
         self.assertEqual(list(self.cdd._disk_dict.keys()), [4])
 
-        self.assertEqual([(k, v) for (k, v) in self.cdd.items()],
+        self.assertEqual([(k, v) for (k, v) in self.cdd.iteritems()],
                          [(1, 1), (2, 2), (3, 3), (4, 4)])
