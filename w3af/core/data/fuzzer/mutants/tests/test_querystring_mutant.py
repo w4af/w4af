@@ -49,14 +49,14 @@ class TestQSMutant(unittest.TestCase):
 
         token_0 = created_mutants[0].get_token()
         self.assertIsInstance(token_0, DataToken)
-        self.assertEqual(token_0.get_name(), 'a')
-        self.assertEqual(token_0.get_original_value(), '1')
+        self.assertEqual(token_0.get_name(), b'a')
+        self.assertEqual(token_0.get_original_value(), b'1')
         self.assertEqual(token_0.get_value(), 'abc')
 
         token_2 = created_mutants[1].get_token()
         self.assertIsInstance(token_0, DataToken)
-        self.assertEqual(token_2.get_name(), 'b')
-        self.assertEqual(token_2.get_original_value(), '2')
+        self.assertEqual(token_2.get_name(), b'b')
+        self.assertEqual(token_2.get_original_value(), b'2')
         self.assertEqual(token_2.get_value(), 'abc')
 
         self.assertTrue(all(isinstance(m, QSMutant) for m in created_mutants))
@@ -77,14 +77,14 @@ class TestQSMutant(unittest.TestCase):
 
         token_0 = created_mutants[0].get_token()
         self.assertIsInstance(token_0, DataToken)
-        self.assertEqual(token_0.get_name(), 'id')
-        self.assertEqual(token_0.get_original_value(), '1')
+        self.assertEqual(token_0.get_name(), b'id')
+        self.assertEqual(token_0.get_original_value(), b'1')
         self.assertEqual(token_0.get_value(), 'abc')
 
         token_1 = created_mutants[1].get_token()
         self.assertIsInstance(token_1, DataToken)
-        self.assertEqual(token_1.get_name(), 'id')
-        self.assertEqual(token_1.get_original_value(), '2')
+        self.assertEqual(token_1.get_name(), b'id')
+        self.assertEqual(token_1.get_original_value(), b'2')
         self.assertEqual(token_1.get_value(), 'abc')
 
         self.assertTrue(all(isinstance(m, QSMutant) for m in created_mutants))

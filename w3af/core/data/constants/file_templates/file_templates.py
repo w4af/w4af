@@ -48,5 +48,5 @@ def get_file_from_template(extension):
 def get_template_with_payload(extension, payload):
     success, file_content, file_name = get_file_from_template(extension)
     # TODO: Add support for file types which have some type of CRC
-    file_content = file_content.replace('A' * 239, smart_str(payload))
+    file_content = file_content.replace(b'A' * 239, smart_str(payload))
     return success, file_content, file_name

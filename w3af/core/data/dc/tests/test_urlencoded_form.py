@@ -57,8 +57,8 @@ class TestURLEncodedForm(unittest.TestCase):
 
         form = URLEncodedForm.from_postdata(headers, post_data)
 
-        self.assertEqual(form['a'], ['2'])
-        self.assertEqual(form['c'], ['3'])
+        self.assertEqual(form[b'a'], [b'2'])
+        self.assertEqual(form[b'c'], [b'3'])
 
         self.assertFalse(form.is_login_form())
         self.assertFalse(form.is_password_change_form())
@@ -150,7 +150,7 @@ class TestURLEncodedForm(unittest.TestCase):
         post_data = 'a=2&c=3'
 
         form = URLEncodedForm.from_postdata(headers, post_data)
-        form.set_token(('a', 0))
+        form.set_token((b'a', 0))
 
         form_copy = copy.deepcopy(form)
 
@@ -163,7 +163,7 @@ class TestURLEncodedForm(unittest.TestCase):
         post_data = 'a=2&c=3'
 
         form = URLEncodedForm.from_postdata(headers, post_data)
-        form.set_token(('a', 0))
+        form.set_token((b'a', 0))
 
         pickled_form = pickle.dumps(form)
         unpickled_form = pickle.loads(pickled_form)
@@ -171,4 +171,4 @@ class TestURLEncodedForm(unittest.TestCase):
         self.assertEqual(form, unpickled_form)
         self.assertEqual(form.get_token(), unpickled_form.get_token())
         self.assertIsNotNone(unpickled_form.get_token())
-        self.assertEqual(list(unpickled_form.keys()), ['a', 'c'])
+        self.assertEqual(list(unpickled_form.keys()), [b'a', b'c'])

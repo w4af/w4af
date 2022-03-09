@@ -39,7 +39,7 @@ from w3af.core.data.db.disk_item import DiskItem
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.request.request_mixin import RequestMixIn
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 ALL_CHARS = ''.join(chr(i) for i in range(256))
@@ -342,7 +342,7 @@ class FuzzableRequest(RequestMixIn, DiskItem):
         if not parameters:
             output = short_fmt % (self.get_method(), self.get_url())
         else:
-            jparams = ', '.join(parameters)
+            jparams = ', '.join([ smart_unicode(p) for p in parameters ])
             output = long_fmt % (self.get_method(), self.get_url(),
                                  dc_type, jparams)
 

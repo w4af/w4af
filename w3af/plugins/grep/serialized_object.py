@@ -35,7 +35,7 @@ from w3af.core.data.dc.cookie import Cookie
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.data.kb.info_set import InfoSet
 from w3af.core.data.dc.factory import dc_from_hdrs_post
-
+from w3af.core.data.misc.encoding import smart_unicode
 
 class serialized_object(GrepPlugin):
     """
@@ -130,7 +130,7 @@ class serialized_object(GrepPlugin):
         :return: None. We just save the vulnerability to the KB
         """
         try:
-            match_object = serialized_object_re.search(parameter_value)
+            match_object = serialized_object_re.search(smart_unicode(parameter_value))
         except Exception as e:
             args = (e, parameter_value)
             om.out.debug('An exception was found while trying to find a'

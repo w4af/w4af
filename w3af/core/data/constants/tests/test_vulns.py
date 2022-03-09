@@ -37,11 +37,11 @@ class TestVulnsConstants(unittest.TestCase):
 
     def get_all_vulnerability_names(self):
         # Just skip the entire license header
-        vulns_file = file(self.LOCATION)
-        for _ in range(21):
-            vulns_file.readline()
+        with open(self.LOCATION) as vulns_file:
+            for _ in range(21):
+                vulns_file.readline()
 
-        return re.findall('[\'"](.*?)[\'"] ?:', vulns_file.read())
+            return re.findall('[\'"](.*?)[\'"] ?:', vulns_file.read())
 
     def test_vulnerability_names_unique(self):
         dups = []
@@ -89,7 +89,8 @@ class TestVulnsConstants(unittest.TestCase):
                 if should_continue:
                     continue
 
-                all_plugin_sources += file(full_path).read()
+                with open(full_path) as f:
+                    all_plugin_sources += f.read()
 
         for dir_name, subdir_list, file_list in os.walk(vuln_template_path):
 
@@ -104,7 +105,8 @@ class TestVulnsConstants(unittest.TestCase):
                     continue
 
                 full_path = os.path.join(vuln_template_path, dir_name, fname)
-                all_plugin_sources += file(full_path).read()
+                with open(full_path) as f:
+                    all_plugin_sources += f.read()
 
         return all_plugin_sources
 

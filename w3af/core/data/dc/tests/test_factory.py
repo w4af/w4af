@@ -82,8 +82,8 @@ class TestDCFactory(unittest.TestCase):
         dc = dc_from_hdrs_post(headers, 'a=3&b=2')
 
         self.assertIsInstance(dc, URLEncodedForm)
-        self.assertIn('a', dc)
-        self.assertIn('b', dc)
+        self.assertIn(b'a', dc)
+        self.assertIn(b'b', dc)
         self.assertEqual('a=3&b=2', str(dc))
 
     def test_unknown_default_form(self):
