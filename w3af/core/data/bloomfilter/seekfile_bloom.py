@@ -60,7 +60,7 @@ class FileSeekBloomFilter(GenericBloomFilter):
         self._mmapped_file.seek(0)
         
         random.seed(42)
-        self.hash_seeds = ([str(random.getrandbits(32)) for _ in 
+        self.hash_seeds = ([str(random.getrandbits(32)).encode('utf-8') for _ in
                             range(self.num_hashes)])
 
     def add(self, key):
@@ -135,7 +135,7 @@ class FileSeekBloomFilter(GenericBloomFilter):
         byte = ord(char)
         byte |= mask
         self._mmapped_file.seek(byteno)
-        self._mmapped_file.write(chr(byte))
+        self._mmapped_file.write(bytes([byte]))
 
     def close(self):
         """Close the file handler and remove the backend file."""
