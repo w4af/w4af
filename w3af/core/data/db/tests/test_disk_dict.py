@@ -102,7 +102,7 @@ class TestDiskDict(unittest.TestCase):
 
         end = time.time()
 
-        self.assertLess(end - start, 10)
+        self.assertLess(end - start, 15)
 
     def test_len_very_large_dict(self):
         disk_dict = DiskDict()

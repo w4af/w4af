@@ -178,7 +178,7 @@ class TestVariantDB(unittest.TestCase):
                              method='PUT',
                              post_data=JSONContainer('{"key": "value", "second_key": ["abc", 3, 2.1]}'))
 
-        expected = '(PUT)-http://www.w3af.com/!object-second_key-list-0-string=string&object-key-string=string'
+        expected = '(PUT)-http://www.w3af.com/!object-key-string=string&object-second_key-list-0-string=string'
         self.assertEqual(clean_fuzzable_request(fr), expected)
 
     def test_clean_fuzzable_request_json_array_null(self):

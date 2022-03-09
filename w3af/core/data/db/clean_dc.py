@@ -51,7 +51,7 @@ def clean_data_container(data_container):
         else:
             _type = 'string'
 
-        result.append('%s=%s' % (key, _type))
+        result.append('%s=%s' % (smart_unicode(key), _type))
 
     return '&'.join(result)
 
