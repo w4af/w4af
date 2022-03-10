@@ -100,21 +100,21 @@ class TestJSONMutant(unittest.TestCase):
         created_mutants = JSONMutant.create_mutants(freq, self.payloads, [],
                                                     False, self.fuzzer_config)
 
-        expected_dcs = ['{"transaction_amount": 100, "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "token": "16faba8617708", "reason": "www", "installments": 1, "payment_method_id": "visa", "extra_charge": null}',
-                        '{"transaction_amount": 100, "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "token": "16faba8617708", "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "xyz", "extra_charge": null}',
-                        '{"transaction_amount": 100, "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "token": "www", "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "extra_charge": null}',
-                        '{"transaction_amount": 100, "external_reference": "xyz", "random_anti_anti_double_click": 11577513359, "token": "16faba8617708", "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "extra_charge": null}',
-                        '{"transaction_amount": 100, "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "token": "xyz", "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "extra_charge": null}',
-                        '{"transaction_amount": 100, "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "token": "16faba8617708", "reason": "xyz", "installments": 1, "payment_method_id": "visa", "extra_charge": null}',
-                        '{"transaction_amount": 100, "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "token": "16faba8617708", "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "www", "extra_charge": null}',
-                        '{"transaction_amount": 100, "external_reference": "www", "random_anti_anti_double_click": 11577513359, "token": "16faba8617708", "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "extra_charge": null}',
-                        '{"transaction_amount": 100, "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "token": "16faba8617708", "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "extra_charge": "xyz"}',
-                        '{"transaction_amount": 100, "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "token": "16faba8617708", "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "extra_charge": "www"}']
+        expected_dcs = ['{"transaction_amount": 100, "reason": "xyz", "installments": 1, "payment_method_id": "visa", "token": "16faba8617708", "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "extra_charge": null}',
+                        '{"transaction_amount": 100, "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "xyz", "token": "16faba8617708", "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "extra_charge": null}',
+                        '{"transaction_amount": 100, "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "token": "xyz", "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "extra_charge": null}',
+                        '{"transaction_amount": 100, "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "token": "16faba8617708", "external_reference": "xyz", "random_anti_anti_double_click": 11577513359, "extra_charge": null}',
+                        '{"transaction_amount": 100, "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "token": "16faba8617708", "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "extra_charge": "xyz"}',
+                        '{"transaction_amount": 100, "reason": "www", "installments": 1, "payment_method_id": "visa", "token": "16faba8617708", "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "extra_charge": null}',
+                        '{"transaction_amount": 100, "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "www", "token": "16faba8617708", "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "extra_charge": null}',
+                        '{"transaction_amount": 100, "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "token": "www", "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "extra_charge": null}',
+                        '{"transaction_amount": 100, "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "token": "16faba8617708", "external_reference": "www", "random_anti_anti_double_click": 11577513359, "extra_charge": null}',
+                        '{"transaction_amount": 100, "reason": "Title of what you are paying for", "installments": 1, "payment_method_id": "visa", "token": "16faba8617708", "external_reference": "1234", "random_anti_anti_double_click": 11577513359, "extra_charge": "www"}']
 
         created_dcs = [str(i.get_dc()) for i in created_mutants]
         created_post_datas = [i.get_data() for i in created_mutants]
 
-        self.assertEqual(set(created_dcs), set(expected_dcs))
+        self.assertEqual(set([ json.dumps(json.loads(s), sort_keys=True) for s in created_dcs ]), set([ json.dumps(json.loads(s), sort_keys=True) for s in expected_dcs ]))
         self.assertEqual(set(created_dcs), set(created_post_datas))
 
         for m in created_mutants:
