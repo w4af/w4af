@@ -127,31 +127,34 @@ class StartUpConfig(object):
             for key in self.DEFAULTS:
                 config.set(startsection, key, defaults[key])
 
-        # Read from file
-        with codecs.open(self._start_cfg_file, "r", UTF8) as config_file:
-            config.read_file(config_file)
+        try:
+            # Read from file
+            with codecs.open(self._start_cfg_file, "r", UTF8) as config_file:
+                config.read_file(config_file)
 
-            auto_upd = self._get_bool_val('auto-update')
-            accepted_disclaimer = self._get_bool_val('accepted-disclaimer')
-            skip_dependencies_check = self._get_bool_val('skip-dependencies-check')
+                auto_upd = self._get_bool_val('auto-update')
+                accepted_disclaimer = self._get_bool_val('accepted-disclaimer')
+                skip_dependencies_check = self._get_bool_val('skip-dependencies-check')
 
-            freq = config.get(startsection, 'frequency', raw=True).upper()
-            if freq not in (StartUpConfig.FREQ_DAILY, StartUpConfig.FREQ_WEEKLY,
-                            StartUpConfig.FREQ_MONTHLY):
-                freq = StartUpConfig.FREQ_DAILY
+                freq = config.get(startsection, 'frequency', raw=True).upper()
+                if freq not in (StartUpConfig.FREQ_DAILY, StartUpConfig.FREQ_WEEKLY,
+                                StartUpConfig.FREQ_MONTHLY):
+                    freq = StartUpConfig.FREQ_DAILY
 
-            lastupdstr = config.get(startsection, 'last-update', raw=True).upper()
-            # Try to parse it
-            try:
-                lastupd = datetime.strptime(lastupdstr, self.ISO_DATE_FMT).date()
-            except:
-                # Provide default value that enforces the update to happen
-                lastupd = date.today() - timedelta(days=31)
-            try:
-                lastrev = config.get(startsection, 'last-commit')
-            except TypeError:
-                lastrev = 0
-            return (auto_upd, freq, lastupd, lastrev, accepted_disclaimer, skip_dependencies_check)
+                lastupdstr = config.get(startsection, 'last-update', raw=True).upper()
+                # Try to parse it
+                try:
+                    lastupd = datetime.strptime(lastupdstr, self.ISO_DATE_FMT).date()
+                except:
+                    # Provide default value that enforces the update to happen
+                    lastupd = date.today() - timedelta(days=31)
+                try:
+                    lastrev = config.get(startsection, 'last-commit')
+                except TypeError:
+                    lastrev = 0
+                return (auto_upd, freq, lastupd, lastrev, accepted_disclaimer, skip_dependencies_check)
+        except FileNotFoundError as fnf:
+            return (False, StartUpConfig.FREQ_DAILY, date.today() - timedelta(days=31), '', False, False)
 
     def save(self):
         """
