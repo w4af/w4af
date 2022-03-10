@@ -24,7 +24,7 @@ import w3af.core.data.kb.config as cf
 
 from w3af.core.data.constants.file_templates.file_templates import get_template_with_payload
 from w3af.core.data.dc.utils.token import DataToken
-from w3af.core.controllers.misc.io import NamedStringIO
+from w3af.core.controllers.misc.io import NamedBytesIO
 
 
 class FileDataToken(DataToken):
@@ -60,14 +60,14 @@ class FileDataToken(DataToken):
         # The last "not isinstance" is important due to the fact that
         # NamedStringIO is a basestring subclass
         #
-        if isinstance(value, str) and not isinstance(value, NamedStringIO):
+        if isinstance(value, str) and not isinstance(value, NamedBytesIO):
             _, file_content, fname = get_template_with_payload(self._extension,
                                                                value)
 
             # I have to create the NamedStringIO with a "name",
             # required for MultipartContainer to properly encode this as
             # multipart/post
-            return NamedStringIO(file_content, name=fname)
+            return NamedBytesIO(file_content, name=fname)
 
         return value
 

@@ -23,6 +23,7 @@ import codecs
 import urllib.request, urllib.parse, urllib.error
 import chardet
 import logging
+import io
 
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 
@@ -154,6 +155,9 @@ def smart_str(s,
     # Already a byte-string, nothing to do here
     if _isinstance(s, _str):
         return s
+
+    if _isinstance(s, io.BytesIO):
+        return s.__str__()
 
     if hasattr(s, '__bytes__'):
         return s.__bytes__()

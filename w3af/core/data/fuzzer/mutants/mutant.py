@@ -155,6 +155,9 @@ class Mutant(DiskItem):
         return (self.get_token() == other.get_token() and
                 self.get_fuzzable_request() == other.get_fuzzable_request())
 
+    def __deepcopy__(self, memo):
+        return self.__class__(copy.deepcopy(self._freq, memo))
+
     def found_at(self):
         """
         Return a string representing WHAT was fuzzed. This string

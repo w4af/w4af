@@ -28,7 +28,7 @@ from collections import OrderedDict
 
 from w3af.core.data.url.HTTPResponse import DEFAULT_CHARSET
 from w3af.core.data.dc.utils.token import DataToken
-
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 BASE_64 = 'base64'
 FUZZABLE_TYPES = (BASE_64, 'string', 'name')
@@ -133,7 +133,7 @@ class XmlRpcWriteHandler(ContentHandler):
                 modified_value = modified_value.get_value()
 
             if self._fuzzed_parameters[self._fuzzable_index][0] == 'base64':
-                enc_val = base64.b64encode(modified_value).decode(DEFAULT_CHARSET)
+                enc_val = base64.b64encode(smart_str_ignore(modified_value)).decode(DEFAULT_CHARSET)
             else:
                 enc_val = html.escape(modified_value)
 

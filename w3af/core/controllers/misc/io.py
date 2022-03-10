@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from io import StringIO, BytesIO, IOBase
 
+from w3af.core.data.dc.utils.token import DataToken
+
 class NamedStringIO(StringIO):
     """
     A unicode file-like string.
@@ -47,10 +49,13 @@ class NamedBytesIO(BytesIO):
         super(NamedBytesIO, self).__init__(the_bytes)
         self._name = name
 
+    def __deepcopy__(self, memo):
+        return NamedBytesIO(self.getvalue(), self._name)
+
     # pylint: disable=E0202
     @property
     def name(self):
         return self._name
 
 def is_file_like(f):
-    return isinstance(f, IOBase)
+    return isinstance(f, IOBase) or (isinstance(f, DataToken) and isinstance(f.get_value(), IOBase))
