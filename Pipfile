@@ -47,12 +47,11 @@ nose = "*"
 httpretty = "*"
 xunitparser = "*"
 pylint = "*"
-compiler = "*"
 apispec = "*"
 memory-profiler = "*"
 marshmallow = "*"
 pypi-simple = "*"
-pygobject = "*"
+PyGObject = "*"
 
 [dev-packages]
 

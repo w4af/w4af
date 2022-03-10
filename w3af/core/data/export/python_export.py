@@ -32,7 +32,7 @@ def python_escape_string(str_in):
 def python_export(request_string):
     """
     :param request_string: The string of the request to export
-    :return: A urllib2 based python script that will perform the same HTTP
+    :return: A urllib based python script that will perform the same HTTP
              request.
     """
     # get the header and the body
@@ -43,14 +43,14 @@ def python_export(request_string):
     http_request = http_request_parser(header, body)
 
     # Now I do the real magic...
-    res = 'import urllib2\n\n'
+    res = 'import urllib.request\n\n'
 
     res += 'url = "' + python_escape_string(http_request.get_uri()
                                             .url_string) + '"\n'
 
     if http_request.get_data() != '\n' and http_request.get_data():
         escaped_data = python_escape_string(str(http_request.get_data()))
-        res += 'data = "' + escaped_data + '"\n'
+        res += 'data = b"' + escaped_data + '"\n'
     else:
         res += 'data = None\n'
 
@@ -65,10 +65,10 @@ def python_export(request_string):
     res += '\n}\n'
 
     res += """
-request = urllib2.Request(url, data, headers)
-response = urllib2.urlopen(request)
+request = urllib.request.Request(url, data, headers)
+response = urllib.request.urlopen(request)
 response_body = response.read()
 """
-    res += 'print response_body\n'
+    res += 'print(response_body)\n'
 
     return res
