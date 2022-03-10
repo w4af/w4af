@@ -144,16 +144,17 @@ class TestPostDataMutant(unittest.TestCase):
         freq = FuzzableRequest(URL('http://www.w3af.com/upload'),
                                post_data=form, method='POST')
 
-        payloads = [file(__file__)]
-        created_mutants = PostDataMutant.create_mutants(freq, payloads,
-                                                        ['file_upload', ],
-                                                        False,
-                                                        self.fuzzer_config)
+        with open(__file__, "rb") as f:
+            payloads = [f]
+            created_mutants = PostDataMutant.create_mutants(freq, payloads,
+                                                            ['file_upload', ],
+                                                            False,
+                                                            self.fuzzer_config)
 
-        self.assertEqual(len(created_mutants), 1, created_mutants)
-        
-        mutant = created_mutants[0]
-        
-        self.assertIsInstance(mutant.get_token().get_value(), file)
-        self.assertEqual(mutant.get_dc()['username'][0], 'default')
+            self.assertEqual(len(created_mutants), 1, created_mutants)
+
+            mutant = created_mutants[0]
+
+            self.assertIsInstance(mutant.get_token().get_value(), type(f))
+            self.assertEqual(mutant.get_dc()['username'][0], 'default')
 
