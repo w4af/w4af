@@ -248,6 +248,9 @@ class Shell(ExploitResult):
               'inherit from "shell"'
         raise NotImplementedError(msg)
 
+    def __hash__(self):
+        return hash(self.id)
+
     def identify_os(self):
         """
         Identify the remote operating system and get some remote variables to

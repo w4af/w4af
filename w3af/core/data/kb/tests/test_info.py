@@ -130,7 +130,7 @@ class TestInfo(unittest.TestCase):
         i = MockInfo(desc=('This is a rather long and complex desc which has'
                            'a new line at the end.\n\n'))
 
-        self.assertIn('\n\nThis information was', i.get_desc())
+        self.assertIn('\n\n This information was', i.get_desc())
 
     def test_pickleable(self):
         pickle.dumps(MockInfo())

@@ -800,8 +800,8 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         query = 'SELECT location_a, location_b, pickle FROM %s'
         results = self.db.select(query % self.table_name)
 
-        for location_a, location_b, pickle in results:
-            obj = pickle.loads(pickle)
+        for location_a, location_b, pickle_bytes in results:
+            obj = pickle.loads(pickle_bytes)
 
             if location_a not in result_dict:
                 result_dict[location_a] = {location_b: [obj,]}
