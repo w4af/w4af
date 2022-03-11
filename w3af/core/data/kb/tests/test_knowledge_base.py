@@ -891,9 +891,9 @@ class TestKnowledgeBase(unittest.TestCase):
 
         # Now some rounds of testing
         for _ in range(5):
-            info_set_after, _ = kb.append_uniq_group('a', 'b', vuln,
-                                                     group_klass=MockInfoSetNames)
+            kb.append_uniq_group('a', 'b', vuln, group_klass=MockInfoSetNames)
 
+            info_set_after = kb.get('a', 'b')[0]
             self.assertEqual(info_set_before.get_uniq_id(),
                              info_set_after.get_uniq_id())
 

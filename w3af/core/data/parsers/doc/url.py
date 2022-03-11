@@ -173,6 +173,9 @@ class URL(DiskItem):
         self._cache = {}
         self._encoding = encoding
 
+        if isinstance(data, bytes):
+            data = data.decode('utf-8')
+
         if not isinstance(data, str):
             raise ValueError('Can not build a URL from %s.' % type(data))
 

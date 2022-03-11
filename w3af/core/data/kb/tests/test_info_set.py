@@ -211,11 +211,12 @@ class TestInfoSet(unittest.TestCase):
         i1.set_url(URL('http://w3af.org/1'))
 
         i2 = MockInfo()
-        i2.set_url(URL('http://w3af.org/2\xc3\xb6'))
+        i2.set_url(URL(b'http://w3af.org/2\xc3\xb6'))
 
         tiset = TemplatedInfoSetPrintUri([i1, i2])
-        expected = ' - http://w3af.org/1\n - http://w3af.org/2ö\n'
-        self.assertEqual(tiset.get_desc(), expected)
+        expected = [ "http://w3af.org/1", "http://w3af.org/2ö" ]
+        for url in expected:
+            self.assertIn(url, tiset.get_desc())
 
 
 class TemplatedInfoSet(InfoSet):
