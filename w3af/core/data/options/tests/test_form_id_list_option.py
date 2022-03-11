@@ -20,12 +20,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import unittest
+import json
 
 from w3af import ROOT_PATH
 from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_types import FORM_ID_LIST
 
+def normalise_json(string):
+    return json.dumps(json.loads(string), sort_keys=True)
 
 class TestFormIDListOptionOption(unittest.TestCase):
 
@@ -52,7 +55,7 @@ class TestFormIDListOptionOption(unittest.TestCase):
         value = '[{"action": "/foo"}, {"action": "/bar", "method": "get"}]'
         opt = opt_factory('name', value, 'desc', FORM_ID_LIST, 'help', 'tab')
 
-        self.assertEqual(opt.get_value_for_profile(), value)
+        self.assertEqual(normalise_json(opt.get_value_for_profile()), normalise_json(value))
 
         form_id_list = opt.get_value().get_form_ids()
 

@@ -99,7 +99,7 @@ class FormIDMatcher(object):
                  exception is raised
         """
         if action is not None:
-            if not isinstance(action, re._pattern_type):
+            if not isinstance(action, re.Pattern):
                 raise ValueError(FORM_ID_FORMAT_ERROR)
 
         if inputs is not None:
@@ -122,7 +122,7 @@ class FormIDMatcher(object):
                     raise ValueError(FORM_ID_FORMAT_ERROR)
 
         if hosted_at_url is not None:
-            if not isinstance(hosted_at_url, re._pattern_type):
+            if not isinstance(hosted_at_url, re.Pattern):
                 raise ValueError(FORM_ID_FORMAT_ERROR)
 
         if method is not None:
