@@ -106,16 +106,16 @@ class TestCachedQueue(unittest.TestCase):
 
         self.assertEqual(q.qsize(), 4)
 
-        self.assertGreater(q.get_input_rpm(), 19)
-        self.assertLess(q.get_input_rpm(), 20)
+        self.assertGreater(q.get_input_rpm(), 25)
+        self.assertLess(q.get_input_rpm(), 27)
 
         for i in range(4):
             q.get()
             # 60 RPM
             time.sleep(1)
 
-        self.assertGreater(q.get_output_rpm(), 59)
-        self.assertLess(q.get_output_rpm(), 60)
+        self.assertGreater(q.get_output_rpm(), 75)
+        self.assertLess(q.get_output_rpm(), 85)
         self.assertEqual(q.qsize(), 0)
 
     def test_join_memory(self):

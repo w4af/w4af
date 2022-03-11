@@ -32,10 +32,9 @@ from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 logging.getLogger('chardet.charsetprober').setLevel(logging.WARNING)
 
 # Custom error handling schemes registration
-ESCAPED_CHAR = 'slash_escape_char'
+ESCAPED_CHAR = 'backslashreplace'
 PERCENT_ENCODE = 'percent_encode'
 HTML_ENCODE = 'html_encode_char'
-
 
 def _return_html_encoded(encodingexc):
     """
@@ -43,21 +42,9 @@ def _return_html_encoded(encodingexc):
     """
     st = encodingexc.start
     en = encodingexc.end
-    hex_encoded = "".join(hex(ord(c))[2:] for c in encodingexc.object[st:en])
+    hex_encoded = "".join(hex(c)[2:] for c in encodingexc.object[st:en])
 
     return str('&#x' + hex_encoded), en
-
-
-def _return_escaped_char(encodingexc):
-    """
-    :return: \\xff when input is \xff
-    """
-    st = encodingexc.start
-    en = encodingexc.end
-
-    slash_x_XX = repr(encodingexc.object[st:en])[1:-1]
-    return str(slash_x_XX), en
-
 
 def _percent_encode(encodingexc):
     if not isinstance(encodingexc, UnicodeEncodeError):
@@ -71,11 +58,8 @@ def _percent_encode(encodingexc):
         en
     )
 
-
-codecs.register_error(ESCAPED_CHAR, _return_escaped_char)
 codecs.register_error(PERCENT_ENCODE, _percent_encode)
 codecs.register_error(HTML_ENCODE, _return_html_encoded)
-
 
 def smart_unicode(s,
                   encoding=DEFAULT_ENCODING,
