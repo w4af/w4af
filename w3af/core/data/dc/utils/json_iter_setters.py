@@ -95,6 +95,9 @@ class MutableWrapper(object):
     def set_value(self, new_value):
         self._wrapped_obj = new_value
 
+    def __deepcopy__(self, memo):
+        return MutableWrapper(self._wrapped_obj)
+
     def __getattr__(self, attr):
         # see if this object has attr
         # NOTE do not use hasattr, it goes into infinite recursion

@@ -495,7 +495,7 @@ class TestSpecification(unittest.TestCase):
         # Assertions on call #1
         #
         (spec, api_resource_name, resource,
-         operation_name, operation, parameters) = data[0]
+         operation_name, operation, parameters) = data[2]
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'get_pets_name')
@@ -518,7 +518,7 @@ class TestSpecification(unittest.TestCase):
         # Assertions on call #2
         #
         (spec, api_resource_name, resource,
-         operation_name, operation, parameters) = data[1]
+         operation_name, operation, parameters) = data[0]
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'get_pets')
@@ -534,7 +534,7 @@ class TestSpecification(unittest.TestCase):
         #
 
         (spec, api_resource_name, resource,
-         operation_name, operation, parameters) = data[2]
+         operation_name, operation, parameters) = data[1]
 
         self.assertEqual(api_resource_name, 'pets')
         self.assertEqual(operation_name, 'post_pets')
