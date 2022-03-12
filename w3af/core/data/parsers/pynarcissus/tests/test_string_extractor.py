@@ -30,7 +30,8 @@ class JSParserMixin(object):
 
     def get_file_contents(self, filename):
         test_file = os.path.join(self.DATA_PATH, filename)
-        return file(test_file).read()
+        with open(test_file) as f:
+            return f.read()
 
 
 class TestStringExtractor(unittest.TestCase, JSParserMixin):

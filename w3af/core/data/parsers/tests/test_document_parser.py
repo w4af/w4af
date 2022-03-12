@@ -70,9 +70,10 @@ class TestDocumentParserFactory(unittest.TestCase):
         self.assertIsInstance(parser._parser, HTMLParser)
 
     def test_pdf_case01(self):
-        parser = document_parser_factory(
-            _build_http_response(file(self.PDF_FILE).read(),
-                                 'application/pdf'))
+        with open(self.PDF_FILE, "rb") as f:
+            parser = document_parser_factory(
+                    _build_http_response(f.read(),
+                                        'application/pdf'))
 
         self.assertIsInstance(parser, DocumentParser)
         self.assertIsInstance(parser._parser, PDFParser)
@@ -96,7 +97,8 @@ class TestDocumentParserFactory(unittest.TestCase):
         """
         Issue to verify https://github.com/andresriancho/w3af/issues/106
         """
-        sharepoint_pl = file(self.HTML_FILE).read()
+        with open(self.HTML_FILE) as f:
+            sharepoint_pl = f.read()
         parser = document_parser_factory(_build_http_response(sharepoint_pl,
                                                               'text/html'))
 

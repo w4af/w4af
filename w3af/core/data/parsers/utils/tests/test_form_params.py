@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import pickle
 import copy
+import math
 import time
 
 from w3af.core.data.parsers.doc.url import URL
@@ -123,7 +124,7 @@ class TestFormParams(unittest.TestCase):
         def filter_tmb(values):
             if len(values) > 3:
                 values = (values[0],
-                          values[len(values) / 2],
+                          values[math.floor(len(values) / 2)],
                           values[-1])
             return values
 

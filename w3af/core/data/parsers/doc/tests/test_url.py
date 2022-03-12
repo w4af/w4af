@@ -145,26 +145,26 @@ class TestURLParser(unittest.TestCase):
     #    Decode tests
     #
     def decode_get_qs(self, url_str):
-        return URL(url_str).url_decode().querystring['id'][0]
+        return URL(url_str).url_decode().querystring[b'id'][0]
 
     def test_decode_simple(self):
         qs_value = self.decode_get_qs('http://w3af.com/?id=1')
-        expected = '1'
+        expected = b'1'
         self.assertEqual(qs_value, expected)
 
     def test_decode_perc_20(self):
         qs_value = self.decode_get_qs('http://w3af.com/?id=1%202')
-        expected = '1 2'
+        expected = b'1 2'
         self.assertEqual(qs_value, expected)
 
     def test_decode_space(self):
         qs_value = self.decode_get_qs('http://w3af.com/?id=1 2')
-        expected = '1 2'
+        expected = b'1 2'
         self.assertEqual(qs_value, expected)
 
     def test_decode_plus(self):
         qs_value = self.decode_get_qs('http://w3af.com/?id=1+2')
-        expected = '1 2'
+        expected = b'1 2'
         self.assertEqual(qs_value, expected)
 
     def test_decode_url_encode_plus(self):
@@ -509,7 +509,7 @@ class TestURLParser(unittest.TestCase):
     
     def test_str_special_encoding_filename(self):
         self.assertEqual(str(URL('http://w3af.com/indéx.html', 'latin1')),
-                         'http://w3af.com/indéx.html'.encode('latin1'))
+                         b'http://w3af.com/ind\\xe9x.html'.encode('latin1'))
 
     def test_str_special_encoding_query_string(self):
         url = URL('http://w3af.com/a/b/é.php?x=á')
@@ -869,7 +869,7 @@ class TestURLParser(unittest.TestCase):
         u = URL('https://w3af.com/xyz/def.html?file=/etc/passwd')
         u.set_file_name('abc.pdf')
         self.assertEqual(u.url_string,
-                         'https://w3af.com/xyz/abc.pdf?file=/etc/passwd')
+                         'https://w3af.com/xyz/abc.pdf?file=%2Fetc%2Fpasswd')
 
         u = URL('https://w3af.com/')
         u.set_file_name('abc.pdf')
@@ -1034,7 +1034,7 @@ class TestURLParser(unittest.TestCase):
 
     def test_file_url_full_path(self):
         u = URL('file:///etc/passwd')
-        self.assertIn('root', urllib.request.urlopen(u.url_string).read())
+        self.assertIn(b'root', urllib.request.urlopen(u.url_string).read())
 
     #
     #   Test memoize
