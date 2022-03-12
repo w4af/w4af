@@ -56,7 +56,7 @@ PARAM_NAME_KNOWLEDGE = {
     'Bonsai': ['company', 'empresa', 'companhia', 'unternehmen'],
     'Manager': ['position', 'jon', 'cargo', 'posição', 'unternehmung', 'position'],
 
-    '90210': ['postal', 'zip', 'postleitzahl', 'plz', 'postais'],
+    '90210': ['postal', 'postalcode', 'zip', 'postleitzahl', 'plz', 'postais'],
     '3419': ['pin', 'id', 'suffix'],
     '22': ['floor', 'age', 'piso', 'edad', 'stock', 'alter', 'port', 'puerto',
            'number', 'numero', 'número', 'int', 'integer', 'entero'],
@@ -79,7 +79,7 @@ PARAM_NAME_KNOWLEDGE = {
                     'description', 'descripcion', 'message', 'mensaje', 'excerpt',
                     'comment', 'comentario'],
 
-    'Spam or Eggs?': ['question', 'pregunta'],
+    'Spam or Eggs?': ['q', 'question', 'pregunta'],
 
     '<html>w3af</html>': ['html', 'wysiwyg'],
 

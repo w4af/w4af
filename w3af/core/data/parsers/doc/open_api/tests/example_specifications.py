@@ -25,6 +25,8 @@ import os
 from apispec import APISpec
 from flask import Flask, jsonify
 from marshmallow import Schema, fields
+from apispec.ext.marshmallow import MarshmallowPlugin
+from apispec_webframeworks.flask import FlaskPlugin
 
 CURRENT_PATH = os.path.split(__file__)[0]
 
@@ -108,9 +110,10 @@ class IntParamPath(object):
         spec = APISpec(
             title=self.__class__.__name__,
             version='1.0.0',
+            openapi_version='2.0',
             plugins=(
-                'apispec.ext.flask',
-                'apispec.ext.marshmallow',
+                FlaskPlugin(),
+                MarshmallowPlugin(),
             ),
         )
 
@@ -140,10 +143,10 @@ class IntParamPath(object):
             return jsonify({})
 
         # Register entities and paths
-        spec.definition('Pet', schema=PetSchema)
-        spec.definition('PetParameter', schema=PetParameter, required=True)
+        spec.components.schema('Pet', schema=PetSchema)
+        spec.components.schema('PetParameter', schema=PetParameter, required=True)
         with app.test_request_context():
-            spec.add_path(view=get_pet)
+            spec.path(view=get_pet)
 
         specification_as_string = json.dumps(spec.to_dict(), indent=4)
 
@@ -153,25 +156,28 @@ class IntParamPath(object):
 
         return specification_as_string
 
+def open_file(path):
+    with open(path) as f:
+        return f.read()
 
 class StringParamQueryString(object):
     def get_specification(self):
-        return file('%s/data/string_param_qs.json' % CURRENT_PATH).read()
+        return open_file('%s/data/string_param_qs.json' % CURRENT_PATH)
 
 
 class ArrayStringItemsQueryString(object):
     def get_specification(self):
-        return file('%s/data/array_string_items_qs.json' % CURRENT_PATH).read()
+        return open_file('%s/data/array_string_items_qs.json' % CURRENT_PATH)
 
 
 class ArrayIntItemsQueryString(object):
     def get_specification(self):
-        return file('%s/data/array_int_items_qs.json' % CURRENT_PATH).read()
+        return open_file('%s/data/array_int_items_qs.json' % CURRENT_PATH)
 
 
 class ArrayModelItems(object):
     def get_specification(self):
-        return file('%s/data/array_model_items_json.json' % CURRENT_PATH).read()
+        return open_file('%s/data/array_model_items_json.json' % CURRENT_PATH)
 
 
 class NoParams(object):
@@ -180,9 +186,10 @@ class NoParams(object):
         spec = APISpec(
             title=self.__class__.__name__,
             version='1.0.0',
+            openapi_version='2.0',
             plugins=(
-                'apispec.ext.flask',
-                'apispec.ext.marshmallow',
+                FlaskPlugin(),
+                MarshmallowPlugin(),
             ),
         )
 
@@ -206,9 +213,9 @@ class NoParams(object):
             return jsonify({})
 
         # Register entities and paths
-        spec.definition('Pet', schema=PetSchema)
+        spec.components.schema('Pet', schema=PetSchema)
         with app.test_request_context():
-            spec.add_path(view=random_pet)
+            spec.path(view=random_pet)
 
         return json.dumps(spec.to_dict(), indent=4)
 
@@ -219,9 +226,10 @@ class ModelParam(object):
         spec = APISpec(
             title=self.__class__.__name__,
             version='1.0.0',
+            openapi_version='2.0',
             plugins=(
-                'apispec.ext.flask',
-                'apispec.ext.marshmallow',
+                FlaskPlugin(),
+                MarshmallowPlugin(),
             ),
         )
 
@@ -245,9 +253,9 @@ class ModelParam(object):
             return jsonify({})
 
         # Register entities and paths
-        spec.definition('Pet', schema=PetSchema)
+        spec.components.schema('Pet', schema=PetSchema)
         with app.test_request_context():
-            spec.add_path(view=random_pet)
+            spec.path(view=random_pet)
 
         return json.dumps(spec.to_dict(), indent=4)
 
@@ -258,9 +266,10 @@ class ModelParamNested(object):
         spec = APISpec(
             title=self.__class__.__name__,
             version='1.0.0',
+            openapi_version='2.0',
             plugins=(
-                'apispec.ext.flask',
-                'apispec.ext.marshmallow',
+                FlaskPlugin(),
+                MarshmallowPlugin(),
             ),
         )
 
@@ -288,10 +297,10 @@ class ModelParamNested(object):
             return jsonify({})
 
         # Register entities and paths
-        spec.definition('Category', schema=CategorySchema)
-        spec.definition('Pet', schema=PetSchema)
+        spec.components.schema('Category', schema=CategorySchema)
+        spec.components.schema('Pet', schema=PetSchema)
         with app.test_request_context():
-            spec.add_path(view=random_pet)
+            spec.path(view=random_pet)
 
         return json.dumps(spec.to_dict(), indent=4)
 
@@ -302,9 +311,10 @@ class ModelParamNestedLoop(object):
         spec = APISpec(
             title=self.__class__.__name__,
             version='1.0.0',
+            openapi_version='2.0',
             plugins=(
-                'apispec.ext.flask',
-                'apispec.ext.marshmallow',
+                FlaskPlugin(),
+                MarshmallowPlugin(),
             ),
         )
 
@@ -336,10 +346,10 @@ class ModelParamNestedLoop(object):
             return jsonify({})
 
         # Register entities and paths
-        spec.definition('A', schema=A)
-        spec.definition('B', schema=B)
-        spec.definition('C', schema=C)
+        spec.components.schema('A', schema=A)
+        spec.components.schema('B', schema=B)
+        spec.components.schema('C', schema=C)
         with app.test_request_context():
-            spec.add_path(view=random_pet)
+            spec.path(view=random_pet)
 
         return json.dumps(spec.to_dict(), indent=4)

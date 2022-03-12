@@ -20,6 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import json
 import unittest
 
 from w3af.core.data.parsers.doc.url import URL
@@ -40,6 +41,10 @@ from w3af.core.data.parsers.doc.open_api.tests.example_specifications import (No
                                                                               NestedModel,
                                                                               ArrayModelItems)
 
+def json_sort(data):
+    if data is None:
+        return None
+    return json.dumps(json.loads(data), sort_keys=True)
 
 class TestRequests(unittest.TestCase):
     def generate_response(self, specification_as_string):
@@ -67,7 +72,7 @@ class TestRequests(unittest.TestCase):
         self.assertEqual(fuzzable_request.get_method(), 'GET')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
         self.assertEqual(fuzzable_request.get_headers(), e_headers)
-        self.assertEqual(fuzzable_request.get_raw_data(), '')
+        self.assertEqual(fuzzable_request.get_raw_data(), None)
 
     def test_string_param_header(self):
         specification_as_string = StringParamHeader().get_specification()
@@ -89,7 +94,7 @@ class TestRequests(unittest.TestCase):
         e_url = 'http://petstore.swagger.io/api/pets'
         e_headers = Headers([('X-Foo-Header', '56'),
                              ('Content-Type', 'application/json')])
-        e_data = ''
+        e_data = None
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
@@ -122,7 +127,7 @@ class TestRequests(unittest.TestCase):
         self.assertEqual(fuzzable_request.get_method(), 'GET')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
         self.assertEqual(fuzzable_request.get_headers(), e_headers)
-        self.assertEqual(fuzzable_request.get_data(), '')
+        self.assertEqual(fuzzable_request.get_data(), None)
 
         #
         # Assertions on call #2
@@ -138,7 +143,7 @@ class TestRequests(unittest.TestCase):
         self.assertEqual(fuzzable_request.get_method(), 'GET')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
         self.assertEqual(fuzzable_request.get_headers(), e_headers)
-        self.assertEqual(fuzzable_request.get_data(), '')
+        self.assertEqual(fuzzable_request.get_data(), None)
 
     def test_simple_int_param_in_path(self):
         specification_as_string = IntParamPath().get_specification()
@@ -159,7 +164,7 @@ class TestRequests(unittest.TestCase):
         self.assertEqual(fuzzable_request.get_method(), 'GET')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
         self.assertEqual(fuzzable_request.get_headers(), e_headers)
-        self.assertEqual(fuzzable_request.get_raw_data(), '')
+        self.assertEqual(fuzzable_request.get_raw_data(), None)
 
     def test_simple_string_param_in_qs(self):
         specification_as_string = StringParamQueryString().get_specification()
@@ -177,13 +182,13 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://petstore.swagger.io/api/pets?q=Spam or Eggs?'
+        e_url = 'http://petstore.swagger.io/api/pets?q=Spam%20or%20Eggs%3F'
         e_headers = Headers([('Content-Type', 'application/json')])
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
         self.assertEqual(fuzzable_request.get_headers(), e_headers)
-        self.assertEqual(fuzzable_request.get_raw_data(), '')
+        self.assertEqual(fuzzable_request.get_raw_data(), None)
 
     def test_array_string_items_param_in_qs(self):
         specification_as_string = ArrayStringItemsQueryString().get_specification()
@@ -207,7 +212,7 @@ class TestRequests(unittest.TestCase):
         self.assertEqual(fuzzable_request.get_method(), 'POST')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
         self.assertEqual(fuzzable_request.get_headers(), e_headers)
-        self.assertEqual(fuzzable_request.get_raw_data(), '')
+        self.assertEqual(fuzzable_request.get_raw_data(), None)
 
     def test_model_with_int_param_json(self):
         specification_as_string = IntParamJson().get_specification()
@@ -275,7 +280,7 @@ class TestRequests(unittest.TestCase):
 
         e_url = 'http://www.w3af.com/pets'
         e_headers = Headers([('Content-Type', 'application/json')])
-        e_data = ('{"pet": {"owner": {"name": {"last": "Smith", "first": "56"},'
+        e_data = json_sort('{"pet": {"owner": {"name": {"last": "Smith", "first": "56"},'
                   ' "address": {"postalCode": "90210", "street1": "Bonsai Street 123",'
                   ' "street2": "Bonsai Street 123", "state": "AK",'
                   ' "city": "Buenos Aires"}}, "type": "cat", "name": "John",'
@@ -284,7 +289,7 @@ class TestRequests(unittest.TestCase):
         self.assertEqual(fuzzable_request.get_method(), 'POST')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
         self.assertEqual(fuzzable_request.get_headers(), e_headers)
-        self.assertEqual(fuzzable_request.get_data(), e_data)
+        self.assertEqual(json_sort(fuzzable_request.get_data()), e_data)
 
     def test_array_with_model_items_param_in_json(self):
         specification_as_string = ArrayModelItems().get_specification()
@@ -310,7 +315,7 @@ class TestRequests(unittest.TestCase):
         self.assertEqual(fuzzable_request.get_method(), 'POST')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
         self.assertEqual(fuzzable_request.get_headers(), e_headers)
-        self.assertEqual(fuzzable_request.get_data(), e_data)
+        self.assertEqual(json_sort(fuzzable_request.get_data()), json_sort(e_data))
 
     def test_model_param_nested_allOf_in_json(self):
         specification_as_string = NestedModel().get_specification()
@@ -338,7 +343,7 @@ class TestRequests(unittest.TestCase):
         self.assertEqual(fuzzable_request.get_method(), 'GET')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
         self.assertEqual(fuzzable_request.get_headers(), e_headers)
-        self.assertEqual(fuzzable_request.get_data(), e_data)
+        self.assertEqual(json_sort(fuzzable_request.get_data()), json_sort(e_data))
 
     def test_dereferenced_pet_store(self):
         # See: dereferenced_pet_store.json , which was generated using
@@ -354,14 +359,14 @@ class TestRequests(unittest.TestCase):
         #
         # Assertions on call #1
         #
-        data_i = data[0]
+        data_i = data[2]
 
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
         e_url = 'http://www.w3af.com/pets/John'
         e_headers = Headers([('Content-Type', 'application/json')])
-        e_data = ''
+        e_data = None
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
@@ -371,14 +376,14 @@ class TestRequests(unittest.TestCase):
         #
         # Assertions on call #2
         #
-        data_i = data[1]
+        data_i = data[0]
 
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
         e_url = 'http://www.w3af.com/pets'
         e_headers = Headers([('Content-Type', 'application/json')])
-        e_data = ''
+        e_data = None
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
@@ -388,7 +393,7 @@ class TestRequests(unittest.TestCase):
         #
         # Assertions on call #3
         #
-        data_i = data[2]
+        data_i = data[1]
 
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
@@ -404,4 +409,4 @@ class TestRequests(unittest.TestCase):
         self.assertEqual(fuzzable_request.get_method(), 'POST')
         self.assertEqual(fuzzable_request.get_uri().url_string, e_url)
         self.assertEqual(fuzzable_request.get_headers(), e_headers)
-        self.assertEqual(fuzzable_request.get_data(), e_data)
+        self.assertEqual(json_sort(fuzzable_request.get_data()), json_sort(e_data))

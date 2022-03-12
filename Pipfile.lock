@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c22b2bda5fc0331e44261b701c32c033a6d02066fbc15939e0497eccddf47af0"
+            "sha256": "6dd1f3af6a1250d209be1302045b833971084479459fa456e14958427ed3a267"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -44,6 +44,14 @@
             ],
             "index": "pypi",
             "version": "==5.1.1"
+        },
+        "apispec-webframeworks": {
+            "hashes": [
+                "sha256:0db35b267914b3f8c562aca0261957dbcb4176f255eacc22520277010818dcf3",
+                "sha256:482c563abbcc2a261439476cb3f1a7c7284cc997c322c574d48c111643e9c04e"
+            ],
+            "index": "pypi",
+            "version": "==0.5.2"
         },
         "appdirs": {
             "hashes": [
@@ -305,6 +313,7 @@
                 "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff",
                 "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"
             ],
+            "markers": "python_version >= '3'",
             "version": "==3.3"
         },
         "importlib-metadata": {

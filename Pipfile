@@ -52,6 +52,7 @@ memory-profiler = "*"
 marshmallow = "*"
 pypi-simple = "*"
 PyGObject = "*"
+apispec-webframeworks = "*"
 
 [dev-packages]
 
