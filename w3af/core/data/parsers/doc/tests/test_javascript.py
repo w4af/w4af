@@ -31,7 +31,7 @@ from w3af.core.data.parsers.doc.url import URL
 
 class TestJavaScriptParser(unittest.TestCase):
 
-    DATA_PATH = 'w3af/core/data/parsers/pynarcissus/tests/data/'
+    DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "pynarcissus", "tests", "data")
 
     def parse(self, filename):
         with open(os.path.join(self.DATA_PATH, filename)) as f:
@@ -55,12 +55,14 @@ class TestJavaScriptParser(unittest.TestCase):
 
     def test_relative(self):
         p = self.parse('test_4.js')
-        expected = [], [URL('http://moth/spam.html'),
-                        URL('http://moth/eggs.html')]
-        self.assertEqual(p.get_references(), expected)
+        expected = [], [URL('http://moth/eggs.html'),
+                        URL('http://moth/spam.html')]
+        self.assertEqual(p.get_references()[0], expected[0])
+        self.assertEqual(set(p.get_references()[1]), set(expected[1]))
 
     def test_full(self):
         p = self.parse('test_full_url.js')
-        expected = [], [URL('http://moth/spam.html'),
-                        URL('http://moth/eggs.html')]
-        self.assertEqual(p.get_references(), expected)
+        expected = [], [URL('http://moth/eggs.html'),
+                        URL('http://moth/spam.html')]
+        self.assertEqual(p.get_references()[0], expected[0])
+        self.assertEqual(set(p.get_references()[1]), set(expected[1]))

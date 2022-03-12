@@ -94,12 +94,13 @@ def parse_qs(qstr, ignore_exc=True, encoding=DEFAULT_ENCODING):
 
     if qstr:
         # convert to string if unicode
-        if isinstance(qstr, str):
-            qstr = qstr.encode(encoding, 'ignore')
+        #if isinstance(qstr, str):
+        #    qstr = qstr.encode(encoding, 'ignore')
 
         try:
             odict = OrderedDict()
             for name, value in urllib.parse.parse_qsl(qstr,
+                                         encoding=encoding,
                                          keep_blank_values=True,
                                          strict_parsing=False,
                                          errors='backslashreplace'):
@@ -174,7 +175,7 @@ class URL(DiskItem):
         self._encoding = encoding
 
         if isinstance(data, bytes):
-            data = data.decode('utf-8')
+            data = data.decode(encoding)
 
         if not isinstance(data, str):
             raise ValueError('Can not build a URL from %s.' % type(data))

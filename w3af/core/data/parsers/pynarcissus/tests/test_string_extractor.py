@@ -26,7 +26,8 @@ from w3af.core.data.parsers.pynarcissus.string_extractor import StringExtractor
 
 
 class JSParserMixin(object):
-    DATA_PATH = 'w3af/core/data/parsers/pynarcissus/tests/data/'
+
+    DATA_PATH = os.path.join(os.path.dirname(__file__), "data")
 
     def get_file_contents(self, filename):
         test_file = os.path.join(self.DATA_PATH, filename)

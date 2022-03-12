@@ -65,7 +65,7 @@ class PDFParser(BaseParser):
         # things like %%EOF\n , or %%EOF\r, or %%EOF\r\n.
         #
         # So... just to be sure I search in the last 12 characters.
-        if document.startswith('%PDF-') and '%%EOF' in document[-12:]:
+        if document.startswith(b'%PDF-') and b'%%EOF' in document[-12:]:
             return True
 
         return False

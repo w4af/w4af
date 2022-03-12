@@ -40,8 +40,7 @@ class TestHTMLParserPerformance(unittest.TestCase):
 
     MEMORY_DUMP = 'manual-analysis-%s.dump'
 
-    HTML_FILE = os.path.join(ROOT_PATH, 'core', 'data', 'context', 'tests',
-                             'samples', 'django-500.html')
+    HTML_FILE = DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "context", "tests", "samples", "django-500.html")
 
     @unittest.skip("Performance test")
     @attr('ci_ignore')
@@ -95,7 +94,7 @@ class TestHTMLParserPerformance(unittest.TestCase):
         # pylint: disable=E1101
         print(self_pid.memory_info())
 
-
+@unittest.skip("Memory profiling")
 def test():
     """
     Run using:
