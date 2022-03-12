@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import json
 import yaml
 import logging
+import requests
 
 from yaml import load
 
@@ -143,9 +144,20 @@ class SpecificationHandler(object):
         self._apply_known_fixes_before_parsing(spec_dict)
 
         try:
+            class ResponseWrapper:
+                def __init__(self, response):
+                    self.response = response
+                def result(self):
+                    return self.response
+
+            class Client:
+                def request(self, params):
+                    return ResponseWrapper(requests.request(params["method"], params["url"]))
+
             self.spec = RelaxedSpec.from_dict(spec_dict,
                                               origin_url=url_string,
-                                              config=config)
+                                              config=config,
+                                              http_client=Client())
         except Exception as e:
             msg = ('The document at "%s" is not a valid Open API specification.'
                    ' The following exception was raised while parsing the dict'
