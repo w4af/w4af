@@ -284,7 +284,8 @@ class TestSGMLParser(unittest.TestCase):
         """
         test_file_path = 'core/data/url/tests/data/encoding_4402.php'
         test_file = os.path.join(ROOT_PATH, test_file_path)
-        body = file(test_file, 'rb').read()
+        with open(test_file, "rb") as f:
+            body = f.read()
 
         sample_encodings = [encoding for _, (_, encoding) in TEST_RESPONSES.items()]
         sample_encodings.extend(['', 'utf-8'])
