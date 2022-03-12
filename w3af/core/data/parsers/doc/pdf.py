@@ -113,12 +113,12 @@ def pdf_to_text(pdf_string):
 
     # According to https://github.com/euske/pdfminer/issues/61 it is a good idea
     # to set laparams to None, which will speed-up parsing
-    device = NoPageHTMLConverter(rsrcmgr, output, codec='utf-8',
+    device = NoPageHTMLConverter(rsrcmgr, output,
                                  layoutmode='normal',
                                  laparams=None, imagewriter=None,
                                  showpageno=False)
 
-    document_io = io.StringIO(pdf_string)
+    document_io = io.BytesIO(pdf_string)
     pagenos = set()
     try:
         interpreter = PDFPageInterpreter(rsrcmgr, device)
@@ -131,7 +131,7 @@ def pdf_to_text(pdf_string):
     
     device.close()
     output.seek(0)
-    output_str = output.read().decode('utf-8')
+    output_str = output.read()
     return SGMLParser.ANY_TAG_MATCH.sub('', output_str)
 
 

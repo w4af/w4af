@@ -230,9 +230,6 @@ class TestHTMLParser(unittest.TestCase):
         self.assertIn('plane', select_values)
         self.assertIn('bike', select_values)
 
-        # The "current" value is the first that was found
-        self.assertEqual(f['vehicle'], ['car'])
-
         # "xxx" and "yyy" options were not parsed because they are outside the
         # form tag and doesn't have a name attribute
         self.assertNotIn('xxx', f.get_option_names())
@@ -491,7 +488,8 @@ class TestHTMLParser(unittest.TestCase):
     def test_unicodedecoreerror_ascii_url(self):
         HTML_FILE = os.path.join(ROOT_PATH, 'core', 'data', 'parsers', 'doc',
                                  'tests', 'data', 'se.html')
-        body = file(HTML_FILE).read()
+        with open(HTML_FILE, "rb") as f:
+            body = f.read()
 
         headers = Headers()
         headers['content-type'] = 'text/html; charset=utf-8'

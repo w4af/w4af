@@ -92,7 +92,7 @@ class BaseParser(object):
         if isinstance(url_string, str):
             url_string = url_string.encode(enc)
 
-        dec_url = urllib.parse.unquote(url_string)
+        dec_url = urllib.parse.unquote(url_string, errors='backslashreplace')
         for sch, repl in self.SAFE_CHARS:
             dec_url = dec_url.replace(sch, repl)
 

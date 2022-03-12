@@ -61,7 +61,7 @@ class TestBaseParser(unittest.TestCase):
         bp_inst._encoding = 'latin1'
 
         decoded_url = bp_inst._decode_url('http://www.w3af.com/ind%E9x.html')
-        self.assertEqual(decoded_url, 'http://www.w3af.com/ind\xe9x.html')
+        self.assertEqual(decoded_url, 'http://www.w3af.com/ind\\xe9x.html')
 
     def test_decode_url_skip_safe_chars(self):
         u = URL('http://www.w3af.com/')
@@ -70,7 +70,7 @@ class TestBaseParser(unittest.TestCase):
         bp_inst._encoding = 'latin1'
 
         test_url = 'http://w3af.com/search.php?a=%00x&b=2%20c=3%D1'
-        expected = 'http://w3af.com/search.php?a=%00x&b=2 c=3\xd1'
+        expected = 'http://w3af.com/search.php?a=%00x&b=2 c=3\\xd1'
 
         decoded_url = bp_inst._decode_url(test_url)
 
@@ -83,7 +83,7 @@ class TestBaseParser(unittest.TestCase):
         bp_inst._encoding = 'utf-8'
 
         test_url = 'http://w3af.com/blah.jsp?p=SQU-300&bgc=%FFAAAA'
-        expected = 'http://w3af.com/blah.jsp?p=SQU-300&bgc=AAAA'
+        expected = 'http://w3af.com/blah.jsp?p=SQU-300&bgc=\\xffAAAA'
 
         decoded_url = bp_inst._decode_url(test_url)
 

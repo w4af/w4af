@@ -43,11 +43,13 @@ class TestHTMLParserPerformance(unittest.TestCase):
     HTML_FILE = os.path.join(ROOT_PATH, 'core', 'data', 'context', 'tests',
                              'samples', 'django-500.html')
 
+    @unittest.skip("Performance test")
     @attr('ci_ignore')
     def test_parse_html_performance(self):
         headers = Headers()
         headers['content-type'] = 'text/html'
-        body = file(self.HTML_FILE).read()
+        with open(self.HTML_FILE) as f:
+            body = f.read()
         url = URL('http://www.w3af.org/')
         response = HTTPResponse(200, body, headers, url, url, charset='utf-8')
 
@@ -101,7 +103,8 @@ def test():
 
     That will activate the profiler.
     """
-    body = file(OUTPUT_FILE).read()
+    with open(OUTPUT_FILE) as f:
+        body = f.read()
     url = URL('http://www.clarin.com.ar/')
     headers = Headers()
     headers['content-type'] = 'text/html'

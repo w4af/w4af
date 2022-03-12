@@ -63,7 +63,8 @@ class TestComplexHTMLForm(unittest.TestCase):
         Reported by one of our partners. The issue seems to be that there are
         too many variants being generated.
         """
-        body = file(self.COMPLEX_FORM).read()
+        with open(self.COMPLEX_FORM, "rb") as f:
+            body = f.read()
         resp = build_http_response(self.url, body)
         p = RaiseHTMLParser(resp)
         p.parse()
@@ -75,5 +76,5 @@ class TestComplexHTMLForm(unittest.TestCase):
                          form_params.TOP_VARIANTS + 1)
 
         self.assertEqual(len(list(form_params.meta.keys())), 31)
-        self.assertEqual(list(form_params.meta.keys()), self.EXPECTED_PARAMS)
+        self.assertEqual(set(form_params.meta.keys()), set(self.EXPECTED_PARAMS))
 
