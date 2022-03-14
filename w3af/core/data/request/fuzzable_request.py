@@ -42,16 +42,15 @@ from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
-ALL_CHARS = ''.join(chr(i) for i in range(256))
-TRANS_TABLE = str.maketrans(ALL_CHARS, ALL_CHARS)
-DELETE_CHARS = ''.join(['\\',
-                        "'",
-                        '"',
-                        '+',
-                        ' ',
-                        chr(0),
-                        chr(int("0D", 16)),
-                        chr(int("0A", 16))])
+DELETE_CHARS = [ord('\\'),
+                ord("'"),
+                ord('"'),
+                ord('+'),
+                ord(' '),
+                0,
+                int("0D", 16),
+                int("0A", 16)]
+TRANS_TABLE = str.maketrans(dict([ (x, None) for x in DELETE_CHARS ]))
 
 
 TYPE_ERROR = 'FuzzableRequest __init__ parameter %s needs to be of %s type'
@@ -150,16 +149,16 @@ class FuzzableRequest(RequestMixIn, DiskItem):
         """
         :return: An instance of FuzzableRequest from the provided parameters.
         """
-        if isinstance(url, str):
+        if isinstance(url, (str, bytes)):
             url = URL(url)
 
         if post_data == '':
             post_data = None
 
-        elif isinstance(post_data, str):
+        elif isinstance(post_data, (str, bytes)):
             post_data = dc_from_hdrs_post(headers, post_data)
 
-        return cls(url, method=method, headers=headers, post_data=post_data)
+        return cls(url, method=smart_unicode(method), headers=headers, post_data=post_data)
 
     @classmethod
     def from_http_response(cls, http_response):
@@ -210,7 +209,7 @@ class FuzzableRequest(RequestMixIn, DiskItem):
         :return: The whole HTTP request serialized and encoded as base64
         """
         raw_http_request = self.dump()
-        return base64.b64encode(raw_http_request)
+        return base64.b64encode(raw_http_request.encode("utf-8"))
 
     @classmethod
     def from_base64(cls, base64_data):
@@ -226,8 +225,7 @@ class FuzzableRequest(RequestMixIn, DiskItem):
         """
         This basically removes characters that are used as escapes such as \
         """
-        return str.translate(heterogen_string, TRANS_TABLE,
-                                deletions=DELETE_CHARS)
+        return smart_unicode(heterogen_string).translate(TRANS_TABLE).encode(DEFAULT_ENCODING)
 
     def sent(self, needle):
         """
@@ -266,9 +264,9 @@ class FuzzableRequest(RequestMixIn, DiskItem):
 
         needles = set()
         needles.add(needle)
-        needles.add(unquote(needle))
-        needles.add(quote(needle))
-        needles.add(quote_plus(needle))
+        needles.add(smart_str_ignore(unquote(needle)))
+        needles.add(smart_str_ignore(quote(needle)))
+        needles.add(smart_str_ignore(quote_plus(needle)))
         needles.add(self.make_comp(needle))
         needles.add(self.make_comp(unquote(needle)))
 
@@ -279,7 +277,7 @@ class FuzzableRequest(RequestMixIn, DiskItem):
         needles = {n for n in needles if len(n) >= 3}
 
         uri = self.get_uri()
-        data = smart_str_ignore(self.get_data())
+        data = smart_str_ignore(self.get_data() or '')
         headers = smart_str_ignore(self.get_all_headers())
 
         haystacks = set()
@@ -298,18 +296,18 @@ class FuzzableRequest(RequestMixIn, DiskItem):
 
         # data
         haystacks.add(data)
-        haystacks.add(unquote(data))
+        haystacks.add(smart_str_ignore(unquote(data)))
         haystacks.add(self.make_comp(data))
         haystacks.add(self.make_comp(unquote(data)))
 
         # headers
         haystacks.add(headers)
-        haystacks.add(unquote(headers))
+        haystacks.add(smart_str_ignore(unquote(headers)))
 
         # Filter the short haystacks
         haystacks = {h for h in haystacks if len(h) >= 3}
 
-        haystack = '--'.join(haystacks)
+        haystack = b'--'.join(haystacks)
 
         for needle in needles:
             if needle in haystack:

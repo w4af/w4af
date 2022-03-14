@@ -26,8 +26,9 @@ from w3af.core.data.dc.headers import Headers
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.controllers.exceptions import BaseFrameworkException
 
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
-SUPPORTED_VERSIONS = {'1.0', '1.1'}
+SUPPORTED_VERSIONS = {b'1.0', b'1.1'}
 
 
 def check_version_syntax(version):
@@ -35,7 +36,7 @@ def check_version_syntax(version):
     :return: True if the syntax of the version section of HTTP is valid; else
              raise an exception.
     """
-    split_version = version.split('/')
+    split_version = smart_str_ignore(version).split(b'/')
 
     if len(split_version) != 2:
         msg = 'The HTTP request has an invalid version token: "%s"'
@@ -43,7 +44,7 @@ def check_version_syntax(version):
 
     elif len(split_version) == 2:
 
-        if split_version[0].lower() != 'http':
+        if split_version[0].lower() != b'http':
             msg = ('The HTTP request has an invalid HTTP token in the version'
                    ' specification: "%s"')
             raise BaseFrameworkException(msg % version)
@@ -61,7 +62,7 @@ def check_uri_syntax(uri, host=None):
              raise an exception.
     """
     supported_schemes = ['http', 'https']
-    scheme, domain, path, params, qs, fragment = urllib.parse.urlparse(uri)
+    scheme, domain, path, params, qs, fragment = urllib.parse.urlparse(smart_unicode(uri))
     scheme = scheme.lower()
 
     if not scheme:
@@ -74,7 +75,7 @@ def check_uri_syntax(uri, host=None):
     if scheme not in supported_schemes or not domain:
         msg = 'You have to specify the complete URI, including the protocol'
         msg += ' and the host. Invalid URI: %s.'
-        raise BaseFrameworkException(msg % uri)
+        raise BaseFrameworkException(msg % smart_unicode(uri))
 
     res = urllib.parse.urlunparse((scheme, domain, path, params, qs, fragment))
     return res
@@ -86,7 +87,7 @@ def raw_http_request_parser(raw_http_request):
     :return: A FuzzableRequest object with all the corresponding information
              that was sent in head and postdata
     """
-    head, postdata = raw_http_request.split('\r\n\r\n', 1)
+    head, postdata = raw_http_request.split(b'\r\n\r\n', 1)
     return http_request_parser(head, postdata)
 
 
@@ -102,7 +103,7 @@ def http_request_parser(head, postdata):
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
     # Parse the request head, the strip() helps us deal with the \r (if any)
-    split_head = head.split('\n')
+    split_head = smart_str_ignore(head).split(b'\n')
     split_head = [h.strip() for h in split_head if h]
 
     if not split_head:
@@ -111,7 +112,7 @@ def http_request_parser(head, postdata):
 
     # Get method, uri, version
     method_uri_version = split_head[0]
-    first_line = method_uri_version.split(' ')
+    first_line = method_uri_version.split(b' ')
     if len(first_line) == 3:
         # Ok, we have something like "GET /foo HTTP/1.0". This is the best case
         # for us!
@@ -137,7 +138,7 @@ def http_request_parser(head, postdata):
     headers_inst = Headers()
 
     for header in headers_str:
-        one_split_header = header.split(':', 1)
+        one_split_header = header.split(b':', 1)
         if len(one_split_header) == 1:
             msg = ('The HTTP request has an invalid header which does not'
                    ' contain the ":" separator: "%s"')
@@ -148,7 +149,7 @@ def http_request_parser(head, postdata):
 
         if header_name in headers_inst:
             # Handle duplicated headers
-            headers_inst[header_name] += ', ' + header_value
+            headers_inst[header_name] += b', ' + header_value
         else:
             headers_inst[header_name] = header_value
 

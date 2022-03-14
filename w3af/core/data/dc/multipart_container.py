@@ -65,6 +65,8 @@ class MultipartContainer(Form):
                                   environ=environ)
         except ValueError:
             raise ValueError('Failed to create MultipartContainer.')
+        except Exception as e:
+            pass
         else:
             # Please note that the FormParameters is just a container for
             # the information.

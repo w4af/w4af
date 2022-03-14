@@ -25,6 +25,7 @@ from w3af.core.data.constants.encodings import UTF8
 from w3af.core.data.dc.generic.nr_kv_container import NonRepeatKeyValueContainer
 from w3af.core.data.misc.encoding import smart_unicode
 from w3af.core.data.dc.utils.token import DataToken
+from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 
 
 class Headers(NonRepeatKeyValueContainer):
@@ -164,6 +165,9 @@ class Headers(NonRepeatKeyValueContainer):
 
         super(Headers, self).__setitem__(k, v)
     # pylint: enable=E0102
+
+    def __bytes__(self):
+        return self.__str__().encode(DEFAULT_ENCODING)
 
     def __str__(self):
         """

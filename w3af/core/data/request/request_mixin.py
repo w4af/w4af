@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import hashlib
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
+from w3af.core.data.misc.encoding import smart_unicode
 
 CR = '\r'
 LF = '\n'
@@ -48,11 +49,12 @@ class RequestMixIn(object):
             data = self.data
         elif hasattr(self, 'get_data'):
             data = self.get_data()
+        if data is None:
+            data = ''
 
         request_head = self.dump_request_head(ignore_headers=ignore_headers)
-        request_head = request_head.encode('utf-8')
 
-        return '%s%s%s' % (request_head, CRLF, data)
+        return '%s%s%s' % (smart_unicode(request_head), CRLF, smart_unicode(data))
 
     def get_request_hash(self, ignore_headers=()):
         """

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from w3af.core.data.dc.generic.data_container import DataContainer
 from w3af.core.data.constants.encodings import UTF8
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class PlainContainer(DataContainer):
@@ -117,4 +118,4 @@ class PlainContainer(DataContainer):
         """
         :return: All the data
         """
-        return self.plain_data
+        return smart_unicode(self.plain_data)

@@ -38,6 +38,7 @@ from w3af.core.data.dc.urlencoded_form import URLEncodedForm
 from w3af.core.data.dc.utils.multipart import multipart_encode
 from w3af.core.data.db.disk_set import DiskSet
 from w3af.core.data.dc.multipart_container import MultipartContainer
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 @attr('smoke')
@@ -70,7 +71,7 @@ class TestFuzzableRequest(unittest.TestCase):
         fr = FuzzableRequest(self.url, method='GET', post_data=post_data,
                              headers=headers)
 
-        self.assertEqual(fr.dump(), expected.encode('utf-8'))
+        self.assertEqual(fr.dump(), expected)
 
     def test_dump_case03(self):
         header_value = ''.join(chr(i) for i in range(256))
@@ -200,7 +201,8 @@ class TestFuzzableRequest(unittest.TestCase):
 
     def test_sent_url(self):
         f = FuzzableRequest(URL('''http://example.com/a?p=d'z"0&paged=2'''))
-        self.assertTrue(f.sent('d%5C%27z%5C%220'))
+        self.assertTrue(f.sent('d%27z%220'))
+        self.assertTrue(f.sent("""d'z"0"""))
 
         f = FuzzableRequest(URL('http://example.com/a?p=<SCrIPT>alert("bsMs")'
                                 '</SCrIPT>'))

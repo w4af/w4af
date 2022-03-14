@@ -68,7 +68,7 @@ class NonRepeatKeyValueContainer(DataContainer, OrderedDict):
                 if key in self:
                     raise RepeatedValueException(init_val)
 
-                if not isinstance(val, (str, DataToken)):
+                if not isinstance(val, (str, bytes, DataToken)):
                     raise TypeError(ERR_MSG_NO_REP % init_val)
 
                 self[key] = val

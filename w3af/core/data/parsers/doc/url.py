@@ -815,6 +815,9 @@ class URL(DiskItem):
     def __hash__(self):
         return hash(self.url_string)
 
+    def __bytes__(self):
+        return smart_str(self.url_string)
+
     @memoized
     def __str__(self):
         """
