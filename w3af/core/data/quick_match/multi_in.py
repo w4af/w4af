@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from acora import AcoraBuilder
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class MultiIn(object):
@@ -77,8 +78,18 @@ class MultiIn(object):
         :param target_str: The target string where the keywords need to be match
         :yield: The matches (see __init__)
         """
+        target_was_string = False
         if isinstance(target_str, str):
+            target_was_string = True
             target_str = target_str.encode(DEFAULT_ENCODING)
+
+        def unwrap(output):
+            if target_was_string:
+                if isinstance(output, bytes):
+                    return output.decode("utf-8")
+                elif isinstance(output, list):
+                    return [ unwrap(a) for a in output ]
+                return output
 
         seen = set()
 
@@ -90,8 +101,8 @@ class MultiIn(object):
             extra_data = self._translator.get(match, None)
 
             if extra_data is None:
-                yield match
+                yield unwrap(match)
             else:
                 all_data = [match]
                 all_data.extend(extra_data)
-                yield all_data
+                yield unwrap(all_data)

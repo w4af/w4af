@@ -201,7 +201,7 @@ def hints(regex):
     
     try:
         for ch in regex:
-            state = state.process_byte(chr(ch))
+            state = state.process_byte(ch)
         
     except StopIteration:
         pass
