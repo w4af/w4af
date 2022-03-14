@@ -199,6 +199,11 @@ class TestFuzzableRequest(unittest.TestCase):
                             headers=Headers([('User-Agent', 'payload')]))
         self.assertFalse(f.sent('payload-not-sent'))
 
+    def test_make_comp(self):
+        f = FuzzableRequest(URL('''http://example.com/a?p=d'z"0&paged=2'''))
+        res = f.make_comp('http://example.com/?p=<ScRIPT>a=/PlaO/%0Afake_alert(a.source)</SCRiPT>')
+        self.assertEqual(res, b'http://example.com/?p=<ScRIPT>a=/PlaO/fake_alert(a.source)</SCRiPT>')
+
     def test_sent_url(self):
         f = FuzzableRequest(URL('''http://example.com/a?p=d'z"0&paged=2'''))
         self.assertTrue(f.sent('d%27z%220'))
@@ -310,7 +315,7 @@ class TestFuzzableRequest(unittest.TestCase):
     
     def test_multipart_fuzzable_request_store(self):
         boundary, post_data = multipart_encode([('a', 'bcd'), ], [])
-        multipart_boundary = MultipartContainer.MULTIPART_HEADER
+        multipart_boundary = smart_str_ignore(MultipartContainer.MULTIPART_HEADER)
 
         headers = Headers([('content-length', str(len(post_data))),
                            ('content-type', multipart_boundary % boundary)])

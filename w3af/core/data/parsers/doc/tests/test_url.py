@@ -181,14 +181,14 @@ class TestURLParser(unittest.TestCase):
     def test_decode_works_per_the_commment_in_the_function(self):
         url_str = "http://host.tld/?id=%2Fhome"
         encoded = URL(url_str)
-        decoded = encoded.url_decode()
-        self.assertEqual(decoded.url_string, "http://host.tld/?id=/home")
+        decoded = encoded.url_decode_string()
+        self.assertEqual(decoded, "http://host.tld/?id=/home")
 
     def test_decode_works_for_urls_with_raw_characters(self):
         url_str = '''http://example.com/a?p=d'z"0&paged=2'''
         encoded = URL(url_str)
-        decoded = encoded.url_decode()
-        self.assertEqual(decoded.url_string, '''http://example.com/a?p=d'z"0&paged=2''')
+        decoded = encoded.url_decode_string()
+        self.assertEqual(decoded, '''http://example.com/a?p=d'z"0&paged=2''')
 
 
     #

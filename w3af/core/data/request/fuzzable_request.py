@@ -225,7 +225,7 @@ class FuzzableRequest(RequestMixIn, DiskItem):
         """
         This basically removes characters that are used as escapes such as \
         """
-        return smart_unicode(heterogen_string).translate(TRANS_TABLE).encode(DEFAULT_ENCODING)
+        return smart_unicode(unquote(heterogen_string)).translate(TRANS_TABLE).encode(DEFAULT_ENCODING)
 
     def sent(self, needle):
         """
@@ -291,8 +291,7 @@ class FuzzableRequest(RequestMixIn, DiskItem):
 
         # uris without encoding
         haystacks.add(smart_str_ignore(uri.url_string))
-        haystacks.add(smart_str_ignore(uri_decoded.url_string))
-        haystacks.add(self.make_comp(smart_str_ignore(uri_decoded.url_string)))
+        haystacks.add(self.make_comp(smart_str_ignore(uri_decoded)))
 
         # data
         haystacks.add(data)
