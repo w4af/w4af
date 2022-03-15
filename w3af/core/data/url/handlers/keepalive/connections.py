@@ -34,6 +34,7 @@ from .utils import debug
 
 from w3af.core.controllers.exceptions import HTTPRequestException
 from w3af.core.data.url.openssl_wrapper.ssl_wrapper import wrap_socket
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class UniqueID(object):
@@ -158,16 +159,16 @@ class ProxyHTTPConnection(_HTTPConnection):
         super(ProxyHTTPConnection, self).connect()
 
         # send proxy CONNECT request
-        new_line = '\r\n'
-        host_port = '%s:%d' % (self._real_host, self._real_port)
-        self.send('CONNECT %s HTTP/1.1%s' % (host_port, new_line))
+        new_line = b'\r\n'
+        host_port = smart_str_ignore('%s:%d' % (self._real_host, self._real_port))
+        self.send(b'CONNECT %s HTTP/1.1%s' % (host_port, new_line))
 
-        connect_headers = {'Proxy-Connection': 'keep-alive',
-                           'Connection': 'keep-alive',
-                           'Host': host_port}
+        connect_headers = {b'Proxy-Connection': b'keep-alive',
+                           b'Connection': b'keep-alive',
+                           b'Host': host_port}
 
         for header_name, header_value in list(connect_headers.items()):
-            self.send('%s: %s%s' % (header_name, header_value, new_line))
+            self.send(b'%s: %s%s' % (header_name, header_value, new_line))
 
         self.send(new_line)
 
@@ -186,7 +187,7 @@ class ProxyHTTPConnection(_HTTPConnection):
         while True:
             # should not use directly fp probably
             line = response.fp.readline()
-            if line == '\r\n':
+            if line == b'\r\n':
                 break
 
 
