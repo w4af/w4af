@@ -105,7 +105,7 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
     def tearDown(self):
         self.uri_opener.end()
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_redirect_302_simple_no_follow(self):
 
         httpretty.register_uri(httpretty.GET, self.REDIR_SRC,
@@ -120,7 +120,7 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
         self.assertEqual(response.get_code(), FOUND)
         self.assertEqual(response.get_id(), 1)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_redirect_302_simple_follow(self):
 
         httpretty.register_uri(httpretty.GET, self.REDIR_SRC,
@@ -139,7 +139,7 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
         self.assertEqual(response.get_url(), URL(self.REDIR_SRC))
         self.assertEqual(response.get_id(), 2)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_redirect_301_loop(self):
 
         httpretty.register_uri(httpretty.GET, self.REDIR_SRC,
@@ -158,7 +158,7 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
         self.assertEqual(response.get_body(), '')
         self.assertEqual(response.get_id(), 9)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_redirect_302_without_location_returns_302_response(self):
         # Breaks the RFC
         httpretty.register_uri(httpretty.GET, self.REDIR_SRC,
@@ -172,7 +172,7 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
         self.assertEqual(response.get_body(), '')
         self.assertEqual(response.get_id(), 1)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_redirect_no_follow_file_proto(self):
         httpretty.register_uri(httpretty.GET, self.REDIR_SRC,
                                body='', status=FOUND,
