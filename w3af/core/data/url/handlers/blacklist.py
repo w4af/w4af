@@ -19,8 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+import urllib.request, urllib.parse, urllib.error, urllib.response
 import email 
 import io
 
@@ -103,12 +102,12 @@ class BlacklistHandler(urllib.request.BaseHandler):
 
 
 def http_response_to_httplib(no_content):
-    header_string = io.StringIO(str(no_content.get_headers()))
+    header_string = str(no_content.get_headers())
     headers = email.message_from_string(header_string)
     
-    no_content = urllib.addinfourl(io.StringIO(no_content.get_body()),
-                                   headers,
-                                   no_content.get_url().url_string,
-                                   code=no_content.get_code())
+    no_content = urllib.response.addinfourl(io.StringIO(no_content.get_body()),
+                                            headers,
+                                            no_content.get_url().url_string,
+                                            code=no_content.get_code())
     no_content.msg = 'No content'
     return no_content
