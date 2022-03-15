@@ -339,7 +339,7 @@ class HTTPResponse(DiskItem):
         body = smart_str_ignore(self.get_body())
 
         args = (headers, body)
-        dump = '%s%s' % args
+        dump = b'%s%s' % args
 
         return self._quick_hash(dump)
 

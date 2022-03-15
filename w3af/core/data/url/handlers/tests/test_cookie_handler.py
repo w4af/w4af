@@ -78,17 +78,17 @@ class TestCookieHandler(unittest.TestCase):
         # And now it will send it because we're setting cookie to True
         with_cookie_req = HTTPRequest(URL(self.URL_CHECK_COOKIE), cookies=True)
         with_cookie_res = opener.open(with_cookie_req).read()
-        self.assertIn('Cookie received', with_cookie_res)
+        self.assertIn(b'Cookie received', with_cookie_res)
 
         # And now it will NOT send any cookie because we're setting cookie to False
         no_cookie_req = HTTPRequest(URL(self.URL_CHECK_COOKIE), cookies=False)
         no_cookie_res = opener.open(no_cookie_req).read()
-        self.assertIn('Cookie not sent', no_cookie_res)
+        self.assertIn(b'Cookie not sent', no_cookie_res)
 
         # And now it will send it because we're setting cookie to True
         with_cookie_req = HTTPRequest(URL(self.URL_CHECK_COOKIE), cookies=True)
         with_cookie_res = opener.open(with_cookie_req).read()
-        self.assertIn('Cookie received', with_cookie_res)
+        self.assertIn(b'Cookie received', with_cookie_res)
 
     @httpretty.activate
     def test_low_level_with_cookie_jar(self):
@@ -102,7 +102,7 @@ class TestCookieHandler(unittest.TestCase):
         # Remove all the indent and save the cookiejar
         cj_contents = self.COOKIEJAR.replace(' ' * 8, '')
         tmp_file = tempfile.NamedTemporaryFile(delete=False)
-        tmp_file.write(cj_contents)
+        tmp_file.write(cj_contents.encode("utf-8"))
         tmp_file.close()
         
         cj = http.cookiejar.MozillaCookieJar()
@@ -114,12 +114,12 @@ class TestCookieHandler(unittest.TestCase):
         # Verify cookie from cookie jar is sent
         with_cookie_req = HTTPRequest(URL(self.URL_CHECK_COOKIE), cookies=True)
         with_cookie_res = opener.open(with_cookie_req).read()
-        self.assertIn('Cookie received', with_cookie_res)
+        self.assertIn(b'Cookie received', with_cookie_res)
 
         # And now it will NOT send any cookie because we're setting cookie to False
         no_cookie_req = HTTPRequest(URL(self.URL_CHECK_COOKIE), cookies=False)
         no_cookie_res = opener.open(no_cookie_req).read()
-        self.assertIn('Cookie not sent', no_cookie_res)
+        self.assertIn(b'Cookie not sent', no_cookie_res)
         
         os.unlink(tmp_file.name)
 
