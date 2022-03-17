@@ -20,7 +20,7 @@ jobs:
       with:
         python-version: "3.9"
     - name: Install Gtk
-      run: sudo apt-get install -y libgirepository1.0-dev
+      run: sudo apt-get install -y libgirepository1.0-dev git
     - name: Install pipenv
       run: |
         python -m pip install --upgrade pipenv wheel
