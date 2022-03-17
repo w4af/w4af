@@ -50,15 +50,15 @@ class RawSSLDaemon(UpperDaemon):
         key_file = os.path.join(os.path.dirname(__file__), 'unittest.key')
         cert_file = os.path.join(os.path.dirname(__file__), 'unittest.crt')
 
-        self.server.socket = ssl.wrap_socket(self.server.socket,
-                                             keyfile=key_file,
-                                             certfile=cert_file,
-                                             cert_reqs=ssl.CERT_NONE,
-                                             ssl_version=self.ssl_version)
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(cert_file, key_file)
 
-        self.server.server_bind()
-        self.server.server_activate()
-        self.server.serve_forever()
+        with context.wrap_socket(self.server.socket, server_side=True) as ssl_sock:
+            self.server.socket = ssl_sock
+
+            self.server.server_bind()
+            self.server.server_activate()
+            self.server.serve_forever()
 
 
 class SSLServer(threading.Thread):
