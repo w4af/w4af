@@ -53,8 +53,21 @@ marshmallow = "*"
 pypi-simple = "*"
 PyGObject = "*"
 apispec-webframeworks = "*"
+flask = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.9"
+
+[packages.darts_util_lru]
+git = "https://github.com/codders/DartsPyLRU"
+editable = true
+
+[packages.mitmproxy]
+git = "https://github.com/codders/mitmproxy"
+editable = true
+
+[packages.netlib]
+git = "https://github.com/codders/netlib"
+editable = true
