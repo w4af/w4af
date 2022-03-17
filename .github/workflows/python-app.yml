@@ -29,6 +29,6 @@ jobs:
         pipenv install
     - name: Test with nosetests
       run: |
-        nosetests -A 'not moth and not internet and not fails' -w ./w3af/core/data/
+        pipenv run nosetests -A 'not moth and not internet and not fails' -w ./w3af/core/data/
 
     name: Test w3af

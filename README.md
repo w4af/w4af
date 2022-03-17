@@ -22,6 +22,27 @@ nosetests -A 'not moth and not internet and not fails' -w ./w3af/core/data/ -x -
 
 You might have some limited success running scans with the current code, but very likely it will fail with mysterious errors. More updates as they become available.
 
+## Installation
+
+### Python
+
+The project's Python dependencies can be install with pipenv:
+
+```
+python -m pip install --upgrade pipenv wheel
+pipenv install
+```
+
+Running `pipenv shell` with then launch a shell from which it is possible to run w3af.
+
+### Node
+
+The project uses NodeJS libraries for some features. To install those dependencies, run:
+
+```
+npm install
+```
+
 ## Development
 
 Use `nosetests` to run the unit tests:
