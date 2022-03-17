@@ -1,3 +1,4 @@
+![Unit Tests](https://github.com/codders/w3af-python3/actions/workflows/python-app.yml/badge.svg)
 ## w3af-python3 - Web Application Attack and Audit Framework for Python3
 
 [w3af-python3](http://w3af.org/) is an [open source](https://www.gnu.org/licenses/gpl-2.0.txt)
