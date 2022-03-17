@@ -28,7 +28,7 @@ from w3af.core.data.url import opener_settings
 
 class TestURLParameterHandler(unittest.TestCase):
 
-    def handler_integration_test_protocol(self, proto):
+    def handler_integration_with_protocol(self, proto):
         test_param = 'test_handler_integration'
 
         settings = opener_settings.OpenerSettings()
@@ -56,7 +56,7 @@ class TestURLParameterHandler(unittest.TestCase):
         """
         Integration test for http with w3af's URL opener.
         """
-        self.handler_integration_test_protocol('http')
+        self.handler_integration_with_protocol('http')
 
     @unittest.skip("httppretty can't mock the connection with the current SSL connection implementation")
     @httpretty.activate(allow_net_connect=False)
@@ -64,4 +64,4 @@ class TestURLParameterHandler(unittest.TestCase):
         """
         Integration test for https with w3af's URL opener.
         """
-        self.handler_integration_test_protocol('https')
+        self.handler_integration_with_protocol('https')

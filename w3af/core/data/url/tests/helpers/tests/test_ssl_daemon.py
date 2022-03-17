@@ -38,7 +38,7 @@ class TestUpperDaemon(unittest.TestCase):
         self.ssl_daemon.wait_for_start()
 
     def test_basic(self):
-        sent = 'abc'
+        sent = b'abc'
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock = ssl.wrap_socket(sock)

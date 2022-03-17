@@ -39,7 +39,7 @@ class RawSSLDaemon(UpperDaemon):
     Echo the data sent by the client, but upper case it first. SSL version of
     UpperDaemon.
     """
-    def __init__(self, handler=UpperTCPHandler, ssl_version=ssl.PROTOCOL_TLSv1):
+    def __init__(self, handler=UpperTCPHandler, ssl_version=ssl.PROTOCOL_TLS):
         super(RawSSLDaemon, self).__init__(handler=handler)
         self.ssl_version = ssl_version
 

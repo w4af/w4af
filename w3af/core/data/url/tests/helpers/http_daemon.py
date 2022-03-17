@@ -47,14 +47,14 @@ class ServerHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()        
         
-        self.wfile.write('ABCDEF\n')
+        self.wfile.write(b'ABCDEF\n')
 
     def do_POST(self):
         """Serve a POST request."""
         self.send_response(200)
         self.end_headers()        
         
-        self.wfile.write('ABCDEF\n')
+        self.wfile.write(b'ABCDEF\n')
 
     def log_message(self, fmt, *args):
         pass

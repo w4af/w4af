@@ -76,7 +76,7 @@ def smart_unicode(s,
     the 'encoding' codec.
     """
     if s is None:
-        return None
+        return ''
 
     if _isinstance(s, _unicode):
         return s
@@ -133,6 +133,9 @@ def smart_str(s,
     """
     Return a byte-string version of 's', encoded as specified in 'encoding'.
     """
+    if s is None:
+        return b''
+
     if _isinstance(s, _unicode):
         return s.encode(encoding, errors)
 

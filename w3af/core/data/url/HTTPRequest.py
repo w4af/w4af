@@ -94,7 +94,7 @@ class HTTPRequest(RequestMixIn, urllib.request.Request):
         return (self.get_method() == other.get_method() and
                 self.get_uri() == other.get_uri() and
                 self.get_headers() == other.get_headers() and
-                self.get_data() == other.get_data() and
+                self.data == other.data and
                 self.get_timeout() == other.get_timeout())
 
     def with_binary_response(self):
@@ -208,7 +208,7 @@ class HTTPRequest(RequestMixIn, urllib.request.Request):
         cookies = udict['cookies']
         session = udict['session']
         cache = udict['cache']
-        timeout = socket.getdefaulttimeout() if udict['timeout'] is None else udict['timeout']
+        timeout = socket._GLOBAL_DEFAULT_TIMEOUT if udict['timeout'] is None else udict['timeout']
         new_connection = udict['new_connection']
         follow_redirects = udict['follow_redirects']
         use_basic_auth = udict['use_basic_auth']

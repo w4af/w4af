@@ -53,7 +53,7 @@ class GetAverageRTTForMutant(object):
         headers = mutant.get_all_headers()
 
         cache_key_parts = [method, uri, data, headers]
-        cache_key_str = ''.join([smart_str_ignore(i) for i in cache_key_parts])
+        cache_key_str = b''.join([smart_str_ignore(i) for i in cache_key_parts])
 
         m = hashlib.md5()
         m.update(cache_key_str)

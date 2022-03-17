@@ -30,7 +30,7 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.dc.utils.token import DataToken
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
-
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 @attr('smoke')
 class TestHTTPRequest(unittest.TestCase):
@@ -50,8 +50,7 @@ class TestHTTPRequest(unittest.TestCase):
         msg = msgpack.dumps(req.to_dict())
         loaded_dict = msgpack.loads(msg)
         loaded_req = HTTPRequest.from_dict(loaded_dict)
-
-        self.assertEqual(req, loaded_req)
+        self.assertEqual(loaded_req, req)
         self.assertEqual(list(req.__dict__.values()),
                          list(loaded_req.__dict__.values()))
 
@@ -84,4 +83,4 @@ class TestHTTPRequest(unittest.TestCase):
         headers = Headers([('Hola', 'Múndo')])
         req = HTTPRequest(u, headers=headers)
         
-        self.assertEqual(req.dump(), expected.encode('utf-8'))
+        self.assertEqual(smart_str_ignore(req.dump()), expected.encode('utf-8'))
