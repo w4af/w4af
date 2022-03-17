@@ -479,22 +479,22 @@ class TestXUrllib(unittest.TestCase):
 class EmptyTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
-        self.request.sendall('')
+        self.request.sendall(b'')
 
 
 class TimeoutTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
         time.sleep(60)
-        self.request.sendall('')
+        self.request.sendall(b'')
 
 
 class Ok200Handler(socketserver.BaseRequestHandler):
-    body = 'abc'
+    body = b'abc'
 
     def handle(self):
         self.data = self.request.recv(1024).strip()
-        self.request.sendall('HTTP/1.0 200 Ok\r\n'
-                             'Connection: Close\r\n'
-                             'Content-Length: 3\r\n'
-                             '\r\n' + self.body)
+        self.request.sendall(b'HTTP/1.0 200 Ok\r\n'
+                             b'Connection: Close\r\n'
+                             b'Content-Length: 3\r\n'
+                             b'\r\n' + self.body)
