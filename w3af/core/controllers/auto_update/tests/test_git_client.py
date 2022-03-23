@@ -23,12 +23,13 @@ import subprocess
 
 from unittest.mock import MagicMock
 from nose.plugins.skip import SkipTest
+from nose.plugins.attrib import attr
 
 from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
 from w3af.core.controllers.auto_update.git_client import GitClient
 from w3af.core.controllers.auto_update.utils import get_current_branch
 
-
+@attr('git')
 class TestGitClient(unittest.TestCase):
     
     def test_get_URL(self):

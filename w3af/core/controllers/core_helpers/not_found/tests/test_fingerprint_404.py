@@ -20,12 +20,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-
-
 import re
 import os
 import random
 import unittest
+import codecs
 
 import httpretty
 
@@ -54,9 +53,6 @@ class Generic404Test(unittest.TestCase):
 
         body = '\n'.join(parts)
 
-        # filename = str(abs(hash(''.join(parts)))) + '-hash.txt'
-        # file(filename, 'w').write(body)
-
         return body
 
     def setUp(self):
@@ -72,7 +68,7 @@ class Generic404Test(unittest.TestCase):
 
 class Test404Detection(Generic404Test):
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_issue_3234(self):
         #
         # is_404 can not handle URLs with : in path #3234
@@ -90,7 +86,7 @@ class Test404Detection(Generic404Test):
 
 class Test404FalseNegative(Generic404Test):
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_false_negative_with_500(self):
         server_error = ('500 error that does NOT\n'
                         'look like one\n'
@@ -128,7 +124,7 @@ class Test404FalsePositiveLargeResponsesRandomShort(Generic404Test):
                         '%s' % random.randint(1, 99999)]
         return self.get_body(unique_parts)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_page_found_with_large_response_random(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -150,12 +146,13 @@ class Test404FalsePositiveLargeResponsesRandomShort(Generic404Test):
         success_200 = HTTPResponse(200, body, headers, success_url, success_url)
         self.assertFalse(self.fingerprint_404.is_404(success_200))
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_page_marked_as_404_with_large_response_random(self):
 
         httpretty.register_uri(httpretty.GET,
                                re.compile('w3af.com/(.*)'),
                                body=self.request_callback,
+                               adding_headers={ 'Content-Type': 'text/html' },
                                status=200)
 
         # FIXME: There is an interference issue between unittests, if the same
@@ -191,7 +188,7 @@ class Test404With1ByteRandomShort(Generic404Test):
 
         return '\n'.join(parts)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_1byte_short_not_404(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -237,7 +234,7 @@ class Test404With1ByteRandomLarge(Generic404Test):
 
         return '\n'.join(parts)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_1byte_large_is_404(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -256,7 +253,7 @@ class Test404With1ByteRandomLarge(Generic404Test):
         not_found = HTTPResponse(200, body, headers, not_found_url, not_found_url)
         self.assertTrue(self.fingerprint_404.is_404(not_found))
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_1byte_large_is_200(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -285,7 +282,7 @@ class Test404FalsePositiveLargeResponsesEqual404s(Generic404Test):
                         'Come back later']
         return self.get_body(unique_parts)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_page_not_found_with_large_response(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -307,13 +304,14 @@ class Test404FalsePositiveLargeResponsesEqual404s(Generic404Test):
         success_200 = HTTPResponse(200, body, headers, success_url, success_url)
         self.assertFalse(self.fingerprint_404.is_404(success_200))
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_page_marked_as_404_with_large_response(self):
 
         httpretty.register_uri(httpretty.GET,
-                               re.compile('w3af.com/(.*)'),
-                               body=self.request_callback,
-                               status=200)
+                                re.compile('w3af.com/(.*)'),
+                                adding_headers={ 'Content-Type': 'text/html' },
+                                body=self.request_callback,
+                                status=200)
 
         # FIXME: There is an interference issue between unittests, if the same
         #        URL is used for multiple unittests, the test will fail. This
@@ -331,14 +329,14 @@ class Test404FalsePositiveLargeResponsesEqual404s(Generic404Test):
 class Test404FalsePositiveLargeResponsesWithCSRFToken(Generic404Test):
 
     def generate_csrf_token(self):
-        return os.urandom(64).encode('hex')
+        return codecs.encode(os.urandom(64), 'hex').decode("utf-8")
 
     def request_callback(self, request, uri, headers):
         unique_parts = [self.generate_csrf_token()]
         body = self.get_body(unique_parts)
         return 200, headers, body
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_is_404_with_csrf_token(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -359,7 +357,7 @@ class Test404FalsePositiveLargeResponsesWithCSRFToken(Generic404Test):
 
         self.assertTrue(self.fingerprint_404.is_404(not_found_404))
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_exists_with_csrf_token_in_404_page(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -395,7 +393,7 @@ class Test404FalsePositiveLargeResponsesWithCSRFTokenPartiallyEqual(Generic404Te
         body = self.get_body(unique_parts)
         return 200, headers, body
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_false_positive(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -467,7 +465,7 @@ class GenericIgnoredPartTest(Generic404Test):
 class Test404HandleIgnoredFilename(GenericIgnoredPartTest):
 
     @unittest.skip('See: IGNORED_PATH_PARTS_DOC')
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_handle_ignored_filename(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -486,7 +484,7 @@ class Test404HandleIgnoredFilename(GenericIgnoredPartTest):
 class Test404HandleIgnoredPath(GenericIgnoredPartTest):
 
     @unittest.skip('See: IGNORED_PATH_PARTS_DOC')
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_handle_ignored_path(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -505,7 +503,7 @@ class Test404HandleIgnoredPath(GenericIgnoredPartTest):
 class Test404HandleIgnoredPathAndFilename(GenericIgnoredPartTest):
 
     @unittest.skip('See: IGNORED_PATH_PARTS_DOC')
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_handle_ignored_path(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -524,7 +522,7 @@ class Test404HandleIgnoredPathAndFilename(GenericIgnoredPartTest):
 class Test404HandleIgnoredPathDeep(GenericIgnoredPartTest):
 
     @unittest.skip('See: IGNORED_PATH_PARTS_DOC')
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_handle_ignored_path(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -546,7 +544,7 @@ class Test404HandleAllIs404(GenericIgnoredPartTest):
         body = self.ALL_SAME_BODY
         return 200, headers, body
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_handle_really_a_404(self):
 
         httpretty.register_uri(httpretty.GET,

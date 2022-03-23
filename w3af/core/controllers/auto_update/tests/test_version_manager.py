@@ -31,7 +31,7 @@ from w3af.core.controllers.auto_update.changelog import ChangeLog
 from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
 from w3af.core.controllers.auto_update.git_client import GitClient
 
-
+@attr('git')
 class TestVersionMgr(unittest.TestCase):
 
     def setUp(self):
