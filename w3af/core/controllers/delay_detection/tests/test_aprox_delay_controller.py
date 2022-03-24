@@ -40,6 +40,9 @@ def generate_delays(wanted_delays, rand_range=(0, 0)):
         
         yield mock_response
 
+def average_delay(mutant, debugging_id):
+    return 0.1
+
 
 class TestAproxDelayController(unittest.TestCase):
     
@@ -50,19 +53,20 @@ class TestAproxDelayController(unittest.TestCase):
                   #    The first multiplier is triggering a delay
                   #
                   #    Then we manage the three verification phase loops
-                  (True, (0.1, 0.1, 0.1, 0.9) * 4),
+                  (True, (0.9, 0.9, 0.9, 0.9,
+                          0.1, 0.1, 0.1, 0.1)),
 
                   # Now the second multiplier is the one which delays
-                  (True, (0.1, 0.1, 0.1, 0.13, 0.9,
+                  (True, (0.13, 0.9, 0.9, 0.9, 0.9,
                           0.1, 0.1, 0.1, 0.8,
                           0.1, 0.1, 0.1, 0.9,
                           0.1, 0.1, 0.1, 1.1)),
 
                   # Random delays
-                  (False, (0.1, 1.1, 2.1, 1.9, 1.8, 1.9, 1.7)),
+                  (False, (0.1, 0.13, 0.15, 0.2, 0.11, 0.01, 1.0)),
 
                   # Now the third multiplier is the one which delays
-                  (True, (0.1, 0.1, 0.1, 0.13, 0.14, 0.9,
+                  (True, (0.13, 0.14, 0.9, 0.9, 0.9, 0.9,
                           0.1, 0.2, 0.2, 0.98,
                           0.2, 0.1, 0.2, 1.1,
                           0.1, 0.23, 0.19, 1.1)),
@@ -79,13 +83,14 @@ class TestAproxDelayController(unittest.TestCase):
             mock_uri_opener = Mock()
             side_effect = generate_delays(delays)
             mock_uri_opener.send_mutant = MagicMock(side_effect=side_effect)
+            mock_uri_opener.get_average_rtt_for_mutant = MagicMock(side_effect=average_delay)
             delay_obj = AproxDelay('%s9!', '1', 10)
             
             url = URL('http://moth/?id=1')
             req = FuzzableRequest(url)
             mutant = QSMutant(req)
             mutant.set_dc(url.querystring)
-            mutant.set_token(('id', 0))
+            mutant.set_token((b'id', 0))
             
             ed = AproxDelayController(mutant, delay_obj, mock_uri_opener)
             controlled, responses = ed.delay_is_controlled()

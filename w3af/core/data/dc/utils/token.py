@@ -20,6 +20,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import copy
+
 from w3af.core.data.misc.encoding import smart_unicode, smart_str_ignore
 
 
@@ -105,6 +107,13 @@ class DataToken(object):
 
         # proxy to the wrapped object
         return getattr(self._value, attr)
+
+    def __deepcopy__(self, memo):
+        return self.__class__(
+            copy.deepcopy(self._name, memo),
+            copy.deepcopy(self._value, memo),
+            copy.deepcopy(self._path, memo)
+        )
 
     def __getstate__(self):
         return self.__dict__

@@ -110,7 +110,7 @@ class TestExactDelay(unittest.TestCase):
             req = FuzzableRequest(url)
             mutant = QSMutant(req)
             mutant.set_dc(url.querystring)
-            mutant.set_token(('id', 0))
+            mutant.set_token((b'id', 0))
             
             ed = ExactDelayController(mutant, delay_obj, urllib)
             controlled, responses = ed.delay_is_controlled()
@@ -128,7 +128,7 @@ class TestExactDelay(unittest.TestCase):
             req = FuzzableRequest(url)
             mutant = QSMutant(req)
             mutant.set_dc(url.querystring)
-            mutant.set_token(('id', 0))
+            mutant.set_token((b'id', 0))
             
             ed = ExactDelayController(mutant, delay_obj, urllib)
             controlled, responses = ed.delay_is_controlled()
