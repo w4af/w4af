@@ -32,7 +32,7 @@ class TestGetVersion(unittest.TestCase):
         self.assertIn(get_minimalistic_version(), get_w3af_version())
 
     def test_minimal(self):
-        self.assertTrue(get_minimalistic_version().startswith('1'))
+        self.assertTrue(get_minimalistic_version().startswith('2019'))
 
     def test_dict(self):
         version_dict = get_w3af_version_as_dict()

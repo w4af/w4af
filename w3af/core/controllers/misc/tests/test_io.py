@@ -29,4 +29,4 @@ class TestIO(unittest.TestCase):
         content = 'content'
         name = 'name'
         ns_io = NamedStringIO(content, name)
-        self.assertEqual(str(ns_io), content)
+        self.assertEqual(ns_io.getvalue(), content)

@@ -53,7 +53,7 @@ marshmallow = "*"
 pypi-simple = "*"
 PyGObject = "*"
 apispec-webframeworks = "*"
-flask = "*"
+Flask = "*"
 
 [dev-packages]
 

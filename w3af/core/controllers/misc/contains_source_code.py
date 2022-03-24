@@ -102,6 +102,11 @@ def contains_source_code(http_response):
                 - A tuple containing the programming language names
     """
     body = http_response.get_body()
+    if isinstance(body, bytes):
+        if http_response.charset is not None:
+            body = http_response.get_body().decode(http_response.charset, errors="ignore")
+        else:
+            body = http_response.decode('utf-8', errors="ignore")
 
     for match, _, _, lang in _multi_re.query(body):
 

@@ -61,7 +61,7 @@ class TestDiffPerformance(unittest.TestCase):
 
     def _print_result(self, result):
         results = list(result.items())
-        results.sort(lambda a, b: a[1] < b[1])
+        results.sort(key=lambda a: a[1])
 
         print()
 
@@ -71,10 +71,9 @@ class TestDiffPerformance(unittest.TestCase):
         print()
 
     def _run_test_xml(self, diff):
-        a = file(os.path.join(self.DATA, 'source.xml')).read()
-        b = file(os.path.join(self.DATA, 'target.xml')).read()
-
-        diff(a, b)
+        with open(os.path.join(self.DATA, 'source.xml')) as a:
+            with open(os.path.join(self.DATA, 'target.xml')) as b:
+                diff(a.read(), b.read())
 
     def _run_diff_large_different_responses(self, diff):
         large_file_1 = ''
