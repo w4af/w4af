@@ -33,7 +33,7 @@ class TestWebserver(unittest.TestCase):
 
     IP = '127.0.0.1'
     PORT = REMOTEFILEINCLUDE
-    TESTSTRING = 'abc<>def'
+    TESTSTRING = b'abc<>def'
 
     def setUp(self):
         self.tempdir = tempfile.gettempdir()
@@ -54,9 +54,8 @@ class TestWebserver(unittest.TestCase):
 
     def _create_file(self):
         # Create a file and request it
-        test_fh = file(os.path.join(self.tempdir, 'foofile.txt'), 'w')
-        test_fh.write(self.TESTSTRING)
-        test_fh.close()
+        with open(os.path.join(self.tempdir, 'foofile.txt'), 'wb') as test_fh:
+            test_fh.write(self.TESTSTRING)
 
     def test_is_down(self):
         # pylint: disable=E1103
