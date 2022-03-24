@@ -47,10 +47,10 @@ class TestUtils(unittest.TestCase):
         url_opener_mock = Mock()
         url_opener_mock.GET = MagicMock(return_value=http_response)
 
-        cors = provides_cors_features(fr, url_opener_mock, None)
+        cors = provides_cors_features(fr, url_opener_mock, 'abc')
 
         call_header = Headers(list({'Origin': 'www.w3af.org'}.items()))
-        url_opener_mock.GET.assert_called_with(url, headers=call_header)
+        url_opener_mock.GET.assert_called_with(url, headers=call_header, debugging_id='abc')
 
         self.assertFalse(cors)
 
