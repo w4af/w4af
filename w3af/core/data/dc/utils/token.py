@@ -109,11 +109,13 @@ class DataToken(object):
         return getattr(self._value, attr)
 
     def __deepcopy__(self, memo):
-        return self.__class__(
+        res = self.__class__(
             copy.deepcopy(self._name, memo),
             copy.deepcopy(self._value, memo),
             copy.deepcopy(self._path, memo)
         )
+        res._original_value = copy.deepcopy(self._original_value, memo)
+        return res
 
     def __getstate__(self):
         return self.__dict__
