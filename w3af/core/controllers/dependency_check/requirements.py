@@ -24,10 +24,9 @@ from w3af.core.controllers.dependency_check.pip_dependency import PIPDependency
 CORE = 1
 GUI = 2
 
-
 CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('github', 'PyGithub', '1.55'),
-                     PIPDependency('git.util', 'GitPython', '3.1.26'),
+                     PIPDependency('git.util', 'GitPython', '3.1.27'),
                      PIPDependency('pybloomfilter', 'pybloomfiltermmap3', '0.5.5'),
                      PIPDependency('phply', 'phply', '1.2.5'),
                      PIPDependency('nltk', 'nltk', '3.7'),
@@ -40,14 +39,14 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      # We need 0.1.8 because of mitmproxy
                      PIPDependency('pyasn1', 'pyasn1', '0.4.8'),
 
-                     PIPDependency('lxml', 'lxml', '4.7.1'),
+                     PIPDependency('lxml', 'lxml', '4.8.0'),
                      PIPDependency('scapy.config', 'scapy', '2.4.5'),
                      PIPDependency('guess_language', 'guess-language', '0.2'),
                      PIPDependency('cluster', 'cluster', '1.4.1.post3'),
                      PIPDependency('msgpack', 'msgpack', '1.0.3'),
                      PIPDependency('ntlm', 'python-ntlm3', '1.0.2'),
                      PIPDependency('Halberd', 'halberd', '0.2.5'),
-                     PIPDependency('darts.lib.utils', 'darts.util.lru', '0.5'),
+                     PIPDependency('darts.lib.utils', 'darts-util-lru', '0.5'),
                      PIPDependency('jinja2', 'Jinja2', '3.0.3'),
                      PIPDependency('vulndb', 'vulndb', '0.1.3'),
                      PIPDependency('markdown', 'markdown', '3.3.6'),
@@ -67,11 +66,11 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
 
                      # Only used by the REST API, but in the future the console
                      # and GUI will consume it so it's ok to put this here
-                     PIPDependency('Flask', 'Flask', '2.0.2'),
+                     PIPDependency('Flask', 'Flask', '2.0.3'),
                      PIPDependency('yaml', 'PyYAML', '6.0'),
 
                      # tldextract extracts the tld from any domain name
-                     PIPDependency('tldextract', 'tldextract', '3.1.2'),
+                     PIPDependency('tldextract', 'tldextract', '3.2.0'),
 
                      # pebble multiprocessing
                      PIPDependency('pebble', 'pebble', '4.6.3'),
@@ -88,10 +87,10 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('bravado_core', 'bravado-core', '5.17.0'),
 
                      # Fast compression library
-                     PIPDependency('lz4', 'lz4', '3.1.10'),
+                     PIPDependency('lz4', 'lz4', '4.0.0'),
 
                      # Vulners API plugin needs this lib
-                     PIPDependency('vulners', 'vulners', '2.0.0'),
+                     PIPDependency('vulners', 'vulners', '2.0.2'),
 
                      PIPDependency('ipaddresses', 'ipaddresses', '0.0.2'),
 

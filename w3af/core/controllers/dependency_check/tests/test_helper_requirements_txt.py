@@ -36,7 +36,9 @@ class TestGenerateTXT(unittest.TestCase):
     def test_generate_requirements_txt_empty(self, ci_mock):
         requirements_file = generate_requirements_txt([])
         
-        self.assertEqual(0, len(file(requirements_file).read()))
+        with open(requirements_file) as reqs:
+            count = len(reqs.read())
+        self.assertEqual(0, count)
         os.unlink(requirements_file)
 
     @patch(MOCK_TARGET, return_value=True)
@@ -45,6 +47,8 @@ class TestGenerateTXT(unittest.TestCase):
         requirements_file = generate_requirements_txt([PIPDependency('a', 'a', '1.2.3'),
                                                        PIPDependency('b', 'c', '3.2.1'),])
         
-        self.assertEqual(EXPECTED, file(requirements_file).read())
+        with open(requirements_file) as text:
+            received = text.read()
+        self.assertEqual(EXPECTED, received)
         os.unlink(requirements_file)
         

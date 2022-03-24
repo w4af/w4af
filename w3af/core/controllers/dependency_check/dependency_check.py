@@ -166,7 +166,7 @@ def write_instructions_to_console(platform, failed_deps, os_packages, script_pat
     print((msg % script_path))
 
 
-def dependency_check(dependency_set=CORE, exit_on_failure=True):
+def dependency_check(dependency_set=CORE, exit_on_failure=True, skip_external_commands=False):
     """
     This function verifies that the dependencies that are needed by the
     framework core are met.
@@ -182,7 +182,10 @@ def dependency_check(dependency_set=CORE, exit_on_failure=True):
 
     failed_deps = get_missing_pip_packages(platform, dependency_set)
     os_packages = get_missing_os_packages(platform, dependency_set)
-    external_commands = get_missing_external_commands(platform)
+    if skip_external_commands:
+        external_commands = []
+    else:
+        external_commands = get_missing_external_commands(platform)
 
     enable_warnings()
 

@@ -25,21 +25,20 @@ import subprocess
 from .base_platform import Platform
 from ..requirements import CORE, GUI
 
+from w3af.core.data.misc.encoding import smart_unicode
 
 class Ubuntu1204(Platform):
     SYSTEM_NAME = 'Ubuntu 12.04'
     PKG_MANAGER_CMD = 'sudo apt-get -y install'
     PIP_CMD = 'pip'
 
-    CORE_SYSTEM_PACKAGES = ['python-pip', 'npm', 'python2.7-dev',
-                            'python-setuptools', 'build-essential',
+    CORE_SYSTEM_PACKAGES = ['python3-pip', 'python3-dev',
+                            'python3-setuptools', 'build-essential',
                             'libsqlite3-dev', 'libssl-dev', 'git',
-                            'libxml2-dev', 'libxslt1-dev', 'libyaml-dev',
-                            'libffi-dev']
+                            'libxml2-dev', 'libffi-dev']
 
     GUI_SYSTEM_PACKAGES = CORE_SYSTEM_PACKAGES[:]
-    GUI_SYSTEM_PACKAGES.extend(['graphviz', 'python-gtksourceview2',
-                                'python-gtk2', 'python-webkit'])
+    GUI_SYSTEM_PACKAGES.extend(['graphviz'])
 
     SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES,
                        GUI: GUI_SYSTEM_PACKAGES}
@@ -60,6 +59,7 @@ class Ubuntu1204(Platform):
             return None
         else:
             dpkg_output, _ = p.communicate()
+            dpkg_output = smart_unicode(dpkg_output)
 
             if not_installed in dpkg_output:
                 return False

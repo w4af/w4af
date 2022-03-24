@@ -27,6 +27,7 @@ from .ubuntu1804 import Ubuntu1804
 from .debian76 import Debian76
 from .debian78 import Debian78
 from .debian80 import Debian80
+from .debian11 import Debian11
 from .centos import CentOS
 from .centos65 import CentOS65
 from .fedora import Fedora
@@ -44,6 +45,7 @@ KNOWN_PLATFORMS = [
                    Debian76,
                    Debian78,
                    Debian80,
+                   Debian11,
                    ElementaryOS02,
                    Fedora,
                    Kali,
