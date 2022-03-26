@@ -44,7 +44,7 @@ class TestTookHelper(unittest.TestCase):
 
             self.assertRegex(sent_message,
                                      'plugin_name.method_name\(test="yes",did="ML7aEYsa"\)'
-                                     ' took .*? seconds to run \(.*? seconds / .*?% consuming CPU cycles\)')
+                                     ' took .*?s to run')
 
     def test_took_with_rtt(self):
         debugging_id = 'ML7aEYsa'
@@ -66,5 +66,4 @@ class TestTookHelper(unittest.TestCase):
 
             self.assertRegex(sent_message,
                                      'plugin_name.method_name\(test="yes",did="ML7aEYsa"\)'
-                                     ' took .*? seconds to run \(1.80 seconds / .*?% sending HTTP requests,'
-                                     ' .*? seconds / .*?% consuming CPU cycles\)')
+                                     ' took .*?s to run \(1.80s .*% sending HTTP requests\)')
