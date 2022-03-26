@@ -54,6 +54,7 @@ pypi-simple = "*"
 PyGObject = "*"
 apispec-webframeworks = "*"
 Flask = "*"
+jinja2 = "*"
 
 [dev-packages]
 
