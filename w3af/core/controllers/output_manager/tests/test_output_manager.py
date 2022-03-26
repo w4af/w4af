@@ -60,7 +60,7 @@ class TestOutputManager(unittest.TestCase):
 
             om.manager.process_all_messages()
 
-            plugin_action.assert_called_once_with(msg, True)
+            plugin_action.assert_called_once_with(msg.encode("utf-8"), True)
 
     def test_output_plugins_actions_with_unicode_message(self):
         """Call all actions on output plugins using a unicode message"""
@@ -106,7 +106,7 @@ class TestOutputManager(unittest.TestCase):
 
         om.manager.process_all_messages()
 
-        plugin_action.assert_called_once_with(msg, False)
+        plugin_action.assert_called_once_with(msg.encode("utf-8"), False)
     
     def test_ignore_plugins(self):
         """The output manager implements ignore_plugins to avoid sending a
@@ -130,7 +130,7 @@ class TestOutputManager(unittest.TestCase):
         
         om.manager.process_all_messages()
 
-        plugin_action.assert_called_once_with(msg, False)        
+        plugin_action.assert_called_once_with(msg.encode('utf-8'), False)
 
     def test_error_handling(self):
         
@@ -149,6 +149,9 @@ class TestOutputManager(unittest.TestCase):
 
             def get_name(self):
                 return 'InvalidPlugin'
+
+            def log_crash(self, crash_message):
+                pass
 
         invalid_plugin = InvalidPlugin()
 
@@ -186,4 +189,4 @@ class TestOutputManager(unittest.TestCase):
 
         om.manager.process_all_messages()
 
-        plugin_action.assert_called_once_with(msg)
+        plugin_action.assert_called_once_with(msg.encode('utf-8'))
