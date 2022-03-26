@@ -20,6 +20,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import copy
+
 import w3af.core.data.kb.config as cf
 
 from w3af.core.data.constants.file_templates.file_templates import get_template_with_payload
@@ -83,3 +85,14 @@ class FileDataToken(DataToken):
         args = (self._name, self._value, self._filename, self._path)
         return self.__class__, args, {'_payload': self._payload,
                                       '_original_value': self._original_value}
+
+    def __deepcopy__(self, memo):
+        res = self.__class__(
+            copy.deepcopy(self._name, memo),
+            copy.deepcopy(self._value, memo),
+            copy.deepcopy(self._filename, memo),
+            copy.deepcopy(self._path, memo)
+        )
+        res._original_value = copy.deepcopy(self._original_value, memo)
+        res._payload = self._payload
+        return res
