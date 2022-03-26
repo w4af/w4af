@@ -116,7 +116,7 @@ class TestPHPSCA(unittest.TestCase):
         """
         analyzer = PhpSCA(code)
         vars = analyzer.get_vars(usr_controlled=False)
-        vars.sort(cmp=lambda x, y: cmp(x.lineno, y.lineno))
+        vars.sort(key=lambda x:x.lineno)
         x1deps, x2deps, x3deps, ydeps, y2deps, zdeps = \
             [[vd.name for vd in v.deps()] for v in vars]
 
