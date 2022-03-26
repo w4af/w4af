@@ -55,6 +55,7 @@ PyGObject = "*"
 apispec-webframeworks = "*"
 Flask = "*"
 jinja2 = "*"
+jellyfish = "*"
 
 [dev-packages]
 

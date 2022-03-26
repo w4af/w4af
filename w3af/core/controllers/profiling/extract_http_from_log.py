@@ -52,8 +52,10 @@ def main(args):
         print(e)
         sys.exit(1)
 
-    file('%s.request' % args.id, 'w').write(request)
-    file('%s.response' % args.id, 'w').write(response)
+    with open('%s.request' % args.id, 'w') as request_fh:
+        request_fh.write(request)
+    with open('%s.response' % args.id, 'w') as response_fh:
+        response_fh.write(response)
 
 
 if __name__ == '__main__':

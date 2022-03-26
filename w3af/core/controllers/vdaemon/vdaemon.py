@@ -181,7 +181,8 @@ class vdaemon(object):
         if os.path.isfile(output_filename):
 
             #    Error handling
-            file_content = file(output_filename).read()
+            with open(output_filename) as fh:
+                file_content = fh.read()
             for tag in ['Invalid', 'Error']:
                 if tag in file_content:
                     raise BaseFrameworkException(file_content.strip())
@@ -226,13 +227,14 @@ class vdaemon(object):
             om.out.debug('Starting payload upload, remote filename is: "' +
                          self._remote_filename + '".')
 
-            if transferHandler.transfer(file(exe_file).read(), self._remote_filename):
-                om.out.console(
-                    'Finished payload upload to "%s"' % self._remote_filename)
-                return self._remote_filename
-            else:
-                raise BaseFrameworkException(
-                    'The payload upload failed, remote md5sum is different.')
+            with open(exe_file) as exe_fh:
+                if transferHandler.transfer(exe_fh.read(), self._remote_filename):
+                    om.out.console(
+                        'Finished payload upload to "%s"' % self._remote_filename)
+                    return self._remote_filename
+                else:
+                    raise BaseFrameworkException(
+                        'The payload upload failed, remote md5sum is different.')
 
     def _exec_payload(self, remote_file_location):
         """

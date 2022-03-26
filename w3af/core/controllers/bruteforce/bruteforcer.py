@@ -182,9 +182,6 @@ class UserPasswordBruteforcer(object):
 
 
 def get_profiling_results(self, max_items=50):
-    def sortfunc(x, y):
-        return cmp(y[1], x[1])
-
     # pylint: disable=E1103
     kb_data = kb.kb.raw_read('password_profiling', 'password_profiling')
 
@@ -197,7 +194,7 @@ def get_profiling_results(self, max_items=50):
 
     else:
         items = list(kb_data.items())
-        items.sort(sortfunc)
+        items.sort(key=lambda x: 0 - x[1])
 
         xlen = min(max_items, len(items))
 

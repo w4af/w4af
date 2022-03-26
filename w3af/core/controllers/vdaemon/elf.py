@@ -54,6 +54,5 @@ class elf:
 
 if __name__ == '__main__':
     e = elf()
-    f = file('genElf', 'w')
-    f.write(e.dump())
-    f.close()
+    with open('genElf', 'w') as f:
+        f.write(e.dump())

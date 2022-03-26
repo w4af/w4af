@@ -90,7 +90,8 @@ class TestStrategy(PluginTest):
         https://github.com/andresriancho/w3af/issues/1557
         """
         script = TEST_SCRIPT_1557 % (OUTPUT_PATH, get_wavsep_http())
-        file(SCRIPT_PATH, 'w').write(script)
+        with open(SCRIPT_PATH, "w") as f:
+            f.write(script)
 
         python_executable = sys.executable
 

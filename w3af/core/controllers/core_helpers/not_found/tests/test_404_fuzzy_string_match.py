@@ -29,6 +29,7 @@ import shelve
 import time
 import re
 import gzip
+import jellyfish
 
 from string import printable
 from io import StringIO
@@ -133,9 +134,9 @@ class Test404FuzzyStringMatch(unittest.TestCase):
         print(('Analyzed samples: %s' % total))
 
         output = '/tmp/%s.txt' % func_name
-        output_fh = file(output, 'w')
-        for domain_a, domain_b in sorted(failed_domains):
-            output_fh.write('%s - %s\n' % (domain_a, domain_b))
+        with open(output, 'w') as output_fh:
+            for domain_a, domain_b in sorted(failed_domains):
+                output_fh.write('%s - %s\n' % (domain_a, domain_b))
 
         print(('Failed domains stored at %s' % output))
 
@@ -172,9 +173,9 @@ class Test404FuzzyStringMatch(unittest.TestCase):
         print(('Analyzed samples: %s' % total))
 
         output = '/tmp/%s.txt' % func_name
-        output_fh = file(output, 'w')
-        for domain in sorted(failed_domains):
-            output_fh.write('%s\n' % domain)
+        with open(output, 'w') as output_fh:
+            for domain in sorted(failed_domains):
+                output_fh.write('%s\n' % domain)
 
         print(('Failed domains stored at %s' % output))
         #
@@ -235,9 +236,9 @@ class Test404FuzzyStringMatch(unittest.TestCase):
         print(('Analyzed samples: %s' % total))
 
         output = '/tmp/%s.txt' % func_name
-        output_fh = file(output, 'w')
-        for domain in sorted(failed_domains):
-            output_fh.write('%s\n' % domain)
+        with open(output, 'w') as output_fh:
+            for domain in sorted(failed_domains):
+                output_fh.write('%s\n' % domain)
 
         print(('Failed domains stored at %s' % output))
 
@@ -258,8 +259,6 @@ class Test404FuzzyStringMatch(unittest.TestCase):
         """
         Yet another ugly surprise, jaro_distance takes ages to run.
         """
-        # Import it here to avoid issues with missing dependencies in CI
-        import jellyfish
 
         def jelly_fuzzy(str_a, str_b, ratio):
             str_a = str_a.replace('\0', '')
@@ -274,9 +273,6 @@ class Test404FuzzyStringMatch(unittest.TestCase):
         a memory leak somewhere.
         """
         raise SkipTest('This one raises a MemoryError')
-
-        # Import it here to avoid issues with missing dependencies in CI
-        import jellyfish
 
         def jelly_fuzzy(str_a, str_b, ratio):
             str_a = str_a.replace('\0', '')

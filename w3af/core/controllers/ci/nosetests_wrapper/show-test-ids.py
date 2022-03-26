@@ -20,11 +20,12 @@ def nose_strategy():
     """
     # This will generate the ID_FILE
     get_test_ids(NOSE_RUN_SELECTOR)
-    nose_data = pickle.load(file(ID_FILE))
+    with open(ID_FILE) as id_fh:
+        nose_data = pickle.load(id_fh)
 
-    for key, value in nose_data['ids'].items():
-        _, _, test_class_method = value
-        print('%s:%s' % (key, test_class_method))
+        for key, value in nose_data['ids'].items():
+            _, _, test_class_method = value
+            print('%s:%s' % (key, test_class_method))
 
 
 if __name__ == '__main__':
