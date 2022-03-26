@@ -156,8 +156,7 @@ class WebHandler(http.server.BaseHTTPRequestHandler):
 
             # Clean up
             self.close_connection = 1
-            self.rfile.close()
-            self.wfile.close()
+            self.wfile.flush()
         return
 
     def log_message(self, fmt, *args):
