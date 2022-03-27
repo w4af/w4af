@@ -261,6 +261,7 @@ class CommonAttackMethods(object):
         if self._header_length == self._footer_length == 0:
             return body
 
+        # pylint: disable=E1130
         if self._footer_length == 0:
             return body[self._header_length:]
         else:

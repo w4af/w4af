@@ -25,7 +25,7 @@ import copy
 import pprint
 import tempfile
 import io
-import platform
+import distro
 
 from itertools import chain
 
@@ -62,10 +62,10 @@ def get_platform_dist():
     :return: A human readable representation of platform.dist() , unknown if
              the module returned none / ''
     """
-    if platform.dist() == ('', '', ''):
+    if distro.linux_distribution() == ('', '', ''):
         return 'Unknown'
 
-    return ' '.join(platform.dist())
+    return ' '.join(distro.linux_distribution())
 
 
 def get_versions():

@@ -44,7 +44,7 @@ class TestGitUtils(unittest.TestCase):
         self.assertIsInstance(latest_commit, str)
         
     def test_get_latest_commit_negative(self):
-        self.assertRaises(git.exc.InvalidGitRepositoryError, get_latest_commit, '/etc/')
+        self.assertRaises(git.InvalidGitRepositoryError, get_latest_commit, '/etc/')
 
     def test_get_current_branch(self):
         # For some strange reason jenkins creates a branch called

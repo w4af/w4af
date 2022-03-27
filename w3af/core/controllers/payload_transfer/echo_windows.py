@@ -133,6 +133,7 @@ class EchoWindows(BasePayloadTransfer):
                                 self._filename + '.' + extension)
 
         om.out.debug('Finished file upload.')
+        return True
 
     def _get_extension(self, filename):
         if len(filename.split('.')) != 1:

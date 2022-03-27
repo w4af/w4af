@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "123354b37cb2442ff574639163255604e90b3e845a8865d4145cbc8a4a7e58fc"
+            "sha256": "5fbab7e1a5684c4cf59c61d9b4a14eac2815a337ad611526e9a6ab6c74b12d40"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -69,10 +69,10 @@
         },
         "astroid": {
             "hashes": [
-                "sha256:33f1c15fe9661348a50b7ec6789947089ead2a5de727bb4782d530d9d2fff2c8",
-                "sha256:e3ae0984c28b7bae2a107dffbc6e9acecf9b06506322f3465e914405dd652394"
+                "sha256:8d0a30fe6481ce919f56690076eafbb2fb649142a89dc874f1ec0e7a011492d0",
+                "sha256:cc8cc0d2d916c42d0a7c476c57550a4557a083081976bf42a73414322a6411d9"
             ],
-            "version": "==2.11.1"
+            "version": "==2.11.2"
         },
         "attrs": {
             "hashes": [
@@ -360,7 +360,6 @@
                 "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff",
                 "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"
             ],
-            "markers": "python_version >= '3'",
             "version": "==3.3"
         },
         "importlib-metadata": {
@@ -741,11 +740,11 @@
         },
         "nocasedict": {
             "hashes": [
-                "sha256:86e2dae49e34de7c31b65b486c8f9aa58b66dc2e8ee9b34c390c6c58885c85a0",
-                "sha256:90edd891f4aafa5a1dc55f5d8f1b5dbdd89ff2a1c2ee37de9938f9b34c2777c3"
+                "sha256:8220b97ba06b08eb2deded774c406c77e0ca0d5352ae71249f6f9d1f2a17bd7b",
+                "sha256:cd5e31a8a45e8e9fd71741b22aea73b5f2abfc7889618fb8aa6b40136c7dce4a"
             ],
             "index": "pypi",
-            "version": "==1.0.2"
+            "version": "==1.0.3"
         },
         "nose": {
             "hashes": [
@@ -1338,15 +1337,6 @@
             ],
             "version": "==2.3.1"
         },
-        "subprocess32": {
-            "hashes": [
-                "sha256:88e37c1aac5388df41cc8a8456bb49ebffd321a3ad4d70358e3518176de3a56b",
-                "sha256:e45d985aef903c5b7444d34350b05da91a9e0ea015415ab45a21212786c649d0",
-                "sha256:eb2937c80497978d181efa1b839ec2d9622cf9600a039a79d0e108d1f9aec79d"
-            ],
-            "index": "pypi",
-            "version": "==3.5.4"
-        },
         "swagger-spec-validator": {
             "hashes": [
                 "sha256:2aee5e1fc0503be9f8299378b10c92169572781573c6de3315e831fd0559ba73",
@@ -1581,6 +1571,13 @@
             ],
             "index": "pypi",
             "version": "==1.3.4"
+        },
+        "yappi": {
+            "hashes": [
+                "sha256:855890cd9a90d833dd2df632d648de8ccd0a4c3131f1edc8abd004db0625b5e8"
+            ],
+            "index": "pypi",
+            "version": "==1.3.3"
         },
         "zipp": {
             "hashes": [

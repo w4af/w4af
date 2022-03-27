@@ -43,6 +43,8 @@ class GitClient(object):
     UPD_ERROR_MSG = ('An error occurred while fetching from the remote'
                      ' Git repository! Please update manually using'
                      ' "git pull".')
+    LATEST_COMMIT_ERROR_MSG = ('An error occured getting the current revision '
+                               'for the active checkout.')
 
     def __init__(self, path):
         self._actionlock = threading.RLock()
@@ -65,7 +67,10 @@ class GitClient(object):
         with self._actionlock:
             try:
                 latest_before_pull = get_latest_commit()
-            
+            except Exception as e:
+                msg = self.LATEST_COMMIT_ERROR_MSG + ' The original exception was: "%s"'
+                raise GitClientError(msg % e)
+            try:
                 self._repo.remotes.origin.pull(progress=self._progress)
 
                 after_pull = get_latest_commit()

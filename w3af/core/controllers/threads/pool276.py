@@ -47,6 +47,7 @@ import pickle
 
 from multiprocessing import Process, cpu_count, TimeoutError
 from multiprocessing.util import Finalize, debug
+import multiprocessing
 
 #
 # Constants representing the state of a pool
@@ -320,8 +321,9 @@ class Pool(object):
 
     def _setup_queues(self):
         from .queues import SimpleQueueWithSize
-        self._inqueue = SimpleQueueWithSize()
-        self._outqueue = SimpleQueueWithSize()
+        ctx = multiprocessing.get_context("spawn")
+        self._inqueue = SimpleQueueWithSize(ctx=ctx)
+        self._outqueue = SimpleQueueWithSize(ctx=ctx)
         self._quick_put = self._inqueue._writer.send
         self._quick_get = self._outqueue._reader.recv
 

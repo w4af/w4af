@@ -4,7 +4,7 @@ import signal
 import select
 import logging
 
-import subprocess32 as subprocess
+import subprocess
 
 from w3af.core.controllers.ci.nosetests_wrapper.utils.output import get_run_id
 from w3af.core.controllers.ci.nosetests_wrapper.constants import (ARTIFACT_DIR,

@@ -24,7 +24,7 @@ import tempfile
 import random
 import time
 
-import subprocess32 as subprocess
+import subprocess
 
 import w3af.core.data.kb.config as cf
 import w3af.core.controllers.output_manager as om

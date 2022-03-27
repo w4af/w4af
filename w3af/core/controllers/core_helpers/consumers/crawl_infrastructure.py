@@ -124,7 +124,9 @@ class CrawlInfrastructure(BaseConsumer):
                 else:
                     # With specific error/success handling just for debugging
                     try:
+                        # pylint: disable=E1120
                         self._consume(work_unit)
+                        # pylint: enable=E1120
                     finally:
                         self.in_queue.task_done()
 

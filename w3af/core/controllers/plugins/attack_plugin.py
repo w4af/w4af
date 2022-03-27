@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import abc
 import copy
 
 import w3af.core.controllers.output_manager as om
@@ -59,6 +60,7 @@ class AttackPlugin(Plugin, CommonAttackMethods):
         # User configured parameter
         self._generate_only_one = False
 
+    @abc.abstractmethod
     def _generate_shell(self, vuln):
         """
         :param vuln: The vulnerability object to exploit.
@@ -149,6 +151,7 @@ class AttackPlugin(Plugin, CommonAttackMethods):
     def get_type(self):
         return 'attack'
 
+    @abc.abstractmethod
     def get_kb_location(self):
         """
         This method should return the vulnerability names (as saved in the kb)

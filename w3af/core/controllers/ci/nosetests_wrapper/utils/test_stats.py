@@ -24,7 +24,7 @@ import json
 import shlex
 import pickle
 import logging
-import subprocess32 as subprocess
+import subprocess
 
 from xml.etree import ElementTree
 

@@ -39,7 +39,6 @@ bravado-core = "*"
 lz4 = "*"
 vulners = "*"
 ipaddresses = "*"
-subprocess32 = "*"
 xdot = "*"
 nocasedict = "*"
 urllib3 = "*"
@@ -54,8 +53,8 @@ pypi-simple = "*"
 PyGObject = "*"
 apispec-webframeworks = "*"
 Flask = "*"
-jinja2 = "*"
 jellyfish = "*"
+yappi = "*"
 
 [dev-packages]
 
