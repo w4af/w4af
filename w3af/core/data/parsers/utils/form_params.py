@@ -102,9 +102,7 @@ class FormParameters(OrderedDict):
         :param attributes: The form tag attributes as seen in the HTML
         :param hosted_at_url: The URL where the form appeared
         """
-        # pylint: disable=E1002
         super(FormParameters, self).__init__(init_vals)
-        # pylint: enable=E1002
 
         # Form parameter meta-data
         self.meta = meta if meta is not None else {}

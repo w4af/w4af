@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import abc
 import re
 import urllib.request, urllib.parse, urllib.error
 import json
@@ -166,6 +167,7 @@ class GoogleAPISearch(object):
 
         return self._uri_opener.GET(url, headers=headers, follow_redirects=True)
 
+    @abc.abstractmethod
     def _do_google_search(self):
         """
         Perform the google search based on implementation. This method has
@@ -173,6 +175,7 @@ class GoogleAPISearch(object):
         """
         pass
 
+    @abc.abstractmethod
     def _extract_links(self, pages):
         """
         Return list of URLs found in pages. Must be overridden by subclasses.

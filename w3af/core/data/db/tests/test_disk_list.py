@@ -47,7 +47,7 @@ class TestDiskList(unittest.TestCase):
         dl = DiskList()
 
         for i in range(0, 1000):
-            _ = dl.append(i)
+            dl.append(i)
 
         for i in range(0, int(1000 / 2)):
             r = random.randint(0, 1000 - 1)
@@ -71,7 +71,7 @@ class TestDiskList(unittest.TestCase):
 
         for i in range(0, 1000):
             rnd = ''.join(random.choice(string.ascii_letters) for i in range(40))
-            _ = dl.append(rnd)
+            dl.append(rnd)
 
         self.assertEqual(rnd in dl, True)
 
@@ -130,7 +130,7 @@ class TestDiskList(unittest.TestCase):
         dl = DiskList()
 
         for i in range(0, 100):
-            _ = dl.append(i)
+            dl.append(i)
 
         self.assertEqual(len(dl), 100)
 

@@ -21,8 +21,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 from collections import defaultdict
+from functools import total_ordering
 
-
+@total_ordering
 class OrderedIterDefaultDict(defaultdict):
     def iteritems(self):
         for k in sorted(self.keys()):
@@ -63,8 +64,11 @@ class URLNode(object):
     def __eq__(self, other):
         return self.path == other.path
 
-    def __cmp__(self, other):
-        return cmp(self.path, other.path)
+    def __ne__(self, other):
+        return not (self.path == other.path)
+
+    def __lt__(self, other):
+        return (self.path < other.path)
 
 
 class URLTree(object):

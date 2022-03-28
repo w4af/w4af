@@ -157,7 +157,7 @@ class SmartQueue(QueueSpeedMeasurement):
         timestamp = time.time()
 
         try:
-            put_res = self.q.put((timestamp, item), block=block, timeout=timeout)
+            self.q.put((timestamp, item), block=block, timeout=timeout)
         except:
             raise
         else:
@@ -170,7 +170,6 @@ class SmartQueue(QueueSpeedMeasurement):
                 om.out.debug(msg % args)
 
             self._item_added_to_queue()
-            return put_res
     
     def __getattr__(self, attr):
         if attr in self.__dict__:

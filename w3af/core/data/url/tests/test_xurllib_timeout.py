@@ -70,7 +70,7 @@ class TestXUrllibTimeout(unittest.TestCase):
         try:
             self.uri_opener.GET(url)
         except HTTPRequestException as hre:
-            self.assertEqual(hre.message, 'HTTP timeout error')
+            self.assertEqual(hre.value, 'HTTP timeout error')
         except Exception as e:
             msg = 'Not expecting: "%s"'
             self.assertTrue(False, msg % e.__class__.__name__)
@@ -128,7 +128,7 @@ class TestXUrllibTimeout(unittest.TestCase):
                 self.uri_opener.GET(url)
             except HTTPRequestException as hre:
                 http_request_e += 1
-                self.assertEqual(hre.message, 'HTTP timeout error')
+                self.assertEqual(hre.value, 'HTTP timeout error')
             except ScanMustStopException:
                 scan_stop_e += 1
                 self.assertTrue(True)

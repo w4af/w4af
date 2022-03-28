@@ -404,10 +404,10 @@ class KeepAliveHandler(object):
                 #        work in 1% of the remote servers, but it is our best bet
                 #
                 if not _is_legal_header_name(k):
-                    k = header_encode(k, charset='utf-8', keep_eols=True)
+                    k = header_encode(k, charset='utf-8')
 
                 if _is_illegal_header_value(v):
-                    v = header_encode(v, charset='utf-8', keep_eols=True)
+                    v = header_encode(v, charset='utf-8')
 
                 conn.putheader(k, v)
 

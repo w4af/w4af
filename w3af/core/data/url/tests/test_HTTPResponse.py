@@ -259,7 +259,8 @@ class TestHTTPResponse(unittest.TestCase):
         TEST_FILE = os.path.join(ROOT_PATH, 'core', 'controllers', 'misc', 'tests',
                                  'data', 'code-detect-false-positive.jpg')
 
-        body = file(TEST_FILE).read()
+        with open(TEST_FILE) as f:
+            body = f.read()
 
         # Note: This is failing when the body contains binary, the content-type
         # is text/html, and the HTTPResponse object trusts the content-type

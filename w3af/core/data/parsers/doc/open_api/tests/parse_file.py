@@ -13,7 +13,8 @@ spec_filename = sys.argv[1]
 
 _, extension = os.path.splitext(spec_filename)
 
-body = file(spec_filename).read()
+with open(spec_filename) as f:
+    body = f.read()
 headers = Headers(list({'Content-Type': 'application/%s' % extension}.items()))
 response = HTTPResponse(200, body, headers,
                         URL('http://moth/swagger.%s' % extension),

@@ -332,6 +332,7 @@ class TestFuzzableRequest(unittest.TestCase):
 
         fr_read = disk_set[0]
 
+        # pylint: disable=E1101
         self.assertIsInstance(fr_read.get_raw_data(), MultipartContainer)
         self.assertIn('a', fr_read.get_raw_data())
 

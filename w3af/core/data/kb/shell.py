@@ -19,6 +19,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import abc
+
 import w3af.plugins.attack.payloads.payload_handler as payload_handler
 import w3af.core.controllers.output_manager as om
 
@@ -144,6 +146,7 @@ class Shell(ExploitResult):
         """
         return True
 
+    @abc.abstractmethod
     def specific_user_input(self, command, parameters):
         """
         This method is called when a user writes a command in the shell and hits

@@ -1,6 +1,8 @@
+from functools import total_ordering
+
 from w3af.core.data.db.disk_dict import DiskDict
 
-
+@total_ordering
 class DiskDeque(object):
     """
     The base code for this file comes from [0], I've modified it to use a
@@ -93,10 +95,18 @@ class DiskDeque(object):
     def __len__(self):
         return self.right - self.left
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
         if type(self) != type(other):
-            return cmp(type(self), type(other))
-        return cmp(list(self), list(other))
+            return False
+        return list(self) == list(other)
+
+    def __ne__(self, other):
+        if type(self) != type(other):
+            return True
+        return list(self) != list(other)
+
+    def __lt__(self, other):
+        return list(self) < list(other)
 
     def __repr__(self, _track=[]):
         if id(self) in _track:

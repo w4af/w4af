@@ -208,6 +208,7 @@ class TestMultipartContainer(unittest.TestCase):
         self.assertIsNot(dc_read, dc)
 
         # But they hold the same data
+        # pylint: disable=E1101
         self.assertEqual(dc.get_token(), dc_read.get_token())
         self.assertIsNotNone(dc.get_token())
         self.assertIsNotNone(dc_read.get_token())

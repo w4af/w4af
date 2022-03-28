@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import abc
 import copy
 
 from w3af.core.data.constants.ignored_params import is_in_ignored_parameters
@@ -45,10 +46,12 @@ class Mutant(DiskItem):
     def set_fuzzable_request(self, freq):
         self._freq = freq
 
+    @abc.abstractmethod
     def set_dc(self, data_container):
         msg = 'Mutant sub-class "%s" needs to implement set_dc'
         raise NotImplementedError(msg % self.__class__.__name__)
 
+    @abc.abstractmethod
     def get_dc(self):
         msg = 'Mutant sub-class "%s" needs to implement get_dc'
         raise NotImplementedError(msg % self.__class__.__name__)

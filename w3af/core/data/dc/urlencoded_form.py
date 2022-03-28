@@ -90,12 +90,15 @@ class URLEncodedForm(Form):
         d = dict()
         d.update(list(self.items()))
 
+        output = dict()
         for key in d:
             key_type = self.get_parameter_type(key, default=None)
             if key_type in self.AVOID_STR_DUPLICATES:
-                d[key] = d[key][:1]
+                output[key] = d[key][:1]
+            else:
+                output[key] = d[key]
 
-        return urlencode(d, encoding=self.encoding, safe='')
+        return urlencode(output, encoding=self.encoding, safe='')
 
     def get_type(self):
         return 'URL encoded form'

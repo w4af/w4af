@@ -454,8 +454,8 @@ class ExtendedUrllib(object):
         if max_requests_per_second <= 0:
             return
 
-        min_interval = 1.0 / float(max_requests_per_second)
-        elapsed = time.clock() - self._rate_limit_last_time_called
+        min_interval = 1000000000 / float(max_requests_per_second)
+        elapsed = time.perf_counter_ns() - self._rate_limit_last_time_called
         left_to_wait = min_interval - elapsed
 
         with self._rate_limit_lock:
@@ -466,9 +466,9 @@ class ExtendedUrllib(object):
                 #
                 #om.out.debug('ExtendedUrllib rate limit in place. Blocking all HTTP'
                 #             ' requests for %s seconds.' % left_to_wait)
-                time.sleep(left_to_wait)
+                time.sleep(left_to_wait / 1000000000.0)
 
-        self._rate_limit_last_time_called = time.clock()
+        self._rate_limit_last_time_called = time.perf_counter_ns()
 
     def _raise_if_should_stop(self):
         # There might be errors that make us stop the process, the exception
@@ -968,18 +968,20 @@ class ExtendedUrllib(object):
             return self._handle_send_success(req, e, grep, original_url,
                                              original_url_inst)
 
-        except (socket.error,
-                URLTimeoutError,
+        except (URLTimeoutError,
                 ConnectionPoolException,
                 OpenSSL.SSL.Error,
                 OpenSSL.SSL.SysCallError,
                 OpenSSL.SSL.ZeroReturnError,
                 BadStatusLine) as e:
             return self._handle_send_socket_error(req, e, grep, original_url)
-        
+
         except (urllib.error.URLError, http.client.HTTPException, HTTPRequestException) as e:
             return self._handle_send_urllib_error(req, e, grep, original_url)
-        
+
+        except socket.error as e:
+            return self._handle_send_socket_error(req, e, grep, original_url)
+
         else:
             return self._handle_send_success(req, res, grep, original_url,
                                              original_url_inst)

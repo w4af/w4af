@@ -55,6 +55,7 @@ apispec-webframeworks = "*"
 Flask = "*"
 jellyfish = "*"
 yappi = "*"
+soappy = "*"
 
 [dev-packages]
 

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import copy
-import cgi
+import html
 
 
 class BaseOption(object):
@@ -150,7 +150,7 @@ class BaseOption(object):
         # FIXME: Not 100% sure about this...
         # I should also kill the \a and other strange escapes...
         # Maybe there is already a function that does this!
-        value = cgi.escape(value)
+        value = html.escape(value)
         value = value.replace('"', '&quot;')
         return value
 

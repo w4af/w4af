@@ -212,7 +212,7 @@ class ParserCache(CacheStats):
                 raise ScanMustStopException(msg % e)
             except Exception as e:
                 # Act just like when there is no parser
-                msg = 'There is no parser for "%s" (%s).' % (http_response.get_url(), e.msg)
+                msg = 'There is no parser for "%s" (%s).' % (http_response.get_url(), str(e))
                 raise BaseFrameworkException(msg)
             else:
                 save_to_cache = self.should_cache(http_response) and cache
