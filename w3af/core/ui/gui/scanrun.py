@@ -621,7 +621,7 @@ class URLsTree(gtk.TreeView):
         # Get the information about the click
         fullurl = "/".join(
             self.treestore[path[:i + 1]][0] for i in range(len(path)))
-        host = urllib2.urlparse.urlparse(fullurl)[1]
+        host = urllib.parse.urlparse(fullurl)[1]
         sendtext = HEAD_TO_SEND % (fullurl, host)
 
         gm = gtk.Menu()

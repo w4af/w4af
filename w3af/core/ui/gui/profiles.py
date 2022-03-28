@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import gtk
-import cgi
+from gi.repository import Gtk as gtk
+import html
 
 from w3af.core.ui.gui import helpers, entries
 from w3af.core.controllers.exceptions import BaseFrameworkException
@@ -430,7 +430,7 @@ class ProfileList(gtk.TreeView):
 
         # save it
         filename, description = dlgResponse
-        filename = cgi.escape(filename)
+        filename = html.escape(filename)
         try:
             profile_obj = helpers.coreWrap(
                 self.w3af.profiles.save_current_to_new_profile,
@@ -483,7 +483,7 @@ class ProfileList(gtk.TreeView):
         dlg.destroy()
         if dlgResponse is not None:
             filename, description = dlgResponse
-            filename = cgi.escape(filename)
+            filename = html.escape(filename)
             try:
                 profile_obj = helpers.coreWrap(self.w3af.profiles.save_current_to_new_profile,
                                                filename, description)

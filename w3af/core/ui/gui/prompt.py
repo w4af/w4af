@@ -19,9 +19,12 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
-import gtk
-import gobject
-import pango
+
+import gi
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+gi.require_version('Pango', '1.0')
+from gi.repository import Pango as pango
 
 from w3af.core.ui.gui import GUI_DATA_PATH
 from w3af.core.ui.gui.output.message_consumer import MessageConsumer

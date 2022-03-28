@@ -49,7 +49,7 @@ def run_simple(hostname, port, application, use_reloader=False,
         from werkzeug.debug import DebuggedApplication
         application = DebuggedApplication(application, use_evalex)
     if static_files:
-        from werkzeug.wsgi import SharedDataMiddleware
+        from werkzeug.middleware.shared_data import SharedDataMiddleware
         application = SharedDataMiddleware(application, static_files)
 
     def inner():

@@ -22,13 +22,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
 # Now that I know that I have them, import them!
-import gtk
-import gobject
 import shelve
 import os
 import webbrowser
 import time
 import sys
+
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 
 from multiprocessing.dummy import Process
 

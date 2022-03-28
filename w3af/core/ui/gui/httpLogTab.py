@@ -19,9 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import gtk
-import gobject
-import pango
+import gi
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+gi.require_version('Pango', '1.0')
+from gi.repository import Pango as pango
 
 # The elements to create the req/res viewer
 from w3af.core.ui.gui.reqResViewer import ReqResViewer
@@ -219,7 +221,7 @@ class httpLogTab(RememberingHPaned):
         self.pref.add_section('sizes', _('Response Size'), filterSize)
         self.pref.show()
         self._advSearchBox.pack_start(self.pref, False, False)
-        self._advSearchBox.hide_all()
+        self._advSearchBox.hide()
         mainvbox.pack_start(self._advSearchBox, False, False)
 
     def __add_columns(self, treeview):
@@ -297,7 +299,7 @@ class httpLogTab(RememberingHPaned):
     def _showHideFilterBox(self, widget):
         """Show/hide advanced options."""
         if not widget.get_active():
-            self._advSearchBox.hide_all()
+            self._advSearchBox.hide()
         else:
             self._advSearchBox.show_all()
 

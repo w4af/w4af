@@ -19,8 +19,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import gtk
-import gobject
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 
 from w3af.core.ui.gui import helpers, entries, httpLogTab
 from w3af.core.ui.gui.reqResViewer import ReqResViewer

@@ -22,8 +22,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import functools
 import os
 
-import gtk
-import gobject
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 
 from w3af import ROOT_PATH
 from w3af.core.ui.gui import helpers, entries

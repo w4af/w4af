@@ -19,9 +19,9 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import gtk
+from gi.repository import Gtk as gtk
 import os
-import cgi
+import html
 
 from w3af import ROOT_PATH
 from w3af.core.ui.gui import GUI_DATA_PATH
@@ -180,7 +180,7 @@ class Wizard(entries.RememberingWindow):
             dlg.destroy()
             return
 
-        filename = cgi.escape(filename)
+        filename = html.escape(filename)
         try:
             helpers.coreWrap(self.w3af.profiles.save_current_to_new_profile,
                              filename, description)

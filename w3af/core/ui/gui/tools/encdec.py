@@ -26,8 +26,8 @@ import base64
 import hashlib
 import random
 
-import gtk
-import gobject
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 import w3af.core.data.parsers.utils.encode_decode as encode_decode
 from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af.core.ui.gui import entries

@@ -19,9 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 # For window creation
-import gtk
-import gtk.gdk
-import gobject
+import gi
+from gi.repository import Gtk as gtk
+from gi.repository import Gdk as gdk
+from gi.repository import GObject as gobject
+
 import xdot
 
 from w3af.core.controllers.misc.fuzzy_string_cmp import relative_distance
