@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 
+import pickle as cPickle
+
 def do_msgpack(obj):
     msg = msgpack.packb([1,2,3])
     msgpack.unpackb(msg)

@@ -89,6 +89,7 @@ class URLTree(object):
                 parent = self.tree[node]
             else:
                 self._update_leaf_flag(parent, node)
+                # pylint: disable=E1136
                 parent = parent[node]
 
     def _update_leaf_flag(self, parent, node):

@@ -57,18 +57,18 @@ def get_days_since_last_update(path):
     cmd_str = 'git log -1 --format=%%cd %s' % path
     cmd = shlex.split(cmd_str)
 
-    # pylint: disable=E1136
     try:
         date_str = git.execute(command=cmd, with_extended_output=False)
     except GitCommandError:
         raise ValueError('"%s" is not in tracked by this repository.' % path)
-    # pylint: enable=E1136
 
     # The date_str is in the following format: Sat Jun 21 10:20:31 2014 -0300
     # We need to parse it, and then do some date math to return the result
     #
     # We ignore the UTC offset because it was "hard to parse" and we don't care
+    # pylint: disable=E1136
     last_commit_time = datetime.strptime(date_str[:-6], '%a %b %d %H:%M:%S %Y')
+    # pylint: enable=E1136
     last_commit_date = last_commit_time.date()
 
     today_date = date.today()

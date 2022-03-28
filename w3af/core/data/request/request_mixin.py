@@ -19,7 +19,9 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import abc
 import hashlib
+
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 from w3af.core.data.misc.encoding import smart_unicode
 
@@ -55,6 +57,18 @@ class RequestMixIn(object):
         request_head = self.dump_request_head(ignore_headers=ignore_headers)
 
         return '%s%s%s' % (smart_unicode(request_head), CRLF, smart_unicode(data))
+
+    @abc.abstractmethod
+    def get_method(self):
+        pass
+
+    @abc.abstractmethod
+    def get_uri(self):
+        pass
+
+    @abc.abstractmethod
+    def get_headers(self):
+        pass
 
     def get_request_hash(self, ignore_headers=()):
         """
