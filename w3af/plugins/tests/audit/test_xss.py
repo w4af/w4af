@@ -343,7 +343,9 @@ class TestXSSPayloadsBreak(TestCase):
 
                 try:
                     # Most contexts
+                    # pylint: disable=E1120
                     context = context_klass(payload, '')
+                    # pylint: enable=E1120
                 except TypeError:
                     # Attribute contexts
                     context = context_klass(payload, '', '')

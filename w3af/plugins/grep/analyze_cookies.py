@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import abc
 import http.cookies
 import re
 
@@ -393,6 +394,10 @@ class CookieMixIn(object):
 
     def get_cookie_object(self):
         return self[COOKIE_OBJECT]
+
+    @abc.abstractmethod
+    def add_to_highlight(self, cookie_string):
+        pass
     
 
 class CookieInfo(Info, CookieMixIn):

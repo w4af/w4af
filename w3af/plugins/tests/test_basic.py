@@ -156,7 +156,8 @@ class TestBasic(unittest.TestCase):
             if os.path.isdir(joined_entry):
                 continue
             
-            plugin_code = file(joined_entry).read()
+            with open(joined_entry) as fh:
+                plugin_code = fh.read()
             
             if 'kb.kb.append' in plugin_code:
                 msg = '%s plugin is directly writing to the kb instead of'\

@@ -34,21 +34,19 @@ class TestPhishTankParseMethods(unittest.TestCase):
     def test_target_parser(self):
         raise SkipTest('This method is awful in terms of memory usage')
 
-        phishtank_db_fd = file(PHISHTANK_DB)
-
-        # pylint: disable=E0602
-        pt_handler = PhishTankHandler([])
-        parser = etree.HTMLParser(recover=True, target=pt_handler)
-        etree.parse(phishtank_db_fd, parser)
+        with open(PHISHTANK_DB) as phishtank_db_fd:
+            # pylint: disable=E0602
+            pt_handler = PhishTankHandler([])
+            parser = etree.HTMLParser(recover=True, target=pt_handler)
+            etree.parse(phishtank_db_fd, parser)
 
     def test_iterparse(self):
         raise SkipTest('This method is awful in terms of memory usage')
 
-        phishtank_db_fd = file(PHISHTANK_DB)
-
-        context = etree.iterparse(phishtank_db_fd, events=('end',), html=True)
-        for action, elem in context:
-            pass
+        with open(PHISHTANK_DB) as phishtank_db_fd:
+            context = etree.iterparse(phishtank_db_fd, events=('end',), html=True)
+            for action, elem in context:
+                pass
 
     def test_iterparse_remove_unused(self):
         """
@@ -78,11 +76,10 @@ class TestPhishTankParseMethods(unittest.TestCase):
 
             del context
 
-        phishtank_db_fd = file(PHISHTANK_DB)
+        with open(PHISHTANK_DB) as phishtank_db_fd:
+            def process_element(elem):
+                pass
 
-        def process_element(elem):
-            pass
-
-        context = etree.iterparse(phishtank_db_fd, events=('end',),
-                                  tag='entry', html=True)
-        fast_iter(context, process_element)
+            context = etree.iterparse(phishtank_db_fd, events=('end',),
+                                    tag='entry', html=True)
+            fast_iter(context, process_element)

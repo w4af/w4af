@@ -62,7 +62,8 @@ class test_all(unittest.TestCase):
         """
         file_path = os.path.join(ROOT_PATH, 'plugins', 'tests', 'grep',
                                  'data', 'w3af.png')        
-        body = file(file_path).read()
+        with open(file_path) as fh:
+            body = fh.read()
         hdrs = Headers(list({'Content-Type': 'image/png'}.items()))
         response = HTTPResponse(200, body, hdrs, self.url_inst, self.url_inst,
                                 _id=random.randint(1, 5000))
@@ -85,7 +86,8 @@ class test_all(unittest.TestCase):
         """
         file_path = os.path.join(ROOT_PATH, 'plugins', 'tests', 'grep',
                                  'data', 'w3af.png')        
-        body = file(file_path).read()
+        with open(file_path) as fh:
+            body = fh.read()
         # Here is the change from the previous test:
         hdrs = Headers(list({'Content-Type': 'text/html'}.items()))
         response = HTTPResponse(200, body, hdrs, self.url_inst, self.url_inst,
@@ -140,7 +142,8 @@ class test_all(unittest.TestCase):
                     file_path = os.path.join(ROOT_PATH, 'plugins', 'tests',
                                              'grep', 'data', file_name)
 
-                    body = file(file_path).read()
+                    with open(file_path) as fh:
+                        body = fh.read()
                     hdrs = Headers(list({'Content-Type': 'text/html'}.items()))
                     response = HTTPResponse(200, body, hdrs,
                                             URL(self.url_str + str(counter)),

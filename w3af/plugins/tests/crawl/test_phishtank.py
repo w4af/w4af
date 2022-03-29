@@ -44,14 +44,16 @@ class TestPhishtank(PluginTest):
         self.assertEqual(len(vulns), 0, vulns)
 
     def get_vulnerable_url(self):
-        pt_csv_reader = csv.reader(file(phishtank.PHISHTANK_DB), delimiter=' ',
-                                   quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        with open(phishtank.PHISHTANK_DB) as phish_fh:
+            pt_csv_reader = csv.reader(phish_fh, delimiter=' ',
+                                    quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
         for phishing_url, phishtank_detail_url in pt_csv_reader:
             return phishing_url
 
     def get_last_vulnerable_url(self):
-        pt_csv_reader = csv.reader(file(phishtank.PHISHTANK_DB), delimiter=' ',
+        with open(phishtank.PHISHTANK_DB) as phish_fh:
+            pt_csv_reader = csv.reader(phish_fh, delimiter=' ',
                                    quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
         for phishing_url, phishtank_detail_url in pt_csv_reader:
@@ -60,7 +62,8 @@ class TestPhishtank(PluginTest):
         return phishing_url
 
     def test_total_urls(self):
-        total_lines = len(file(phishtank.PHISHTANK_DB).read().split('\n'))
+        with open(phishtank.PHISHTANK_DB) as phish_fh:
+            total_lines = len(phish_fh.read().split('\n'))
         self.assertGreater(total_lines, 5000)
 
     def test_phishtank_match_url(self):

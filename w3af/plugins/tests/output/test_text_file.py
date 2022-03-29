@@ -74,7 +74,8 @@ class TestTextFile(PluginTest):
         )
 
     def _analyze_output_file(self):
-        output_file_content = file(self.OUTPUT_HTTP_FILE).read()
+        with open(self.OUTPUT_HTTP_FILE) as http_fh:
+            output_file_content = http_fh.read()
         
         expected = ['Request 1', 'Response 1', '='*40]
         not_expected = ['Request None']
@@ -91,15 +92,16 @@ class TestTextFile(PluginTest):
                      ', using HTTP method (.*?). The sent .*?data was: "(.*?)"'
         vuln_re = re.compile(vuln_regex)
 
-        for line in file(self.OUTPUT_FILE):
-            mo = vuln_re.search(line)
+        with (open(self.OUTPUT_FILE)) as output_fh:
+            for line in output_fh:
+                mo = vuln_re.search(line)
 
-            if mo:
-                v = MockVuln('TestCase', None, 'High', 1, 'plugin')
-                v.set_url(URL(mo.group(1)))
-                v.set_method(mo.group(2))
-                
-                file_vulns.append(v)
+                if mo:
+                    v = MockVuln('TestCase', None, 'High', 1, 'plugin')
+                    v.set_url(URL(mo.group(1)))
+                    v.set_method(mo.group(2))
+
+                    file_vulns.append(v)
 
         return file_vulns
 

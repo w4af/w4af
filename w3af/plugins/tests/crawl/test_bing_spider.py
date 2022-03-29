@@ -23,6 +23,9 @@ from nose.plugins.attrib import attr
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 
+def responses(fmt, expected_urls):
+    return [MockResponse(fmt % eu, 'Response body.') for eu in expected_urls]
+
 @attr('fails')
 class TestBingSpider(PluginTest):
 
@@ -40,9 +43,6 @@ class TestBingSpider(PluginTest):
         'research/', 'blog/', 'education/', 'es/research/',
         'blog', 'es/clients/', '',
     )
-
-    def responses(fmt, expected_urls):
-        return [MockResponse(fmt % eu, 'Response body.') for eu in expected_urls]
 
     MOCK_RESPONSES = responses(target_url_fmt, EXPECTED_URLS)
 

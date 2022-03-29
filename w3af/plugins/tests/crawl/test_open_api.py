@@ -79,10 +79,7 @@ class TestOpenAPIFindAllEndpointsWithAuth(PluginTest):
         fuzzable_requests = [f for f in fuzzable_requests if f.get_url().get_path() not in ('/swagger.json', '/')]
 
         # Order them to be able to easily assert things
-        def by_path(fra, frb):
-            return cmp(fra.get_url().url_string, frb.get_url().url_string)
-
-        fuzzable_requests.sort(by_path)
+        fuzzable_requests.sort(lambda x: x.get_url().url_string)
 
         #
         # Assertions on call #1
@@ -204,10 +201,7 @@ class TestOpenAPINestedModelSpec(PluginTest):
         fuzzable_requests = [f for f in fuzzable_requests if f.get_url().get_path() not in ('/openapi.json', '/')]
 
         # Order them to be able to easily assert things
-        def by_path(fra, frb):
-            return cmp(fra.get_url().url_string, frb.get_url().url_string)
-
-        fuzzable_requests.sort(by_path)
+        fuzzable_requests.sort(key=lambda x:x.get_url().url_string)
 
         self.assertEqual(len(fuzzable_requests), 1)
 

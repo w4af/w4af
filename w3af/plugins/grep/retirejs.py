@@ -24,7 +24,7 @@ import json
 import shlex
 import hashlib
 import tempfile
-import subprocess32 as subprocess
+import subprocess
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.constants.severity as severity
@@ -366,7 +366,8 @@ class retirejs(GrepPlugin):
             return dict()
 
         try:
-            file_contents = file(json_file.name).read()
+            with open(json_file.name) as fh:
+                file_contents = fh.read()
         except Exception:
             msg = 'Failed to read retirejs output file at %s'
             om.out.debug(msg % json_file.name)

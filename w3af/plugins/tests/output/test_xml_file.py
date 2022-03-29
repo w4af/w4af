@@ -100,7 +100,8 @@ class TestXMLOutput(PluginTest):
             set(sorted([v.get_plugin_name() for v in file_vulns]))
         )
 
-        self.assertEqual(validate_xml(file(self.FILENAME).read(), self.XSD), '')
+        with open(self.FILENAME) as file_h:
+            self.assertEqual(validate_xml(file_h.read(), self.XSD), '')
 
     def tearDown(self):
         super(TestXMLOutput, self).tearDown()
@@ -253,7 +254,8 @@ class XMLParser(object):
 def get_vulns_from_xml(filename):
     xp = XMLParser()
     parser = etree.XMLParser(target=xp)
-    vulns = etree.fromstring(file(filename).read(), parser)
+    with open(filename) as file_h:
+        vulns = etree.fromstring(file_h.read(), parser)
     return vulns
 
 

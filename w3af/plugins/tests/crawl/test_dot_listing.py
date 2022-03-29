@@ -74,7 +74,8 @@ class TestDotListing(PluginTest):
         for i in range(1, 4):
             file_name = file_name_fmt % i
             file_path = os.path.join(listing_files_path, file_name)
-            file_content = file(file_path).read()
+            with open(file_path) as fh:
+                file_content = fh.read()
             for user, group, filename in dot_listing_inst._extract_info_from_listing(file_content):
                 users.add(user)
                 groups.add(group)

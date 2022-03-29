@@ -102,7 +102,8 @@ class TestCreditCards(unittest.TestCase):
         credit_card = '3566 0020 2036 0505'
 
         html_file = os.path.join(ROOT_PATH, 'plugins/tests/grep/data/test-3.html')
-        html = file(html_file).read()
+        with open(html_file) as fh:
+            html = fh.read()
         html = html[:len(html) / 2] + ' ' + credit_card + ' ' + html[len(html) / 2:]
 
         url = URL('http://www.w3af.com/')

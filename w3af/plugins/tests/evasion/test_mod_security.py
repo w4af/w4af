@@ -41,13 +41,13 @@ class TestEvasion(unittest.TestCase):
         
         u = URL('http://www.w3af.com/')
         r = HTTPRequest( u, data='' )
-        self.assertEqual(modsec.modify_request( r ).get_data(), '')
+        self.assertEqual(modsec.modify_request( r ).data, '')
 
     def test_urlencoded_post_data(self):
         modsec = mod_security()
         
         u = URL('http://www.w3af.com/')
         r = HTTPRequest( u, data='a=b' )
-        self.assertEqual(modsec.modify_request( r ).get_data(),
+        self.assertEqual(modsec.modify_request( r ).data,
                          '\x00a=b')
         

@@ -56,7 +56,7 @@ class TestValidMOTW(PluginTest):
         self.assertEqual(set([severity.INFORMATION] * 2),
                           set([v.get_severity() for v in infos]))
 
-        self.assertEqual(v.get_name(), 'Mark of the web')
+        self.assertEqual(infos[0].get_name(), 'Mark of the web')
 
 
 class TestInvalidMOTW(PluginTest):
