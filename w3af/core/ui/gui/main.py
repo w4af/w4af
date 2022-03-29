@@ -452,7 +452,7 @@ class MainApp(object):
         # finish it
         self.window.show()
         splash.destroy()
-        self.exceptions_sb.hide_all()
+        self.exceptions_sb.hide()
 
         # No need to add a try/except here to catch KeyboardInterrupt since
         # it is already done in unhandled.handle_crash

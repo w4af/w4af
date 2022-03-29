@@ -18,14 +18,15 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import gtk
-import gobject
 import urllib.request, urllib.error, urllib.parse
 import sys
 import re
 import queue
 import webkit
 import webbrowser
+
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 
 from multiprocessing.dummy import Process, Event
 from markdown import markdown

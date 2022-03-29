@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import gtk
+from gi.repository import Gtk as gtk
 
 from w3af.core.ui.gui import entries
 from w3af.core.ui.gui.tools.encdec import SimpleTextView

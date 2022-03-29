@@ -3,11 +3,12 @@ import os
 import re
 import difflib
 import struct
-import pango
-import gobject
-import gtk
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+from gi.repository import Pango as pango
 from . import diffutil
 import traceback
+from functools import total_ordering
 
 from w3af import ROOT_PATH
 
@@ -120,6 +121,7 @@ def load_pixbuf(fname, size=0):
     return image
 
 
+@total_ordering
 class Struct(object):
     """Similar to a dictionary except that members may be accessed as s.member.
 
@@ -137,9 +139,14 @@ class Struct(object):
         r.append(">\n")
         return " ".join(r)
 
-    def __cmp__(self, other):
-        return cmp(self.__dict__, other.__dict__)
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
 
+    def __ne__(self, other):
+        return not (self.__dict__ == other.__dict__)
+
+    def __lt__(self, other):
+        return (str(self) < str(other))
 
 class Prefs(object):
     edit_wrap_lines = 0
@@ -418,6 +425,7 @@ class FileDiff(object):
                 return s
             else:
                 return ""
+        r = None
         try:
             for c, r in self.regexes:
                 txt = c.sub(killit, txt)

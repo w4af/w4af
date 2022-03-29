@@ -42,7 +42,8 @@ class TestHandleCtrlC(unittest.TestCase):
                                                suffix='.w3af',
                                                dir=tempfile.tempdir,
                                                delete=False)
-        fhandler.write(file(self.SCRIPT).read() % {'moth': get_moth_http()})
+        with open(self.SCRIPT) as script:
+            fhandler.write(script.read() % {'moth': get_moth_http()})
         fhandler.close()
         return fhandler.name
         

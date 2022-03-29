@@ -102,11 +102,9 @@ def suggest(tree, part, skipList=[]):
     :author: Alexander Berezhnoy (alexander.berezhnoy |at| gmail.com)
     """
     try:
-        list = list(tree.keys())
-        dir = True
+        suggestion_list = list(tree.keys())
     except:
-        dir = False
-        list = tree
+        suggestion_list = tree
 
 #    skipList = []
 #    if allowSet:
@@ -128,7 +126,7 @@ def suggest(tree, part, skipList=[]):
     #       hint = ' '
 
     lp = len(part)
-    completions += [(part, v) for v in map(str, list) if v.startswith(
+    completions += [(part, v) for v in map(str, suggestion_list) if v.startswith(
         part) and v not in skipList and lp != len(v)]
 
 #    suffix = allowSet and ',' or ' '
@@ -137,7 +135,7 @@ def suggest(tree, part, skipList=[]):
     #if not allowSet:
     #    completions = [(p, s+' ') for (p, s) in completions]
 
-    if part in list:
+    if part in suggestion_list:
         completions.append((part, part + suffix))
     else:
         if len(completions) == 1:  # and not allowSet:

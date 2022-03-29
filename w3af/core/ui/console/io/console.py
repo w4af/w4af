@@ -137,6 +137,7 @@ try:
 except Exception as e:
     # We aren't on unix !
     try:
+        # pylint: disable=E0401
         import msvcrt
         from w3af.core.ui.console.io.winctrl import *
     except Exception as a:
