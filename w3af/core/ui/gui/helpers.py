@@ -168,6 +168,7 @@ def FriendlyExceptionDlg(message):
     :param message: text received in the friendly exception.
     """
     class w3af_message_dialog(gtk.MessageDialog):
+
         def dialog_response_cb(self, widget, response_id):
             """
             http://faq.pygtk.org/index.py?req=show&file=faq10.017.htp
@@ -175,11 +176,6 @@ def FriendlyExceptionDlg(message):
             self.destroy()
 
         def dialog_run(self):
-            """
-            http://faq.pygtk.org/index.py?req=show&file=faq10.017.htp
-            """
-            if not self.modal:
-                self.set_modal(True)
             self.connect('response', self.dialog_response_cb)
             self.show()
 

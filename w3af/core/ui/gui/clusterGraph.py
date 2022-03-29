@@ -144,7 +144,7 @@ class distance_function_selector(entries.RememberingWindow):
         button = gtk.Button("Select")
         button.connect_object("clicked", self._launch_graph_generator, None)
         box2.pack_start(button, True, True, 0)
-        button.set_flags(gtk.CAN_DEFAULT)
+        button.set_can_default(True)
         button.grab_default()
 
         # Show!
@@ -220,7 +220,7 @@ class w3afDotWindow(xdot.DotWindow):
         gtk.Window.__init__(self)
         self.set_icon_from_file(W3AF_ICON)
 
-        self.graph = xdot.Graph()
+        self.graph = xdot.ui.elements.Graph()
 
         window = self
 

@@ -22,11 +22,15 @@ import urllib.request, urllib.error, urllib.parse
 import sys
 import re
 import queue
-import webkit
 import webbrowser
 
+import gi
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
+gi.require_version("WebKit2","4.0")
+from gi.repository import WebKit2 as webkit
+gi.require_version('GtkSource', '4')
+from gi.repository import GtkSource as gtksource
 
 from multiprocessing.dummy import Process, Event
 from markdown import markdown

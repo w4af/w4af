@@ -58,6 +58,7 @@ class ValidatedEntry(gtk.Entry):
         self.connect("focus-out-event", self._setDefault)
         self.connect("key-release-event", self._key)
         self.orig_value = orig_value
+        self.default_value = orig_value
         self.esc_key = gtk.gdk.keyval_from_name("Escape")
         self.set_width_chars(50)
         
@@ -550,7 +551,7 @@ class TextDialog(gtk.Dialog):
     def __init__(self, title, tabnames=(), icon=None):
         super(TextDialog, self).__init__(title, None, gtk.DIALOG_MODAL,
              (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
-
+        self.modal = True
         self.textviews = []
         if len(tabnames) > 1:
             # The notebook

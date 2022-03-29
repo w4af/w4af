@@ -85,7 +85,7 @@ class LogGraph(gtk.DrawingArea, MessageConsumer):
         """
         # gtk.MAPPED: the widget can be displayed on the screen.
         # flags: http://pygtk.org/docs/pygtk/class-gtkobject.html#method-gtkobject--flags
-        if self.flags() & gtk.MAPPED:
+        if self.get_mapped():
             if self._redraw_gen is None:
                 self._redraw_gen = self._redraw_all()
 

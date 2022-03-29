@@ -27,6 +27,7 @@ from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
 gi.require_version('Pango', '1.0')
 from gi.repository import Pango as pango
+from gi.repository import GtkSource as gtksourceview
 
 from w3af import ROOT_PATH
 from w3af.core.data.constants import severity
