@@ -22,12 +22,15 @@ import os
 import urllib.request, urllib.error, urllib.parse
 import threading
 
+from nose.plugins.attrib import attr
+
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
 
 from w3af.core.data.url.tests.helpers.http_daemon import HTTPDaemon
 
 
+@attr('gui')
 class TestProxy(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'proxy', 'images')

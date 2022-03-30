@@ -31,6 +31,7 @@ from w3af.core.ui.tests.wrappers.xvfb_server import XVFBServer
 from w3af.core.ui.tests.wrappers.tests.utils import is_black_image
 
 
+@attr('gui')
 class TestEnvironment(unittest.TestCase):
 
     X_TEST_COMMAND = 'python %s' % os.path.join(ROOT_PATH, 'core', 'ui', 'tests',

@@ -77,7 +77,7 @@ class TestAll(unittest.TestCase):
     def test_double_token_together(self):
         # from bug 2393362, the idea is to generate 00 to 99
         # using to generators (I'm doing less iterations here)
-        fg = FuzzyGenerator("-$xrange(2)$$xrange(2)$-", "")
+        fg = FuzzyGenerator("-$range(2)$$range(2)$-", "")
         self.assertEqual(list(fg.generate()), [
             ("-00-", ""), ("-01-", ""), ("-10-", ""), ("-11-", "")])
 
