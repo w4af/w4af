@@ -26,7 +26,6 @@ import py_compile
 class TestW3afGUI(unittest.TestCase):
     def test_compiles(self):
         try:
-            with open('w3af_gui') as f:
-                py_compile.compile(f.read(), '/tmp/foo.tmp', 'exec')
+            py_compile.compile('w3af_gui', '/tmp/foo.tmp', 'exec')
         except SyntaxError as se:
             self.assertTrue(False, 'Error in w3af_gui code "%s"' % se)
