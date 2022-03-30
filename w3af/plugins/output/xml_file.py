@@ -24,6 +24,7 @@ import sys
 import time
 import base64
 import jinja2
+import markupsafe
 
 import subprocess
 
@@ -876,7 +877,7 @@ def jinja2_attr_value_escape_filter(value):
         else:
             retval += letter
 
-    return jinja2.Markup(retval)
+    return markupsafe.Markup(retval)
 
 
 TEXT_VALUE_ESCAPES = {
@@ -937,4 +938,4 @@ def jinja2_text_value_escape_filter(value):
         else:
             retval += letter
 
-    return jinja2.Markup(retval)
+    return markupsafe.Markup(retval)

@@ -340,7 +340,8 @@ class SQLMapWrapper(object):
             return ''
         else:
             if os.path.exists(local_file):
-                return file(local_file).read()
+                with open(local_file) as fh:
+                    return fh.read()
         
         return 
 

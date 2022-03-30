@@ -59,16 +59,17 @@ class find_backdoors(CrawlPlugin):
             self._signature_re = MultiRE(signatures, hint_len=2)
 
     def _read_signatures(self):
-        for line in file(self.SIGNATURE_DB):
-            line = line.strip()
+        with open(self.SIGNATURE_DB) as sig_fh:
+            for line in sig_fh:
+                line = line.strip()
 
-            if not line:
-                continue
+                if not line:
+                    continue
 
-            if line.startswith('#'):
-                continue
+                if line.startswith('#'):
+                    continue
 
-            yield (line, 'Backdoor signature')
+                yield (line, 'Backdoor signature')
 
     def crawl(self, fuzzable_request, debugging_id):
         """
@@ -99,16 +100,17 @@ class find_backdoors(CrawlPlugin):
         """
         :yield: lines from the web shell DB
         """
-        for line in file(self.WEBSHELL_DB):
-            line = line.strip()
+        with open(self.WEBSHELL_DB) as web_fh:
+            for line in web_fh:
+                line = line.strip()
 
-            if line.startswith('#'):
-                continue
+                if line.startswith('#'):
+                    continue
 
-            if not line:
-                continue
+                if not line:
+                    continue
 
-            yield line
+                yield line
 
     def _check_if_exists(self, web_shell_url):
         """

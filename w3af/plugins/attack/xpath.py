@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import difflib
 import re
 import textwrap
+import math
 
 from random import randint
 
@@ -337,7 +338,7 @@ class XPathReader(Shell):
         
         while True:
 
-            mid = (maxl + minl) / 2
+            mid = math.floor((maxl + minl) / 2)
             om.out.debug("MAX:%i, MID:%i, MIN:%i" % (maxl, mid, minl))
             
             if self._verify_data_len_eq(mid):

@@ -247,8 +247,7 @@ class rfi(AuditPlugin):
                 # Perform the real work
                 self._test_inclusion(freq, rfi_data, orig_response, debugging_id)
             except socket.error as se:
-                errorcode = se[0]
-                if errorcode == errno.EADDRINUSE:
+                if se.errno == errno.EADDRINUSE:
                     # We can't use this address because it is already in use
                     self._listen_address = None
 

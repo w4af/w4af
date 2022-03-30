@@ -71,7 +71,32 @@ class web_diff(CrawlPlugin):
                                      (among other things) the URL to test.
         """
         if self._local_dir and self._remote_url_path:
-            os.path.walk(self._local_dir, self._compare_dir, None)
+            for directory, dirnames, flist in os.walk(self._local_dir):
+                if self._first:
+                    self._first = False
+                    self._start_path = directory
+
+                relative_dir = directory.replace(self._start_path, '')
+                if relative_dir and not relative_dir.endswith('/'):
+                    relative_dir += '/'
+
+                remote_root = self._remote_url_path
+                remote_root_with_local_path = remote_root.url_join(relative_dir)
+
+                for fname in flist:
+                    url = remote_root_with_local_path.url_join(fname)
+                    response = self._uri_opener.GET(url, cache=True)
+
+                    if not is_404(response):
+                        if response.is_text_or_html():
+                            fr = FuzzableRequest(response.get_url())
+                            self.output_queue.put(fr)
+
+                        path = '%s%s%s' % (directory, os.path.sep, fname)
+                        self._check_content(response, path)
+                        self._exist_remote.append(url)
+                    else:
+                        self._not_exist_remote.append(url)
             self._generate_report()
         else:
             msg = 'web_diff plugin: You need to configure a local directory'\
