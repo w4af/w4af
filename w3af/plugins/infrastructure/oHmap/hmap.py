@@ -137,7 +137,7 @@ class request(object):
             except KeyboardInterrupt as e:
                 raise e
 
-            except socket.sslerror as ssl_err:
+            except ssl.SSLError as ssl_err:
                 # When the remote server has no more data to send
                 # It simply closes the remote connection, which raises:
                 # (6, 'TLS/SSL connection has been closed')
@@ -145,7 +145,7 @@ class request(object):
                     return response(data)
 
                 msg = 'hmap found an SSL error while reading data from socket: "%s"'
-                om.out.debug(msg % ssl_err)
+                om.out.debug(msg % str(ssl_err))
 
                 # Try again
                 tries -= 1
@@ -774,7 +774,7 @@ def winnow_ordered_list(ordered_list):
         #print 'ordered_list too small to look at'
         return
 
-    ordered_list.sort(lambda a, b: cmp(len(a), len(b)))
+    ordered_list.sort(key=lambda a: len(a))
     #print 'sorted order', ordered_list
 
     index = 0
@@ -926,7 +926,7 @@ def partial_same_order(list1, list2):
     #common_items = [common_items[k] = v for k,v in common if v == 2]
     for k, v in common:
         if v == 2:
-            common[k] = v
+            common_items[k] = v
     common1 = []  # is there a simple way??
     common2 = []
     for i in list1:
@@ -990,16 +990,15 @@ def testServer(ssl, server, port, matchCount, generateFP, threads):
     # Read the fingerprint db
     known_servers = []
     for f in glob.glob(fingerprintDir + '*'):
-        ksf = file(f)
-        try:
-            ### FIXME: This eval is awful, I should change it to pickle.
-            ks = eval(ksf.read())
-        except Exception as e:
-            raise BaseFrameworkException(
-                'The signature file "' + f + '" has an invalid syntax.')
-        else:
-            known_servers.append(ks)
-            ksf.close()
+        with open(f) as ksf:
+            try:
+                ### FIXME: This eval is awful, I should change it to pickle.
+                ks = eval(ksf.read())
+            except Exception as e:
+                raise BaseFrameworkException(
+                    'The signature file "' + f + '" has an invalid syntax.')
+            else:
+                known_servers.append(ks)
 
     # Generate the fingerprint file
     if generateFP:
@@ -1019,15 +1018,7 @@ def testServer(ssl, server, port, matchCount, generateFP, threads):
     # Compare
     scores = find_most_similar(known_servers, fp)
 
-    def score_cmp(score1, score2):
-        (server1, (matches1, mismatches1, unknowns1)) = score1
-        (server2, (matches2, mismatches2, unknowns2)) = score2
-
-        if -cmp(matches1, matches2) != 0:
-            return -cmp(matches1, matches2)
-
-        return cmp(server1, server2)
-    scores.sort(score_cmp)
+    scores.sort(key=lambda score: (score[0], score[1][0]))
 
     res = []
     for (server, (matches, mismatches, unknowns)) in scores[:MATCH_COUNT]:

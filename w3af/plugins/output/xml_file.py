@@ -25,7 +25,7 @@ import time
 import base64
 import jinja2
 
-import subprocess32 as subprocess
+import subprocess
 
 import lz4.frame
 
@@ -640,11 +640,11 @@ class HTTPTransaction(CachedXMLNode):
         # HTTP transaction
         request, response = req_history.load_from_file(self._id)
 
-        data = request.get_data() or ''
-        b64_encoded_request_body = base64.encodestring(smart_str_ignore(data))
+        data = request.data or ''
+        b64_encoded_request_body = base64.b64encode(smart_str_ignore(data))
 
         body = response.get_body() or ''
-        b64_encoded_response_body = base64.encodestring(smart_str_ignore(body))
+        b64_encoded_response_body = base64.b64encode(smart_str_ignore(body))
 
         context = {'id': self._id,
                    'request': {'status': request.get_request_line().strip(),

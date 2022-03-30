@@ -232,12 +232,13 @@ class LoggingHandler(ProxyHandler):
             ('Content-type', 'image/vnd.microsoft.icon'),
         ))
 
-        http_response = HTTPResponse(200,
-                                     file(favicon, 'rb').read(),
-                                     headers,
-                                     http_response.get_uri(),
-                                     http_response.get_uri(),
-                                     msg='Ok')
+        with open(favicon, 'rb') as favicon_fh:
+            http_response = HTTPResponse(200,
+                                        favicon_fh.read(),
+                                        headers,
+                                        http_response.get_uri(),
+                                        http_response.get_uri(),
+                                        msg='Ok')
         return http_response
 
     def _is_terminate_request(self, http_request):

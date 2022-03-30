@@ -60,44 +60,40 @@ class csv_file(OutputPlugin):
         self.output_file = os.path.expanduser(self.output_file)
 
         try:
-            output_handler = file(self.output_file, 'wb')
+            with open(self.output_file, 'wb') as output_handler:
+                try:
+                    csv_writer = csv.writer(output_handler,
+                                            delimiter=',',
+                                            quotechar='|',
+                                            quoting=csv.QUOTE_MINIMAL)
+
+                    for info in kb.kb.get_all_findings_iter():
+                        try:
+                            row = [info.get_severity(),
+                                info.get_name(),
+                                info.get_method(),
+                                info.get_uri(),
+                                info.get_token_name(),
+                                base64.b64encode(info.get_mutant().get_data()),
+                                info.get_id(),
+                                info.get_desc()]
+                            csv_writer.writerow(row)
+                        except Exception as e:
+                            msg = ('An exception was raised while trying to write the '
+                                ' vulnerabilities to the output file. Exception: "%s"')
+                            om.out.error(msg % e)
+                            print(e)
+                            return
+                except Exception as e:
+                    msg = ('An exception was raised while trying to open the '
+                        ' CSV writer. Exception: "%s"')
+                    om.out.error(msg % e)
+                    return
+
         except IOError as ioe:
             msg = 'Failed to open the output file for writing: "%s"'
             om.out.error(msg % ioe)
             return
-
-        try:
-            csv_writer = csv.writer(output_handler,
-                                    delimiter=',',
-                                    quotechar='|',
-                                    quoting=csv.QUOTE_MINIMAL)
-        except Exception as e:
-            msg = ('An exception was raised while trying to open the '
-                   ' CSV writer. Exception: "%s"')
-            om.out.error(msg % e)
-            output_handler.close()
-            return
-
-        for info in kb.kb.get_all_findings_iter():
-            try:
-                row = [info.get_severity(),
-                       info.get_name(),
-                       info.get_method(),
-                       info.get_uri(),
-                       info.get_token_name(),
-                       base64.b64encode(info.get_mutant().get_data()),
-                       info.get_id(),
-                       info.get_desc()]
-                csv_writer.writerow(row)
-            except Exception as e:
-                msg = ('An exception was raised while trying to write the '
-                       ' vulnerabilities to the output file. Exception: "%s"')
-                om.out.error(msg % e)
-                output_handler.close()
-                print(e)
-                return
-
-        output_handler.close()
 
     def get_long_desc(self):
         """

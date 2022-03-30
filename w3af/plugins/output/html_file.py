@@ -195,10 +195,9 @@ class html_file(OutputPlugin):
                    'known_urls': known_urls}
 
         # The file was verified to exist when setting the plugin configuration
-        template_fh = file(os.path.expanduser(self._template), 'r')
-        output_fh = file(os.path.expanduser(self._output_file_name), 'w')
-
-        self._render_html_file(template_fh, context, output_fh)
+        with open(os.path.expanduser(self._template), 'r') as template_fh:
+            with open(os.path.expanduser(self._output_file_name), 'w') as output_fh:
+                self._render_html_file(template_fh, context, output_fh)
 
     def _render_html_file(self, template_fh, context, output_fh):
         """
@@ -314,7 +313,8 @@ def get_severity_icon(template_root, severity):
     fmt = 'data:image/png;base64,%s'
 
     if os.path.exists(icon_file):
-        return fmt % file(icon_file).read().encode('base64')
+        with open(icon_file, 'rb') as icon_fh:
+            return fmt % icon_fh.read().encode('base64')
 
     return fmt
 

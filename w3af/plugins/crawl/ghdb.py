@@ -129,44 +129,43 @@ class ghdb(CrawlPlugin):
                  objects.
         """
         try:
-            ghdb_fd = file(self._ghdb_file)
+            with open(self._ghdb_file) as ghdb_fd:
+                try:
+                    dom = xml.dom.minidom.parseString(ghdb_fd.read())
+                except Exception as e:
+                    msg = 'Failed to parse XML file: "%s", error: "%s".'
+                    raise BaseFrameworkException(msg % (self._ghdb_file, e))
+
+                res = []
+
+                for signature in dom.getElementsByTagName("signature"):
+                    if len(signature.childNodes) != 6:
+                        msg = ('There is a corrupt signature in the GHDB. The error was'
+                            ' found in the following XML code: "%s".')
+                        om.out.debug(msg % signature.toxml())
+                        continue
+
+                    try:
+                        query_string = signature.childNodes[4].childNodes[0].data
+
+                    except Exception as e:
+                        msg = ('There is a corrupt signature in the GHDB. No query '
+                            ' string was found in the following XML code: "%s".')
+                        om.out.debug(msg % signature.toxml())
+                        continue
+
+                    try:
+                        desc = signature.childNodes[5].childNodes[0].data
+                    except:
+                        desc = 'No description provided by GHDB.'
+
+                    gh = GoogleHack(query_string, desc)
+                    res.append(gh)
+
+                return res
         except Exception as e:
             msg = 'Failed to open ghdb file: "%s", error: "%s".'
             raise BaseFrameworkException(msg % (self._ghdb_file, e))
-
-        try:
-            dom = xml.dom.minidom.parseString(ghdb_fd.read())
-        except Exception as e:
-            msg = 'Failed to parse XML file: "%s", error: "%s".'
-            raise BaseFrameworkException(msg % (self._ghdb_file, e))
-
-        res = []
-
-        for signature in dom.getElementsByTagName("signature"):
-            if len(signature.childNodes) != 6:
-                msg = ('There is a corrupt signature in the GHDB. The error was'
-                       ' found in the following XML code: "%s".')
-                om.out.debug(msg % signature.toxml())
-                continue
-
-            try:
-                query_string = signature.childNodes[4].childNodes[0].data
-
-            except Exception as e:
-                msg = ('There is a corrupt signature in the GHDB. No query '
-                       ' string was found in the following XML code: "%s".')
-                om.out.debug(msg % signature.toxml())
-                continue
-
-            try:
-                desc = signature.childNodes[5].childNodes[0].data
-            except:
-                desc = 'No description provided by GHDB.'
-
-            gh = GoogleHack(query_string, desc)
-            res.append(gh)
-
-        return res
 
     def get_options(self):
         """

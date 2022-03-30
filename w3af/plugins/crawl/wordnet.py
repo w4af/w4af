@@ -172,13 +172,7 @@ class wordnet(CrawlPlugin):
         :param results: The result map of the wordnet search.
         :return: The same result map, but each item is ordered by popularity
         """
-        def sort_function(i, j):
-            """
-            Compare the lengths of the objects.
-            """
-            return cmp(len(i), len(j))
-
-        result.sort(sort_function)
+        result.sort(key=lambda y: len(y))
 
         return result
 

@@ -355,9 +355,8 @@ class find_dvcs(CrawlPlugin):
                                               delete=False,
                                               dir=get_temp_dir())
 
-        temp_db_fh = file(temp_db.name, 'w')
-        temp_db_fh.write(body)
-        temp_db_fh.close()
+        with open(temp_db.name, 'w') as temp_db_fh:
+            temp_db_fh.write(body)
 
         query = ('SELECT local_relpath, '
                  ' ".svn/pristine/" || substr(checksum,7,2) || "/" || substr(checksum,7) || ".svn-base" AS svn'
