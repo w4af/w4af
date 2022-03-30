@@ -27,8 +27,11 @@ jobs:
     - name: Install dependencies
       run: |
         pipenv install
-    - name: Test with nosetests
+    - name: Core data unittests
       run: |
         pipenv run nosetests -A 'not moth and not internet and not fails and not git' -w ./w3af/core/data/
+    - name: Core controllers unittests
+      run: |
+        pipenv run nosetests -A 'not moth and not internet and not fails and not git' -w ./w3af/core/controllers/
 
     name: Test w3af
