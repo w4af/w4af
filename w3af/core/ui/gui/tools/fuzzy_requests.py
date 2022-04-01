@@ -37,7 +37,7 @@ from w3af.core.controllers.exceptions import (HTTPRequestException,
 
 
 FUZZY_REQUEST_EXAMPLE = """\
-GET http://localhost/$xrange(10)$ HTTP/1.0
+GET http://localhost/$range(10)$ HTTP/1.0
 Host: www.some_host.com
 User-Agent: w3af.org
 Pragma: no-cache
@@ -71,7 +71,7 @@ window: you could be executing OS commands in your box.
 For example, you can do:
 <tt>
   Numbers from 0 to 4: $range(5)$
-  First ten letters: $string.lowercase[:10]$
+  First ten letters: $string.ascii_lowercase[:10]$
   The words "spam" and "eggs": $['spam', 'eggs']$
   The content of a file:
       $[l.strip() for l in file('input.txt').readlines()]$
