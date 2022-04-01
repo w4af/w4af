@@ -78,3 +78,7 @@ editable = true
 [packages.netlib]
 git = "https://github.com/codders/netlib"
 editable = true
+
+[packages.halberd]
+git = "https://github.com/codders/halberd"
+editable = true

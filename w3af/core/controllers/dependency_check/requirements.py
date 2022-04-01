@@ -41,7 +41,6 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
 
                      PIPDependency('lxml', 'lxml', '4.8.0'),
                      PIPDependency('scapy.config', 'scapy', '2.4.5'),
-                     PIPDependency('guess_language', 'guess-language', '0.2'),
                      PIPDependency('cluster', 'cluster', '1.4.1.post3'),
                      PIPDependency('msgpack', 'msgpack', '1.0.3'),
                      PIPDependency('ntlm', 'python-ntlm3', '1.0.2'),
@@ -66,8 +65,15 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
 
                      # Only used by the REST API, but in the future the console
                      # and GUI will consume it so it's ok to put this here
-                     PIPDependency('Flask', 'Flask', '2.0.3'),
+                     PIPDependency('Flask', 'Flask', '2.1.1'),
                      PIPDependency('yaml', 'PyYAML', '6.0'),
+
+                     # For language detection
+                     PIPDependency('morfessor', 'morfessor', '2.0.6'),
+                     PIPDependency('numpy', 'numpy', '1.22.3'),
+                     PIPDependency('polyglot', 'polyglot', '16.7.4'),
+                     PIPDependency('pycld2', 'pycld2', '0.41'),
+                     PIPDependency('pyicu', 'pyicu', '2.8.1'),
 
                      # tldextract extracts the tld from any domain name
                      PIPDependency('tldextract', 'tldextract', '3.2.0'),
@@ -94,7 +100,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
 
                      PIPDependency('ipaddresses', 'ipaddresses', '0.0.2'),
 
-                     PIPDependency('nocasedict', 'nocasedict', '1.0.2')
+                     PIPDependency('nocasedict', 'nocasedict', '1.0.3')
                      ]
 
 GUI_PIP_EXTRAS = [PIPDependency('xdot', 'xdot', '1.2')]
