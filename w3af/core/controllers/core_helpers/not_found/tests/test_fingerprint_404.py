@@ -36,7 +36,9 @@ from w3af.core.controllers.core_helpers.fingerprint_404 import Fingerprint404
 from w3af.core.controllers.misc.fuzzy_string_cmp import MAX_FUZZY_LENGTH
 from w3af.core.data.db.dbms import clear_default_temp_db_instance
 
+from nose.plugins.attrib import attr
 
+@attr('suspect')
 class Generic404Test(unittest.TestCase):
 
     def get_body(self, unique_parts):
@@ -329,7 +331,6 @@ class Test404FalsePositiveLargeResponsesEqual404s(Generic404Test):
         not_found = HTTPResponse(200, body, headers, not_found_url, not_found_url)
         self.assertTrue(self.fingerprint_404.is_404(not_found))
 
-
 class Test404FalsePositiveLargeResponsesWithCSRFToken(Generic404Test):
 
     def generate_csrf_token(self):
@@ -505,7 +506,6 @@ class Test404HandleIgnoredPath(GenericIgnoredPartTest):
 
         self.assertFalse(self.fingerprint_404.is_404(success_200))
 
-
 class Test404HandleIgnoredPathAndFilename(GenericIgnoredPartTest):
 
     @unittest.skip('See: IGNORED_PATH_PARTS_DOC')
@@ -524,7 +524,6 @@ class Test404HandleIgnoredPathAndFilename(GenericIgnoredPartTest):
 
         self.assertFalse(self.fingerprint_404.is_404(success_200))
 
-
 class Test404HandleIgnoredPathDeep(GenericIgnoredPartTest):
 
     @unittest.skip('See: IGNORED_PATH_PARTS_DOC')
@@ -542,7 +541,6 @@ class Test404HandleIgnoredPathDeep(GenericIgnoredPartTest):
         success_200 = HTTPResponse(200, self.ALL_SAME_BODY, headers, query_url, query_url)
 
         self.assertFalse(self.fingerprint_404.is_404(success_200))
-
 
 class Test404HandleAllIs404(GenericIgnoredPartTest):
 

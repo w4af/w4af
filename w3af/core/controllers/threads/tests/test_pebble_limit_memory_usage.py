@@ -111,6 +111,7 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         #self.assertGreaterEqual(self.MEMORY_LIMIT * 1.2, current_len)
         #self.assertLessEqual(self.MEMORY_LIMIT * 0.8, current_len)
 
+    @unittest.skip("Memory limiter is not currently working on Linux")
     def test_sub_process_with_high_memory_usage_is_killed(self):
         #
         # Run a task that requires a lot of memory. Confirm that the process

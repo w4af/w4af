@@ -32,7 +32,9 @@ from w3af.plugins.audit.xss import xss
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.parsers.doc.url import URL
 
+from nose.plugins.attrib import attr
 
+@attr('suspect')
 class TestAuditConsumer(unittest.TestCase):
 
     def tearDown(self):

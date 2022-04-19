@@ -42,7 +42,7 @@ class test_wizards(object):
         for filename in os.listdir('w3af/core/controllers/wizard/wizards/'):
             wizard_id, ext = os.path.splitext(filename)
 
-            if wizard_id in ('__init__', '.git') or ext == '.pyc':
+            if wizard_id in ('__init__', '.git', '__pycache__') or ext == '.pyc':
                 continue
 
             klass = mod % wizard_id
