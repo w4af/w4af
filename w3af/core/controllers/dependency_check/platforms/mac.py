@@ -85,8 +85,8 @@ class MacOSX(Platform):
 
     @staticmethod
     def os_package_is_installed(package_name):
-        not_installed = 'None of the specified ports are installed'
-        installed = 'The following ports are currently installed'
+        not_installed = b'None of the specified ports are installed'
+        installed = b'The following ports are currently installed'
 
         try:
             p = subprocess.Popen(['port', '-v', 'installed', package_name],

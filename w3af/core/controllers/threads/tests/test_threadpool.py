@@ -96,7 +96,7 @@ class TestWorkerPool(unittest.TestCase):
 
         # Give the result handler task inside the pool set the results on the
         # result instances stored in the results lists
-        time.sleep(8)
+        time.sleep(12)
 
         # There should be no pending tasks in the output queue
         self.assertEqual(pool_sizes['outqueue_size'], 0)
