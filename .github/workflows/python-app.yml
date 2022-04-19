@@ -32,6 +32,6 @@ jobs:
         pipenv run nosetests -A 'not moth and not internet and not fails and not git and not suspect' -w ./w3af/core/data/
     - name: Core controllers unittests
       run: |
-        pipenv run nosetests -A 'not moth and not internet and not fails and not git' -w ./w3af/core/controllers/
+        pipenv run nosetests -A 'not moth and not internet and not fails and not git and not suspect' -w ./w3af/core/controllers/
 
     name: Test w3af
