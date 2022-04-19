@@ -93,7 +93,9 @@ class SSLServer(threading.Thread):
         newsocket, fromaddr = self.sock.accept()
 
         try:
+            # pylint: disable=E1101
             newsocket.do_handshake()
+            # pylint: enable=E1101
         except:
             # The ssl certificate might request a connection with
             # SSL protocol v2 and that will "break" the handshake

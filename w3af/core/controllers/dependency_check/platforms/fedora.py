@@ -44,8 +44,8 @@ class Fedora(Platform):
 
     @staticmethod
     def os_package_is_installed(package_name):
-        not_installed = 'is not installed'
-        installed = 'Status: install ok installed'
+        not_installed = b'is not installed'
+        installed = b'Status: install ok installed'
 
         try:
             p = subprocess.Popen(['rpm', '-q', package_name],

@@ -130,7 +130,9 @@ class TestXUrllib(unittest.TestCase):
         self.assertEqual(str(len(data)), request_headers['content-length'])
 
         self.assertEqual(httpretty.last_request().body, data)
+        # pylint: disable=E1101
         self.assertEqual(httpretty.last_request().path, '/')
+        # pylint: enable=E1101
 
     @httpretty.activate
     def test_GET_with_post_data_and_qs(self):
@@ -154,7 +156,9 @@ class TestXUrllib(unittest.TestCase):
         self.assertEqual(str(len(data)), request_headers['content-length'])
 
         self.assertEqual(httpretty.last_request().body, data)
+        # pylint: disable=E1101
         self.assertEqual(httpretty.last_request().path, '/' + qs)
+        # pylint: enable=E1101
 
     def test_post(self):
         url = URL(get_moth_http('/audit/xss/simple_xss_form.py'))
