@@ -21,11 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import json
 
-from w3af.core.ui.api.tests.utils.api_unittest import APIUnitTest
+from w3af.core.ui.api.tests.utils.test_api import APIUnitTest
 from w3af.core.ui.api.tests.utils.test_profile import (get_test_profile,
                                                        SLOW_TEST_PROFILE)
+from nose.plugins.attrib import attr
 
 
+@attr("moth")
 class ApiScanLogTest(APIUnitTest):
 
     def test_scan_log(self):

@@ -35,8 +35,10 @@ from w3af.core.ui.api.tests.utils.integration_test import IntegrationTest
 from w3af.core.ui.api.tests.utils.test_profile import (get_test_profile,
                                                        get_expected_vuln_names,
                                                        get_expected_vuln_urls)
+from nose.plugins.attrib import attr
 
 
+@attr("moth")
 class APIScanTest(IntegrationTest):
 
     def test_start_simple_scan(self):

@@ -27,14 +27,14 @@ import unittest
 
 from w3af.core.ui.api import app
 from w3af.core.ui.api.db.master import SCANS
-
+from w3af.core.data.misc.encoding import smart_unicode
 
 class APIUnitTest(unittest.TestCase):
     PASSWORD = 'password'
     AUTHORIZATION = base64.b64encode(('%s:%s' % ('admin', PASSWORD)).encode('utf-8'))
     HEADERS = {'Content-type': 'application/json',
                'Accept': 'application/json',
-               'Authorization': 'Basic %s' % AUTHORIZATION}
+               'Authorization': 'Basic %s' % smart_unicode(AUTHORIZATION)}
 
     def setUp(self):
         # Raise exceptions
@@ -42,7 +42,7 @@ class APIUnitTest(unittest.TestCase):
         app.testing = True
 
         # Configure authentication
-        app.config['PASSWORD'] = hashlib.sha512(self.PASSWORD).hexdigest()
+        app.config['PASSWORD'] = hashlib.sha512(self.PASSWORD.encode('utf-8')).hexdigest()
         app.config['USERNAME'] = 'admin'
 
         self.app = app.test_client()
@@ -69,7 +69,10 @@ class APIUnitTest(unittest.TestCase):
             response = self.app.get('/scans/', headers=self.HEADERS)
 
             self.assertEqual(response.status_code, 200, response.data)
-            if json.loads(response.data)['items'][0]['status'] != 'Stopped':
+            scan_id = json.loads(response.data)['items'][0]['id']
+            log_response = self.app.get('/scans/%s/log' % scan_id, headers=self.HEADERS)
+            entries = json.loads(log_response.data)['entries']
+            if len(entries) > 0:
                 return response
 
         raise RuntimeError('Timeout waiting for scan to run')

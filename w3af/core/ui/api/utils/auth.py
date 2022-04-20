@@ -33,7 +33,7 @@ def check_auth(username, password):
     password combination is valid.
     """
     return (username == app.config['USERNAME'] and
-            sha512(password).hexdigest() == app.config['PASSWORD'])
+            sha512(password.encode('utf-8')).hexdigest() == app.config['PASSWORD'])
 
 
 def requires_auth(f):
