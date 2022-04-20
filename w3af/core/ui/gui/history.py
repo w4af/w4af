@@ -87,7 +87,7 @@ class HistorySuggestion(object):
 
     def save(self):
         """Saves the history information."""
-        fileh = open(self.filename, "w")
+        fileh = open(self.filename, "wb")
         pickle.dump(self.history, fileh)
         fileh.close()
 

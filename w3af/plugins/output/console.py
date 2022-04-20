@@ -32,6 +32,7 @@ from w3af.core.controllers.exceptions import ScanMustStopByKnownReasonExc
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_types import BOOL
 from w3af.core.data.options.option_list import OptionList
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 ERROR = 'Error'
@@ -74,7 +75,7 @@ class console(OutputPlugin):
         self.use_colors = True
 
     def _make_printable(self, a_string):
-        a_string = str(a_string)
+        a_string = str(smart_unicode(a_string))
         a_string = a_string.replace('\n', '\n\r')
         return ''.join(ch for ch in a_string if ch in string.printable)
 

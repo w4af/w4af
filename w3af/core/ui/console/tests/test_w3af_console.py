@@ -30,9 +30,7 @@ from w3af.core.data.db.startup_cfg import StartUpConfig
 class TestW3afConsole(unittest.TestCase):
     def test_compiles(self):
         try:
-            with open('w3af_console') as f:
-                py_compile.compile(f.read(),
-                                 '/tmp/foo.tmp', 'exec')
+            py_compile.compile('w3af_console', '/tmp/foo.tmp', 'exec')
         except SyntaxError as se:
             self.assertTrue(False, 'Error in w3af_console code "%s"' % se)
 

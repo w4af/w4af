@@ -63,7 +63,7 @@ def set_raw_input_mode(raw):
     
     :param raw: Boolean to indicate if we want to turn raw mode on or off.
     """
-    if not os.isatty(sys.stdin.fileno()):
+    if not sys.stdin.isatty():
         return
     
     global old_settings
