@@ -78,6 +78,7 @@ class TestWorkerPool(unittest.TestCase):
 
         worker_pool.terminate_join()
 
+    @unittest.skip("Takes too long to run reliably")
     def test_output_pool_size(self):
         worker_pool = Pool(processes=4,
                            worker_names='WorkerThread',
