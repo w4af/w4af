@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import collections
+from collections import Iterable
 import functools
 import threading
 import pickle
@@ -554,7 +555,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         if isinstance(obj, (Info, InfoSet)):
             return obj.get_uniq_id()
 
-        if isinstance(obj, collections.Iterable):
+        if isinstance(obj, Iterable):
             concat_all = ''.join([str(hash(i)) for i in obj])
             return str(hash(concat_all))
 

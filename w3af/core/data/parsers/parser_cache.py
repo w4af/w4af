@@ -43,6 +43,7 @@ from w3af.core.data.parsers.document_parser import DocumentParser
 from w3af.core.data.db.disk_set import DiskSet
 from w3af.core.data.parsers.utils.response_uniq_id import (get_response_unique_id,
                                                            get_body_unique_id)
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class ParserCache(CacheStats):
@@ -259,7 +260,7 @@ class ParserCache(CacheStats):
 
             for tag in tags:
                 lt_tag = '<%s' % tag
-                if lt_tag in body_lower:
+                if lt_tag in smart_unicode(body_lower):
                     break
             else:
                 # No tag was found in the HTML

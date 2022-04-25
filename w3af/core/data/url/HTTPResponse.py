@@ -288,7 +288,7 @@ class HTTPResponse(DiskItem):
 
         :param string_to_test: String to look for in the body
         """
-        return string_to_test in self.body
+        return smart_unicode(string_to_test) in smart_unicode(self.body)
     
     def __eq__(self, other):
         return (self.id == other.id and

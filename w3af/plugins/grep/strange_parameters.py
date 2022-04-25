@@ -27,7 +27,7 @@ import w3af.core.data.constants.severity as severity
 
 from w3af.core.controllers.plugins.grep_plugin import GrepPlugin
 from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
 from w3af.core.data.kb.info import Info
 from w3af.core.data.kb.vuln import Vuln
@@ -122,7 +122,7 @@ class strange_parameters(GrepPlugin):
 
         :return: True if the parameter value contains SQL sentences
         """
-        for match in self.SQL_RE.findall(token_value):
+        for match in self.SQL_RE.findall(smart_unicode(token_value)):
             if request.sent(match):
                 continue
 
@@ -169,14 +169,14 @@ class strange_parameters(GrepPlugin):
         #
         # Which are strange in all cases, except from wicket!
         #
-        if 'wicket:' in parameter or 'wicket:' in decoded_parameter:
+        if 'wicket:' in smart_unicode(parameter) or 'wicket:' in smart_unicode(decoded_parameter):
             return False
 
         #
         # Match specific things such as function calls
         #
         for regex in self.STRANGE_RE_LIST:
-            for match in regex.findall(value):
+            for match in regex.findall(smart_unicode(value)):
                 if not request.sent(match):
                     return True
 
@@ -184,7 +184,7 @@ class strange_parameters(GrepPlugin):
         # Split the parameter by any character that is not A-Za-z0-9 and if
         # the length is greater than X then report it
         #
-        split_value = [x for x in self.STRANGE_RE_CHARS.split(value) if x != '']
+        split_value = [x for x in self.STRANGE_RE_CHARS.split(smart_unicode(value)) if x != '']
         if len(split_value) > 4:
             if not request.sent(value):
                 return True

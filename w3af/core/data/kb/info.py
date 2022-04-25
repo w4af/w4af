@@ -33,6 +33,7 @@ from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.constants.vulns import is_valid_name, VULNS
 from w3af.core.controllers.tests.running_tests import is_running_tests
 from w3af.core.controllers.ci.constants import ARTIFACTS_DIR
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class Info(dict):
@@ -625,8 +626,8 @@ class Info(dict):
 
     def add_to_highlight(self, *str_match):
         for s in str_match:
-            if not isinstance(s, str):
+            if not isinstance(s, (str, bytes)):
                 raise TypeError('Only able to highlight strings.')
             
-            self._string_matches.add(s)
+            self._string_matches.add(smart_unicode(s))
 

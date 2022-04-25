@@ -51,9 +51,9 @@ class retirejs(GrepPlugin):
     METHODS = ('GET',)
     HTTP_CODES = (200,)
 
-    RETIRE_CMD = 'retire -j --outputformat json --outputpath %s --jspath %s'
-    RETIRE_CMD_VERSION = 'retire --version'
-    RETIRE_CMD_JSREPO = 'retire -j --outputformat json --outputpath %s --jsrepo %s --jspath %s'
+    RETIRE_CMD = 'npx retire -j --outputformat json --outputpath %s --jspath %s'
+    RETIRE_CMD_VERSION = 'npx retire --version'
+    RETIRE_CMD_JSREPO = 'npx retire -j --outputformat json --outputpath %s --jsrepo %s --jspath %s'
 
     RETIRE_VERSION = '2.'
 
@@ -255,7 +255,7 @@ class retirejs(GrepPlugin):
                                                  suffix='.js',
                                                  delete=False,
                                                  dir=get_temp_dir())
-        check_file.write('')
+        check_file.write(b'')
         check_file.close()
 
         output_file = tempfile.NamedTemporaryFile(prefix='retirejs-output-',

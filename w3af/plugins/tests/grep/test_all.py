@@ -62,7 +62,7 @@ class test_all(unittest.TestCase):
         """
         file_path = os.path.join(ROOT_PATH, 'plugins', 'tests', 'grep',
                                  'data', 'w3af.png')        
-        with open(file_path) as fh:
+        with open(file_path, "rb") as fh:
             body = fh.read()
         hdrs = Headers(list({'Content-Type': 'image/png'}.items()))
         response = HTTPResponse(200, body, hdrs, self.url_inst, self.url_inst,
@@ -79,6 +79,8 @@ class test_all(unittest.TestCase):
     @patch('w3af.plugins.grep.meta_tags.is_404', side_effect=repeat(False))
     @patch('w3af.plugins.grep.lang.is_404', side_effect=repeat(False))
     @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))        
+    @patch('w3af.plugins.grep.click_jacking.is_404', side_effect=repeat(False))
+    @patch('w3af.plugins.grep.meta_generator.is_404', side_effect=repeat(False))
     def test_image_with_text_html_content_type(self, *args):
         """
         Verify that our plugins don't break when we send them an image with
@@ -86,7 +88,7 @@ class test_all(unittest.TestCase):
         """
         file_path = os.path.join(ROOT_PATH, 'plugins', 'tests', 'grep',
                                  'data', 'w3af.png')        
-        with open(file_path) as fh:
+        with open(file_path, "rb") as fh:
             body = fh.read()
         # Here is the change from the previous test:
         hdrs = Headers(list({'Content-Type': 'text/html'}.items()))
@@ -124,6 +126,8 @@ class test_all(unittest.TestCase):
     @patch('w3af.plugins.grep.meta_tags.is_404', side_effect=repeat(False))
     @patch('w3af.plugins.grep.lang.is_404', side_effect=repeat(False))
     @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @patch('w3af.plugins.grep.click_jacking.is_404', side_effect=repeat(False))
+    @patch('w3af.plugins.grep.meta_generator.is_404', side_effect=repeat(False))
     def test_all_grep_plugins(self, *args):
         """
         Run a set of 5 html files through all grep plugins.
