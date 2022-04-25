@@ -48,7 +48,7 @@ class rnd_param(EvasionPlugin):
         new_url.querystring = qs
 
         # Mangle the postdata
-        data = request.get_data()
+        data = request.data
         if data:
             try:
                 # Only mangle the postdata if it is a url encoded string

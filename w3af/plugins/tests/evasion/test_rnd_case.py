@@ -50,7 +50,7 @@ class TestEvasion(unittest.TestCase):
         
         u = URL('http://www.w3af.com/')
         r = HTTPRequest( u, data='a=b' )
-        modified_data = rc.modify_request( r ).get_data()
+        modified_data = rc.modify_request( r ).data
         self.assertIn(modified_data, ['a=b','A=b','a=B','A=B'])
 
     def test_modify_path_file(self):

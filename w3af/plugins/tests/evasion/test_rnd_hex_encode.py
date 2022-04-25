@@ -64,7 +64,7 @@ class TestEvasion(unittest.TestCase):
         
         u = URL('http://www.w3af.com/')
         r = HTTPRequest( u, data='a=b' )
-        modified_pdata = rhe.modify_request( r ).get_data()
+        modified_pdata = rhe.modify_request( r ).data
         self.assertIn(modified_pdata, ['a=b','%61=b','a=%62','%61=%62'])
 
         

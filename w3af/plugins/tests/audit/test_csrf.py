@@ -263,7 +263,7 @@ class TestLowLevelCSRF(unittest.TestCase):
         self.assertFalse(self.csrf_plugin.is_csrf_token('secret', 'áÄé'))
 
     def test_is_csrf_token_false_case05(self):
-        self.assertTrue(self.csrf_plugin.is_csrf_token('secret', LOREM))
+        self.assertFalse(self.csrf_plugin.is_csrf_token('secret', LOREM))
 
     def test_is_csrf_token_false_case06(self):
         self.assertFalse(self.csrf_plugin.is_csrf_token('token', 'f842e'))
@@ -275,7 +275,7 @@ class TestLowLevelCSRF(unittest.TestCase):
         freq.set_querystring(query_string)
         
         token = self.csrf_plugin._find_csrf_token(freq)
-        self.assertIn('secret', token)
+        self.assertIn(b'secret', token)
 
     def test_find_csrf_token_true_repeated(self):
         url = URL('http://moth/w3af/audit/csrf/')
@@ -285,7 +285,7 @@ class TestLowLevelCSRF(unittest.TestCase):
         freq.set_querystring(query_string)
 
         token = self.csrf_plugin._find_csrf_token(freq)
-        self.assertIn('secret', token)
+        self.assertIn(b'secret', token)
 
     def test_find_csrf_token_false(self):
         url = URL('http://moth/w3af/audit/csrf/')
@@ -294,4 +294,4 @@ class TestLowLevelCSRF(unittest.TestCase):
         freq.set_querystring(query_string)
         
         token = self.csrf_plugin._find_csrf_token(freq)
-        self.assertIn('secret', token)
+        self.assertIsNone(token)

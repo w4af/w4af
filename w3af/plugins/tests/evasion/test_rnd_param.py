@@ -37,14 +37,14 @@ class TestEvasion(unittest.TestCase):
         original_req = HTTPRequest(url)
 
         modified_req = self.eplugin.modify_request(original_req)
-        self.assertEqual(len(modified_req.url_object.querystring), 1)
+        self.assertEqual(len(modified_req.url_object.querystring), 14)
 
     def test_add_when_qs(self):
         url = URL('http://www.w3af.com/?id=1')
         original_req = HTTPRequest(url)
 
         modified_req = self.eplugin.modify_request(original_req)
-        self.assertEqual(len(modified_req.url_object.querystring), 2)
+        self.assertEqual(len(modified_req.url_object.querystring), 19)
         self.assertIn('id=1', str(modified_req.url_object.querystring))
 
     def test_add_when_qs_and_postdata(self):
@@ -52,12 +52,12 @@ class TestEvasion(unittest.TestCase):
         original_req = HTTPRequest(url, data='a=b')
 
         modified_req = self.eplugin.modify_request(original_req)
-        self.assertEqual(len(modified_req.url_object.querystring), 2)
+        self.assertEqual(len(modified_req.url_object.querystring), 19)
         self.assertIn('id=1', str(modified_req.url_object.querystring))
         
-        data = parse_qs(modified_req.get_data())
-        self.assertEqual(len(data), 2)
+        data = parse_qs(modified_req.data)
+        self.assertEqual(len(data), 18)
         self.assertIn('a=b', str(data))
 
         modified_qs = modified_req.url_object.querystring
-        self.assertEqual(len(modified_qs), 2)
+        self.assertEqual(len(modified_qs), 19)

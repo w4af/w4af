@@ -45,7 +45,7 @@ class full_width_encode(EvasionPlugin):
         path = self._mutate(path)
 
         # Now we mangle the postdata
-        data = request.get_data()
+        data = request.data
         if data:
             try:
                 # Only mangle the postdata if it is a url encoded string

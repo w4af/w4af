@@ -47,7 +47,7 @@ class rnd_hex_encode(EvasionPlugin):
         new_url.set_path(path)
 
         # Mangle the postdata
-        data = request.get_data()
+        data = request.data
         if data:
 
             try:
