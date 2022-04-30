@@ -23,6 +23,7 @@ import os
 import base64
 import os.path
 import io
+import re
 import unittest
 import xml.etree.ElementTree as ElementTree
 
@@ -609,6 +610,11 @@ class TestScanInfo(XMLNodeGeneratorTest):
         self.assertEqual(xml, expected)
         self.assertValidXML(xml)
 
+def clear_variable_tags(xml_string):
+    for tag in ('rpm', 'sent-request-count'):
+        tagr = re.compile("<%s>.*</%s>" % (tag, tag))
+        xml_string = re.sub(tagr, xml_string, "<%s></%s>" % (tag, tag))
+    return xml_string
 
 class TestScanStatus(XMLNodeGeneratorTest):
     def setUp(self):
@@ -706,7 +712,7 @@ class TestScanStatus(XMLNodeGeneratorTest):
                     '    </known-urls>\n'
                     '</scan-status>')
 
-        self.assertEqual(xml, expected)
+        self.assertEqual(clear_variable_tags(xml), clear_variable_tags(expected))
         self.assertValidXML(xml)
 
 
