@@ -47,6 +47,7 @@ class TestUserDir(PluginTest):
                         ('Identified installed application', 'http://httpretty/xfs/'),
                         ('Fingerprinted operating system', 'http://httpretty/~kmem/')}
 
+    @pytest.mark.deprecated
     def test_fuzzer_user(self):
         # Don't enable dependencies
         self.w3afcore.plugins.resolve_dependencies = Mock()

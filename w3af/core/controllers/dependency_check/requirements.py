@@ -61,7 +61,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('termcolor', 'termcolor', '1.1.0'),
 
                      # We "outsource" the HTTP proxy feature to mitmproxy
-                     PIPDependency('mitmproxy', 'mitmproxy', '0.13'),
+                     PIPDependency('mitmproxy', 'mitmproxy', '0.18.3'),
 
                      # Only used by the REST API, but in the future the console
                      # and GUI will consume it so it's ok to put this here
@@ -95,12 +95,19 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      # Fast compression library
                      PIPDependency('lz4', 'lz4', '4.0.0'),
 
+                     # Used to communicate with chrome via devtools protocol
+                     PIPDependency('PyChromeDevTools', 'PyChromeDevTools', '0.1'),
+
                      # Vulners API plugin needs this lib
                      PIPDependency('vulners', 'vulners', '2.0.2'),
 
                      PIPDependency('ipaddresses', 'ipaddresses', '0.0.2'),
 
                      PIPDependency('nocasedict', 'nocasedict', '1.0.3')
+                     PIPDependency('setproctitle', 'setproctitle', '1.1.10'),
+
+                     # Calculate distances between two strings
+                     PIPDependency('Levenshtein', 'python-Levenshtein', '0.12.0'),
                      ]
 
 GUI_PIP_EXTRAS = [PIPDependency('xdot', 'xdot', '1.2')]

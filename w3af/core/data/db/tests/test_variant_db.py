@@ -20,6 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 from w3af.core.controllers.misc_settings import MiscSettings
@@ -124,6 +125,7 @@ class TestVariantDB(unittest.TestCase):
         e = '(GET)-http://w3af.org/%s.php' % FILENAME_TOKEN
         self.assertEqual(s, e)
 
+    @pytest.mark.deprecated
     def test_clean_fuzzable_request_directory_file(self):
         u = 'http://w3af.org/foo/index.php'
         s = clean_fuzzable_request(fr(URL(u)))
@@ -484,3 +486,29 @@ class TestVariantDB(unittest.TestCase):
         for i in range(MAX_EQUAL_FORM_VARIANTS * 2):
             fri = create_fuzzable_request(i)
             self.assertTrue(self.vdb.append(fri))
+
+    def test_request_is_looped_method(self):
+        looped_url = 'http://example.com/redirect/redirect/redirect/redirect/redirect/index.html'
+        too_short_looped_url = 'http://example.com/redirect/redirect/index.html'
+        not_looped_url1 = 'http://example.com/one/two/3/4/5/index.html'
+        not_looped_url2 = (
+            'http://example.com/good/redirect/redirect/redirect/redirect/index.html'
+        )
+        not_looped_url3 = (
+            'http://example.com/redirect/redirect/redirect/redirect/good/index.html'
+        )
+
+        req = fr(URL(looped_url))
+        self.assertTrue(self.vdb._request_is_looped(req))
+
+        req = fr(URL(too_short_looped_url))
+        self.assertFalse(self.vdb._request_is_looped(req))
+
+        req = fr(URL(not_looped_url1))
+        self.assertFalse(self.vdb._request_is_looped(req))
+
+        req = fr(URL(not_looped_url2))
+        self.assertFalse(self.vdb._request_is_looped(req))
+
+        req = fr(URL(not_looped_url3))
+        self.assertFalse(self.vdb._request_is_looped(req))

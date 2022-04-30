@@ -337,11 +337,16 @@ class FuzzableRequest(RequestMixIn, DiskItem):
             dc_type = self.get_uri().querystring.get_type()
 
         if not parameters:
-            output = short_fmt % (self.get_method(), self.get_url())
+            fmt = u'Method: %s | %s'
+            args = (self.get_method(), self.get_url())
+            output = fmt % args
         else:
             jparams = ', '.join([ smart_unicode(p) for p in parameters ])
-            output = long_fmt % (self.get_method(), self.get_url(),
-                                 dc_type, jparams)
+            args = (self.get_method(),
+                    self.get_url(),
+                    dc_type,
+                    jparams)
+            output = fmt % args
 
         return output
 

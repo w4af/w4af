@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 from w3af.core.data.kb.config import Config
@@ -124,6 +125,7 @@ class TestFuzzer(unittest.TestCase):
         self.assertAllInstance(generated_mutants, QSMutant)
         self.assertAllHaveTokens(generated_mutants)
 
+    @pytest.mark.deprecated
     def test_fuzz_headers_no_headers_in_request(self):
         cf_singleton.save('fuzzable_headers', ['Referer'])  # This one changed
         cf_singleton.save('fuzz_cookies', False)

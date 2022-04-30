@@ -23,6 +23,7 @@ import time
 import unittest
 import socketserver
 
+import pytest
 from nose.plugins.attrib import attr
 from unittest.mock import Mock
 
@@ -52,6 +53,7 @@ class TestXUrllibTimeout(unittest.TestCase):
     def tearDown(self):
         self.uri_opener.end()
 
+    @pytest.mark.deprecated
     def test_timeout(self):
         upper_daemon = UpperDaemon(TimeoutTCPHandler)
         upper_daemon.start()
@@ -81,6 +83,7 @@ class TestXUrllibTimeout(unittest.TestCase):
         self.uri_opener.settings.set_default_values()
         self.assertLess(end-start, 1.5)
 
+    @pytest.mark.deprecated
     def test_timeout_ssl(self):
         ssl_daemon = RawSSLDaemon(TimeoutTCPHandler)
         ssl_daemon.start()
@@ -107,6 +110,7 @@ class TestXUrllibTimeout(unittest.TestCase):
         # the headers
         self.assertLess(end-start, 80)
 
+    @pytest.mark.slow
     def test_timeout_many(self):
         upper_daemon = UpperDaemon(TimeoutTCPHandler)
         upper_daemon.start()
@@ -145,6 +149,7 @@ class TestXUrllibTimeout(unittest.TestCase):
         self.assertEqual(http_request_e, 4)
         self.assertEqual(scan_stop_e, 1)
 
+    @pytest.mark.deprecated
     def test_timeout_auto_adjust(self):
         upper_daemon = UpperDaemon(Ok200SmallDelayHandler)
         upper_daemon.start()
@@ -222,7 +227,7 @@ class TestXUrllibTimeout(unittest.TestCase):
         # These make sure that the HTTP connection pool is full, this is
         # required because we want to check if the timeout applies to
         # existing connections, not new ones
-        for _ in range(ConnectionManager.MAX_CONNECTIONS):
+        for _ in range(ConnectionManager.MAX_CONNECTIONS_PER_HOST):
             self.uri_opener.GET(url)
 
         # Make sure we reached the desired timeout after our HTTP

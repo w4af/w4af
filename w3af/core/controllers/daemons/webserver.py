@@ -29,6 +29,8 @@ import http.server
 
 import w3af.core.controllers.output_manager as om
 
+from w3af.core.controllers.misc.poll import poll
+
 # Created servers
 _servers = {}
 
@@ -56,10 +58,6 @@ def _get_inst(ip, port):
 
 
 class HTTPServer(http.server.HTTPServer):
-    """
-    Most of the behavior added here is included in
-    """
-
     def __init__(self, server_address, webroot, RequestHandlerClass):
         http.server.HTTPServer.__init__(self, server_address,
                                            RequestHandlerClass)
@@ -72,7 +70,8 @@ class HTTPServer(http.server.HTTPServer):
         return self.__is_shut_down.is_set()
 
     def serve_forever(self, poll_interval=0.5):
-        """Handle one request at a time until shutdown.
+        """
+        Handle one request at a time until shutdown.
 
         Polls for shutdown every poll_interval seconds. Ignores
         self.timeout. If you need to do periodic tasks, do them in
@@ -97,6 +96,7 @@ class HTTPServer(http.server.HTTPServer):
 
                     self.service_actions()
         finally:
+            self.server_close()
             self.__shutdown_request = False
             self.__is_shut_down.set()
 
@@ -121,6 +121,9 @@ class HTTPServer(http.server.HTTPServer):
         while self.get_port() is None:
             time.sleep(0.5)
 
+    def shutdown(self):
+        """
+        Stops the serve_forever loop.
 
 class WebHandler(http.server.BaseHTTPRequestHandler):
 
@@ -193,7 +196,8 @@ def start_webserver(ip, port, webroot, handler=WebHandler):
 
 
 def start_webserver_any_free_port(ip, webroot, handler=WebHandler):
-    """Create a http server daemon in any free port available.
+    """
+    Create an http server daemon in any free port.
 
     :param ip: IP address where to bind
     :param webroot: web server's root directory
@@ -209,4 +213,4 @@ def start_webserver_any_free_port(ip, webroot, handler=WebHandler):
 
     web_server.wait_for_start()
 
-    return server_thread, web_server.get_port()
+    return server_thread, web_server, web_server.get_port()

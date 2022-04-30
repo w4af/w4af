@@ -39,6 +39,7 @@ class TestFindVhosts(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_find_vhosts(self):
         # Setup the server
         upper_daemon = ThreadingUpperDaemon(MultipleVHostsHandler)
@@ -71,6 +72,7 @@ class TestFindVhostsInHTML(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_find_vhost_dead_link(self):
         cfg = self._run_configs['cfg']
         self._scan(self.target_url, cfg['plugins'])

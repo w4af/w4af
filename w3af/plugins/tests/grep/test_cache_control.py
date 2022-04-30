@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 from unittest.mock import patch
 from itertools import repeat
@@ -42,6 +43,7 @@ class TestCacheControl(unittest.TestCase):
     def tearDown(self):
         kb.kb.cleanup()
 
+    @pytest.mark.deprecated
     def test_cache_control_http(self):
         """
         No cache control, but the content is not sensitive (sent over http) so
@@ -59,6 +61,7 @@ class TestCacheControl(unittest.TestCase):
         infos = kb.kb.get('cache_control', 'cache_control')
         self.assertEqual(len(infos), 0)
 
+    @pytest.mark.deprecated
     def test_cache_control_images(self):
         """
         No cache control, but the content is not sensitive (is an image)
@@ -76,6 +79,7 @@ class TestCacheControl(unittest.TestCase):
         infos = kb.kb.get('cache_control', 'cache_control')
         self.assertEqual(len(infos), 0)
 
+    @pytest.mark.deprecated
     def test_cache_control_empty_body(self):
         """
         No cache control, but the content is not sensitive (since it is an

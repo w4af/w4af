@@ -19,9 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import json
 import base64
 
+import pytest
 import requests
 
 # pylint: disable=E0401
@@ -41,6 +43,7 @@ from nose.plugins.attrib import attr
 @attr("moth")
 class APIScanTest(IntegrationTest):
 
+    @pytest.mark.deprecated
     def test_start_simple_scan(self):
         profile, target_url = get_test_profile()
         data = {'scan_profile': profile,
@@ -163,6 +166,7 @@ class APIScanTest(IntegrationTest):
 
         return scan_id
 
+    @pytest.mark.deprecated
     def test_stop(self):
         profile, target_url = get_test_profile()
         data = {'scan_profile': profile,
@@ -207,6 +211,8 @@ class APIScanTest(IntegrationTest):
         else:
             self.assertTrue(False, 'Stop not found in log')
 
+    @pytest.mark.slow
+    @pytest.mark.deprecated
     def test_two_scans(self):
         scan_id_0 = self.test_start_simple_scan()
         scan_id_1 = self.test_start_simple_scan()

@@ -20,6 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import sys
 import pickle
 import unittest
@@ -50,6 +51,7 @@ class TestExceptionHandler(unittest.TestCase):
                                                  'http://www.w3af.org/')
 
     @attr('smoke')
+    @pytest.mark.deprecated
     def test_handle_one(self):
 
         caught_exception = None
@@ -87,6 +89,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertEqual(edata.lineno, 58)
 
     @attr('smoke')
+    @pytest.mark.deprecated
     def test_handle_multiple(self):
 
         for _ in range(10):
@@ -113,6 +116,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertEqual(edata.fuzzable_request, 'http://www.w3af.org/')
         self.assertEqual(edata.filename, __file__)
 
+    @pytest.mark.deprecated
     def test_get_unique_exceptions(self):
 
         for _ in range(10):
@@ -140,6 +144,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertEqual(edata.fuzzable_request, 'http://www.w3af.org/')
         self.assertEqual(edata.filename, __file__)
 
+    @pytest.mark.deprecated
     def test_handle_threads_calls(self):
         
         def test2():
@@ -173,6 +178,7 @@ class TestExceptionHandler(unittest.TestCase):
         # the only way to do it without much effort
         self.assertEqual(edata.lineno, 146)
 
+    @pytest.mark.deprecated
     def test_handle_multi_calls(self):
 
         def test3():        

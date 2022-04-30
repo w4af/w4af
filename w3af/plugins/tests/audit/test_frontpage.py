@@ -50,6 +50,7 @@ class TestFrontpage(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_upload(self):
         cfg = self._run_configs['cfg']
 

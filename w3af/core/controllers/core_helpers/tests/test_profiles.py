@@ -20,6 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 import os
 
@@ -139,6 +140,9 @@ class TestCoreProfiles(unittest.TestCase):
 
             self.core.profiles.use_profile(profile_name, workdir='.')
 
+    @pytest.mark.deprecated
+    @pytest.mark.slow
+    @pytest.mark.slow
     def test_cant_start_new_thread_bug(self):
         """
         This tests that https://github.com/andresriancho/w3af/issues/56 was
@@ -152,6 +156,7 @@ class TestCoreProfiles(unittest.TestCase):
 
                 self.core.profiles.use_profile(profile_name, workdir='.')
 
+    @pytest.mark.deprecated
     def test_use_profile_variable_replace(self):
         self.core.profiles.use_profile('OWASP_TOP10', workdir='.')
 
@@ -160,6 +165,7 @@ class TestCoreProfiles(unittest.TestCase):
         ca_path = os.path.abspath(os.path.join(ROOT_PATH, "..", plugin_opts['ca_file_name'].get_value()))
         self.assertEqual(ca_path, self.INPUT_FILE)
 
+    @pytest.mark.deprecated
     def test_load_save_as_no_changes(self):
         """
         During some tests I noticed that the console UI was removing the plugin

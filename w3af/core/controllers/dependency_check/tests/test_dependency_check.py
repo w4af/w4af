@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 from unittest.mock import patch
@@ -81,6 +82,7 @@ class TestDependencyCheck(unittest.TestCase):
             all_stdout = ''.join(k[1][0] for k in stdout_mock.method_calls)
             self.assertIn(self.MISSING_DEP_CMD, all_stdout)
 
+    @pytest.mark.deprecated
     def test_default_platform_gui(self):
         """
         Test that the dependency check works for gui + default platform when the
@@ -93,6 +95,7 @@ class TestDependencyCheck(unittest.TestCase):
                                          skip_external_commands=True)
             self.assertFalse(must_exit)
 
+    @pytest.mark.deprecated
     def test_default_platform_gui_missing_deps(self):
         """
         Test that the dependency check works for gui + default platform when
@@ -114,6 +117,7 @@ class TestDependencyCheck(unittest.TestCase):
             all_stdout = ''.join(k[1][0] for k in stdout_mock.method_calls)
             self.assertIn(self.MISSING_DEP_CMD, all_stdout)
 
+    @pytest.mark.deprecated
     def test_ubuntu1204_core(self):
         """
         Test that the dependency check works for core + ubuntu1204
@@ -125,6 +129,7 @@ class TestDependencyCheck(unittest.TestCase):
                                          skip_external_commands=True)
             self.assertFalse(must_exit)
 
+    @pytest.mark.deprecated
     def test_ubuntu1204_gui(self):
         """
         Test that the dependency check works for core + ubuntu1204

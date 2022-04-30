@@ -73,6 +73,7 @@ class TestRFI(PluginTest):
 
     }
 
+    @pytest.mark.deprecated
     def test_found_rfi_with_w3af_site(self):
         cfg = self._run_configs['remote_rce']
         self._scan(cfg['target'], cfg['plugins'])
@@ -86,6 +87,7 @@ class TestRFI(PluginTest):
         self.assertEqual(self.target_rce, vuln.get_url().url_string)
 
     @attr('smoke')
+    @pytest.mark.deprecated
     def test_found_rfi_with_local_server_rce(self):
         cfg = self._run_configs['local_rce']
         self._scan(cfg['target'], cfg['plugins'])
@@ -98,6 +100,7 @@ class TestRFI(PluginTest):
         self.assertEqual("Remote code execution", vuln.get_name())
         self.assertEqual(self.target_rce, vuln.get_url().url_string)
 
+    @pytest.mark.deprecated
     def test_found_rfi_with_local_server_read(self):
         cfg = self._run_configs['local_read']
         self._scan(cfg['target'], cfg['plugins'])
@@ -110,6 +113,7 @@ class TestRFI(PluginTest):
         self.assertEqual("Remote file inclusion", vuln.get_name())
         self.assertEqual(self.target_read, vuln.get_url().url_string)
 
+    @pytest.mark.deprecated
     def test_found_rfi_with_remote_server_read(self):
         cfg = self._run_configs['remote_read']
         self._scan(cfg['target'], cfg['plugins'])
@@ -122,6 +126,7 @@ class TestRFI(PluginTest):
         self.assertEqual("Remote file inclusion", vuln.get_name())
         self.assertEqual(self.target_read, vuln.get_url().url_string)
 
+    @pytest.mark.deprecated
     def test_custom_web_server(self):
         RFIWebHandler.RESPONSE_BODY = '<? echo "hello world"; ?>'
         ws = HTTPServer(('127.0.0.1', 0), '.', RFIWebHandler)

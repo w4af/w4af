@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import unittest
 import subprocess
 
@@ -29,6 +30,7 @@ from w3af.core.controllers.auto_update.utils import (is_git_repo,
                                                      get_current_branch)
 
 @attr('git')
+@pytest.mark.skip(reason='deprecated')
 class TestGitUtils(unittest.TestCase):
     
     def test_is_git_repo(self):

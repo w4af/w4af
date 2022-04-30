@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import time
 import socket
 import urllib.request, urllib.error, urllib.parse
@@ -63,8 +64,9 @@ class BrowserThread(Process):
                      'https': 'http://127.0.0.1:%s/' % self.proxy_port}
         proxy_support = urllib.request.ProxyHandler(proxy_cfg)
         opener = urllib.request.build_opener(proxy_support)
+
         # Avoid this, it might influence other tests!
-        #urllib2.install_opener(opener)
+        # urllib2.install_opener(opener)
 
         all_urls = BROWSE_URLS
 
@@ -88,7 +90,7 @@ class BrowserThread(Process):
                 try:
                     response = opener.open(full_url)
                 except Exception as ex:
-                    self.responses.append(str(ex))
+                    self.responses.append(ex.read())
                 else:
                     self.responses.append(response.read())
 
@@ -147,6 +149,7 @@ class TestSpiderman(PluginTest):
 
 class TestHTTPSpiderman(TestSpiderman):
 
+    @pytest.mark.deprecated
     def test_spiderman_http(self):
         port = get_unused_port()
 
@@ -163,6 +166,7 @@ class TestHTTPSpiderman(TestSpiderman):
 
 class TestHTTPSSpiderman(TestSpiderman):
 
+    @pytest.mark.deprecated
     def test_spiderman_https(self):
         port = get_unused_port()
 

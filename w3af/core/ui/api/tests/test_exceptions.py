@@ -26,7 +26,7 @@ from w3af.core.ui.api.tests.utils.test_profile import get_test_profile
 
 
 class ScanExceptionResourceTest(APIUnitTest):
-
+    @pytest.mark.deprecated
     def test_query_exceptions(self):
         profile, target_url = get_test_profile()
         data = {'scan_profile': profile,

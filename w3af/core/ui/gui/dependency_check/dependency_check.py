@@ -38,23 +38,34 @@ def dependency_check():
     mdep_check() 
     """
     should_exit = mdep_check(dependency_set=GUI, exit_on_failure=False)
-    
+
+    errors = []
+
     try:
         from gi.repository import Gtk as gtk
         from gi.repository import GObject as gobject
-        assert gtk.gtk_version >= (2, 12)
-        assert gtk.pygtk_version >= (2, 12)
-    except:
-        msg = 'The GTK package requirements are not met, please make sure your'\
-              ' system meets these requirements:\n'\
-              '    - PyGTK >= 2.12\n'\
-              '    - GTK >= 2.12\n'
-        print(msg)
+    except ImportError:
+        errors.append('Failed to import module gobject')
+
+    #
+    # Now print a detailed error message with all the errors (if any)
+    #
+    if errors:
+        msg = ('The GTK user interface package requirements are not met,'
+               ' please make sure your system meets these requirements:\n'
+               '    - PyGTK >= 2.12\n'
+               '    - GTK >= 2.12\n'
+               '\n'
+               'The following errors were found:\n'
+               '%s')
+        errors_as_str = ''.join('    - %s\n' % e for e in errors)
+        print(msg % errors_as_str)
+
         should_exit = True
 
     if not which('dot'):
-        msg = 'The required "dot" binary is missing, please install the' \
-              ' "graphviz" package in your operating system.'
+        msg = ('The required "dot" binary is missing, please install the'
+               ' "graphviz" package in your operating system.')
         print(msg)
         should_exit = True
 

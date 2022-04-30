@@ -40,6 +40,5 @@ class CentOS65(CentOS):
     SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES,
                        GUI: GUI_SYSTEM_PACKAGES}
 
-    @staticmethod
-    def is_current_platform():
+    def is_current_platform(self):
         return 'centos' in distro.linux_distribution() and '6.5' in distro.linux_distribution()

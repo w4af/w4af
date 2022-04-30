@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import os
 import re
 import unittest
@@ -110,6 +111,7 @@ class TestVulnsConstants(unittest.TestCase):
 
         return all_plugin_sources
     @unittest.skip("This is failing - I'm not sure why")
+    @pytest.mark.deprecated
     def test_all_vulnerability_names_from_db_are_used(self):
         vuln_names = list(VULNS.keys())
         all_plugin_sources = self.get_all_plugins_source()

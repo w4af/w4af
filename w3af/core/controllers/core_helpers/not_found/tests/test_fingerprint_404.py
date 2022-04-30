@@ -90,6 +90,7 @@ class Test404FalseNegative(Generic404Test):
 
     @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.deprecated
     def test_false_negative_with_500(self):
         server_error = ('500 error that does NOT\n'
                         'look like one\n'
@@ -128,6 +129,7 @@ class Test404FalsePositiveLargeResponsesRandomShort(Generic404Test):
         return self.get_body(unique_parts)
 
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.slow
     def test_page_found_with_large_response_random(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -151,6 +153,7 @@ class Test404FalsePositiveLargeResponsesRandomShort(Generic404Test):
 
     @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.slow
     def test_page_marked_as_404_with_large_response_random(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -193,6 +196,7 @@ class Test404With1ByteRandomShort(Generic404Test):
         return '\n'.join(parts)
 
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.deprecated
     def test_1byte_short_not_404(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -240,6 +244,7 @@ class Test404With1ByteRandomLarge(Generic404Test):
 
     @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.deprecated
     def test_1byte_large_is_404(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -259,6 +264,7 @@ class Test404With1ByteRandomLarge(Generic404Test):
         self.assertTrue(self.fingerprint_404.is_404(not_found))
 
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.deprecated
     def test_1byte_large_is_200(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -288,6 +294,7 @@ class Test404FalsePositiveLargeResponsesEqual404s(Generic404Test):
         return self.get_body(unique_parts)
 
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.slow
     def test_page_not_found_with_large_response(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -311,6 +318,7 @@ class Test404FalsePositiveLargeResponsesEqual404s(Generic404Test):
 
     @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.slow
     def test_page_marked_as_404_with_large_response(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -343,6 +351,7 @@ class Test404FalsePositiveLargeResponsesWithCSRFToken(Generic404Test):
 
     @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.slow
     def test_is_404_with_csrf_token(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -364,6 +373,7 @@ class Test404FalsePositiveLargeResponsesWithCSRFToken(Generic404Test):
         self.assertTrue(self.fingerprint_404.is_404(not_found_404))
 
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.slow
     def test_exists_with_csrf_token_in_404_page(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -401,6 +411,7 @@ class Test404FalsePositiveLargeResponsesWithCSRFTokenPartiallyEqual(Generic404Te
 
     @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.slow
     def test_false_positive(self):
 
         httpretty.register_uri(httpretty.GET,
@@ -550,6 +561,7 @@ class Test404HandleAllIs404(GenericIgnoredPartTest):
 
     @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
+    @pytest.mark.deprecated
     def test_handle_really_a_404(self):
 
         httpretty.register_uri(httpretty.GET,

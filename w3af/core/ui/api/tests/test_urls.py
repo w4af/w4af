@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import json
 
 from w3af.core.ui.api.tests.utils.test_api import APIUnitTest
@@ -29,6 +30,7 @@ from nose.plugins.attrib import attr
 @attr("moth")
 class URLTest(APIUnitTest):
 
+    @pytest.mark.deprecated
     def test_url_list(self):
         profile, target_url = get_test_profile()
         data = {'scan_profile': profile,

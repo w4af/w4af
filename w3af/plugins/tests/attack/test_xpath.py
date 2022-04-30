@@ -46,6 +46,7 @@ class TestXPathShell(PluginTest):
     }
 
     @attr('fails')
+    @pytest.mark.deprecated
     def test_find_exploit_xpath(self):
         # Run the scan
         cfg = self._run_configs['cfg']
@@ -63,6 +64,7 @@ class TestXPathShell(PluginTest):
         self._exploit_xpath(vuln_to_exploit_id)
 
     @attr('fails')
+    @pytest.mark.deprecated
     def test_from_template(self):
         xt = XPathTemplate()
         

@@ -61,6 +61,7 @@ class TestEmailReport(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_found_xss(self):
         # monkey-patch smtplib so we don't send actual emails
         inbox = []
