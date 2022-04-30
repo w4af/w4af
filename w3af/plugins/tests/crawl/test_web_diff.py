@@ -18,10 +18,11 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 
 from nose.plugins.attrib import attr
-from mock import patch, call
+from unittest.mock import patch, call
 
 from w3af import ROOT_PATH
 from w3af.core.data.parsers.doc.url import URL
@@ -51,6 +52,7 @@ class TestWebDiff(PluginTest):
     }
 
     @attr('ci_fails')
+    @pytest.mark.deprecated
     def test_compare(self):
         cfg = self._run_configs['basic']
 
@@ -61,25 +63,25 @@ class TestWebDiff(PluginTest):
                 call.information('The following files exist in the local'
                                  ' directory and in the remote server:'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/456.html'),
+                    '- http://moth/w3af/crawl/web_diff/456.html'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/exclude.php'),
+                    '- http://moth/w3af/crawl/web_diff/exclude.php'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/123.html'),
+                    '- http://moth/w3af/crawl/web_diff/123.html'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/index.html'),
+                    '- http://moth/w3af/crawl/web_diff/index.html'),
                 call.information('The following files exist in the local'
                                  ' directory and in the remote server and'
                                  ' their contents match:'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/123.html'),
+                    '- http://moth/w3af/crawl/web_diff/123.html'),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/index.html'),
+                    '- http://moth/w3af/crawl/web_diff/index.html'),
                 call.information("The following files exist in the local"
                                  " directory and in the remote server but"
                                  " their contents don't match:"),
                 call.information(
-                    u'- http://moth/w3af/crawl/web_diff/456.html'),
+                    '- http://moth/w3af/crawl/web_diff/456.html'),
                 call.information('Match files: 4 of 4'),
                 call.information('Match contents: 2 of 3')
             ]

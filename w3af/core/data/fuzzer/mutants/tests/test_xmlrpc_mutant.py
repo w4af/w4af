@@ -50,7 +50,7 @@ class TestXMLRPCMutant(unittest.TestCase):
         self.assertEqual(len(dc['base64']), 1)
 
         self.assertEqual(dc['string'][0], 'Foo bar')
-        self.assertEqual(dc['base64'][0], 'Spam eggs')
+        self.assertEqual(dc['base64'][0], b'Spam eggs')
 
         self.assertEqual(str(m.get_dc()), str(m.get_data()))
 

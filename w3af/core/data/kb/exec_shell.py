@@ -105,12 +105,11 @@ class ExecShell(Shell):
             return 'Remote file does not exist.'
         else:
             try:
-                fh = file(local_filename, 'w')
+                with open(local_filename, 'w') as fh:
+                    fh.write(remote_content)
             except:
                 return 'Failed to open local file for writing.'
             else:
-                fh.write(remote_content)
-                fh.close()
                 return 'Success.'
 
     def upload(self, local_filename, remote_filename):
@@ -125,12 +124,11 @@ class ExecShell(Shell):
         :return: The message to show to the user.
         """
         try:
-            fh = file(local_filename, 'r')
+            with open(local_filename, 'r') as fh:
+                file_content = fh.read()
         except:
             return 'Failed to open local file for reading.'
         else:
-            file_content = fh.read()
-            fh.close()
             self.write(remote_filename, file_content)
             return 'Success.'
 
@@ -149,7 +147,7 @@ class ExecShell(Shell):
             try:
                 ptf = payload_transfer_factory(self.execute)
                 self._transfer_handler = ptf.get_transfer_handler()
-            except BaseFrameworkException, e:
+            except BaseFrameworkException as e:
                 return '%s' % e
 
         if not self._transfer_handler.can_transfer():
@@ -320,7 +318,7 @@ class ExecShell(Shell):
             self._rSystem = self.execute('uname -o -r -n -m -s').strip()
             self._rSystemName = self.execute('uname -n').strip()
         elif self._rOS == 'windows':
-            self._rUser = self.execute('echo %USERDOMAIN%\%USERNAME%').strip()
+            self._rUser = self.execute('echo %USERDOMAIN%\\%USERNAME%').strip()
             self._rSystem = self.execute(
                 'echo %COMPUTERNAME% - %OS% - %PROCESSOR_IDENTIFIER%').strip()
             self._rSystemName = self.execute('echo %COMPUTERNAME%').strip()

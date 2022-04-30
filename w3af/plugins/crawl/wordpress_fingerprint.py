@@ -122,32 +122,33 @@ class wordpress_fingerprint(CrawlPlugin):
 
             release_db = self._release_db
 
-            for line in file(release_db):
-                try:
-                    line = line.strip()
-                    release_db_hash, release_db_name = line.split(',')
-                except:
-                    continue
+            with open(release_db) as release_fh:
+                for line in release_fh:
+                    try:
+                        line = line.strip()
+                        release_db_hash, release_db_name = line.split(',')
+                    except:
+                        continue
 
-                if release_db_hash == remote_release_hash:
+                    if release_db_hash == remote_release_hash:
 
-                    desc = ('The sysadmin used WordPress version "%s" during the'
-                            ' installation, which was found by matching the contents'
-                            ' of "%s" with the hashes of known releases. If the'
-                            ' sysadmin did not update wordpress, the current version'
-                            ' will still be the same.')
-                    desc %= (release_db_name, install_url)
+                        desc = ('The sysadmin used WordPress version "%s" during the'
+                                ' installation, which was found by matching the contents'
+                                ' of "%s" with the hashes of known releases. If the'
+                                ' sysadmin did not update wordpress, the current version'
+                                ' will still be the same.')
+                        desc %= (release_db_name, install_url)
 
-                    i = Info('Fingerprinted Wordpress version', desc, response.id,
-                             self.get_name())
-                    i.set_url(install_url)
-                    
-                    kb.kb.append(self, 'info', i)
-                    om.out.information(i.get_desc())
+                        i = Info('Fingerprinted Wordpress version', desc, response.id,
+                                self.get_name())
+                        i.set_url(install_url)
 
-                    # Send link to core
-                    fr = FuzzableRequest(response.get_uri())
-                    self.output_queue.put(fr)
+                        kb.kb.append(self, 'info', i)
+                        om.out.information(i.get_desc())
+
+                        # Send link to core
+                        fr = FuzzableRequest(response.get_uri())
+                        self.output_queue.put(fr)
 
     def _fingerprint_readme(self, domain_path, wp_unique_url, response):
         """
@@ -157,7 +158,7 @@ class wordpress_fingerprint(CrawlPlugin):
         response = self._uri_opener.GET(wp_readme_url, cache=True)
 
         # Find the string in the response html
-        find = '<br /> Version (\d\.\d\.?\d?)'
+        find = r'<br /> Version (\d\.\d\.?\d?)'
         m = re.search(find, response.get_body())
 
         # If string found, group version
@@ -187,7 +188,7 @@ class wordpress_fingerprint(CrawlPlugin):
         response = self._uri_opener.GET(wp_index_url, cache=True)
 
         # Find the string in the response html
-        find = '<meta name="generator" content="[Ww]ord[Pp]ress (\d\.\d\.?\d?)" />'
+        find = r'<meta name="generator" content="[Ww]ord[Pp]ress (\d\.\d\.?\d?)" />'
         m = re.search(find, response.get_body())
 
         # If string found, group version
@@ -256,7 +257,7 @@ class wordpress_fingerprint(CrawlPlugin):
         try:
             wordpress_fp_fd = codecs.open(self.WP_VERSIONS_XML, 'r', 'utf-8',
                                           errors='ignore')
-        except Exception, e:
+        except Exception as e:
             msg = 'Failed to open wordpress fingerprint database "%s": "%s".'
             args = (self.WP_VERSIONS_XML, e)
             raise BaseFrameworkException(msg % args)
@@ -268,7 +269,7 @@ class wordpress_fingerprint(CrawlPlugin):
         
         try:
             parser.parse(wordpress_fp_fd)
-        except Exception, e:
+        except Exception as e:
             msg = 'XML parsing error in wordpress version DB, exception: "%s".'
             raise BaseFrameworkException(msg % e)
         

@@ -18,11 +18,12 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 import re
 import json
-import urllib
-import cPickle
+import urllib.request, urllib.parse, urllib.error
+import pickle
 import base64
 import unittest
 
@@ -36,7 +37,7 @@ from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
 from w3af.core.data.fuzzer.mutants.cookie_mutant import CookieMutant
 from w3af.core.data.dc.urlencoded_form import URLEncodedForm
 from w3af.core.data.parsers.utils.form_params import FormParameters
-
+from w3af.core.data.misc.encoding import smart_unicode
 
 test_config = {
     'audit': (PluginConfig('deserialization'),),
@@ -49,18 +50,18 @@ class TestDeserializePickle(PluginTest):
 
     class DeserializeMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
             b64message = uri[uri.find('=') + 1:]
 
             try:
                 message = base64.b64decode(b64message)
-            except Exception, e:
+            except Exception as e:
                 body = str(e)
                 return self.status, response_headers, body
 
             try:
-                cPickle.loads(message)
-            except Exception, e:
+                pickle.loads(message)
+            except Exception as e:
                 body = str(e)
                 return self.status, response_headers, body
 
@@ -70,17 +71,18 @@ class TestDeserializePickle(PluginTest):
     MOCK_RESPONSES = [DeserializeMockResponse(re.compile('.*'), body=None,
                                               method='GET', status=200)]
 
+    @pytest.mark.deprecated
     def test_found_deserialization_in_pickle(self):
         self._scan(self.target_url, test_config)
         vulns = self.kb.get('deserialization', 'deserialization')
 
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
 
-        self.assertEquals('message', vuln.get_token_name())
-        self.assertEquals('Insecure deserialization', vuln.get_name())
+        self.assertEqual('message', vuln.get_token_name())
+        self.assertEqual('Insecure deserialization', vuln.get_name())
 
 
 class TestDeserializePickleNotBase64(PluginTest):
@@ -89,12 +91,12 @@ class TestDeserializePickleNotBase64(PluginTest):
 
     class DeserializeMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
             message = uri[uri.find('=') + 1:]
 
             try:
-                cPickle.loads(message)
-            except Exception, e:
+                pickle.loads(message)
+            except Exception as e:
                 body = str(e)
                 return self.status, response_headers, body
 
@@ -104,17 +106,18 @@ class TestDeserializePickleNotBase64(PluginTest):
     MOCK_RESPONSES = [DeserializeMockResponse(re.compile('.*'), body=None,
                                               method='GET', status=200)]
 
+    @pytest.mark.deprecated
     def test_found_deserialization_in_pickle(self):
         self._scan(self.target_url, test_config)
         vulns = self.kb.get('deserialization', 'deserialization')
 
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
 
-        self.assertEquals('message', vuln.get_token_name())
-        self.assertEquals('Insecure deserialization', vuln.get_name())
+        self.assertEqual('message', vuln.get_token_name())
+        self.assertEqual('Insecure deserialization', vuln.get_name())
 
 
 class TestShouldInjectIsCalled(PluginTest):
@@ -123,18 +126,18 @@ class TestShouldInjectIsCalled(PluginTest):
 
     class DeserializeMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
             b64message = uri[uri.find('=') + 1:]
 
             try:
                 message = base64.b64decode(b64message)
-            except Exception, e:
+            except Exception as e:
                 body = str(e)
                 return self.status, response_headers, body
 
             try:
-                cPickle.loads(message)
-            except Exception, e:
+                pickle.loads(message)
+            except Exception as e:
                 body = str(e)
                 return self.status, response_headers, body
 
@@ -144,11 +147,12 @@ class TestShouldInjectIsCalled(PluginTest):
     MOCK_RESPONSES = [DeserializeMockResponse(re.compile('.*'), body=None,
                                               method='GET', status=200)]
 
+    @pytest.mark.deprecated
     def test_found_deserialization_in_pickle(self):
         self._scan(self.target_url, test_config)
         vulns = self.kb.get('deserialization', 'deserialization')
 
-        self.assertEquals(0, len(vulns), vulns)
+        self.assertEqual(0, len(vulns), vulns)
 
 
 class TestShouldInject(unittest.TestCase):
@@ -176,8 +180,8 @@ class TestShouldInject(unittest.TestCase):
         self.assertFalse(self.plugin._should_inject(mutant, 'python'))
 
     def test_should_not_inject_qs_with_b64(self):
-        b64data = base64.b64encode('just some random b64 data here')
-        self.url = URL('http://moth/?id=%s' % b64data)
+        b64data = base64.b64encode('just some random b64 data here'.encode("utf-8"))
+        self.url = URL('http://moth/?id=%s' % b64data.decode('utf-8'))
         freq = FuzzableRequest(self.url)
 
         mutant = QSMutant.create_mutants(freq, self.payloads, [],
@@ -186,9 +190,9 @@ class TestShouldInject(unittest.TestCase):
         self.assertFalse(self.plugin._should_inject(mutant, 'python'))
 
     def test_should_inject_qs_with_b64_pickle(self):
-        b64data = base64.b64encode(cPickle.dumps({'data': 'here',
+        b64data = base64.b64encode(pickle.dumps({'data': 'here',
                                                   'cookie': 'A' * 16}))
-        self.url = URL('http://moth/?id=%s' % b64data)
+        self.url = URL('http://moth/?id=%s' % smart_unicode(b64data))
         freq = FuzzableRequest(self.url)
 
         mutant = QSMutant.create_mutants(freq, self.payloads, [],
@@ -197,8 +201,8 @@ class TestShouldInject(unittest.TestCase):
         self.assertTrue(self.plugin._should_inject(mutant, 'python'))
 
     def test_should_not_inject_qs_with_b64_pickle_java(self):
-        b64data = base64.b64encode(cPickle.dumps(1))
-        self.url = URL('http://moth/?id=%s' % b64data)
+        b64data = base64.b64encode(pickle.dumps(1))
+        self.url = URL('http://moth/?id=%s' % b64data.decode('utf-8'))
         freq = FuzzableRequest(self.url)
 
         mutant = QSMutant.create_mutants(freq, self.payloads, [],
@@ -207,8 +211,8 @@ class TestShouldInject(unittest.TestCase):
         self.assertFalse(self.plugin._should_inject(mutant, 'java'))
 
     def test_should_inject_qs_with_pickle(self):
-        pickle_data = cPickle.dumps(1)
-        self.url = URL('http://moth/?id=%s' % pickle_data)
+        pickle_data = pickle.dumps(1)
+        self.url = URL('http://moth/?id=%s' % urllib.parse.quote(pickle_data))
         freq = FuzzableRequest(self.url)
 
         mutant = QSMutant.create_mutants(freq, self.payloads, [],
@@ -234,11 +238,11 @@ class TestShouldInject(unittest.TestCase):
         self.assertTrue(self.plugin._should_inject(m, 'python'))
 
     def test_should_inject_cookie_value(self):
-        b64data = base64.b64encode(cPickle.dumps({'data': 'here',
+        b64data = base64.b64encode(pickle.dumps({'data': 'here',
                                                   'cookie': 'A' * 16}))
 
         url = URL('http://moth/')
-        cookie = Cookie('foo=%s' % b64data)
+        cookie = Cookie('foo=%s' % b64data.decode('utf-8'))
         freq = FuzzableRequest(url, cookie=cookie)
 
         mutant = CookieMutant.create_mutants(freq, self.payloads, [],
@@ -273,7 +277,8 @@ class TestJSONPayloadIsValid(unittest.TestCase):
                     continue
 
                 if file_name.endswith(deserialization.PAYLOAD_EXTENSION):
-                    json_str = file(os.path.join(root, file_name)).read()
+                    with open(os.path.join(root, file_name)) as f:
+                        json_str = f.read()
                     data = json.loads(json_str)
 
                     self.assertIn('1', data, file_name)
@@ -314,8 +319,8 @@ class TestExactDelay(unittest.TestCase):
         payload_1 = ed.get_string_for_delay(1)
         payload_22 = ed.get_string_for_delay(22)
 
-        self.assertEqual(payload['1']['payload'], payload_1)
-        self.assertEqual(payload['2']['payload'], payload_22)
+        self.assertEqual(payload['1']['payload'], payload_1.decode('utf-8'))
+        self.assertEqual(payload['2']['payload'], payload_22.decode('utf-8'))
 
     def test_get_payload_all(self):
         for root, dirs, files in os.walk(deserialization.PAYLOADS):
@@ -331,7 +336,8 @@ class TestExactDelay(unittest.TestCase):
                     continue
 
                 if file_name.endswith(deserialization.PAYLOAD_EXTENSION):
-                    json_str = file(os.path.join(root, file_name)).read()
+                    with open(os.path.join(root, file_name)) as f:
+                        json_str = f.read()
                     payload = json.loads(json_str)
 
                     ed = B64DeserializationExactDelay(payload)
@@ -339,13 +345,10 @@ class TestExactDelay(unittest.TestCase):
                     try:
                         payload_1 = ed.get_string_for_delay(1)
                         payload_22 = ed.get_string_for_delay(22)
-                    except Exception, e:
+                    except Exception as e:
                         msg = 'Raised exception "%s" on "%s"'
                         args = (e, file_name)
                         self.assertTrue(False, msg % args)
 
-                    #file('1', 'w').write(base64.b64decode(payload['1']['payload']))
-                    #file('2', 'w').write(base64.b64decode(payload_1))
-
-                    self.assertEqual(payload['1']['payload'], payload_1, file_name)
-                    self.assertEqual(payload['2']['payload'], payload_22, file_name)
+                    self.assertEqual(payload['1']['payload'], payload_1.decode('utf-8'), file_name)
+                    self.assertEqual(payload['2']['payload'], payload_22.decode('utf-8'), file_name)

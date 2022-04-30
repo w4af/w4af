@@ -42,7 +42,7 @@ class http_auth_detect(GrepPlugin):
     def __init__(self):
         GrepPlugin.__init__(self)
 
-        self._auth_uri_regex = re.compile('.*://[\w%]*?:[\w%]*?@[\w\.]{3,40}')
+        self._auth_uri_regex = re.compile(r'.*://[\w%]*?:[\w%]*?@[\w\.]{3,40}')
 
     def grep(self, request, response):
         """
@@ -96,7 +96,7 @@ class http_auth_detect(GrepPlugin):
         url_list = []
         try:
             document_parser = parser_cache.dpc.get_document_parser_for(response)
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = 'Failed to find a suitable document parser. Exception: "%s"'
             om.out.debug(msg % e)
         else:

@@ -34,10 +34,12 @@ class TestProfiles(unittest.TestCase):
         target_tmp = '/tmp/OWASP_TOP10.pw3af'
 
         shutil.copy(p.profile_file_name, '/tmp/')
-        profile_content = file(target_tmp).read()
+        with open(target_tmp) as f:
+            profile_content = f.read()
         profile_content = profile_content.replace('name = OWASP_TOP10',
                                                   'name = foobar')
-        file(target_tmp, 'w').write(profile_content)
+        with open(target_tmp, "w") as f:
+            f.write(profile_content)
 
         p = profile('foobar', workdir='/tmp/')
         self.assertEqual(target_tmp, p.profile_file_name)
@@ -49,10 +51,12 @@ class TestProfiles(unittest.TestCase):
         target_tmp = '/tmp/OWASP_TOP10.pw3af'
 
         shutil.copy(p.profile_file_name, '/tmp/')
-        profile_content = file(target_tmp).read()
+        with open(target_tmp) as f:
+            profile_content = f.read()
         profile_content = profile_content.replace('name = OWASP_TOP10',
                                                   'name = foobar')
-        file(target_tmp, 'w').write(profile_content)
+        with open(target_tmp, "w") as f:
+            f.write(profile_content)
 
         p = profile('foobar', workdir='/tmp/')
         p.remove()

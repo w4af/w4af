@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 import time
 
@@ -27,6 +28,7 @@ from w3af.core.controllers.core_helpers.strategy_observers.thread_state_observer
 
 
 class TestThreadStateObserver(unittest.TestCase):
+    @pytest.mark.deprecated
     def test_inspect_data_to_log(self):
         worker_pool = Pool(processes=1, worker_names='WorkerThread')
         tso = ThreadStateObserver()
@@ -41,12 +43,12 @@ class TestThreadStateObserver(unittest.TestCase):
         def sleep(sleep_time, **kwargs):
             time.sleep(sleep_time)
 
-        args = (2,)
+        args = (15,)
         kwds = {'x': 2}
         worker_pool.apply_async(func=sleep, args=args, kwds=kwds)
 
         # Let the worker get the task
-        time.sleep(0.3)
+        time.sleep(10)
 
         worker_states = worker_pool.inspect_threads()
         tso.inspect_data_to_log(worker_pool, worker_states)
@@ -55,5 +57,5 @@ class TestThreadStateObserver(unittest.TestCase):
 
         message_re = ('Worker with ID .*? has been running job .*? for .*? seconds.'
                       ' The job is: .*?(.*?, kwargs=.*?)')
-        self.assertRegexpMatches(messages[0], message_re)
+        self.assertRegex(messages[0], message_re)
         self.assertEqual(messages[1], '0% of WorkerThread workers are idle.')

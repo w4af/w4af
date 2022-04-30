@@ -132,13 +132,13 @@ class error_pages(GrepPlugin):
     _multi_in = MultiIn(ERROR_PAGES)
 
     VERSION_REGEX = (
-        ('<address>(.*?)</address>', 'Apache'),
-        ('<HR size="1" noshade="noshade"><h3>(.*?)</h3></body>',
+        (r'<address>(.*?)</address>', 'Apache'),
+        (r'<HR size="1" noshade="noshade"><h3>(.*?)</h3></body>',
          'Apache Tomcat'),
-        ('<a href="http://www.microsoft.com/ContentRedirect.asp\?prd=iis&sbp=&pver=(.*?)&pid=&ID', 'IIS'),
+        (r'<a href="http://www.microsoft.com/ContentRedirect.asp\?prd=iis&sbp=&pver=(.*?)&pid=&ID', 'IIS'),
 
         # <b>Version Information:</b>&nbsp;Microsoft .NET Framework Version:1.1.4322.2300; ASP.NET Version:1.1.4322.2300
-        ('<b>Version Information:</b>&nbsp;(.*?)\n', 'ASP .NET')
+        (r'<b>Version Information:</b>&nbsp;(.*?)\n', 'ASP .NET')
     )
     _multi_re = MultiRE(VERSION_REGEX)
 

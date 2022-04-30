@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 import w3af.core.data.kb.knowledge_base as kb
@@ -47,22 +48,25 @@ class TestPathDisclosure(unittest.TestCase):
     def _create_response(self, body):
         return HTTPResponse(200, body, self.header, self.url, self.url, _id=1)
 
+    @pytest.mark.deprecated
     def test_path_disclosure(self):
         res = self._create_response('header body footer')
         self.plugin.grep(self.request, res)
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
+    @pytest.mark.deprecated
     def test_path_disclosure_positive(self):
         res = self._create_response('header /etc/passwd footer')
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
 
         path = infos[0]['path']
         self.assertEqual(path, '/etc/passwd')
 
+    @pytest.mark.deprecated
     def test_path_disclosure_false_positive_6640(self):
         # see: https://github.com/andresriancho/w3af/issues/6640
         path = '/media/js/spotlight.js'
@@ -72,8 +76,9 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
+    @pytest.mark.deprecated
     def test_path_disclosure_calculated_webroot(self):
         kb.kb.add_url(self.url)
 
@@ -83,6 +88,7 @@ class TestPathDisclosure(unittest.TestCase):
         webroot = kb.kb.raw_read('path_disclosure', 'webroot')
         self.assertEqual(webroot, '/var/www')
 
+    @pytest.mark.deprecated
     def test_path_disclosure_false_positive_in_tag_attr(self):
         kb.kb.add_url(self.url)
 
@@ -90,8 +96,9 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
+    @pytest.mark.deprecated
     def test_path_disclosure_false_positive_not_starting_with(self):
         kb.kb.add_url(URL('http://mock/js/banner.js'))
 
@@ -99,8 +106,9 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
+    @pytest.mark.deprecated
     def test_path_disclosure_tag_text(self):
         kb.kb.add_url(self.url)
 
@@ -108,8 +116,9 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
 
+    @pytest.mark.deprecated
     def test_path_disclosure_tag_text_quotes(self):
         kb.kb.add_url(self.url)
 
@@ -117,4 +126,4 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)

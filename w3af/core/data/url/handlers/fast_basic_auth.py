@@ -19,12 +19,13 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import base64
 
+from w3af.core.data.misc.encoding import smart_str_ignore
 
-class FastHTTPBasicAuthHandler(urllib2.AbstractBasicAuthHandler,
-                               urllib2.BaseHandler):
+class FastHTTPBasicAuthHandler(urllib.request.AbstractBasicAuthHandler,
+                               urllib.request.BaseHandler):
     """
     The AbstractBasicAuthHandler only sends the basic HTTP credentials after
     receiving a 401 which makes scans much slower (1 returns 401, 1 with the
@@ -42,7 +43,7 @@ class FastHTTPBasicAuthHandler(urllib2.AbstractBasicAuthHandler,
         user, pw = self.passwd.find_user_password(None, request.get_full_url())
         if pw is not None:
             raw = '%s:%s' % (user, pw)
-            auth = 'Basic %s' % base64.b64encode(raw).strip()
+            auth = 'Basic %s' % base64.b64encode(smart_str_ignore(raw)).strip()
             request.add_header('Authorization', auth)
 
         return request

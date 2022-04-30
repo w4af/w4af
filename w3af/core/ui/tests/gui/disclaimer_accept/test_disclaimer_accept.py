@@ -18,14 +18,18 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 import subprocess
+
+from nose.plugins.attrib import attr
 
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
 from w3af.core.data.db.startup_cfg import StartUpConfig
 
 
+@attr('gui')
 class TestDisclaimer(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'disclaimer_accept', 'images')
@@ -48,6 +52,7 @@ class TestDisclaimer(XpresserUnittest):
         startup_cfg.accepted_disclaimer = True
         startup_cfg.save()
 
+    @pytest.mark.deprecated
     def test_disclaimer_shown_accept(self):
         startup_cfg = StartUpConfig()
         startup_cfg.accepted_disclaimer = False
@@ -58,6 +63,7 @@ class TestDisclaimer(XpresserUnittest):
         
         self.find('owasp_top_10_profile')
 
+    @pytest.mark.deprecated
     def test_disclaimer_shown_not_accept(self):
         startup_cfg = StartUpConfig()
         startup_cfg.accepted_disclaimer = False
@@ -68,6 +74,7 @@ class TestDisclaimer(XpresserUnittest):
         
         self.not_find('owasp_top_10_profile')
 
+    @pytest.mark.deprecated
     def test_disclaimer_not_shown(self):
         startup_cfg = StartUpConfig()
         startup_cfg.accepted_disclaimer = True

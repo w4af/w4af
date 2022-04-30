@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 
 from w3af.core.controllers.ci.moth import get_moth_http
@@ -47,6 +48,7 @@ class TestExportRequests(PluginTest):
         },
     }
 
+    @pytest.mark.deprecated
     def test_export_requests(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -55,15 +57,16 @@ class TestExportRequests(PluginTest):
 
         self.assertTrue(os.path.exists('output-fr.b64'))
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted(freq)),
             set(sorted(self._get_fuzzable_requests_from_file()))
         )
 
     def _get_fuzzable_requests_from_file(self):
         # Get the contents of the output file
-        for line in file('output-fr.b64'):
-            yield FuzzableRequest.from_base64(line)
+        with open('output-fr.b64') as output_fh:
+            for line in output_fh:
+                yield FuzzableRequest.from_base64(line)
 
     def tearDown(self):
         super(TestExportRequests, self).tearDown()

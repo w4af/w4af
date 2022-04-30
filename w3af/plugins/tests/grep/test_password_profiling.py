@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.plugins.grep.password_profiling import password_profiling
@@ -44,26 +45,25 @@ class TestPasswordProfiling(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_collected_passwords(self):
         cfg = self._run_configs['cfg1']
         self._scan(cfg['target'], cfg['plugins'])
         
-        def sortfunc(x_obj, y_obj):
-            return cmp(x_obj[1], y_obj[1])
-
         # pylint: disable=E1103
         # Pylint fails to detect the object types that come out of the KB            
         collected_passwords = self.kb.raw_read('password_profiling',
                                                'password_profiling')
 
-        collected_passwords = collected_passwords.keys()
+        collected_passwords = list(collected_passwords.keys())
         # pylint: enable=E1103
-        collected_passwords.sort(sortfunc)
+        collected_passwords.sort(key=lambda x:x[1])
 
         self.assertIn('Moth', collected_passwords)
         self.assertIn('application', collected_passwords)
         self.assertIn('creators', collected_passwords)
 
+    @pytest.mark.deprecated
     def test_merge_password_profiling(self):
         pp = password_profiling()
         
@@ -80,6 +80,7 @@ class TestPasswordProfiling(PluginTest):
                                       'spameggs': 3,
                                       'charlotte': 3})
 
+    @pytest.mark.deprecated
     def test_merge_password_profiling_unknown_lang(self):
         pp = password_profiling()
         

@@ -19,10 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 from itertools import repeat
-from mock import patch
+from unittest.mock import patch
 
 import w3af.core.data.kb.knowledge_base as kb
 
@@ -50,6 +51,7 @@ class TestMetaGenerator(unittest.TestCase):
         self.plugin.end()
 
     @patch('w3af.plugins.grep.meta_generator.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_detects_meta_tags_with_generator(self, *args):
         request = FuzzableRequest(self.url)
         response = self._generate_response('<meta name="generator" content="wordpress 1.2.3">')
@@ -61,14 +63,15 @@ class TestMetaGenerator(unittest.TestCase):
         self.assertEqual(len(info_sets), 1)
         info_set = info_sets[0]
 
-        self.assertEquals(info_set.get_url(), self.url)
+        self.assertEqual(info_set.get_url(), self.url)
 
-        expected_desc = (u'The application returned 1 HTTP responses containing the'
-                         u' generator meta tag value "wordpress 1.2.3". The first'
-                         u' ten URLs  that match are:\n - http://www.w3af.com/\n')
-        self.assertEquals(info_set.get_desc(), expected_desc)
+        expected_desc = ('The application returned 1 HTTP responses containing the'
+                         ' generator meta tag value "wordpress 1.2.3". The first'
+                         ' ten URLs  that match are:\n - http://www.w3af.com/\n')
+        self.assertEqual(info_set.get_desc(), expected_desc)
 
     @patch('w3af.plugins.grep.meta_generator.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_groups_findings(self, *args):
         request = FuzzableRequest(self.url)
 
@@ -85,19 +88,20 @@ class TestMetaGenerator(unittest.TestCase):
         urls = set(i.get_url() for i in info_sets)
         descs = set(i.get_desc() for i in info_sets)
 
-        self.assertEquals(urls, {self.url, self.url})
+        self.assertEqual(urls, {self.url, self.url})
 
-        expected_desc_1 = (u'The application returned 1 HTTP responses containing the'
-                           u' generator meta tag value "wordpress 1.2.3". The first'
-                           u' ten URLs  that match are:\n - http://www.w3af.com/\n')
+        expected_desc_1 = ('The application returned 1 HTTP responses containing the'
+                           ' generator meta tag value "wordpress 1.2.3". The first'
+                           ' ten URLs  that match are:\n - http://www.w3af.com/\n')
 
-        expected_desc_2 = (u'The application returned 1 HTTP responses containing the'
-                           u' generator meta tag value "wordpress 1.2.4". The first'
-                           u' ten URLs  that match are:\n - http://www.w3af.com/\n')
+        expected_desc_2 = ('The application returned 1 HTTP responses containing the'
+                           ' generator meta tag value "wordpress 1.2.4". The first'
+                           ' ten URLs  that match are:\n - http://www.w3af.com/\n')
 
-        self.assertEquals(descs, {expected_desc_1, expected_desc_2})
+        self.assertEqual(descs, {expected_desc_1, expected_desc_2})
 
     @patch('w3af.plugins.grep.meta_generator.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_avoid_false_positive_0(self, *args):
         request = FuzzableRequest(self.url)
         response = self._generate_response('<meta name="not-a-generator" content="wordpress 1.2.3">')
@@ -109,6 +113,7 @@ class TestMetaGenerator(unittest.TestCase):
         self.assertEqual(len(info_sets), 0)
 
     @patch('w3af.plugins.grep.meta_generator.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_avoid_false_positive_1(self, *args):
         request = FuzzableRequest(self.url)
         response = self._generate_response('<meta name="generator">')
@@ -120,6 +125,7 @@ class TestMetaGenerator(unittest.TestCase):
         self.assertEqual(len(info_sets), 0)
 
     @patch('w3af.plugins.grep.meta_generator.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_avoid_false_positive_2(self, *args):
         request = FuzzableRequest(self.url)
         response = self._generate_response('<meta name="generator" name="">')

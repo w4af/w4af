@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from httpretty import httpretty
 
 import w3af.core.data.kb.knowledge_base as kb
@@ -58,16 +59,17 @@ class TestDetailedBasic(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_post_auth_xss(self):
         self._scan(self._run_config['target'], self._run_config['plugins'])
 
         vulns = self.kb.get('xss', 'xss')
 
-        self.assertEquals(len(vulns), 1, vulns)
+        self.assertEqual(len(vulns), 1, vulns)
 
         vuln = vulns[0]
-        self.assertEquals(vuln.get_name(), 'Cross site scripting vulnerability')
-        self.assertEquals(vuln.get_token_name(), 'text')
+        self.assertEqual(vuln.get_name(), 'Cross site scripting vulnerability')
+        self.assertEqual(vuln.get_token_name(), 'text')
 
 
 class TestDetailedFailAuth(PluginTest):
@@ -100,6 +102,7 @@ class TestDetailedFailAuth(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_failed_login_invalid_password(self):
         self._scan(self._run_config['target'], self._run_config['plugins'])
 
@@ -163,6 +166,7 @@ class TestDetailedRedirect(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_redirect_login(self):
         self._scan(self._run_config['target'], self._run_config['plugins'])
 
@@ -225,6 +229,7 @@ class TestDetailedRedirectLoop(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_redirect_loop_in_login(self):
         """
         The main test here is that the plugin finishes
@@ -282,14 +287,15 @@ class TestDetailedSquareBrackets(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_post_auth_xss(self):
         self._scan(self._run_config['target'], self._run_config['plugins'])
 
         vulns = self.kb.get('xss', 'xss')
 
-        self.assertEquals(len(vulns), 1, vulns)
+        self.assertEqual(len(vulns), 1, vulns)
 
         vuln = vulns[0]
-        self.assertEquals(vuln.get_name(), 'Cross site scripting vulnerability')
-        self.assertEquals(vuln.get_token_name(), 'text')
+        self.assertEqual(vuln.get_name(), 'Cross site scripting vulnerability')
+        self.assertEqual(vuln.get_token_name(), 'text')
 

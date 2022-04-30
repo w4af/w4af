@@ -63,8 +63,8 @@ class pks(SearchEngine):
         This method is based from the pks.py file from the massive enumeration
         toolset, coded by pdp and released under GPL v2.
         """
-        url = URL(u'http://pgp.mit.edu:11371/pks/lookup')
-        url.querystring = [(u'op', [u'index']), (u'search', [query])]
+        url = URL('http://pgp.mit.edu:11371/pks/lookup')
+        url.querystring = [('op', ['index']), ('search', [query])]
 
         try:
             response = self._uri_opener.GET(url, headers=self._headers,

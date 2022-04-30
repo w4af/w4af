@@ -1,11 +1,11 @@
 # coding=utf-8
-from __future__ import print_function
+
 
 import time
 import logging
 import hashlib
 
-from itertools import ifilterfalse
+from itertools import filterfalse
 
 from w3af.core.controllers.ci.nosetests_wrapper.constants import (NOISE,
                                                                   NOSE_IGNORE_SELECTOR)
@@ -21,7 +21,7 @@ def unique_everseen(iterable, key=None):
     seen = set()
     seen_add = seen.add
     if key is None:
-        for element in ifilterfalse(seen.__contains__, iterable):
+        for element in filterfalse(seen.__contains__, iterable):
             seen_add(element)
             yield element
     else:
@@ -64,7 +64,7 @@ def print_status(start_time, done_list, total_tests, queued_run_ids, executor,
                  exit_codes):
 
     if len(exit_codes) == 0:
-        msg = u'Status: (%s/%s) ' % (len(done_list), total_tests)
+        msg = 'Status: (%s/%s) ' % (len(done_list), total_tests)
     else:
         exit_codes = list(set(exit_codes))
         will_fail = False
@@ -78,9 +78,9 @@ def print_status(start_time, done_list, total_tests, queued_run_ids, executor,
             will_fail = True
 
         if not will_fail:
-            msg = u'Status: (%s/%s) ✓ ' % (len(done_list), total_tests)
+            msg = 'Status: (%s/%s) ✓ ' % (len(done_list), total_tests)
         else:
-            msg = u'Status: (%s/%s) ✗ ' % (len(done_list), total_tests)
+            msg = 'Status: (%s/%s) ✗ ' % (len(done_list), total_tests)
 
     logging.warning(msg)
 

@@ -19,7 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import abc
 import hashlib
+
+from w3af.core.data.constants.encodings import DEFAULT_ENCODING
+from w3af.core.data.misc.encoding import smart_unicode
 
 CR = '\r'
 LF = '\n'
@@ -42,24 +46,41 @@ class RequestMixIn(object):
                  by the RFC, and the POST-data (potentially) holding raw bytes
                  such as an image content.
         """
-        data = self.get_data() or ''
+        data = ''
+        if hasattr(self, 'data'):
+            data = self.data
+        elif hasattr(self, 'get_data'):
+            data = self.get_data()
+        if data is None:
+            data = ''
 
         request_head = self.dump_request_head(ignore_headers=ignore_headers)
-        request_head = request_head.encode('utf-8')
 
-        return '%s%s%s' % (request_head, CRLF, data)
+        return '%s%s%s' % (smart_unicode(request_head), CRLF, smart_unicode(data))
+
+    @abc.abstractmethod
+    def get_method(self):
+        pass
+
+    @abc.abstractmethod
+    def get_uri(self):
+        pass
+
+    @abc.abstractmethod
+    def get_headers(self):
+        pass
 
     def get_request_hash(self, ignore_headers=()):
         """
         :return: Hash the request (as it would be sent to the wire) and return
         """
-        return hashlib.md5(self.dump(ignore_headers=ignore_headers)).hexdigest()
+        return hashlib.md5(self.dump(ignore_headers=ignore_headers).encode(DEFAULT_ENCODING)).hexdigest()
 
     def get_request_line(self):
         """
         :return: request first line as sent to the wire.
         """
-        return u'%s %s HTTP/1.1%s' % (self.get_method(),
+        return '%s %s HTTP/1.1%s' % (self.get_method(),
                                       self.get_uri().url_encode(),
                                       CRLF)
 
@@ -67,7 +88,7 @@ class RequestMixIn(object):
         """
         :return: A string with the head of the request
         """
-        return u'%s%s' % (self.get_request_line(),
+        return '%s%s' % (self.get_request_line(),
                           self.dump_headers(ignore_headers=ignore_headers))
 
     def dump_headers(self, ignore_headers=()):
@@ -89,4 +110,4 @@ class RequestMixIn(object):
                 # That's fine, if it doesn't exist we just continue
                 continue
 
-        return unicode(headers)
+        return str(headers)

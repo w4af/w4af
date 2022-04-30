@@ -19,13 +19,14 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 import os
 import cProfile
 import random
 from itertools import repeat
 
-from mock import patch
+from unittest.mock import patch
 
 from w3af import ROOT_PATH
 from w3af.core.controllers.w3afCore import w3afCore
@@ -56,14 +57,16 @@ class test_all(unittest.TestCase):
     @patch('w3af.plugins.grep.meta_tags.is_404', side_effect=repeat(False))
     @patch('w3af.plugins.grep.lang.is_404', side_effect=repeat(False))
     @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_image_with_image_content_type(self, *args):
         """
         Verify that our plugins don't break when we send them an image.
         """
         file_path = os.path.join(ROOT_PATH, 'plugins', 'tests', 'grep',
                                  'data', 'w3af.png')        
-        body = file(file_path).read()
-        hdrs = Headers({'Content-Type': 'image/png'}.items())
+        with open(file_path, "rb") as fh:
+            body = fh.read()
+        hdrs = Headers(list({'Content-Type': 'image/png'}.items()))
         response = HTTPResponse(200, body, hdrs, self.url_inst, self.url_inst,
                                 _id=random.randint(1, 5000))
         request = FuzzableRequest(self.url_inst)
@@ -78,6 +81,8 @@ class test_all(unittest.TestCase):
     @patch('w3af.plugins.grep.meta_tags.is_404', side_effect=repeat(False))
     @patch('w3af.plugins.grep.lang.is_404', side_effect=repeat(False))
     @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))        
+    @patch('w3af.plugins.grep.click_jacking.is_404', side_effect=repeat(False))
+    @patch('w3af.plugins.grep.meta_generator.is_404', side_effect=repeat(False))
     def test_image_with_text_html_content_type(self, *args):
         """
         Verify that our plugins don't break when we send them an image with
@@ -85,9 +90,10 @@ class test_all(unittest.TestCase):
         """
         file_path = os.path.join(ROOT_PATH, 'plugins', 'tests', 'grep',
                                  'data', 'w3af.png')        
-        body = file(file_path).read()
+        with open(file_path, "rb") as fh:
+            body = fh.read()
         # Here is the change from the previous test:
-        hdrs = Headers({'Content-Type': 'text/html'}.items())
+        hdrs = Headers(list({'Content-Type': 'text/html'}.items()))
         response = HTTPResponse(200, body, hdrs, self.url_inst, self.url_inst,
                                 _id=random.randint(1, 5000))
         request = FuzzableRequest(self.url_inst)
@@ -95,6 +101,7 @@ class test_all(unittest.TestCase):
         for pinst in self._plugins:
             pinst.grep(request, response)
 
+    @pytest.mark.deprecated
     def test_options_for_grep_plugins(self):
         """
         We're not going to assert anything here. What just want to see if
@@ -122,6 +129,8 @@ class test_all(unittest.TestCase):
     @patch('w3af.plugins.grep.meta_tags.is_404', side_effect=repeat(False))
     @patch('w3af.plugins.grep.lang.is_404', side_effect=repeat(False))
     @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @patch('w3af.plugins.grep.click_jacking.is_404', side_effect=repeat(False))
+    @patch('w3af.plugins.grep.meta_generator.is_404', side_effect=repeat(False))
     def test_all_grep_plugins(self, *args):
         """
         Run a set of 5 html files through all grep plugins.
@@ -133,15 +142,16 @@ class test_all(unittest.TestCase):
             """
             To be profiled
             """
-            for _ in xrange(1):
-                for counter in xrange(1, 5):
+            for _ in range(1):
+                for counter in range(1, 5):
 
                     file_name = 'test-' + str(counter) + '.html'
                     file_path = os.path.join(ROOT_PATH, 'plugins', 'tests',
                                              'grep', 'data', file_name)
 
-                    body = file(file_path).read()
-                    hdrs = Headers({'Content-Type': 'text/html'}.items())
+                    with open(file_path) as fh:
+                        body = fh.read()
+                    hdrs = Headers(list({'Content-Type': 'text/html'}.items()))
                     response = HTTPResponse(200, body, hdrs,
                                             URL(self.url_str + str(counter)),
                                             URL(self.url_str + str(counter)),

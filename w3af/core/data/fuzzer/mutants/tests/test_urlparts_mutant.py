@@ -19,8 +19,9 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
-import cPickle
+import pickle
 
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
@@ -42,7 +43,7 @@ class TestURLPartsMutant(unittest.TestCase):
         m = URLPartsMutant(freq)
         m.set_dc(divided_path)
         self.assertEqual(m.get_url().url_string,
-                         u'http://www.w3af.com/ping%21/bar')
+                         'http://www.w3af.com/ping%21/bar')
 
         expected_found_at = '"http://www.w3af.com/ping%21/bar", using HTTP method'\
                             ' GET. The modified parameter was the URL path, with'\
@@ -51,9 +52,10 @@ class TestURLPartsMutant(unittest.TestCase):
 
         self.assertEqual(generated_found_at, expected_found_at)
 
+    @pytest.mark.deprecated
     def test_pickle(self):
         divided_path = URLPartsContainer('/', 'ping!', '/bar')
-        loaded_dp = cPickle.loads(cPickle.dumps(divided_path))
+        loaded_dp = pickle.loads(pickle.dumps(divided_path))
 
         self.assertEqual(loaded_dp, divided_path)
         self.assertEqual(loaded_dp.url_start, divided_path.url_start)

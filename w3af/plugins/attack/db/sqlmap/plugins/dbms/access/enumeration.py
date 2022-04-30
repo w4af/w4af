@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -9,11 +9,8 @@ from lib.core.data import logger
 from plugins.generic.enumeration import Enumeration as GenericEnumeration
 
 class Enumeration(GenericEnumeration):
-    def __init__(self):
-        GenericEnumeration.__init__(self)
-
     def getBanner(self):
-        warnMsg = "on Microsoft Access it is not possible to get a banner"
+        warnMsg = "on Microsoft Access it is not possible to get the banner"
         logger.warn(warnMsg)
 
         return None
@@ -26,7 +23,7 @@ class Enumeration(GenericEnumeration):
         warnMsg = "on Microsoft Access it is not possible to get name of the current database"
         logger.warn(warnMsg)
 
-    def isDba(self):
+    def isDba(self, user=None):
         warnMsg = "on Microsoft Access it is not possible to test if current user is DBA"
         logger.warn(warnMsg)
 
@@ -42,7 +39,7 @@ class Enumeration(GenericEnumeration):
 
         return {}
 
-    def getPrivileges(self, *args):
+    def getPrivileges(self, *args, **kwargs):
         warnMsg = "on Microsoft Access it is not possible to enumerate the user privileges"
         logger.warn(warnMsg)
 
@@ -79,3 +76,9 @@ class Enumeration(GenericEnumeration):
     def getHostname(self):
         warnMsg = "on Microsoft Access it is not possible to enumerate the hostname"
         logger.warn(warnMsg)
+
+    def getStatements(self):
+        warnMsg = "on Microsoft Access it is not possible to enumerate the SQL statements"
+        logger.warn(warnMsg)
+
+        return []

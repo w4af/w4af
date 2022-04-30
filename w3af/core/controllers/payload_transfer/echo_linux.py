@@ -84,7 +84,7 @@ class EchoLinux(BasePayloadTransfer):
             # Prepare the command
             cmd = "/bin/echo -ne "
             for c in data_str[i:i + self._step]:
-                cmd += '\\\\' + oct(ord(c)).zfill(4)
+                cmd += '\\\\' + oct(ord(c)).replace('0o', '0').zfill(4)
 
             cmd += " >> " + self._filename
             i += self._step

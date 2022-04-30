@@ -21,9 +21,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import ssl
 import socket
-import urllib
-import urllib2
-import httplib
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import http.client
 import OpenSSL
 import itertools
 
@@ -49,10 +49,6 @@ from w3af.core.controllers.misc.number_generator import consecutive_number_gener
 EUNKNSERV = -2        # Name or service not known error
 EINVHOSTNAME = -5     # No address associated with hostname
 EUNEXPECTEDEOF = -1   # https://github.com/andresriancho/w3af/issues/10290
-
-KNOWN_SOCKET_ERRORS = (EUNKNSERV, ECONNREFUSED, EHOSTUNREACH, ECONNRESET,
-                       ENETDOWN, ENETUNREACH, EINVHOSTNAME, ETIMEDOUT,
-                       ENOSPC, EUNEXPECTEDEOF)
 
 NO_CONTENT_MSG = 'No Content'
 
@@ -287,7 +283,7 @@ def get_clean_body_impl(body, strings_to_replace_list, multi_encode=True,
 
         # unquote, just in case the plugin did an extra encoding of some type.
         # what we want to do here is get the original version of the string
-        unicode_to_repl_unquoted = urllib.unquote_plus(unicode_to_repl)
+        unicode_to_repl_unquoted = urllib.parse.unquote_plus(unicode_to_repl)
 
         unicodes_to_replace_set.add(unicode_to_repl)
         unicodes_to_replace_set.add(unicode_to_repl_unquoted)
@@ -325,7 +321,7 @@ def get_clean_body_impl(body, strings_to_replace_list, multi_encode=True,
 
     # uniq sorted by longest len
     encoded_payloads = list(encoded_payloads)
-    encoded_payloads.sort(lambda x, y: cmp(len(y), len(x)))
+    encoded_payloads.sort(key=lambda x: 0 - len(x))
     encoded_payloads = [i.lower() for i in encoded_payloads]
 
     for to_replace in encoded_payloads:
@@ -363,14 +359,13 @@ def remove_using_lower_case(body, body_lower, to_replace):
         index_l = body_lower.find(to_replace, idx)
 
         if index_l == -1:
-            return body, body_lower
+            return body, body.lower()
 
         body = body[:index_l] + body[index_l + to_replace_len:]
-        body_lower = body.lower()
 
-        idx = index_l + 1
+        idx = index_l
 
-    return body, body_lower
+    return body, body.lower()
 
 
 def get_socket_exception_reason(error):
@@ -381,8 +376,8 @@ def get_socket_exception_reason(error):
     if not isinstance(error, socket.error):
         return
 
-    if error[0] in KNOWN_SOCKET_ERRORS:
-        return str(error)
+    if isinstance(error, ConnectionError):
+        return repr(error)
 
     return
 
@@ -399,20 +394,20 @@ def get_exception_reason(error):
 
     # Exceptions may be of type httplib.HTTPException or socket.error
     # We're interested on handling them in different ways
-    if isinstance(error, urllib2.URLError):
+    if isinstance(error, urllib.error.URLError):
         reason_err = error.reason
 
         if isinstance(reason_err, socket.error):
             return get_socket_exception_reason(error)
 
     if isinstance(error, OpenSSL.SSL.SysCallError):
-        if error[0] in KNOWN_SOCKET_ERRORS:
-            return str(error[1])
+        if isinstance(error, ConnectionError):
+            return repr(error)
 
     if isinstance(error, OpenSSL.SSL.ZeroReturnError):
         return 'OpenSSL Error: OpenSSL.SSL.ZeroReturnError'
 
-    if isinstance(error, (ssl.SSLError, socket.sslerror)):
+    if isinstance(error, ssl.SSLError):
         socket_reason = get_socket_exception_reason(error)
         if socket_reason:
             return 'SSL Error: %s' % socket_reason
@@ -423,10 +418,10 @@ def get_exception_reason(error):
     if isinstance(error, HTTPRequestException):
         return error.value
 
-    if isinstance(error, httplib.BadStatusLine):
+    if isinstance(error, http.client.BadStatusLine):
         return 'Bad HTTP response status line: %s' % error.line
 
-    if isinstance(error, httplib.HTTPException):
+    if isinstance(error, http.client.HTTPException):
         #
         # Here we catch:
         #

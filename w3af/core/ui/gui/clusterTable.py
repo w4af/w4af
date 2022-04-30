@@ -20,8 +20,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import threading
 
-import gtk
-import gobject
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 from w3af.core.ui.gui import helpers, entries
 
 
@@ -176,12 +176,12 @@ class clusterCellData(gtk.TreeView):
         clusteredData = cl.getlevel(level)
 
         self._parsed_clusteredData = self._parse(clusteredData)
-        self._column_names = ['Group %d' % i for i in xrange(len(
+        self._column_names = ['Group %d' % i for i in range(len(
             clusteredData))]
 
         # Start with the treeview and liststore creation
-        dynamicListStoreTypes = [str for i in xrange(len(self._column_names))]
-        self.liststore = apply(gtk.ListStore, dynamicListStoreTypes)
+        dynamicListStoreTypes = [str for i in range(len(self._column_names))]
+        self.liststore = gtk.ListStore(*dynamicListStoreTypes)
 
         gtk.TreeView.__init__(self, self.liststore)
 
@@ -320,14 +320,14 @@ class clusterCellData(gtk.TreeView):
             if isinstance(i, type([])):
                 # We have a list to pad
                 i = [w.get_id() for w in i]
-                for j in xrange(larger_list - len(i)):
+                for j in range(larger_list - len(i)):
                     i.append('')
                 padded_list.append(i)
             else:
                 # Its an object, create a list and pad it.
                 tmp = []
                 tmp.append(i.get_id())
-                for j in xrange(larger_list - len(tmp)):
+                for j in range(larger_list - len(tmp)):
                     tmp.append('')
                 padded_list.append(tmp)
 
@@ -384,7 +384,7 @@ class clusterCellData(gtk.TreeView):
         # I'm talking about the self._colDict[ current_column ]!
         currentId = self.liststore[path[0]][self._colDict[view_column]]
         # Search the Id and show the data
-        print 'I should show the data for', currentId, 'in a different window.'
+        print('I should show the data for', currentId, 'in a different window.')
 
     def _getInfoForId(self, id):
         """
@@ -392,7 +392,7 @@ class clusterCellData(gtk.TreeView):
         """
         try:
             obj = [i for i in self._data if i.get_id() == int(id)][0]
-        except Exception, e:
+        except Exception as e:
             return ''
         else:
             msg = '<b><i>Code: </i></b>%s\n<b><i>Message: </i></b>%s' \

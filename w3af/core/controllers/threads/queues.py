@@ -3,8 +3,8 @@ from multiprocessing.queues import SimpleQueue
 
 class SimpleQueueWithSize(SimpleQueue):
 
-    def __init__(self):
-        SimpleQueue.__init__(self)
+    def __init__(self, ctx):
+        SimpleQueue.__init__(self, ctx=ctx)
         self._qsize = 0
 
     def qsize(self):

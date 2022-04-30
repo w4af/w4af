@@ -96,7 +96,7 @@ class keys(GrepPlugin):
             return
 
         for _, (key, keypair_type) in self._multi_in.query(response.body):
-            desc = u'The URL: "%s" discloses a key of type: "%s"'
+            desc = 'The URL: "%s" discloses a key of type: "%s"'
             desc %= (response.get_url(), key)
 
             if keypair_type == self.PUBLIC:

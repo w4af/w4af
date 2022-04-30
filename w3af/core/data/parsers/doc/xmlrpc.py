@@ -20,14 +20,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import xml.sax
-import cgi
+import html
 import base64
 
 from xml.sax.handler import ContentHandler
-from ruamel.ordereddict import ordereddict as OrderedDict
+from collections import OrderedDict
 
+from w3af.core.data.url.HTTPResponse import DEFAULT_CHARSET
 from w3af.core.data.dc.utils.token import DataToken
-
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 BASE_64 = 'base64'
 FUZZABLE_TYPES = (BASE_64, 'string', 'name')
@@ -106,7 +107,7 @@ class XmlRpcWriteHandler(ContentHandler):
         self._fuzzed_parameters = []
 
         # Flatten the OrderedDict to easily iterate it with startElement
-        for key, value_list in data_container.items():
+        for key, value_list in list(data_container.items()):
             for value in value_list:
                 self._fuzzed_parameters.append((key, value))
 
@@ -132,10 +133,9 @@ class XmlRpcWriteHandler(ContentHandler):
                 modified_value = modified_value.get_value()
 
             if self._fuzzed_parameters[self._fuzzable_index][0] == 'base64':
-                enc_val = base64.b64encode(modified_value)
+                enc_val = base64.b64encode(smart_str_ignore(modified_value)).decode(DEFAULT_CHARSET)
             else:
-                enc_val = cgi.escape(modified_value).encode('ascii',
-                                                            'xmlcharrefreplace')
+                enc_val = html.escape(modified_value)
 
             self.fuzzed_xml_string += enc_val
 

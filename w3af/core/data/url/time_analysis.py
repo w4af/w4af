@@ -104,11 +104,11 @@ class time_analysis:
         :param dc: This is the data container that ExtendedUrllib is going to send.
         :return: No value is returned.
         """
-        if (uri, method, str(dc)) not in self._outgoingRequests.keys():
+        if (uri, method, str(dc)) not in list(self._outgoingRequests.keys()):
             # This tuple hasnt been registered as an outgoing request.
             # It should be registered now.
             self._registerRequest(uri, method, dc)
-        elif (uri, method, str(dc)) not in self._incomingResponses.keys():
+        elif (uri, method, str(dc)) not in list(self._incomingResponses.keys()):
             # This tuple has been registered before and now it has arrived for analysis
             self._numberOfRequests += 1
             self._registerResponse(uri, method, dc)
@@ -120,11 +120,11 @@ class time_analysis:
             # Now we are going to calculate the average time
             reqTime = 0
             resTime = 0
-            for req in self._outgoingRequests.keys():
+            for req in list(self._outgoingRequests.keys()):
                 reqTime += self._outgoingRequests[req]
                 del self._outgoingRequests[req]
 
-            for res in self._incomingResponses.keys():
+            for res in list(self._incomingResponses.keys()):
                 resTime += self._incomingResponses[res]
                 del self._incomingResponses[res]
 

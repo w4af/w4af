@@ -74,29 +74,28 @@ class import_results(CrawlPlugin):
             return
 
         try:
-            file_handler = file(self._input_base64, 'rb')
-        except BaseFrameworkException, e:
+            with open(self._input_base64, 'rb') as file_handler:
+                for line in file_handler:
+                    line = line.strip()
+
+                    # Support empty lines
+                    if not line:
+                        continue
+
+                    # Support comments
+                    if line.startswith('#'):
+                        continue
+
+                    try:
+                        fuzzable_request = FuzzableRequest.from_base64(line)
+                    except ValueError:
+                        om.out.debug('Invalid import_results input: "%r"' % line)
+                    else:
+                        self.output_queue.put(fuzzable_request)
+        except BaseFrameworkException as e:
             msg = 'An error was found while trying to read "%s": "%s".'
             om.out.error(msg % (self._input_base64, e))
             return
-
-        for line in file_handler:
-            line = line.strip()
-
-            # Support empty lines
-            if not line:
-                continue
-
-            # Support comments
-            if line.startswith('#'):
-                continue
-
-            try:
-                fuzzable_request = FuzzableRequest.from_base64(line)
-            except ValueError:
-                om.out.debug('Invalid import_results input: "%r"' % line)
-            else:
-                self.output_queue.put(fuzzable_request)
 
     def _load_data_from_burp(self):
         """
@@ -110,7 +109,7 @@ class import_results(CrawlPlugin):
 
         try:
             fuzzable_request_list = self._objs_from_burp_log(self._input_burp)
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = ('An error was found while trying to read the Burp log'
                    ' file (%s): "%s".')
             om.out.error(msg % (self._input_burp, e))
@@ -126,8 +125,9 @@ class import_results(CrawlPlugin):
         parser = etree.XMLParser(target=xp, resolve_entities=False)
 
         try:
-            requests = etree.fromstring(file(burp_file).read(), parser)
-        except XMLSyntaxError, xse:
+            with open(burp_file) as burp_fh:
+                requests = etree.fromstring(burp_fh.read(), parser)
+        except XMLSyntaxError as xse:
             msg = ('The Burp input file is not a valid XML document. The'
                    ' parser error is: "%s"')
             om.out.error(msg % xse)

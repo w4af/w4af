@@ -13,7 +13,8 @@ if __name__ == '__main__':
     branch = os.environ.get('CIRCLE_BRANCH')
     token = os.environ.get('W3AF_API_DOCKER_TOKEN')
 
-    latest_w3af_tag = file('/tmp/new-w3af-docker-tag.txt').read()
+    with open('/tmp/new-w3af-docker-tag.txt') as tag:
+       latest_w3af_tag = tag.read()
 
     data = {'build_parameters': {'W3AF_REGISTRY_TAG': latest_w3af_tag}}
     data = json.dumps(data)

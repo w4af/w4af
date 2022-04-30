@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement, print_function
+
 
 import atexit
 import threading
@@ -43,6 +43,7 @@ from w3af.core.data.parsers.document_parser import DocumentParser
 from w3af.core.data.db.disk_set import DiskSet
 from w3af.core.data.parsers.utils.response_uniq_id import (get_response_unique_id,
                                                            get_body_unique_id)
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class ParserCache(CacheStats):
@@ -207,12 +208,12 @@ class ParserCache(CacheStats):
                 # Act just like when there is no parser
                 msg = 'Reached memory usage limit parsing "%s".' % http_response.get_url()
                 raise BaseFrameworkException(msg)
-            except ScanMustStopException, e:
+            except ScanMustStopException as e:
                 msg = 'The document parser is in an invalid state! %s'
                 raise ScanMustStopException(msg % e)
-            except:
+            except Exception as e:
                 # Act just like when there is no parser
-                msg = 'There is no parser for "%s".' % http_response.get_url()
+                msg = 'There is no parser for "%s" (%s).' % (http_response.get_url(), str(e))
                 raise BaseFrameworkException(msg)
             else:
                 save_to_cache = self.should_cache(http_response) and cache
@@ -259,7 +260,7 @@ class ParserCache(CacheStats):
 
             for tag in tags:
                 lt_tag = '<%s' % tag
-                if lt_tag in body_lower:
+                if lt_tag in smart_unicode(body_lower):
                     break
             else:
                 # No tag was found in the HTML
@@ -340,10 +341,10 @@ class ParserCache(CacheStats):
                 # Act just like when there is no parser
                 self._log_return_empty(http_response, 'Reached memory usage limit')
                 return []
-            except ScanMustStopException, e:
+            except ScanMustStopException as e:
                 msg = 'The document parser is in an invalid state! %s'
                 raise ScanMustStopException(msg % e)
-            except Exception, e:
+            except Exception as e:
                 # Act just like when there is no parser
                 msg = 'Unhandled exception running get_tags_by_filter("%s"): %s'
                 args = (http_response.get_url(), e)

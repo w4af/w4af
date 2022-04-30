@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import hashlib
 
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 class BasePayloadTransfer(object):
     """
@@ -72,7 +73,7 @@ class BasePayloadTransfer(object):
             hash_ = md5sum_res.split(' ')[0]
 
             m = hashlib.md5()
-            m.update(file_content)
+            m.update(smart_str_ignore(file_content))
             return hash_ == m.hexdigest()
 
         # TODO: Hmmmmmmm....

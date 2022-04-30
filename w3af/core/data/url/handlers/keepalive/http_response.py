@@ -1,13 +1,15 @@
-import httplib
+import http.client
+from http.client import parse_headers, IncompleteRead
 
 try:
-    from cStringIO import StringIO
+    from io import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 from .utils import debug
 from w3af.core.data.constants.response_codes import NO_CONTENT
 from w3af.core.data.kb.config import cf
+from w3af.core.data.misc.encoding import smart_str
 
 
 def close_on_error(read_meth):
@@ -18,13 +20,13 @@ def close_on_error(read_meth):
     def new_read_meth(inst):
         try:
             return read_meth(inst)
-        except httplib.HTTPException:
+        except http.client.HTTPException:
             inst.close()
             raise
     return new_read_meth
 
 
-class HTTPResponse(httplib.HTTPResponse):
+class HTTPResponse(http.client.HTTPResponse):
     # we need to subclass HTTPResponse in order to
     #
     # 1) add readline() and readlines() methods
@@ -46,12 +48,11 @@ class HTTPResponse(httplib.HTTPResponse):
     # Both readline and readlines have been stolen with almost no
     # modification from socket.py
 
-    def __init__(self, sock, debuglevel=0, strict=0, method=None):
-        httplib.HTTPResponse.__init__(self, sock, debuglevel, strict=strict,
-                                      method=method)
+    def __init__(self, sock, debuglevel=0, method=None):
+        http.client.HTTPResponse.__init__(self, sock, debuglevel, method=method)
         self.fileno = sock.fileno
         self.code = None
-        self._rbuf = ''
+        self._rbuf = b""
         self._rbufsize = 8096
         self._handler = None     # inserted by the handler later
         self._host = None        # (same)
@@ -88,42 +89,41 @@ class HTTPResponse(httplib.HTTPResponse):
         fetched, and throw an exception in case it is too big.
         """
         if self.fp is None:
-            return ''
+            return b""
 
         max_file_size = cf.get('max_file_size') or None
-        if max_file_size:
-            if self.length > max_file_size:
+        if max_file_size is not None:
+            if self.length is not None and self.length > max_file_size:
                 self.status = NO_CONTENT
                 self.reason = 'No Content'  # Reason-Phrase
                 self.close()
-                return ''
+                return b""
 
-        if self.chunked:
-            return self._read_chunked(amt)
+        if amt is not None:
+            # Amount is given, implement using readinto
+            b = bytearray(amt)
+            n = self.readinto(b)
+            return memoryview(b)[:n].tobytes()
+        else:
+            # Amount is not given (unbounded read) so we must check self.length
+            # and self.chunked
 
-        if amt is None:
-            # unbounded read
+            if self.chunked:
+                s = self._readall_chunked()
+                self.close()
+                return s
+
             if self.length is None:
                 s = self.fp.read()
             else:
-                s = self._safe_read(self.length)
+                try:
+                    s = self._safe_read(self.length)
+                except IncompleteRead:
+                    self.close()
+                    raise
                 self.length = 0
             self.close()        # we read everything
             return s
-
-        if self.length is not None:
-            if amt > self.length:
-                # clip the read to the "end of response"
-                amt = self.length
-
-        # we do not use _safe_read() here because this may be a .will_close
-        # connection, and the user is reading more bytes than will be provided
-        # (for example, reading in 1k chunks)
-        s = self.fp.read(amt)
-        if self.length is not None:
-            self.length -= len(s)
-
-        return s
 
     def begin(self):
         if self.msg is not None:
@@ -133,18 +133,18 @@ class HTTPResponse(httplib.HTTPResponse):
         # read until we get a non-100 response
         while True:
             version, status, reason = self._read_status()
-            if status != httplib.CONTINUE:
+            if status != http.client.CONTINUE:
                 break
             # skip the header from the 100 response
             while True:
-                skip = self.fp.readline(httplib._MAXLINE + 1)
-                if len(skip) > httplib._MAXLINE:
-                    raise httplib.LineTooLong("header line")
+                skip = self.fp.readline(http.client._MAXLINE + 1)
+                if len(skip) > http.client._MAXLINE:
+                    raise http.client.LineTooLong("header line")
                 skip = skip.strip()
                 if not skip:
                     break
                 if self.debuglevel > 0:
-                    print "header:", skip
+                    print("header:", skip)
 
         self.status = status
         self.reason = reason.strip()
@@ -155,25 +155,26 @@ class HTTPResponse(httplib.HTTPResponse):
         elif version == 'HTTP/0.9':
             self.version = 9
         else:
-            raise httplib.UnknownProtocol(version)
+            raise http.client.UnknownProtocol(version)
 
         if self.version == 9:
             self.length = None
             self.chunked = 0
             self.will_close = 1
-            self.msg = httplib.HTTPMessage(StringIO())
+            self.msg = http.client.HTTPMessage(StringIO())
             return
 
-        self.msg = httplib.HTTPMessage(self.fp, 0)
+        self.headers = self.msg = parse_headers(self.fp)
+
         if self.debuglevel > 0:
-            for hdr in self.msg.headers:
-                print "header:", hdr,
+            for hdr in self.msg:
+                print("header:", hdr, end=' ')
 
         # don't let the msg keep an fp
         self.msg.fp = None
 
         # are we using the chunked-style of transfer encoding?
-        tr_enc = self.msg.getheader('transfer-encoding')
+        tr_enc = self.msg.get('transfer-encoding')
         if tr_enc and tr_enc.lower() == "chunked":
             self.chunked = 1
             self.chunk_left = None
@@ -186,7 +187,7 @@ class HTTPResponse(httplib.HTTPResponse):
         # do we have a Content-Length?
         # NOTE: RFC 2616, S4.4, #3 says we ignore this if tr_enc is "chunked"
         length = self._get_content_length()
-        if length and not self.chunked:
+        if length is not None and not self.chunked:
             try:
                 self.length = int(length)
             except (ValueError, TypeError):
@@ -198,7 +199,7 @@ class HTTPResponse(httplib.HTTPResponse):
             self.length = None
 
         # does the body have a fixed length? (of zero)
-        if (status == NO_CONTENT or status == httplib.NOT_MODIFIED or
+        if (status == NO_CONTENT or status == http.client.NOT_MODIFIED or
             100 <= status < 200 or      # 1xx codes
             self._method == 'HEAD'):
             self.length = 0
@@ -223,7 +224,7 @@ class HTTPResponse(httplib.HTTPResponse):
 
         :return: The content length (as integer)
         """
-        length = self.msg.getheader('content-length')
+        length = self.msg.get('content-length')
 
         if length is None:
             # This is a response where there is no content-length header,
@@ -236,7 +237,7 @@ class HTTPResponse(httplib.HTTPResponse):
 
     def close(self):
         # First call parent's close()
-        httplib.HTTPResponse.close(self)
+        http.client.HTTPResponse.close(self)
         if self._handler:
             self._handler._request_closed(self._connection)
 
@@ -262,7 +263,7 @@ class HTTPResponse(httplib.HTTPResponse):
             # This like fixes the bug with title "GET is much faster than HEAD".
             # https://sourceforge.net/tracker2/?func=detail&aid=2202532&group_id=170274&atid=853652
             self.close()
-            return ''
+            return b""
 
         if self._multiread is None:
             # read all
@@ -278,17 +279,17 @@ class HTTPResponse(httplib.HTTPResponse):
                 return s
         else:
             s = self._rbuf + self._multiread
-            self._rbuf = ''
+            self._rbuf = b""
             return s
 
     def readline(self, limit=-1):
-        i = self._rbuf.find('\n')
+        i = self._rbuf.find(b'\n')
 
         while i < 0 and not (0 < limit <= len(self._rbuf)):
             new = self._raw_read(self._rbufsize)
             if not new:
                 break
-            i = new.find('\n')
+            i = new.find(b'\n')
             if i >= 0:
                 i += len(self._rbuf)
             self._rbuf = self._rbuf + new
@@ -323,21 +324,21 @@ class HTTPResponse(httplib.HTTPResponse):
         This was added to make my life a lot simpler while implementing mangle
         plugins
         """
-        self._multiread = data
+        self._multiread = smart_str(data)
 
     def _check_close(self):
         """
         Overriding to add "max" support
         http://tools.ietf.org/id/draft-thomson-hybi-http-timeout-01.html#p-max
         """
-        keep_alive = self.msg.getheader('keep-alive')
+        keep_alive = self.msg.get('keep-alive')
 
         if keep_alive and keep_alive.lower().endswith('max=1'):
             # We close right before the "max" deadline
             debug('will_close = True due to max=1')
             return True
 
-        conn = self.msg.getheader('connection')
+        conn = self.msg.get('connection')
 
         # Is the remote end saying we need to keep the connection open?
         if conn and 'keep-alive' in conn.lower():
@@ -356,7 +357,7 @@ class HTTPResponse(httplib.HTTPResponse):
             return False
 
         # Proxy-Connection is a netscape hack.
-        pconn = self.msg.getheader('proxy-connection')
+        pconn = self.msg.get('proxy-connection')
         if pconn and 'keep-alive' in pconn.lower():
             return False
 

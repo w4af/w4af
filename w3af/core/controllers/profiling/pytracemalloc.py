@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 import sys
 import gc
-import cPickle
+import pickle
 
 
 def user_wants_pytracemalloc():
@@ -39,8 +39,8 @@ if user_wants_pytracemalloc():
         # User's don't need this module, and installation is complex
         # http://pytracemalloc.readthedocs.org/install.html
         import tracemalloc
-    except ImportError, ie:
-        print('Failed to import tracemalloc: %s' % ie)
+    except ImportError as ie:
+        print(('Failed to import tracemalloc: %s' % ie))
         sys.exit(-1)
 
 
@@ -84,7 +84,7 @@ def dump_tracemalloc():
 
     output_file = PROFILING_OUTPUT_FMT % get_filename_fmt()
     with open(output_file, 'wb') as fp:
-        cPickle.dump(snapshot, fp, 2)
+        pickle.dump(snapshot, fp, 2)
 
     # Make sure the snapshot goes away
     snapshot = None

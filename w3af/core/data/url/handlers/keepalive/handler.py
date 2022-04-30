@@ -28,18 +28,20 @@ modifications are:
 """
 import time
 import socket
-import urllib2
-import httplib
+import urllib.request, urllib.error, urllib.parse
+import http.client
 import OpenSSL
 import threading
 
 from email.base64mime import header_encode
-from httplib import _is_legal_header_name, _is_illegal_header_value
+from http.client import _is_legal_header_name, _is_illegal_header_value
 
 from .utils import debug, error, to_utf8_raw
 from .connection_manager import ConnectionManager
-from .connections import (ProxyHTTPConnection, ProxyHTTPSConnection,
-                          HTTPConnection, HTTPSConnection)
+from .connections import (ProxyHTTPConnection,
+                          ProxyHTTPSConnection,
+                          HTTPConnection,
+                          HTTPSConnection)
 from w3af.core.controllers.exceptions import (BaseFrameworkException,
                                               HTTPRequestException,
                                               ConnectionPoolException)
@@ -48,12 +50,12 @@ from w3af.core.controllers.exceptions import (BaseFrameworkException,
 DEFAULT_CONTENT_TYPE = 'application/x-www-form-urlencoded'
 
 
-class URLTimeoutError(urllib2.URLError):
+class URLTimeoutError(urllib.error.URLError):
     """
     Our own URLError timeout exception. Basically a wrapper for socket.timeout.
     """
     def __init__(self):
-        urllib2.URLError.__init__(self, (408, 'timeout'))
+        urllib.error.URLError.__init__(self, (408, 'timeout'))
 
     def __str__(self):
         default_timeout = socket.getdefaulttimeout()
@@ -94,8 +96,13 @@ class KeepAliveHandler(object):
         host is the host:port spec, as in 'www.cnn.com:8080' as passed in.
         no error occurs if there is no connection to that host.
         """
+        closed_connections = 0
+
         for conn in self._cm.get_all(host):
             self._cm.remove_connection(conn, reason='close connection')
+            closed_connections += 1
+
+        return closed_connections
 
     def close_all(self):
         """
@@ -121,9 +128,9 @@ class KeepAliveHandler(object):
         """
         Called by handler's url_open method.
         """
-        host = req.get_host()
+        host = req.host
         if not host:
-            raise urllib2.URLError('no host given')
+            raise urllib.error.URLError('no host given')
 
         conn_factory = self.get_connection
 
@@ -181,12 +188,12 @@ class KeepAliveHandler(object):
             self._cm.remove_connection(conn, reason='OpenSSL.SSL.Error')
             raise
 
-        except (socket.error, httplib.HTTPException):
+        except (socket.error, http.client.HTTPException):
             # We better discard this connection
             self._cm.remove_connection(conn, reason='socket error')
             raise
 
-        except Exception, e:
+        except Exception as e:
             # We better discard this connection, we don't even know what happen!
             reason = 'unexpected exception "%s"' % e
             self._cm.remove_connection(conn, reason=reason)
@@ -206,15 +213,15 @@ class KeepAliveHandler(object):
 
         try:
             resp.read()
-        except AttributeError:
+        except AttributeError as e:
             # The rare case of: 'NoneType' object has no attribute 'recv', we
             # read the response here because we're closer to the error and can
             # better understand it.
             #
             # https://github.com/andresriancho/w3af/issues/2074
             self._cm.remove_connection(conn, reason='http connection died')
-            raise HTTPRequestException('The HTTP connection died')
-        except Exception, e:
+            raise HTTPRequestException('The HTTP connection died: %s' % e)
+        except Exception as e:
             # We better discard this connection, we don't even know what happen!
             reason = 'unexpected exception while reading "%s"' % e
             self._cm.remove_connection(conn, reason=reason)
@@ -226,13 +233,15 @@ class KeepAliveHandler(object):
             self._cm.remove_connection(conn, reason='will close')
         elif req.new_connection:
             self._cm.remove_connection(conn, reason='new connection')
+        else:
+            debug("Returning connection to pool")
 
         # We measure time here because it's the best place we know of
         elapsed = time.time() - start
         resp.set_wait_time(elapsed)
 
         msg = "HTTP response: %s - %s - %s with %s in %s seconds"
-        args = (req.get_selector(), resp.status, resp.reason, conn, elapsed)
+        args = (req.selector, resp.status, resp.reason, conn, elapsed)
         debug(msg % args)
 
         return resp
@@ -265,17 +274,17 @@ class KeepAliveHandler(object):
             resp = conn.getresponse()
             # note: just because we got something back doesn't mean it
             # worked.  We'll check the version below, too.
-        except (socket.error, httplib.HTTPException), e:
+        except (socket.error, http.client.HTTPException) as e:
             self._cm.remove_connection(conn, reason='socket error')
             resp = None
             reason = e
-        except OpenSSL.SSL.ZeroReturnError, e:
+        except OpenSSL.SSL.ZeroReturnError as e:
             # According to the pyOpenSSL docs ZeroReturnError means that the
             # SSL connection has been closed cleanly
             self._cm.remove_connection(conn, reason='ZeroReturnError')
             resp = None
             reason = e
-        except OpenSSL.SSL.SysCallError, e:
+        except OpenSSL.SSL.SysCallError as e:
             # Not sure why we're getting this exception when trying to reuse a
             # connection (but not when doing the initial request). So we just
             # ignore the exception and go on.
@@ -285,7 +294,7 @@ class KeepAliveHandler(object):
             self._cm.remove_connection(conn, reason='OpenSSL.SSL.SysCallError')
             resp = None
             reason = e
-        except Exception, e:
+        except Exception as e:
             # adding this block just in case we've missed something we will
             # still raise the exception, but lets try and close the connection
             # and remove it first.  We previously got into a nasty loop where
@@ -337,7 +346,7 @@ class KeepAliveHandler(object):
         self._update_socket_timeout(conn, req)
 
         conn.putrequest(req.get_method(),
-                        req.get_selector(),
+                        req.selector,
                         skip_host=1,
                         skip_accept_encoding=1)
 
@@ -348,9 +357,9 @@ class KeepAliveHandler(object):
         if not req.has_header('Connection'):
             conn.putheader('Connection', 'keep-alive')
 
-        data = req.get_data()
+        data = req.data
         if data is not None:
-            data = str(data)
+            data = bytes(data)
 
             if not req.has_header('Content-type'):
                 conn.putheader('Content-type', DEFAULT_CONTENT_TYPE)
@@ -363,7 +372,7 @@ class KeepAliveHandler(object):
         header_dict.update(req.headers)
         header_dict.update(req.unredirected_hdrs)
 
-        for k, v in header_dict.iteritems():
+        for k, v in header_dict.items():
             #
             # Handle case where the key or value is None (strange but could happen)
             #
@@ -402,10 +411,10 @@ class KeepAliveHandler(object):
                 #        work in 1% of the remote servers, but it is our best bet
                 #
                 if not _is_legal_header_name(k):
-                    k = header_encode(k, charset='utf-8', keep_eols=True)
+                    k = header_encode(k, charset='utf-8')
 
                 if _is_illegal_header_value(v):
-                    v = header_encode(v, charset='utf-8', keep_eols=True)
+                    v = header_encode(v, charset='utf-8')
 
                 conn.putheader(k, v)
 
@@ -421,22 +430,22 @@ class KeepAliveHandler(object):
         raise NotImplementedError()
 
 
-class HTTPHandler(KeepAliveHandler, urllib2.HTTPHandler):
+class HTTPHandler(KeepAliveHandler, urllib.request.HTTPHandler):
     def __init__(self):
         KeepAliveHandler.__init__(self)
-        urllib2.HTTPHandler.__init__(self, debuglevel=0)
+        urllib.request.HTTPHandler.__init__(self, debuglevel=0)
 
     def http_open(self, req):
         return self.do_open(req)
 
     def get_connection(self, request):
-        return HTTPConnection(request.get_host(), timeout=request.get_timeout())
+        return HTTPConnection(request.host, timeout=request.get_timeout())
 
 
-class HTTPSHandler(KeepAliveHandler, urllib2.HTTPSHandler):
+class HTTPSHandler(KeepAliveHandler, urllib.request.HTTPSHandler):
     def __init__(self, proxy):
         KeepAliveHandler.__init__(self)
-        urllib2.HTTPSHandler.__init__(self, debuglevel=0)
+        urllib.request.HTTPSHandler.__init__(self, debuglevel=0)
 
         self._proxy = proxy
         try:
@@ -460,7 +469,7 @@ class HTTPSHandler(KeepAliveHandler, urllib2.HTTPSHandler):
                                         proxy_port,
                                         timeout=request.get_timeout())
         else:
-            return HTTPSConnection(request.get_host(),
+            return HTTPSConnection(request.host,
                                    timeout=request.get_timeout())
 
 

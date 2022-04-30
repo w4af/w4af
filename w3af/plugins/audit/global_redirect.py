@@ -30,6 +30,8 @@ from w3af.core.data.kb.vuln import Vuln
 from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
 
+def compile_expressions(regexp_list, domain):
+    return [re.compile(r % domain) for r in regexp_list]
 
 class global_redirect(AuditPlugin):
     """
@@ -42,13 +44,13 @@ class global_redirect(AuditPlugin):
     BASIC_PAYLOADS = {'http://www.%s/' % TEST_DOMAIN,
                       '//%s' % TEST_DOMAIN}
 
-    SCRIPT_RE = re.compile('<script.*?>(.*?)</script>', re.IGNORECASE | re.DOTALL)
-    META_URL_RE = re.compile('.*?; *?URL *?= *?(.*)', re.IGNORECASE | re.DOTALL)
+    SCRIPT_RE = re.compile(r'<script.*?>(.*?)</script>', re.IGNORECASE | re.DOTALL)
+    META_URL_RE = re.compile(r'.*?; *?URL *?= *?(.*)', re.IGNORECASE | re.DOTALL)
 
-    JS_REDIR_GENERIC_FMT = ['window\.location.*?=.*?["\'].*?%s.*?["\']',
-                            '(self|top)\.location.*?=.*?["\'].*?%s.*?["\']',
-                            'window\.location\.(replace|assign)\(["\'].*?%s.*?["\']\)']
-    REDIR_TO_TEST_DOMAIN_JS_RE = [re.compile(r % TEST_DOMAIN) for r in JS_REDIR_GENERIC_FMT]
+    JS_REDIR_GENERIC_FMT = [r'window\.location.*?=.*?["\'].*?%s.*?["\']',
+                            r'(self|top)\.location.*?=.*?["\'].*?%s.*?["\']',
+                            r'window\.location\.(replace|assign)\(["\'].*?%s.*?["\']\)']
+    REDIR_TO_TEST_DOMAIN_JS_RE = compile_expressions(JS_REDIR_GENERIC_FMT, TEST_DOMAIN)
     JS_REDIR_RE = [re.compile(r % '') for r in JS_REDIR_GENERIC_FMT]
 
     def audit(self, freq, orig_response, debugging_id):

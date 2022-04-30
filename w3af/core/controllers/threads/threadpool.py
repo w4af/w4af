@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys
 import time
-import Queue
+import queue
 import threading
 import traceback
 
@@ -36,7 +36,7 @@ from .pool276 import ThreadPool, RUN, create_detailed_pickling_error, mapstar
 from w3af.core.data.fuzzer.utils import rand_alnum
 from w3af.core.controllers.threads.decorators import apply_with_return_error
 
-__all__ = ['Pool', 'return_args', 'one_to_many']
+__all__ = ['Pool', 'return_args', 'one_to_many', 'add_traceback_string']
 
 
 class one_to_many(object):
@@ -74,7 +74,8 @@ class return_args(object):
 
 class DaemonProcess(Process):
 
-    def __init__(self, group=None, target=None, name=None, args=(), kwargs={}):
+    def __init__(self, group=None, target=None, name=None, args=(), kwargs=None):
+        kwargs = kwargs or dict()
         super(DaemonProcess, self).__init__(group, target, name, args, kwargs)
         self.daemon = True
         self.worker = target
@@ -248,7 +249,7 @@ class Worker(object):
                 'worker_id': self.id}
 
     def __call__(self, inqueue, outqueue, initializer=None, initargs=(), maxtasks=None):
-        assert maxtasks is None or (type(maxtasks) in (int, long) and maxtasks > 0)
+        assert maxtasks is None or (type(maxtasks) in (int, int) and maxtasks > 0)
 
         put = outqueue.put
         get = inqueue.get
@@ -282,7 +283,7 @@ class Worker(object):
 
             try:
                 result = (True, func(*args, **kwds))
-            except Exception, e:
+            except Exception as e:
                 add_traceback_string(e)
                 result = (False, e)
 
@@ -352,10 +353,11 @@ class Pool(ThreadPool):
         # limit.
         #
         if max_queued_tasks != 0:
-            assert max_queued_tasks - 1 > 0, 'max_queued_tasks needs to be at least 2'
+            msg = 'max_queued_tasks needs to be greater than processes'
+            assert max_queued_tasks > processes, msg
 
         self._setup_queues(max_queued_tasks - 1)
-        self._taskqueue = Queue.Queue(maxsize=1)
+        self._taskqueue = queue.Queue(maxsize=1)
 
         self._cache = {}
         self._state = RUN
@@ -419,7 +421,7 @@ class Pool(ThreadPool):
     def get_running_task_count(self):
         # Cheating here a little bit because the task queued in _inqueue will
         # eventually be run by the pool, but is not yet in the pool
-        running_tasks = self._inqueue.qsize()
+        running_tasks = self._inqueue.qsize() + self._taskqueue.qsize()
 
         for process in self._pool[:]:
             if not process.is_idle():
@@ -479,8 +481,8 @@ class Pool(ThreadPool):
         self._repopulate_pool()
 
     def _setup_queues(self, max_queued_tasks):
-        self._inqueue = Queue.Queue(maxsize=max_queued_tasks)
-        self._outqueue = Queue.Queue()
+        self._inqueue = queue.Queue(maxsize=max_queued_tasks)
+        self._outqueue = queue.Queue()
         self._quick_put = self._inqueue.put
         self._quick_get = self._outqueue.get
 
@@ -506,7 +508,7 @@ class Pool(ThreadPool):
         their specified lifetime.  Returns True if any workers were cleaned up.
         """
         cleaned = False
-        for i in reversed(range(len(self._pool))):
+        for i in reversed(list(range(len(self._pool)))):
             worker = self._pool[i]
             if worker.exitcode is not None:
                 # worker exited
@@ -544,7 +546,7 @@ class Pool(ThreadPool):
         """
         delay = 0.1
 
-        for _ in xrange(int(timeout / delay)):
+        for _ in range(int(timeout / delay)):
             if (self._inqueue.qsize() == 0 and
                     self._outqueue.qsize() == 0 and
                     self._taskqueue.qsize() == 0):

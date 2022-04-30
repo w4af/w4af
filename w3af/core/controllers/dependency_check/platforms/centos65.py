@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro
 
 from .centos import CentOS
 from ..requirements import CORE, GUI
@@ -40,6 +40,5 @@ class CentOS65(CentOS):
     SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES,
                        GUI: GUI_SYSTEM_PACKAGES}
 
-    @staticmethod
-    def is_current_platform():
-        return 'centos' in platform.dist() and '6.5' in platform.dist()
+    def is_current_platform(self):
+        return 'centos' in distro.linux_distribution() and '6.5' in distro.linux_distribution()

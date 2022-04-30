@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -20,7 +20,7 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Encloses each non-function keyword with versioned MySQL comment
+    Encloses each non-function keyword with (MySQL) versioned comment
 
     Requirement:
         * MySQL
@@ -46,7 +46,7 @@ def tamper(payload, **kwargs):
     retVal = payload
 
     if payload:
-        retVal = re.sub(r"(?<=\W)(?P<word>[A-Za-z_]+)(?=[^\w(]|\Z)", lambda match: process(match), retVal)
+        retVal = re.sub(r"(?<=\W)(?P<word>[A-Za-z_]+)(?=[^\w(]|\Z)", process, retVal)
         retVal = retVal.replace(" /*!", "/*!").replace("*/ ", "*/")
 
     return retVal

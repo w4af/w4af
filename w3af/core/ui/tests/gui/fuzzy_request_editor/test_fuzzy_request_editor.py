@@ -18,7 +18,10 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
+
+from nose.plugins.attrib import attr
 
 from w3af.core.data.parsers.doc.http_request_parser import http_request_parser
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
@@ -43,6 +46,7 @@ Content-Type: application/x-www-form-urlencoded
 """
 
 
+@attr('gui')
 class TestFuzzyRequestEditor(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'fuzzy_request_editor', 'images')
@@ -57,6 +61,7 @@ class TestFuzzyRequestEditor(XpresserUnittest):
         self.click('close-with-cross')
         XpresserUnittest.tearDown(self)
     
+    @pytest.mark.deprecated
     def test_offline_url(self):
         self.double_click('localhost')
         self.type('moth:8081', False)
@@ -68,6 +73,7 @@ class TestFuzzyRequestEditor(XpresserUnittest):
         self.type(['<Enter>',], False)
 
     
+    @pytest.mark.deprecated
     def test_invalid_request(self):
         self.double_click('localhost')
         self.type('moth:8081', False)
@@ -94,6 +100,7 @@ class TestFuzzyRequestEditor(XpresserUnittest):
         self.type(['<Enter>',], False)
 
     
+    @pytest.mark.deprecated
     def test_GET_request(self):
         self.http_daemon = HTTPDaemon()
         self.http_daemon.start()
@@ -127,12 +134,13 @@ class TestFuzzyRequestEditor(XpresserUnittest):
             self.assertEqual('/%s' % i, daemon_request.path)
             self.assertEqual(parsed_request.get_method(), daemon_request.command)
         
-            for header_name, header_value in parsed_request.get_headers().iteritems():
+            for header_name, header_value in parsed_request.get_headers().items():
                 self.assertIn(header_name.lower(), daemon_request.headers)
                 self.assertEqual(header_value, daemon_request.headers[header_name.lower()])
             
         self.http_daemon.shutdown()
     
+    @pytest.mark.deprecated
     def test_POST_request(self):
         self.http_daemon = HTTPDaemon()
         self.http_daemon.start()
@@ -180,7 +188,7 @@ class TestFuzzyRequestEditor(XpresserUnittest):
             self.assertEqual('/%s' % i, daemon_request.path)
             self.assertEqual('POST', daemon_request.command)
         
-            for header_name, header_value in parsed_request.get_headers().iteritems():
+            for header_name, header_value in parsed_request.get_headers().items():
                 self.assertIn(header_name.lower(), daemon_request.headers)
                 self.assertEqual(header_value, daemon_request.headers[header_name.lower()])
         

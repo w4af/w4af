@@ -19,12 +19,14 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import time
 import unittest
 from itertools import repeat
 
 import pyclamd
-from mock import patch, Mock
+from unittest.mock import patch, Mock
+from nose.plugins.attrib import attr
 
 import w3af.core.data.kb.knowledge_base as kb
 from w3af.plugins.grep.clamav import clamav
@@ -37,6 +39,7 @@ from w3af.core.controllers.threads.threadpool import Pool
 from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@attr('integration')
 class TestClamAV(unittest.TestCase):
 
     def setUp(self):
@@ -51,6 +54,7 @@ class TestClamAV(unittest.TestCase):
         self.plugin.end()
 
     @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_clamav_eicar(self, *args):
         body = pyclamd.ClamdAgnostic().EICAR()
         url = URL('http://www.w3af.com/')
@@ -75,6 +79,7 @@ class TestClamAV(unittest.TestCase):
         self.assertEqual(finding.get_url().url_string, url.url_string)
 
     @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_clamav_empty(self, *args):
         body = ''
         url = URL('http://www.w3af.com/')
@@ -94,6 +99,7 @@ class TestClamAV(unittest.TestCase):
         self.assertEqual(len(findings), 0, findings)
 
     @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_clamav_workers(self, *args):
         
         WAIT_TIME = 3
@@ -108,7 +114,7 @@ class TestClamAV(unittest.TestCase):
         self.plugin._report_result = lambda x: 42
         start_time = time.time()
         
-        for i in xrange(3):
+        for i in range(3):
             body = ''
             url = URL('http://www.w3af.com/%s' % i)
             headers = Headers([('content-type', 'text/html')])
@@ -131,6 +137,7 @@ class TestClamAV(unittest.TestCase):
         self.assertLessEqual(time_spent, WAIT_TIME + DELTA)
 
     @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_no_clamav_eicar(self, *args):
         body = pyclamd.ClamdAgnostic().EICAR()
         url = URL('http://www.w3af.com/')
@@ -147,7 +154,8 @@ class TestClamAV(unittest.TestCase):
         self.assertEqual(len(findings), 0)
         self.assertEqual(self.plugin._scan_http_response.call_count, 0)
 
- 
+
+@attr('integration')
 class TestClamAVScan(PluginTest):
  
     target_url = get_moth_http('/grep/clamav/')
@@ -173,6 +181,7 @@ class TestClamAVScan(PluginTest):
         super(TestClamAVScan, self).tearDown()
         self.plugin.end()
         
+    @pytest.mark.slow
     def test_found_vuln(self):
         """
         Test to validate case in which malware is identified while crawling.

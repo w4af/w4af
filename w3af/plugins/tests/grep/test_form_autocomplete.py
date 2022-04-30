@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import unittest
 
 import w3af.core.data.kb.knowledge_base as kb
@@ -48,6 +49,7 @@ class TestFormAutocomplete(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_found_vuln(self):
         cfg = self._run_configs['cfg1']
         self._scan(cfg['target'], cfg['plugins'])
@@ -62,7 +64,7 @@ class TestFormAutocomplete(PluginTest):
         filenames.sort()
         expected_results.sort()
 
-        self.assertEquals(expected_results, filenames)
+        self.assertEqual(expected_results, filenames)
 
 
 class TestFormAutocompleteRaw(unittest.TestCase):
@@ -74,6 +76,7 @@ class TestFormAutocompleteRaw(unittest.TestCase):
     def tearDown(self):
         kb.kb.cleanup()
 
+    @pytest.mark.deprecated
     def test_form_autocomplete_group_info_set(self):
         body = '<form action="/login"><input type="password" name="p"></form>'
         url_1 = URL('http://www.w3af.com/1')
@@ -87,12 +90,12 @@ class TestFormAutocompleteRaw(unittest.TestCase):
         self.plugin.grep(request, resp_2)
         self.plugin.end()
 
-        expected_desc = (u'The application contains 2 different URLs with a'
-                         u' <form> element which has auto-complete enabled'
-                         u' for password fields. The first two vulnerable'
-                         u' URLs are:\n'
-                         u' - http://www.w3af.com/2\n'
-                         u' - http://www.w3af.com/1\n')
+        expected_desc = ('The application contains 2 different URLs with a'
+                         ' <form> element which has auto-complete enabled'
+                         ' for password fields. The first two vulnerable'
+                         ' URLs are:\n'
+                         ' - http://www.w3af.com/1\n'
+                         ' - http://www.w3af.com/2\n')
 
         # pylint: disable=E1103
         info_set = kb.kb.get_one('form_autocomplete', 'form_autocomplete')

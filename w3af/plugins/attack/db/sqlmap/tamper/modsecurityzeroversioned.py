@@ -1,20 +1,24 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
+import os
+
+from lib.core.common import singleTimeWarnMessage
+from lib.core.enums import DBMS
 from lib.core.enums import PRIORITY
 
 __priority__ = PRIORITY.HIGHER
 
 def dependencies():
-    pass
+    singleTimeWarnMessage("tamper script '%s' is only meant to be run against %s" % (os.path.basename(__file__).split(".")[0], DBMS.MYSQL))
 
 def tamper(payload, **kwargs):
     """
-    Embraces complete query with zero-versioned comment
+    Embraces complete query with (MySQL) zero-versioned comment
 
     Requirement:
         * MySQL
@@ -23,7 +27,7 @@ def tamper(payload, **kwargs):
         * MySQL 5.0
 
     Notes:
-        * Useful to bypass ModSecurity WAF/IDS
+        * Useful to bypass ModSecurity WAF
 
     >>> tamper('1 AND 2>1--')
     '1 /*!00000AND 2>1*/--'

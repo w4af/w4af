@@ -19,10 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import os
 import unittest
 
-from mock import patch
+from unittest.mock import patch
 
 from w3af.core.controllers.dependency_check.helper_requirements_txt import generate_requirements_txt
 from w3af.core.controllers.dependency_check.pip_dependency import PIPDependency 
@@ -33,10 +34,13 @@ class TestGenerateTXT(unittest.TestCase):
     MOCK_TARGET = 'w3af.core.controllers.ci.only_ci_decorator.is_running_on_ci'
     
     @patch(MOCK_TARGET, return_value=True)
+    @pytest.mark.deprecated
     def test_generate_requirements_txt_empty(self, ci_mock):
         requirements_file = generate_requirements_txt([])
         
-        self.assertEqual(0, len(file(requirements_file).read()))
+        with open(requirements_file) as reqs:
+            count = len(reqs.read())
+        self.assertEqual(0, count)
         os.unlink(requirements_file)
 
     @patch(MOCK_TARGET, return_value=True)
@@ -45,6 +49,7 @@ class TestGenerateTXT(unittest.TestCase):
         requirements_file = generate_requirements_txt([PIPDependency('a', 'a', '1.2.3'),
                                                        PIPDependency('b', 'c', '3.2.1'),])
         
-        self.assertEqual(EXPECTED, file(requirements_file).read())
+        with open(requirements_file) as text:
+            received = text.read()
+        self.assertEqual(EXPECTED, received)
         os.unlink(requirements_file)
-        

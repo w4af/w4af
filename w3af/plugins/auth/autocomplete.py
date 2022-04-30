@@ -145,7 +145,7 @@ class autocomplete(AuthSessionPlugin):
                                                          cache=False,
                                                          follow_redirects=True,
                                                          debugging_id=self._debugging_id)
-        except Exception, e:
+        except Exception as e:
             msg = 'Failed to submit the login form: %s'
             self._log_debug(msg % e)
             return False
@@ -257,21 +257,31 @@ class autocomplete(AuthSessionPlugin):
         :return: A list of option objects for this plugin.
         """
         options = [
-            ('username', self.username, STRING,
+            ('username',
+             self.username,
+             STRING,
              'Username for the authentication process'),
 
-            ('password', self.password, STRING,
+            ('password',
+             self.password,
+             STRING,
              'Password for the authentication process'),
 
-            ('login_form_url', self.login_form_url, URL_OPT,
+            ('login_form_url',
+             self.login_form_url,
+             URL_OPT,
              'The URL where the login form appears'),
 
-            ('check_url', self.check_url, URL_OPT,
+            ('check_url',
+             self.check_url,
+             URL_OPT,
              'URL used to verify if the session is active. The plugin sends'
              ' an HTTP GET request to this URL and asserts if `check_string`'
              ' is present.'),
 
-            ('check_string', self.check_string, STRING,
+            ('check_string',
+             self.check_string,
+             STRING,
              'String to search in the `check_url` page to determine if the'
              ' session is active.'),
         ]

@@ -18,13 +18,13 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from __future__ import print_function
+
 
 import os
 import re
 import time
 import pprint
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import unittest
 import tempfile
 import httpretty
@@ -89,7 +89,7 @@ class PluginTest(unittest.TestCase):
             
             try:
                 url = URL(self.target_url)
-            except ValueError, ve:
+            except ValueError as ve:
                 msg = ('When using MOCK_RESPONSES you need to set the'
                        ' target_url attribute to a valid URL, exception was:'
                        ' "%s".')
@@ -147,7 +147,7 @@ class PluginTest(unittest.TestCase):
         found_tokens = [(v.get_url().get_file_name(),
                          v.get_token_name()) for v in found_vulns]
 
-        self.assertEquals(
+        self.assertEqual(
             set(found_tokens),
             set(expected)
         )
@@ -194,7 +194,7 @@ class PluginTest(unittest.TestCase):
 
             found.append(data)
 
-        self.assertEquals(set(found),
+        self.assertEqual(set(found),
                           set(expected))
 
     def __internal_request_callback(self, http_request, uri, headers):
@@ -224,9 +224,9 @@ class PluginTest(unittest.TestCase):
 
         for target in target_list:
             try:
-                response = urllib2.urlopen(target.url_string)
+                response = urllib.request.urlopen(target.url_string)
                 response.read()
-            except urllib2.URLError, e:
+            except urllib.error.URLError as e:
                 if hasattr(e, 'code'):
                     # pylint: disable=E1101
                     if e.code in (404, 403, 401):
@@ -238,7 +238,7 @@ class PluginTest(unittest.TestCase):
 
                 self.assertTrue(False, msg % (target, e.reason))
             
-            except Exception, e:
+            except Exception as e:
                 self.assertTrue(False, msg % (target, e))
 
     def _scan(self,
@@ -269,13 +269,13 @@ class PluginTest(unittest.TestCase):
             self.misc_settings.set_default_values()
 
     def _set_target(self, target, verify_targets):
-        if not isinstance(target, (basestring, tuple)):
+        if not isinstance(target, (str, tuple)):
             raise TypeError('Expected basestring or tuple in scan target.')
         
         if isinstance(target, tuple):
             target = tuple([URL(u) for u in target])
             
-        elif isinstance(target, basestring):
+        elif isinstance(target, str):
             target = (URL(target),)
         
         if verify_targets and not self.MOCK_RESPONSES:
@@ -286,7 +286,7 @@ class PluginTest(unittest.TestCase):
 
     def _set_enabled_plugins(self, plugins):
         # Enable plugins to be tested
-        for ptype, plugincfgs in plugins.items():
+        for ptype, plugincfgs in list(plugins.items()):
             self.w3afcore.plugins.set_plugins([p.name for p in plugincfgs],
                                               ptype)
 
@@ -325,7 +325,7 @@ class PluginTest(unittest.TestCase):
 
         options = self.misc_settings.get_options()
 
-        for setting, value in misc_settings.iteritems():
+        for setting, value in misc_settings.items():
             options[setting].set_value(value)
 
         self.misc_settings.set_options(options)
@@ -391,7 +391,7 @@ class PluginTest(unittest.TestCase):
             if should_continue:
                 continue
 
-            if path == u'':
+            if path == '':
                 continue
 
             if path in ok_to_miss:
@@ -455,7 +455,15 @@ class PluginTest(unittest.TestCase):
         default_opts['http_output_file'].set_value(http_output)
         default_opts['verbose'].set_value(True)
 
-        print('Logging to %s' % text_output)
+        print('')
+        print('    Logging to %s' % text_output)
+
+        latest_output = os.path.join(tempfile.gettempdir(), 'latest-w3af-output.txt')
+        if os.path.exists(latest_output):
+            os.remove(latest_output)
+
+        os.symlink(text_output, latest_output)
+        print('    Symlink to log file created at %s' % latest_output)
 
         self.w3afcore.plugins.set_plugin_options(ptype, pname, default_opts)
 
@@ -602,9 +610,9 @@ class MockResponse(object):
             self.headers.update(headers)
 
         assert method in self.KNOWN_METHODS, self.NO_MOCK
-        assert isinstance(url, (basestring, RE_COMPILE_TYPE))
+        assert isinstance(url, (str, RE_COMPILE_TYPE))
 
-        if isinstance(url, basestring):
+        if isinstance(url, str):
             url = URL(url)
             assert url.get_domain(), 'Need to specify the MockResponse domain'
 
@@ -655,7 +663,7 @@ class MockResponse(object):
         :param request_uri: The http request URI sent by the plugin
         :return: True if the request_uri matches this mock_response
         """
-        if isinstance(self.url, basestring):
+        if isinstance(self.url, str):
             request_uri = URL(request_uri)
             response_uri = URL(self.url)
 

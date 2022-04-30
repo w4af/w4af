@@ -22,9 +22,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 import sys
 import time
-import Queue
+import queue
 import threading
 
+import multiprocessing as mp
 from multiprocessing.dummy import Process
 from functools import wraps
 
@@ -101,6 +102,7 @@ class OutputManager(Process):
 
     def __init__(self):
         super(OutputManager, self).__init__(name='OutputManager')
+        self.ctx = mp.get_context('fork')
         self.daemon = True
         self.name = 'OutputManager'
 
@@ -110,7 +112,7 @@ class OutputManager(Process):
         self._plugin_options = {}
 
         # Internal variables
-        self.in_queue = SilentJoinableQueue()
+        self.in_queue = SilentJoinableQueue(ctx=self.ctx)
         self._w3af_core = None
         self._last_output_flush = None
         self._is_shutting_down = False
@@ -147,7 +149,7 @@ class OutputManager(Process):
         while True:
             try:
                 work_unit = self.in_queue.get(timeout=self.FLUSH_TIMEOUT)
-            except Queue.Empty:
+            except queue.Empty:
                 self.flush_plugin_output()
                 continue
 
@@ -185,7 +187,7 @@ class OutputManager(Process):
             # we flush the output (if needed)
             self.flush_plugin_output()
 
-    def flush_plugin_output(self):
+    def flush_plugin_output(self, force=False):
         """
         Call flush() on all plugins so they write their data to the external
         file(s) / socket(s) if they want to. This is useful when the scan
@@ -200,7 +202,7 @@ class OutputManager(Process):
         :see: https://github.com/andresriancho/w3af/issues/6726
         :return: None
         """
-        if not self.should_flush():
+        if not force and not self.should_flush():
             return
 
         pool = self._worker_pool
@@ -210,8 +212,17 @@ class OutputManager(Process):
         self.update_last_output_flush()
 
         for o_plugin in self._output_plugin_instances:
-            pool.apply_async(func=self.__inner_flush_plugin_output,
-                             args=(o_plugin,))
+            result = pool.apply_async(func=self.__inner_flush_plugin_output,
+                                      args=(o_plugin,))
+
+            #
+            # This forces the method to wait for each plugin.flush()
+            #
+            # Should be used with care because some plugins take considerable
+            # time to flush their ouput
+            #
+            if force:
+                result.get()
 
     def __inner_flush_plugin_output(self, o_plugin):
         """
@@ -249,7 +260,7 @@ class OutputManager(Process):
 
         try:
             o_plugin.flush()
-        except Exception, exception:
+        except Exception as exception:
             self._handle_output_plugin_exception(o_plugin, exception)
         finally:
             o_plugin.is_running_flush = False
@@ -314,6 +325,16 @@ class OutputManager(Process):
 
         # Now call end() on all plugins
         self.__end_output_plugins_impl()
+
+    def terminate(self):
+        while self.in_queue.qsize():
+            try:
+                self.in_queue.get_nowait()
+            except:
+                continue
+
+        self._worker_pool.close()
+        self._worker_pool.terminate()
 
     @start_thread_on_demand
     def process_all_messages(self):
@@ -412,7 +433,7 @@ class OutputManager(Process):
         # Given that we don't want to convert to utf8 inside every plugin
         # before sending to a file, we do it here
         for arg in args:
-            if isinstance(arg, unicode):
+            if isinstance(arg, str):
                 arg = arg.encode(UTF8, 'replace')
 
             encoded_params.append(arg)
@@ -442,8 +463,8 @@ class OutputManager(Process):
             
             try:
                 opl_func_ptr = getattr(o_plugin, action_name)
-                apply(opl_func_ptr, args, kwds)
-            except Exception, exception:
+                opl_func_ptr(*args, **kwds)
+            except Exception as exception:
                 self._handle_output_plugin_exception(o_plugin, exception)
 
     def set_output_plugin_inst(self, output_plugin_inst):
@@ -504,7 +525,7 @@ class OutputManager(Process):
         plugin = factory('w3af.plugins.output.%s' % plugin_name)
         plugin.set_w3af_core(self._w3af_core)
 
-        if plugin_name in self._plugin_options.keys():
+        if plugin_name in list(self._plugin_options.keys()):
             plugin.set_options(self._plugin_options[plugin_name])
 
         return plugin

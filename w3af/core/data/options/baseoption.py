@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import copy
-import cgi
+import html
 
 
 class BaseOption(object):
@@ -29,24 +29,39 @@ class BaseOption(object):
 
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
-    def __init__(self, name, default_value, desc, _help='', tabid=''):
+
+    # Each subclass overrides this
+    _type = None
+
+    def __init__(self, name, default_value, desc, _help='', tabid='', options=None):
         """
         :param name: The name of the option
         :param default_value: The default value of the option
         :param desc: The description of the option
-        :param type: boolean, integer, string, etc..
         :param _help: The help of the option; a large description of the option
         :param tabid: The tab id of the option
+        :param options: The specific options for this config, for example in
+                        INT type this is used to configure max and min values
+                        which are then checked for in validate()
         """
+        self._name = name
+        self._desc = desc
+        self._help = _help
+        self._tabid = tabid
+
+        options = options or dict()
+        self._options = options
+
         # To be set by set_value and to avoid pylint error
         self._value = None
         self.set_value(default_value)
         self._default_value = self._value
 
-        self._name = name
-        self._desc = desc
-        self._help = _help
-        self._tabid = tabid
+    def get_type(self):
+        return self._type
+
+    def set_type(self, _type):
+        self._type = _type
 
     def get_name(self):
         return self._name
@@ -90,9 +105,6 @@ class BaseOption(object):
         """
         return self._get_str(self.get_value())
 
-    def get_type(self):
-        return self._type
-
     def get_help(self):
         return self._help
 
@@ -134,14 +146,14 @@ class BaseOption(object):
         """
         raise NotImplementedError
 
-    def set_type(self, v):
-        self._type = v
-
     def set_help(self, v):
         self._help = v
 
     def set_tabid(self, v):
         self._tabid = v
+
+    def get_options(self):
+        return self._options
 
     def _sanitize(self, value):
         """
@@ -150,7 +162,7 @@ class BaseOption(object):
         # FIXME: Not 100% sure about this...
         # I should also kill the \a and other strange escapes...
         # Maybe there is already a function that does this!
-        value = cgi.escape(value)
+        value = html.escape(value)
         value = value.replace('"', '&quot;')
         return value
 

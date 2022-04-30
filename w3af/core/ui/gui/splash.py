@@ -18,8 +18,9 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import gtk
 import os
+
+from gi.repository import Gtk as gtk
 
 from w3af.core.ui.gui.constants import W3AF_ICON
 from w3af.core.controllers.dependency_check.platforms.mac import MacOSX
@@ -51,7 +52,7 @@ class Splash(gtk.Window):
 
         # Splash screen doesn't have decoration (at least where supported)
         # https://github.com/andresriancho/w3af/issues/9084
-        if not MacOSX.is_current_platform():
+        if not MacOSX().is_current_platform():
             self.set_decorated(False)
 
         # color and position

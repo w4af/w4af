@@ -19,12 +19,12 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import SocketServer
+import socketserver
 import threading
 import time
 
 
-class UpperTCPHandler(SocketServer.BaseRequestHandler):
+class UpperTCPHandler(socketserver.BaseRequestHandler):
     """
     The RequestHandler class for our server.
 
@@ -57,7 +57,7 @@ class UpperDaemon(threading.Thread):
 
     def run(self):
         # Zero in the port means: bind to any free port
-        self.server = SocketServer.TCPServer(self.server_address,
+        self.server = socketserver.TCPServer(self.server_address,
                                              self.handler)
     
         try:
@@ -96,7 +96,7 @@ class ThreadingUpperDaemon(UpperDaemon):
         self.server.serve_forever()
 
 
-class ThreadingServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+class ThreadingServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     # Ctrl-C will cleanly kill all spawned threads
     daemon_threads = True
 
@@ -104,4 +104,4 @@ class ThreadingServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True
 
     def __init__(self, server_address, handler_klass):
-        SocketServer.TCPServer.__init__(self, server_address, handler_klass)
+        socketserver.TCPServer.__init__(self, server_address, handler_klass)

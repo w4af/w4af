@@ -29,7 +29,7 @@ from w3af.core.data.dc.utils.token import DataToken
 class TestHeaders(unittest.TestCase):
 
     def test_empty(self):
-        self.assertEquals(Headers([]), Headers([]))
+        self.assertEqual(Headers([]), Headers([]))
 
     def test_false(self):
         self.assertFalse(Headers())
@@ -63,11 +63,11 @@ class TestHeaders(unittest.TestCase):
     def test_unicode(self):
         headers = Headers([('a', 'b')])
 
-        self.assertEqual(unicode(headers), 'a: b\r\n')
+        self.assertEqual(str(headers), 'a: b\r\n')
 
     def test_str_strange(self):
-        header_value = ''.join(chr(i) for i in xrange(256))
-        headers = Headers([(u'Hola', header_value)])
+        header_value = ''.join(chr(i) for i in range(256))
+        headers = Headers([('Hola', header_value)])
         
         # I don't assert in a stricter way because the output depends on
         # smart_unicode which might change in the future
@@ -79,15 +79,15 @@ class TestHeaders(unittest.TestCase):
     def test_special_chars(self):
         headers = Headers([('á', 'ç')])
 
-        self.assertIn(u'á', headers)
-        self.assertEqual(headers[u'á'], u'ç')
+        self.assertIn('á', headers)
+        self.assertEqual(headers['á'], 'ç')
 
     def test_special_chars_build(self):
         headers_initial = Headers([('á', 'ç')])
         headers_from_headers = Headers(headers_initial)
         
-        self.assertIn(u'á', headers_from_headers)
-        self.assertEqual(headers_from_headers[u'á'], u'ç')
+        self.assertIn('á', headers_from_headers)
+        self.assertEqual(headers_from_headers['á'], 'ç')
 
     def test_add_later(self):
         headers = Headers([('a', 'b')])
@@ -168,7 +168,7 @@ class TestHeaders(unittest.TestCase):
 
         self.assertIn('a', headers)
         self.assertEqual(headers['a'], 'b')
-        self.assertIsInstance(headers['a'], basestring)
+        self.assertIsInstance(headers['a'], str)
 
     def test_copy_with_token(self):
         dc = Headers([('Abc', 'b')])

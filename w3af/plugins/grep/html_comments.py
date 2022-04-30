@@ -20,7 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement
+
 
 import re
 
@@ -63,12 +63,12 @@ class html_comments(GrepPlugin):
         'pass', 'password', 'passwd', 'pwd', 'secret', 'stupid',
         
         # In Spanish
-        'tonto', 'porqueria', 'cuidado', 'usuario', u'contraseña',
+        'tonto', 'porqueria', 'cuidado', 'usuario', 'contraseña',
         'puta', 'email', 'security', 'captcha', 'pinga', 'cojones',
         
         # In Portuguese
-        'banco', 'bradesco', 'itau', 'visa', 'bancoreal', u'transfêrencia',
-        u'depósito', u'cartão', u'crédito', 'dados pessoais'
+        'banco', 'bradesco', 'itau', 'visa', 'bancoreal', 'transfêrencia',
+        'depósito', 'cartão', 'crédito', 'dados pessoais'
     )
 
     _multi_in = MultiIn([' %s ' % w for w in INTERESTING_WORDS])

@@ -94,7 +94,7 @@ class csp(GrepPlugin):
         vuln_already_reported = []
 
         for vuln_store_item in self._vulns:
-            for csp_directive_name, csp_vulns_list in vuln_store_item.csp_vulns.iteritems():
+            for csp_directive_name, csp_vulns_list in vuln_store_item.csp_vulns.items():
                 for csp_vuln in csp_vulns_list:
                     # Check if the current vuln is common (shared) to several
                     # url processed and has been already reported
@@ -143,7 +143,7 @@ class csp(GrepPlugin):
         # Parse vulns collection
         ref = vuln_desc.lower().strip()        
         for vuln_store_item in self._vulns:
-            for csp_directive_name, csp_vulns_list in vuln_store_item.csp_vulns.iteritems():
+            for csp_directive_name, csp_vulns_list in vuln_store_item.csp_vulns.items():
                 for csp_vuln in csp_vulns_list:        
                     if csp_vuln.desc.strip().lower() == ref:
                         if vuln_store_item.resp_id not in list_resp_id:

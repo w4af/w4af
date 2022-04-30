@@ -20,10 +20,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 #magic
-import __builtin__
+import builtins
 
 import hashlib
-import cPickle
+import pickle
 
 from w3af.core.data.misc.cpickle_dumps import cpickle_dumps
 from w3af.core.data.db.disk_item import DiskItem
@@ -116,7 +116,7 @@ class DiskList(object):
         if self.load is not None:
             return self.load(serialized_object)
 
-        return cPickle.loads(serialized_object)
+        return pickle.loads(serialized_object)
 
     def _get_eq_attrs_values(self, obj):
         """
@@ -150,7 +150,7 @@ class DiskList(object):
         return result
 
     def _is_builtin(self, value):
-        if type(value).__name__ in __builtin__.__dict__:
+        if type(value).__name__ in builtins.__dict__:
             return True
 
         elif value is None:
@@ -285,7 +285,7 @@ class DiskList(object):
         #
         # We could find ways to make this in only one SELECT/INSERT, but the
         # main problem is when I add, remove, and then try to slice a DiskList
-        for i in xrange(start, stop, step):
+        for i in range(start, stop, step):
             if i >= disk_list_length:
                 break
             copy.append(self[i])
@@ -300,7 +300,7 @@ class DiskList(object):
         return r[0]
 
     def __unicode__(self):
-        return u'<DiskList [%s]>' % ', '.join([unicode(i) for i in self])
+        return '<DiskList [%s]>' % ', '.join([str(i) for i in self])
     
     __str__ = __unicode__
 

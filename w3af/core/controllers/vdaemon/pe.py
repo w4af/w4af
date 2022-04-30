@@ -51,8 +51,9 @@ class pe(object):
         :return: A string with the complete pe file.
         """
         try:
-            template = file(self._templateFileName, 'r').read()
-        except Exception, e:
+            with open(self._templateFileName, 'r') as template_fh:
+                template = template_fh.read()
+        except Exception as e:
             raise BaseFrameworkException(
                 'Failed to open PE template file. Exception: ' + str(e))
         else:

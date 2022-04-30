@@ -20,7 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from itertools import izip, repeat
+from itertools import repeat
 
 import w3af.core.data.kb.knowledge_base as kb
 import w3af.core.data.constants.severity as severity
@@ -70,7 +70,7 @@ class generic(AuditPlugin):
         mutants = create_mutants(freq, ['', ], orig_resp=original_response)
 
         original_response_repeat = repeat(original_response)
-        args_iterator = izip(original_response_repeat, mutants)
+        args_iterator = zip(original_response_repeat, mutants)
         check_mutant = one_to_many(self._check_mutant)
 
         self.worker_pool.imap_unordered(check_mutant, args_iterator)
@@ -112,31 +112,31 @@ class generic(AuditPlugin):
         """
         # This is the reduced payload set which is effective in triggering
         # most of the errors you'll find
-        payloads = [u'1/0',
-                    u'Ω≈ç√∫˜µ≤≥÷',
-                    u'<>?:"{}|_+\',./;\'[]\\-=',
-                    u'%*.*s',
-                    u'']
+        payloads = ['1/0',
+                    'Ω≈ç√∫˜µ≤≥÷',
+                    '<>?:"{}|_+\',./;\'[]\\-=',
+                    '%*.*s',
+                    '']
 
         # Add more payloads if the user wants to perform a detailed scan
         if self._extensive:
-            payloads += [u'undefined',
-                         u'undef',
-                         u'null',
-                         u'NULL',
-                         u'nil',
-                         u'NIL',
-                         u'true',
-                         u'false',
-                         u'True',
-                         u'False',
-                         u'None',
-                         u'-1',
-                         u'0.0/0',
-                         u'NaN',
-                         u'Infinity',
-                         u"$ENV{'HOME'}",
-                         u'00˙Ɩ$-',
+            payloads += ['undefined',
+                         'undef',
+                         'null',
+                         'NULL',
+                         'nil',
+                         'NIL',
+                         'true',
+                         'false',
+                         'True',
+                         'False',
+                         'None',
+                         '-1',
+                         '0.0/0',
+                         'NaN',
+                         'Infinity',
+                         "$ENV{'HOME'}",
+                         '00˙Ɩ$-',
                          ]
 
         return set(payloads)

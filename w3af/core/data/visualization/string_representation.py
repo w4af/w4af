@@ -48,7 +48,7 @@ class StringRepresentation(object):
         sumlinecounts = lambda st, en: \
             sum(linecount(ln) for ln in split[st:en])
 
-        for i, j in enumerate(xrange(0, length - extra, step)):
+        for i, j in enumerate(range(0, length - extra, step)):
             accum = sumlinecounts(j, j + step)
             self.parsed_instr[i] = accum % height
 

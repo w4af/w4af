@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from urllib import quote_plus
+from urllib.parse import quote_plus
 
 import w3af.core.controllers.output_manager as om
 
@@ -87,7 +87,7 @@ class detailed(AuthSessionPlugin):
                                     cache=False,
                                     follow_redirects=self.follow_redirects,
                                     debugging_id=self._debugging_id)
-        except Exception, e:
+        except Exception as e:
             self._handle_authentication_failure()
 
             msg = 'Failed to login to the application because of exception: %s'

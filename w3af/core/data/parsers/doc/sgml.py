@@ -20,10 +20,10 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 import traceback
-import StringIO
+import io
 
 from lxml import etree
 
@@ -149,13 +149,13 @@ class SGMLParser(BaseParser):
         else:
             try:
                 method(tag, tag_name, attrs)
-            except Exception, ex:
+            except Exception as ex:
                 self._handle_exception('parsing %s tag' % tag_name, ex)
 
         try:
             if tag_name in self.TAGS_WITH_URLS:
                 self._find_references(tag, tag_name, attrs)
-        except Exception, ex:
+        except Exception as ex:
             self._handle_exception('extracting references', ex)
 
         try:
@@ -164,7 +164,7 @@ class SGMLParser(BaseParser):
             # changed it to this for performance
             if tag_name == 'a':
                 self._find_emails(tag, tag_name, attrs)
-        except Exception, ex:
+        except Exception as ex:
             self._handle_exception('finding emails', ex)
 
     def end(self, tag):
@@ -200,7 +200,7 @@ class SGMLParser(BaseParser):
 
         try:
             self._parse_response_body_as_string(resp_body, errors='ignore')
-        except etree.XMLSyntaxError, xse:
+        except etree.XMLSyntaxError as xse:
             #
             # This is too common, we don't want to raise an exception because
             # of invalid / broken HTML
@@ -221,8 +221,7 @@ class SGMLParser(BaseParser):
             # body which is empty).
             return
 
-        resp_body = resp_body.encode(DEFAULT_ENCODING, errors=errors)
-        body_io = StringIO.StringIO(resp_body)
+        body_io = io.BytesIO(resp_body.encode(DEFAULT_ENCODING))
         event_map = {'start': self.start,
                      'end': self.end,
                      'comment': self.comment}
@@ -237,7 +236,7 @@ class SGMLParser(BaseParser):
         #   * tag=self.PARSE_TAGS makes sure that we only go to python code when
         #     strictly required (CPU usage reduction)
         context = etree.iterparse(body_io,
-                                  events=event_map.keys(),
+                                  events=list(event_map.keys()),
                                   tag=self.PARSE_TAGS,
                                   html=True,
                                   recover=True,
@@ -248,7 +247,7 @@ class SGMLParser(BaseParser):
         for event, elem in context:
             try:
                 event_map[event](elem)
-            except Exception, e:
+            except Exception as e:
                 msg = ('Found a parser exception while handling tag "%s" with'
                        ' event "%s". The exception was: "%s"')
                 args = (elem.tag, event, e)
@@ -308,7 +307,7 @@ class SGMLParser(BaseParser):
             # Don't even try to parse this response, it's empty anyways.
             return
 
-        body_io = StringIO.StringIO(resp_body.encode(DEFAULT_ENCODING))
+        body_io = io.BytesIO(resp_body.encode(DEFAULT_ENCODING))
 
         # Performance notes, see "_parse_response_body_as_string"
         context = etree.iterparse(body_io,
@@ -358,7 +357,7 @@ class SGMLParser(BaseParser):
         :param attrs: The attributes for that tag
         :return: Store the emails in self._emails
         """
-        for key, mailto_address in attrs.iteritems():
+        for key, mailto_address in attrs.items():
             if key not in self.URL_ATTRS:
                 continue
 
@@ -375,7 +374,7 @@ class SGMLParser(BaseParser):
                     self._emails.add(email)
 
     def _parse_mailto(self, mailto):
-        mailto = urllib.unquote_plus(mailto)
+        mailto = urllib.parse.unquote_plus(mailto)
         colon_split = mailto.split(':', 1)
         quest_split = colon_split[1].split('?', 1)
         email = quest_split[0].strip()
@@ -409,7 +408,7 @@ class SGMLParser(BaseParser):
         base_url = self._base_url
         decode_url = self._decode_url
 
-        for _, url_path in filter(filter_ref, attrs.iteritems()):
+        for _, url_path in filter(filter_ref, iter(attrs.items())):
             try:
                 url_path = decode_url(url_path)
                 url = base_url.url_join(url_path, encoding=self._encoding)
@@ -508,7 +507,7 @@ class SGMLParser(BaseParser):
         :return: A clear text representation of the HTTP response body.
         """
         body = self.get_http_response().get_body()
-        clear_text = self.ANY_TAG_MATCH.sub(u'', body)
+        clear_text = self.ANY_TAG_MATCH.sub('', body)
         return clear_text
 
     def get_references_of_tag(self, tag_type):
@@ -549,7 +548,7 @@ class SGMLParser(BaseParser):
         #
         for urlstr in self.META_URL_REDIR_RE.findall(content):
             urlstr = self._decode_url(urlstr.strip())
-            url = unicode(self._base_url.url_join(urlstr))
+            url = str(self._base_url.url_join(urlstr))
             url = URL(url, encoding=self._encoding)
             self._tag_and_url.add(('meta', url))
 

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from unittest import TestCase
 
 from w3af.core.controllers.ci.moth import get_moth_http
@@ -48,6 +49,7 @@ class TestGlobalRedirect(PluginTest):
 
     target_url = get_moth_http('/audit/global_redirect/')
 
+    @pytest.mark.deprecated
     def test_found_redirect(self):
         cfg = SCAN_CONFIG['cfg']
         cfg['target'] = self.target_url
@@ -82,6 +84,7 @@ class TestGlobalRedirectBasic(PluginTest):
                                    headers={'Location': 'https://www.w3af.org/'},
                                    body='')]
 
+    @pytest.mark.deprecated
     def test_original_response_has_no_redirect(self):
         cfg = SCAN_CONFIG['cfg']
         cfg['target'] = self.target_url
@@ -106,6 +109,7 @@ class TestGlobalRedirectBasicWithMetaRedir(PluginTest):
                       MockResponse('http://httpretty/redir?target=http://www.w3af.org/',
                                    body='<meta http-equiv="refresh" content="0; url=http://www.w3af.org/">')]
 
+    @pytest.mark.deprecated
     def test_original_response_has_meta_redirect(self):
         cfg = SCAN_CONFIG['cfg']
         cfg['target'] = self.target_url
@@ -134,6 +138,7 @@ class TestGlobalRedirectExtendedPayloadSet(PluginTest):
                                    headers={'Location': 'httpretty.w3af.org'},
                                    body='')]
 
+    @pytest.mark.deprecated
     def test_original_response_has_redirect(self):
         cfg = SCAN_CONFIG['cfg']
         cfg['target'] = self.target_url
@@ -159,7 +164,7 @@ class TestGlobalRedirectUnitExtractScript(TestCase):
         code = plugin._extract_script_code(resp)
         code = [c for c in code]
 
-        self.assertEqual(code, [u'var x=1', u'var y=2'])
+        self.assertEqual(code, ['var x=1', 'var y=2'])
 
     def test_extract_script_code_new_line(self):
         plugin = global_redirect()
@@ -172,7 +177,7 @@ class TestGlobalRedirectUnitExtractScript(TestCase):
         code = plugin._extract_script_code(resp)
         code = [c for c in code]
 
-        self.assertEqual(code, [u'var x=1', u'var y=2', u'alert(1)'])
+        self.assertEqual(code, ['var x=1', 'var y=2', 'alert(1)'])
 
 
 class TestGlobalRedirectUnitJSRedirect(TestCase):
@@ -208,6 +213,7 @@ class TestGlobalRedirectUnitResponseHasRedirect(TestCase):
 
         self.assertTrue(plugin._response_has_redirect(resp))
 
+    @pytest.mark.deprecated
     def test_response_has_redirect_meta(self):
         plugin = global_redirect()
 
@@ -238,6 +244,7 @@ class TestGlobalRedirectUnitResponseHasRedirect(TestCase):
 
         self.assertTrue(plugin._response_has_redirect(resp))
 
+    @pytest.mark.deprecated
     def test_response_has_redirect_js_false(self):
         plugin = global_redirect()
 
@@ -248,6 +255,7 @@ class TestGlobalRedirectUnitResponseHasRedirect(TestCase):
 
         self.assertFalse(plugin._response_has_redirect(resp))
 
+    @pytest.mark.deprecated
     def test_response_has_redirect_headers_false(self):
         plugin = global_redirect()
 

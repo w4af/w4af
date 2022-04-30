@@ -38,6 +38,7 @@ from w3af.core.data.serialization.detect import (is_java_serialized_data,
                                                  is_net_serialized_data,
                                                  is_nodejs_serialized_data,
                                                  is_pickled_data)
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 class deserialization(AuditPlugin):
@@ -110,7 +111,7 @@ class deserialization(AuditPlugin):
         #
         # Why: We never know, maybe the application is going to unserialize() it
         #
-        if original_value == '':
+        if smart_str_ignore(original_value) == b'':
             return True
 
         #
@@ -122,6 +123,8 @@ class deserialization(AuditPlugin):
         isb64, b64_decoded_ov = maybe_decode_base64(original_value)
         if isb64:
             original_value = b64_decoded_ov
+        else:
+            original_value = smart_str_ignore(original_value)
 
         #
         # This code makes sure that we only send payloads with the expected
@@ -171,10 +174,11 @@ class deserialization(AuditPlugin):
                     continue
 
                 if file_name.endswith(self.PAYLOAD_EXTENSION):
-                    json_str = file(os.path.join(root, file_name)).read()
+                    with open(os.path.join(root, file_name)) as payload_file:
+                        json_str = payload_file.read()
                     yield language, json.loads(json_str)
 
-    def _find_delay_in_mutant(self, (mutant, delay_obj), debugging_id=None):
+    def _find_delay_in_mutant(self, xxx_todo_changeme, debugging_id=None):
         """
         Try to delay the response and save a vulnerability if successful
 
@@ -182,6 +186,7 @@ class deserialization(AuditPlugin):
         :param delay_obj: The delay to use
         :param debugging_id: The debugging ID for logging
         """
+        (mutant, delay_obj) = xxx_todo_changeme
         if self._has_bug(mutant):
             return
 
@@ -284,9 +289,9 @@ class DeserializationExactDelay(ExactDelay):
 
         for offset in offsets:
             for i, second_i in enumerate(seconds):
-                payload_lst[offset + i] = second_i
+                payload_lst[offset + i] = ord(second_i)
 
-        return ''.join(payload_lst)
+        return bytes(payload_lst)
 
 
 class B64DeserializationExactDelay(DeserializationExactDelay):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -13,7 +13,6 @@ from lib.core.data import logger
 from lib.core.dicts import FROM_DUMMY_TABLE
 from lib.core.exception import SqlmapNotVulnerableException
 from lib.techniques.dns.use import dnsUse
-
 
 def dnsTest(payload):
     logger.info("testing for data retrieval through DNS channel")

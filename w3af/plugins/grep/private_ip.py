@@ -38,9 +38,9 @@ class private_ip(GrepPlugin):
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
     # More info regarding this regular expression: http://bit.ly/185DFJc
-    IP_RE = '(?<!\.)(?<!\d)(?:(?:10|127)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9]' \
-            '[0-9]?)|192\.168|169\.254|172\.0?(?:1[6-9]|2[0-9]|3[01]))' \
-            '(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){2}(?!\d)(?!\.)'
+    IP_RE = r'(?<!\.)(?<!\d)(?:(?:10|127)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9]' \
+            r'[0-9]?)|192\.168|169\.254|172\.0?(?:1[6-9]|2[0-9]|3[01]))' \
+            r'(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){2}(?!\d)(?!\.)'
 
     RE_LIST = [re.compile(IP_RE)]
 
@@ -72,7 +72,7 @@ class private_ip(GrepPlugin):
         self._analyze_html(request, response)
 
     def _get_header_name(self, response, ip_address, regex):
-        for header_name, header_value in response.get_headers().iteritems():
+        for header_name, header_value in response.get_headers().items():
             for header_ip_address in regex.findall(header_value):
                 header_ip_address = header_ip_address.strip()
                 if header_ip_address == ip_address:

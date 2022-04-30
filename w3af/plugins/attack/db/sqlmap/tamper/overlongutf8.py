@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -16,13 +16,14 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Converts all characters in a given payload (not processing already
-    encoded)
+    Converts all (non-alphanum) characters in a given payload to overlong UTF8 (not processing already encoded) (e.g. ' -> %C0%A7)
 
-    Reference: https://www.acunetix.com/vulnerabilities/unicode-transformation-issues/
+    Reference:
+        * https://www.acunetix.com/vulnerabilities/unicode-transformation-issues/
+        * https://www.thecodingforums.com/threads/newbie-question-about-character-encoding-what-does-0xc0-0x8a-have-in-common-with-0xe0-0x80-0x8a.170201/
 
     >>> tamper('SELECT FIELD FROM TABLE WHERE 2>1')
-    'SELECT%C0%AAFIELD%C0%AAFROM%C0%AATABLE%C0%AAWHERE%C0%AA2%C0%BE1'
+    'SELECT%C0%A0FIELD%C0%A0FROM%C0%A0TABLE%C0%A0WHERE%C0%A02%C0%BE1'
     """
 
     retVal = payload
@@ -37,7 +38,7 @@ def tamper(payload, **kwargs):
                 i += 3
             else:
                 if payload[i] not in (string.ascii_letters + string.digits):
-                    retVal += "%%C0%%%.2X" % (0x8A | ord(payload[i]))
+                    retVal += "%%%.2X%%%.2X" % (0xc0 + (ord(payload[i]) >> 6), 0x80 + (ord(payload[i]) & 0x3f))
                 else:
                     retVal += payload[i]
                 i += 1

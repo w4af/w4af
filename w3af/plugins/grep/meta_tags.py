@@ -82,7 +82,7 @@ class meta_tags(GrepPlugin):
         meta_tag_list = dp.get_meta_tags()
 
         for tag in meta_tag_list:
-            for attr_name, attr_value in tag.items():
+            for attr_name, attr_value in list(tag.items()):
 
                 if not attr_name or not attr_value:
                     # https://github.com/andresriancho/w3af/issues/2012
@@ -126,7 +126,7 @@ class meta_tags(GrepPlugin):
         """
         :return: the tag name.
         """
-        for key, value in tag.items():
+        for key, value in list(tag.items()):
             if key.lower() == 'name':
                 return value.lower()
         return None

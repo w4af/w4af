@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 import w3af.core.data.kb.knowledge_base as kb
@@ -40,6 +41,7 @@ class TestContentSniffingSecurity(unittest.TestCase):
         self.plugin.end()
         kb.kb.cleanup()
 
+    @pytest.mark.deprecated
     def test_has_content_sniffing_header(self):
         body = ''
         url = URL('http://www.w3af.com/')
@@ -49,9 +51,10 @@ class TestContentSniffingSecurity(unittest.TestCase):
         resp = HTTPResponse(200, body, headers, url, url, _id=1)
 
         self.plugin.grep(request, resp)
-        self.assertEquals(len(kb.kb.get('content_sniffing',
+        self.assertEqual(len(kb.kb.get('content_sniffing',
                                         'content_sniffing')), 0)
 
+    @pytest.mark.deprecated
     def test_no_content_sniffing(self):
         body = ''
         url = URL('https://www.w3af.com/')
@@ -62,19 +65,20 @@ class TestContentSniffingSecurity(unittest.TestCase):
         self.plugin.grep(request, resp)
 
         findings = kb.kb.get('content_sniffing', 'content_sniffing')
-        self.assertEquals(len(findings), 1, findings)
+        self.assertEqual(len(findings), 1, findings)
 
         info_set = findings[0]
-        expected_desc = u'The remote web application sent 1 HTTP responses' \
-                        u' which do not contain the X-Content-Type-Options' \
-                        u' header. The first ten URLs which did not send the' \
-                        u' header are:\n - https://www.w3af.com/\n'
+        expected_desc = 'The remote web application sent 1 HTTP responses' \
+                        ' which do not contain the X-Content-Type-Options' \
+                        ' header. The first ten URLs which did not send the' \
+                        ' header are:\n - https://www.w3af.com/\n'
 
         self.assertEqual(info_set.get_id(), [1])
         self.assertEqual(info_set.get_desc(), expected_desc)
         self.assertEqual(info_set.get_name(),
                          'Missing X-Content-Type-Options header')
 
+    @pytest.mark.deprecated
     def test_no_content_sniffing_group_by_domain(self):
         body = ''
         url = URL('https://www.w3af.com/1')
@@ -94,14 +98,14 @@ class TestContentSniffingSecurity(unittest.TestCase):
 
         findings = kb.kb.get('content_sniffing',
                              'content_sniffing')
-        self.assertEquals(len(findings), 1, findings)
+        self.assertEqual(len(findings), 1, findings)
 
         info_set = findings[0]
-        expected_desc = u'The remote web application sent 2 HTTP responses' \
-                        u' which do not contain the X-Content-Type-Options' \
-                        u' header. The first ten URLs which did not send the' \
-                        u' header are:\n - https://www.w3af.com/1\n' \
-                        u' - https://www.w3af.com/2\n'
+        expected_desc = 'The remote web application sent 2 HTTP responses' \
+                        ' which do not contain the X-Content-Type-Options' \
+                        ' header. The first ten URLs which did not send the' \
+                        ' header are:\n - https://www.w3af.com/1\n' \
+                        ' - https://www.w3af.com/2\n'
 
         self.assertEqual(info_set.get_id(), [1, 2])
         self.assertEqual(info_set.get_desc(), expected_desc)

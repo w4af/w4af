@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 import unittest
 
@@ -26,7 +27,10 @@ from w3af.core.controllers.misc.temp_dir import create_temp_dir
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 from w3af.plugins.grep.retirejs import retirejs
 
+from nose.plugins.attrib import attr
 
+
+@attr('internet')
 class TestRetireJSNotAnalyzeHTMLContentType(PluginTest):
 
     target_url = 'http://httpretty'
@@ -41,7 +45,7 @@ class TestRetireJSNotAnalyzeHTMLContentType(PluginTest):
                                    method='GET',
                                    status=200),
                       MockResponse('http://httpretty/js/jquery.js',
-                                   body=file(JQUERY_VULN).read(),
+                                   body=open(JQUERY_VULN).read(),
                                    method='GET',
                                    status=200,
                                    content_type='text/html'),
@@ -61,6 +65,7 @@ class TestRetireJSNotAnalyzeHTMLContentType(PluginTest):
         }
     }
 
+    @pytest.mark.slow
     def test_is_vulnerable_not_detected(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -80,6 +85,7 @@ A JavaScript library with known vulnerabilities was identified at http://httpret
 Consider updating to the latest stable release of the affected library.'''
 
 
+@attr('internet')
 class TestRetireJS(PluginTest):
 
     target_url = 'http://httpretty'
@@ -94,7 +100,7 @@ class TestRetireJS(PluginTest):
                                    method='GET',
                                    status=200),
                       MockResponse('http://httpretty/js/jquery.js',
-                                   body=file(JQUERY_VULN).read(),
+                                   body=open(JQUERY_VULN).read(),
                                    method='GET',
                                    status=200,
                                    content_type='application/javascript'),
@@ -114,6 +120,7 @@ class TestRetireJS(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_is_vulnerable_detected(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -129,6 +136,7 @@ class TestRetireJS(PluginTest):
         self.assertEqual(vuln.get_desc(with_id=False), EXPECTED_VULN_DESC)
 
 
+@attr('internet')
 class TestRetireJSClass(unittest.TestCase):
     def setUp(self):
         create_temp_dir()

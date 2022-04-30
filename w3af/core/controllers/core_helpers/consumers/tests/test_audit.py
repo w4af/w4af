@@ -18,10 +18,11 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import unittest
 import httpretty
 
-from mock import patch, call
+from unittest.mock import patch, call
 
 import w3af.core.data.kb.knowledge_base as kb
 
@@ -32,13 +33,16 @@ from w3af.plugins.audit.xss import xss
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.parsers.doc.url import URL
 
+from nose.plugins.attrib import attr
 
+@attr('suspect')
 class TestAuditConsumer(unittest.TestCase):
 
     def tearDown(self):
         kb.kb.cleanup()
 
     @httpretty.activate
+    @pytest.mark.deprecated
     def test_teardown_with_must_stop_exception(self):
         w3af_core = w3afCore()
 
@@ -78,5 +82,5 @@ class TestAuditConsumer(unittest.TestCase):
             audit_consumer.terminate()
 
             msg = ('Spent 0.00 seconds running xss.end() until a scan must'
-                   ' stop exception was raised.')
+                   ' stop exception was raised')
             self.assertIn(call.debug(msg), om_mock.mock_calls)

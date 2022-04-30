@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import sys
-import Queue
+import queue
 import threading
 
 from itertools import repeat
@@ -59,7 +59,7 @@ class Plugin(Configurable):
         self._w3af_core = None
         self.worker_pool = None
 
-        self.output_queue = Queue.Queue()
+        self.output_queue = queue.Queue()
         self._plugin_lock = threading.RLock()
 
     def set_worker_pool(self, worker_pool):
@@ -98,6 +98,16 @@ class Plugin(Configurable):
 
     def get_w3af_core(self):
         return self._w3af_core
+
+    def has_pending_work(self):
+        """
+        Plugins might start tasks in async threads. Those tasks might be running
+        after the call to audit() or discover() exits. This method is called by
+        the framework to check if any of those tasks is still running.
+
+        :return: True if there are async threads started by the plugin still running
+        """
+        return False
 
     def set_options(self, options_list):
         """
@@ -238,7 +248,7 @@ class Plugin(Configurable):
         #
         # Now the real code:
         func = return_args(func, **kwds)
-        args = zip(repeat(func), iterable)
+        args = list(zip(repeat(func), iterable))
 
         for result in imap_unordered(awre, args):
             # re-raise the thread exception in the main thread with this method
@@ -278,6 +288,9 @@ class Plugin(Configurable):
         om.out.error(msg % args)
 
         return False, no_content_resp
+
+    def __hash__(self):
+        return hash(self.get_name())
 
 
 class UrlOpenerProxy(object):
@@ -323,7 +336,7 @@ class UrlOpenerProxy(object):
         def url_opener_proxy(*args, **kwargs):
             try:
                 return attr(*args, **kwargs)
-            except HTTPRequestException, hre:
+            except HTTPRequestException as hre:
                 #
                 # We get here when **one** HTTP request fails. When more than
                 # one exception fails the URL opener will raise a different
@@ -344,7 +357,7 @@ class UrlOpenerProxy(object):
                 # response and hope for the best.
                 if re_raise:
                     exc_info = sys.exc_info()
-                    raise exc_info[0], exc_info[1], exc_info[2]
+                    raise exc_info[0](exc_info[1]).with_traceback(exc_info[2])
 
                 return result
 

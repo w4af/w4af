@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import re
 import os
 
@@ -76,9 +76,10 @@ class TestWebSpider(PluginTest):
         urls = self.kb.get_all_known_urls()
         found_urls = set(str(u).decode('utf-8') for u in urls)
 
-        self.assertEquals(found_urls, expected_urls)
+        self.assertEqual(found_urls, expected_urls)
 
     @attr('smoke')
+    @pytest.mark.deprecated
     def test_spider_found_urls(self):
         config = self._run_configs['basic']
         expected_files = ['1.html', '2.html', '3.html', '4.html',
@@ -88,30 +89,35 @@ class TestWebSpider(PluginTest):
         self.generic_scan(config, self.follow_links_url,
                           start_url, expected_files)
 
+    @pytest.mark.deprecated
     def test_utf8_urls(self):
         config = self._run_configs['basic']
-        expected_files = [u'vúlnerable.py',
-                          u'é.py',
-                          u'改.py',
-                          u'проверка.py']
+        expected_files = ['vúlnerable.py',
+                          'é.py',
+                          '改.py',
+                          'проверка.py']
         start_url = self.encoding_url + '_utf8/'
 
         self.generic_scan(config, start_url, start_url, expected_files)
 
+    @pytest.mark.deprecated
     def test_euc_jp_urls(self):
         config = self._run_configs['basic']
-        expected_files = [u'raw-qs-jp.py',
-                          u'qs-jp.py']
+        expected_files = ['raw-qs-jp.py',
+                          'qs-jp.py']
         start_url = self.encoding_url + '_euc-jp/'
 
         self.generic_scan(config, start_url, start_url, expected_files)
 
+    @pytest.mark.deprecated
     def test_spider_relative_urls_found_with_regex(self):
         raise SkipTest('FIXME: Need to test this feature!')
 
+    @pytest.mark.deprecated
     def test_spider_traverse_directories(self):
         raise SkipTest('FIXME: Need to test this feature!')
 
+    @pytest.mark.deprecated
     def test_wivet(self):
         clear_wivet()
 
@@ -169,14 +175,14 @@ class TestWebSpider(PluginTest):
         found = set(str(u) for u in urls if inner_pages in str(u) and str(u).endswith('.php'))
         expected = set((self.wivet + inner_pages + end) for end in EXPECTED_URLS)
 
-        self.assertEquals(found, expected)
+        self.assertEqual(found, expected)
 
         #
         #    And now, verify that w3af used only one session to identify these
         #    wivet links.
         #
         stats = extract_all_stats()
-        self.assertEquals(len(stats), 1)
+        self.assertEqual(len(stats), 1)
 
         coverage = get_coverage_for_scan_id(stats[0][0])
         # TODO: Sometimes coverage is 44 and sometimes it is 42!
@@ -192,7 +198,7 @@ def clear_wivet():
     """
     clear_url = get_wivet_http('/offscanpages/remove-all-stats.php?sure=yes')
 
-    response = urllib2.urlopen(clear_url)
+    response = urllib.request.urlopen(clear_url)
     html = response.read()
 
     assert 'Done!' in html, html
@@ -203,7 +209,7 @@ def extract_all_stats():
     :return: A list with all the stats generated during this scan
     """
     stats_url = get_wivet_http('/offscanpages/statistics.php')
-    response = urllib2.urlopen(stats_url)
+    response = urllib.request.urlopen(stats_url)
 
     index_page = response.read()
 
@@ -213,7 +219,7 @@ def extract_all_stats():
 
     for scan_id in re.findall(SCAN_ID_RE, index_page):
         scan_stat_url = SCAN_STATS + scan_id
-        response = urllib2.urlopen(scan_stat_url)
+        response = urllib.request.urlopen(scan_stat_url)
         result.append((scan_id, response.read()))
 
     return result
@@ -222,7 +228,7 @@ def extract_all_stats():
 def get_coverage_for_scan_id(scan_id):
     specific_stats_url = get_wivet_http('/offscanpages/statistics.php?id=%s')
 
-    response = urllib2.urlopen(specific_stats_url % scan_id)
+    response = urllib.request.urlopen(specific_stats_url % scan_id)
     html = response.read()
 
     match_obj = re.search('<span id="coverage">%(.*?)</span>', html)
@@ -250,14 +256,15 @@ class TestRelativePathsIn404(PluginTest):
     TEST_ROOT = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl',
                              'web_spider', '5834')
 
-    GALERIA_HTML = file(os.path.join(TEST_ROOT, 'galeria-root.html')).read()
-    INDEX_HTML = file(os.path.join(TEST_ROOT, 'index.html')).read()
+    GALERIA_HTML = open(os.path.join(TEST_ROOT, 'galeria-root.html')).read()
+    INDEX_HTML = open(os.path.join(TEST_ROOT, 'index.html')).read()
 
     MOCK_RESPONSES = [MockResponse(re.compile('http://mock/galeria/.*'),
                                    GALERIA_HTML),
                       MockResponse('http://mock/', 'Thanks.', method='POST'),
                       MockResponse('http://mock/', INDEX_HTML)]
 
+    @pytest.mark.deprecated
     def test_crawl_404_relative(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -275,7 +282,7 @@ class TestRelativePathsIn404(PluginTest):
         urls = self.kb.get_all_known_urls()
         found_urls = set(str(u).decode('utf-8') for u in urls)
 
-        self.assertEquals(found_urls, expected_urls)
+        self.assertEqual(found_urls, expected_urls)
 
 
 class TestDeadLock(PluginTest):
@@ -299,11 +306,12 @@ class TestDeadLock(PluginTest):
     TEST_ROOT = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl',
                              'web_spider', '5834')
 
-    INDEX_HTML = file(os.path.join(TEST_ROOT, 'index.html')).read()
+    INDEX_HTML = open(os.path.join(TEST_ROOT, 'index.html')).read()
 
     MOCK_RESPONSES = [MockResponse('http://mock/', INDEX_HTML),
                       MockResponse('http://mock/', 'Thanks.', method='POST')]
 
+    @pytest.mark.deprecated
     def test_no_lock(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -335,6 +343,7 @@ class TestFormExclusions(PluginTest):
                       MockResponse('http://mock/out/', 'Thanks.', method='POST'),
                       MockResponse('http://mock/in/', 'Thanks.', method='POST')]
 
+    @pytest.mark.deprecated
     def test_form_exclusions(self):
         user_value = '[{"action": "/out.*"}]'
         cf.cf.save('form_id_list', FormIDMatcherList(user_value))
@@ -354,7 +363,7 @@ class TestFormExclusions(PluginTest):
         urls = self.kb.get_all_known_urls()
         found_urls = set(str(u).decode('utf-8') for u in urls)
 
-        self.assertEquals(found_urls, expected_urls)
+        self.assertEqual(found_urls, expected_urls)
 
         # revert any changes to the default so we don't affect other tests
         cf.cf.save('form_id_list', FormIDMatcherList('[]'))

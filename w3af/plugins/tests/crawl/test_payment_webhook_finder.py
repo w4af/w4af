@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from w3af.core.data.parsers.doc.url import URL
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 from w3af.plugins.crawl.payment_webhook_finder import payment_webhook_finder
@@ -34,7 +35,7 @@ def fill_kb_with_cgi_urls(target_url, add_url):
     :param add_url: The method to use to write to the KB
     :return: None
     """
-    for i in xrange(payment_webhook_finder.MIN_URL_COUNT_FOR_EXTENSION_FILTER + 1):
+    for i in range(payment_webhook_finder.MIN_URL_COUNT_FOR_EXTENSION_FILTER + 1):
         url_str = '%s%s.cgi' % (target_url, i)
         url = URL(url_str)
         add_url(url)
@@ -62,6 +63,8 @@ class TestPaymentWebHookFinderGET(PluginTest):
         'plugins': {'crawl': (PluginConfig('payment_webhook_finder'),)}
     }
 
+    @pytest.mark.deprecated
+    @pytest.mark.slow
     def test_find_using_GET(self):
         fill_kb_with_cgi_urls(self.target_url, self.kb.add_url)
 
@@ -95,6 +98,8 @@ class TestPaymentWebHookFinderPOST(PluginTest):
         'plugins': {'crawl': (PluginConfig('payment_webhook_finder'),)}
     }
 
+    @pytest.mark.deprecated
+    @pytest.mark.slow
     def test_find_using_POST(self):
         fill_kb_with_cgi_urls(self.target_url, self.kb.add_url)
 

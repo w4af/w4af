@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 from lib.core.common import Backend
 from lib.core.common import Format
+from lib.core.common import hashDBRetrieve
+from lib.core.common import hashDBWrite
 from lib.core.data import conf
 from lib.core.data import kb
 from lib.core.data import logger
 from lib.core.enums import DBMS
+from lib.core.enums import FORK
+from lib.core.enums import HASHDB_KEYS
 from lib.core.enums import OS
 from lib.core.session import setDbms
 from lib.core.settings import PGSQL_ALIASES
@@ -22,6 +26,28 @@ class Fingerprint(GenericFingerprint):
         GenericFingerprint.__init__(self, DBMS.PGSQL)
 
     def getFingerprint(self):
+        fork = hashDBRetrieve(HASHDB_KEYS.DBMS_FORK)
+
+        if fork is None:
+            if inject.checkBooleanExpression("VERSION() LIKE '%CockroachDB%'"):
+                fork = FORK.COCKROACHDB
+            elif inject.checkBooleanExpression("VERSION() LIKE '%Redshift%'"):      # Reference: https://dataedo.com/kb/query/amazon-redshift/check-server-version
+                fork = FORK.REDSHIFT
+            elif inject.checkBooleanExpression("VERSION() LIKE '%Greenplum%'"):     # Reference: http://www.sqldbpros.com/wordpress/wp-content/uploads/2014/08/what-version-of-greenplum.png
+                fork = FORK.GREENPLUM
+            elif inject.checkBooleanExpression("VERSION() LIKE '%Yellowbrick%'"):   # Reference: https://www.yellowbrick.com/docs/3.3/ybd_sqlref/version.html
+                fork = FORK.YELLOWBRICK
+            elif inject.checkBooleanExpression("VERSION() LIKE '%EnterpriseDB%'"):  # Reference: https://www.enterprisedb.com/edb-docs/d/edb-postgres-advanced-server/user-guides/user-guide/11/EDB_Postgres_Advanced_Server_Guide.1.087.html
+                fork = FORK.ENTERPRISEDB
+            elif inject.checkBooleanExpression("VERSION() LIKE '%YB-%'"):           # Reference: https://github.com/yugabyte/yugabyte-db/issues/2447#issue-499562926
+                fork = FORK.YUGABYTEDB
+            elif inject.checkBooleanExpression("AURORA_VERSION() LIKE '%'"):        # Reference: https://aws.amazon.com/premiumsupport/knowledge-center/aurora-version-number/
+                fork = FORK.AURORA
+            else:
+                fork = ""
+
+            hashDBWrite(HASHDB_KEYS.DBMS_FORK, fork)
+
         value = ""
         wsOsFp = Format.getOs("web server", kb.headersFp)
 
@@ -38,6 +64,8 @@ class Fingerprint(GenericFingerprint):
 
         if not conf.extensiveFp:
             value += DBMS.PGSQL
+            if fork:
+                value += " (%s fork)" % fork
             return value
 
         actVer = Format.getDbms()
@@ -45,14 +73,19 @@ class Fingerprint(GenericFingerprint):
         value += "active fingerprint: %s" % actVer
 
         if kb.bannerFp:
-            banVer = kb.bannerFp["dbmsVersion"] if 'dbmsVersion' in kb.bannerFp else None
-            banVer = Format.getDbms([banVer])
-            value += "\n%sbanner parsing fingerprint: %s" % (blank, banVer)
+            banVer = kb.bannerFp.get("dbmsVersion")
+
+            if banVer:
+                banVer = Format.getDbms([banVer])
+                value += "\n%sbanner parsing fingerprint: %s" % (blank, banVer)
 
         htmlErrorFp = Format.getErrorParsedDBMSes()
 
         if htmlErrorFp:
             value += "\n%shtml error message fingerprint: %s" % (blank, htmlErrorFp)
+
+        if fork:
+            value += "\n%sfork fingerprint: %s" % (blank, fork)
 
         return value
 
@@ -60,7 +93,7 @@ class Fingerprint(GenericFingerprint):
         """
         References for fingerprint:
 
-        * http://www.postgresql.org/docs/9.1/interactive/release.html (up to 9.1.3)
+        * https://www.postgresql.org/docs/current/static/release.html
         """
 
         if not conf.extensiveFp and Backend.isDbmsWithin(PGSQL_ALIASES):
@@ -73,7 +106,8 @@ class Fingerprint(GenericFingerprint):
         infoMsg = "testing %s" % DBMS.PGSQL
         logger.info(infoMsg)
 
-        result = inject.checkBooleanExpression("[RANDNUM]::int=[RANDNUM]")
+        # NOTE: Vertica works too without the CONVERT_TO()
+        result = inject.checkBooleanExpression("CONVERT_TO('[RANDSTR]', QUOTE_IDENT(NULL)) IS NULL")
 
         if result:
             infoMsg = "confirming %s" % DBMS.PGSQL
@@ -97,8 +131,18 @@ class Fingerprint(GenericFingerprint):
             infoMsg = "actively fingerprinting %s" % DBMS.PGSQL
             logger.info(infoMsg)
 
-            if inject.checkBooleanExpression("TO_JSONB(1) IS NOT NULL"):
-                Backend.setVersion(">= 9.5.0")
+            if inject.checkBooleanExpression("GEN_RANDOM_UUID() IS NOT NULL"):
+                Backend.setVersion(">= 13.0")
+            elif inject.checkBooleanExpression("SINH(0)=0"):
+                Backend.setVersion(">= 12.0")
+            elif inject.checkBooleanExpression("SHA256(NULL) IS NULL"):
+                Backend.setVersion(">= 11.0")
+            elif inject.checkBooleanExpression("XMLTABLE(NULL) IS NULL"):
+                Backend.setVersionList([">= 10.0", "< 11.0"])
+            elif inject.checkBooleanExpression("SIND(0)=0"):
+                Backend.setVersionList([">= 9.6.0", "< 10.0"])
+            elif inject.checkBooleanExpression("TO_JSONB(1) IS NOT NULL"):
+                Backend.setVersionList([">= 9.5.0", "< 9.6.0"])
             elif inject.checkBooleanExpression("JSON_TYPEOF(NULL) IS NULL"):
                 Backend.setVersionList([">= 9.4.0", "< 9.5.0"])
             elif inject.checkBooleanExpression("ARRAY_REPLACE(NULL,1,1) IS NULL"):

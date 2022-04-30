@@ -21,10 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import time
 import unittest
-import SocketServer
+import socketserver
 
+import pytest
 from nose.plugins.attrib import attr
-from mock import Mock
+from unittest.mock import Mock
 
 from w3af.core.data.url.extended_urllib import ExtendedUrllib
 from w3af.core.data.url.constants import (MAX_ERROR_COUNT,
@@ -52,6 +53,7 @@ class TestXUrllibTimeout(unittest.TestCase):
     def tearDown(self):
         self.uri_opener.end()
 
+    @pytest.mark.deprecated
     def test_timeout(self):
         upper_daemon = UpperDaemon(TimeoutTCPHandler)
         upper_daemon.start()
@@ -69,9 +71,9 @@ class TestXUrllibTimeout(unittest.TestCase):
 
         try:
             self.uri_opener.GET(url)
-        except HTTPRequestException, hre:
-            self.assertEqual(hre.message, 'HTTP timeout error')
-        except Exception, e:
+        except HTTPRequestException as hre:
+            self.assertEqual(hre.value, 'HTTP timeout error')
+        except Exception as e:
             msg = 'Not expecting: "%s"'
             self.assertTrue(False, msg % e.__class__.__name__)
         else:
@@ -81,6 +83,7 @@ class TestXUrllibTimeout(unittest.TestCase):
         self.uri_opener.settings.set_default_values()
         self.assertLess(end-start, 1.5)
 
+    @pytest.mark.deprecated
     def test_timeout_ssl(self):
         ssl_daemon = RawSSLDaemon(TimeoutTCPHandler)
         ssl_daemon.start()
@@ -107,6 +110,7 @@ class TestXUrllibTimeout(unittest.TestCase):
         # the headers
         self.assertLess(end-start, 80)
 
+    @pytest.mark.slow
     def test_timeout_many(self):
         upper_daemon = UpperDaemon(TimeoutTCPHandler)
         upper_daemon.start()
@@ -123,17 +127,17 @@ class TestXUrllibTimeout(unittest.TestCase):
         http_request_e = 0
         scan_stop_e = 0
 
-        for _ in xrange(MAX_ERROR_COUNT):
+        for _ in range(MAX_ERROR_COUNT):
             try:
                 self.uri_opener.GET(url)
-            except HTTPRequestException, hre:
+            except HTTPRequestException as hre:
                 http_request_e += 1
-                self.assertEqual(hre.message, 'HTTP timeout error')
+                self.assertEqual(hre.value, 'HTTP timeout error')
             except ScanMustStopException:
                 scan_stop_e += 1
                 self.assertTrue(True)
                 break
-            except Exception, e:
+            except Exception as e:
                 msg = 'Not expecting: "%s"'
                 self.assertTrue(False, msg % e.__class__.__name__)
             else:
@@ -145,6 +149,7 @@ class TestXUrllibTimeout(unittest.TestCase):
         self.assertEqual(http_request_e, 4)
         self.assertEqual(scan_stop_e, 1)
 
+    @pytest.mark.deprecated
     def test_timeout_auto_adjust(self):
         upper_daemon = UpperDaemon(Ok200SmallDelayHandler)
         upper_daemon.start()
@@ -172,7 +177,7 @@ class TestXUrllibTimeout(unittest.TestCase):
         self.uri_opener.GET(url)
         time.sleep(TIMEOUT_UPDATE_ELAPSED_MIN + 1)
 
-        for _ in xrange(TIMEOUT_ADJUST_LIMIT * 3):
+        for _ in range(TIMEOUT_ADJUST_LIMIT * 3):
             try:
                 self.uri_opener.GET(url)
             except Exception:
@@ -216,13 +221,13 @@ class TestXUrllibTimeout(unittest.TestCase):
         self.uri_opener.GET(url)
         time.sleep(TIMEOUT_UPDATE_ELAPSED_MIN + 1)
 
-        for _ in xrange(TIMEOUT_ADJUST_LIMIT * 3):
+        for _ in range(TIMEOUT_ADJUST_LIMIT * 3):
             self.uri_opener.GET(url)
 
         # These make sure that the HTTP connection pool is full, this is
         # required because we want to check if the timeout applies to
         # existing connections, not new ones
-        for _ in xrange(ConnectionManager.MAX_CONNECTIONS):
+        for _ in range(ConnectionManager.MAX_CONNECTIONS_PER_HOST):
             self.uri_opener.GET(url)
 
         # Make sure we reached the desired timeout after our HTTP
@@ -245,7 +250,7 @@ class TestXUrllibTimeout(unittest.TestCase):
         self.assertRaises(Exception, self.uri_opener.GET, timeout_url)
 
 
-class Ok200SmallDelayHandler(SocketServer.BaseRequestHandler):
+class Ok200SmallDelayHandler(socketserver.BaseRequestHandler):
     body = 'abc'
     sleep = 0.1
 
@@ -258,7 +263,7 @@ class Ok200SmallDelayHandler(SocketServer.BaseRequestHandler):
                              '\r\n' + self.body)
 
 
-class Ok200SmallDelayWithLongTriggeredTimeoutHandler(SocketServer.BaseRequestHandler):
+class Ok200SmallDelayWithLongTriggeredTimeoutHandler(socketserver.BaseRequestHandler):
     body = 'abc'
     regular_sleep = 0.1
     long_sleep = 7.0

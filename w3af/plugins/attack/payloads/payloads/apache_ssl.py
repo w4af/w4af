@@ -55,7 +55,7 @@ class apache_ssl(Payload):
             rows.append(['Description', 'Value'])
             rows.append([])
             for key_name in api_result:
-                for desc, value in api_result[key_name].iteritems():
+                for desc, value in api_result[key_name].items():
                     rows.append([desc, value])
             result_table = table(rows)
             result_table.draw(80)

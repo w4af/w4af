@@ -121,7 +121,7 @@ class file_upload(AttackPlugin):
         # this will return the shell_handler.SHELL_IDENTIFIER if success
         dst = vuln_obj['file_dest']
         exploit_url = dst.get_domain_path().url_join(file_name)
-        exploit_url.querystring = u'cmd='
+        exploit_url.querystring = 'cmd='
         response = self._uri_opener.GET(exploit_url)
 
         if shell_handler.SHELL_IDENTIFIER in response.get_body():
@@ -193,7 +193,7 @@ class FileUploadShell(ExecShell):
         :return: The result of the command.
         """
         to_send = self.get_exploit_url()
-        to_send.querystring = u'cmd=' + command
+        to_send.querystring = 'cmd=' + command
         response = self._uri_opener.GET(to_send)
         return shell_handler.extract_result(response.get_body())
 

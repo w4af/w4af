@@ -9,7 +9,7 @@ ERRORS_RE = [re.compile('Unhandled exception "(.*?)"'),
              re.compile('scan was able to continue by ignoring those'),
              re.compile('The scan will stop')]
 
-IGNORES = [u'The fuzzable request router loop will break']
+IGNORES = ['The fuzzable request router loop will break']
 
 
 # Original log line without any issues:

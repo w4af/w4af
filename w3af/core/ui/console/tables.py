@@ -19,11 +19,15 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+from functools import cmp_to_key
+
 import w3af.core.controllers.output_manager as om
 
 from w3af.core.ui.console.io.console import terminal_width
 from w3af.core.ui.console.util import formatParagraph
 
+def cmp(a, b):
+    return (a > b) - (a < b)
 
 class table(object):
     """
@@ -38,7 +42,7 @@ class table(object):
         """
         self._rows = rows
         self._colsNum = len(self._rows[0])
-        self._colsRange = range(self._colsNum)
+        self._colsRange = list(range(self._colsNum))
         self._separator = '|'
 
     def draw(self, termWidth=terminal_width(), header=False, group=None, transf=None):
@@ -65,7 +69,7 @@ class table(object):
         space = termWidth - self._colsNum * (ls + 2) - ls  # Useful space
 
         #maximal length of content for every column
-        maxLengths = [max([max(map(len, row[i].split('\n'))) for row in self._rows if len(row) > 0])
+        maxLengths = [max([max(list(map(len, row[i].split('\n')))) for row in self._rows if len(row) > 0])
                       for i in self._colsRange]
         sumMaxLen = sum(maxLengths)
 
@@ -82,12 +86,12 @@ class table(object):
         This function acts as Robin Hood: it takes excess of space from the "richest" column and gives it
         to the poorest ones.
         """
-        minLengths = [max([max(map(len, row[i].split() + [''])) for row in self._rows if len(row) > 0])
+        minLengths = [max([max(list(map(len, row[i].split() + ['']))) for row in self._rows if len(row) > 0])
                       for i in range(self._colsNum)]
         shifts = [w - mw for mw, w in zip(minLengths, self._widthes)]
         #length = len(shifts)
-        borrow = zip(self._colsRange, shifts)
-        borrow.sort(lambda a, b: cmp(a[1], b[1]))
+        borrow = list(zip(self._colsRange, shifts))
+        borrow.sort(key=cmp_to_key(lambda a, b: cmp(a[1], b[1])))
         delta = [0] * self._colsNum
 
         donorIdx = self._colsNum - 1
@@ -127,7 +131,7 @@ class table(object):
         columns = [formatParagraph(col, w) for col, w in zip(row,
                                                              self._widthes)]
         emptyLines = [' ' * w for w in self._widthes]
-        maxHeight = max(map(len, columns))
+        maxHeight = max(list(map(len, columns)))
         columns = [col + [er] * (maxHeight - len(col)) for (col,
                                                             er) in zip(columns, emptyLines)]
 

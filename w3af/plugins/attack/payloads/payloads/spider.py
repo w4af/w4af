@@ -24,7 +24,7 @@ class spider(Payload):
             I use this as a start point.
             """
             payload_result = self.exec_payload('apache_config_files')
-            payload_files = payload_result['apache_config'].keys()
+            payload_files = list(payload_result['apache_config'].keys())
 
             key_payloads = ['dhcp_config_files', 'dns_config_files',
                             'dns_config_files', 'ftp_config_files',
@@ -36,7 +36,7 @@ class spider(Payload):
             for keyed_payload in key_payloads:
                 payload_result = self.exec_payload(keyed_payload)
                 if isinstance(payload_result, dict):
-                    payload_files.extend(payload_result.keys())
+                    payload_files.extend(list(payload_result.keys()))
 
             #    This increases the run time of this plugin a lot!
             """

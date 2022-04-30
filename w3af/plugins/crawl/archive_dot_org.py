@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
-from itertools import izip, repeat
+from itertools import repeat
 
 import w3af.core.controllers.output_manager as om
 from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
@@ -43,7 +43,7 @@ class archive_dot_org(CrawlPlugin):
     """
 
     ARCHIVE_START_URL = 'http://web.archive.org/web/*/%s'
-    INTERESTING_URLS_RE = '<a href="(http://web\.archive\.org/web/\d*?/https?://%s/.*?)"'
+    INTERESTING_URLS_RE = r'<a href="(http://web\.archive\.org/web/\d*?/https?://%s/.*?)"'
     NOT_IN_ARCHIVE = '<p>Wayback Machine doesn&apos;t have that page archived.</p>'
 
     def __init__(self):
@@ -157,7 +157,7 @@ class archive_dot_org(CrawlPlugin):
                 om.out.debug(msg)
                 return new_urls
 
-        args = izip(url_list, repeat(max_depth), repeat(domain))
+        args = zip(url_list, repeat(max_depth), repeat(domain))
         self.worker_pool.map_multi_args(spider_worker, args)
 
         return list(set(res))

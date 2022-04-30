@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import gtk
+from gi.repository import Gtk as gtk
 
 RENDERING_ENGINES = {'webkit': False,
                      'gtkhtml2': False,
@@ -120,14 +120,14 @@ class GtkHtmlRenderingView(RenderingView):
             document.write_stream(obj.get_body())
             document.close_stream()
             self._renderingWidget.set_document(document)
-        except ValueError, ve:
+        except ValueError as ve:
             # I get here when the mime type is an image or something that I
             # can't display
             pass
-        except Exception, e:
-            print _('gtkhtml2 exception:'), type(e), str(e)
-            print _('Please report this issue here:')
-            print 'https://github.com/andresriancho/w3af/issues/new'
+        except Exception as e:
+            print(_('gtkhtml2 exception:'), type(e), str(e))
+            print(_('Please report this issue here:'))
+            print('https://github.com/andresriancho/w3af/issues/new')
 
     def clear(self):
         """Clear view."""
@@ -153,7 +153,7 @@ class MozRenderingView(RenderingView):
         # mimeType = obj.content_type
         if obj.is_text_or_html():
             self._renderingWidget.render_data(obj.get_body(
-            ), long(len(obj.get_body())), str(obj.get_uri()), mime_type)
+            ), int(len(obj.get_body())), str(obj.get_uri()), mime_type)
 
     def clear(self):
         """Clear view."""

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import json
 import os
 
@@ -50,6 +51,7 @@ class TestJsonOutput(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_found_vuln(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -59,19 +61,19 @@ class TestJsonOutput(PluginTest):
 
         self.assertEqual(len(kb_vulns), 1, kb_vulns)
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_url() for v in kb_vulns])),
             set(sorted([v.get_url() for v in file_vulns])),
             set(sorted([v.get_url() for v in kb_vulns])),
         )
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_name() for v in kb_vulns])),
             set(sorted([v.get_name() for v in file_vulns])),
             set(sorted([v.get_name() for v in kb_vulns]))
         )
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_plugin_name() for v in kb_vulns])),
             set(sorted([v.get_plugin_name() for v in file_vulns])),
             set(sorted([v.get_plugin_name() for v in kb_vulns]))

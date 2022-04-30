@@ -43,11 +43,11 @@ def handle_exceptions(w3af_core):
         create_crash_file(edata_str)
 
     msg = 'Complete information related to the exceptions is available at "%s"'
-    print msg % gettempdir()
+    print(msg % gettempdir())
 
     # We do this because it would be both awful and useless to simply
     # print all exceptions one below the other in the console
-    print w3af_core.exception_handler.generate_summary_str()
+    print(w3af_core.exception_handler.generate_summary_str())
 
     # Create the dialog that allows the user to send the bugs, potentially more
     # than one since we captured all of them during the scan using the new

@@ -18,16 +18,19 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 import subprocess
 import datetime
 import sys
 
+from nose.plugins.attrib import attr
+
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
 from w3af.core.data.db.startup_cfg import StartUpConfig
 
-
+@attr('gui')
 class TestAutoUpdate(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'auto_update', 'images')
@@ -50,6 +53,7 @@ class TestAutoUpdate(XpresserUnittest):
         startup_cfg.last_upd = datetime.date.today()
         startup_cfg.save()
         
+    @pytest.mark.deprecated
     def test_disclaimer_shown_accept(self):
         startup_cfg = StartUpConfig()
         startup_cfg.last_upd = datetime.date.today() - datetime.timedelta(days=3)

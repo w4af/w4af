@@ -19,11 +19,13 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
-import ConfigParser
+import codecs
+import configparser
 
 from datetime import datetime, date, timedelta
 
 from w3af.core.controllers.misc.home_dir import get_home_dir
+from w3af.core.data.constants.encodings import UTF8
 
 
 class StartUpConfig(object):
@@ -49,7 +51,7 @@ class StartUpConfig(object):
         self._start_cfg_file = cfg_file
         self._start_section = 'STARTUP_CONFIG'
 
-        self._config = ConfigParser.ConfigParser()
+        self._config = configparser.ConfigParser()
         configs = self._load_cfg()
 
         (self._autoupd, self._freq, self._lastupd, self._last_commit_id,
@@ -90,7 +92,7 @@ class StartUpConfig(object):
         return self._last_commit_id
 
     def set_last_commit_id(self, commit_id):
-        if not isinstance(commit_id, basestring):
+        if not isinstance(commit_id, str):
             raise TypeError('Expected string got %s instead.' % type(commit_id))
         
         self._last_commit_id = commit_id
@@ -125,36 +127,40 @@ class StartUpConfig(object):
             for key in self.DEFAULTS:
                 config.set(startsection, key, defaults[key])
 
-        # Read from file
-        config.read(self._start_cfg_file)
-
-        auto_upd = self._get_bool_val('auto-update')
-        accepted_disclaimer = self._get_bool_val('accepted-disclaimer')
-        skip_dependencies_check = self._get_bool_val('skip-dependencies-check')
-
-        freq = config.get(startsection, 'frequency', raw=True).upper()
-        if freq not in (StartUpConfig.FREQ_DAILY, StartUpConfig.FREQ_WEEKLY,
-                        StartUpConfig.FREQ_MONTHLY):
-            freq = StartUpConfig.FREQ_DAILY
-
-        lastupdstr = config.get(startsection, 'last-update', raw=True).upper()
-        # Try to parse it
         try:
-            lastupd = datetime.strptime(lastupdstr, self.ISO_DATE_FMT).date()
-        except:
-            # Provide default value that enforces the update to happen
-            lastupd = date.today() - timedelta(days=31)
-        try:
-            lastrev = config.get(startsection, 'last-commit')
-        except TypeError:
-            lastrev = 0
-        return (auto_upd, freq, lastupd, lastrev, accepted_disclaimer, skip_dependencies_check)
+            # Read from file
+            with codecs.open(self._start_cfg_file, "r", UTF8) as config_file:
+                config.read_file(config_file)
+
+                auto_upd = self._get_bool_val('auto-update')
+                accepted_disclaimer = self._get_bool_val('accepted-disclaimer')
+                skip_dependencies_check = self._get_bool_val('skip-dependencies-check')
+
+                freq = config.get(startsection, 'frequency', raw=True).upper()
+                if freq not in (StartUpConfig.FREQ_DAILY, StartUpConfig.FREQ_WEEKLY,
+                                StartUpConfig.FREQ_MONTHLY):
+                    freq = StartUpConfig.FREQ_DAILY
+
+                lastupdstr = config.get(startsection, 'last-update', raw=True).upper()
+                # Try to parse it
+                try:
+                    lastupd = datetime.strptime(lastupdstr, self.ISO_DATE_FMT).date()
+                except:
+                    # Provide default value that enforces the update to happen
+                    lastupd = date.today() - timedelta(days=31)
+                try:
+                    lastrev = config.get(startsection, 'last-commit')
+                except TypeError:
+                    lastrev = 0
+                return (auto_upd, freq, lastupd, lastrev, accepted_disclaimer, skip_dependencies_check)
+        except FileNotFoundError as fnf:
+            return (False, StartUpConfig.FREQ_DAILY, date.today() - timedelta(days=31), '', False, False)
 
     def save(self):
         """
         Saves current values to cfg file
         """
-        with open(self._start_cfg_file, 'wb') as configfile:
+        with open(self._start_cfg_file, 'w') as configfile:
             self._config.write(configfile)
     
     ### PROPERTIES #

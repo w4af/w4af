@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import httpretty
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
@@ -43,17 +44,18 @@ class TestUnSSL(PluginTest):
         super(TestUnSSL, self).setUp()
         self._register_httpretty_uri('https', 'httpretty', 443)
 
+    @pytest.mark.deprecated
     def test_found_unssl(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
 
         vulns = self.kb.get('un_ssl', 'un_ssl')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEquals(vuln.get_name(), 'Secure content over insecure channel')
-        self.assertEquals(vuln.get_url().url_string, 'http://httpretty/')
+        self.assertEqual(vuln.get_name(), 'Secure content over insecure channel')
+        self.assertEqual(vuln.get_url().url_string, 'http://httpretty/')
 
 
 class TestNotFoundUnSSL(PluginTest):
@@ -73,6 +75,7 @@ class TestNotFoundUnSSL(PluginTest):
     }
 
     @httpretty.activate
+    @pytest.mark.deprecated
     def test_not_found_unssl(self):
         httpretty.register_uri(httpretty.GET, self.target_url,
                                body='This is NOT SECURE')
@@ -84,4 +87,4 @@ class TestNotFoundUnSSL(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
 
         vulns = self.kb.get('un_ssl', 'un_ssl')
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))

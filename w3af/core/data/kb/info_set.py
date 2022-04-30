@@ -144,14 +144,14 @@ class InfoSet(object):
             return self.first_info.get_desc(with_id=with_id)
 
         # We render the template using the information set data
-        context = {'urls': [smart_unicode(u) for u in self.get_urls()],
-                   'uris': [smart_unicode(u) for u in self.get_uris()],
+        context = {'urls': sorted([smart_unicode(u) for u in self.get_urls()]),
+                   'uris': sorted([smart_unicode(u) for u in self.get_uris()]),
                    'severity': self.get_severity(),
                    'name': self.get_name(),
                    'id': self.get_id(),
                    'method': smart_unicode(self.get_method()),
                    'plugin': self.get_plugin_name()}
-        context.update(self.first_info.items())
+        context.update(list(self.first_info.items()))
 
         template_str = textwrap.dedent(self.TEMPLATE)
         template = self.JINJA2_ENV.from_string(template_str)
@@ -228,7 +228,7 @@ class InfoSet(object):
         references = None
         owasp_top_10_references = None
 
-        for k, v in self.first_info.iteritems():
+        for k, v in self.first_info.items():
             attributes[str(k)] = str(v)
 
         if self.has_db_details():

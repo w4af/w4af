@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro
 
 from .kali import Kali
 
@@ -29,6 +29,6 @@ class Kali2(Kali):
 
     @staticmethod
     def is_current_platform():
-        return 'Kali' in platform.dist() and '2.0' in platform.dist()
+        return 'Kali' in distro.linux_distribution() and '2.0' in distro.linux_distribution()
 
 

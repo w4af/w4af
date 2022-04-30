@@ -19,8 +19,9 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import abc
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import json
 
 from w3af.core.controllers import output_manager as om
@@ -137,7 +138,7 @@ class GoogleAPISearch(object):
         if self._status == IS_NEW:
             try:
                 self._pages = self._do_google_search()
-            except BaseFrameworkException, w3:
+            except BaseFrameworkException as w3:
                 om.out.debug('%s' % w3)
                 self._status = FINISHED_BAD
             else:
@@ -166,6 +167,7 @@ class GoogleAPISearch(object):
 
         return self._uri_opener.GET(url, headers=headers, follow_redirects=True)
 
+    @abc.abstractmethod
     def _do_google_search(self):
         """
         Perform the google search based on implementation. This method has
@@ -173,6 +175,7 @@ class GoogleAPISearch(object):
         """
         pass
 
+    @abc.abstractmethod
     def _extract_links(self, pages):
         """
         Return list of URLs found in pages. Must be overridden by subclasses.
@@ -215,14 +218,14 @@ class GAjaxSearch(GoogleAPISearch):
             # Build param dict; then encode it
             params_dict = {'v': '1.0', 'q': self._query,
                            'rsz': size, 'start': start}
-            params = urllib.urlencode(params_dict)
+            params = urllib.parse.urlencode(params_dict)
 
             google_url_instance = URL(self.GOOGLE_AJAX_SEARCH_URL + params)
 
             # Do the request
             try:
                 resp = self._do_GET(google_url_instance)
-            except Exception, e:
+            except Exception as e:
                 msg = 'Failed to GET google.com AJAX API: "%s"'
                 raise BaseFrameworkException(msg % e)
 
@@ -269,7 +272,7 @@ class GStandardSearch(GoogleAPISearch):
     GOOGLE_SEARCH_URL = 'http://www.google.com/search?'
 
     # TODO: Update this, it changes!!
-    REGEX_STRING = 'class="r"><a href="/url\?q=(.*?)&amp;sa=U'
+    REGEX_STRING = r'class="r"><a href="/url\?q=(.*?)&amp;sa=U'
 
     # Used to find out if google will return more items
     NEXT_PAGE_STR = '<strong>Next</strong></a></td>'
@@ -293,7 +296,7 @@ class GStandardSearch(GoogleAPISearch):
         there_is_more = True
 
         while start < max_start and there_is_more:
-            params = urllib.urlencode({'hl': 'en',
+            params = urllib.parse.urlencode({'hl': 'en',
                                        'q': self._query,
                                        'start': start,
                                        'sa': 'N'})
@@ -325,7 +328,7 @@ class GStandardSearch(GoogleAPISearch):
         for resp in pages:
             for url in re.findall(self.REGEX_STRING, resp.get_body()):
                 # Parse the URL
-                url = urllib.unquote_plus(url)
+                url = urllib.parse.unquote_plus(url)
 
                 # Google sometimes returns a result that doesn't have a
                 # protocol we add a default protocol (http)
@@ -361,7 +364,7 @@ class GMobileSearch(GStandardSearch):
 
     # Used to extract URLs from Google responses
     # Keep me updated!
-    REGEX_STRING = 'class="r"><a href="/url\?q=(.*?)&amp;sa=U'
+    REGEX_STRING = r'class="r"><a href="/url\?q=(.*?)&amp;sa=U'
 
     # Used to find out if google will return more items.
     # Keep me updated!
@@ -388,7 +391,7 @@ class GMobileSearch(GStandardSearch):
 
         while start < max_start and there_is_more:
             param_dict['start'] = start
-            params = urllib.urlencode(param_dict)
+            params = urllib.parse.urlencode(param_dict)
 
             gm_url = self.GOOGLE_SEARCH_URL + params
             gm_url_instance = URL(gm_url)

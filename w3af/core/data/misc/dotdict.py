@@ -12,7 +12,7 @@ class dotdict(dict):
         :param value: The value (string, unicode or anything else)
         :return: None
         """
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             value = smart_unicode(value)
 
         self[key] = value

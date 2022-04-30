@@ -35,8 +35,8 @@ def main():
     """
     try:
         args = process_cmd_args_config(app)
-    except argparse.ArgumentTypeError, ate:
-        print('%s' % ate)
+    except argparse.ArgumentTypeError as ate:
+        print(('%s' % ate))
         return 1
 
     # And finally start the app:
@@ -51,8 +51,8 @@ def main():
             app.run(host=app.config['HOST'], port=app.config['PORT'],
                     debug=args.verbose, use_reloader=False, threaded=True,
                     ssl_context=cert_key)
-    except socket.error, se:
-        print('Failed to start REST API server: %s' % se.strerror)
+    except socket.error as se:
+        print(('Failed to start REST API server: %s' % se.strerror))
         return 1
 
     return 0

@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from itertools import repeat, izip
+from itertools import repeat
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.knowledge_base as kb
@@ -143,7 +143,7 @@ class open_api(CrawlPlugin):
 
         self._first_run = False
 
-        args = izip(
+        args = zip(
             self._spec_url_generator_common(fuzzable_request),
             repeat(debugging_id)
         )
@@ -167,7 +167,7 @@ class open_api(CrawlPlugin):
         #
         qs = spec_url.get_querystring()
 
-        for key, values in self._query_string_auth.iteritems():
+        for key, values in self._query_string_auth.items():
             qs[key] = values
 
         spec_url.set_querystring(qs)
@@ -321,11 +321,11 @@ class open_api(CrawlPlugin):
         query_string = uri.get_querystring()
 
         if self._header_auth:
-            for header_name, header_value in self._header_auth.iteritems():
+            for header_name, header_value in self._header_auth.items():
                 headers[header_name] = header_value
 
         if self._query_string_auth:
-            for qs_param, qs_value in self._query_string_auth.iteritems():
+            for qs_param, qs_value in self._query_string_auth.items():
                 query_string[qs_param] = qs_value
 
         uri.set_querystring(query_string)
@@ -386,7 +386,7 @@ class open_api(CrawlPlugin):
 
         :return: None, we send everything we find to the core.
         """
-        args = izip(
+        args = zip(
             self._spec_url_generator_current_path(fuzzable_request),
             repeat(debugging_id)
         )

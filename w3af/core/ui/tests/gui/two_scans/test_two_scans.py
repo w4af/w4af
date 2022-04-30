@@ -18,14 +18,17 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 
 from nose.plugins.skip import SkipTest
+from nose.plugins.attrib import attr
 
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
 
 
+@attr('gui')
 class TestTwoScans(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'two_scans', 'images')
@@ -42,6 +45,7 @@ class TestTwoScans(XpresserUnittest):
         self.xp.load_images(self.SCAN_IMAGES_1)
         self.xp.load_images(self.SCAN_IMAGES_2)
     
+    @pytest.mark.deprecated
     def test_two_scans(self):
         raise SkipTest('See comment below in run_scan_2')
     
@@ -68,7 +72,7 @@ class TestTwoScans(XpresserUnittest):
     def run_scan_2(self):
         self.double_click('previous_target')
         self.type(['<Home>'], False)
-        for _ in xrange(len(self.TARGET_1)): self.type(['<Delete>'], False)
+        for _ in range(len(self.TARGET_1)): self.type(['<Delete>'], False)
 
         # This type() seems to trigger the same bug I get in prompt.py:
         # https://github.com/andresriancho/w3af/issues/228

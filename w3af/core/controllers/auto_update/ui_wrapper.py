@@ -43,9 +43,9 @@ class UIUpdater(object):
         vmngr = getattr(self, '__vmngr', None)
         if vmngr is None:
             vmngr = VersionMgr(log=self._logger)
-            [setattr(vmngr, n, c) for n, c in self._callbacks.items()]
+            [setattr(vmngr, n, c) for n, c in list(self._callbacks.items())]
             [vmngr.register(ev, val[0], val[1]) for ev, val in
-             self._registries.items()]
+             list(self._registries.items())]
             setattr(self, '__vmngr', vmngr)
         return vmngr
 
@@ -63,7 +63,7 @@ class UIUpdater(object):
                 self._handle_update_output(resp)
             except KeyboardInterrupt:
                 pass
-            except Exception, ex:
+            except Exception as ex:
                 self._logger('An error occurred while updating: "%s"' % ex)
 
             # TODO: Please read https://github.com/andresriancho/w3af/issues/6
@@ -84,4 +84,4 @@ class UIUpdater(object):
         raise NotImplementedError("Must be implemented by subclass")
 
     def _log(self, msg):
-        print msg
+        print(msg)

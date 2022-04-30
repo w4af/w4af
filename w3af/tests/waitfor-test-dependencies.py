@@ -2,7 +2,7 @@
 
 import sys
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 LOOPS = 25
 DELAY = 1
@@ -25,23 +25,23 @@ TEST_DEPENDENCIES = [('http://127.0.0.1:8000', None),
 
 def is_online(url, match_string):
     try:
-        content = urllib2.urlopen(url).read()
-    except urllib2.HTTPError, e:
+        content = urllib.request.urlopen(url).read()
+    except urllib.error.HTTPError as e:
         content = e.read()
-    except Exception, e:
-        print('%s is offline (%s)' % (url, e.__class__.__name__))
+    except Exception as e:
+        print(('%s is offline (%s)' % (url, e.__class__.__name__)))
         return False
 
     if match_string is None:
-        print('%s is UP' % url)
+        print(('%s is UP' % url))
         return True
 
     elif match_string in content:
-        print('%s is UP and matches string' % url)
+        print(('%s is UP and matches string' % url))
         return True
 
     else:
-        print('%s is UP but string does NOT match' % url)
+        print(('%s is UP but string does NOT match' % url))
 
     return False
 
@@ -50,7 +50,7 @@ def waitfor_test_dependencies():
     print('Waiting for dependencies to be up...\n\n')
     is_available = []
 
-    for _ in xrange(LOOPS):
+    for _ in range(LOOPS):
         time.sleep(DELAY)
 
         for url, match_string in TEST_DEPENDENCIES:
@@ -71,7 +71,7 @@ def wait_until_stable():
     print('\n\nWaiting for dependencies to be stable...\n\n')
     test_results = {}
 
-    for _ in xrange(LOOPS):
+    for _ in range(LOOPS):
         time.sleep(DELAY)
 
         for url, match_string in TEST_DEPENDENCIES:
@@ -85,7 +85,7 @@ def wait_until_stable():
 
     up_count_summary = []
 
-    for up_count in test_results.itervalues():
+    for up_count in test_results.values():
         up_count_summary.append(up_count >= STABLE_LOOPS)
 
     if not all(up_count_summary):

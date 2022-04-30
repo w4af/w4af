@@ -89,7 +89,7 @@ class TookLine(object):
         if self._debugging_id:
             method_params['did'] = self._debugging_id
 
-        params_str = ','.join('%s="%s"' % (key, value) for key, value in method_params.iteritems())
+        params_str = ','.join('%s="%s"' % (key, value) for key, value in method_params.items())
 
         #
         #   Query the extended urllib to check if it has RTT data regarding this debugging_id

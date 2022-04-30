@@ -119,8 +119,10 @@ __all__ = ['crypt']
 # ----- END fcrypt.c LICENSE -----
 
 
-import string, struct
+import struct, sys
 
+if sys.version_info >= (3, 0):
+    xrange = range
 
 _ITERATIONS = 16
 
@@ -453,7 +455,7 @@ def _PERM_OP(a,b,n,m):
 def _set_key(password):
     """Generate DES key schedule from ASCII password."""
 
-    c,d = struct.unpack('<ii', password)
+    c,d = struct.unpack('<ii', password.encode("utf8") if not isinstance(password, bytes) else password)
     c = (c & 0x7f7f7f7f) << 1
     d = (d & 0x7f7f7f7f) << 1
 
@@ -571,7 +573,7 @@ In practice, you would read the password using something like the
 getpass module, and generate the salt randomly:
 
   >>> import random, string
-  >>> saltchars = string.letters + string.digits + './'
+  >>> saltchars = string.ascii_letters + string.digits + './'
   >>> salt = random.choice(saltchars) + random.choice(saltchars)
 
 Note that other ASCII characters are accepted in the salt, but the
@@ -604,7 +606,7 @@ crypt supported by the OpenBSD C library.
     # Convert to characters.
     for i in xrange(len(r)):
         r[i] = _cov_2char[r[i]]
-    return salt[:2] + string.join(r, '')
+    return salt[:2] + ''.join(r)
 
 def _test():
     """Run doctest on fcrypt module."""

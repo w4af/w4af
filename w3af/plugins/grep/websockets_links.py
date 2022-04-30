@@ -32,11 +32,11 @@ from w3af.core.data.kb.info import Info
 
 WS_URL = 'ws://'
 WSS_URL = 'wss://'
-WEBSOCKETS_URL_RE = re.compile('["|\']{1}(wss?:\/\/'
-                               '[\da-z\.-]+'
-                               '(\.[a-z\.]{2,6})?'
-                               '(\:\d{1,5})?'
-                               '([\da-z\.-\_\/])*)["|\']{1}', re.U | re.I)
+WEBSOCKETS_URL_RE = re.compile(r'["|\']{1}(wss?:\/\/'
+                               r'[\da-z\.-]+'
+                               r'(\.[a-z\.]{2,6})?'
+                               r'(\:\d{1,5})?'
+                               r'([\da-z\.-\_\/])*)["|\']{1}', re.U | re.I)
 
 
 class websockets_links(GrepPlugin):

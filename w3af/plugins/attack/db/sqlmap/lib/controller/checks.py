@@ -1,19 +1,16 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 import copy
-import httplib
 import logging
-import os
 import random
 import re
 import socket
 import subprocess
-import tempfile
 import time
 
 from extra.beep.beep import beep
@@ -21,6 +18,7 @@ from lib.core.agent import agent
 from lib.core.common import Backend
 from lib.core.common import extractRegexResult
 from lib.core.common import extractTextTagContent
+from lib.core.common import filterNone
 from lib.core.common import findDynamicContent
 from lib.core.common import Format
 from lib.core.common import getFilteredPageContent
@@ -28,12 +26,12 @@ from lib.core.common import getLastRequestHTTPError
 from lib.core.common import getPublicTypeMembers
 from lib.core.common import getSafeExString
 from lib.core.common import getSortedInjectionTests
-from lib.core.common import getUnicode
 from lib.core.common import hashDBRetrieve
 from lib.core.common import hashDBWrite
 from lib.core.common import intersect
+from lib.core.common import isDigit
+from lib.core.common import joinValue
 from lib.core.common import listToStrValue
-from lib.core.common import openFile
 from lib.core.common import parseFilePaths
 from lib.core.common import popValue
 from lib.core.common import pushValue
@@ -43,59 +41,70 @@ from lib.core.common import readInput
 from lib.core.common import showStaticWords
 from lib.core.common import singleTimeLogMessage
 from lib.core.common import singleTimeWarnMessage
-from lib.core.common import urlencode
+from lib.core.common import unArrayizeValue
 from lib.core.common import wasLastResponseDBMSError
 from lib.core.common import wasLastResponseHTTPError
-from lib.core.defaults import defaults
+from lib.core.compat import xrange
+from lib.core.convert import getUnicode
 from lib.core.data import conf
 from lib.core.data import kb
 from lib.core.data import logger
 from lib.core.datatype import AttribDict
 from lib.core.datatype import InjectionDict
-from lib.core.decorators import cachedmethod
+from lib.core.decorators import stackedmethod
 from lib.core.dicts import FROM_DUMMY_TABLE
+from lib.core.dicts import HEURISTIC_NULL_EVAL
 from lib.core.enums import DBMS
 from lib.core.enums import HASHDB_KEYS
 from lib.core.enums import HEURISTIC_TEST
 from lib.core.enums import HTTP_HEADER
 from lib.core.enums import HTTPMETHOD
-from lib.core.enums import MKSTEMP_PREFIX
 from lib.core.enums import NOTE
 from lib.core.enums import NULLCONNECTION
 from lib.core.enums import PAYLOAD
 from lib.core.enums import PLACE
 from lib.core.enums import REDIRECTION
+from lib.core.enums import WEB_PLATFORM
 from lib.core.exception import SqlmapConnectionException
+from lib.core.exception import SqlmapDataException
 from lib.core.exception import SqlmapNoneDataException
 from lib.core.exception import SqlmapSilentQuitException
 from lib.core.exception import SqlmapSkipTargetException
 from lib.core.exception import SqlmapUserQuitException
+from lib.core.settings import BOUNDED_INJECTION_MARKER
 from lib.core.settings import CANDIDATE_SENTENCE_MIN_LENGTH
 from lib.core.settings import CHECK_INTERNET_ADDRESS
 from lib.core.settings import CHECK_INTERNET_VALUE
+from lib.core.settings import DEFAULT_COOKIE_DELIMITER
 from lib.core.settings import DEFAULT_GET_POST_DELIMITER
-from lib.core.settings import DEV_EMAIL_ADDRESS
 from lib.core.settings import DUMMY_NON_SQLI_CHECK_APPENDIX
 from lib.core.settings import FI_ERROR_REGEX
 from lib.core.settings import FORMAT_EXCEPTION_STRINGS
 from lib.core.settings import HEURISTIC_CHECK_ALPHABET
-from lib.core.settings import IDS_WAF_CHECK_PAYLOAD
-from lib.core.settings import IDS_WAF_CHECK_RATIO
-from lib.core.settings import IDS_WAF_CHECK_TIMEOUT
+from lib.core.settings import INFERENCE_EQUALS_CHAR
+from lib.core.settings import IPS_WAF_CHECK_PAYLOAD
+from lib.core.settings import IPS_WAF_CHECK_RATIO
+from lib.core.settings import IPS_WAF_CHECK_TIMEOUT
 from lib.core.settings import MAX_DIFFLIB_SEQUENCE_LENGTH
+from lib.core.settings import MAX_STABILITY_DELAY
 from lib.core.settings import NON_SQLI_CHECK_PREFIX_SUFFIX_LENGTH
+from lib.core.settings import PRECONNECT_INCOMPATIBLE_SERVERS
+from lib.core.settings import SINGLE_QUOTE_MARKER
 from lib.core.settings import SLEEP_TIME_MARKER
 from lib.core.settings import SUHOSIN_MAX_VALUE_LENGTH
 from lib.core.settings import SUPPORTED_DBMS
-from lib.core.settings import URI_HTTP_HEADER
 from lib.core.settings import UPPER_RATIO_BOUND
+from lib.core.settings import URI_HTTP_HEADER
 from lib.core.threads import getCurrentThreadData
+from lib.core.unescaper import unescaper
 from lib.request.connect import Connect as Request
 from lib.request.comparison import comparison
 from lib.request.inject import checkBooleanExpression
 from lib.request.templates import getPageTemplate
 from lib.techniques.union.test import unionTest
 from lib.techniques.union.use import configUnion
+from thirdparty import six
+from thirdparty.six.moves import http_client as _http_client
 
 def checkSqlInjection(place, parameter, value):
     # Store here the details about boundaries and payload used to
@@ -106,9 +115,12 @@ def checkSqlInjection(place, parameter, value):
     threadData = getCurrentThreadData()
 
     # Favoring non-string specific boundaries in case of digit-like parameter values
-    if value.isdigit():
+    if isDigit(value):
         kb.cache.intBoundaries = kb.cache.intBoundaries or sorted(copy.deepcopy(conf.boundaries), key=lambda boundary: any(_ in (boundary.prefix or "") or _ in (boundary.suffix or "") for _ in ('"', '\'')))
         boundaries = kb.cache.intBoundaries
+    elif value.isalpha():
+        kb.cache.alphaBoundaries = kb.cache.alphaBoundaries or sorted(copy.deepcopy(conf.boundaries), key=lambda boundary: not any(_ in (boundary.prefix or "") or _ in (boundary.suffix or "") for _ in ('"', '\'')))
+        boundaries = kb.cache.alphaBoundaries
     else:
         boundaries = conf.boundaries
 
@@ -142,9 +154,9 @@ def checkSqlInjection(place, parameter, value):
                 # error message, simple heuristic check or via DBMS-specific
                 # payload), ask the user to limit the tests to the fingerprinted
                 # DBMS
-                if kb.reduceTests is None and not conf.testFilter and (intersect(Backend.getErrorParsedDBMSes(), \
-                   SUPPORTED_DBMS, True) or kb.heuristicDbms or injection.dbms):
-                    msg = "it looks like the back-end DBMS is '%s'. " % (Format.getErrorParsedDBMSes() or kb.heuristicDbms or injection.dbms)
+
+                if kb.reduceTests is None and not conf.testFilter and (intersect(Backend.getErrorParsedDBMSes(), SUPPORTED_DBMS, True) or kb.heuristicDbms or injection.dbms):
+                    msg = "it looks like the back-end DBMS is '%s'. " % (Format.getErrorParsedDBMSes() or kb.heuristicDbms or joinValue(injection.dbms, '/'))
                     msg += "Do you want to skip test payloads specific for other DBMSes? [Y/n]"
                     kb.reduceTests = (Backend.getErrorParsedDBMSes() or [kb.heuristicDbms]) if readInput(msg, default='Y', boolean=True) else []
 
@@ -152,11 +164,9 @@ def checkSqlInjection(place, parameter, value):
             # message, via simple heuristic check or via DBMS-specific
             # payload), ask the user to extend the tests to all DBMS-specific,
             # regardless of --level and --risk values provided
-            if kb.extendTests is None and not conf.testFilter and (conf.level < 5 or conf.risk < 3) \
-               and (intersect(Backend.getErrorParsedDBMSes(), SUPPORTED_DBMS, True) or \
-               kb.heuristicDbms or injection.dbms):
+            if kb.extendTests is None and not conf.testFilter and (conf.level < 5 or conf.risk < 3) and (intersect(Backend.getErrorParsedDBMSes(), SUPPORTED_DBMS, True) or kb.heuristicDbms or injection.dbms):
                 msg = "for the remaining tests, do you want to include all tests "
-                msg += "for '%s' extending provided " % (Format.getErrorParsedDBMSes() or kb.heuristicDbms or injection.dbms)
+                msg += "for '%s' extending provided " % (Format.getErrorParsedDBMSes() or kb.heuristicDbms or joinValue(injection.dbms, '/'))
                 msg += "level (%d)" % conf.level if conf.level < 5 else ""
                 msg += " and " if conf.level < 5 and conf.risk < 3 else ""
                 msg += "risk (%d)" % conf.risk if conf.risk < 3 else ""
@@ -202,7 +212,7 @@ def checkSqlInjection(place, parameter, value):
                     continue
 
                 match = re.search(r"(\d+)-(\d+)", test.request.columns)
-                if injection.data and match:
+                if match and injection.data:
                     lower, upper = int(match.group(1)), int(match.group(2))
                     for _ in (lower, upper):
                         if _ > 1:
@@ -214,10 +224,10 @@ def checkSqlInjection(place, parameter, value):
 
             # Skip test if the user's wants to test only for a specific
             # technique
-            if conf.tech and isinstance(conf.tech, list) and stype not in conf.tech:
-                debugMsg = "skipping test '%s' because the user " % title
-                debugMsg += "specified to test only for "
-                debugMsg += "%s techniques" % " & ".join(PAYLOAD.SQLINJECTION[_] for _ in conf.tech)
+            if conf.technique and isinstance(conf.technique, list) and stype not in conf.technique:
+                debugMsg = "skipping test '%s' because user " % title
+                debugMsg += "specified testing of only "
+                debugMsg += "%s techniques" % " & ".join(PAYLOAD.SQLINJECTION[_] for _ in conf.technique)
                 logger.debug(debugMsg)
                 continue
 
@@ -238,23 +248,19 @@ def checkSqlInjection(place, parameter, value):
 
             # Skip tests if title, vector or DBMS is not included by the
             # given test filter
-            if conf.testFilter and not any(conf.testFilter in str(item) or \
-               re.search(conf.testFilter, str(item), re.I) for item in \
-               (test.title, test.vector, payloadDbms)):
-                    debugMsg = "skipping test '%s' because its " % title
-                    debugMsg += "name/vector/DBMS is not included by the given filter"
-                    logger.debug(debugMsg)
-                    continue
+            if conf.testFilter and not any(conf.testFilter in str(item) or re.search(conf.testFilter, str(item), re.I) for item in (test.title, test.vector, payloadDbms)):
+                debugMsg = "skipping test '%s' because its " % title
+                debugMsg += "name/vector/DBMS is not included by the given filter"
+                logger.debug(debugMsg)
+                continue
 
             # Skip tests if title, vector or DBMS is included by the
             # given skip filter
-            if conf.testSkip and any(conf.testSkip in str(item) or \
-               re.search(conf.testSkip, str(item), re.I) for item in \
-               (test.title, test.vector, payloadDbms)):
-                    debugMsg = "skipping test '%s' because its " % title
-                    debugMsg += "name/vector/DBMS is included by the given skip filter"
-                    logger.debug(debugMsg)
-                    continue
+            if conf.testSkip and any(conf.testSkip in str(item) or re.search(conf.testSkip, str(item), re.I) for item in (test.title, test.vector, payloadDbms)):
+                debugMsg = "skipping test '%s' because its " % title
+                debugMsg += "name/vector/DBMS is included by the given skip filter"
+                logger.debug(debugMsg)
+                continue
 
             if payloadDbms is not None:
                 # Skip DBMS-specific test if it does not match the user's
@@ -282,9 +288,9 @@ def checkSqlInjection(place, parameter, value):
                 # Skip DBMS-specific test if it does not match the
                 # previously identified DBMS (via DBMS-specific error message)
                 if kb.reduceTests and not intersect(payloadDbms, kb.reduceTests, True):
-                    debugMsg = "skipping test '%s' because the parsed " % title
-                    debugMsg += "error message(s) showed that the back-end DBMS "
-                    debugMsg += "could be %s" % Format.getErrorParsedDBMSes()
+                    debugMsg = "skipping test '%s' because the heuristic " % title
+                    debugMsg += "tests showed that the back-end DBMS "
+                    debugMsg += "could be '%s'" % unArrayizeValue(kb.reduceTests)
                     logger.debug(debugMsg)
                     continue
 
@@ -332,6 +338,24 @@ def checkSqlInjection(place, parameter, value):
                 logger.debug(debugMsg)
                 continue
 
+            if stype == PAYLOAD.TECHNIQUE.UNION:
+                match = re.search(r"(\d+)-(\d+)", test.request.columns)
+                if match and not injection.data:
+                    _ = test.request.columns.split('-')[-1]
+                    if conf.uCols is None and _.isdigit():
+                        if kb.futileUnion is None:
+                            msg = "it is recommended to perform "
+                            msg += "only basic UNION tests if there is not "
+                            msg += "at least one other (potential) "
+                            msg += "technique found. Do you want to reduce "
+                            msg += "the number of requests? [Y/n] "
+                            kb.futileUnion = readInput(msg, default='Y', boolean=True)
+
+                        if kb.futileUnion and int(_) > 10:
+                            debugMsg = "skipping test '%s'" % title
+                            logger.debug(debugMsg)
+                            continue
+
             infoMsg = "testing '%s'" % title
             logger.info(infoMsg)
 
@@ -341,7 +365,7 @@ def checkSqlInjection(place, parameter, value):
 
             # Parse test's <request>
             comment = agent.getComment(test.request) if len(conf.boundaries) > 1 else None
-            fstPayload = agent.cleanupPayload(test.request.payload, origValue=value if place not in (PLACE.URI, PLACE.CUSTOM_POST, PLACE.CUSTOM_HEADER) else None)
+            fstPayload = agent.cleanupPayload(test.request.payload, origValue=value if place not in (PLACE.URI, PLACE.CUSTOM_POST, PLACE.CUSTOM_HEADER) and BOUNDED_INJECTION_MARKER not in (value or "") else None)
 
             for boundary in boundaries:
                 injectable = False
@@ -377,8 +401,8 @@ def checkSqlInjection(place, parameter, value):
                     continue
 
                 # Parse boundary's <prefix>, <suffix> and <ptype>
-                prefix = boundary.prefix if boundary.prefix else ""
-                suffix = boundary.suffix if boundary.suffix else ""
+                prefix = boundary.prefix or ""
+                suffix = boundary.suffix or ""
                 ptype = boundary.ptype
 
                 # Options --prefix/--suffix have a higher priority (if set by user)
@@ -403,11 +427,14 @@ def checkSqlInjection(place, parameter, value):
                     templatePayload = None
                     vector = None
 
-                    # Threat the parameter original value according to the
+                    origValue = value
+                    if kb.customInjectionMark in origValue:
+                        origValue = origValue.split(kb.customInjectionMark)[0]
+                        origValue = re.search(r"(\w*)\Z", origValue).group(1)
+
+                    # Treat the parameter original value according to the
                     # test's <where> tag
                     if where == PAYLOAD.WHERE.ORIGINAL or conf.prefix:
-                        origValue = value
-
                         if kb.tamperFunctions:
                             templatePayload = agent.payload(place, parameter, value="", newValue=origValue, where=where)
                     elif where == PAYLOAD.WHERE.NEGATIVE:
@@ -417,7 +444,7 @@ def checkSqlInjection(place, parameter, value):
 
                         if conf.invalidLogical:
                             _ = int(kb.data.randomInt[:2])
-                            origValue = "%s AND %s=%s" % (value, _, _ + 1)
+                            origValue = "%s AND %s LIKE %s" % (origValue, _, _ + 1)
                         elif conf.invalidBignum:
                             origValue = kb.data.randomInt[:6]
                         elif conf.invalidString:
@@ -438,11 +465,13 @@ def checkSqlInjection(place, parameter, value):
                         boundPayload = agent.prefixQuery(fstPayload, prefix, where, clause)
                         boundPayload = agent.suffixQuery(boundPayload, comment, suffix, where)
                         reqPayload = agent.payload(place, parameter, newValue=boundPayload, where=where)
+
                         if reqPayload:
-                            if reqPayload in seenPayload:
+                            stripPayload = re.sub(r"(\A|\b|_)([A-Za-z]{4}((?<!LIKE))|\d+)(_|\b|\Z)", r"\g<1>.\g<4>", reqPayload)
+                            if stripPayload in seenPayload:
                                 continue
                             else:
-                                seenPayload.add(reqPayload)
+                                seenPayload.add(stripPayload)
                     else:
                         reqPayload = None
 
@@ -450,13 +479,13 @@ def checkSqlInjection(place, parameter, value):
                     # payload was successful
                     # Parse test's <response>
                     for method, check in test.response.items():
-                        check = agent.cleanupPayload(check, origValue=value if place not in (PLACE.URI, PLACE.CUSTOM_POST, PLACE.CUSTOM_HEADER) else None)
+                        check = agent.cleanupPayload(check, origValue=value if place not in (PLACE.URI, PLACE.CUSTOM_POST, PLACE.CUSTOM_HEADER) and BOUNDED_INJECTION_MARKER not in (value or "") else None)
 
                         # In case of boolean-based blind SQL injection
                         if method == PAYLOAD.METHOD.COMPARISON:
                             # Generate payload used for comparison
                             def genCmpPayload():
-                                sndPayload = agent.cleanupPayload(test.response.comparison, origValue=value if place not in (PLACE.URI, PLACE.CUSTOM_POST, PLACE.CUSTOM_HEADER) else None)
+                                sndPayload = agent.cleanupPayload(test.response.comparison, origValue=value if place not in (PLACE.URI, PLACE.CUSTOM_POST, PLACE.CUSTOM_HEADER) and BOUNDED_INJECTION_MARKER not in (value or "") else None)
 
                                 # Forge response payload by prepending with
                                 # boundary's prefix and appending the boundary's
@@ -468,20 +497,36 @@ def checkSqlInjection(place, parameter, value):
 
                                 return cmpPayload
 
-                            # Useful to set kb.matchRatio at first based on
-                            # the False response content
+                            # Useful to set kb.matchRatio at first based on False response content
                             kb.matchRatio = None
                             kb.negativeLogic = (where == PAYLOAD.WHERE.NEGATIVE)
+                            suggestion = None
                             Request.queryPage(genCmpPayload(), place, raise404=False)
                             falsePage, falseHeaders, falseCode = threadData.lastComparisonPage or "", threadData.lastComparisonHeaders, threadData.lastComparisonCode
                             falseRawResponse = "%s%s" % (falseHeaders, falsePage)
+
+                            # Checking if there is difference between current FALSE, original and heuristics page (i.e. not used parameter)
+                            if not any((kb.negativeLogic, conf.string, conf.notString, conf.code)):
+                                try:
+                                    ratio = 1.0
+                                    seqMatcher = getCurrentThreadData().seqMatcher
+
+                                    for current in (kb.originalPage, kb.heuristicPage):
+                                        seqMatcher.set_seq1(current or "")
+                                        seqMatcher.set_seq2(falsePage or "")
+                                        ratio *= seqMatcher.quick_ratio()
+
+                                    if ratio == 1.0:
+                                        continue
+                                except (MemoryError, OverflowError):
+                                    pass
 
                             # Perform the test's True request
                             trueResult = Request.queryPage(reqPayload, place, raise404=False)
                             truePage, trueHeaders, trueCode = threadData.lastComparisonPage or "", threadData.lastComparisonHeaders, threadData.lastComparisonCode
                             trueRawResponse = "%s%s" % (trueHeaders, truePage)
 
-                            if trueResult and not(truePage == falsePage and not kb.nullConnection):
+                            if trueResult and not(truePage == falsePage and not any((kb.nullConnection, conf.code))):
                                 # Perform the test's False request
                                 falseResult = Request.queryPage(genCmpPayload(), place, raise404=False)
 
@@ -494,30 +539,39 @@ def checkSqlInjection(place, parameter, value):
                                         errorResult = Request.queryPage(errorPayload, place, raise404=False)
                                         if errorResult:
                                             continue
-                                    elif not any((conf.string, conf.notString, conf.regexp, conf.code, kb.nullConnection)):
+                                    elif kb.heuristicPage and not any((conf.string, conf.notString, conf.regexp, conf.code, kb.nullConnection)):
                                         _ = comparison(kb.heuristicPage, None, getRatioValue=True)
-                                        if _ > kb.matchRatio:
+                                        if (_ or 0) > (kb.matchRatio or 0):
                                             kb.matchRatio = _
                                             logger.debug("adjusting match ratio for current parameter to %.3f" % kb.matchRatio)
 
+                                    # Reducing false-positive "appears" messages in heavily dynamic environment
+                                    if kb.heavilyDynamic and not Request.queryPage(reqPayload, place, raise404=False):
+                                        continue
+
                                     injectable = True
 
-                                elif threadData.lastComparisonRatio > UPPER_RATIO_BOUND and not any((conf.string, conf.notString, conf.regexp, conf.code, kb.nullConnection)):
+                                elif (threadData.lastComparisonRatio or 0) > UPPER_RATIO_BOUND and not any((conf.string, conf.notString, conf.regexp, conf.code, kb.nullConnection)):
                                     originalSet = set(getFilteredPageContent(kb.pageTemplate, True, "\n").split("\n"))
                                     trueSet = set(getFilteredPageContent(truePage, True, "\n").split("\n"))
                                     falseSet = set(getFilteredPageContent(falsePage, True, "\n").split("\n"))
 
+                                    if threadData.lastErrorPage and threadData.lastErrorPage[1]:
+                                        errorSet = set(getFilteredPageContent(threadData.lastErrorPage[1], True, "\n").split("\n"))
+                                    else:
+                                        errorSet = set()
+
                                     if originalSet == trueSet != falseSet:
-                                        candidates = trueSet - falseSet
+                                        candidates = trueSet - falseSet - errorSet
 
                                         if candidates:
-                                            candidates = sorted(candidates, key=lambda _: len(_))
+                                            candidates = sorted(candidates, key=len)
                                             for candidate in candidates:
                                                 if re.match(r"\A[\w.,! ]+\Z", candidate) and ' ' in candidate and candidate.strip() and len(candidate) > CANDIDATE_SENTENCE_MIN_LENGTH:
-                                                    conf.string = candidate
+                                                    suggestion = conf.string = candidate
                                                     injectable = True
 
-                                                    infoMsg = "%s parameter '%s' appears to be '%s' injectable (with --string=\"%s\")" % (paramType, parameter, title, repr(conf.string).lstrip('u').strip("'"))
+                                                    infoMsg = "%sparameter '%s' appears to be '%s' injectable (with --string=\"%s\")" % ("%s " % paramType if paramType != parameter else "", parameter, title, repr(conf.string).lstrip('u').strip("'"))
                                                     logger.info(infoMsg)
 
                                                     break
@@ -525,46 +579,52 @@ def checkSqlInjection(place, parameter, value):
                             if injectable:
                                 if kb.pageStable and not any((conf.string, conf.notString, conf.regexp, conf.code, kb.nullConnection)):
                                     if all((falseCode, trueCode)) and falseCode != trueCode:
-                                        conf.code = trueCode
+                                        suggestion = conf.code = trueCode
 
-                                        infoMsg = "%s parameter '%s' appears to be '%s' injectable (with --code=%d)" % (paramType, parameter, title, conf.code)
+                                        infoMsg = "%sparameter '%s' appears to be '%s' injectable (with --code=%d)" % ("%s " % paramType if paramType != parameter else "", parameter, title, conf.code)
                                         logger.info(infoMsg)
                                     else:
                                         trueSet = set(extractTextTagContent(trueRawResponse))
-                                        trueSet = trueSet.union(__ for _ in trueSet for __ in _.split())
+                                        trueSet |= set(__ for _ in trueSet for __ in _.split())
 
                                         falseSet = set(extractTextTagContent(falseRawResponse))
-                                        falseSet = falseSet.union(__ for _ in falseSet for __ in _.split())
+                                        falseSet |= set(__ for _ in falseSet for __ in _.split())
 
-                                        candidates = filter(None, (_.strip() if _.strip() in trueRawResponse and _.strip() not in falseRawResponse else None for _ in (trueSet - falseSet)))
+                                        if threadData.lastErrorPage and threadData.lastErrorPage[1]:
+                                            errorSet = set(extractTextTagContent(threadData.lastErrorPage[1]))
+                                            errorSet |= set(__ for _ in errorSet for __ in _.split())
+                                        else:
+                                            errorSet = set()
+
+                                        candidates = filterNone(_.strip() if _.strip() in trueRawResponse and _.strip() not in falseRawResponse else None for _ in (trueSet - falseSet - errorSet))
 
                                         if candidates:
-                                            candidates = sorted(candidates, key=lambda _: len(_))
+                                            candidates = sorted(candidates, key=len)
                                             for candidate in candidates:
-                                                if re.match(r"\A\w+\Z", candidate):
+                                                if re.match(r"\A\w{2,}\Z", candidate):  # Note: length of 1 (e.g. --string=5) could cause trouble, especially in error message pages with partially reflected payload content
                                                     break
 
-                                            conf.string = candidate
+                                            suggestion = conf.string = candidate
 
-                                            infoMsg = "%s parameter '%s' appears to be '%s' injectable (with --string=\"%s\")" % (paramType, parameter, title, repr(conf.string).lstrip('u').strip("'"))
+                                            infoMsg = "%sparameter '%s' appears to be '%s' injectable (with --string=\"%s\")" % ("%s " % paramType if paramType != parameter else "", parameter, title, repr(conf.string).lstrip('u').strip("'"))
                                             logger.info(infoMsg)
 
                                         if not any((conf.string, conf.notString)):
-                                            candidates = filter(None, (_.strip() if _.strip() in falseRawResponse and _.strip() not in trueRawResponse else None for _ in (falseSet - trueSet)))
+                                            candidates = filterNone(_.strip() if _.strip() in falseRawResponse and _.strip() not in trueRawResponse else None for _ in (falseSet - trueSet))
 
                                             if candidates:
-                                                candidates = sorted(candidates, key=lambda _: len(_))
+                                                candidates = sorted(candidates, key=len)
                                                 for candidate in candidates:
                                                     if re.match(r"\A\w+\Z", candidate):
                                                         break
 
-                                                conf.notString = candidate
+                                                suggestion = conf.notString = candidate
 
-                                                infoMsg = "%s parameter '%s' appears to be '%s' injectable (with --not-string=\"%s\")" % (paramType, parameter, title, repr(conf.notString).lstrip('u').strip("'"))
+                                                infoMsg = "%sparameter '%s' appears to be '%s' injectable (with --not-string=\"%s\")" % ("%s " % paramType if paramType != parameter else "", parameter, title, repr(conf.notString).lstrip('u').strip("'"))
                                                 logger.info(infoMsg)
 
-                                if not any((conf.string, conf.notString, conf.code)):
-                                    infoMsg = "%s parameter '%s' appears to be '%s' injectable " % (paramType, parameter, title)
+                                if not suggestion:
+                                    infoMsg = "%sparameter '%s' appears to be '%s' injectable " % ("%s " % paramType if paramType != parameter else "", parameter, title)
                                     singleTimeLogMessage(infoMsg)
 
                         # In case of error-based SQL injection
@@ -573,24 +633,24 @@ def checkSqlInjection(place, parameter, value):
                             # body for the test's <grep> regular expression
                             try:
                                 page, headers, _ = Request.queryPage(reqPayload, place, content=True, raise404=False)
-                                output = extractRegexResult(check, page, re.DOTALL | re.IGNORECASE) \
-                                        or extractRegexResult(check, threadData.lastHTTPError[2] if wasLastResponseHTTPError() else None, re.DOTALL | re.IGNORECASE) \
-                                        or extractRegexResult(check, listToStrValue((headers[key] for key in headers.keys() if key.lower() != URI_HTTP_HEADER.lower()) if headers else None), re.DOTALL | re.IGNORECASE) \
-                                        or extractRegexResult(check, threadData.lastRedirectMsg[1] if threadData.lastRedirectMsg and threadData.lastRedirectMsg[0] == threadData.lastRequestUID else None, re.DOTALL | re.IGNORECASE)
+                                output = extractRegexResult(check, page, re.DOTALL | re.IGNORECASE)
+                                output = output or extractRegexResult(check, threadData.lastHTTPError[2] if wasLastResponseHTTPError() else None, re.DOTALL | re.IGNORECASE)
+                                output = output or extractRegexResult(check, listToStrValue((headers[key] for key in headers if key.lower() != URI_HTTP_HEADER.lower()) if headers else None), re.DOTALL | re.IGNORECASE)
+                                output = output or extractRegexResult(check, threadData.lastRedirectMsg[1] if threadData.lastRedirectMsg and threadData.lastRedirectMsg[0] == threadData.lastRequestUID else None, re.DOTALL | re.IGNORECASE)
 
                                 if output:
-                                    result = output == "1"
+                                    result = output == '1'
 
                                     if result:
-                                        infoMsg = "%s parameter '%s' is '%s' injectable " % (paramType, parameter, title)
+                                        infoMsg = "%sparameter '%s' is '%s' injectable " % ("%s " % paramType if paramType != parameter else "", parameter, title)
                                         logger.info(infoMsg)
 
                                         injectable = True
 
-                            except SqlmapConnectionException, msg:
+                            except SqlmapConnectionException as ex:
                                 debugMsg = "problem occurred most likely because the "
                                 debugMsg += "server hasn't recovered as expected from the "
-                                debugMsg += "error-based payload used ('%s')" % msg
+                                debugMsg += "used error-based payload ('%s')" % getSafeExString(ex)
                                 logger.debug(debugMsg)
 
                         # In case of time-based blind or stacked queries
@@ -611,7 +671,7 @@ def checkSqlInjection(place, parameter, value):
                                 trueResult = Request.queryPage(reqPayload, place, timeBasedCompare=True, raise404=False)
 
                                 if trueResult:
-                                    infoMsg = "%s parameter '%s' appears to be '%s' injectable " % (paramType, parameter, title)
+                                    infoMsg = "%sparameter '%s' appears to be '%s' injectable " % ("%s " % paramType if paramType != parameter else "", parameter, title)
                                     logger.info(infoMsg)
 
                                     injectable = True
@@ -645,24 +705,12 @@ def checkSqlInjection(place, parameter, value):
                                 infoMsg += "there is at least one other (potential) "
                                 infoMsg += "technique found"
                                 singleTimeLogMessage(infoMsg)
-                            elif not injection.data:
-                                _ = test.request.columns.split('-')[-1]
-                                if _.isdigit() and int(_) > 10:
-                                    if kb.futileUnion is None:
-                                        msg = "it is not recommended to perform "
-                                        msg += "extended UNION tests if there is not "
-                                        msg += "at least one other (potential) "
-                                        msg += "technique found. Do you want to skip? [Y/n] "
-
-                                        kb.futileUnion = not readInput(msg, default='Y', boolean=True)
-                                    if kb.futileUnion is False:
-                                        continue
 
                             # Test for UNION query SQL injection
                             reqPayload, vector = unionTest(comment, place, parameter, value, prefix, suffix)
 
-                            if isinstance(reqPayload, basestring):
-                                infoMsg = "%s parameter '%s' is '%s' injectable" % (paramType, parameter, title)
+                            if isinstance(reqPayload, six.string_types):
+                                infoMsg = "%sparameter '%s' is '%s' injectable" % ("%s " % paramType if paramType != parameter else "", parameter, title)
                                 logger.info(infoMsg)
 
                                 injectable = True
@@ -673,7 +721,7 @@ def checkSqlInjection(place, parameter, value):
 
                         kb.previousMethod = method
 
-                        if conf.dummy or conf.offline:
+                        if conf.offline:
                             injectable = False
 
                     # If the injection test was successful feed the injection
@@ -740,8 +788,12 @@ def checkSqlInjection(place, parameter, value):
                                 infoMsg = "executing alerting shell command(s) ('%s')" % conf.alert
                                 logger.info(infoMsg)
 
-                                process = subprocess.Popen(conf.alert, shell=True)
-                                process.wait()
+                                try:
+                                    process = subprocess.Popen(conf.alert, shell=True)
+                                    process.wait()
+                                except Exception as ex:
+                                    errMsg = "error occurred while executing '%s' ('%s')" % (conf.alert, getSafeExString(ex))
+                                    logger.error(errMsg)
 
                             kb.alerted = True
 
@@ -762,7 +814,7 @@ def checkSqlInjection(place, parameter, value):
 
             if conf.multipleTargets:
                 msg = "how do you want to proceed? [ne(X)t target/(s)kip current test/(e)nd detection phase/(n)ext parameter/(c)hange verbosity/(q)uit]"
-                choice = readInput(msg, default='T', checkBatch=False).upper()
+                choice = readInput(msg, default='X', checkBatch=False).upper()
             else:
                 msg = "how do you want to proceed? [(S)kip current test/(e)nd detection phase/(n)ext parameter/(c)hange verbosity/(q)uit]"
                 choice = readInput(msg, default='S', checkBatch=False).upper()
@@ -802,7 +854,9 @@ def checkSqlInjection(place, parameter, value):
             logger.warn(warnMsg)
 
         if not checkFalsePositives(injection):
-            kb.vulnHosts.remove(conf.hostname)
+            if conf.hostname in kb.vulnHosts:
+                kb.vulnHosts.remove(conf.hostname)
+
             if NOTE.FALSE_POSITIVE_OR_UNEXPLOITABLE not in injection.notes:
                 injection.notes.append(NOTE.FALSE_POSITIVE_OR_UNEXPLOITABLE)
 
@@ -815,6 +869,7 @@ def checkSqlInjection(place, parameter, value):
 
     return injection
 
+@stackedmethod
 def heuristicCheckDbms(injection):
     """
     This functions is called when boolean-based blind is identified with a
@@ -822,20 +877,29 @@ def heuristicCheckDbms(injection):
     to identify with a simple DBMS specific boolean-based test what the DBMS
     may be
     """
+
     retVal = False
+
+    if conf.skipHeuristics:
+        return retVal
 
     pushValue(kb.injection)
     kb.injection = injection
 
     for dbms in getPublicTypeMembers(DBMS, True):
         randStr1, randStr2 = randomStr(), randomStr()
+
         Backend.forceDbms(dbms)
 
-        if conf.noEscape and dbms not in FROM_DUMMY_TABLE:
-            continue
+        if dbms in HEURISTIC_NULL_EVAL:
+            result = checkBooleanExpression("(SELECT %s%s) IS NULL" % (HEURISTIC_NULL_EVAL[dbms], FROM_DUMMY_TABLE.get(dbms, "")))
+        elif not ((randStr1 in unescaper.escape("'%s'" % randStr1)) and list(FROM_DUMMY_TABLE.values()).count(FROM_DUMMY_TABLE.get(dbms, "")) != 1):
+            result = checkBooleanExpression("(SELECT '%s'%s)=%s%s%s" % (randStr1, FROM_DUMMY_TABLE.get(dbms, ""), SINGLE_QUOTE_MARKER, randStr1, SINGLE_QUOTE_MARKER))
+        else:
+            result = False
 
-        if checkBooleanExpression("(SELECT '%s'%s)='%s'" % (randStr1, FROM_DUMMY_TABLE.get(dbms, ""), randStr1)):
-            if not checkBooleanExpression("(SELECT '%s'%s)='%s'" % (randStr1, FROM_DUMMY_TABLE.get(dbms, ""), randStr2)):
+        if result:
+            if not checkBooleanExpression("(SELECT '%s'%s)=%s%s%s" % (randStr1, FROM_DUMMY_TABLE.get(dbms, ""), SINGLE_QUOTE_MARKER, randStr2, SINGLE_QUOTE_MARKER)):
                 retVal = dbms
                 break
 
@@ -851,6 +915,7 @@ def heuristicCheckDbms(injection):
 
     return retVal
 
+@stackedmethod
 def checkFalsePositives(injection):
     """
     Checks for false positives (only in single special cases)
@@ -858,8 +923,7 @@ def checkFalsePositives(injection):
 
     retVal = True
 
-    if all(_ in (PAYLOAD.TECHNIQUE.BOOLEAN, PAYLOAD.TECHNIQUE.TIME, PAYLOAD.TECHNIQUE.STACKED) for _ in injection.data) or\
-      (len(injection.data) == 1 and PAYLOAD.TECHNIQUE.UNION in injection.data and "Generic" in injection.data[PAYLOAD.TECHNIQUE.UNION].title):
+    if all(_ in (PAYLOAD.TECHNIQUE.BOOLEAN, PAYLOAD.TECHNIQUE.TIME, PAYLOAD.TECHNIQUE.STACKED) for _ in injection.data) or (len(injection.data) == 1 and PAYLOAD.TECHNIQUE.UNION in injection.data and "Generic" in injection.data[PAYLOAD.TECHNIQUE.UNION].title):
         pushValue(kb.injection)
 
         infoMsg = "checking if the injection point on %s " % injection.place
@@ -871,37 +935,42 @@ def checkFalsePositives(injection):
 
         kb.injection = injection
 
-        for i in xrange(conf.level):
+        for level in xrange(conf.level):
             while True:
                 randInt1, randInt2, randInt3 = (_() for j in xrange(3))
 
                 randInt1 = min(randInt1, randInt2, randInt3)
                 randInt3 = max(randInt1, randInt2, randInt3)
 
+                if conf.string and any(conf.string in getUnicode(_) for _ in (randInt1, randInt2, randInt3)):
+                    continue
+
+                if conf.notString and any(conf.notString in getUnicode(_) for _ in (randInt1, randInt2, randInt3)):
+                    continue
+
                 if randInt3 > randInt2 > randInt1:
                     break
 
-            if not checkBooleanExpression("%d=%d" % (randInt1, randInt1)):
+            if not checkBooleanExpression("%d%s%d" % (randInt1, INFERENCE_EQUALS_CHAR, randInt1)):
                 retVal = False
                 break
 
-            # Just in case if DBMS hasn't properly recovered from previous delayed request
             if PAYLOAD.TECHNIQUE.BOOLEAN not in injection.data:
-                checkBooleanExpression("%d=%d" % (randInt1, randInt2))
+                checkBooleanExpression("%d%s%d" % (randInt1, INFERENCE_EQUALS_CHAR, randInt2))          # just in case if DBMS hasn't properly recovered from previous delayed request
 
-            if checkBooleanExpression("%d=%d" % (randInt1, randInt3)):          # this must not be evaluated to True
+            if checkBooleanExpression("%d%s%d" % (randInt1, INFERENCE_EQUALS_CHAR, randInt3)):          # this must not be evaluated to True
                 retVal = False
                 break
 
-            elif checkBooleanExpression("%d=%d" % (randInt3, randInt2)):        # this must not be evaluated to True
+            elif checkBooleanExpression("%d%s%d" % (randInt3, INFERENCE_EQUALS_CHAR, randInt2)):        # this must not be evaluated to True
                 retVal = False
                 break
 
-            elif not checkBooleanExpression("%d=%d" % (randInt2, randInt2)):    # this must be evaluated to True
+            elif not checkBooleanExpression("%d%s%d" % (randInt2, INFERENCE_EQUALS_CHAR, randInt2)):    # this must be evaluated to True
                 retVal = False
                 break
 
-            elif checkBooleanExpression("%d %d" % (randInt3, randInt2)):        # this must not be evaluated to True (invalid statement)
+            elif checkBooleanExpression("%d %d" % (randInt3, randInt2)):                                # this must not be evaluated to True (invalid statement)
                 retVal = False
                 break
 
@@ -913,14 +982,15 @@ def checkFalsePositives(injection):
 
     return retVal
 
+@stackedmethod
 def checkSuhosinPatch(injection):
     """
     Checks for existence of Suhosin-patch (and alike) protection mechanism(s)
     """
 
-    if injection.place == PLACE.GET:
+    if injection.place in (PLACE.GET, PLACE.URI):
         debugMsg = "checking for parameter length "
-        debugMsg += "constrainting mechanisms"
+        debugMsg += "constraining mechanisms"
         logger.debug(debugMsg)
 
         pushValue(kb.injection)
@@ -929,13 +999,14 @@ def checkSuhosinPatch(injection):
         randInt = randomInt()
 
         if not checkBooleanExpression("%d=%s%d" % (randInt, ' ' * SUHOSIN_MAX_VALUE_LENGTH, randInt)):
-            warnMsg = "parameter length constrainting "
+            warnMsg = "parameter length constraining "
             warnMsg += "mechanism detected (e.g. Suhosin patch). "
             warnMsg += "Potential problems in enumeration phase can be expected"
             logger.warn(warnMsg)
 
         kb.injection = popValue()
 
+@stackedmethod
 def checkFilteredChars(injection):
     debugMsg = "checking for filtered characters"
     logger.debug(debugMsg)
@@ -956,7 +1027,7 @@ def checkFilteredChars(injection):
 
     # inference techniques depend on character '>'
     if not any(_ in injection.data for _ in (PAYLOAD.TECHNIQUE.ERROR, PAYLOAD.TECHNIQUE.UNION, PAYLOAD.TECHNIQUE.QUERY)):
-        if not checkBooleanExpression("%d>%d" % (randInt+1, randInt)):
+        if not checkBooleanExpression("%d>%d" % (randInt + 1, randInt)):
             warnMsg = "it appears that the character '>' is "
             warnMsg += "filtered by the back-end server. You are strongly "
             warnMsg += "advised to rerun with the '--tamper=between'"
@@ -965,9 +1036,7 @@ def checkFilteredChars(injection):
     kb.injection = popValue()
 
 def heuristicCheckSqlInjection(place, parameter):
-    if kb.nullConnection:
-        debugMsg = "heuristic check skipped because NULL connection used"
-        logger.debug(debugMsg)
+    if conf.skipHeuristics:
         return None
 
     origValue = conf.paramDict[place][parameter]
@@ -999,15 +1068,14 @@ def heuristicCheckSqlInjection(place, parameter):
     parseFilePaths(page)
     result = wasLastResponseDBMSError()
 
-    infoMsg = "heuristic (basic) test shows that %s parameter " % paramType
-    infoMsg += "'%s' might " % parameter
+    infoMsg = "heuristic (basic) test shows that %sparameter '%s' might " % ("%s " % paramType if paramType != parameter else "", parameter)
 
     def _(page):
         return any(_ in (page or "") for _ in FORMAT_EXCEPTION_STRINGS)
 
     casting = _(page) and not _(kb.originalPage)
 
-    if not casting and not result and kb.dynamicParameter and origValue.isdigit():
+    if not casting and not result and kb.dynamicParameter and origValue.isdigit() and not kb.heavilyDynamic:
         randInt = int(randomInt())
         payload = "%s%s%s" % (prefix, "%d-%d" % (int(origValue) + randInt, randInt), suffix)
         payload = agent.payload(place, parameter, newValue=payload, where=PAYLOAD.WHERE.REPLACE)
@@ -1021,10 +1089,25 @@ def heuristicCheckSqlInjection(place, parameter):
 
     kb.heuristicTest = HEURISTIC_TEST.CASTED if casting else HEURISTIC_TEST.NEGATIVE if not result else HEURISTIC_TEST.POSITIVE
 
+    if kb.heavilyDynamic:
+        debugMsg = "heuristic check stopped because of heavy dynamicity"
+        logger.debug(debugMsg)
+        return kb.heuristicTest
+
     if casting:
-        errMsg = "possible %s casting " % ("integer" if origValue.isdigit() else "type")
-        errMsg += "detected (e.g. \"$%s=intval($_REQUEST['%s'])\") " % (parameter, parameter)
-        errMsg += "at the back-end web application"
+        errMsg = "possible %s casting detected (e.g. '" % ("integer" if origValue.isdigit() else "type")
+
+        platform = conf.url.split('.')[-1].lower()
+        if platform == WEB_PLATFORM.ASP:
+            errMsg += "%s=CInt(request.querystring(\"%s\"))" % (parameter, parameter)
+        elif platform == WEB_PLATFORM.ASPX:
+            errMsg += "int.TryParse(Request.QueryString[\"%s\"], out %s)" % (parameter, parameter)
+        elif platform == WEB_PLATFORM.JSP:
+            errMsg += "%s=Integer.parseInt(request.getParameter(\"%s\"))" % (parameter, parameter)
+        else:
+            errMsg += "$%s=intval($_REQUEST[\"%s\"])" % (parameter, parameter)
+
+        errMsg += "') at the back-end web application"
         logger.error(errMsg)
 
         if kb.ignoreCasted is None:
@@ -1042,6 +1125,7 @@ def heuristicCheckSqlInjection(place, parameter):
         logger.warn(infoMsg)
 
     kb.heuristicMode = True
+    kb.disableHtmlDecoding = True
 
     randStr1, randStr2 = randomStr(NON_SQLI_CHECK_PREFIX_SUFFIX_LENGTH), randomStr(NON_SQLI_CHECK_PREFIX_SUFFIX_LENGTH)
     value = "%s%s%s" % (randStr1, DUMMY_NON_SQLI_CHECK_APPENDIX, randStr2)
@@ -1051,18 +1135,25 @@ def heuristicCheckSqlInjection(place, parameter):
 
     paramType = conf.method if conf.method not in (None, HTTPMETHOD.GET, HTTPMETHOD.POST) else place
 
-    if value.lower() in (page or "").lower():
-        infoMsg = "heuristic (XSS) test shows that %s parameter " % paramType
-        infoMsg += "'%s' might be vulnerable to cross-site scripting attacks" % parameter
+    # Reference: https://bugs.python.org/issue18183
+    if value.upper() in (page or "").upper():
+        infoMsg = "heuristic (XSS) test shows that %sparameter '%s' might be vulnerable to cross-site scripting (XSS) attacks" % ("%s " % paramType if paramType != parameter else "", parameter)
         logger.info(infoMsg)
+
+        if conf.beep:
+            beep()
 
     for match in re.finditer(FI_ERROR_REGEX, page or ""):
         if randStr1.lower() in match.group(0).lower():
-            infoMsg = "heuristic (FI) test shows that %s parameter " % paramType
-            infoMsg += "'%s' might be vulnerable to file inclusion attacks" % parameter
+            infoMsg = "heuristic (FI) test shows that %sparameter '%s' might be vulnerable to file inclusion (FI) attacks" % ("%s " % paramType if paramType != parameter else "", parameter)
             logger.info(infoMsg)
+
+            if conf.beep:
+                beep()
+
             break
 
+    kb.disableHtmlDecoding = False
     kb.heuristicMode = False
 
     return kb.heuristicTest
@@ -1074,7 +1165,7 @@ def checkDynParam(place, parameter, value):
     dynamicity might depend on another parameter.
     """
 
-    if kb.redirectChoice:
+    if kb.choices.redirect:
         return None
 
     kb.matchRatio = None
@@ -1083,20 +1174,12 @@ def checkDynParam(place, parameter, value):
 
     paramType = conf.method if conf.method not in (None, HTTPMETHOD.GET, HTTPMETHOD.POST) else place
 
-    infoMsg = "testing if %s parameter '%s' is dynamic" % (paramType, parameter)
+    infoMsg = "testing if %sparameter '%s' is dynamic" % ("%s " % paramType if paramType != parameter else "", parameter)
     logger.info(infoMsg)
 
     try:
         payload = agent.payload(place, parameter, value, getUnicode(randInt))
         dynResult = Request.queryPage(payload, place, raise404=False)
-
-        if not dynResult:
-            infoMsg = "confirming that %s parameter '%s' is dynamic" % (paramType, parameter)
-            logger.info(infoMsg)
-
-            randInt = randomInt()
-            payload = agent.payload(place, parameter, value, getUnicode(randInt))
-            dynResult = Request.queryPage(payload, place, raise404=False)
     except SqlmapConnectionException:
         pass
 
@@ -1156,6 +1239,8 @@ def checkDynamicContent(firstPage, secondPage):
             warnMsg += "sqlmap is going to retry the request(s)"
             singleTimeLogMessage(warnMsg, logging.CRITICAL)
 
+            kb.heavilyDynamic = True
+
             secondPage, _, _ = Request.queryPage(content=True)
             findDynamicContent(firstPage, secondPage)
 
@@ -1175,13 +1260,13 @@ def checkStability():
 
     firstPage = kb.originalPage  # set inside checkConnection()
 
-    delay = 1 - (time.time() - (kb.originalPageTime or 0))
-    delay = max(0, min(1, delay))
+    delay = MAX_STABILITY_DELAY - (time.time() - (kb.originalPageTime or 0))
+    delay = max(0, min(MAX_STABILITY_DELAY, delay))
     time.sleep(delay)
 
     secondPage, _, _ = Request.queryPage(content=True, noteResponseTime=False, raise404=False)
 
-    if kb.redirectChoice:
+    if kb.choices.redirect:
         return None
 
     kb.pageStable = (firstPage == secondPage)
@@ -1198,7 +1283,7 @@ def checkStability():
             logger.error(errMsg)
 
     else:
-        warnMsg = "target URL content is not stable. sqlmap will base the page "
+        warnMsg = "target URL content is not stable (i.e. content differs). sqlmap will base the page "
         warnMsg += "comparison on a sequence matcher. If no dynamic nor "
         warnMsg += "injectable parameters are detected, or in case of "
         warnMsg += "junk results, refer to user's manual paragraph "
@@ -1252,45 +1337,7 @@ def checkStability():
 
     return kb.pageStable
 
-def checkString():
-    if not conf.string:
-        return True
-
-    infoMsg = "testing if the provided string is within the "
-    infoMsg += "target URL page content"
-    logger.info(infoMsg)
-
-    page, headers, _ = Request.queryPage(content=True)
-    rawResponse = "%s%s" % (listToStrValue(headers.headers if headers else ""), page)
-
-    if conf.string not in rawResponse:
-        warnMsg = "you provided '%s' as the string to " % conf.string
-        warnMsg += "match, but such a string is not within the target "
-        warnMsg += "URL raw response, sqlmap will carry on anyway"
-        logger.warn(warnMsg)
-
-    return True
-
-def checkRegexp():
-    if not conf.regexp:
-        return True
-
-    infoMsg = "testing if the provided regular expression matches within "
-    infoMsg += "the target URL page content"
-    logger.info(infoMsg)
-
-    page, headers, _ = Request.queryPage(content=True)
-    rawResponse = "%s%s" % (listToStrValue(headers.headers if headers else ""), page)
-
-    if not re.search(conf.regexp, rawResponse, re.I | re.M):
-        warnMsg = "you provided '%s' as the regular expression to " % conf.regexp
-        warnMsg += "match, but such a regular expression does not have any "
-        warnMsg += "match within the target URL raw response, sqlmap "
-        warnMsg += "will carry on anyway"
-        logger.warn(warnMsg)
-
-    return True
-
+@stackedmethod
 def checkWaf():
     """
     Reference: http://seclists.org/nmap-dev/2011/q2/att-1005/http-waf-detect.nse
@@ -1299,11 +1346,14 @@ def checkWaf():
     if any((conf.string, conf.notString, conf.regexp, conf.dummy, conf.offline, conf.skipWaf)):
         return None
 
+    if kb.originalCode == _http_client.NOT_FOUND:
+        return None
+
     _ = hashDBRetrieve(HASHDB_KEYS.CHECK_WAF_RESULT, True)
     if _ is not None:
         if _:
             warnMsg = "previous heuristics detected that the target "
-            warnMsg += "is protected by some kind of WAF/IPS/IDS"
+            warnMsg += "is protected by some kind of WAF/IPS"
             logger.critical(warnMsg)
         return _
 
@@ -1311,130 +1361,61 @@ def checkWaf():
         return None
 
     infoMsg = "checking if the target is protected by "
-    infoMsg += "some kind of WAF/IPS/IDS"
+    infoMsg += "some kind of WAF/IPS"
     logger.info(infoMsg)
 
     retVal = False
-    payload = "%d %s" % (randomInt(), IDS_WAF_CHECK_PAYLOAD)
+    payload = "%d %s" % (randomInt(), IPS_WAF_CHECK_PAYLOAD)
 
-    value = "" if not conf.parameters.get(PLACE.GET) else conf.parameters[PLACE.GET] + DEFAULT_GET_POST_DELIMITER
-    value += agent.addPayloadDelimiters("%s=%s" % (randomStr(), payload))
+    if PLACE.URI in conf.parameters:
+        place = PLACE.POST
+        value = "%s=%s" % (randomStr(), agent.addPayloadDelimiters(payload))
+    else:
+        place = PLACE.GET
+        value = "" if not conf.parameters.get(PLACE.GET) else conf.parameters[PLACE.GET] + DEFAULT_GET_POST_DELIMITER
+        value += "%s=%s" % (randomStr(), agent.addPayloadDelimiters(payload))
 
+    pushValue(kb.choices.redirect)
+    pushValue(kb.resendPostOnRedirect)
     pushValue(conf.timeout)
-    conf.timeout = IDS_WAF_CHECK_TIMEOUT
+
+    kb.choices.redirect = REDIRECTION.YES
+    kb.resendPostOnRedirect = False
+    conf.timeout = IPS_WAF_CHECK_TIMEOUT
 
     try:
-        retVal = Request.queryPage(place=PLACE.GET, value=value, getRatioValue=True, noteResponseTime=False, silent=True)[1] < IDS_WAF_CHECK_RATIO
+        retVal = (Request.queryPage(place=place, value=value, getRatioValue=True, noteResponseTime=False, silent=True, raise404=False, disableTampering=True)[1] or 0) < IPS_WAF_CHECK_RATIO
     except SqlmapConnectionException:
         retVal = True
     finally:
         kb.matchRatio = None
+
         conf.timeout = popValue()
-
-    if retVal:
-        warnMsg = "heuristics detected that the target "
-        warnMsg += "is protected by some kind of WAF/IPS/IDS"
-        logger.critical(warnMsg)
-
-        if not conf.identifyWaf:
-            message = "do you want sqlmap to try to detect backend "
-            message += "WAF/IPS/IDS? [y/N] "
-
-            if readInput(message, default='N', boolean=True):
-                conf.identifyWaf = True
-
-        if conf.timeout == defaults.timeout:
-            logger.warning("dropping timeout to %d seconds (i.e. '--timeout=%d')" % (IDS_WAF_CHECK_TIMEOUT, IDS_WAF_CHECK_TIMEOUT))
-            conf.timeout = IDS_WAF_CHECK_TIMEOUT
+        kb.resendPostOnRedirect = popValue()
+        kb.choices.redirect = popValue()
 
     hashDBWrite(HASHDB_KEYS.CHECK_WAF_RESULT, retVal, True)
 
-    return retVal
-
-def identifyWaf():
-    if not conf.identifyWaf:
-        return None
-
-    if not kb.wafFunctions:
-        setWafFunctions()
-
-    kb.testMode = True
-
-    infoMsg = "using WAF scripts to detect "
-    infoMsg += "backend WAF/IPS/IDS protection"
-    logger.info(infoMsg)
-
-    @cachedmethod
-    def _(*args, **kwargs):
-        page, headers, code = None, None, None
-        try:
-            pushValue(kb.redirectChoice)
-            kb.redirectChoice = REDIRECTION.NO
-            if kwargs.get("get"):
-                kwargs["get"] = urlencode(kwargs["get"])
-            kwargs["raise404"] = False
-            kwargs["silent"] = True
-            page, headers, code = Request.getPage(*args, **kwargs)
-        except Exception:
-            pass
-        finally:
-            kb.redirectChoice = popValue()
-        return page or "", headers or {}, code
-
-    retVal = []
-
-    for function, product in kb.wafFunctions:
-        if retVal and "unknown" in product.lower():
-            continue
-
-        try:
-            logger.debug("checking for WAF/IPS/IDS product '%s'" % product)
-            found = function(_)
-        except Exception, ex:
-            errMsg = "exception occurred while running "
-            errMsg += "WAF script for '%s' ('%s')" % (product, getSafeExString(ex))
-            logger.critical(errMsg)
-
-            found = False
-
-        if found:
-            errMsg = "WAF/IPS/IDS identified as '%s'" % product
-            logger.critical(errMsg)
-
-            retVal.append(product)
-
     if retVal:
-        if kb.wafSpecificResponse and len(retVal) == 1 and "unknown" in retVal[0].lower():
-            handle, filename = tempfile.mkstemp(prefix=MKSTEMP_PREFIX.SPECIFIC_RESPONSE)
-            os.close(handle)
-            with openFile(filename, "w+b") as f:
-                f.write(kb.wafSpecificResponse)
-
-            message = "WAF/IPS/IDS specific response can be found in '%s'. " % filename
-            message += "If you know the details on used protection please "
-            message += "report it along with specific response "
-            message += "to '%s'" % DEV_EMAIL_ADDRESS
-            logger.warn(message)
+        if not kb.identifiedWafs:
+            warnMsg = "heuristics detected that the target "
+            warnMsg += "is protected by some kind of WAF/IPS"
+            logger.critical(warnMsg)
 
         message = "are you sure that you want to "
-        message += "continue with further target testing? [y/N] "
-        choice = readInput(message, default='N', boolean=True)
-
-        if not conf.tamper:
-            warnMsg = "please consider usage of tamper scripts (option '--tamper')"
-            singleTimeWarnMessage(warnMsg)
+        message += "continue with further target testing? [Y/n] "
+        choice = readInput(message, default='Y', boolean=True)
 
         if not choice:
             raise SqlmapUserQuitException
-    else:
-        warnMsg = "WAF/IPS/IDS product hasn't been identified"
-        logger.warn(warnMsg)
-
-    kb.testType = None
-    kb.testMode = False
+        else:
+            if not conf.tamper:
+                warnMsg = "please consider usage of tamper scripts (option '--tamper')"
+                singleTimeWarnMessage(warnMsg)
 
     return retVal
 
+@stackedmethod
 def checkNullConnection():
     """
     Reference: http://www.wisec.it/sectou.php?id=472f952d79293
@@ -1443,59 +1424,76 @@ def checkNullConnection():
     if conf.data:
         return False
 
-    infoMsg = "testing NULL connection to the target URL"
-    logger.info(infoMsg)
+    _ = hashDBRetrieve(HASHDB_KEYS.CHECK_NULL_CONNECTION_RESULT, True)
+    if _ is not None:
+        kb.nullConnection = _
 
-    try:
+        if _:
+            dbgMsg = "resuming NULL connection method '%s'" % _
+            logger.debug(dbgMsg)
+
+    else:
+        infoMsg = "testing NULL connection to the target URL"
+        logger.info(infoMsg)
+
         pushValue(kb.pageCompress)
         kb.pageCompress = False
 
-        page, headers, _ = Request.getPage(method=HTTPMETHOD.HEAD)
+        try:
+            page, headers, _ = Request.getPage(method=HTTPMETHOD.HEAD, raise404=False)
 
-        if not page and HTTP_HEADER.CONTENT_LENGTH in (headers or {}):
-            kb.nullConnection = NULLCONNECTION.HEAD
+            if not page and HTTP_HEADER.CONTENT_LENGTH in (headers or {}):
+                kb.nullConnection = NULLCONNECTION.HEAD
 
-            infoMsg = "NULL connection is supported with HEAD method ('Content-Length')"
-            logger.info(infoMsg)
-        else:
-            page, headers, _ = Request.getPage(auxHeaders={HTTP_HEADER.RANGE: "bytes=-1"})
-
-            if page and len(page) == 1 and HTTP_HEADER.CONTENT_RANGE in (headers or {}):
-                kb.nullConnection = NULLCONNECTION.RANGE
-
-                infoMsg = "NULL connection is supported with GET method ('Range')"
+                infoMsg = "NULL connection is supported with HEAD method ('Content-Length')"
                 logger.info(infoMsg)
             else:
-                _, headers, _ = Request.getPage(skipRead=True)
+                page, headers, _ = Request.getPage(auxHeaders={HTTP_HEADER.RANGE: "bytes=-1"})
 
-                if HTTP_HEADER.CONTENT_LENGTH in (headers or {}):
-                    kb.nullConnection = NULLCONNECTION.SKIP_READ
+                if page and len(page) == 1 and HTTP_HEADER.CONTENT_RANGE in (headers or {}):
+                    kb.nullConnection = NULLCONNECTION.RANGE
 
-                    infoMsg = "NULL connection is supported with 'skip-read' method"
+                    infoMsg = "NULL connection is supported with GET method ('Range')"
                     logger.info(infoMsg)
+                else:
+                    _, headers, _ = Request.getPage(skipRead=True)
 
-    except SqlmapConnectionException, ex:
-        errMsg = getSafeExString(ex)
-        raise SqlmapConnectionException(errMsg)
+                    if HTTP_HEADER.CONTENT_LENGTH in (headers or {}):
+                        kb.nullConnection = NULLCONNECTION.SKIP_READ
 
-    finally:
-        kb.pageCompress = popValue()
+                        infoMsg = "NULL connection is supported with 'skip-read' method"
+                        logger.info(infoMsg)
 
-    return kb.nullConnection is not None
+        except SqlmapConnectionException:
+            pass
+
+        finally:
+            kb.pageCompress = popValue()
+            kb.nullConnection = False if kb.nullConnection is None else kb.nullConnection
+            hashDBWrite(HASHDB_KEYS.CHECK_NULL_CONNECTION_RESULT, kb.nullConnection, True)
+
+    return kb.nullConnection in getPublicTypeMembers(NULLCONNECTION, True)
 
 def checkConnection(suppressOutput=False):
-    if not any((conf.proxy, conf.tor, conf.dummy, conf.offline)):
-        try:
-            debugMsg = "resolving hostname '%s'" % conf.hostname
-            logger.debug(debugMsg)
-            socket.getaddrinfo(conf.hostname, None)
-        except socket.gaierror:
-            errMsg = "host '%s' does not exist" % conf.hostname
-            raise SqlmapConnectionException(errMsg)
-        except socket.error, ex:
-            errMsg = "problem occurred while "
-            errMsg += "resolving a host name '%s' ('%s')" % (conf.hostname, getSafeExString(ex))
-            raise SqlmapConnectionException(errMsg)
+    threadData = getCurrentThreadData()
+
+    if not re.search(r"\A\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\Z", conf.hostname):
+        if not any((conf.proxy, conf.tor, conf.dummy, conf.offline)):
+            try:
+                debugMsg = "resolving hostname '%s'" % conf.hostname
+                logger.debug(debugMsg)
+                socket.getaddrinfo(conf.hostname, None)
+            except socket.gaierror:
+                errMsg = "host '%s' does not exist" % conf.hostname
+                raise SqlmapConnectionException(errMsg)
+            except socket.error as ex:
+                errMsg = "problem occurred while "
+                errMsg += "resolving a host name '%s' ('%s')" % (conf.hostname, getSafeExString(ex))
+                raise SqlmapConnectionException(errMsg)
+            except UnicodeError as ex:
+                errMsg = "problem occurred while "
+                errMsg += "handling a host name '%s' ('%s')" % (conf.hostname, getSafeExString(ex))
+                raise SqlmapDataException(errMsg)
 
     if not suppressOutput and not conf.dummy and not conf.offline:
         infoMsg = "testing connection to the target URL"
@@ -1504,26 +1502,61 @@ def checkConnection(suppressOutput=False):
     try:
         kb.originalPageTime = time.time()
         page, headers, _ = Request.queryPage(content=True, noteResponseTime=False)
-        kb.originalPage = kb.pageTemplate = page
+
+        rawResponse = "%s%s" % (listToStrValue(headers.headers if headers else ""), page)
+
+        if conf.string:
+            infoMsg = "testing if the provided string is within the "
+            infoMsg += "target URL page content"
+            logger.info(infoMsg)
+
+            if conf.string not in rawResponse:
+                warnMsg = "you provided '%s' as the string to " % conf.string
+                warnMsg += "match, but such a string is not within the target "
+                warnMsg += "URL raw response, sqlmap will carry on anyway"
+                logger.warn(warnMsg)
+
+        if conf.regexp:
+            infoMsg = "testing if the provided regular expression matches within "
+            infoMsg += "the target URL page content"
+            logger.info(infoMsg)
+
+            if not re.search(conf.regexp, rawResponse, re.I | re.M):
+                warnMsg = "you provided '%s' as the regular expression " % conf.regexp
+                warnMsg += "which does not have any match within the target URL raw response. sqlmap "
+                warnMsg += "will carry on anyway"
+                logger.warn(warnMsg)
 
         kb.errorIsNone = False
 
+        if any(_ in (kb.serverHeader or "") for _ in PRECONNECT_INCOMPATIBLE_SERVERS):
+            singleTimeWarnMessage("turning off pre-connect mechanism because of incompatible server ('%s')" % kb.serverHeader)
+            conf.disablePrecon = True
+
         if not kb.originalPage and wasLastResponseHTTPError():
-            errMsg = "unable to retrieve page content"
-            raise SqlmapConnectionException(errMsg)
+            if getLastRequestHTTPError() not in (conf.ignoreCode or []):
+                errMsg = "unable to retrieve page content"
+                raise SqlmapConnectionException(errMsg)
         elif wasLastResponseDBMSError():
             warnMsg = "there is a DBMS error found in the HTTP response body "
             warnMsg += "which could interfere with the results of the tests"
             logger.warn(warnMsg)
         elif wasLastResponseHTTPError():
-            if getLastRequestHTTPError() != conf.ignoreCode:
+            if getLastRequestHTTPError() not in (conf.ignoreCode or []):
                 warnMsg = "the web server responded with an HTTP error code (%d) " % getLastRequestHTTPError()
                 warnMsg += "which could interfere with the results of the tests"
                 logger.warn(warnMsg)
         else:
             kb.errorIsNone = True
 
-    except SqlmapConnectionException, ex:
+        if kb.choices.redirect == REDIRECTION.YES and threadData.lastRedirectURL and threadData.lastRedirectURL[0] == threadData.lastRequestUID:
+            if (threadData.lastRedirectURL[1] or "").startswith("https://") and conf.hostname in getUnicode(threadData.lastRedirectURL[1]):
+                conf.url = re.sub(r"https?://", "https://", conf.url)
+                match = re.search(r":(\d+)", threadData.lastRedirectURL[1])
+                port = match.group(1) if match else 443
+                conf.url = re.sub(r":\d+(/|\Z)", r":%s\g<1>" % port, conf.url)
+
+    except SqlmapConnectionException as ex:
         if conf.ipv6:
             warnMsg = "check connection to a provided "
             warnMsg += "IPv6 address with a tool like ping6 "
@@ -1532,7 +1565,7 @@ def checkConnection(suppressOutput=False):
             warnMsg += "any addressing issues"
             singleTimeWarnMessage(warnMsg)
 
-        if any(code in kb.httpErrorCodes for code in (httplib.NOT_FOUND, )):
+        if any(code in kb.httpErrorCodes for code in (_http_client.NOT_FOUND, )):
             errMsg = getSafeExString(ex)
             logger.critical(errMsg)
 
@@ -1546,6 +1579,19 @@ def checkConnection(suppressOutput=False):
                 kb.ignoreNotFound = True
         else:
             raise
+    finally:
+        kb.originalPage = kb.pageTemplate = threadData.lastPage
+        kb.originalCode = threadData.lastCode
+
+    if conf.cj and not conf.cookie and not any(_[0] == HTTP_HEADER.COOKIE for _ in conf.httpHeaders) and not conf.dropSetCookie:
+        candidate = DEFAULT_COOKIE_DELIMITER.join("%s=%s" % (_.name, _.value) for _ in conf.cj)
+
+        message = "you have not declared cookie(s), while "
+        message += "server wants to set its own ('%s'). " % re.sub(r"(=[^=;]{10}[^=;])[^=;]+([^=;]{10})", r"\g<1>...\g<2>", candidate)
+        message += "Do you want to use those [Y/n] "
+        if readInput(message, default='Y', boolean=True):
+            kb.mergeCookies = True
+            conf.httpHeaders.append((HTTP_HEADER.COOKIE, candidate))
 
     return True
 
@@ -1553,8 +1599,5 @@ def checkInternet():
     content = Request.getPage(url=CHECK_INTERNET_ADDRESS, checking=True)[0]
     return CHECK_INTERNET_VALUE in (content or "")
 
-def setVerbosity():  # Cross-linked function
-    raise NotImplementedError
-
-def setWafFunctions():  # Cross-linked function
+def setVerbosity():  # Cross-referenced function
     raise NotImplementedError

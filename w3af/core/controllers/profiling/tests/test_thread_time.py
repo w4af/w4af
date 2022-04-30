@@ -22,6 +22,8 @@ import unittest
 import time
 import hashlib
 
+import pytest
+
 from w3af.core.controllers.profiling.thread_time import thread_active_time
 
 
@@ -40,6 +42,7 @@ class TestThreadTime(unittest.TestCase):
         spent = thread_active_time() - start
         self.assertLess(spent, 0.1)
 
+    @pytest.mark.deprecated
     def test_thread_active_time_hash(self):
         #
         # What we want to test here is that the time measured is not the wall time
@@ -50,9 +53,9 @@ class TestThreadTime(unittest.TestCase):
         start_thread = thread_active_time()
         start_wall = time.time()
 
-        for i in xrange(1000000):
+        for i in range(1000000):
             h = hashlib.sha512()
-            h.update('%s' % i)
+            h.update(str(i).encode("utf-8"))
             h.hexdigest()
 
         spent_thread = thread_active_time() - start_thread

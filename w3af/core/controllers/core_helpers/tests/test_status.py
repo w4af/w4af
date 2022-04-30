@@ -20,9 +20,10 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
-from mock import Mock
+from unittest.mock import Mock
 
 from w3af.core.controllers.w3afCore import w3afCore
 from w3af.core.controllers.core_helpers.status import (CoreStatus,
@@ -65,20 +66,19 @@ class TestStatus(unittest.TestCase):
         self.assertEqual(s.get_status(), STOPPED)
         self.assertFalse(s.is_running())
     
+    @pytest.mark.deprecated
     def test_queue_status_not_started(self):
         core = w3afCore()
         s = CoreStatus(core)
         
-        self.assertEqual(s.get_crawl_input_speed(), None)
-        self.assertEqual(s.get_crawl_output_speed(), None)
-        self.assertEqual(s.get_crawl_qsize(), None)
+        self.assertEqual(s.get_crawl_input_speed(), 0)
+        self.assertEqual(s.get_crawl_output_speed(), 0)
+        self.assertEqual(s.get_crawl_qsize(), 0)
         self.assertEqual(s.get_crawl_current_fr(), None)
-        self.assertEqual(s.get_crawl_eta(), None)
         
-        self.assertEqual(s.get_audit_input_speed(), None)
-        self.assertEqual(s.get_audit_output_speed(), None)
-        self.assertEqual(s.get_audit_qsize(), None)
+        self.assertEqual(s.get_audit_input_speed(), 0)
+        self.assertEqual(s.get_audit_output_speed(), 0)
+        self.assertEqual(s.get_audit_qsize(), 0)
         self.assertEqual(s.get_audit_current_fr(), None)
-        self.assertEqual(s.get_audit_eta(), None)
 
         core.worker_pool.terminate_join()

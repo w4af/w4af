@@ -274,9 +274,7 @@ class allowed_methods(InfrastructurePlugin):
         for method in methods_to_test:
             method_functor = getattr(self._uri_opener, method)
             try:
-                response = apply(method_functor,
-                                 (url,),
-                                 {'error_handling': False})
+                response = method_functor(*(url,), **{'error_handling': False})
             except HTTPRequestException:
                 continue
 

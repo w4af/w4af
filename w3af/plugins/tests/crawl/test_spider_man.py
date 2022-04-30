@@ -18,9 +18,10 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import time
 import socket
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from multiprocessing.dummy import Process
 
@@ -50,7 +51,7 @@ class BrowserThread(Process):
         """
 
         # Wait for the proxy to start
-        for i in xrange(120):
+        for i in range(120):
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             try:
                 s.connect(('127.0.0.1', self.proxy_port))
@@ -61,10 +62,11 @@ class BrowserThread(Process):
 
         proxy_cfg = {'http': 'http://127.0.0.1:%s/' % self.proxy_port,
                      'https': 'http://127.0.0.1:%s/' % self.proxy_port}
-        proxy_support = urllib2.ProxyHandler(proxy_cfg)
-        opener = urllib2.build_opener(proxy_support)
+        proxy_support = urllib.request.ProxyHandler(proxy_cfg)
+        opener = urllib.request.build_opener(proxy_support)
+
         # Avoid this, it might influence other tests!
-        #urllib2.install_opener(opener)
+        # urllib2.install_opener(opener)
 
         all_urls = BROWSE_URLS
 
@@ -72,10 +74,10 @@ class BrowserThread(Process):
             url = self.url_resolver(path)
 
             if method == 'POST':
-                req = urllib2.Request(url, payload)
+                req = urllib.request.Request(url, payload)
                 try:
                     response = opener.open(req)
-                except Exception, ex:
+                except Exception as ex:
                     self.responses.append(str(ex))
                 else:
                     self.responses.append(response.read())
@@ -87,14 +89,14 @@ class BrowserThread(Process):
 
                 try:
                     response = opener.open(full_url)
-                except Exception, ex:
-                    self.responses.append(str(ex))
+                except Exception as ex:
+                    self.responses.append(ex.read())
                 else:
                     self.responses.append(response.read())
 
         try:
             response = opener.open(TERMINATE_URL.url_string)
-        except Exception, ex:
+        except Exception as ex:
             self.responses.append(str(ex))
         else:
             self.responses.append(response.read())
@@ -147,6 +149,7 @@ class TestSpiderman(PluginTest):
 
 class TestHTTPSpiderman(TestSpiderman):
 
+    @pytest.mark.deprecated
     def test_spiderman_http(self):
         port = get_unused_port()
 
@@ -163,6 +166,7 @@ class TestHTTPSpiderman(TestSpiderman):
 
 class TestHTTPSSpiderman(TestSpiderman):
 
+    @pytest.mark.deprecated
     def test_spiderman_https(self):
         port = get_unused_port()
 

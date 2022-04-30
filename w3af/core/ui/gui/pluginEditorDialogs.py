@@ -1,5 +1,5 @@
-import pygtk
-import gtk
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 import os
 
 

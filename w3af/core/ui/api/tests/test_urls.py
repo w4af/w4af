@@ -19,14 +19,18 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import json
 
-from w3af.core.ui.api.tests.utils.api_unittest import APIUnitTest
+from w3af.core.ui.api.tests.utils.test_api import APIUnitTest
 from w3af.core.ui.api.tests.utils.test_profile import get_test_profile
+from nose.plugins.attrib import attr
 
 
+@attr("moth")
 class URLTest(APIUnitTest):
 
+    @pytest.mark.deprecated
     def test_url_list(self):
         profile, target_url = get_test_profile()
         data = {'scan_profile': profile,
@@ -53,8 +57,8 @@ class URLTest(APIUnitTest):
         url_items = json.loads(response.data)['items']
 
         expected_urls = [target_url,
-                         u'%s/where_integer_qs.py' % target_url[:-1],
-                         u'%s/where_string_single_qs.py' % target_url[:-1],
-                         u'%s/where_integer_form.py' % target_url[:-1]]
+                         '%s/where_integer_qs.py' % target_url[:-1],
+                         '%s/where_string_single_qs.py' % target_url[:-1],
+                         '%s/where_integer_form.py' % target_url[:-1]]
         self.assertEqual(set(url_items), set(expected_urls))
 

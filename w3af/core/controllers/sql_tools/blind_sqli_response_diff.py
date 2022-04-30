@@ -29,7 +29,8 @@ from w3af.core.data.fuzzer.utils import rand_number
 from w3af.core.data.misc.encoding import smart_str_ignore
 from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal
 from w3af.core.controllers.exceptions import HTTPRequestException
-from w3af.core.controllers.misc.diff import chunked_diff
+from w3af.core.controllers.diff.diff import chunked_diff
+from w3af.core.controllers.diff.sequence_matcher import SequenceMatcherTimeoutException
 
 
 class BlindSqliResponseDiff(object):
@@ -42,7 +43,7 @@ class BlindSqliResponseDiff(object):
     """
 
     SPECIAL_CHARS = '"\'=()'
-    SYNTAX_ERROR = u"a'b\"c'd\""
+    SYNTAX_ERROR = "a'b\"c'd\""
     CONFIRMATION_ROUNDS = 3
 
     NUMERIC = 'numeric'
@@ -90,7 +91,7 @@ class BlindSqliResponseDiff(object):
         # seems to be a blind SQL injection
         #
         confirmations = 0
-        for _ in xrange(self.CONFIRMATION_ROUNDS):
+        for _ in range(self.CONFIRMATION_ROUNDS):
 
             # Get fresh statements with new random numbers for each
             # confirmation round.
@@ -393,7 +394,11 @@ class BlindSqliResponseDiff(object):
         start = time.time()
 
         if compare_diff:
-            body1, body2 = chunked_diff(body1, body2)
+            try:
+                body1, body2 = chunked_diff(body1, body2)
+            except SequenceMatcherTimeoutException:
+                self.debug('equal_with_limit() timed out at chunked_diff()')
+                return False
 
         cmp_res = fuzzy_equal(body1, body2, self._eq_limit)
 

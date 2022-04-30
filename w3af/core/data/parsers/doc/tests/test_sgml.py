@@ -66,36 +66,36 @@ class TestSGMLParser(unittest.TestCase):
         self.assertEqual(p.get_emails(), set())
 
     def test_extract_emails_mailto(self):
-        body = u'<a href="mailto:abc@w3af.com">test</a>'
+        body = '<a href="mailto:abc@w3af.com">test</a>'
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
 
-        expected_res = {u'abc@w3af.com'}
+        expected_res = {'abc@w3af.com'}
         self.assertEqual(p.get_emails(), expected_res)
 
     def test_extract_emails_mailto_dup(self):
-        body = u'<a href="mailto:abc@w3af.com">a</a>'\
-               u'<a href="mailto:abc@w3af.com">b</a>'
+        body = '<a href="mailto:abc@w3af.com">a</a>'\
+               '<a href="mailto:abc@w3af.com">b</a>'
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
 
-        expected_res = {u'abc@w3af.com'}
+        expected_res = {'abc@w3af.com'}
         self.assertEqual(p.get_emails(), expected_res)
 
     def test_extract_emails_mailto_not_dup(self):
-        body = u'<a href="mailto:abc@w3af.com">a</a>'\
-               u'<a href="mailto:abc_def@w3af.com">b</a>'
+        body = '<a href="mailto:abc@w3af.com">a</a>'\
+               '<a href="mailto:abc_def@w3af.com">b</a>'
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
 
-        expected_res = {u'abc@w3af.com', u'abc_def@w3af.com'}
+        expected_res = {'abc@w3af.com', 'abc_def@w3af.com'}
         self.assertEqual(p.get_emails(), expected_res)
 
     def test_mailto_ignored_in_links(self):
-        body = u'<a href="mailto:abc@w3af.com">a</a>'
+        body = '<a href="mailto:abc@w3af.com">a</a>'
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
@@ -104,13 +104,13 @@ class TestSGMLParser(unittest.TestCase):
         self.assertEqual(parsed, [])
 
     def test_mailto_subject_body(self):
-        body = u'<a href="mailto:abc@w3af.com?subject=testing out mailto'\
-               u'&body=Just testing">test</a>'
+        body = '<a href="mailto:abc@w3af.com?subject=testing out mailto'\
+               '&body=Just testing">test</a>'
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
 
-        expected_res = {u'abc@w3af.com'}
+        expected_res = {'abc@w3af.com'}
         self.assertEqual(p.get_emails(), expected_res)
 
     def test_parser_attrs(self):
@@ -123,18 +123,18 @@ class TestSGMLParser(unittest.TestCase):
         self.assertFalse(getattr(p, '_inside_text_area'))
         self.assertFalse(getattr(p, '_inside_script'))
 
-        self.assertEquals(set(), getattr(p, '_tag_and_url'))
-        self.assertEquals([], getattr(p, '_forms'))
-        self.assertEquals([], getattr(p, '_comments_in_doc'))
-        self.assertEquals([], getattr(p, '_meta_redirs'))
-        self.assertEquals([], getattr(p, '_meta_tags'))
+        self.assertEqual(set(), getattr(p, '_tag_and_url'))
+        self.assertEqual([], getattr(p, '_forms'))
+        self.assertEqual([], getattr(p, '_comments_in_doc'))
+        self.assertEqual([], getattr(p, '_meta_redirs'))
+        self.assertEqual([], getattr(p, '_meta_tags'))
 
     def test_baseurl(self):
         body = HTML_DOC % {'head': BASE_TAG, 'body': ''}
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
-        self.assertEquals(URL('http://www.w3afbase.com/'), p._base_url)
+        self.assertEqual(URL('http://www.w3afbase.com/'), p._base_url)
 
     def test_meta_tags(self):
         body = HTML_DOC % {'head': META_REFRESH + META_REFRESH_WITH_URL,
@@ -169,7 +169,7 @@ class TestSGMLParser(unittest.TestCase):
         """
         def islower(s):
             il = False
-            if isinstance(s, basestring):
+            if isinstance(s, str):
                 il = s.islower()
             else:
                 il = all(k.islower() for k in s)
@@ -185,7 +185,7 @@ class TestSGMLParser(unittest.TestCase):
                 TEXTAREA_WITH_ID_AND_DATA, INPUT_HIDDEN)
         ops = "lower", "upper", "title"
 
-        for indexes in combinations(range(len(tags)), 2):
+        for indexes in combinations(list(range(len(tags))), 2):
 
             body_elems = []
 
@@ -217,8 +217,8 @@ class TestSGMLParser(unittest.TestCase):
         p = SGMLParser(r)
         p.parse()
         parsed_refs = p.references[0]
-        self.assertEquals(1, len(parsed_refs))
-        self.assertEquals(
+        self.assertEqual(1, len(parsed_refs))
+        self.assertEqual(
             'http://w3af.com/x.py?a=1', parsed_refs[0].url_string)
 
     def test_reference_with_colon(self):
@@ -234,7 +234,7 @@ class TestSGMLParser(unittest.TestCase):
         #    Finding zero URLs is the correct behavior based on what
         #    I've seen in Opera and Chrome.
         #
-        self.assertEquals(0, len(parsed_refs))
+        self.assertEqual(0, len(parsed_refs))
 
     def test_get_clear_text_body(self):
         html = 'header <b>ABC</b>-<b>DEF</b>-<b>XYZ</b> footer'
@@ -245,7 +245,7 @@ class TestSGMLParser(unittest.TestCase):
         p = SGMLParser(r)
         p.parse()
 
-        self.assertEquals(clear_text, p.get_clear_text_body())
+        self.assertEqual(clear_text, p.get_clear_text_body())
 
     def test_get_clear_text_body_memoized(self):
         html = 'header <b>ABC</b>-<b>DEF</b>-<b>XYZ</b> footer'
@@ -257,13 +257,13 @@ class TestSGMLParser(unittest.TestCase):
         p.parse()
 
         calculated_clear_text = p.get_clear_text_body()
-        self.assertEquals(clear_text, calculated_clear_text)
+        self.assertEqual(clear_text, calculated_clear_text)
 
     def test_get_clear_text_body_encodings(self):
 
         raise SkipTest('Not sure why this one is failing :S')
 
-        for lang_desc, (body, encoding) in TEST_RESPONSES.iteritems():
+        for lang_desc, (body, encoding) in TEST_RESPONSES.items():
             encoding_header = 'text/html; charset=%s' % encoding
             headers = Headers([('Content-Type', encoding_header)])
 
@@ -284,9 +284,10 @@ class TestSGMLParser(unittest.TestCase):
         """
         test_file_path = 'core/data/url/tests/data/encoding_4402.php'
         test_file = os.path.join(ROOT_PATH, test_file_path)
-        body = file(test_file, 'rb').read()
+        with open(test_file, "rb") as f:
+            body = f.read()
 
-        sample_encodings = [encoding for _, (_, encoding) in TEST_RESPONSES.iteritems()]
+        sample_encodings = [encoding for _, (_, encoding) in TEST_RESPONSES.items()]
         sample_encodings.extend(['', 'utf-8'])
 
         for encoding in sample_encodings:

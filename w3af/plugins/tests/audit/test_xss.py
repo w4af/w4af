@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from nose.plugins.attrib import attr
 from unittest import TestCase
 
@@ -106,6 +107,7 @@ class TestXSS(PluginTest):
         return expected_data
 
     @attr('smoke')
+    @pytest.mark.deprecated
     def test_find_one_xss(self):
         """
         Simplest possible test to verify that we identify XSSs.
@@ -120,11 +122,12 @@ class TestXSS(PluginTest):
         expected_data = self.normalize_expected_data(self.XSS_URL_SMOKE,
                                                      EXPECTED)
         
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
 
+    @pytest.mark.deprecated
     def test_2919_javascript_src_frame(self):
         """
         https://github.com/andresriancho/w3af/issues/2919
@@ -141,11 +144,12 @@ class TestXSS(PluginTest):
         expected_data = self.normalize_expected_data(self.WAVSEP_PATH,
                                                      EXPECTED)
 
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
 
+    @pytest.mark.deprecated
     def test_no_false_positive_499(self):
         """
         Avoiding false positives in the case where the payload is echoed back
@@ -158,13 +162,14 @@ class TestXSS(PluginTest):
 
         xss_vulns = self.kb.get('xss', 'xss')
         
-        self.assertEquals(0, len(xss_vulns), xss_vulns)
+        self.assertEqual(0, len(xss_vulns), xss_vulns)
 
     def scan_file_upload_fuzz_files(self):
         cfg = self._run_configs['cfg']
         target_path = get_php_moth_http('/audit/file_upload/echo_content/')
         self._scan(target_path, cfg['plugins'])
 
+    @pytest.mark.deprecated
     def test_user_configured_find_in_file_upload_content(self):
         """
         Do not send file content mutants unless the user configures it.
@@ -182,6 +187,7 @@ class TestXSS(PluginTest):
         xss_vulns = self.kb.get('xss', 'xss')
         self.assertEqual(len(xss_vulns), 0, xss_vulns)
 
+    @pytest.mark.deprecated
     def test_find_in_file_upload_content(self):
         """
         Find XSS in the content of an uploaded file
@@ -196,11 +202,12 @@ class TestXSS(PluginTest):
         EXPECTED = [('txt_uploader.php', 'txt_file', ['txt_file']), ]
         expected_data = self.normalize_expected_data(target_path, EXPECTED)
 
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
 
+    @pytest.mark.deprecated
     def test_found_xss(self):
         cfg = self._run_configs['cfg']
         self._scan(self.XSS_PATH, cfg['plugins'])
@@ -241,7 +248,7 @@ class TestXSS(PluginTest):
         expected_data = self.normalize_expected_data(self.XSS_PATH,
                                                      expected)
 
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
@@ -257,6 +264,7 @@ class TestXSS(PluginTest):
                          csp_vulns)
 
     @attr('ci_fails')
+    @pytest.mark.deprecated
     def test_found_xss_with_redirect(self):
         cfg = self._run_configs['cfg']
         self._scan(self.XSS_302_URL, cfg['plugins'])
@@ -276,11 +284,12 @@ class TestXSS(PluginTest):
         expected_data = self.normalize_expected_data(self.XSS_302_URL,
                                                      expected)
         
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
 
+    @pytest.mark.deprecated
     def test_found_wavsep_get_xss(self):
         cfg = self._run_configs['cfg']
         self._scan(self.WAVSEP_PATH, cfg['plugins'])
@@ -327,7 +336,7 @@ class TestXSS(PluginTest):
         expected_data = self.normalize_expected_data(self.WAVSEP_PATH,
                                                      expected)
         
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
@@ -343,7 +352,9 @@ class TestXSSPayloadsBreak(TestCase):
 
                 try:
                     # Most contexts
+                    # pylint: disable=E1120
                     context = context_klass(payload, '')
+                    # pylint: enable=E1120
                 except TypeError:
                     # Attribute contexts
                     context = context_klass(payload, '', '')

@@ -1,9 +1,39 @@
+# Version 1.6 (2022-01-03)
+
+* [View changes](https://github.com/sqlmapproject/sqlmap/compare/1.5...1.6)
+* [View issues](https://github.com/sqlmapproject/sqlmap/milestone/7?closed=1)
+
+# Version 1.5 (2021-01-03)
+
+* [View changes](https://github.com/sqlmapproject/sqlmap/compare/1.4...1.5)
+* [View issues](https://github.com/sqlmapproject/sqlmap/milestone/6?closed=1)
+
+# Version 1.4 (2020-01-01)
+
+* [View changes](https://github.com/sqlmapproject/sqlmap/compare/1.3...1.4)
+* [View issues](https://github.com/sqlmapproject/sqlmap/milestone/5?closed=1)
+
+# Version 1.3 (2019-01-05)
+
+* [View changes](https://github.com/sqlmapproject/sqlmap/compare/1.2...1.3)
+* [View issues](https://github.com/sqlmapproject/sqlmap/milestone/4?closed=1)
+
+# Version 1.2 (2018-01-08)
+
+* [View changes](https://github.com/sqlmapproject/sqlmap/compare/1.1...1.2)
+* [View issues](https://github.com/sqlmapproject/sqlmap/milestone/3?closed=1)
+
+# Version 1.1 (2017-04-07)
+
+* [View changes](https://github.com/sqlmapproject/sqlmap/compare/1.0...1.1)
+* [View issues](https://github.com/sqlmapproject/sqlmap/milestone/2?closed=1)
+
 # Version 1.0 (2016-02-27)
 
 * Implemented support for automatic decoding of page content through detected charset.
 * Implemented mechanism for proper data dumping on DBMSes not supporting `LIMIT/OFFSET` like mechanism(s) (e.g. Microsoft SQL Server, Sybase, etc.).
 * Major improvements to program stabilization based on user reports.
-* Added new tampering scripts avoiding popular WAF/IPS/IDS mechanisms.
+* Added new tampering scripts avoiding popular WAF/IPS mechanisms.
 * Fixed major bug with DNS leaking in Tor mode.
 * Added wordlist compilation made of the most popular cracking dictionaries.
 * Implemented multi-processor hash cracking routine(s).
@@ -23,7 +53,7 @@
 * Added option `--csv-del` for manually setting delimiting character used in CSV output.
 * Added switch `--hex` for using DBMS hex conversion function(s) for data retrieval.
 * Added switch `--smart` for conducting through tests only in case of positive heuristic(s).
-* Added switch `--check-waf` for checking of existence of WAF/IPS/IDS protection.
+* Added switch `--check-waf` for checking of existence of WAF/IPS protection.
 * Added switch `--schema` to enumerate DBMS schema: shows all columns of all databases' tables.
 * Added switch `--count` to count the number of entries for a specific table or all database(s) tables.
 * Major improvements to switches `--tables` and `--columns`.
@@ -55,7 +85,7 @@
 * Added option `--host` to set the HTTP Host header value.
 * Added switch `--hostname` to turn on retrieval of DBMS server hostname.
 * Added switch `--hpp` to turn on the usage of HTTP parameter pollution WAF bypass method.
-* Added switch `--identify-waf` for turning on the thorough testing of WAF/IPS/IDS protection.
+* Added switch `--identify-waf` for turning on the thorough testing of WAF/IPS protection.
 * Added switch `--ignore-401` to ignore HTTP Error Code 401 (Unauthorized).
 * Added switch `--invalid-bignum` for usage of big numbers while invalidating values.
 * Added switch `--invalid-logical` for usage of logical operations while invalidating values.
@@ -78,7 +108,7 @@
 * Added option `--skip` to skip testing of given parameter(s).
 * Added switch `--skip-static` to skip testing parameters that not appear to be dynamic.
 * Added switch `--skip-urlencode` to skip URL encoding of payload data.
-* Added switch `--skip-waf` to skip heuristic detection of WAF/IPS/IDS protection.
+* Added switch `--skip-waf` to skip heuristic detection of WAF/IPS protection.
 * Added switch `--smart` to conduct thorough tests only if positive heuristic(s).
 * Added option `--sql-file` for setting file(s) holding SQL statements to be executed (in case of stacked SQLi).
 * Added switch `--sqlmap-shell` to turn on interactive sqlmap shell prompt.
@@ -151,7 +181,7 @@
 * Major code cleanup.
 * Added simple file encryption/compression utility, extra/cloak/cloak.py, used by sqlmap to decrypt on the fly Churrasco, UPX executable and web shells consequently reducing drastically the number of anti-virus software that mistakenly mark sqlmap as a malware.
 * Updated user's manual.
-* Created several demo videos, hosted on YouTube (http://www.youtube.com/user/inquisb) and linked from http://sqlmap.org/demo.html.
+* Created several demo videos, hosted on YouTube (http://www.youtube.com/user/inquisb) and linked from https://sqlmap.org/demo.html.
 
 # Version 0.8 release candidate (2009-09-21)
 
@@ -323,7 +353,7 @@
 * Added Microsoft SQL Server extensive DBMS fingerprint checks based upon accurate '@@version' parsing matching on an XML file to get also the exact patching level of the DBMS;
 * Added support for query ETA (Estimated Time of Arrival) real time calculation (`--eta`);
 * Added support to extract database management system users password hash on MySQL and PostgreSQL (`--passwords`);
-* Added docstrings to all functions, classes and methods, consequently released the sqlmap development documentation <http://sqlmap.org/dev/>;
+* Added docstrings to all functions, classes and methods, consequently released the sqlmap development documentation <https://sqlmap.org/dev/>;
 * Implemented Google dorking feature (`-g`) to take advantage of Google results affected by SQL injection to perform other command line argument on their DBMS;
 * Improved logging functionality: passed from banal 'print' to Python native logging library;
 * Added support for more than one parameter in `-p` command line option;

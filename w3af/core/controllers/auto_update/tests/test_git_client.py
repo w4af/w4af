@@ -18,17 +18,20 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import unittest
 import subprocess
 
-from mock import MagicMock
+from unittest.mock import MagicMock
 from nose.plugins.skip import SkipTest
+from nose.plugins.attrib import attr
 
 from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
 from w3af.core.controllers.auto_update.git_client import GitClient
 from w3af.core.controllers.auto_update.utils import get_current_branch
 
-
+@attr('git')
+@pytest.mark.skip(reason="deprecated")
 class TestGitClient(unittest.TestCase):
     
     def test_get_URL(self):
@@ -36,9 +39,9 @@ class TestGitClient(unittest.TestCase):
         
         # https://github.com/andresriancho/w3af/ provides a list of all the
         # URLs which can be used to clone the repo
-        REPO_URLS = ('git@github.com:andresriancho/w3af.git',
-                     'https://github.com/andresriancho/w3af.git',
-                     'git://github.com/andresriancho/w3af.git')
+        REPO_URLS = ('git@github.com:codders/w3af-python3.git',
+                     'https://github.com/codders/w3af-python3.git',
+                     'git://github.com/codders/w3af-python3.git')
         
         self.assertIn(client.URL, REPO_URLS)
     
@@ -47,7 +50,7 @@ class TestGitClient(unittest.TestCase):
         local_head = client.get_local_head_id()
         
         self.assertEqual(len(local_head), 40)
-        self.assertIsInstance(local_head, basestring)
+        self.assertIsInstance(local_head, str)
         
         # Get the ID using an alternative way for double checking
         proc = subprocess.Popen(['git', 'log', '-n', '1'], stdout=subprocess.PIPE)
@@ -73,7 +76,7 @@ class TestGitClient(unittest.TestCase):
         client.fetch.assert_called_once_with()
                 
         self.assertEqual(len(remote_head), 40)
-        self.assertIsInstance(remote_head, basestring)
+        self.assertIsInstance(remote_head, str)
         
         # Get the ID using an alternative way for double checking
         branch = 'refs/remotes/origin/%s' % get_current_branch()

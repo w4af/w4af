@@ -122,7 +122,7 @@ class server_header(InfrastructurePlugin):
         """
         Analyze X-Powered-By header.
         """
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             for needle in ['ASPNET', 'POWERED']:
                 if needle in header_name.upper():
                     powered_by = response.get_headers()[header_name]

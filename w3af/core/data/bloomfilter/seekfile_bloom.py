@@ -60,8 +60,8 @@ class FileSeekBloomFilter(GenericBloomFilter):
         self._mmapped_file.seek(0)
         
         random.seed(42)
-        self.hash_seeds = ([str(random.getrandbits(32)) for _ in 
-                            xrange(self.num_hashes)])
+        self.hash_seeds = ([str(random.getrandbits(32)).encode('utf-8') for _ in
+                            range(self.num_hashes)])
 
     def add(self, key):
         """Add an element to the filter"""
@@ -86,7 +86,7 @@ class FileSeekBloomFilter(GenericBloomFilter):
         """
         :return: A string representation of @key.
         """
-        return unicode(key).encode("utf-8")
+        return str(key).encode("utf-8")
     
     def generate_bits_for_key(self, key):
         """
@@ -102,7 +102,7 @@ class FileSeekBloomFilter(GenericBloomFilter):
         # seconds (26 vs. 28), so I'm going to leave md5.
         #m = hashlib.sha512()
         
-        for i in xrange(self.num_hashes):
+        for i in range(self.num_hashes):
             seed = self.hash_seeds[i]
             
             m.update(seed)
@@ -135,7 +135,7 @@ class FileSeekBloomFilter(GenericBloomFilter):
         byte = ord(char)
         byte |= mask
         self._mmapped_file.seek(byteno)
-        self._mmapped_file.write(chr(byte))
+        self._mmapped_file.write(bytes([byte]))
 
     def close(self):
         """Close the file handler and remove the backend file."""

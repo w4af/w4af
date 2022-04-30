@@ -60,7 +60,7 @@ def debug_notify(meth):
     def debug(self, *args, **kwds):
         try:
             result = meth(self, *args, **kwds)
-        except ImageNotFound, inf:
+        except ImageNotFound as inf:
             title = 'Error'
             message = 'Error found while running %s%s: %s'
             message = message % (name, args, inf)

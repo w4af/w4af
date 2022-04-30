@@ -22,16 +22,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 import time
 import socket
-import select
+import selectors
 import threading
 import mimetypes
-import BaseHTTPServer
+import http.server
 
 import w3af.core.controllers.output_manager as om
+
+from w3af.core.controllers.misc.poll import poll
 
 # Created servers
 _servers = {}
 
+if hasattr(selectors, 'PollSelector'):
+    _ServerSelector = selectors.PollSelector
+else:
+    _ServerSelector = selectors.SelectSelector
 
 def is_running(ip, port):
     """
@@ -51,23 +57,21 @@ def _get_inst(ip, port):
     return _servers.get((ip, port), None)
 
 
-class HTTPServer(BaseHTTPServer.HTTPServer):
-    """
-    Most of the behavior added here is included in
-    """
-
+class HTTPServer(http.server.HTTPServer):
     def __init__(self, server_address, webroot, RequestHandlerClass):
-        BaseHTTPServer.HTTPServer.__init__(self, server_address,
+        http.server.HTTPServer.__init__(self, server_address,
                                            RequestHandlerClass)
-        self.webroot = webroot
         self.__is_shut_down = threading.Event()
         self.__shutdown_request = False
+        self.allow_reuse_address = True
+        self.webroot = webroot
 
     def is_down(self):
         return self.__is_shut_down.is_set()
 
     def serve_forever(self, poll_interval=0.5):
-        """Handle one request at a time until shutdown.
+        """
+        Handle one request at a time until shutdown.
 
         Polls for shutdown every poll_interval seconds. Ignores
         self.timeout. If you need to do periodic tasks, do them in
@@ -75,36 +79,26 @@ class HTTPServer(BaseHTTPServer.HTTPServer):
         """
         self.__is_shut_down.clear()
         try:
-            while not self.__shutdown_request:
-                self.handle_request(poll_interval=poll_interval)
+            # XXX: Consider using another file descriptor or connecting to the
+            # socket to wake this up instead of polling. Polling reduces our
+            # responsiveness to a shutdown request and wastes cpu at all other
+            # times.
+            with _ServerSelector() as selector:
+                selector.register(self, selectors.EVENT_READ)
+
+                while not self.__shutdown_request:
+                    ready = selector.select(poll_interval)
+                    # bpo-35017: shutdown() called during select(), exit immediately.
+                    if self.__shutdown_request:
+                        break
+                    if ready:
+                        self._handle_request_noblock()
+
+                    self.service_actions()
         finally:
+            self.server_close()
             self.__shutdown_request = False
             self.__is_shut_down.set()
-
-    def handle_request(self, poll_interval=0.5):
-        """Handle one request, possibly blocking."""
-
-        fd_sets = select.select([self], [], [], poll_interval)
-        if not fd_sets[0]:
-            self.server_close()
-            self.__shutdown_request = True
-            return
-
-        try:
-            request, client_address = self.get_request()
-        except socket.error:
-            return
-
-        if self.verify_request(request, client_address):
-            try:
-                self.process_request(request, client_address)
-            except Exception:
-                self.handle_error(request, client_address)
-                self.close_request(request)
-
-    def server_bind(self):
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        BaseHTTPServer.HTTPServer.server_bind(self)
 
     def get_port(self):
         try:
@@ -112,12 +106,26 @@ class HTTPServer(BaseHTTPServer.HTTPServer):
         except:
             return None
     
+    def shutdown(self):
+        """Stops the serve_forever loop.
+
+        Blocks until the loop has finished. This must be called while
+        serve_forever() is running in another thread, or it will
+        deadlock.
+        """
+        self.__shutdown_request = True
+        HTTPServer.shutdown(self)
+        self.__is_shut_down.wait()
+
     def wait_for_start(self):
         while self.get_port() is None:
             time.sleep(0.5)
 
+    def shutdown(self):
+        """
+        Stops the serve_forever loop.
 
-class WebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class WebHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
 
@@ -125,11 +133,11 @@ class WebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.send_error(403, 'Yeah right...')
         else:
             try:
-                f = open(self.server.webroot + os.path.sep + self.path[1:])
+                f = open(self.server.webroot + os.path.sep + self.path[1:], "rb")
             except IOError:
                 try:
                     self.send_error(404, 'File Not Found: %s' % self.path)
-                except Exception, e:
+                except Exception as e:
                     om.out.debug('[webserver] Exception: ' + str(e))
             else:
                 try:
@@ -144,15 +152,14 @@ class WebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                         self.send_header('Content-type', 'text/html')
                     self.end_headers()
                     self.wfile.write(f.read())
-                except Exception, e:
+                except Exception as e:
                     om.out.debug('[webserver] Exception: ' + str(e))
 
                 f.close()
 
             # Clean up
             self.close_connection = 1
-            self.rfile.close()
-            self.wfile.close()
+            self.wfile.flush()
         return
 
     def log_message(self, fmt, *args):
@@ -189,7 +196,8 @@ def start_webserver(ip, port, webroot, handler=WebHandler):
 
 
 def start_webserver_any_free_port(ip, webroot, handler=WebHandler):
-    """Create a http server daemon in any free port available.
+    """
+    Create an http server daemon in any free port.
 
     :param ip: IP address where to bind
     :param webroot: web server's root directory
@@ -205,4 +213,4 @@ def start_webserver_any_free_port(ip, webroot, handler=WebHandler):
 
     web_server.wait_for_start()
 
-    return server_thread, web_server.get_port()
+    return server_thread, web_server, web_server.get_port()

@@ -18,10 +18,11 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import unittest
 from itertools import repeat
 
-from mock import patch
+from unittest.mock import patch
 
 import w3af.core.data.constants.severity as severity
 import w3af.core.data.kb.knowledge_base as kb
@@ -53,17 +54,18 @@ class TestMetaTags(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_found_vuln(self):
         cfg = self._run_configs['cfg1']
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('meta_tags', 'meta_tags')
 
-        self.assertEquals(2, len(vulns))
+        self.assertEqual(2, len(vulns))
 
-        self.assertEquals(set([severity.INFORMATION] * 2),
+        self.assertEqual(set([severity.INFORMATION] * 2),
                           set([v.get_severity() for v in vulns]))
 
-        self.assertEquals(set(['Interesting META tag'] * 2),
+        self.assertEqual(set(['Interesting META tag'] * 2),
                           set([v.get_name() for v in vulns]))
 
         joined_desc = ''.join([v.get_desc() for v in vulns])
@@ -82,6 +84,7 @@ class TestMetaTagsRaw(unittest.TestCase):
         kb.kb.cleanup()
 
     @patch('w3af.plugins.grep.meta_tags.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_meta_user(self, *args):
         body = '<meta test="user/pass"></script>'
         url = URL('http://www.w3af.com/')
@@ -93,13 +96,14 @@ class TestMetaTagsRaw(unittest.TestCase):
         self.plugin.end()
 
         infos = kb.kb.get('meta_tags', 'meta_tags')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
 
         info = infos[0]
         self.assertEqual(info.get_name(), 'Interesting META tag')
         self.assertIn('pass', info.get_desc())
 
     @patch('w3af.plugins.grep.meta_tags.is_404', side_effect=repeat(False))
+    @pytest.mark.deprecated
     def test_group_info_set(self, *args):
         body = '<meta test="user/pass"></script>'
         url_1 = URL('http://www.w3af.com/1')
@@ -113,12 +117,12 @@ class TestMetaTagsRaw(unittest.TestCase):
         self.plugin.grep(request, resp_2)
         self.plugin.end()
 
-        expected_desc = u'The application sent a <meta> tag with the' \
-                        u' attribute value set to "user/pass" which looks' \
-                        u' interesting and should be manually reviewed. The' \
-                        u' first ten URLs which sent the tag are:\n' \
-                        u' - http://www.w3af.com/2\n' \
-                        u' - http://www.w3af.com/1\n'
+        expected_desc = 'The application sent a <meta> tag with the' \
+                        ' attribute value set to "user/pass" which looks' \
+                        ' interesting and should be manually reviewed. The' \
+                        ' first ten URLs which sent the tag are:\n' \
+                        ' - http://www.w3af.com/1\n' \
+                        ' - http://www.w3af.com/2\n'
 
         # pylint: disable=E1103
         info_set = kb.kb.get_one('meta_tags', 'meta_tags')

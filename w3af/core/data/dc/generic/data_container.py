@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import copy
 
-from itertools import chain, izip_longest
+from itertools import chain, zip_longest
 
 from w3af.core.data.db.disk_item import DiskItem
 from w3af.core.data.constants.encodings import UTF8
@@ -114,9 +114,9 @@ class DataContainer(DiskItem):
 
                 return token
 
-        path_str = lambda path: '(%s)' % ', '.join([smart_str_ignore(i) for i in path])
+        path_str = lambda path: b'(%s)' % b', '.join([smart_str_ignore(i) for i in path])
         ppath = path_str(token_path)
-        vpath = ' - '.join([path_str(p) for _, _, p, _ in self.iter_setters()])
+        vpath = b' - '.join([path_str(p) for _, _, p, _ in self.iter_setters()])
 
         if vpath:
             msg = 'Invalid token path "%s". Valid paths are: %s'
@@ -182,7 +182,7 @@ class DataContainer(DiskItem):
                  have the same token names, and for each token the type (int or
                  string) is the same.
         """
-        for tself, tother in izip_longest(chain(self.iter_tokens()),
+        for tself, tother in zip_longest(chain(self.iter_tokens()),
                                           chain(other.iter_tokens()),
                                           fillvalue=None):
             if None in (tself, tother):
@@ -240,6 +240,9 @@ class DataContainer(DiskItem):
     @property
     def all_items(self):
         return str(self)
+
+    def __len__(self):
+        return len(self.all_items)
 
     def get_eq_attrs(self):
         return ['all_items']

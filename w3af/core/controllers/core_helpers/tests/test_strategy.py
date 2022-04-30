@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import subprocess
 import sys
 import os
@@ -83,6 +84,9 @@ class TestStrategy(PluginTest):
         if os.path.exists(OUTPUT_PATH):
             os.unlink(OUTPUT_PATH)
 
+    @pytest.mark.deprecated
+    @pytest.mark.slow
+    @pytest.mark.slow
     def test_1557_random_number_of_results(self):
         """
         Pseudo-random number of vulnerabilities found in audit phase (xss)
@@ -90,7 +94,8 @@ class TestStrategy(PluginTest):
         https://github.com/andresriancho/w3af/issues/1557
         """
         script = TEST_SCRIPT_1557 % (OUTPUT_PATH, get_wavsep_http())
-        file(SCRIPT_PATH, 'w').write(script)
+        with open(SCRIPT_PATH, "w") as f:
+            f.write(script)
 
         python_executable = sys.executable
 
@@ -100,8 +105,8 @@ class TestStrategy(PluginTest):
 
         loops = 2 if is_running_on_ci() else 10
 
-        for i in xrange(loops):
-            print('Start run #%s' % i)
+        for i in range(loops):
+            print(('Start run #%s' % i))
             found_vulns = set()
 
             p = subprocess.Popen([python_executable, 'w3af_console',
@@ -114,7 +119,7 @@ class TestStrategy(PluginTest):
 
             stdout, stderr = p.communicate()
             i_vuln_count = stdout.count(VULN_STRING)
-            print('%s vulnerabilities found' % i_vuln_count)
+            print(('%s vulnerabilities found' % i_vuln_count))
 
             self.assertNotEqual(i_vuln_count, 0, stdout)
 
@@ -143,6 +148,7 @@ class TestSameFuzzableRequestSet(PluginTest):
 
     @attr('smoke')
     @attr('moth')
+    @pytest.mark.deprecated
     def test_same_fr_set_object(self):
         cfg = self._run_configs['cfg']
 
@@ -154,5 +160,5 @@ class TestSameFuzzableRequestSet(PluginTest):
         id_after_fr = id(self.kb.get_all_known_fuzzable_requests())
         id_after_ur = id(self.kb.get_all_known_urls())
 
-        self.assertEquals(id_before_fr, id_after_fr)
-        self.assertEquals(id_before_ur, id_after_ur)
+        self.assertEqual(id_before_fr, id_after_fr)
+        self.assertEqual(id_before_ur, id_after_ur)

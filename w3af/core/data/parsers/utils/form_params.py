@@ -24,8 +24,7 @@ import operator
 import random
 import copy
 
-from ruamel.ordereddict import ordereddict as OrderedDict
-from types import NoneType
+from collections import OrderedDict
 
 import w3af.core.controllers.output_manager as om
 
@@ -49,6 +48,7 @@ from w3af.core.data.parsers.utils.form_constants import (DEFAULT_FORM_ENCODING,
                                                          MODE_ALL, MODE_TB,
                                                          MODE_TMB, MODE_T,
                                                          MODE_B)
+from functools import reduce
 
 
 class FormParameters(OrderedDict):
@@ -102,9 +102,7 @@ class FormParameters(OrderedDict):
         :param attributes: The form tag attributes as seen in the HTML
         :param hosted_at_url: The URL where the form appeared
         """
-        # pylint: disable=E1002
         super(FormParameters, self).__init__(init_vals)
-        # pylint: enable=E1002
 
         # Form parameter meta-data
         self.meta = meta if meta is not None else {}
@@ -140,7 +138,7 @@ class FormParameters(OrderedDict):
         :see: https://github.com/andresriancho/w3af/issues/15161
         """
         return FormID(action=self._action,
-                      inputs=self.meta.keys(),
+                      inputs=list(self.meta.keys()),
                       attributes=self._attributes,
                       hosted_at_url=self._hosted_at_url,
                       method=self._method)
@@ -193,7 +191,7 @@ class FormParameters(OrderedDict):
         return self._action
 
     def set_action(self, action):
-        if not isinstance(action, (URL, NoneType)):
+        if not isinstance(action, (URL, type(None))):
             msg = 'The action of a Form must be of URL type.'
             raise TypeError(msg)
         self._action = action
@@ -277,13 +275,13 @@ class FormParameters(OrderedDict):
         """
         file_keys = set()
 
-        for k, v_lst in self.meta.iteritems():
+        for k, v_lst in self.meta.items():
             for v in v_lst:
                 if isinstance(v, FileFormField):
                     file_keys.add(k)
 
         # pylint: disable=E1133
-        for k, v_lst in self.items():
+        for k, v_lst in list(self.items()):
             for v in v_lst:
                 if is_file_like(v):
                     file_keys.add(k)
@@ -411,7 +409,7 @@ class FormParameters(OrderedDict):
     def get_option_names(self):
         option_names = []
 
-        for form_field_list in self.meta.itervalues():
+        for form_field_list in self.meta.values():
             for form_field in form_field_list:
                 if form_field.input_type in self.OPTION_MATRIX_FORM_TYPES:
                     option_names.append(form_field.name)
@@ -421,7 +419,7 @@ class FormParameters(OrderedDict):
     def get_option_matrix(self):
         option_matrix = []
 
-        for form_field_list in self.meta.itervalues():
+        for form_field_list in self.meta.values():
             for form_field in form_field_list:
                 if form_field.input_type in self.OPTION_MATRIX_FORM_TYPES:
                     option_matrix.append(form_field.values)
@@ -513,7 +511,7 @@ class FormParameters(OrderedDict):
 
                 variants_total = min(variants_total, self.MAX_VARIANTS_TOTAL)
 
-                for _ in xrange(self.TOP_VARIANTS):
+                for _ in range(self.TOP_VARIANTS):
                     path = rand.randint(0, variants_total)
                     yield self._decode_path(path, matrix)
 
@@ -525,7 +523,7 @@ class FormParameters(OrderedDict):
                         # Create new 3-length vector
                         if len(vector) > 3:
                             new_vector = [vector[0],
-                                          vector[len(vector) / 2],
+                                          vector[int(len(vector) / 2)],
                                           vector[-1]]
                             matrix[row] = new_vector
 
@@ -533,7 +531,7 @@ class FormParameters(OrderedDict):
                     variants_total = self._get_variants_count(matrix, mode)
 
                 # Now get all paths!
-                for path in xrange(variants_total):
+                for path in range(variants_total):
                     decoded_path = self._decode_path(path, matrix)
                     yield decoded_path
 
@@ -552,13 +550,13 @@ class FormParameters(OrderedDict):
         # Hack to make the algorithm work.
         matrix.append([1])
 
-        get_count = lambda y: reduce(operator.mul, map(len, matrix[y + 1:]))
+        get_count = lambda y: reduce(operator.mul, list(map(len, matrix[y + 1:])))
         remainder = path
         decoded_path = []
 
-        for i in xrange(len(matrix) - 1):
+        for i in range(len(matrix) - 1):
             base = get_count(i)
-            decoded_path.append(remainder / base)
+            decoded_path.append(int(remainder / base))
             remainder = remainder % base
 
         # Restore state, pop out [1]
@@ -577,7 +575,7 @@ class FormParameters(OrderedDict):
             return 2
         else:
             len_fun = (lambda x: min(len(x), 3)) if mode == MODE_TMB else len
-            return reduce(operator.mul, map(len_fun, matrix))
+            return reduce(operator.mul, list(map(len_fun, matrix)))
 
     def deepish_copy(self):
         """
@@ -586,7 +584,7 @@ class FormParameters(OrderedDict):
 
         :return: A copy of myself.
         """
-        init_val = copy.deepcopy(self.items())
+        init_val = copy.deepcopy(list(self.items()))
         self_copy = FormParameters(init_vals=init_val,
                                    meta=self.meta,
                                    attributes=self._attributes,
@@ -614,7 +612,7 @@ class FormParameters(OrderedDict):
         items = []
 
         # pylint: disable=E1133
-        for key, value_list in self.iteritems():
+        for key, value_list in self.items():
             for value in value_list:
                 kv = "'%s': '%s'" % (key, value)
                 items.append(kv)
@@ -631,7 +629,7 @@ class FormParameters(OrderedDict):
         #
         # Count the parameter types
         #
-        for form_field_list in self.meta.itervalues():
+        for form_field_list in self.meta.values():
             for form_field in form_field_list:
 
                 if form_field.input_type == INPUT_TYPE_PASSWD:

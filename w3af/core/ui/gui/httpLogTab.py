@@ -19,9 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import gtk
-import gobject
-import pango
+import gi
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+gi.require_version('Pango', '1.0')
+from gi.repository import Pango as pango
 
 # The elements to create the req/res viewer
 from w3af.core.ui.gui.reqResViewer import ReqResViewer
@@ -219,7 +221,7 @@ class httpLogTab(RememberingHPaned):
         self.pref.add_section('sizes', _('Response Size'), filterSize)
         self.pref.show()
         self._advSearchBox.pack_start(self.pref, False, False)
-        self._advSearchBox.hide_all()
+        self._advSearchBox.hide()
         mainvbox.pack_start(self._advSearchBox, False, False)
 
     def __add_columns(self, treeview):
@@ -297,7 +299,7 @@ class httpLogTab(RememberingHPaned):
     def _showHideFilterBox(self, widget):
         """Show/hide advanced options."""
         if not widget.get_active():
-            self._advSearchBox.hide_all()
+            self._advSearchBox.hide()
         else:
             self._advSearchBox.show_all()
 
@@ -306,7 +308,7 @@ class httpLogTab(RememberingHPaned):
         self._searchText.set_text("")
         try:
             self.find_request_response()
-        except BaseFrameworkException, w3:
+        except BaseFrameworkException as w3:
             self._empty_results()
         return
 
@@ -385,7 +387,7 @@ class httpLogTab(RememberingHPaned):
             # Please see the 5000 below
             searchResultObjects = self._historyItem.find(search_data,
                                                          result_limit=5001, order_data=[("id", "")])
-        except BaseFrameworkException, w3:
+        except BaseFrameworkException as w3:
             self._empty_results()
             return
         if len(searchResultObjects) == 0:
@@ -478,7 +480,7 @@ class httpLogTab(RememberingHPaned):
             # from disk and if they aren't there an exception will rise
             history_item.request
             history_item.response
-        except IOError, ioe:
+        except IOError as ioe:
             self._show_message(_('Error'), str(ioe))
             return
 
@@ -508,7 +510,7 @@ class FilterOptions(gtk.HBox, Preferences):
         super(FilterOptions, self).show()
 
     def _init_optionsView(self):
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             frame = gtk.Frame()
             label = gtk.Label('<b>%s</b>' % self.sections[section])
             label.set_use_markup(True)
@@ -534,7 +536,7 @@ class FilterOptions(gtk.HBox, Preferences):
     def _changedWidget(self, widg, like_initial):
         # check if all widgets are valid
         invalid = []
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             for opt in optList:
                 if hasattr(opt.widg, "is_valid"):
                     if not opt.widg.is_valid():
@@ -550,7 +552,7 @@ class FilterOptions(gtk.HBox, Preferences):
             return
 
         # Get the value from the GTK widget and set it to the option object
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             for opt in optList:
                 opt.set_value(opt.widg.get_value())
         self.parentWidg.find_request_response()

@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro 
 
 from .ubuntu1204 import Ubuntu1204
 
@@ -29,5 +29,5 @@ class Ubuntu1410(Ubuntu1204):
 
     @staticmethod
     def is_current_platform():
-        return 'Ubuntu' in platform.dist() and '14.10' in platform.dist()
+        return 'Ubuntu' in distro.linux_distribution() and '14.10' in distro.linux_distribution()
 

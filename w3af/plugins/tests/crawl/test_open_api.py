@@ -18,10 +18,11 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import json
 import re
 
-from mock import patch
+from unittest.mock import patch
 
 from w3af.plugins.audit.sqli import sqli
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
@@ -55,6 +56,7 @@ class TestOpenAPIFindAllEndpointsWithAuth(PluginTest):
                                    IntParamQueryString().get_specification(),
                                    content_type='application/json')]
 
+    @pytest.mark.deprecated
     def test_find_all_endpoints_with_auth(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -79,10 +81,7 @@ class TestOpenAPIFindAllEndpointsWithAuth(PluginTest):
         fuzzable_requests = [f for f in fuzzable_requests if f.get_url().get_path() not in ('/swagger.json', '/')]
 
         # Order them to be able to easily assert things
-        def by_path(fra, frb):
-            return cmp(fra.get_url().url_string, frb.get_url().url_string)
-
-        fuzzable_requests.sort(by_path)
+        fuzzable_requests.sort(lambda x: x.get_url().url_string)
 
         #
         # Assertions on call #1
@@ -180,6 +179,7 @@ class TestOpenAPINestedModelSpec(PluginTest):
                                        method='GET',
                                        status=200)]
 
+    @pytest.mark.deprecated
     def test_find_all_endpoints_with_auth(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -204,10 +204,7 @@ class TestOpenAPINestedModelSpec(PluginTest):
         fuzzable_requests = [f for f in fuzzable_requests if f.get_url().get_path() not in ('/openapi.json', '/')]
 
         # Order them to be able to easily assert things
-        def by_path(fra, frb):
-            return cmp(fra.get_url().url_string, frb.get_url().url_string)
-
-        fuzzable_requests.sort(by_path)
+        fuzzable_requests.sort(key=lambda x:x.get_url().url_string)
 
         self.assertEqual(len(fuzzable_requests), 1)
 
@@ -244,6 +241,7 @@ class TestOpenAPIRaisesWarningIfNoAuth(PluginTest):
                                    NestedModel().get_specification(),
                                    content_type='application/json')]
 
+    @pytest.mark.deprecated
     def test_auth_warning_raised(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -275,6 +273,7 @@ class TestOpenAPIRaisesWarningIfParsingError(PluginTest):
                                    NestedModel().get_specification()[:-1],
                                    content_type='application/json')]
 
+    @pytest.mark.deprecated
     def test_parsing_error_raised(self):
         cfg = self._run_configs['cfg']
 
@@ -320,6 +319,7 @@ class TestOpenAPIFindsSpecInOtherDirectory(PluginTest):
                                    NestedModel().get_specification(),
                                    content_type='application/json')]
 
+    @pytest.mark.deprecated
     def test_auth_warning_raised(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -348,6 +348,7 @@ class TestOpenAPIFindsSpecInOtherDirectory2(PluginTest):
                                    NestedModel().get_specification(),
                                    content_type='application/json')]
 
+    @pytest.mark.deprecated
     def test_auth_warning_raised(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -413,6 +414,7 @@ class TestOpenAPIFuzzURLParts(PluginTest):
                                        status=200)
                       ]
 
+    @pytest.mark.deprecated
     def test_fuzzing_parameters_in_path(self):
         #
         # TODO: This unittest is failing because of basePath being ignored
@@ -436,5 +438,5 @@ class TestOpenAPIFuzzURLParts(PluginTest):
         self.assertEqual(len(vulns), 1)
 
         vuln = vulns[0]
-        self.assertEquals(vuln.get_method(), 'GET')
-        self.assertEquals(vuln.get_url().url_string, TestOpenAPIFuzzURLParts.vulnerable_url)
+        self.assertEqual(vuln.get_method(), 'GET')
+        self.assertEqual(vuln.get_url().url_string, TestOpenAPIFuzzURLParts.vulnerable_url)

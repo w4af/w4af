@@ -1,20 +1,16 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 from lib.core.common import Backend
-from lib.core.data import conf
 from lib.core.datatype import AttribDict
 from lib.core.settings import EXCLUDE_UNESCAPE
 
 class Unescaper(AttribDict):
     def escape(self, expression, quote=True, dbms=None):
-        if conf.noEscape:
-            return expression
-
         if expression is None:
             return expression
 
@@ -25,10 +21,15 @@ class Unescaper(AttribDict):
         identifiedDbms = Backend.getIdentifiedDbms()
 
         if dbms is not None:
-            return self[dbms](expression, quote=quote)
-        elif identifiedDbms is not None:
-            return self[identifiedDbms](expression, quote=quote)
+            retVal = self[dbms](expression, quote=quote)
+        elif identifiedDbms is not None and identifiedDbms in self:
+            retVal = self[identifiedDbms](expression, quote=quote)
         else:
-            return expression
+            retVal = expression
+
+        # e.g. inference comparison for '
+        retVal = retVal.replace("'''", "''''")
+
+        return retVal
 
 unescaper = Unescaper()

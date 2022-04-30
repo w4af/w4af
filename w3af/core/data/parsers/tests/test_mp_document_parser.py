@@ -19,13 +19,14 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import os
 import time
 import random
 import unittest
 import multiprocessing
 
-from mock import patch, PropertyMock
+from unittest.mock import patch, PropertyMock
 from nose.plugins.skip import SkipTest
 from concurrent.futures import TimeoutError
 
@@ -43,12 +44,13 @@ class TestMPDocumentParser(unittest.TestCase):
 
     def setUp(self):
         self.url = URL('http://w3af.com')
-        self.headers = Headers([(u'content-type', u'text/html')])
+        self.headers = Headers([('content-type', 'text/html')])
         self.mpdoc = MultiProcessingDocumentParser()
 
     def tearDown(self):
         self.mpdoc.stop_workers()
 
+    @pytest.mark.deprecated
     def test_basic(self):
         resp = HTTPResponse(200, '<a href="/abc">hello</a>',
                             self.headers, self.url, self.url)
@@ -58,19 +60,21 @@ class TestMPDocumentParser(unittest.TestCase):
         parsed_refs, _ = parser.get_references()
         self.assertEqual([URL('http://w3af.com/abc')], parsed_refs)
 
+    @pytest.mark.deprecated
     def test_no_parser_for_images(self):
         body = ''
         url = URL('http://w3af.com/foo.jpg')
-        headers = Headers([(u'content-type', u'image/jpeg')])
+        headers = Headers([('content-type', 'image/jpeg')])
         resp = HTTPResponse(200, body, headers, url, url)
 
         try:
             self.mpdoc.get_document_parser_for(resp)
-        except Exception, e:
+        except Exception as e:
             self.assertEqual(str(e), 'There is no parser for images.')
         else:
             self.assertTrue(False, 'Expected exception!')
 
+    @pytest.mark.deprecated
     def test_parser_timeout(self):
         """
         Test to verify fix for https://github.com/andresriancho/w3af/issues/6723
@@ -89,7 +93,7 @@ class TestMPDocumentParser(unittest.TestCase):
             #   Test the timeout
             #
             html = '<html>DelayedParser!</html>'
-            http_resp = _build_http_response(html, u'text/html')
+            http_resp = _build_http_response(html, 'text/html')
 
             timeout_mock.return_value = 1
             max_workers_mock.return_value = 1
@@ -97,7 +101,7 @@ class TestMPDocumentParser(unittest.TestCase):
 
             try:
                 self.mpdoc.get_document_parser_for(http_resp)
-            except TimeoutError, toe:
+            except TimeoutError as toe:
                 self._is_timeout_exception_message(toe, om_mock, http_resp)
             else:
                 self.assertTrue(False)
@@ -109,11 +113,12 @@ class TestMPDocumentParser(unittest.TestCase):
             #   https://github.com/andresriancho/w3af/issues/9713
             #
             html = '<html>foo-</html>'
-            http_resp = _build_http_response(html, u'text/html')
+            http_resp = _build_http_response(html, 'text/html')
 
             doc_parser = self.mpdoc.get_document_parser_for(http_resp)
             self.assertIsInstance(doc_parser._parser, HTMLParser)
 
+    @pytest.mark.slow
     def test_many_parsers_timing_out(self):
         """
         Received more reports of parsers timing out, and after that
@@ -145,12 +150,12 @@ class TestMPDocumentParser(unittest.TestCase):
             #
             # Lets timeout many sequentially
             #
-            for i in xrange(ITERATIONS):
-                http_resp = _build_http_response(html_trigger_delay % i, u'text/html')
+            for i in range(ITERATIONS):
+                http_resp = _build_http_response(html_trigger_delay % i, 'text/html')
 
                 try:
                     self.mpdoc.get_document_parser_for(http_resp)
-                except TimeoutError, toe:
+                except TimeoutError as toe:
                     self._is_timeout_exception_message(toe, om_mock, http_resp)
                 else:
                     self.assertTrue(False)
@@ -158,13 +163,13 @@ class TestMPDocumentParser(unittest.TestCase):
             #
             # Lets timeout randomly
             #
-            for i in xrange(ITERATIONS):
+            for i in range(ITERATIONS):
                 html = random.choice([html_trigger_delay, html_ok])
-                http_resp = _build_http_response(html % i, u'text/html')
+                http_resp = _build_http_response(html % i, 'text/html')
 
                 try:
                     parser = self.mpdoc.get_document_parser_for(http_resp)
-                except TimeoutError, toe:
+                except TimeoutError as toe:
                     self._is_timeout_exception_message(toe, om_mock, http_resp)
                 else:
                     self.assertIsInstance(parser._parser, HTMLParser)
@@ -172,8 +177,8 @@ class TestMPDocumentParser(unittest.TestCase):
             #
             # Lets parse things we know should work
             #
-            for i in xrange(ITERATIONS):
-                http_resp = _build_http_response(html_ok % i, u'text/html')
+            for i in range(ITERATIONS):
+                http_resp = _build_http_response(html_ok % i, 'text/html')
                 parser = self.mpdoc.get_document_parser_for(http_resp)
                 self.assertIsInstance(parser._parser, HTMLParser)
 
@@ -219,12 +224,12 @@ class TestMPDocumentParser(unittest.TestCase):
             #
             # Lets timeout many sequentially
             #
-            for i in xrange(ITERATIONS):
-                http_resp = _build_http_response(html_trigger_delay % i, u'text/html')
+            for i in range(ITERATIONS):
+                http_resp = _build_http_response(html_trigger_delay % i, 'text/html')
 
                 try:
                     self.mpdoc.get_document_parser_for(http_resp)
-                except TimeoutError, toe:
+                except TimeoutError as toe:
                     self._is_timeout_exception_message(toe, om_mock, http_resp)
                 else:
                     self.assertTrue(False)
@@ -232,13 +237,13 @@ class TestMPDocumentParser(unittest.TestCase):
             #
             # Lets timeout randomly
             #
-            for i in xrange(ITERATIONS):
+            for i in range(ITERATIONS):
                 html = random.choice([html_trigger_delay, html_ok])
-                http_resp = _build_http_response(html % i, u'text/html')
+                http_resp = _build_http_response(html % i, 'text/html')
 
                 try:
                     parser = self.mpdoc.get_document_parser_for(http_resp)
-                except TimeoutError, toe:
+                except TimeoutError as toe:
                     self._is_timeout_exception_message(toe, om_mock, http_resp)
                 else:
                     self.assertIsInstance(parser._parser, HTMLParser)
@@ -246,11 +251,12 @@ class TestMPDocumentParser(unittest.TestCase):
             #
             # Lets parse things we know should work
             #
-            for i in xrange(ITERATIONS):
-                http_resp = _build_http_response(html_ok % i, u'text/html')
+            for i in range(ITERATIONS):
+                http_resp = _build_http_response(html_ok % i, 'text/html')
                 parser = self.mpdoc.get_document_parser_for(http_resp)
                 self.assertIsInstance(parser._parser, HTMLParser)
 
+    @pytest.mark.deprecated
     def test_parser_memory_usage_exceeded(self):
         """
         This makes sure that we stop parsing a document that exceeds our memory
@@ -269,7 +275,7 @@ class TestMPDocumentParser(unittest.TestCase):
             #   Test the memory usage
             #
             html = '<html>UseMemoryParser!</html>'
-            http_resp = _build_http_response(html, u'text/html')
+            http_resp = _build_http_response(html, 'text/html')
 
             memory_mock.return_value = 150000
             max_workers_mock.return_value = 1
@@ -277,7 +283,7 @@ class TestMPDocumentParser(unittest.TestCase):
 
             try:
                 self.mpdoc.get_document_parser_for(http_resp)
-            except MemoryError, me:
+            except MemoryError as me:
                 self.assertIn('OOM issues', str(me))
             else:
                 self.assertTrue(False)
@@ -287,7 +293,7 @@ class TestMPDocumentParser(unittest.TestCase):
             # the process the Pool continues handling tasks as expected
             #
             html = '<html>foo-</html>'
-            http_resp = _build_http_response(html, u'text/html')
+            http_resp = _build_http_response(html, 'text/html')
 
             doc_parser = self.mpdoc.get_document_parser_for(http_resp)
             self.assertIsInstance(doc_parser._parser, HTMLParser)
@@ -299,7 +305,7 @@ class TestMPDocumentParser(unittest.TestCase):
         error = msg % (MultiProcessingDocumentParser.PARSER_TIMEOUT,
                        http_resp.get_url())
 
-        self.assertEquals(str(toe), error)
+        self.assertEqual(str(toe), error)
 
     def test_daemon_child(self):
         """
@@ -340,6 +346,7 @@ class TestMPDocumentParser(unittest.TestCase):
             self.assertTrue(False, 'daemonic processes are not allowed'
                                    ' to have children')
 
+    @pytest.mark.deprecated
     def test_dictproxy_pickle_8748(self):
         """
         MaybeEncodingError - PicklingError: Can't pickle dictproxy #8748
@@ -354,6 +361,7 @@ class TestMPDocumentParser(unittest.TestCase):
         parser = self.mpdoc.get_document_parser_for(resp)
         self.assertIsInstance(parser._parser, HTMLParser)
 
+    @pytest.mark.deprecated
     def test_get_tags_by_filter(self):
         body = '<html><a href="/abc">foo</a><b>bar</b></html>'
         url = URL('http://www.w3af.com/')
@@ -366,6 +374,7 @@ class TestMPDocumentParser(unittest.TestCase):
         self.assertEqual([Tag('a', {'href': '/abc'}, 'foo'),
                           Tag('b', {}, 'bar')], tags)
 
+    @pytest.mark.deprecated
     def test_get_tags_by_filter_empty_tag(self):
         body = '<html><script src="foo.js"></script></html>'
         url = URL('http://www.w3af.com/')
@@ -416,7 +425,7 @@ class UseMemoryParser(object):
     def parse(self):
         memory_user = ''
 
-        for _ in xrange(1000000):
+        for _ in range(1000000):
             memory_user += 'A' * 256
 
     def clear(self):

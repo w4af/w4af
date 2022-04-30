@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 
 from nose.plugins.attrib import attr
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
@@ -29,6 +30,7 @@ class TestAllFP(PluginTest):
     target_url = 'http://moth/w3af/core/base_false_positive/'
 
     @attr('ci_fails')
+    @pytest.mark.deprecated
     def test_false_positive(self):
         raise SkipTest('FIXME: This test takes too long to run.')
 
@@ -59,7 +61,7 @@ class TestAllFP(PluginTest):
 
             msg_i = 'audit.%s found a vulnerability in "%s"' % (audit_plugin,
                                                                 ','.join(infos))
-            self.assertEquals(len(infos), 0, msg_i)
+            self.assertEqual(len(infos), 0, msg_i)
 
             # I tried to do this in the right way, with nosetests test
             # generators, but they have a bug with unittest.TestCase

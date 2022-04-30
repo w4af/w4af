@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import time
-import Queue
+import queue
 
 
 class QueueSpeedMeasurement(object):
@@ -103,7 +103,7 @@ class SmartQueue(QueueSpeedMeasurement):
     """
     def __init__(self, maxsize=0, name='Unknown'):
         super(SmartQueue, self).__init__()
-        self.q = Queue.Queue(maxsize=maxsize)
+        self.q = queue.Queue(maxsize=maxsize)
 
         self._name = name
 
@@ -157,7 +157,7 @@ class SmartQueue(QueueSpeedMeasurement):
         timestamp = time.time()
 
         try:
-            put_res = self.q.put((timestamp, item), block=block, timeout=timeout)
+            self.q.put((timestamp, item), block=block, timeout=timeout)
         except:
             raise
         else:
@@ -170,7 +170,6 @@ class SmartQueue(QueueSpeedMeasurement):
                 om.out.debug(msg % args)
 
             self._item_added_to_queue()
-            return put_res
     
     def __getattr__(self, attr):
         if attr in self.__dict__:

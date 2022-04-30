@@ -1,20 +1,24 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
+import os
+
+from lib.core.common import singleTimeWarnMessage
+from lib.core.enums import DBMS
 from lib.core.enums import PRIORITY
 
 __priority__ = PRIORITY.LOWEST
 
 def dependencies():
-    pass
+    singleTimeWarnMessage("tamper script '%s' is only meant to be run against %s" % (os.path.basename(__file__).split(".")[0], DBMS.ACCESS))
 
 def tamper(payload, **kwargs):
     """
-    Appends encoded NULL byte character at the end of payload
+    Appends (Access) NULL byte character (%00) at the end of payload
 
     Requirement:
         * Microsoft Access

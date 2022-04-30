@@ -23,7 +23,7 @@ import re
 import sys
 import unittest
 
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 import w3af.core.data.kb.knowledge_base as kb
 

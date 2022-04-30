@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import uuid
-import Queue
+import queue
 import bisect
 
 import w3af.core.controllers.output_manager as om
@@ -30,7 +30,7 @@ from w3af.core.data.misc.smart_queue import QueueSpeedMeasurement
 from w3af.core.controllers.core_helpers.consumers.constants import POISON_PILL
 
 
-class OrderedCachedQueue(Queue.Queue, QueueSpeedMeasurement):
+class OrderedCachedQueue(queue.Queue, QueueSpeedMeasurement):
     """
     This queue implements all the features explained in CachedQueue (see
     cached_queue.py) plus it will order the items in the queue as they are
@@ -64,7 +64,7 @@ class OrderedCachedQueue(Queue.Queue, QueueSpeedMeasurement):
         # We want to send zero to the maxsize of the Queue implementation
         # here because we can write an infinite number of items. But keep
         # in mind that we don't really use the queue storage in any way
-        Queue.Queue.__init__(self, maxsize=0)
+        queue.Queue.__init__(self, maxsize=0)
 
     def get_name(self):
         return self.name

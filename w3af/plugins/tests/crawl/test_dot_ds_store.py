@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
@@ -35,12 +36,13 @@ class TestDSStore(PluginTest):
         }
     }
 
-    DS_STORE = file(os.path.join(ROOT_PATH, 'plugins/tests/crawl/ds_store/DS_Store')).read()
+    DS_STORE = open(os.path.join(ROOT_PATH, 'plugins/tests/crawl/ds_store/DS_Store'), "rb").read()
 
     MOCK_RESPONSES = [MockResponse('http://mock/.DS_Store', DS_STORE),
                       MockResponse('http://mock/other', 'Secret directory'),
                       MockResponse('http://mock/', 'Not here', status=404)]
 
+    @pytest.mark.deprecated
     def test_ds_store(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -54,7 +56,7 @@ class TestDSStore(PluginTest):
         expected_urls = ('/', '/.DS_Store', '/other')
         urls = self.kb.get_all_known_urls()
 
-        self.assertEquals(
+        self.assertEqual(
             set(str(u) for u in urls),
             set((self.target_url + end) for end in expected_urls)
         )

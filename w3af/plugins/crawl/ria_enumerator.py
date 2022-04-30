@@ -82,10 +82,10 @@ class ria_enumerator(CrawlPlugin):
         """
         # Google Gears
         for ext in extensions:
-            for word in file(wordlist):
-
-                manifest_url = base_url.url_join(word.strip() + ext)
-                yield manifest_url
+            with open(wordlist) as word_fh:
+                for word in word_fh:
+                    manifest_url = base_url.url_join(word.strip() + ext)
+                    yield manifest_url
 
         # CrossDomain.XML
         cross_domain_url = base_url.url_join('crossdomain.xml')

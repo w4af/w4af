@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from itertools import repeat, izip
+from itertools import repeat
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.knowledge_base as kb
@@ -125,7 +125,7 @@ class payment_webhook_finder(CrawlPlugin):
         url_generator = self._test_once_filter(url_generator)
 
         url_repeater = repeat(url)
-        args = izip(url_repeater, url_generator)
+        args = zip(url_repeater, url_generator)
 
         self.worker_pool.map_multi_args(self._send_requests, args)
 

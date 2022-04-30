@@ -24,7 +24,7 @@ import tempfile
 import random
 import time
 
-import subprocess32 as subprocess
+import subprocess
 
 import w3af.core.data.kb.config as cf
 import w3af.core.controllers.output_manager as om
@@ -101,14 +101,14 @@ class vdaemon(object):
         try:
             executable_file_name = self._generate_exe(payload,
                                                       msfpayload_parameters)
-        except Exception, e:
+        except Exception as e:
             raise BaseFrameworkException(
                 'Failed to create the payload file, error: "%s".' % str(e))
 
         try:
             remote_file_location = self._send_exe_to_server(
                 executable_file_name)
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             error_msg = 'Failed to send the payload file, error: "%s".'
             raise BaseFrameworkException(error_msg % e)
         else:
@@ -125,7 +125,7 @@ class vdaemon(object):
             else:
                 try:
                     self._exec_payload(remote_file_location)
-                except Exception, e:
+                except Exception as e:
                     raise BaseFrameworkException('Failed to execute the executable file on the server, error: %s' % e)
                 else:
                     om.out.console('Successfully executed the MSF payload on the remote server.')
@@ -181,7 +181,8 @@ class vdaemon(object):
         if os.path.isfile(output_filename):
 
             #    Error handling
-            file_content = file(output_filename).read()
+            with open(output_filename) as fh:
+                file_content = fh.read()
             for tag in ['Invalid', 'Error']:
                 if tag in file_content:
                     raise BaseFrameworkException(file_content.strip())
@@ -226,13 +227,14 @@ class vdaemon(object):
             om.out.debug('Starting payload upload, remote filename is: "' +
                          self._remote_filename + '".')
 
-            if transferHandler.transfer(file(exe_file).read(), self._remote_filename):
-                om.out.console(
-                    'Finished payload upload to "%s"' % self._remote_filename)
-                return self._remote_filename
-            else:
-                raise BaseFrameworkException(
-                    'The payload upload failed, remote md5sum is different.')
+            with open(exe_file) as exe_fh:
+                if transferHandler.transfer(exe_fh.read(), self._remote_filename):
+                    om.out.console(
+                        'Finished payload upload to "%s"' % self._remote_filename)
+                    return self._remote_filename
+                else:
+                    raise BaseFrameworkException(
+                        'The payload upload failed, remote md5sum is different.')
 
     def _exec_payload(self, remote_file_location):
         """
@@ -250,6 +252,6 @@ class vdaemon(object):
         A wrapper for executing commands
         """
         om.out.debug('Executing: ' + command)
-        response = apply(self._exec_method, (command,))
+        response = self._exec_method(*(command,))
         om.out.debug('"' + command + '" returned: ' + response)
         return response

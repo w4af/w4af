@@ -71,7 +71,7 @@ class MacOSX(Platform):
     # https://github.com/andresriancho/w3af/issues/485
     MAC_CORE_PIP_PACKAGES = CORE_PIP_PACKAGES[:]
     MAC_CORE_PIP_PACKAGES.remove(PIPDependency('pybloomfilter',
-                                               'pybloomfiltermmap', '0.3.14'))
+                                               'pybloomfiltermmap3', '0.5.5'))
 
     MAC_GUI_PIP_PACKAGES = MAC_CORE_PIP_PACKAGES[:]
     MAC_GUI_PIP_PACKAGES.extend(GUI_PIP_EXTRAS)
@@ -81,12 +81,12 @@ class MacOSX(Platform):
 
     @staticmethod
     def is_current_platform():
-        return 'darwin' in platform.dist() or 'mac' in platform.dist()
+        return 'Darwin' == platform.system()
 
     @staticmethod
     def os_package_is_installed(package_name):
-        not_installed = 'None of the specified ports are installed'
-        installed = 'The following ports are currently installed'
+        not_installed = b'None of the specified ports are installed'
+        installed = b'The following ports are currently installed'
 
         try:
             p = subprocess.Popen(['port', '-v', 'installed', package_name],
@@ -116,7 +116,7 @@ class MacOSX(Platform):
             # that python site-packages directory
             pass
         else:
-            print TWO_PYTHON_MSG % sys.executable
+            print((TWO_PYTHON_MSG % sys.executable))
 
         #check if scapy is correctly installed/working on OSX
         try:
@@ -124,6 +124,6 @@ class MacOSX(Platform):
         except ImportError:
             # The user just needs to work on his dependencies.
             pass
-        except OSError, ose:
+        except OSError as ose:
             if "Device not configured" in str(ose):
                 print(TRACEROUTE_SCAPY_MSG)

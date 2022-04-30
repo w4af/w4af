@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.data.kb.vuln_templates.os_commanding_template import OSCommandingTemplate
 from w3af.plugins.tests.helper import PluginConfig, ExecExploitTest
@@ -39,6 +40,7 @@ class TestOSCommandingShell(ExecExploitTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_found_exploit_osc(self):
         # Run the scan
         cfg = self._run_configs['cfg']
@@ -46,12 +48,12 @@ class TestOSCommandingShell(ExecExploitTest):
 
         # Assert the general results
         vulns = self.kb.get('os_commanding', 'os_commanding')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         
         vuln = vulns[0]
-        self.assertEquals(vuln.get_name(), 'OS commanding vulnerability')
-        self.assertEquals(vuln.get_url().get_file_name(), 'trivial_osc.py')
-        self.assertEquals(vuln.get_mutant().get_token_name(), 'cmd')
+        self.assertEqual(vuln.get_name(), 'OS commanding vulnerability')
+        self.assertEqual(vuln.get_url().get_file_name(), 'trivial_osc.py')
+        self.assertEqual(vuln.get_mutant().get_token_name(), 'cmd')
 
         vuln_to_exploit_id = vuln.get_id()
 
@@ -90,6 +92,7 @@ class TestOSCommandingShell(ExecExploitTest):
             self.assertIn('execute', _help)
             self.assertIn('upload', _help)
     
+    @pytest.mark.deprecated
     def test_from_template(self):
         osct = OSCommandingTemplate()
         

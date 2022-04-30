@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 import w3af.core.data.constants.severity as severity
@@ -41,24 +42,25 @@ class TestHttpInBody(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_found_vuln(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
 
         infos = self.kb.get('http_in_body', 'request')
-        self.assertEquals(1, len(infos), infos)
+        self.assertEqual(1, len(infos), infos)
         
         info = infos[0]
-        self.assertEquals(get_moth_http('/grep/http_in_body/http_request.html'),
+        self.assertEqual(get_moth_http('/grep/http_in_body/http_request.html'),
                           str(info.get_url()))
-        self.assertEquals(severity.INFORMATION, info.get_severity())
-        self.assertEquals('HTTP Request in HTTP body', info.get_name())
+        self.assertEqual(severity.INFORMATION, info.get_severity())
+        self.assertEqual('HTTP Request in HTTP body', info.get_name())
 
         infos = self.kb.get('http_in_body', 'response')
-        self.assertEquals(1, len(infos), infos)
+        self.assertEqual(1, len(infos), infos)
         
         info = infos[0]
-        self.assertEquals(get_moth_http('/grep/http_in_body/http_response.html'),
+        self.assertEqual(get_moth_http('/grep/http_in_body/http_response.html'),
                           str(info.get_url()))
-        self.assertEquals(severity.INFORMATION, info.get_severity())
-        self.assertEquals('HTTP Response in HTTP body', info.get_name())
+        self.assertEqual(severity.INFORMATION, info.get_severity())
+        self.assertEqual('HTTP Response in HTTP body', info.get_name())

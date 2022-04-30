@@ -23,6 +23,7 @@ import inspect
 
 import w3af.core.data.constants.severity as severity
 from w3af.core.controllers.plugins.plugin import Plugin
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class OutputPlugin(Plugin):
@@ -174,7 +175,7 @@ class OutputPlugin(Plugin):
             return ''
 
         for char, replace in self.STRING_CLEAN:
-            string_to_clean = string_to_clean.replace(char, replace)
+            string_to_clean = smart_unicode(string_to_clean).replace(char, replace)
 
         return string_to_clean
 

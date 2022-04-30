@@ -18,14 +18,15 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from lxml import etree
 from xml import sax
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
-from mock import patch
+from unittest.mock import patch
 
 
 test_config = {
@@ -39,7 +40,7 @@ class TestXXESimple(PluginTest):
 
     class XXEMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
             xml = uri[uri.find('=') + 1:]
 
             # A very vulnerable parser
@@ -49,7 +50,7 @@ class TestXXESimple(PluginTest):
             try:
                 root = etree.fromstring(str(xml), parser=parser)
                 body = etree.tostring(root)
-            except Exception, e:
+            except Exception as e:
                 body = str(e)
 
             return self.status, response_headers, body
@@ -57,17 +58,18 @@ class TestXXESimple(PluginTest):
     MOCK_RESPONSES = [XXEMockResponse(re.compile('.*'), body=None,
                                       method='GET', status=200)]
 
+    @pytest.mark.deprecated
     def test_found_xxe(self):
         self._scan(self.target_url, test_config)
         vulns = self.kb.get('xxe', 'xxe')
 
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
 
-        self.assertEquals('xml', vuln.get_token_name())
-        self.assertEquals('XML External Entity', vuln.get_name())
+        self.assertEqual('xml', vuln.get_token_name())
+        self.assertEqual('XML External Entity', vuln.get_name())
 
 
 class NoOpContentHandler(sax.ContentHandler):
@@ -91,7 +93,7 @@ class TestXXERemoteLoading(PluginTest):
 
     class XXEMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
             xml = uri[uri.find('=') + 1:]
 
             # A very vulnerable parser that loads remote files over https
@@ -99,7 +101,7 @@ class TestXXERemoteLoading(PluginTest):
 
             try:
                 sax.parseString(xml, handler)
-            except Exception, e:
+            except Exception as e:
                 body = str(e)
             else:
                 body = handler.chars
@@ -109,6 +111,7 @@ class TestXXERemoteLoading(PluginTest):
     MOCK_RESPONSES = [XXEMockResponse(re.compile('.*'), body=None,
                                       method='GET', status=200)]
 
+    @pytest.mark.deprecated
     def test_found_xxe_with_remote(self):
 
         # Use this mock to make sure that the vulnerability is found using
@@ -119,13 +122,13 @@ class TestXXERemoteLoading(PluginTest):
 
         vulns = self.kb.get('xxe', 'xxe')
 
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
 
-        self.assertEquals('xml', vuln.get_token_name())
-        self.assertEquals('XML External Entity', vuln.get_name())
+        self.assertEqual('xml', vuln.get_token_name())
+        self.assertEqual('XML External Entity', vuln.get_name())
 
 
 class TestXXENegativeWithError(PluginTest):
@@ -134,7 +137,7 @@ class TestXXENegativeWithError(PluginTest):
 
     class XXEMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
             xml = uri[uri.find('=') + 1:]
 
             # Secure
@@ -145,7 +148,7 @@ class TestXXENegativeWithError(PluginTest):
             try:
                 root = etree.fromstring(str(xml), parser=parser)
                 body = etree.tostring(root)
-            except Exception, e:
+            except Exception as e:
                 body = str(e)
 
             return self.status, response_headers, body
@@ -153,19 +156,20 @@ class TestXXENegativeWithError(PluginTest):
     MOCK_RESPONSES = [XXEMockResponse(re.compile('.*'), body=None,
                                       method='GET', status=200)]
 
+    @pytest.mark.deprecated
     def test_not_found_xxe(self):
         self._scan(self.target_url, test_config)
         errors = self.kb.get('xxe', 'errors')
         vulns = self.kb.get('xxe', 'xxe')
 
-        self.assertEquals(0, len(vulns), vulns)
-        self.assertEquals(1, len(errors), errors)
+        self.assertEqual(0, len(vulns), vulns)
+        self.assertEqual(1, len(errors), errors)
 
         # Now some tests around specific details of the found vuln
         error = errors[0]
 
-        self.assertEquals('xml', error.get_token_name())
-        self.assertEquals('XML Parsing Error', error.get_name())
+        self.assertEqual('xml', error.get_token_name())
+        self.assertEqual('XML Parsing Error', error.get_name())
 
 
 class TestXXENegativeNoError(PluginTest):
@@ -174,7 +178,7 @@ class TestXXENegativeNoError(PluginTest):
 
     class XXEMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
             xml = uri[uri.find('=') + 1:]
 
             # Secure
@@ -185,7 +189,7 @@ class TestXXENegativeNoError(PluginTest):
             try:
                 root = etree.fromstring(str(xml), parser=parser)
                 body = etree.tostring(root)
-            except Exception, e:
+            except Exception as e:
                 body = 'Generic error here'
 
             return self.status, response_headers, body
@@ -193,13 +197,14 @@ class TestXXENegativeNoError(PluginTest):
     MOCK_RESPONSES = [XXEMockResponse(re.compile('.*'), body=None,
                                       method='GET', status=200)]
 
+    @pytest.mark.deprecated
     def test_not_found_xxe(self):
         self._scan(self.target_url, test_config)
         errors = self.kb.get('xxe', 'errors')
         vulns = self.kb.get('xxe', 'xxe')
 
-        self.assertEquals(0, len(vulns), vulns)
-        self.assertEquals(0, len(errors), errors)
+        self.assertEqual(0, len(vulns), vulns)
+        self.assertEqual(0, len(errors), errors)
 
 
 class TestXXEInParameter(PluginTest):
@@ -215,7 +220,7 @@ class TestXXEInParameter(PluginTest):
 
     class XXEMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
             xml = uri[uri.find('=') + 1:]
 
             # A very vulnerable parser
@@ -225,7 +230,7 @@ class TestXXEInParameter(PluginTest):
 
             try:
                 root = etree.fromstring(str(xml), parser=parser)
-            except Exception, e:
+            except Exception as e:
                 body = str(e)
                 return self.status, response_headers, body
 
@@ -238,14 +243,15 @@ class TestXXEInParameter(PluginTest):
     MOCK_RESPONSES = [XXEMockResponse(re.compile('.*'), body=None,
                                       method='GET', status=200)]
 
+    @pytest.mark.deprecated
     def test_found_xxe(self):
         self._scan(self.target_url, test_config)
         vulns = self.kb.get('xxe', 'xxe')
 
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
 
-        self.assertEquals('xml', vuln.get_token_name())
-        self.assertEquals('XML External Entity', vuln.get_name())
+        self.assertEqual('xml', vuln.get_token_name())
+        self.assertEqual('XML External Entity', vuln.get_name())

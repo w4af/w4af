@@ -1,15 +1,15 @@
 #
 # Copyright (C) 2010-2012 Vinay Sajip. All rights reserved. Licensed under the new BSD license.
+# (Note: 2018 modifications by @stamparm)
 #
+
 import logging
-import os
 import re
-import subprocess
 import sys
 
-from lib.core.convert import stdoutencode
+from lib.core.settings import IS_WIN
 
-if subprocess.mswindows:
+if IS_WIN:
     import ctypes
     import ctypes.wintypes
 
@@ -19,6 +19,8 @@ if subprocess.mswindows:
     ctypes.windll.kernel32.SetConsoleTextAttribute.argtypes = [ctypes.wintypes.HANDLE, ctypes.wintypes.WORD]
     ctypes.windll.kernel32.SetConsoleTextAttribute.restype = ctypes.wintypes.BOOL
 
+def stdoutEncode(data):  # Cross-referenced function
+    return data
 
 class ColorizingStreamHandler(logging.StreamHandler):
     # color names to indices
@@ -43,6 +45,7 @@ class ColorizingStreamHandler(logging.StreamHandler):
     }
     csi = '\x1b['
     reset = '\x1b[0m'
+    bold = "\x1b[1m"
     disable_coloring = False
 
     @property
@@ -52,7 +55,7 @@ class ColorizingStreamHandler(logging.StreamHandler):
 
     def emit(self, record):
         try:
-            message = stdoutencode(self.format(record))
+            message = stdoutEncode(self.format(record))
             stream = self.stream
 
             if not self.is_tty:
@@ -71,7 +74,7 @@ class ColorizingStreamHandler(logging.StreamHandler):
         except:
             self.handleError(record)
 
-    if not subprocess.mswindows:
+    if not IS_WIN:
         def output_colorized(self, message):
             self.stream.write(message)
     else:
@@ -90,7 +93,6 @@ class ColorizingStreamHandler(logging.StreamHandler):
 
         def output_colorized(self, message):
             parts = self.ansi_esc.split(message)
-            write = self.stream.write
             h = None
             fd = getattr(self.stream, 'fileno', None)
 
@@ -104,7 +106,8 @@ class ColorizingStreamHandler(logging.StreamHandler):
                 text = parts.pop(0)
 
                 if text:
-                    write(text)
+                    self.stream.write(text)
+                    self.stream.flush()
 
                 if parts:
                     params = parts.pop(0)
@@ -127,9 +130,19 @@ class ColorizingStreamHandler(logging.StreamHandler):
 
                         ctypes.windll.kernel32.SetConsoleTextAttribute(h, color)
 
-    def colorize(self, message, record):
-        if record.levelno in self.level_map and self.is_tty:
-            bg, fg, bold = self.level_map[record.levelno]
+    def _reset(self, message):
+        if not message.endswith(self.reset):
+            reset = self.reset
+        elif self.bold in message:  # bold
+            reset = self.reset + self.bold
+        else:
+            reset = self.reset
+
+        return reset
+
+    def colorize(self, message, levelno):
+        if levelno in self.level_map and self.is_tty:
+            bg, fg, bold = self.level_map[levelno]
             params = []
 
             if bg in self.color_map:
@@ -155,4 +168,4 @@ class ColorizingStreamHandler(logging.StreamHandler):
 
     def format(self, record):
         message = logging.StreamHandler.format(self, record)
-        return self.colorize(message, record)
+        return self.colorize(message, record.levelno)

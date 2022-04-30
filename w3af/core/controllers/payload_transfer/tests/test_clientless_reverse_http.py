@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import commands
+import subprocess
 import socket
 import tempfile
 import unittest
@@ -36,7 +36,7 @@ from w3af.plugins.tests.helper import onlyroot
 class TestClientlessReverseHTTP(unittest.TestCase):
 
     def test_upload_file_mock(self):
-        exec_method = commands.getoutput
+        exec_method = subprocess.getoutput
         os = 'linux'
 
         create_temp_dir()
@@ -59,7 +59,7 @@ class TestClientlessReverseHTTP(unittest.TestCase):
 
     @onlyroot
     def test_upload_file_root(self):
-        exec_method = commands.getoutput
+        exec_method = subprocess.getoutput
         os = 'linux'
 
         create_temp_dir()

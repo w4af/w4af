@@ -46,7 +46,7 @@ class Commit(object):
         self._changes = []
     
     def add_change(self, action_short, filename):
-        if action_short not in ACTIONS.values():
+        if action_short not in list(ACTIONS.values()):
             raise ValueError('Action must be in ACTIONS.')
         
         self._changes.append((action_short, filename))
@@ -105,7 +105,7 @@ class ChangeLog(object):
             
             diff = git_commit.parents[0].diff(git_commit)
             
-            for action_short in ACTIONS.values():
+            for action_short in list(ACTIONS.values()):
                 for file_diff in diff.iter_change_type(action_short):
                     affected_file = get_affected_file(file_diff)
                     commit.add_change(action_short, affected_file)

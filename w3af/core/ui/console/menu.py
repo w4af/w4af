@@ -84,7 +84,7 @@ class menu(object):
         for cmd in [c for c in dir(self) if c.startswith('_cmd_')]:
             self._handlers[cmd[5:]] = getattr(self, cmd)
 
-        for cmd in self._handlers.keys():
+        for cmd in list(self._handlers.keys()):
             try:
                 pHandler = getattr(self, '_para_' + cmd)
                 self._paramHandlers[cmd] = pHandler
@@ -135,7 +135,7 @@ class menu(object):
         """
         By default, commands are defined by methods _cmd_<command>.
         """
-        cmds = self._handlers.keys()
+        cmds = list(self._handlers.keys())
 
         if onlyLocal:
             cmds = [c for c in cmds if c not in self._universalCommands]

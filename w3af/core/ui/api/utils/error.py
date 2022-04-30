@@ -30,12 +30,12 @@ class JSONHTTPException(HTTPException):
         self.description = description
         self.code = code
 
-    def get_body(self, environ=None):
+    def get_body(self, environ=None, scope=None):
         """Get the JSON body"""
         return json.dumps({'message': self.description,
                            'code': self.code})
 
-    def get_headers(self, environ=None):
+    def get_headers(self, environ=None, scope=None):
         """Get a list of headers."""
         return [('Content-Type', 'application/json')]
 

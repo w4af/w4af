@@ -19,18 +19,19 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 import ssl
 import time
-import Queue
+import queue
 import types
 import unittest
-import SocketServer
+import socketserver
 from multiprocessing.dummy import Process
 
 import httpretty
 from nose.plugins.attrib import attr
-from mock import patch
+from unittest.mock import patch
 
 from w3af import ROOT_PATH
 from w3af.core.data.url.extended_urllib import ExtendedUrllib
@@ -63,6 +64,7 @@ class TestXUrllib(unittest.TestCase):
         self.uri_opener.end()
         httpretty.reset()
         
+    @pytest.mark.deprecated
     def test_basic(self):
         url = URL(get_moth_http())
         http_response = self.uri_opener.GET(url, cache=False)
@@ -72,6 +74,19 @@ class TestXUrllib(unittest.TestCase):
         self.assertGreaterEqual(http_response.id, 1)
         self.assertNotEqual(http_response.id, None)
 
+    @httpretty.activate
+    def test_redir_content_length_zero(self):
+        httpretty.register_uri(httpretty.GET, self.MOCK_URL,
+                               body='', status=301,
+                               adding_headers={'content-length': 0,
+                                               'location': self.MOCK_URL,
+                                               'connection': 'keep-alive'})
+
+        url = URL(self.MOCK_URL)
+        http_response = self.uri_opener.GET(url, cache=False)
+        self.assertEqual(http_response.get_code(), 301)
+
+    @pytest.mark.deprecated
     def test_basic_ssl(self):
         url = URL(get_moth_https())
         http_response = self.uri_opener.GET(url, cache=False)
@@ -91,6 +106,7 @@ class TestXUrllib(unittest.TestCase):
         self.assertGreaterEqual(http_response.id, 1)
         self.assertNotEqual(http_response.id, None)
 
+    @pytest.mark.deprecated
     def test_cache(self):
         url = URL(get_moth_http())
         http_response = self.uri_opener.GET(url)
@@ -100,6 +116,7 @@ class TestXUrllib(unittest.TestCase):
         http_response = self.uri_opener.GET(url)
         self.assertIn(self.MOTH_MESSAGE, http_response.body)
 
+    @pytest.mark.deprecated
     def test_qs_params(self):
         url = URL(get_moth_http('/audit/xss/simple_xss.py?text=123456abc'))
         http_response = self.uri_opener.GET(url, cache=False)
@@ -130,7 +147,9 @@ class TestXUrllib(unittest.TestCase):
         self.assertEqual(str(len(data)), request_headers['content-length'])
 
         self.assertEqual(httpretty.last_request().body, data)
+        # pylint: disable=E1101
         self.assertEqual(httpretty.last_request().path, '/')
+        # pylint: enable=E1101
 
     @httpretty.activate
     def test_GET_with_post_data_and_qs(self):
@@ -154,8 +173,11 @@ class TestXUrllib(unittest.TestCase):
         self.assertEqual(str(len(data)), request_headers['content-length'])
 
         self.assertEqual(httpretty.last_request().body, data)
+        # pylint: disable=E1101
         self.assertEqual(httpretty.last_request().path, '/' + qs)
+        # pylint: enable=E1101
 
+    @pytest.mark.deprecated
     def test_post(self):
         url = URL(get_moth_http('/audit/xss/simple_xss_form.py'))
 
@@ -165,9 +187,10 @@ class TestXUrllib(unittest.TestCase):
         http_response = self.uri_opener.POST(url, data, cache=False)
         self.assertIn('123456abc', http_response.body)
 
+    @pytest.mark.deprecated
     def test_post_special_chars(self):
         url = URL(get_moth_http('/audit/xss/simple_xss_form.py'))
-        test_data = u'abc<def>"-á-'
+        test_data = 'abc<def>"-á-'
 
         data = URLEncodedForm()
         data['text'] = [test_data]
@@ -175,6 +198,7 @@ class TestXUrllib(unittest.TestCase):
         http_response = self.uri_opener.POST(url, data, cache=False)
         self.assertIn(test_data, http_response.body)
 
+    @pytest.mark.deprecated
     def test_unknown_domain(self):
         url = URL('http://longsitethatdoesnotexistfoo.com/')
         self.assertRaises(HTTPRequestException, self.uri_opener.GET, url)
@@ -183,11 +207,13 @@ class TestXUrllib(unittest.TestCase):
         url = URL('file://foo/bar.txt')
         self.assertRaises(HTTPRequestException, self.uri_opener.GET, url)
 
+    @pytest.mark.deprecated
     def test_url_port_closed(self):
         # TODO: Change 2312 by an always closed/non-http port
         url = URL('http://127.0.0.1:2312/')
         self.assertRaises(HTTPRequestException, self.uri_opener.GET, url)
 
+    @pytest.mark.deprecated
     def test_url_port_not_http(self):
         upper_daemon = UpperDaemon(EmptyTCPHandler)
         upper_daemon.start()
@@ -199,11 +225,12 @@ class TestXUrllib(unittest.TestCase):
 
         try:
             self.uri_opener.GET(url)
-        except HTTPRequestException, hre:
+        except HTTPRequestException as hre:
             self.assertEqual(hre.value, "Bad HTTP response status line: ''")
         else:
             self.assertTrue(False, 'Expected HTTPRequestException.')
 
+    @pytest.mark.deprecated
     def test_url_port_not_http_many(self):
         upper_daemon = UpperDaemon(EmptyTCPHandler)
         upper_daemon.start()
@@ -217,21 +244,22 @@ class TestXUrllib(unittest.TestCase):
         http_request_e = 0
         scan_must_stop_e = 0
 
-        for _ in xrange(MAX_ERROR_COUNT):
+        for _ in range(MAX_ERROR_COUNT):
             try:
                 self.uri_opener.GET(url)
             except HTTPRequestException:
                 http_request_e += 1
-            except ScanMustStopException, smse:
+            except ScanMustStopException as smse:
                 scan_must_stop_e += 1
                 break
-            except Exception, e:
+            except Exception as e:
                 msg = 'Not expecting "%s".'
                 self.assertTrue(False, msg % e.__class__.__name__)
 
         self.assertEqual(scan_must_stop_e, 1)
         self.assertEqual(http_request_e, 9)
 
+    @pytest.mark.deprecated
     def test_get_wait_time(self):
         """
         Asserts that all the responses coming out of the extended urllib have a
@@ -289,6 +317,7 @@ class TestXUrllib(unittest.TestCase):
 
     @attr('internet')
     @attr('ci_fails')
+    @pytest.mark.deprecated
     def test_ssl_sni(self):
         """
         Test is our HTTP client supports SSL SNI
@@ -298,6 +327,7 @@ class TestXUrllib(unittest.TestCase):
         resp = self.uri_opener.GET(url)
         self.assertIn('<strong>Great!', resp.get_body())
 
+    @pytest.mark.deprecated
     def test_ssl_fail_when_requesting_http(self):
         http_daemon = UpperDaemon(Ok200Handler)
         http_daemon.start()
@@ -311,6 +341,7 @@ class TestXUrllib(unittest.TestCase):
 
         self.assertRaises(HTTPRequestException, self.uri_opener.GET, url)
 
+    @pytest.mark.deprecated
     def test_ssl_fail_when_requesting_moth_http(self):
         """
         https://github.com/andresriancho/w3af/issues/7989
@@ -342,7 +373,7 @@ class TestXUrllib(unittest.TestCase):
         self.assertRaises(ScanMustStopByUserRequest, self.uri_opener.GET, url)
 
     def test_pause(self):
-        output = Queue.Queue()
+        output = queue.Queue()
         self.uri_opener.pause(True)
 
         def send(uri_opener, output):
@@ -357,10 +388,11 @@ class TestXUrllib(unittest.TestCase):
         th.daemon = True
         th.start()
 
-        self.assertRaises(Queue.Empty, output.get, True, 2)
+        self.assertRaises(queue.Empty, output.get, True, 2)
 
+    @pytest.mark.deprecated
     def test_pause_unpause(self):
-        output = Queue.Queue()
+        output = queue.Queue()
         self.uri_opener.pause(True)
 
         def send(uri_opener, output):
@@ -375,12 +407,12 @@ class TestXUrllib(unittest.TestCase):
         th.daemon = True
         th.start()
 
-        self.assertRaises(Queue.Empty, output.get, True, 2)
+        self.assertRaises(queue.Empty, output.get, True, 2)
 
         self.uri_opener.pause(False)
 
         http_response = output.get()
-        self.assertNotIsInstance(http_response, types.NoneType,
+        self.assertNotIsInstance(http_response, type(None),
                                  'Error in send thread.')
         
         th.join()
@@ -388,6 +420,7 @@ class TestXUrllib(unittest.TestCase):
         self.assertEqual(http_response.get_code(), 200)
         self.assertIn(self.MOTH_MESSAGE, http_response.body)
     
+    @pytest.mark.deprecated
     def test_removes_cache(self):
         url = URL(get_moth_http())
         self.uri_opener.GET(url, cache=False)
@@ -400,19 +433,21 @@ class TestXUrllib(unittest.TestCase):
         trace_fmt = 'db_unittest-%s_traces/'
         temp_dir = get_temp_dir()
         
-        for i in xrange(100):
+        for i in range(100):
             test_db_path = os.path.join(temp_dir, db_fmt % i)
             test_trace_path = os.path.join(temp_dir, trace_fmt % i)
             self.assertFalse(os.path.exists(test_db_path), test_db_path)
             self.assertFalse(os.path.exists(test_trace_path), test_trace_path)
     
+    @pytest.mark.deprecated
     def test_special_char_header(self):
         url = URL(get_moth_http('/core/headers/echo-headers.py'))
-        header_content = u'name=ábc'
+        header_content = 'name=ábc'
         headers = Headers([('Cookie', header_content)])
         http_response = self.uri_opener.GET(url, cache=False, headers=headers)
         self.assertIn(header_content, http_response.body)
 
+    @pytest.mark.deprecated
     def test_bad_file_descriptor_8125_local(self):
         """
         8125 is basically an issue with the way HTTP SSL connections handle the
@@ -435,15 +470,13 @@ class TestXUrllib(unittest.TestCase):
         body = 'abc'
         mock_url = 'https://localhost:%s/' % port
         url = URL(mock_url)
-        http_response = self.uri_opener.GET(url, cache=False)
+
+        try:
+            http_response = self.uri_opener.GET(url, cache=False)
+        finally:
+            s.stop()
 
         self.assertEqual(body, http_response.body)
-        s.stop()
-
-        # This error is expected, it's generated when the xurllib negotiates
-        # the different SSL protocols with the server
-        self.assertEqual(set([e.strerror for e in s.errors]),
-                         {'Bad file descriptor'})
 
     def test_rate_limit_high(self):
         self.rate_limit_generic(500, 0.009, 0.4)
@@ -476,25 +509,25 @@ class TestXUrllib(unittest.TestCase):
         self.assertLessEqual(elapsed_time, _max)
 
 
-class EmptyTCPHandler(SocketServer.BaseRequestHandler):
+class EmptyTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
-        self.request.sendall('')
+        self.request.sendall(b'')
 
 
-class TimeoutTCPHandler(SocketServer.BaseRequestHandler):
+class TimeoutTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
         time.sleep(60)
-        self.request.sendall('')
+        self.request.sendall(b'')
 
 
-class Ok200Handler(SocketServer.BaseRequestHandler):
-    body = 'abc'
+class Ok200Handler(socketserver.BaseRequestHandler):
+    body = b'abc'
 
     def handle(self):
         self.data = self.request.recv(1024).strip()
-        self.request.sendall('HTTP/1.0 200 Ok\r\n'
-                             'Connection: Close\r\n'
-                             'Content-Length: 3\r\n'
-                             '\r\n' + self.body)
+        self.request.sendall(b'HTTP/1.0 200 Ok\r\n'
+                             b'Connection: Close\r\n'
+                             b'Content-Length: 3\r\n'
+                             b'\r\n' + self.body)

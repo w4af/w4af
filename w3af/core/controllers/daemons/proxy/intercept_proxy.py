@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
-import Queue
+import queue
 
 from w3af.core.controllers.daemons.proxy import Proxy
 from w3af.core.controllers.daemons.proxy import InterceptProxyHandler
@@ -33,8 +33,8 @@ class InterceptProxy(Proxy):
     interface to perform all its magic ;)
     """
 
-    DEFAULT_NO_TRAP = '.*\.(gif|jpg|png|css|js|ico|swf|axd|tif)$'
-    DEFAULT_TRAP = '.*'
+    DEFAULT_NO_TRAP = r'.*\.(gif|jpg|png|css|js|ico|swf|axd|tif)$'
+    DEFAULT_TRAP = r'.*'
 
     def __init__(self, ip, port, url_opener):
         """
@@ -48,8 +48,8 @@ class InterceptProxy(Proxy):
                        name='LocalProxyThread')
 
         # Internal vars
-        self.requests_pending_modification = Queue.Queue()
-        self.requests_already_modified = Queue.Queue()
+        self.requests_pending_modification = queue.Queue()
+        self.requests_already_modified = queue.Queue()
 
         # User configured parameters
         self.methods_to_trap = set()
@@ -68,7 +68,7 @@ class InterceptProxy(Proxy):
         """
         try:
             return self.requests_pending_modification.get(block=False)
-        except Queue.Empty:
+        except queue.Empty:
             return None
 
     def set_what_to_trap(self, regex):

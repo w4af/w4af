@@ -99,7 +99,7 @@ class FormIDMatcher(object):
                  exception is raised
         """
         if action is not None:
-            if not isinstance(action, re._pattern_type):
+            if not isinstance(action, re.Pattern):
                 raise ValueError(FORM_ID_FORMAT_ERROR)
 
         if inputs is not None:
@@ -107,26 +107,26 @@ class FormIDMatcher(object):
                 raise ValueError(FORM_ID_FORMAT_ERROR)
 
             for input_name in inputs:
-                if not isinstance(input_name, basestring):
+                if not isinstance(input_name, str):
                     raise ValueError(FORM_ID_FORMAT_ERROR)
 
         if attributes is not None:
             if not isinstance(attributes, dict):
                 raise ValueError(FORM_ID_FORMAT_ERROR)
 
-            for k, v in attributes.iteritems():
-                if not isinstance(k, basestring):
+            for k, v in attributes.items():
+                if not isinstance(k, str):
                     raise ValueError(FORM_ID_FORMAT_ERROR)
 
-                if not isinstance(v, basestring):
+                if not isinstance(v, str):
                     raise ValueError(FORM_ID_FORMAT_ERROR)
 
         if hosted_at_url is not None:
-            if not isinstance(hosted_at_url, re._pattern_type):
+            if not isinstance(hosted_at_url, re.Pattern):
                 raise ValueError(FORM_ID_FORMAT_ERROR)
 
         if method is not None:
-            if not isinstance(method, basestring):
+            if not isinstance(method, str):
                 raise ValueError(FORM_ID_FORMAT_ERROR)
 
         return True

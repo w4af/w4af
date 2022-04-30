@@ -36,7 +36,7 @@ def is_git_repo(path=W3AF_LOCAL_PATH):
     """
     try:
         git.Repo(path)
-    except git.exc.InvalidGitRepositoryError:
+    except git.InvalidGitRepositoryError:
         return False
     else:
         return True
@@ -48,7 +48,7 @@ def is_dirty_repo(path=W3AF_LOCAL_PATH):
     """
     try:
         repo = git.Repo(path)
-    except git.exc.InvalidGitRepositoryError:
+    except git.InvalidGitRepositoryError:
         return False
     else:
         return repo.is_dirty()

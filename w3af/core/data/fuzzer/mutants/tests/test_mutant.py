@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import copy
 
-from mock import patch
+from unittest.mock import patch
 
 from w3af.core.data.fuzzer.mutants.mutant import Mutant
 from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
@@ -34,7 +34,7 @@ from w3af.core.data.dc.query_string import QueryString
 from w3af.core.data.dc.urlencoded_form import URLEncodedForm
 from w3af.core.data.dc.multipart_container import MultipartContainer
 from w3af.core.data.constants.file_templates.file_templates import get_file_from_template
-from w3af.core.controllers.misc.io import NamedStringIO
+from w3af.core.controllers.misc.io import NamedBytesIO
 from w3af.core.data.dc.utils.multipart import encode_as_multipart, get_boundary
 
 
@@ -77,7 +77,7 @@ class TestMutant(unittest.TestCase):
 
         created_dcs = [str(i.get_dc()) for i in created_mutants]
 
-        self.assertEquals(expected_dcs, created_dcs)
+        self.assertEqual(expected_dcs, created_dcs)
 
         token_0 = created_mutants[0].get_token()
         self.assertIsInstance(token_0, DataToken)
@@ -105,7 +105,7 @@ class TestMutant(unittest.TestCase):
 
         created_dcs = [str(i.get_dc()) for i in created_mutants]
 
-        self.assertEquals(expected_dcs, created_dcs)
+        self.assertEqual(expected_dcs, created_dcs)
 
     def test_get_mutant_class(self):
         m = Mutant(None)
@@ -178,18 +178,18 @@ class TestMutant(unittest.TestCase):
         self.assertEqual(len(generated_mutants), 6, generated_mutants)
 
         _, gif_file_content, _ = get_file_from_template('gif')
-        gif_named_stringio = NamedStringIO(gif_file_content, 'upload.gif')
+        gif_named_bytesio = NamedBytesIO(gif_file_content, 'upload.gif')
 
         expected_forms = []
 
         form = MultipartContainer(copy.deepcopy(form_params))
-        form['image'] = [gif_named_stringio]
+        form['image'] = [gif_named_bytesio]
         form['username'] = ['def']
         form['address'] = ['Bonsai Street 123']
         expected_forms.append(form)
 
         form = MultipartContainer(copy.deepcopy(form_params))
-        form['image'] = [gif_named_stringio]
+        form['image'] = [gif_named_bytesio]
         form['username'] = ['abc']
         form['address'] = ['Bonsai Street 123']
         expected_forms.append(form)
@@ -213,39 +213,39 @@ class TestMutant(unittest.TestCase):
         #
 
         form = MultipartContainer(copy.deepcopy(form_params))
-        form['image'] = [gif_named_stringio]
+        form['image'] = [gif_named_bytesio]
         form['username'] = ['John8212']
         form['address'] = ['abc']
         expected_forms.append(form)
 
         form = MultipartContainer(copy.deepcopy(form_params))
-        form['image'] = [gif_named_stringio]
+        form['image'] = [gif_named_bytesio]
         form['username'] = ['John8212']
         form['address'] = ['def']
         expected_forms.append(form)
 
         boundary = get_boundary()
-        noop = '1' * len(boundary)
+        noop = b'1' * len(boundary)
 
         expected_data = [encode_as_multipart(f, boundary) for f in expected_forms]
         expected_data = set([s.replace(boundary, noop) for s in expected_data])
 
         generated_forms = [m.get_dc() for m in generated_mutants]
-        generated_data = [str(f).replace(f.boundary, noop) for f in generated_forms]
+        generated_data = [bytes(f).replace(f.boundary, noop) for f in generated_forms]
 
         self.assertEqual(expected_data, set(generated_data))
 
         str_file = generated_forms[0]['image'][0]
-        self.assertIsInstance(str_file, NamedStringIO)
+        self.assertIsInstance(str_file, NamedBytesIO)
         self.assertEqual(str_file.name[-4:], '.gif')
-        self.assertEqual(gif_file_content, str_file)
+        self.assertEqual(gif_file_content, str_file.getvalue())
 
         str_file = generated_forms[1]['image'][0]
-        self.assertIsInstance(str_file, NamedStringIO)
+        self.assertIsInstance(str_file, NamedBytesIO)
         self.assertEqual(str_file.name[-4:], '.gif')
-        self.assertEqual(gif_file_content, str_file)
+        self.assertEqual(gif_file_content, str_file.getvalue())
 
-        self.assertIn('name="image"; filename="upload.gif"', generated_data[0])
+        self.assertIn(b'name="image"; filename="upload.gif"', generated_data[0])
 
     def test_mutant_creation_append(self):
         qs = QueryString(self.SIMPLE_KV)
@@ -260,7 +260,7 @@ class TestMutant(unittest.TestCase):
 
         created_dcs = [str(i.get_dc()) for i in created_mutants]
 
-        self.assertEquals(expected_dcs, created_dcs)
+        self.assertEqual(expected_dcs, created_dcs)
 
     def test_mutant_creation_repeated_params(self):
         qs = QueryString([('a', ['1', '2']), ('b', ['3'])])
@@ -279,7 +279,7 @@ class TestMutant(unittest.TestCase):
 
         created_dcs = [str(i.get_dc()) for i in created_mutants]
 
-        self.assertEquals(expected_dcs, created_dcs)
+        self.assertEqual(expected_dcs, created_dcs)
 
         token_0 = created_mutants[0].get_token()
         self.assertIsInstance(token_0, DataToken)

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import re
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
@@ -51,18 +52,19 @@ class TestRosettaFlash(PluginTest):
                                         method='GET', status=200,
                                         content_type='application/javascript')]
 
+    @pytest.mark.deprecated
     def test_found_rosetta_flash(self):
         self._scan(self.target_url, CONFIG)
         vulns = self.kb.get('rosetta_flash', 'rosetta_flash')
 
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
 
-        self.assertEquals('callback', vuln.get_token_name())
-        self.assertEquals('Rosetta Flash', vuln.get_name())
-        self.assertEquals(URL(self.target_url).uri2url().url_string,
+        self.assertEqual('callback', vuln.get_token_name())
+        self.assertEqual('Rosetta Flash', vuln.get_name())
+        self.assertEqual(URL(self.target_url).uri2url().url_string,
                           vuln.get_url().url_string)
 
 
@@ -91,8 +93,9 @@ class TestRosettaFlashFixed(PluginTest):
                                         method='GET', status=200,
                                         content_type='application/javascript')]
 
+    @pytest.mark.deprecated
     def test_not_found_rosetta_flash(self):
         self._scan(self.target_url, CONFIG)
         vulns = self.kb.get('rosetta_flash', 'rosetta_flash')
 
-        self.assertEquals(0, len(vulns), vulns)
+        self.assertEqual(0, len(vulns), vulns)

@@ -25,12 +25,13 @@ import os
 
 from nose.plugins.attrib import attr
 
-from w3af.core.controllers.misc.io import NamedStringIO
+from w3af.core.controllers.misc.io import NamedBytesIO
 from w3af.core.data.dc.utils.multipart import multipart_encode
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.db.disk_set import DiskSet
 from w3af.core.data.parsers.utils.form_params import FormParameters
 from w3af.core.data.dc.multipart_container import MultipartContainer
+from w3af.core.data.misc.encoding import smart_unicode
 
 MULTIPART_TEST = '''\
 --4266ff2e00ac63588a571483e5727142
@@ -54,7 +55,7 @@ class TestMultipartContainer(unittest.TestCase):
         multipart_boundary = MultipartContainer.MULTIPART_HEADER
 
         headers = Headers([('content-length', str(len(post_data))),
-                           ('content-type', multipart_boundary % boundary)])
+                           ('content-type', multipart_boundary % smart_unicode(boundary))])
 
         mpc = MultipartContainer.from_postdata(headers, post_data)
 
@@ -69,7 +70,7 @@ class TestMultipartContainer(unittest.TestCase):
         multipart_boundary = MultipartContainer.MULTIPART_HEADER
 
         headers = Headers([('content-length', str(len(post_data))),
-                           ('content-type', multipart_boundary % boundary)])
+                           ('content-type', multipart_boundary % smart_unicode(boundary))])
 
         mpc = MultipartContainer.from_postdata(headers, post_data)
 
@@ -93,7 +94,7 @@ class TestMultipartContainer(unittest.TestCase):
         self.assertIn('file', mpc)
 
         self.assertEqual(mpc['MAX_FILE_SIZE'], ['2097152'])
-        self.assertTrue(mpc['file'][0].startswith('GIF89'))
+        self.assertTrue(mpc['file'][0].startswith(b'GIF89'))
 
         self.assertEqual(mpc.get_file_vars(), ['file'])
         self.assertEqual(mpc.get_parameter_type('MAX_FILE_SIZE'), 'text')
@@ -101,14 +102,14 @@ class TestMultipartContainer(unittest.TestCase):
         self.assertEqual(mpc.get_file_name('file'), 'rsXiwMY.gif')
 
     def test_multipart_post_with_filename(self):
-        fake_file = NamedStringIO('def', name='hello.txt')
+        fake_file = NamedBytesIO(b'def', name='hello.txt')
         vars = [('a', 'bcd'), ]
         files = [('b', fake_file)]
         boundary, post_data = multipart_encode(vars, files)
         multipart_boundary = MultipartContainer.MULTIPART_HEADER
 
         headers = Headers([('content-length', str(len(post_data))),
-                           ('content-type', multipart_boundary % boundary)])
+                           ('content-type', multipart_boundary % smart_unicode(boundary))])
 
         mpc = MultipartContainer.from_postdata(headers, post_data)
 
@@ -140,20 +141,20 @@ class TestMultipartContainer(unittest.TestCase):
         self.assertEqual(mpc.get_file_name('b'), 'hello.txt')
 
     def test_multipart_3570(self):
-        headers = Headers([(u'Content-length', u'557'),
-                           (u'Accept-encoding', u'gzip, deflate'),
-                           (u'Accept', u'*/*'),
-                           (u'User-agent', u'Mozilla/4.0'),
-                           (u'Host', u'www.webscantest.com'),
-                           (u'Cookie', u'SESSIONID_VULN_SITE=k4no98smgdkun2eqme5k2btgb5'),
-                           (u'Referer', u'http://www.webscantest.com/'),
-                           (u'Content-type', u'multipart/form-data; boundary=db36a3a8bb45ec40c22301ffcaa98e05')])
+        headers = Headers([('Content-length', '557'),
+                           ('Accept-encoding', 'gzip, deflate'),
+                           ('Accept', '*/*'),
+                           ('User-agent', 'Mozilla/4.0'),
+                           ('Host', 'www.webscantest.com'),
+                           ('Cookie', 'SESSIONID_VULN_SITE=k4no98smgdkun2eqme5k2btgb5'),
+                           ('Referer', 'http://www.webscantest.com/'),
+                           ('Content-type', 'multipart/form-data; boundary=db36a3a8bb45ec40c22301ffcaa98e05')])
 
         test_dir = os.path.dirname(os.path.realpath(__file__))
         post_data_file = os.path.join(test_dir, 'samples', 'post-data-3570')
-        multipart_post_data = file(post_data_file).read()
+        multipart_post_data = open(post_data_file, 'rb').read()
 
-        self.assertIn('db36a3a8bb45ec40c22301ffcaa98e05', multipart_post_data)
+        self.assertIn(b'db36a3a8bb45ec40c22301ffcaa98e05', multipart_post_data)
         self.assertEqual(len(multipart_post_data), 557)
 
         mpc = MultipartContainer.from_postdata(headers, multipart_post_data)
@@ -163,7 +164,7 @@ class TestMultipartContainer(unittest.TestCase):
         self.assertIn('userfile', mpc)
 
         self.assertEqual(mpc['MAX_FILE_SIZE'], ['2097152'])
-        self.assertTrue(mpc['userfile'][0].startswith('GIF89'))
+        self.assertTrue(mpc['userfile'][0].startswith(b'GIF89'))
 
         self.assertEqual(mpc.get_file_vars(), ['userfile'])
         self.assertEqual(mpc.get_parameter_type('MAX_FILE_SIZE'), 'text')
@@ -175,7 +176,7 @@ class TestMultipartContainer(unittest.TestCase):
         multipart_boundary = MultipartContainer.MULTIPART_HEADER
 
         headers = Headers([('content-length', str(len(post_data))),
-                           ('content-type', multipart_boundary % boundary)])
+                           ('content-type', multipart_boundary % smart_unicode(boundary))])
 
         dc = MultipartContainer.from_postdata(headers, post_data)
 
@@ -192,7 +193,7 @@ class TestMultipartContainer(unittest.TestCase):
         multipart_boundary = MultipartContainer.MULTIPART_HEADER
 
         headers = Headers([('content-length', str(len(post_data))),
-                           ('content-type', multipart_boundary % boundary)])
+                           ('content-type', multipart_boundary % smart_unicode(boundary))])
 
         dc = MultipartContainer.from_postdata(headers, post_data)
 
@@ -207,6 +208,7 @@ class TestMultipartContainer(unittest.TestCase):
         self.assertIsNot(dc_read, dc)
 
         # But they hold the same data
+        # pylint: disable=E1101
         self.assertEqual(dc.get_token(), dc_read.get_token())
         self.assertIsNotNone(dc.get_token())
         self.assertIsNotNone(dc_read.get_token())

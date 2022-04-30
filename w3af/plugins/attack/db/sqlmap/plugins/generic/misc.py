@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -25,10 +25,9 @@ from lib.core.enums import DBMS
 from lib.core.enums import HASHDB_KEYS
 from lib.core.enums import OS
 from lib.core.exception import SqlmapNoneDataException
-from lib.core.exception import SqlmapUnsupportedFeatureException
 from lib.request import inject
 
-class Miscellaneous:
+class Miscellaneous(object):
     """
     This class defines miscellaneous functionalities for plugins.
     """
@@ -83,25 +82,16 @@ class Miscellaneous:
         infoMsg = "detecting back-end DBMS version from its banner"
         logger.info(infoMsg)
 
-        if Backend.isDbms(DBMS.MYSQL):
-            first, last = 1, 6
-
-        elif Backend.isDbms(DBMS.PGSQL):
-            first, last = 12, 6
-
-        elif Backend.isDbms(DBMS.MSSQL):
-            first, last = 29, 9
-
-        else:
-            raise SqlmapUnsupportedFeatureException("unsupported DBMS")
-
-        query = queries[Backend.getIdentifiedDbms()].substring.query % (queries[Backend.getIdentifiedDbms()].banner.query, first, last)
+        query = queries[Backend.getIdentifiedDbms()].banner.query
 
         if conf.direct:
             query = "SELECT %s" % query
 
-        kb.bannerFp["dbmsVersion"] = unArrayizeValue(inject.getValue(query))
-        kb.bannerFp["dbmsVersion"] = (kb.bannerFp["dbmsVersion"] or "").replace(',', "").replace('-', "").replace(' ', "")
+        kb.bannerFp["dbmsVersion"] = unArrayizeValue(inject.getValue(query)) or ""
+
+        match = re.search(r"\d[\d.-]*", kb.bannerFp["dbmsVersion"])
+        if match:
+            kb.bannerFp["dbmsVersion"] = match.group(0)
 
     def delRemoteFile(self, filename):
         if not filename:
@@ -137,7 +127,10 @@ class Miscellaneous:
             self.delRemoteFile(self.webStagerFilePath)
             self.delRemoteFile(self.webBackdoorFilePath)
 
-        if not isStackingAvailable() and not conf.direct:
+        if (not isStackingAvailable() or kb.udfFail) and not conf.direct:
+            return
+
+        if any((conf.osCmd, conf.osShell)) and Backend.isDbms(DBMS.PGSQL) and kb.copyExecTest:
             return
 
         if Backend.isOs(OS.WINDOWS):
@@ -162,10 +155,10 @@ class Miscellaneous:
             inject.goStacked("DROP TABLE %s" % self.cmdTblName, silent=True)
 
             if Backend.isDbms(DBMS.MSSQL):
-                udfDict = {"master..new_xp_cmdshell": None}
+                udfDict = {"master..new_xp_cmdshell": {}}
 
             if udfDict is None:
-                udfDict = self.sysUdfs
+                udfDict = getattr(self, "sysUdfs", {})
 
             for udf, inpRet in udfDict.items():
                 message = "do you want to remove UDF '%s'? [Y/n] " % udf

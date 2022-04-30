@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import w3af.core.data.kb.knowledge_base as kb
 
 from nose.plugins.attrib import attr
@@ -45,6 +46,7 @@ class TestWordnet(PluginTest):
     }
 
     @attr('ci_fails')
+    @pytest.mark.deprecated
     def test_found_urls(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -57,11 +59,12 @@ class TestWordnet(PluginTest):
 
         frs = kb.kb.get_all_known_fuzzable_requests()
         
-        self.assertEquals(
+        self.assertEqual(
             set(fr.get_uri().url_string for fr in frs),
             set((self.target_url + end) for end in expected_urls)
         )
 
+    @pytest.mark.deprecated
     def test_search_wordnet(self):
         wn = wordnet()
         wn_result = wn._search_wn('blue')

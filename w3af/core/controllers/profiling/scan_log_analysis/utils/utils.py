@@ -2,7 +2,7 @@ import os
 import sys
 import datetime
 
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 
 FIRST_TIMESTAMP = None

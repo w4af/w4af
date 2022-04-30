@@ -2,27 +2,22 @@ This file lists bundled packages and their associated licensing terms.
 
 # BSD
 
-* The Ansistrm library located under thirdparty/ansistrm/.
+* The `Ansistrm` library located under `thirdparty/ansistrm/`.
   Copyright (C) 2010-2012, Vinay Sajip.
-* The Beautiful Soup library located under thirdparty/beautifulsoup/.
+* The `Beautiful Soup` library located under `thirdparty/beautifulsoup/`.
   Copyright (C) 2004-2010, Leonard Richardson.
-* The ClientForm library located under thirdparty/clientform/.
+* The `ClientForm` library located under `thirdparty/clientform/`.
   Copyright (C) 2002-2007, John J. Lee.
   Copyright (C) 2005, Gary Poster.
   Copyright (C) 2005, Zope Corporation.
   Copyright (C) 1998-2000, Gisle Aas.
-* The Colorama library located under thirdparty/colorama/.
+* The `Colorama` library located under `thirdparty/colorama/`.
   Copyright (C) 2013, Jonathan Hartley.
-* The Fcrypt library located under thirdparty/fcrypt/.
+* The `Fcrypt` library located under `thirdparty/fcrypt/`.
   Copyright (C) 2000, 2001, 2004 Carey Evans.
-* The Odict library located under thirdparty/odict/.
-  Copyright (C) 2005, Nicola Larosa, Michael Foord.
-* The Oset library located under thirdparty/oset/.
-  Copyright (C) 2010, BlueDynamics Alliance, Austria.
-  Copyright (C) 2009, Raymond Hettinger, and others.
-* The PrettyPrint library located under thirdparty/prettyprint/.
+* The `PrettyPrint` library located under `thirdparty/prettyprint/`.
   Copyright (C) 2010, Chris Hall.
-* The SocksiPy library located under thirdparty/socks/.
+* The `SocksiPy` library located under `thirdparty/socks/`.
   Copyright (C) 2006, Dan-Haim.
 
 ````
@@ -51,17 +46,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # LGPL
 
-* The Chardet library located under thirdparty/chardet/.
+* The `Chardet` library located under `thirdparty/chardet/`.
   Copyright (C) 2008, Mark Pilgrim.
-* The Gprof2dot library located under thirdparty/gprof2dot/.
-  Copyright (C) 2008-2009, Jose Fonseca.
-* The KeepAlive library located under thirdparty/keepalive/.
+* The `KeepAlive` library located under `thirdparty/keepalive/`.
   Copyright (C) 2002-2003, Michael D. Stenner.
-* The MultipartPost library located under thirdparty/multipart/.
+* The `MultipartPost` library located under `thirdparty/multipart/`.
   Copyright (C) 2006, Will Holcomb.
-* The XDot library located under thirdparty/xdot/.
-  Copyright (C) 2008, Jose Fonseca.
-* The icmpsh tool located under extra/icmpsh/.
+* The `icmpsh` tool located under `extra/icmpsh/`.
   Copyright (C) 2010, Nico Leidecker, Bernardo Damele.
 
 ````
@@ -234,7 +225,7 @@ Library.
 
 # PSF
 
-* The Magic library located under thirdparty/magic/.
+* The `Magic` library located under `thirdparty/magic/`.
   Copyright (C) 2011, Adam Hupp.
 
 ````
@@ -279,9 +270,15 @@ be bound by the terms and conditions of this License Agreement.
 
 # MIT
 
-* The bottle web framework library located under thirdparty/bottle/.
+* The `bottle` web framework library located under `thirdparty/bottle/`.
   Copyright (C) 2012, Marcel Hellkamp.
-* The Termcolor library located under thirdparty/termcolor/.
+* The `identYwaf` library located under `thirdparty/identywaf/`.
+  Copyright (C) 2019-2020, Miroslav Stampar.
+* The `ordereddict` library located under `thirdparty/odict/`.
+  Copyright (C) 2009, Raymond Hettinger.
+* The `six` Python 2 and 3 compatibility library located under `thirdparty/six/`.
+  Copyright (C) 2010-2018, Benjamin Peterson.
+* The `Termcolor` library located under `thirdparty/termcolor/`.
   Copyright (C) 2008-2011, Volvox Development Team.
 
 ````
@@ -308,7 +305,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Public domain
 
-* The PyDes library located under thirdparty/pydes/.
+* The `PyDes` library located under `thirdparty/pydes/`.
    Copyleft 2009, Todd Whiteman.
-* The win_inet_pton library located under thirdparty/wininetpton/.
+* The `win_inet_pton` library located under `thirdparty/wininetpton/`.
    Copyleft 2014, Ryan Vennell.

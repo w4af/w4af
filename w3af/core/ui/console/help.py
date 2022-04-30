@@ -32,8 +32,8 @@ except ImportError:
         import elementtree.ElementTree as ET
     except ImportError:
         import sys
-        print 'It seems that your python installation doesn\'t have element tree',
-        print 'installed. Please install it and run w3af again.'
+        print('It seems that your python installation doesn\'t have element tree', end=' ')
+        print('installed. Please install it and run w3af again.')
         sys.exit(-9)
 
 from w3af import ROOT_PATH
@@ -139,7 +139,7 @@ class HelpContainer(object):
         d.append(subj)
 
     def get_categories(self):
-        return self._subj2Gat.keys()
+        return list(self._subj2Gat.keys())
 
     def add_help(self, table, cat=''):
         for subj in table:
@@ -152,7 +152,7 @@ class HelpContainer(object):
         return self._table[subj]
 
     def get_items(self):
-        return self._table.keys()
+        return list(self._table.keys())
 
     def get_plain_help_table(self, separators=True, cat=None):
         """

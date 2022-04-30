@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 from nose.plugins.attrib import attr
@@ -43,6 +44,7 @@ class TestAuditPlugin(unittest.TestCase):
         self.w3af.quit()
         kb.cleanup()
     
+    @pytest.mark.deprecated
     def test_audit_return_vulns(self):
         plugin_inst = self.w3af.plugins.get_plugin_inst('audit', 'sqli')
         
@@ -55,12 +57,13 @@ class TestAuditPlugin(unittest.TestCase):
         self.assertEqual(len(vulns), 1, vulns)
         
         vuln = vulns[0]
-        self.assertEquals("syntax error", vuln['error'])
-        self.assertEquals("Unknown database", vuln['db'])
-        self.assertEquals(target_url, str(vuln.get_url()))        
+        self.assertEqual("syntax error", vuln['error'])
+        self.assertEqual("Unknown database", vuln['db'])
+        self.assertEqual(target_url, str(vuln.get_url()))        
         
         self.assertEqual(plugin_inst._store_kb_vulns, False)
 
+    @pytest.mark.deprecated
     def test_http_timeout_with_plugin(self):
         """
         This is very related with the tests at:

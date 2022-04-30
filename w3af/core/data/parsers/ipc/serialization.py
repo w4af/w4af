@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import os
-import cPickle
+import pickle
 import tempfile
 
 import msgpack
@@ -54,8 +54,9 @@ def load_http_response_from_temp_file(filename, remove=True):
     from w3af.core.data.url.HTTPResponse import HTTPResponse
 
     try:
-        data = msgpack.load(file(filename, 'rb'), raw=False)
-        result = HTTPResponse.from_dict(data)
+        with open(filename, 'rb') as f:
+            data = msgpack.load(f, raw=False)
+            result = HTTPResponse.from_dict(data)
     except:
         if remove:
             remove_file_if_exists(filename)
@@ -87,7 +88,8 @@ def load_tags_from_temp_file(filename, remove=True):
     :return: A list containing tags
     """
     try:
-        data = msgpack.load(file(filename, 'rb'), raw=False)
+        with open(filename, "rb") as f:
+            data = msgpack.load(f, raw=False)
         result = [Tag.from_dict(t) for t in data]
     except:
         if remove:
@@ -118,7 +120,7 @@ def write_object_to_temp_file(obj):
     :return: The name of the file
     """
     temp = get_temp_file('parser')
-    cPickle.dump(obj, temp, cPickle.HIGHEST_PROTOCOL)
+    pickle.dump(obj, temp, pickle.HIGHEST_PROTOCOL)
     temp.close()
     return temp.name
 
@@ -132,7 +134,8 @@ def load_object_from_temp_file(filename, remove=True):
     :return: The object instance
     """
     try:
-        result = cPickle.load(file(filename, 'rb'))
+        with open(filename, 'rb') as f:
+            result = pickle.load(f)
     except:
         if remove:
             remove_file_if_exists(filename)

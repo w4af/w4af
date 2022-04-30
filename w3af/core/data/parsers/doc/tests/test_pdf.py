@@ -38,17 +38,19 @@ class TestPDF(unittest.TestCase):
                                 'tests', 'data', 'links.pdf')
     
     def test_pdf_to_text(self):
-        text = pdf_to_text(file(self.SIMPLE_SAMPLE).read())
+        with open(self.SIMPLE_SAMPLE, "rb") as f:
+            text = pdf_to_text(f.read())
         self.assertIn('Hello', text)
         self.assertIn('World', text)
 
     def test_pdf_to_text_no_pdf(self):
-        text = pdf_to_text('hello world')
+        text = pdf_to_text(b'hello world')
         self.assertEqual('', text)
     
     def test_pdf_parser(self):
-        body = file(self.LINKS_SAMPLE).read()
-        hdrs = Headers({'Content-Type': 'application/pdf'}.items())
+        with open(self.LINKS_SAMPLE, "rb") as f:
+            body = f.read()
+        hdrs = Headers(list({'Content-Type': 'application/pdf'}.items()))
         response = HTTPResponse(200, body, hdrs,
                                 URL('http://moth/'),
                                 URL('http://moth/'),

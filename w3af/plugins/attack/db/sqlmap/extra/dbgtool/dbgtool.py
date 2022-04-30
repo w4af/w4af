@@ -3,13 +3,14 @@
 """
 dbgtool.py - Portable executable to ASCII debug script converter
 
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
+from __future__ import print_function
+
 import os
 import sys
-import struct
 
 from optparse import OptionError
 from optparse import OptionParser
@@ -19,7 +20,7 @@ def convert(inputFile):
     fileSize = fileStat.st_size
 
     if fileSize > 65280:
-        print "ERROR: the provided input file '%s' is too big for debug.exe" % inputFile
+        print("ERROR: the provided input file '%s' is too big for debug.exe" % inputFile)
         sys.exit(1)
 
     script = "n %s\nr cx\n" % os.path.basename(inputFile.replace(".", "_"))
@@ -32,7 +33,7 @@ def convert(inputFile):
     fileContent = fp.read()
 
     for fileChar in fileContent:
-        unsignedFileChar = struct.unpack("B", fileChar)[0]
+        unsignedFileChar = fileChar if sys.version_info >= (3, 0) else ord(fileChar)
 
         if unsignedFileChar != 0:
             counter2 += 1
@@ -59,7 +60,7 @@ def convert(inputFile):
 
 def main(inputFile, outputFile):
     if not os.path.isfile(inputFile):
-        print "ERROR: the provided input file '%s' is not a regular file" % inputFile
+        print("ERROR: the provided input file '%s' is not a regular file" % inputFile)
         sys.exit(1)
 
     script = convert(inputFile)
@@ -70,7 +71,7 @@ def main(inputFile, outputFile):
         sys.stdout.write(script)
         sys.stdout.close()
     else:
-        print script
+        print(script)
 
 if __name__ == "__main__":
     usage = "%s -i <input file> [-o <output file>]" % sys.argv[0]
@@ -86,8 +87,8 @@ if __name__ == "__main__":
         if not args.inputFile:
             parser.error("Missing the input file, -h for help")
 
-    except (OptionError, TypeError), e:
-        parser.error(e)
+    except (OptionError, TypeError) as ex:
+        parser.error(ex)
 
     inputFile = args.inputFile
     outputFile = args.outputFile

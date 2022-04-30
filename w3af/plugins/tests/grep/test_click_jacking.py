@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import w3af.core.data.constants.severity as severity
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
@@ -46,17 +47,18 @@ class TestClickJackingVuln(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_found_vuln(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         v = vulns[0]
-        self.assertEquals(severity.MEDIUM, v.get_severity())
-        self.assertEquals('Click-Jacking vulnerability', v.get_name())
-        self.assertEquals(len(v.get_id()), 1, v.get_id())
+        self.assertEqual(severity.MEDIUM, v.get_severity())
+        self.assertEqual('Click-Jacking vulnerability', v.get_name())
+        self.assertEqual(len(v.get_id()), 1, v.get_id())
         self.assertIn('The application has no protection', v.get_desc())
 
 
@@ -84,12 +86,13 @@ class TestClickJackingProtectedXFrameOptions(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_no_vuln(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestClickJackingCSPNone(PluginTest):
@@ -116,12 +119,13 @@ class TestClickJackingCSPNone(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_no_vuln(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestClickJackingCSPWildcard(PluginTest):
@@ -148,12 +152,13 @@ class TestClickJackingCSPWildcard(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_vuln(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
 
 class TestClickJackingCSPSpecificDomain(PluginTest):
@@ -180,12 +185,13 @@ class TestClickJackingCSPSpecificDomain(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_vuln(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestClickJackingCSPSelf(PluginTest):
@@ -212,12 +218,13 @@ class TestClickJackingCSPSelf(PluginTest):
         }
     }
 
+    @pytest.mark.slow
     def test_vuln(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestClickJackingCSPSelfAndSpecificDomain(PluginTest):
@@ -244,9 +251,10 @@ class TestClickJackingCSPSelfAndSpecificDomain(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_vuln(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))

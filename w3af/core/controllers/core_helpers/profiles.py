@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 
+from w3af import ROOT_PATH
 import w3af.core.data.kb.config as cf
 
 from w3af.core.controllers.misc_settings import MiscSettings
@@ -143,7 +144,7 @@ class CoreProfiles(object):
         # Set the misc and http settings
         try:
             profile_misc_settings = profile_inst.get_misc_settings()
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = ('Setting the framework misc-settings raised an exception'
                    ' due to unknown or invalid configuration parameters. %s')
             error_messages.append(msg % e)
@@ -161,7 +162,7 @@ class CoreProfiles(object):
 
         try:
             http_settings = profile_inst.get_http_settings()
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = ('Setting the framework http-settings raised an exception'
                    ' due to unknown or invalid configuration parameters. %s')
             error_messages.append(msg % e)
@@ -198,7 +199,7 @@ class CoreProfiles(object):
             try:
                 unknown_plugins = core_set_plugins(plugin_names, plugin_type,
                                                    raise_on_error=False)
-            except KeyError:
+            except KeyError as ke:
                 msg = ('The profile references the "%s" plugin type which is'
                        ' unknown to the w3af framework.')
                 error_messages.append(msg % plugin_type)
@@ -221,7 +222,7 @@ class CoreProfiles(object):
                     self._w3af_core.plugins.set_plugin_options(plugin_type,
                                                                plugin_name,
                                                                plugin_options)
-                except BaseFrameworkException, w3e:
+                except BaseFrameworkException as w3e:
                     msg = ('Setting the options for plugin "%s.%s" raised an'
                            ' exception due to unknown or invalid configuration'
                            ' parameters. %s')

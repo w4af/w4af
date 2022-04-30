@@ -18,12 +18,16 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
+
+from nose.plugins.attrib import attr
 
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
 
 
+@attr('gui')
 class TestNewProfile(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'new_profile', 'images')
@@ -34,6 +38,7 @@ class TestNewProfile(XpresserUnittest):
         super(TestNewProfile, self).setUp()
         self.xp.load_images(self.EXTRA_IMAGES)
     
+    @pytest.mark.deprecated
     def test_new_profile(self):
         self.click('new_profile')
         

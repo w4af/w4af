@@ -3,11 +3,12 @@ import os
 import re
 import difflib
 import struct
-import pango
-import gobject
-import gtk
-import diffutil
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+from gi.repository import Pango as pango
+from . import diffutil
 import traceback
+from functools import total_ordering
 
 from w3af import ROOT_PATH
 
@@ -120,6 +121,7 @@ def load_pixbuf(fname, size=0):
     return image
 
 
+@total_ordering
 class Struct(object):
     """Similar to a dictionary except that members may be accessed as s.member.
 
@@ -132,14 +134,19 @@ class Struct(object):
 
     def __repr__(self):
         r = ["<"]
-        for i in self.__dict__.keys():
+        for i in list(self.__dict__.keys()):
             r.append("%s=%s" % (i, getattr(self, i)))
         r.append(">\n")
         return " ".join(r)
 
-    def __cmp__(self, other):
-        return cmp(self.__dict__, other.__dict__)
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
 
+    def __ne__(self, other):
+        return not (self.__dict__ == other.__dict__)
+
+    def __lt__(self, other):
+        return (str(self) < str(other))
 
 class Prefs(object):
     edit_wrap_lines = 0
@@ -314,7 +321,7 @@ class FileDiff(object):
 
             def add_tag(name, props):
                 tag = buf.create_tag(name)
-                for p, v in props.items():
+                for p, v in list(props.items()):
                     tag.set_property(p, v)
             add_tag("edited line", {"background": Prefs.color_edited_bg,
                                     "foreground": Prefs.color_edited_fg})
@@ -367,7 +374,7 @@ class FileDiff(object):
                 it.get_line() + 1, it.get_line_offset() + 1)
             raise StopIteration
             yield 0
-        self.scheduler.add_task(update().next)
+        self.scheduler.add_task(update().__next__)
 
     def on_textbuffer_mark_set(self, buffer, it, mark):
         if mark.get_name() == "insert":
@@ -418,12 +425,13 @@ class FileDiff(object):
                 return s
             else:
                 return ""
+        r = None
         try:
             for c, r in self.regexes:
                 txt = c.sub(killit, txt)
         except AssertionError:
-            print "Regular expression '%s' changed the number of lines in" \
-                  "the file. Comparison will be incorrect. " % r
+            print("Regular expression '%s' changed the number of lines in" \
+                  "the file. Comparison will be incorrect. " % r)
         return txt
 
     def after_text_insert_text(self, buffer, it, newtext, textlen):
@@ -505,12 +513,12 @@ class FileDiff(object):
             buffers[i].set_text(text)
             panetext[i] = text
         panetext = [self._filter_text(p) for p in panetext]
-        lines = map(lambda x: x.split("\n"), panetext)
+        lines = [x.split("\n") for x in panetext]
         self.linediffer.set_sequences_iter(*lines)
         self.queue_draw()
         lenseq = [len(d) for d in self.linediffer.diffs]
         self.scheduler.add_task(
-            self._update_highlighting((0, lenseq[0]), (0, lenseq[1])).next)
+            self._update_highlighting((0, lenseq[0]), (0, lenseq[1])).__next__)
 
     def _update_highlighting(self, range0, range1):
         buffers = [t.get_buffer() for t in self.textview]
@@ -607,7 +615,7 @@ class FileDiff(object):
             self._sync_hscroll_lock = 0
         if not self._sync_hscroll_lock:
             self._sync_hscroll_lock = 1
-            adjs = map(lambda x: x.get_hadjustment(), self.scrolledwindow)
+            adjs = [x.get_hadjustment() for x in self.scrolledwindow]
             adjs.remove(adjustment)
             val = adjustment.get_value()
             for a in adjs:
@@ -622,12 +630,11 @@ class FileDiff(object):
             self._sync_vscroll_lock = 1
             syncpoint = 0.5
 
-            adjustments = map(
-                lambda x: x.get_vadjustment(), self.scrolledwindow)
+            adjustments = [x.get_vadjustment() for x in self.scrolledwindow]
             adjustments = adjustments[:2]
             master = adjustments.index(adjustment)
             # scrollbar influence 0->1->2 or 0<-1<-2 or 0<-1->2
-            others = zip(range(2), adjustments)
+            others = list(zip(list(range(2)), adjustments))
             del others[master]
             if master == 2:
                 others.reverse()
@@ -739,7 +746,7 @@ class FileDiff(object):
         return self.textview[pane].get_line_at_y(pixel)[0].get_line()
 
     def next_diff(self, direction):
-        adjs = map(lambda x: x.get_vadjustment(), self.scrolledwindow)
+        adjs = [x.get_vadjustment() for x in self.scrolledwindow]
         curline = self._pixel_to_line(
             1, int(adjs[1].value + adjs[1].page_size / 2))
         c = None
@@ -883,7 +890,7 @@ class FileDiff(object):
                 n = (1, 9)[draw_style - 1]
                 points0 = []
                 points1 = []
-                for t in map(lambda x: float(x) / n, range(n + 1)):
+                for t in [float(x) / n for x in range(n + 1)]:
                     points0.append(
                         (int(t * wtotal), int((1 - f(t)) * f0 + f(t) * t0)))
                     points1.append((int((

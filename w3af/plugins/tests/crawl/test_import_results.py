@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 
 from w3af import ROOT_PATH
@@ -64,6 +65,7 @@ class TestImportResults(PluginTest):
 
     }
 
+    @pytest.mark.deprecated
     def test_base64(self):
         cfg = self._run_configs['w3af']
         self._scan(cfg['target'], cfg['plugins'])
@@ -105,21 +107,22 @@ class TestImportResults(PluginTest):
         urls = [fr.get_uri().url_string for fr in fuzzable_requests]
 
         expected_urls = {
-            u'http://127.0.0.1:8000/',
-            u'http://127.0.0.1:8000/static/moth/css/sticky-footer-navbar.css',
-            u'http://127.0.0.1:8000/core/file_upload/upload.py',
-            u'http://127.0.0.1:8000/static/moth/js/bootstrap.min.js',
-            u'http://127.0.0.1:8000/static/moth/css/font-awesome/css/font-awesome.min.css',
-            u'http://127.0.0.1:8000/static/moth/js/jquery.js',
-            u'http://127.0.0.1:8000/static/moth/css/style.css',
-            u'http://127.0.0.1:8000/about/',
-            u'http://127.0.0.1:8000/static/moth/css/bootstrap.min.css',
-            u'http://127.0.0.1:8000/w3af/file_upload/',
-            u'http://127.0.0.1:8000/static/moth/images/w3af.png',
+            'http://127.0.0.1:8000/',
+            'http://127.0.0.1:8000/static/moth/css/sticky-footer-navbar.css',
+            'http://127.0.0.1:8000/core/file_upload/upload.py',
+            'http://127.0.0.1:8000/static/moth/js/bootstrap.min.js',
+            'http://127.0.0.1:8000/static/moth/css/font-awesome/css/font-awesome.min.css',
+            'http://127.0.0.1:8000/static/moth/js/jquery.js',
+            'http://127.0.0.1:8000/static/moth/css/style.css',
+            'http://127.0.0.1:8000/about/',
+            'http://127.0.0.1:8000/static/moth/css/bootstrap.min.css',
+            'http://127.0.0.1:8000/w3af/file_upload/',
+            'http://127.0.0.1:8000/static/moth/images/w3af.png',
         }
 
         self.assertEqual(set(urls), expected_urls)
 
+    @pytest.mark.deprecated
     def test_burp_b64(self):
         cfg = self._run_configs['burp64']
         self._scan(cfg['target'], cfg['plugins'])
@@ -172,16 +175,17 @@ class TestImportResults(PluginTest):
         #
         urls = [fr.get_uri().url_string for fr in fuzzable_requests]
 
-        expected_urls = {u'http://127.0.0.1:8000/',
-                         u'http://127.0.0.1:8000/core/',
-                         u'http://127.0.0.1:8000/favicon.ico',
-                         u'http://127.0.0.1:8000/audit/xss/simple_xss_form.py',
-                         u'http://127.0.0.1:8000/core/file_upload/upload.py',
-                         u'http://127.0.0.1:8000/audit/',
-                         u'http://127.0.0.1:8000/static/moth/css/font-awesome/fonts/fontawesome-webfont.woff?v=4.0.3'}
+        expected_urls = {'http://127.0.0.1:8000/',
+                         'http://127.0.0.1:8000/core/',
+                         'http://127.0.0.1:8000/favicon.ico',
+                         'http://127.0.0.1:8000/audit/xss/simple_xss_form.py',
+                         'http://127.0.0.1:8000/core/file_upload/upload.py',
+                         'http://127.0.0.1:8000/audit/',
+                         'http://127.0.0.1:8000/static/moth/css/font-awesome/fonts/fontawesome-webfont.woff?v=4.0.3'}
 
         self.assertEqual(set(urls), expected_urls)
 
+    @pytest.mark.deprecated
     def test_burp(self):
         cfg = self._run_configs['burp']
         self._scan(cfg['target'], cfg['plugins'])
@@ -233,12 +237,12 @@ class TestImportResults(PluginTest):
         #
         urls = [fr.get_uri().url_string for fr in fuzzable_requests]
 
-        expected_urls = {u'http://127.0.0.1:8000/',
-                         u'http://127.0.0.1:8000/core/',
-                         u'http://127.0.0.1:8000/favicon.ico',
-                         u'http://127.0.0.1:8000/audit/xss/simple_xss_form.py',
-                         u'http://127.0.0.1:8000/core/file_upload/upload.py',
-                         u'http://127.0.0.1:8000/audit/',
-                         u'http://127.0.0.1:8000/static/moth/css/font-awesome/fonts/fontawesome-webfont.woff?v=4.0.3'}
+        expected_urls = {'http://127.0.0.1:8000/',
+                         'http://127.0.0.1:8000/core/',
+                         'http://127.0.0.1:8000/favicon.ico',
+                         'http://127.0.0.1:8000/audit/xss/simple_xss_form.py',
+                         'http://127.0.0.1:8000/core/file_upload/upload.py',
+                         'http://127.0.0.1:8000/audit/',
+                         'http://127.0.0.1:8000/static/moth/css/font-awesome/fonts/fontawesome-webfont.woff?v=4.0.3'}
 
         self.assertEqual(set(urls), expected_urls)

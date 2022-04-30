@@ -19,11 +19,12 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import time
 import unittest
-import SocketServer
+import socketserver
 
-from mock import Mock, patch, call
+from unittest.mock import Mock, patch, call
 from nose.plugins.attrib import attr
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
@@ -51,6 +52,7 @@ class TestXUrllibDelayOnError(unittest.TestCase):
     def tearDown(self):
         self.uri_opener.end()
 
+    @pytest.mark.deprecated
     def test_increasing_delay_on_errors(self):
         expected_log = {0: False, 70: False, 40: False, 10: False, 80: False,
                         50: False, 20: False, 90: False, 60: False, 30: False,
@@ -76,12 +78,12 @@ class TestXUrllibDelayOnError(unittest.TestCase):
 
         # Now check the delays
         with patch('w3af.core.data.url.extended_urllib.time.sleep') as sleepm:
-            for i in xrange(loops):
+            for i in range(loops):
                 try:
                     self.uri_opener.GET(url, cache=False)
                 except HTTPRequestException:
                     http_exception_count += 1
-                except Exception, e:
+                except Exception as e:
                     msg = 'Not expecting: "%s"'
                     self.assertTrue(False, msg % e.__class__.__name__)
                 else:
@@ -117,8 +119,9 @@ class TestXUrllibDelayOnError(unittest.TestCase):
                 self.assertTrue(False, 'Expected HTTPRequestException')
 
             # The log was cleared, all values should be False
-            self.assertTrue(all([not v for v in self.uri_opener._sleep_log.values()]))
+            self.assertTrue(all([not v for v in list(self.uri_opener._sleep_log.values())]))
 
+    @pytest.mark.deprecated
     def test_error_handling_disable_per_request(self):
         upper_daemon = UpperDaemon(TimeoutTCPHandler)
         upper_daemon.start()
@@ -141,6 +144,7 @@ class TestXUrllibDelayOnError(unittest.TestCase):
 
         self.uri_opener.settings.set_default_values()
 
+    @pytest.mark.deprecated
     def test_exception_is_raised_always_after_stop(self):
         return_empty_daemon = UpperDaemon(EmptyTCPHandler)
         return_empty_daemon.start()
@@ -159,24 +163,24 @@ class TestXUrllibDelayOnError(unittest.TestCase):
         loops = 100
 
         # Loop until we reach a must stop exception
-        for i in xrange(loops):
+        for i in range(loops):
             try:
                 self.uri_opener.GET(url, cache=False)
             except HTTPRequestException:
                 http_exception_count += 1
-            except ScanMustStopByKnownReasonExc, smse:
+            except ScanMustStopByKnownReasonExc as smse:
                 break
-            except Exception, e:
+            except Exception as e:
                 msg = 'Not expecting: "%s"'
                 self.assertTrue(False, msg % e.__class__.__name__)
             else:
                 self.assertTrue(False, 'Expecting an exception')
 
         # We quickly reach this state, which is good since the server is down
-        self.assertEquals(http_exception_count, 9)
+        self.assertEqual(http_exception_count, 9)
 
         # After reaching this state we will always yield ScanMustStopByKnownReasonExc
-        for i in xrange(loops):
+        for i in range(loops):
             self.assertRaises(ScanMustStopByKnownReasonExc,
                               self.uri_opener.GET, url, cache=False)
 
@@ -209,6 +213,7 @@ class TestXUrllibErrorHandling(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_do_not_reach_must_stop_exception(self):
         # Configure low timeout to have faster test
         self.w3afcore.uri_opener.settings.set_configured_timeout(TIMEOUT_SECS)
@@ -259,7 +264,7 @@ class TestXUrllibErrorHandling(PluginTest):
         self.assertTrue(self.w3afcore.uri_opener.clear.called)
 
 
-class MultipleTimeoutsTCPHandler(SocketServer.BaseRequestHandler):
+class MultipleTimeoutsTCPHandler(socketserver.BaseRequestHandler):
     RESPONSE = ('HTTP/1.0 200 Ok\r\n'
                 'Connection: Close\r\n'
                 'Content-Length: %s\r\n'

@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import copy
 
-from mock import patch
+from unittest.mock import patch
 
 from w3af.core.data.constants.file_templates.file_templates import get_template_with_payload
 from w3af.core.data.parsers.doc.url import URL
@@ -32,7 +32,7 @@ from w3af.core.data.fuzzer.mutants.filecontent_mutant import (FileContentMutant,
 from w3af.core.data.dc.multipart_container import MultipartContainer
 from w3af.core.data.parsers.utils.form_params import FormParameters
 from w3af.core.data.dc.utils.multipart import encode_as_multipart, get_boundary
-from w3af.core.controllers.misc.io import NamedStringIO
+from w3af.core.controllers.misc.io import NamedBytesIO
 
 
 class TestFileContentMutant(unittest.TestCase):
@@ -64,9 +64,9 @@ class TestFileContentMutant(unittest.TestCase):
         m = self.create_simple_filecontent_mutant(MultipartContainer)
         self.assertEqual(m.get_url().url_string, 'http://moth/')
 
-        expected_found_at = u'"http://moth/", using HTTP method POST. The'\
-            u' sent post-data was: "...file=abc..."'\
-            u' which modified the uploaded file content.'
+        expected_found_at = '"http://moth/", using HTTP method POST. The'\
+            ' sent post-data was: "...file=abc..."'\
+            ' which modified the uploaded file content.'
         generated_found_at = m.found_at()
 
         self.assertEqual(generated_found_at, expected_found_at)
@@ -87,7 +87,7 @@ class TestFileContentMutant(unittest.TestCase):
         self.assertEqual(ofr.get_method(), cfr.get_method())
         self.assertEqual(ofr.get_uri(), cfr.get_uri())
         self.assertEqual(ofr.get_raw_data(), cfr.get_raw_data())
-        self.assertEqual(ofr.get_headers().keys(), cfr.get_headers().keys())
+        self.assertEqual(list(ofr.get_headers().keys()), list(cfr.get_headers().keys()))
 
         # Not doing this because of the previous comment
         #self.assertEqual(ofr, cfr)
@@ -142,8 +142,8 @@ class TestFileContentMutant(unittest.TestCase):
         _, file_payload_abc, _ = get_template_with_payload('gif', 'abc')
         _, file_payload_def, _ = get_template_with_payload('gif', 'def')
 
-        file_abc = NamedStringIO(file_payload_abc, 'upload.gif')
-        file_def = NamedStringIO(file_payload_def, 'upload.gif')
+        file_abc = NamedBytesIO(file_payload_abc, 'upload.gif')
+        file_def = NamedBytesIO(file_payload_def, 'upload.gif')
 
         form_1 = MultipartContainer(copy.deepcopy(form_params))
         form_2 = MultipartContainer(copy.deepcopy(form_params))
@@ -159,24 +159,24 @@ class TestFileContentMutant(unittest.TestCase):
         expected_forms = [form_1, form_2]
 
         boundary = get_boundary()
-        noop = '1' * len(boundary)
+        noop = b'1' * len(boundary)
 
         expected_data = [encode_as_multipart(f, boundary) for f in expected_forms]
         expected_data = set([s.replace(boundary, noop) for s in expected_data])
 
         generated_forms = [m.get_dc() for m in generated_mutants]
-        generated_data = [str(f).replace(f.boundary, noop) for f in generated_forms]
+        generated_data = [bytes(f).replace(f.boundary, noop) for f in generated_forms]
 
         self.assertEqual(expected_data, set(generated_data))
 
         str_file = generated_forms[0]['image'][0].get_value()
-        self.assertIsInstance(str_file, NamedStringIO)
+        self.assertIsInstance(str_file, NamedBytesIO)
         self.assertEqual(str_file.name[-4:], '.gif')
-        self.assertEqual(file_payload_abc, str_file)
+        self.assertEqual(file_payload_abc, str_file.getvalue())
 
         str_file = generated_forms[1]['image'][0].get_value()
-        self.assertIsInstance(str_file, NamedStringIO)
+        self.assertIsInstance(str_file, NamedBytesIO)
         self.assertEqual(str_file.name[-4:], '.gif')
-        self.assertEqual(file_payload_def, str_file)
+        self.assertEqual(file_payload_def, str_file.getvalue())
 
-        self.assertIn('name="image"; filename="upload.gif"', generated_data[0])
+        self.assertIn(b'name="image"; filename="upload.gif"', generated_data[0])

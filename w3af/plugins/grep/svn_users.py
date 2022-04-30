@@ -39,8 +39,8 @@ class svn_users(GrepPlugin):
     #   $Id: lzio.c,v 1.24 2003/03/20 16:00:56 roberto Exp $
     #   $Id: file name, version, timestamp, creator Exp $
     #
-    SVN_RE = '\$.{1,12}: .*? .*? \d{4}[-/]\d{1,2}[-/]\d{1,2}' \
-             ' \d{1,2}:\d{1,2}:\d{1,2}.*? (.*?) (Exp )?\$'
+    SVN_RE = r'\$.{1,12}: .*? .*? \d{4}[-/]\d{1,2}[-/]\d{1,2}' \
+             r' \d{1,2}:\d{1,2}:\d{1,2}.*? (.*?) (Exp )?\$'
     RE_LIST = [re.compile(SVN_RE)]
 
     def grep(self, request, response):

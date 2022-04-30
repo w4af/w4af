@@ -3,42 +3,45 @@
 """
 cloak.py - Simple file encryption/compression utility
 
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
+from __future__ import print_function
+
 import os
+import struct
 import sys
 import zlib
 
 from optparse import OptionError
 from optparse import OptionParser
 
-def hideAscii(data):
-    retVal = ""
-    for i in xrange(len(data)):
-        if ord(data[i]) < 128:
-            retVal += chr(ord(data[i]) ^ 127)
-        else:
-            retVal += data[i]
+if sys.version_info >= (3, 0):
+    xrange = range
+    ord = lambda _: _
 
-    return retVal
+KEY = b"ENWsCymUeJcXqSbD"
+
+def xor(message, key):
+    return b"".join(struct.pack('B', ord(message[i]) ^ ord(key[i % len(key)])) for i in range(len(message)))
 
 def cloak(inputFile=None, data=None):
     if data is None:
         with open(inputFile, "rb") as f:
             data = f.read()
 
-    return hideAscii(zlib.compress(data))
+    return xor(zlib.compress(data), KEY)
 
 def decloak(inputFile=None, data=None):
     if data is None:
         with open(inputFile, "rb") as f:
             data = f.read()
     try:
-        data = zlib.decompress(hideAscii(data))
-    except:
-        print 'ERROR: the provided input file \'%s\' does not contain valid cloaked content' % inputFile
+        data = zlib.decompress(xor(data, KEY))
+    except Exception as ex:
+        print(ex)
+        print('ERROR: the provided input file \'%s\' does not contain valid cloaked content' % inputFile)
         sys.exit(1)
     finally:
         f.close()
@@ -47,7 +50,7 @@ def decloak(inputFile=None, data=None):
 
 def main():
     usage = '%s [-d] -i <input file> [-o <output file>]' % sys.argv[0]
-    parser = OptionParser(usage=usage, version='0.1')
+    parser = OptionParser(usage=usage, version='0.2')
 
     try:
         parser.add_option('-d', dest='decrypt', action="store_true", help='Decrypt')
@@ -59,11 +62,11 @@ def main():
         if not args.inputFile:
             parser.error('Missing the input file, -h for help')
 
-    except (OptionError, TypeError), e:
-        parser.error(e)
+    except (OptionError, TypeError) as ex:
+        parser.error(ex)
 
     if not os.path.isfile(args.inputFile):
-        print 'ERROR: the provided input file \'%s\' is non existent' % args.inputFile
+        print('ERROR: the provided input file \'%s\' is non existent' % args.inputFile)
         sys.exit(1)
 
     if not args.decrypt:

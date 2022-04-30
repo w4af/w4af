@@ -18,14 +18,19 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import gtk
-import gobject
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import sys
 import re
-import Queue
-import webkit
+import queue
 import webbrowser
+
+import gi
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+gi.require_version("WebKit2","4.0")
+from gi.repository import WebKit2 as webkit
+gi.require_version('GtkSource', '4')
+from gi.repository import GtkSource as gtksource
 
 from multiprocessing.dummy import Process, Event
 from markdown import markdown
@@ -155,7 +160,7 @@ class FullKBTree(KBTree):
                 # from disk and if they aren't there an exception will rise
                 history_item.request
                 history_item.response
-            except IOError, ioe:
+            except IOError as ioe:
                 self._show_message(_('Error'), str(ioe))
                 return
 
@@ -396,7 +401,7 @@ class URLsGraph(gtk.VBox):
             return True
 
         # let's draw!
-        q = Queue.Queue()
+        q = queue.Queue()
         evt = Event()
         th = Process(target=self._draw_real, args=(q, evt), name='GTKDraw')
         th.start()
@@ -410,7 +415,7 @@ class URLsGraph(gtk.VBox):
         
         try:
             new_widget.set_dotcode(dotcode)
-        except ValueError, ve:
+        except ValueError as ve:
             msg = ('A ValueError exception with message "%s" was found while'
                    ' trying to render a new dotcode. Please create a new'
                    ' bug report at %s including the following info:\n\n%s')
@@ -508,7 +513,7 @@ class URLsTree(gtk.TreeView):
         self.treeholder = {}
 
         # get the queue and go live
-        self.urls = Queue.Queue()
+        self.urls = queue.Queue()
         kb.kb.add_observer(URLObserver(self))
         gobject.timeout_add(250, self.add_url)
         self.show()
@@ -531,7 +536,7 @@ class URLsTree(gtk.TreeView):
         """
         try:
             url = self.urls.get_nowait()
-        except Queue.Empty:
+        except queue.Empty:
             pass
         else:
             path = url.get_path()
@@ -621,7 +626,7 @@ class URLsTree(gtk.TreeView):
         # Get the information about the click
         fullurl = "/".join(
             self.treestore[path[:i + 1]][0] for i in range(len(path)))
-        host = urllib2.urlparse.urlparse(fullurl)[1]
+        host = urllib.parse.urlparse(fullurl)[1]
         sendtext = HEAD_TO_SEND % (fullurl, host)
 
         gm = gtk.Menu()

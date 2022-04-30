@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -14,11 +14,11 @@ _readline = None
 try:
     from readline import *
     import readline as _readline
-except ImportError:
+except:
     try:
         from pyreadline import *
         import pyreadline as _readline
-    except ImportError:
+    except:
         pass
 
 if IS_WIN and _readline:
@@ -35,7 +35,7 @@ if IS_WIN and _readline:
 # Thanks to Boyd Waters for this patch.
 uses_libedit = False
 
-if PLATFORM == 'mac' and _readline:
+if PLATFORM == "mac" and _readline:
     import commands
 
     (status, result) = commands.getstatusoutput("otool -L %s | grep libedit" % _readline.__file__)
@@ -56,9 +56,7 @@ if PLATFORM == 'mac' and _readline:
 # http://mail.python.org/pipermail/python-dev/2003-August/037845.html
 # has the original discussion.
 if _readline:
-    try:
-        _readline.clear_history()
-    except AttributeError:
+    if not hasattr(_readline, "clear_history"):
         def clear_history():
             pass
 

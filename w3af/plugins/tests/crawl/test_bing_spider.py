@@ -18,10 +18,14 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from nose.plugins.attrib import attr
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
+
+def responses(fmt, expected_urls):
+    return [MockResponse(fmt % eu, 'Response body.') for eu in expected_urls]
 
 @attr('fails')
 class TestBingSpider(PluginTest):
@@ -41,8 +45,9 @@ class TestBingSpider(PluginTest):
         'blog', 'es/clients/', '',
     )
 
-    MOCK_RESPONSES = [MockResponse(target_url_fmt % eu, 'Response body.') for eu in EXPECTED_URLS]
+    MOCK_RESPONSES = responses(target_url_fmt, EXPECTED_URLS)
 
+    @pytest.mark.deprecated
     def test_found_urls(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -52,4 +57,4 @@ class TestBingSpider(PluginTest):
         found_urls = set(str(u) for u in urls),
         expected_urls = set((self.target_url + end) for end in self.EXPECTED_URLS)
         
-        self.assertEquals(found_urls, expected_urls)
+        self.assertEqual(found_urls, expected_urls)

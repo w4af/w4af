@@ -20,11 +20,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
-import compiler
+import py_compile
+import tempfile
+import os
 
 from w3af.core.data.export.python_export import python_export
 
-EXPECTED_SIMPLE = """import urllib2
+EXPECTED_SIMPLE = """import urllib.request
 
 url = "http://www.w3af.org/"
 data = None
@@ -33,45 +35,59 @@ headers = {
     "Foo" : "bar"
 }
 
-request = urllib2.Request(url, data, headers)
-response = urllib2.urlopen(request)
+request = urllib.request.Request(url, data, headers)
+response = urllib.request.urlopen(request)
 response_body = response.read()
-print response_body
+print(response_body)
 """
 
-EXPECTED_POST = """import urllib2
+EXPECTED_POST = """import urllib.request
 
 url = "http://www.w3af.org/"
-data = "a=1"
+data = b"a=1"
 headers = {
     "Host" : "www.w3af.org",
     "Content-Type" : "application/x-www-form-urlencoded"
 }
 
-request = urllib2.Request(url, data, headers)
-response = urllib2.urlopen(request)
+request = urllib.request.Request(url, data, headers)
+response = urllib.request.urlopen(request)
 response_body = response.read()
-print response_body
+print(response_body)
 """
 
-EXPECTED_POST_REPEATED = """import urllib2
+EXPECTED_POST_REPEATED = """import urllib.request
 
 url = "http://www.w3af.org/"
-data = "a=1&a=2"
+data = b"a=1&a=2"
 headers = {
     "Host" : "www.w3af.org",
     "Content-Type" : "application/x-www-form-urlencoded",
     "Foo" : "spam, eggs"
 }
 
-request = urllib2.Request(url, data, headers)
-response = urllib2.urlopen(request)
+request = urllib.request.Request(url, data, headers)
+response = urllib.request.urlopen(request)
 response_body = response.read()
-print response_body
+print(response_body)
 """
 
 
 class TestPythonExport(unittest.TestCase):
+
+    def can_compile(self, source_code):
+        file = tempfile.NamedTemporaryFile("w", delete=False)
+        name = file.name
+        file.write(source_code)
+        file.close()
+        target_file = os.path.join(tempfile.gettempdir(), "compile_temp.pyc")
+        try:
+            res = py_compile.compile(name, cfile=target_file, doraise=True)
+            return True
+        finally:
+            if os.path.exists(target_file):
+                os.unlink(target_file)
+            os.unlink(name)
 
     def test_export_GET(self):
         http_request = 'GET http://www.w3af.org/ HTTP/1.1\n' \
@@ -79,9 +95,8 @@ class TestPythonExport(unittest.TestCase):
                        'Foo: bar\n' \
                        '\n'
         python_code = python_export(http_request)
-        self.assertTrue(
-            compiler.compile(python_code, 'python_export.tmp', 'exec'))
-        self.assertEquals(python_code, EXPECTED_SIMPLE)
+        self.assertTrue(self.can_compile(python_code))
+        self.assertEqual(python_code, EXPECTED_SIMPLE)
 
     def test_export_POST(self):
         http_request = 'POST http://www.w3af.org/ HTTP/1.1\n' \
@@ -91,9 +106,8 @@ class TestPythonExport(unittest.TestCase):
                        '\n' \
                        'a=1'
         python_code = python_export(http_request)
-        self.assertTrue(
-            compiler.compile(python_code, 'python_export.tmp', 'exec'))
-        self.assertEquals(python_code, EXPECTED_POST)
+        self.assertTrue(self.can_compile(python_code))
+        self.assertEqual(python_code, EXPECTED_POST)
 
     def test_export_POST_repeated(self):
         http_request = 'POST http://www.w3af.org/ HTTP/1.1\n' \
@@ -105,9 +119,8 @@ class TestPythonExport(unittest.TestCase):
                        '\n' \
                        'a=1&a=2'
         python_code = python_export(http_request)
-        self.assertTrue(
-            compiler.compile(python_code, 'python_export.tmp', 'exec'))
-        self.assertEquals(python_code, EXPECTED_POST_REPEATED)
+        self.assertTrue(self.can_compile(python_code))
+        self.assertEqual(python_code, EXPECTED_POST_REPEATED)
 
     def test_export_inject(self):
         http_request = 'POST http://www.w3af.org/ HTTP/1.1\n' \
@@ -119,7 +132,6 @@ class TestPythonExport(unittest.TestCase):
                        '\n' \
                        'a=1&a=2"3'
         python_code = python_export(http_request)
-        self.assertTrue(
-            compiler.compile(python_code, 'python_export.tmp', 'exec'))
+        self.assertTrue(self.can_compile(python_code))
         self.assertIn('a=1&a=2%223', python_code)
         self.assertIn("sp\\\"am", python_code)

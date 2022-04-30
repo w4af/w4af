@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
-import cPickle
+import pickle
 import copy
 
 from nose.plugins.attrib import attr
@@ -72,8 +72,8 @@ class TestForm(unittest.TestCase):
 
         for form_copy, _ in form.iter_bound_tokens():
             self.assertIsInstance(form_copy, Form)
-            self.assertEquals(form_copy.items(), form.items())
-            self.assertEquals(form_copy.get_parameter_type('username'),
+            self.assertEqual(list(form_copy.items()), list(form.items()))
+            self.assertEqual(form_copy.get_parameter_type('username'),
                               INPUT_TYPE_PASSWD)
 
     def test_mutant_smart_fill_with_file(self):
@@ -92,7 +92,8 @@ class TestForm(unittest.TestCase):
 
         str_file = form['file'][0]
         self.assertEqual(str_file.name[-4:], '.gif')
-        self.assertIn('GIF', str_file)
+        contents = str_file.read()
+        self.assertIn(b'GIF', contents)
 
         self.assertIs(form.get_form_params(), form_params)
 
@@ -132,9 +133,9 @@ class TestForm(unittest.TestCase):
 
         form = Form(form_params)
 
-        pickled_form = cPickle.loads(cPickle.dumps(form))
+        pickled_form = pickle.loads(pickle.dumps(form))
 
-        self.assertEqual(pickled_form.items(), form.items())
+        self.assertEqual(list(pickled_form.items()), list(form.items()))
 
     def test_cpickle_unsync(self):
         form_params = FormParameters()
@@ -144,9 +145,9 @@ class TestForm(unittest.TestCase):
         form = Form(form_params)
         form['xyz'] = ['1', '2']
 
-        pickled_form = cPickle.loads(cPickle.dumps(form))
+        pickled_form = pickle.loads(pickle.dumps(form))
 
-        self.assertEqual(pickled_form.items(), form.items())
+        self.assertEqual(list(pickled_form.items()), list(form.items()))
 
     def test_keep_sync(self):
         form_params = FormParameters()

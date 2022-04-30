@@ -66,7 +66,7 @@ class ConfigMenu(menu):
         self._group_options_by_tabid()
         
         table = [['Setting', 'Value', 'Modified', 'Description']]
-        for tabid in self._tabbed_options.keys():
+        for tabid in list(self._tabbed_options.keys()):
             tab_opts = self._tabbed_options[tabid]
 
             for opt_name in tab_opts:
@@ -115,7 +115,7 @@ class ConfigMenu(menu):
         try:
             self._options[name].set_value(value)
             self._unsaved_options[name] = value
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             om.out.error(str(e))
         else:
             if value not in self._memory[name]:
@@ -139,7 +139,7 @@ class ConfigMenu(menu):
     
     def _cmd_save(self, tokens):
         try:
-            for unsaved_opt_name, unsaved_val in self._unsaved_options.iteritems():
+            for unsaved_opt_name, unsaved_val in self._unsaved_options.items():
                 self._options[unsaved_opt_name].set_value(unsaved_val)
 
             # Save the options using the corresponding setter
@@ -151,7 +151,7 @@ class ConfigMenu(menu):
                     self._configurable.get_name(),
                     self._options)
 
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = 'Identified an error with the user-defined settings:\n\n'\
                   '    - %s \n\n'\
                   'No information has been saved.'
@@ -163,7 +163,7 @@ class ConfigMenu(menu):
     def _cmd_back(self, tokens):
         try:
             self._cmd_save(tokens)
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             om.out.error(str(e))
 
         return self._console.back

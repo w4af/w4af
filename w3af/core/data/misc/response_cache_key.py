@@ -21,13 +21,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import zlib
 
+from w3af.core.data.constants.encodings import DEFAULT_ENCODING
+
 # pylint: disable=E0401
 from darts.lib.utils.lru import SynchronizedLRUDict
 # pylint: enable=E0401
 
 from w3af.core.controllers.core_helpers.not_found.response import FourOhFourResponse
 from w3af.core.data.misc.xml_bones import get_xml_bones
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 def get_response_cache_key(http_response,
@@ -69,9 +71,9 @@ def get_response_cache_key(http_response,
     # Calculate the hash using all the captured information
     #
     key = ''.join([str(http_response.get_code()),
-                   smart_str_ignore(normalized_path),
+                   smart_unicode(normalized_path),
                    str(headers),
-                   smart_str_ignore(body)])
+                   smart_unicode(body)])
 
     return quick_hash(key)
 
@@ -104,8 +106,8 @@ def _should_use_xml_bones(http_response):
 
 
 def quick_hash(text):
-    text = smart_str_ignore(text)
-    return '%s%s' % (hash(text), zlib.adler32(text))
+    text = smart_unicode(text)
+    return '%s%s' % (hash(text), zlib.adler32(text.encode(DEFAULT_ENCODING)))
 
 
 class ResponseCacheKeyCache(object):
@@ -133,7 +135,7 @@ class ResponseCacheKeyCache(object):
         else:
             body = http_response.body
 
-        cache_key = '%s%s' % (smart_str_ignore(body), headers)
+        cache_key = '%s%s' % (smart_unicode(body), headers)
         cache_key = quick_hash(cache_key)
 
         result = self._cache.get(cache_key, None)

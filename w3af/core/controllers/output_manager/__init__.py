@@ -22,6 +22,9 @@ from .log_sink import LogSink
 
 from w3af.core.controllers.core_helpers.consumers.constants import POISON_PILL
 
+# Create the default manager and out instances, we'll be creating others later:
+# most likely for the log sink, which will be replaced in each sub-process
+manager = OutputManager()
 
 def fresh_output_manager_inst():
     """
@@ -56,10 +59,6 @@ def log_sink_factory(om_queue):
     out = LogSink(om_queue)
     return out
 
-
-# Create the default manager and out instances, we'll be creating others later:
-# most likely for the log sink, which will be replaced in each sub-process
-manager = OutputManager()
 
 # Logs to into the logging process through out.debug() , out.error() , etc.
 out = log_sink_factory(manager.get_in_queue())

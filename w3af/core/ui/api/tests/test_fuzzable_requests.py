@@ -19,11 +19,15 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import json
 import base64
 
-from w3af.core.ui.api.tests.utils.api_unittest import APIUnitTest
+from w3af.core.ui.api.tests.utils.test_api import APIUnitTest
 from w3af.core.ui.api.tests.utils.test_profile import get_test_profile
+
+from nose.plugins.attrib import attr
+
 
 EXPECTED_FUZZABLE_REQUESTS = [
     'GET http://127.0.0.1:8000/audit/sql_injection/ HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\n',
@@ -34,9 +38,10 @@ EXPECTED_FUZZABLE_REQUESTS = [
     'GET http://127.0.0.1:8000/audit/sql_injection/where_integer_qs.py?id=1 HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\n',
 ]
 
-
+@attr("moth")
 class FuzzableRequestsTest(APIUnitTest):
 
+    @pytest.mark.deprecated
     def test_fuzzable_request_list(self):
         profile, target_url = get_test_profile()
         data = {'scan_profile': profile,

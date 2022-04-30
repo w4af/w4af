@@ -18,9 +18,12 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import threading
+
+from nose.plugins.attrib import attr
 
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
@@ -28,6 +31,7 @@ from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
 from w3af.core.data.url.tests.helpers.http_daemon import HTTPDaemon
 
 
+@attr('gui')
 class TestProxy(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'proxy', 'images')
@@ -43,9 +47,9 @@ class TestProxy(XpresserUnittest):
         self.http_daemon.wait_for_start()
 
         proxy_url = '127.0.0.1:8080'
-        proxy_support = urllib2.ProxyHandler({'http': proxy_url,
+        proxy_support = urllib.request.ProxyHandler({'http': proxy_url,
                                               'https': proxy_url})
-        self.opener = urllib2.build_opener(proxy_support)
+        self.opener = urllib.request.build_opener(proxy_support)
         
     def tearDown(self):
         self.click('close-with-cross')
@@ -55,11 +59,13 @@ class TestProxy(XpresserUnittest):
         
         XpresserUnittest.tearDown(self)
     
+    @pytest.mark.deprecated
     def test_basic_forwarding(self):
         port = self.http_daemon.get_port()
         http_response = self.opener.open('http://127.0.0.1:%s/foo' % port).read()
         self.assertEqual('ABCDEF\n', http_response)
 
+    @pytest.mark.deprecated
     def test_intercept(self):
         
         self.click('intercept')

@@ -1,4 +1,6 @@
 """
+@pytest.mark.deprecated
+@pytest.mark.deprecated
 test_get_source_code.py
 
 Copyright 2012 Andres Riancho
@@ -18,6 +20,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import tempfile
 import shutil
 
@@ -37,19 +40,21 @@ class test_get_source_code(PayloadTestHelper):
     CONTENT = "echo file_get_contents( $_REQUEST['file'] );"
 
     @attr('ci_fails')
+    @pytest.mark.deprecated
     def test_get_source_code(self):
         temp_dir = tempfile.mkdtemp()
         result = exec_payload(self.shell, 'get_source_code', args=(temp_dir,),
                               use_api=True)
 
-        self.assertEqual(len(self.EXPECTED_RESULT.keys()), 1)
+        self.assertEqual(len(list(self.EXPECTED_RESULT.keys())), 1)
 
-        expected_url = self.EXPECTED_RESULT.keys()[0]
-        downloaded_url = result.items()[0][0].url_string
-        self.assertEquals(expected_url, downloaded_url)
+        expected_url = list(self.EXPECTED_RESULT.keys())[0]
+        downloaded_url = list(result.items())[0][0].url_string
+        self.assertEqual(expected_url, downloaded_url)
 
-        downloaded_file_path = result.items()[0][1][1]
-        downloaded_file_content = file(downloaded_file_path).read()
+        downloaded_file_path = list(result.items())[0][1][1]
+        with open(downloaded_file_path) as download_fh:
+            downloaded_file_content = download_fh.read()
         self.assertTrue(self.CONTENT in downloaded_file_content)
 
         shutil.rmtree(temp_dir)

@@ -23,7 +23,7 @@ import os
 import codecs
 import shutil
 import string
-import ConfigParser
+import configparser
 
 from w3af.core.controllers.core_helpers.target import CoreTarget
 from w3af.core.controllers.misc.factory import factory
@@ -54,20 +54,20 @@ class profile(object):
         # w3af needs the value as it is
         optionxform = lambda opt: opt
 
-        self._config = ConfigParser.ConfigParser()
+        self._config = configparser.ConfigParser()
         # Set the new optionxform function
         self._config.optionxform = optionxform
 
         if profname:
             # Get profile name's complete path
             profname = self.get_real_profile_path(profname, workdir)
-            with codecs.open(profname, "rb", UTF8) as fp:
+            with codecs.open(profname, "r", UTF8) as fp:
                 try:
-                    self._config.readfp(fp)
-                except ConfigParser.Error, cpe:
+                    self._config.read_file(fp)
+                except configparser.Error as cpe:
                     msg = 'ConfigParser error in profile: "%s". Exception: "%s"'
                     raise BaseFrameworkException(msg % (profname, cpe))
-                except Exception, e:
+                except Exception as e:
                     msg = 'Unknown error in profile: "%s". Exception: "%s"'
                     raise BaseFrameworkException(msg % (profname, e))
                 else:
@@ -117,10 +117,10 @@ class profile(object):
 
                 profile_path_file = os.path.join(profile_path, profile_file)
 
-                with codecs.open(profile_path_file, "rb", UTF8) as fp:
-                    config = ConfigParser.ConfigParser()
+                with codecs.open(profile_path_file, "r", UTF8) as fp:
+                    config = configparser.ConfigParser()
                     try:
-                        config.readfp(fp)
+                        config.read_file(fp)
                     except:
                         # Any errors simply break name detection
                         continue
@@ -179,7 +179,7 @@ class profile(object):
         """
         try:
             os.unlink(self.profile_file_name)
-        except Exception, e:
+        except Exception as e:
             msg = ('An exception occurred while removing the profile.'
                    ' Exception: "%s".')
             raise BaseFrameworkException(msg % e)
@@ -204,7 +204,7 @@ class profile(object):
 
         try:
             shutil.copyfile(self.profile_file_name, new_profile_path_name)
-        except Exception, e:
+        except Exception as e:
             msg = 'An exception occurred while copying the profile. Exception:'
             msg += ' "%s".' % e
             raise BaseFrameworkException(msg % e)
@@ -238,7 +238,7 @@ class profile(object):
         for plugin in plugin_names:
             try:
                 self._config.add_section(plugin_type + "." + plugin)
-            except ConfigParser.DuplicateSectionError:
+            except configparser.DuplicateSectionError:
                 pass
 
     def get_enabled_plugins(self, plugin_type):
@@ -272,6 +272,8 @@ class profile(object):
 
         for option in options:
             value = option.get_value_for_profile(self_contained=self_contained)
+            # Escape unquoted percents
+            value = value.replace('%', '%%')
 
             self._config.set(section,
                              option.get_name(),
@@ -366,7 +368,7 @@ class profile(object):
 
         try:
             profile_options = self._config.options(section)
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             # Some profiles don't have an http-settings or misc-settings
             # section, so we return the defaults as returned by the configurable
             # instance

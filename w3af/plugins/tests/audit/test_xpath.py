@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.core.controllers.ci.moth import get_moth_http
 
@@ -40,6 +41,7 @@ class TestXPATH(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_found_xpath(self):
         # Run the scan
         cfg = self._run_configs['cfg']
@@ -48,19 +50,19 @@ class TestXPATH(PluginTest):
         # Assert the general results
         expected_vuln_number = 4
         vulns = self.kb.get('xpath', 'xpath')
-        self.assertEquals(expected_vuln_number, len(vulns), vulns)
+        self.assertEqual(expected_vuln_number, len(vulns), vulns)
         
         vtitle = "XPATH injection vulnerability"
         all_titles = all([vtitle == vuln.get_name() for vuln in vulns])
         self.assertTrue(all_titles, vulns)
 
         # Verify the specifics about the vulnerabilities
-        expected = [(u'xpath-attr-double.py', 'text'),
-                    (u'xpath-attr-tag.py', 'text'),
-                    (u'xpath-attr-or.py', 'text'),
-                    (u'xpath-attr-single.py', 'text')]
+        expected = [('xpath-attr-double.py', 'text'),
+                    ('xpath-attr-tag.py', 'text'),
+                    ('xpath-attr-or.py', 'text'),
+                    ('xpath-attr-single.py', 'text')]
 
         found = [(v.get_url().get_file_name(),
                   v.get_mutant().get_token_name()) for v in vulns]
 
-        self.assertEquals(set(expected), set(found))
+        self.assertEqual(set(expected), set(found))

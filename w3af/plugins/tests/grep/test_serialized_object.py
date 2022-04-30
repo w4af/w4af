@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 import base64
 
@@ -36,8 +37,8 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 
 SERIALIZED_PHP_OBJECTS = [
-    'O:8:"Example1":1:{s:10:"cache_file";s:15:"../../index.php";}',
-    'O:1:"a":1:{s:5:"value";s:3:"100";}',
+    b'O:8:"Example1":1:{s:10:"cache_file";s:15:"../../index.php";}',
+    b'O:1:"a":1:{s:5:"value";s:3:"100";}',
 ]
 
 
@@ -55,6 +56,7 @@ class TestSerializedObject(unittest.TestCase):
     def tearDown(self):
         self.plugin.end()
 
+    @pytest.mark.deprecated
     def test_php_serialized_objects_query_string(self):
 
         for i, obj in enumerate(SERIALIZED_PHP_OBJECTS):
@@ -67,9 +69,10 @@ class TestSerializedObject(unittest.TestCase):
 
             self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 2)
 
+    @pytest.mark.deprecated
     def test_php_serialized_objects_query_string_b64(self):
         url = self.url.copy()
 
@@ -81,30 +84,33 @@ class TestSerializedObject(unittest.TestCase):
 
         self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 1)
 
+    @pytest.mark.deprecated
     def test_php_serialized_objects_headers(self):
         headers = Headers([('X-API-Key', SERIALIZED_PHP_OBJECTS[0])])
         request = FuzzableRequest(self.url, headers=headers)
 
         self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 1)
 
+    @pytest.mark.deprecated
     def test_php_serialized_objects_cookies(self):
-        cookie_value = 'state=%s' % base64.b64encode(SERIALIZED_PHP_OBJECTS[0])
+        cookie_value = b'state=%s' % base64.b64encode(SERIALIZED_PHP_OBJECTS[0])
         headers = Headers([('Cookie', cookie_value)])
         request = FuzzableRequest(self.url, headers=headers)
 
         self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 1)
 
+    @pytest.mark.deprecated
     def test_php_serialized_objects_post_data(self):
-        post_data = 'obj=%s' % base64.b64encode(SERIALIZED_PHP_OBJECTS[1])
+        post_data = b'obj=%s' % base64.b64encode(SERIALIZED_PHP_OBJECTS[1])
         headers = Headers([('Content-Type', 'application/x-www-form-urlencoded')])
 
         form = URLEncodedForm.from_postdata(headers, post_data)
@@ -112,9 +118,10 @@ class TestSerializedObject(unittest.TestCase):
 
         self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 1)
 
+    @pytest.mark.deprecated
     def test_not_php_serialized_objects(self):
         # Note that I'm sending the serialized object in reverse string order
         post_data = 'obj=%s' % base64.b64encode(SERIALIZED_PHP_OBJECTS[1][::-1])
@@ -125,12 +132,13 @@ class TestSerializedObject(unittest.TestCase):
 
         self.plugin.grep(request, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 0)
 
+    @pytest.mark.deprecated
     def test_mutated_request(self):
         # Note that I'm sending the serialized object in reverse string order
-        post_data = 'test=1&obj=%s' % base64.b64encode(SERIALIZED_PHP_OBJECTS[1])
+        post_data = b'test=1&obj=%s' % base64.b64encode(SERIALIZED_PHP_OBJECTS[1])
         headers = Headers([('Content-Type', 'application/x-www-form-urlencoded')])
 
         form = URLEncodedForm.from_postdata(headers, post_data)
@@ -140,7 +148,7 @@ class TestSerializedObject(unittest.TestCase):
         for mutant in mutants:
             self.plugin.grep(mutant, self.response)
 
-        self.assertEquals(len(kb.kb.get('serialized_object',
+        self.assertEqual(len(kb.kb.get('serialized_object',
                                         'serialized_object')), 1)
 
 
@@ -163,9 +171,9 @@ class TestSerializedObjectIntegration(PluginTest):
 
     target_url = 'http://mock/'
 
-    html = ('<form action="/form" method="GET">'
-            '<input type="hidden" name="viewstate" value="%s">'
-            '</form>'
+    html = (b'<form action="/form" method="GET">'
+            b'<input type="hidden" name="viewstate" value="%s">'
+            b'</form>'
             % base64.b64encode(SERIALIZED_PHP_OBJECTS[0]))
 
     MOCK_RESPONSES = [MockResponse(url='http://mock/',
@@ -176,6 +184,7 @@ class TestSerializedObjectIntegration(PluginTest):
                                    body='Ok',
                                    method='GET', status=200)]
 
+    @pytest.mark.slow
     def test_vuln_found(self):
         self._scan(self.target_url, RUN_CONFIGS['cfg']['plugins'])
 
@@ -183,9 +192,9 @@ class TestSerializedObjectIntegration(PluginTest):
                             'serialized_object')
 
         expected_vulns = {('Serialized object',
-                           u'A total of 1 HTTP requests contained a serialized object'
-                           u' in the parameter with name "viewstate". The first ten'
-                           u' matching URLs are:\n - http://mock/form\n')}
+                           'A total of 1 HTTP requests contained a serialized object'
+                           ' in the parameter with name "viewstate". The first ten'
+                           ' matching URLs are:\n - http://mock/form\n')}
 
         vulns_set = set()
 

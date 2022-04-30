@@ -14,7 +14,7 @@ class root_login_allowed(Payload):
         ssh_config_result = self.exec_payload('ssh_config_files')
         result['ssh_root_bruteforce'] = 'unknown'
 
-        for config in ssh_config_result.values():
+        for config in list(ssh_config_result.values()):
             ssh_root_bruteforce = parse_permit_root_login(config)
             result['ssh_root_bruteforce'] = ssh_root_bruteforce
             if ssh_root_bruteforce:

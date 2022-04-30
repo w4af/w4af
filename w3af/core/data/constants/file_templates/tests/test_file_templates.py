@@ -29,7 +29,7 @@ class TestFileTemplates(unittest.TestCase):
         success, file_content, file_name = get_file_from_template('gif')
 
         self.assertTrue(success)
-        self.assertIn('GIF', file_content)
+        self.assertIn(b'GIF', file_content)
         self.assertTrue(file_name.endswith('.gif'), file_name)
 
     def test_get_file_from_template_false(self):

@@ -24,8 +24,9 @@ import sys
 import time
 import base64
 import jinja2
+import markupsafe
 
-import subprocess32 as subprocess
+import subprocess
 
 import lz4.frame
 
@@ -199,7 +200,7 @@ class xml_file(OutputPlugin):
 
         try:
             self._add_scan_status_to_context(context)
-        except RuntimeError, rte:
+        except RuntimeError as rte:
             # In some very strange scenarios we get this error:
             #
             #   Can NOT call get_run_time before start()
@@ -383,6 +384,7 @@ class xml_file(OutputPlugin):
         jinja2_env.loader = FileSystemLoader(TEMPLATE_ROOT)
         jinja2_env.filters['escape_attr'] = jinja2_attr_value_escape_filter
         jinja2_env.filters['escape_text'] = jinja2_text_value_escape_filter
+        jinja2_env.filters['smart_unicode'] = jinja2_text_value_smart_unicode_filter
         return jinja2_env
 
     @took
@@ -640,11 +642,11 @@ class HTTPTransaction(CachedXMLNode):
         # HTTP transaction
         request, response = req_history.load_from_file(self._id)
 
-        data = request.get_data() or ''
-        b64_encoded_request_body = base64.encodestring(smart_str_ignore(data))
+        data = request.data or ''
+        b64_encoded_request_body = base64.b64encode(smart_str_ignore(data))
 
         body = response.get_body() or ''
-        b64_encoded_response_body = base64.encodestring(smart_str_ignore(body))
+        b64_encoded_response_body = base64.b64encode(smart_str_ignore(body))
 
         context = {'id': self._id,
                    'request': {'status': request.get_request_line().strip(),
@@ -811,22 +813,22 @@ class Finding(XMLNode):
 
 
 def is_unicode_escape(i):
-    return category(unichr(i)).startswith('C')
+    return category(chr(i)).startswith('C')
 
 
 ATTR_VALUE_ESCAPES = {
-    u'"': u'&quot;',
-    u'&': u'&amp;',
-    u'<': u'&lt;',
-    u'>': u'&gt;',
+    '"': '&quot;',
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
 
     # Note that here we replace tabs with 4-spaces, like in python ;-)
     # but it makes sense for easy parsing and showing to users
-    u'\t': u'    ',
+    '\t': '    ',
 }
 
-ATTR_VALUE_ESCAPES.update(dict((unichr(i), '&lt;character code=&quot;%04x&quot;/&gt;' % i)
-                               for i in xrange(sys.maxunicode)
+ATTR_VALUE_ESCAPES.update(dict((chr(i), '&lt;character code=&quot;%04x&quot;/&gt;' % i)
+                               for i in range(sys.maxunicode)
                                if is_unicode_escape(i)))
 
 ATTR_VALUE_ESCAPES_IGNORE = {'\n', '\r'}
@@ -857,13 +859,13 @@ def jinja2_attr_value_escape_filter(value):
     :param value: The value to escape
     :return: The escaped string
     """
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         return value
 
     # Fix some encoding errors which are triggered when the value is not an
     # unicode string
     value = smart_unicode(value)
-    retval = u''
+    retval = ''
 
     for letter in value:
         if letter in ATTR_VALUE_ESCAPES_IGNORE:
@@ -876,26 +878,29 @@ def jinja2_attr_value_escape_filter(value):
         else:
             retval += letter
 
-    return jinja2.Markup(retval)
+    return markupsafe.Markup(retval)
 
 
 TEXT_VALUE_ESCAPES = {
-    u'"': u'&quot;',
-    u'&': u'&amp;',
-    u'<': u'&lt;',
-    u'>': u'&gt;',
+    '"': '&quot;',
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
 
     # Note that here we replace tabs with 4-spaces, like in python ;-)
     # but it makes sense for easy parsing and showing to users
-    u'\t': u'    ',
+    '\t': '    ',
 }
 
-TEXT_VALUE_ESCAPES.update(dict((unichr(i), '<character code="%04x"/>' % i)
-                               for i in xrange(sys.maxunicode)
+TEXT_VALUE_ESCAPES.update(dict((chr(i), '<character code="%04x"/>' % i)
+                               for i in range(sys.maxunicode)
                                if is_unicode_escape(i)))
 
 TEXT_VALUE_ESCAPES_IGNORE = {'\n', '\r'}
 
+
+def jinja2_text_value_smart_unicode_filter(value):
+    return smart_unicode(value)
 
 def jinja2_text_value_escape_filter(value):
     """
@@ -918,13 +923,13 @@ def jinja2_text_value_escape_filter(value):
     :param value: The value to escape
     :return: The escaped string
     """
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         return value
 
     # Fix some encoding errors which are triggered when the value is not an
     # unicode string
     value = smart_unicode(value)
-    retval = u''
+    retval = ''
 
     for letter in value:
         if letter in TEXT_VALUE_ESCAPES_IGNORE:
@@ -937,4 +942,4 @@ def jinja2_text_value_escape_filter(value):
         else:
             retval += letter
 
-    return jinja2.Markup(retval)
+    return markupsafe.Markup(retval)

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
+import functools
 import os
 import random
 import shutil
@@ -12,7 +13,11 @@ import stat
 import string
 
 from lib.core.common import getSafeExString
+from lib.core.common import openFile
+from lib.core.compat import xrange
+from lib.core.convert import getUnicode
 from lib.core.data import logger
+from thirdparty.six import unichr as _unichr
 
 def purge(directory):
     """
@@ -31,8 +36,8 @@ def purge(directory):
     dirpaths = []
 
     for rootpath, directories, filenames in os.walk(directory):
-        dirpaths.extend([os.path.abspath(os.path.join(rootpath, _)) for _ in directories])
-        filepaths.extend([os.path.abspath(os.path.join(rootpath, _)) for _ in filenames])
+        dirpaths.extend(os.path.abspath(os.path.join(rootpath, _)) for _ in directories)
+        filepaths.extend(os.path.abspath(os.path.join(rootpath, _)) for _ in filenames)
 
     logger.debug("changing file attributes")
     for filepath in filepaths:
@@ -45,8 +50,8 @@ def purge(directory):
     for filepath in filepaths:
         try:
             filesize = os.path.getsize(filepath)
-            with open(filepath, "w+b") as f:
-                f.write("".join(chr(random.randint(0, 255)) for _ in xrange(filesize)))
+            with openFile(filepath, "w+b") as f:
+                f.write("".join(_unichr(random.randint(0, 255)) for _ in xrange(filesize)))
         except:
             pass
 
@@ -65,7 +70,7 @@ def purge(directory):
         except:
             pass
 
-    dirpaths.sort(cmp=lambda x, y: y.count(os.path.sep) - x.count(os.path.sep))
+    dirpaths.sort(key=functools.cmp_to_key(lambda x, y: y.count(os.path.sep) - x.count(os.path.sep)))
 
     logger.debug("renaming directory names to random values")
     for dirpath in dirpaths:
@@ -75,9 +80,7 @@ def purge(directory):
             pass
 
     logger.debug("deleting the whole directory tree")
-    os.chdir(os.path.join(directory, ".."))
-
     try:
         shutil.rmtree(directory)
-    except OSError, ex:
-        logger.error("problem occurred while removing directory '%s' ('%s')" % (directory, getSafeExString(ex)))
+    except OSError as ex:
+        logger.error("problem occurred while removing directory '%s' ('%s')" % (getUnicode(directory), getSafeExString(ex)))

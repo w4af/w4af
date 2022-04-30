@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import threading
 import binascii
-import httplib
-import urllib
+import http.client
+import urllib.request, urllib.parse, urllib.error
 import socket
 import ssl
 import os
@@ -34,6 +34,7 @@ from .utils import debug
 
 from w3af.core.controllers.exceptions import HTTPRequestException
 from w3af.core.data.url.openssl_wrapper.ssl_wrapper import wrap_socket
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class UniqueID(object):
@@ -57,13 +58,11 @@ class UniqueID(object):
         return '<%s(id:%s, req_count:%s, timeout:%s)>' % args
 
 
-class _HTTPConnection(httplib.HTTPConnection, UniqueID):
+class _HTTPConnection(http.client.HTTPConnection, UniqueID):
 
-    def __init__(self, host, port=None, strict=None,
-                 timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+    def __init__(self, host, port=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         UniqueID.__init__(self)
-        httplib.HTTPConnection.__init__(self, host, port, strict,
-                                        timeout=timeout)
+        http.client.HTTPConnection.__init__(self, host, port, timeout=timeout)
         self.is_fresh = True
         self.host_port = '%s:%s' % (self.host, self.port)
 
@@ -84,30 +83,54 @@ class _HTTPConnection(httplib.HTTPConnection, UniqueID):
         if self._tunnel_host:
             self._tunnel()
 
+    def __repr__(self):
+        return '<HTTPConnection %s>' % self.host_port
 
-def create_connection(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
+    def __str__(self):
+        return '<HTTPConnection %s>' % self.host_port
+
+
+def create_connection(address,
+                      timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
                       source_address=None):
     """
     Extends socket.create_connection with the socket options to apply before
     calling connect().
     """
-
     host, port = address
     err = None
+
     for res in socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM):
         af, socktype, proto, canonname, sa = res
         sock = None
         try:
             sock = socket.socket(af, socktype, proto)
 
+            #
             # This is what I've added to the create_connection function
             # https://github.com/andresriancho/w3af/issues/11359
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            #
+            sock.setsockopt(socket.SOL_SOCKET,
+                            socket.SO_REUSEADDR,
+                            1)
+
+            #
+            # Turn the SO_LINGER socket option on and set the linger time
+            # to 0 seconds. This will cause TCP to abort the connection when
+            # it is closed, flush the data and send a RST
+            #
+            l_on_off = 1
+            l_linger = 0
+            sock.setsockopt(socket.SOL_SOCKET,
+                            socket.SO_LINGER,
+                            struct.pack('ii', l_on_off, l_linger))
 
             if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
                 sock.settimeout(timeout)
+
             if source_address:
                 sock.bind(source_address)
+
             sock.connect(sa)
             return sock
 
@@ -130,22 +153,21 @@ class ProxyHTTPConnection(_HTTPConnection):
     """
     _ports = {'http': 80, 'https': 443}
 
-    def __init__(self, host, port=None, strict=None,
-                 timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
-        _HTTPConnection.__init__(self, host, port, strict, timeout=timeout)
+    def __init__(self, host, port=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+        _HTTPConnection.__init__(self, host, port, timeout=timeout)
         self._real_host = None
         self._real_port = None
 
     def proxy_setup(self, url):
         # request is called before connect, so can interpret url and get
         # real host/port to be used to make CONNECT request to proxy
-        proto, rest = urllib.splittype(url)
+        proto, rest = urllib.parse.splittype(url)
         if proto is None:
             raise ValueError('Unknown URL type: %s' % url)
 
         # get host and port
-        host_port, rest = urllib.splithost(rest)
-        host, port = urllib.splitport(host_port)
+        host_port, rest = urllib.parse.splithost(rest)
+        host, port = urllib.parse.splitport(host_port)
         self._real_host = host
 
         # if port is not defined try to get from proto
@@ -161,22 +183,21 @@ class ProxyHTTPConnection(_HTTPConnection):
         super(ProxyHTTPConnection, self).connect()
 
         # send proxy CONNECT request
-        new_line = '\r\n'
-        host_port = '%s:%d' % (self._real_host, self._real_port)
-        self.send('CONNECT %s HTTP/1.1%s' % (host_port, new_line))
+        new_line = b'\r\n'
+        host_port = smart_str_ignore('%s:%d' % (self._real_host, self._real_port))
+        self.send(b'CONNECT %s HTTP/1.1%s' % (host_port, new_line))
 
-        connect_headers = {'Proxy-Connection': 'keep-alive',
-                           'Connection': 'keep-alive',
-                           'Host': host_port}
+        connect_headers = {b'Proxy-Connection': b'keep-alive',
+                           b'Connection': b'keep-alive',
+                           b'Host': host_port}
 
-        for header_name, header_value in connect_headers.items():
-            self.send('%s: %s%s' % (header_name, header_value, new_line))
+        for header_name, header_value in list(connect_headers.items()):
+            self.send(b'%s: %s%s' % (header_name, header_value, new_line))
 
         self.send(new_line)
 
         # expect a HTTP/1.0 200 Connection established
-        response = self.response_class(self.sock, strict=self.strict,
-                                       method=self._method)
+        response = self.response_class(self.sock, method=self._method)
         version, code, message = response._read_status()
 
         # probably here we can handle auth requests...
@@ -190,22 +211,24 @@ class ProxyHTTPConnection(_HTTPConnection):
         while True:
             # should not use directly fp probably
             line = response.fp.readline()
-            if line == '\r\n':
+            if line == b'\r\n':
                 break
 
+    def __repr__(self):
+        real_host_port = '%s:%s' % (self._real_host, self._real_port)
+        args = (real_host_port, self.host_port)
+        return '<ProxyHTTPConnection %s via proxy %s>' % args
 
-_protocols = [OpenSSL.SSL.SSLv3_METHOD,
-              OpenSSL.SSL.TLSv1_METHOD,
-              OpenSSL.SSL.SSLv23_METHOD,
-              OpenSSL.SSL.TLSv1_1_METHOD,
+_protocols = [OpenSSL.SSL.TLS_METHOD,
               OpenSSL.SSL.TLSv1_2_METHOD,
-              OpenSSL.SSL.SSLv2_METHOD]
+              OpenSSL.SSL.TLSv1_1_METHOD,
+              OpenSSL.SSL.TLSv1_METHOD]
 
 # Avoid race conditions
 _protocols_lock = threading.RLock()
 
 
-class SSLNegotiatorConnection(httplib.HTTPSConnection, UniqueID):
+class SSLNegotiatorConnection(http.client.HTTPSConnection, UniqueID):
     """
     Connection class that enables usage of newer SSL protocols.
 
@@ -216,8 +239,9 @@ class SSLNegotiatorConnection(httplib.HTTPSConnection, UniqueID):
     """
     def __init__(self, *args, **kwargs):
         UniqueID.__init__(self)
-        httplib.HTTPSConnection.__init__(self, *args, **kwargs)
+        http.client.HTTPSConnection.__init__(self, *args, **kwargs)
         self.host_port = '%s:%s' % (self.host, self.port)
+        self._ssl_protocol = None
 
     def connect(self):
         """
@@ -227,6 +251,7 @@ class SSLNegotiatorConnection(httplib.HTTPSConnection, UniqueID):
             sock = self.connect_socket()
             sock = self.make_ssl_aware(sock, protocol)
             if sock is not None:
+                self._ssl_protocol = protocol
                 break
         else:
             msg = 'Unable to create a SSL connection using protocols: %s'
@@ -256,14 +281,14 @@ class SSLNegotiatorConnection(httplib.HTTPSConnection, UniqueID):
                                    ssl_version=protocol,
                                    server_hostname=self.host,
                                    timeout=self.timeout)
-        except ssl.SSLError, ssl_exc:
+        except ssl.SSLError as ssl_exc:
             msg = "SSL connection error occurred with protocol %s: '%s'"
             debug(msg % (protocol, ssl_exc.__class__.__name__))
 
             # Always close the tcp/ip connection on error
             sock.close()
 
-        except Exception, e:
+        except Exception as e:
             msg = "Unexpected exception occurred with protocol %s: '%s'"
             debug(msg % (protocol, e))
 
@@ -283,6 +308,14 @@ class SSLNegotiatorConnection(httplib.HTTPSConnection, UniqueID):
 
         return None
 
+    def __repr__(self):
+        args = (self.host_port, self._ssl_protocol)
+        return '<SSLNegotiatorConnection %s with SSL protocol %s>' % args
+
+    def __str__(self):
+        args = (self.host_port, self._ssl_protocol)
+        return '<SSLNegotiatorConnection %s with SSL protocol %s>' % args
+
 
 class ProxyHTTPSConnection(ProxyHTTPConnection, SSLNegotiatorConnection):
     """
@@ -294,10 +327,9 @@ class ProxyHTTPSConnection(ProxyHTTPConnection, SSLNegotiatorConnection):
     response_class = HTTPResponse
 
     def __init__(self, host, port=None, key_file=None, cert_file=None,
-                 strict=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+                 timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         UniqueID.__init__(self)
-        ProxyHTTPConnection.__init__(self, host, port, strict=strict,
-                                     timeout=timeout)
+        ProxyHTTPConnection.__init__(self, host, port, timeout=timeout)
         self.key_file = key_file
         self.cert_file = cert_file
 
@@ -314,16 +346,24 @@ class ProxyHTTPSConnection(ProxyHTTPConnection, SSLNegotiatorConnection):
             msg = 'Unable to create a proxied SSL connection'
             raise HTTPRequestException(msg)
 
+    def __repr__(self):
+        real_host_port = '%s:%s' % (self._real_host, self._real_port)
+        args = (real_host_port, self.host_port)
+        return '<ProxyHTTPSConnection %s via proxy %s>' % args
+
+    def __str__(self):
+        real_host_port = '%s:%s' % (self._real_host, self._real_port)
+        args = (real_host_port, self.host_port)
+        return '<ProxyHTTPSConnection %s via proxy %s>' % args
+
 
 class HTTPConnection(_HTTPConnection):
     # use the modified response class
     response_class = HTTPResponse
 
-    def __init__(self, host, port=None, strict=None,
-                 timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+    def __init__(self, host, port=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         _HTTPConnection.__init__(self, host,
                                  port=port,
-                                 strict=strict,
                                  timeout=timeout)
         self.current_request_start = None
         self.connection_manager_move_ts = None
@@ -333,9 +373,8 @@ class HTTPSConnection(SSLNegotiatorConnection):
     response_class = HTTPResponse
 
     def __init__(self, host, port=None, key_file=None, cert_file=None,
-                 strict=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
-        SSLNegotiatorConnection.__init__(self, host, port, key_file, cert_file,
-                                         strict, timeout=timeout)
+                 timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+        SSLNegotiatorConnection.__init__(self, host, port, key_file, cert_file, timeout=timeout)
         self.is_fresh = True
         self.current_request_start = None
         self.connection_manager_move_ts = None

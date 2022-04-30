@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 
 from w3af.core.data.search_engines.search_engine import SearchEngine
@@ -51,7 +51,7 @@ class bing(SearchEngine):
         toolset, coded by pdp and released under GPL v2.
         """
         url = 'http://www.bing.com/search?'
-        query = urllib.urlencode({'q': query,
+        query = urllib.parse.urlencode({'q': query,
                                   'first': start + 1,
                                   'FORM': 'PERE'})
         url_instance = URL(url + query)

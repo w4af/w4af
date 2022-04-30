@@ -62,19 +62,19 @@ class rfd(AuditPlugin):
 
             if 'filename' in cd.lower():
                 # yes filename exists
-                om.out.debug(u'URL "%s" is not vulnerable to RFD because of'
-                             u' explicit filename in content-disposition header'
-                             u', response id %s' %
+                om.out.debug('URL "%s" is not vulnerable to RFD because of'
+                             ' explicit filename in content-disposition header'
+                             ', response id %s' %
                              (freq.get_url(), orig_response.id))
                 return
             else:
                 self._test(freq)
 
         elif ct in NOT_VULNERABLE_TYPES:
-            om.out.debug(u'URL "%s" is not vulnerable to RFD because'
-                         u' response content-type is "%s" and'
-                         u' content-disposition header is missing,'
-                         u' response id %s' %
+            om.out.debug('URL "%s" is not vulnerable to RFD because'
+                         ' response content-type is "%s" and'
+                         ' content-disposition header is missing,'
+                         ' response id %s' %
                          (freq.get_url(), ct, orig_response.id))
             return
         else:
@@ -83,10 +83,10 @@ class rfd(AuditPlugin):
     def _report_vuln(self, debug_msg, freq, rid):
         debug_msg = debug_msg % (freq.get_uri(), rid)
         om.out.debug(debug_msg)
-        desc = u'Reflected File Download has been ' \
-               u'found at: %s'
+        desc = 'Reflected File Download has been ' \
+               'found at: %s'
         desc = desc % freq.get_url()
-        v = Vuln.from_fr(u'Reflected File Download vulnerability',
+        v = Vuln.from_fr('Reflected File Download vulnerability',
                          desc, severity.HIGH,
                          rid, self.get_name(), freq)
         self.kb_append_uniq(self, 'rfd', v)
@@ -119,17 +119,17 @@ class rfd(AuditPlugin):
             # is it JSONP?
             if body[rpos+len(EXEC_TOKEN)] == '(' and not '\"' in body[:rpos]:
                 # we've reflected as JSONP callback
-                self._report_vuln(u'%s is vulnerable, to RFD because even if'
-                                  u' escape chars are filtered, JSONP callback'
-                                  u' comes first, response id %s',
+                self._report_vuln('%s is vulnerable, to RFD because even if'
+                                  ' escape chars are filtered, JSONP callback'
+                                  ' comes first, response id %s',
                                   freq, response.id)
                 break
 
             # now we need to figure out what escape chars were filtered
             if body[rpos:rpos+len(payloads[1])] == payloads[1]:
                 # nothing was filtered or escaped
-                self._report_vuln(u'%s is vulnerable to RFD because nothing is'
-                                  u' filtered or escaped, response id %s',
+                self._report_vuln('%s is vulnerable to RFD because nothing is'
+                                  ' filtered or escaped, response id %s',
                                   freq, response.id)
                 return
 
@@ -138,9 +138,9 @@ class rfd(AuditPlugin):
                                                                ESCAPE_CHARS)
 
             if '\n' not in filtered:
-                self._report_vuln(u'%s is vulnerable to RFD because with'
-                                  u' newline we don\'t need any escaping,'
-                                  u' response id %s ',
+                self._report_vuln('%s is vulnerable to RFD because with'
+                                  ' newline we don\'t need any escaping,'
+                                  ' response id %s ',
                                   freq, response.id)
                 return
 
@@ -148,9 +148,9 @@ class rfd(AuditPlugin):
 
             if not '\"' in filtered:
                 if not all(char in fne for char in SHELL_CHARS):
-                        self._report_vuln(u'%s is vulnerable to RFD because'
-                                          u' double quotes are not filtered,'
-                                          u' response id %s',
+                        self._report_vuln('%s is vulnerable to RFD because'
+                                          ' double quotes are not filtered,'
+                                          ' response id %s',
                                           freq, response.id)
                         return
 
@@ -160,9 +160,9 @@ class rfd(AuditPlugin):
                     continue
 
                 if not all(char in fne for char in SHELL_CHARS):
-                        self._report_vuln(u'uri %s is vulnerable to RFD because'
-                                          u' we don\'t need to escape double'
-                                          u' quotes ,response id %s',
+                        self._report_vuln('uri %s is vulnerable to RFD because'
+                                          ' we don\'t need to escape double'
+                                          ' quotes ,response id %s',
                                           freq, response.id)
                         return
 

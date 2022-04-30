@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from w3af.core.controllers.ci.sqlmap_testenv import get_sqlmap_testenv_http
 from w3af.core.controllers.ci.moth import get_moth_http
 
@@ -49,6 +50,7 @@ class TestSQLMapShell(ReadExploitTest):
         
     }
 
+    @pytest.mark.deprecated
     def test_found_exploit_sqlmap_sqli(self):
         # Run the scan
         cfg = self._run_configs['sqli']
@@ -56,7 +58,7 @@ class TestSQLMapShell(ReadExploitTest):
 
         # Assert the general results
         vulns = self.kb.get('sqli', 'sqli')
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
         self.assertTrue(all(["SQL injection" == v.get_name() for v in vulns]))
 
         # Verify the specifics about the vulnerabilities
@@ -65,7 +67,7 @@ class TestSQLMapShell(ReadExploitTest):
         found_vulns = [(v.get_url().get_file_name(),
                         v.get_mutant().get_token_name()) for v in vulns]
 
-        self.assertEquals(set(EXPECTED),
+        self.assertEqual(set(EXPECTED),
                           set(found_vulns))
 
         vuln_to_exploit_id = [v.get_id() for v in vulns
@@ -73,6 +75,7 @@ class TestSQLMapShell(ReadExploitTest):
         
         self._exploit_vuln(vuln_to_exploit_id, 'sqlmap')
 
+    @pytest.mark.deprecated
     def test_found_exploit_sqlmap_blind_sqli(self):
         # Run the scan
         cfg = self._run_configs['blind_sqli']
@@ -81,16 +84,17 @@ class TestSQLMapShell(ReadExploitTest):
         # Assert the general results
         vulns = self.kb.get('blind_sqli', 'blind_sqli')
         
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         vuln = vulns[0]
 
-        self.assertEquals('Blind SQL injection vulnerability', vuln.get_name())
-        self.assertEquals('id', vuln.get_mutant().get_token_name())
-        self.assertEquals('get_int_noerror.php', vuln.get_url().get_file_name())
+        self.assertEqual('Blind SQL injection vulnerability', vuln.get_name())
+        self.assertEqual('id', vuln.get_mutant().get_token_name())
+        self.assertEqual('get_int_noerror.php', vuln.get_url().get_file_name())
         
         vuln_to_exploit_id = vuln.get_id()
         self._exploit_vuln(vuln_to_exploit_id, 'sqlmap')
 
+    @pytest.mark.deprecated
     def test_from_template(self):
         sqlit = SQLiTemplate()
         
@@ -107,6 +111,7 @@ class TestSQLMapShell(ReadExploitTest):
         
         self._exploit_vuln(vuln_to_exploit_id, 'sqlmap')
 
+    @pytest.mark.deprecated
     def test_found_exploit_blind_sqli_form_GET(self):
         """
         Reproduce bug https://github.com/andresriancho/w3af/issues/262
@@ -119,12 +124,12 @@ class TestSQLMapShell(ReadExploitTest):
         # Assert the general results
         vulns = self.kb.get('blind_sqli', 'blind_sqli')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
         vuln = vulns[0]
 
-        self.assertEquals("Blind SQL injection vulnerability", vuln.get_name())
-        self.assertEquals('q', vuln.get_mutant().get_token_name())
-        self.assertEquals('blind_where_integer_form_get.py',
+        self.assertEqual("Blind SQL injection vulnerability", vuln.get_name())
+        self.assertEqual('q', vuln.get_mutant().get_token_name())
+        self.assertEqual('blind_where_integer_form_get.py',
                           vuln.get_url().get_file_name())
 
         vuln_to_exploit_id = vuln.get_id()

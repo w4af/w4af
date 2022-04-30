@@ -51,8 +51,8 @@ def draw_http_requests_over_time(scan_log_filename, scan):
     fig.set_x_limits(min_=0, max_=None)
     fig.set_y_limits(min_=0, max_=None)
 
-    fig.plot(xrange(len(requests_by_minute)),
+    fig.plot(range(len(requests_by_minute)),
              requests_by_minute)
 
-    print(fig.show())
+    print((fig.show()))
     print('')

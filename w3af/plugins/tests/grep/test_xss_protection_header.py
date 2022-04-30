@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 import w3af.core.data.kb.knowledge_base as kb
@@ -38,6 +39,7 @@ class TestXSSProtectionHeader(unittest.TestCase):
     def tearDown(self):
         self.plugin.end()
 
+    @pytest.mark.deprecated
     def test_no_xss_protection_header(self):
         body = ''
         url = URL('http://www.w3af.com/')
@@ -48,6 +50,7 @@ class TestXSSProtectionHeader(unittest.TestCase):
         self.assertEqual(len(kb.kb.get('xss_protection_header',
                                        'xss_protection_header')), 0)
 
+    @pytest.mark.deprecated
     def test_xss_protection_header_enable(self):
         body = ''
         url = URL('http://www.w3af.com/')
@@ -59,6 +62,7 @@ class TestXSSProtectionHeader(unittest.TestCase):
         self.assertEqual(len(kb.kb.get('xss_protection_header',
                                        'xss_protection_header')), 0)
 
+    @pytest.mark.deprecated
     def test_xss_protection_header_disable(self):
         body = ''
         url = URL('http://www.w3af.com/')
@@ -70,6 +74,7 @@ class TestXSSProtectionHeader(unittest.TestCase):
         self.assertEqual(len(kb.kb.get('xss_protection_header',
                                        'xss_protection_header')), 1)
 
+    @pytest.mark.deprecated
     def test_xss_protection_header_invalid(self):
         body = ''
         url = URL('http://www.w3af.com/')
@@ -81,6 +86,7 @@ class TestXSSProtectionHeader(unittest.TestCase):
         self.assertEqual(len(kb.kb.get('xss_protection_header',
                                        'xss_protection_header')), 0)
 
+    @pytest.mark.deprecated
     def test_xss_protection_header_disable_group(self):
         body = ''
         headers = Headers([('content-type', 'text/html'),
@@ -99,12 +105,12 @@ class TestXSSProtectionHeader(unittest.TestCase):
         info_sets = kb.kb.get('xss_protection_header', 'xss_protection_header')
         self.assertEqual(len(info_sets), 1)
 
-        expected_desc = u'The remote web server sent 2 HTTP responses with' \
-                        u' the X-XSS-Protection header with a value of "0",' \
-                        u' which disables Internet Explorer\'s XSS filter.' \
-                        u' The first ten URLs which sent the insecure header' \
-                        u' are:\n - http://www.w3af.com/2\n' \
-                        u' - http://www.w3af.com/1\n'
+        expected_desc = 'The remote web server sent 2 HTTP responses with' \
+                        ' the X-XSS-Protection header with a value of "0",' \
+                        ' which disables Internet Explorer\'s XSS filter.' \
+                        ' The first ten URLs which sent the insecure header' \
+                        ' are:\n - http://www.w3af.com/1\n' \
+                        ' - http://www.w3af.com/2\n'
 
         info_set = info_sets[0]
         self.assertEqual(info_set.get_id(), [1, 3])

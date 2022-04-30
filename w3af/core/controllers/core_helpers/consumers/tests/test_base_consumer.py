@@ -18,9 +18,10 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import unittest
 
-from mock import Mock
+from unittest.mock import Mock
 
 from w3af.core.controllers.core_helpers.consumers.base_consumer import BaseConsumer
 from w3af.core.controllers.w3afCore import w3afCore
@@ -33,20 +34,22 @@ class TestBaseConsumer(unittest.TestCase):
     def setUp(self):
         self.bc = BaseConsumer([], w3afCore(), 'TestConsumer')
 
+    @pytest.mark.deprecated
     def test_handle_exception(self):
         url = URL('http://moth/')
         fr = FuzzableRequest(url)
         try:
             raise Exception()
-        except Exception, e:
-            self.bc.handle_exception('audit', 'sqli', fr, e)
+        except Exception as e:
+            exception = e
+            self.bc.handle_exception('audit', 'sqli', fr, e, store_tb=True)
 
         exception_data = self.bc.out_queue.get()
 
         self.assertTrue(exception_data.traceback is not None)
         self.assertEqual(exception_data.phase, 'audit')
         self.assertEqual(exception_data.plugin, 'sqli')
-        self.assertEqual(exception_data.exception, e)
+        self.assertEqual(exception_data.exception, exception)
     
     def test_terminate(self):
         self.bc.start()

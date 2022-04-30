@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -17,7 +17,7 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Replaces each keyword character with lower case value
+    Replaces each keyword character with lower case value (e.g. SELECT -> select)
 
     Tested against:
         * Microsoft SQL Server 2005
@@ -28,7 +28,6 @@ def tamper(payload, **kwargs):
     Notes:
         * Useful to bypass very weak and bespoke web application firewalls
           that has poorly written permissive regular expressions
-        * This tamper script should work against all (?) databases
 
     >>> tamper('INSERT')
     'insert'
@@ -37,7 +36,7 @@ def tamper(payload, **kwargs):
     retVal = payload
 
     if payload:
-        for match in re.finditer(r"[A-Za-z_]+", retVal):
+        for match in re.finditer(r"\b[A-Za-z_]+\b", retVal):
             word = match.group()
 
             if word.upper() in kb.keywords:

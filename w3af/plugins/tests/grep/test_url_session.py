@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 import w3af.core.data.kb.knowledge_base as kb
@@ -40,6 +41,7 @@ class TestURLInSession(unittest.TestCase):
     def tearDown(self):
         self.plugin.end()
 
+    @pytest.mark.deprecated
     def test_url_session_false(self):
         body = 'abc'
         url = URL('http://www.w3af.com/')
@@ -50,8 +52,9 @@ class TestURLInSession(unittest.TestCase):
         self.plugin.grep(request, resp)
         
         infos = kb.kb.get('url_session', 'url_session')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
     
+    @pytest.mark.deprecated
     def test_url_session_in_url(self):
         body = 'abc'
         url = URL('http://www.w3af.com/?JSESSIONID=231badb19b93e44f47da1bd64a8147f2')
@@ -62,11 +65,12 @@ class TestURLInSession(unittest.TestCase):
         self.plugin.grep(request, resp)
         
         infos = kb.kb.get('url_session', 'url_session')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
         
         info = infos[0]
         self.assertEqual(info.get_name(), 'Session ID in URL')       
     
+    @pytest.mark.deprecated
     def test_url_session_in_body(self):
         url = 'http://www.w3af.com/?JSESSIONID=231badb19b93e44f47da1bd64a8147f2'
         body = 'abc <a href="%s">def</a> footer' % url
@@ -78,11 +82,12 @@ class TestURLInSession(unittest.TestCase):
         self.plugin.grep(request, resp)
         
         infos = kb.kb.get('url_session', 'url_session')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
         
         info = infos[0]
         self.assertEqual(info.get_name(), 'Session ID in URL')
     
+    @pytest.mark.deprecated
     def test_url_session_in_body_and_url(self):
         url = 'http://www.w3af.com/?JSESSIONID=231badb19b93e44f47da1bd64a8147f2'
         body = 'abc <a href="%s">def</a> footer' % url
@@ -94,7 +99,7 @@ class TestURLInSession(unittest.TestCase):
         self.plugin.grep(request, resp)
         
         infos = kb.kb.get('url_session', 'url_session')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
         
         info = infos[0]
         self.assertEqual(info.get_name(), 'Session ID in URL')

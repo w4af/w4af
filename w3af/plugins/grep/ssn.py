@@ -36,8 +36,8 @@ class ssn(GrepPlugin):
     :author: dliz <dliz !at! users.sourceforge.net>
     """
     # match numbers of the form: 'nnn-nn-nnnn' with some extra restrictions
-    regex = ('(?:^|[^\d-])(?!(000|666))([0-6]\d{2}|7([0-6]\d|7[012]))'
-             ' ?-? ?(?!00)(\d{2}) ?-? ?(?!0000)(\d{4})(?:^|[^\d-])')
+    regex = (r'(?:^|[^\d-])(?!(000|666))([0-6]\d{2}|7([0-6]\d|7[012]))'
+             r' ?-? ?(?!00)(\d{2}) ?-? ?(?!0000)(\d{4})(?:^|[^\d-])')
     ssn_regex = re.compile(regex)
 
     def __init__(self):
@@ -126,10 +126,10 @@ class ssn(GrepPlugin):
         if not group:
             return False
 
-        odd_one = xrange(1, 11, 2)
-        even_two = xrange(10, 100, 2)  # (10-98 even only)
-        even_three = xrange(2, 10, 2)
-        odd_four = xrange(11, 100, 2)  # (11-99 odd only)
+        odd_one = range(1, 11, 2)
+        even_two = range(10, 100, 2)  # (10-98 even only)
+        even_three = range(2, 10, 2)
+        odd_four = range(11, 100, 2)  # (11-99 odd only)
         le_group = lambda x: x <= group
         is_ssn = False
 
@@ -141,19 +141,19 @@ class ssn(GrepPlugin):
         # For big evens (evens between 10 and 98)
         elif group in even_two:
             if group_number in itertools.chain(odd_one,
-                                               filter(le_group, even_two)):
+                                               list(filter(le_group, even_two))):
                 is_ssn = True
 
         # For little evens (evens between 2 and 8)
         elif group in even_three:
             if group_number in itertools.chain(odd_one, even_two,
-                                               filter(le_group, even_three)):
+                                               list(filter(le_group, even_three))):
                 is_ssn = True
 
         # For big odds (odds between 11 and 99)
         elif group in odd_four:
             if group_number in itertools.chain(odd_one, even_two, even_three,
-                                               filter(le_group, odd_four)):
+                                               list(filter(le_group, odd_four))):
                 is_ssn = True
 
         if is_ssn:

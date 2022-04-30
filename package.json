@@ -1,0 +1,25 @@
+{
+  "name": "w3af",
+  "version": "1.0.0",
+  "description": "w3af node dependencies",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andresriancho/w3af.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andresriancho/w3af/issues"
+  },
+  "homepage": "https://github.com/andresriancho/w3af#readme",
+  "dependencies": {
+    "retire": "^3.0.6"
+  }
+}

@@ -18,10 +18,11 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import unittest
 
 from httpretty import httpretty
-from mock import Mock
+from unittest.mock import Mock
 
 import w3af.core.data.kb.knowledge_base as kb
 
@@ -139,6 +140,7 @@ class TestAutocomplete(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_find_form_submit_csrf_token(self):
         self._scan(self._run_config['target'], self._run_config['plugins'])
 
@@ -198,6 +200,7 @@ class TestAutocompleteInvalidCredentials(PluginTest):
         }
     }
 
+    @pytest.mark.deprecated
     def test_handle_invalid_credentials(self):
         self._scan(self._run_config['target'], self._run_config['plugins'])
 
@@ -224,11 +227,12 @@ class TestAutocompleteInvalidCredentials(PluginTest):
 
 
 class TestAutocompleteAuthenticationFailure(unittest.TestCase):
+    @pytest.mark.deprecated
     def test_consecutive_authentication_failure(self):
         plugin = autocomplete()
         kb.kb.cleanup()
 
-        for i in xrange(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT - 1):
+        for i in range(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT - 1):
             plugin._log_debug(str(i))
             plugin._handle_authentication_failure()
 
@@ -254,11 +258,12 @@ class TestAutocompleteAuthenticationFailure(unittest.TestCase):
         self.assertEqual(info.get_desc(with_id=False), expected_desc)
         self.assertEqual(info.get_id(), [])
 
+    @pytest.mark.deprecated
     def test_mixed_authentication_results(self):
         plugin = autocomplete()
         kb.kb.cleanup()
 
-        for i in xrange(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT):
+        for i in range(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT):
             plugin._log_debug(str(i))
             plugin._handle_authentication_failure()
             plugin._handle_authentication_success(Mock())
@@ -271,11 +276,12 @@ class TestAutocompleteAuthenticationFailure(unittest.TestCase):
         infos = kb.kb.get('authentication', 'error')
         self.assertEqual(len(infos), 0)
 
+    @pytest.mark.deprecated
     def test_mixed_authentication_results_fail_fail_success(self):
         plugin = autocomplete()
         kb.kb.cleanup()
 
-        for i in xrange(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT):
+        for i in range(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT):
             plugin._log_debug(str(i))
 
             plugin._handle_authentication_failure()

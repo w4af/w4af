@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from nose.plugins.skip import SkipTest
 from nose.plugins.attrib import attr
 
@@ -86,21 +87,23 @@ class TestGeneric(PluginTest):
     }
 
     @attr('smoke')
+    @pytest.mark.deprecated
     def test_post_auth_xss(self):
         self._scan(self._run_config['target'], self._run_config['plugins'])
 
         vulns = self.kb.get('xss', 'xss')
 
-        self.assertEquals(len(vulns), 1, vulns)
+        self.assertEqual(len(vulns), 1, vulns)
 
         vuln = vulns[0]
-        self.assertEquals(vuln.get_name(), 'Cross site scripting vulnerability')
-        self.assertEquals(vuln.get_token_name(), 'text')
-        self.assertEquals(vuln.get_url().get_path(),
+        self.assertEqual(vuln.get_name(), 'Cross site scripting vulnerability')
+        self.assertEqual(vuln.get_token_name(), 'text')
+        self.assertEqual(vuln.get_url().get_path(),
                           '/auth/auth_1/post_auth_xss.py')
 
     @attr('internet')
     @attr('fails')
+    @pytest.mark.deprecated
     def test_demo_testfire_net(self):
         # We don't control the demo.testfire.net domain, so we'll check if its
         # up before doing anything else

@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement
+
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.knowledge_base as kb
@@ -119,8 +119,8 @@ class password_profiling(GrepPlugin):
             return data
 
         # pylint: disable=E1103
-        items = data.items()
-        items.sort(sort_func)
+        items = list(data.items())
+        items.sort(key=lambda a:0-a[1])
 
         items = items[:1000]
 
@@ -219,8 +219,8 @@ class password_profiling(GrepPlugin):
             return
 
         # pylint: disable=E1103
-        items = profiling_data.items()
-        items.sort(sort_func)
+        items = list(profiling_data.items())
+        items.sort(key=lambda a:0-a[1])
         items = items[:100]
 
         om.out.information('Password profiling TOP 100:')
@@ -245,7 +245,3 @@ class password_profiling(GrepPlugin):
         This plugin creates a list of possible passwords by reading responses
         and counting the most common words.
         """
-
-
-def sort_func(x_obj, y_obj):
-    return cmp(y_obj[1], x_obj[1])

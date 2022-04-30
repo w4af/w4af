@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -17,8 +17,7 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Replaces space character after SQL statement with a valid random blank character.
-    Afterwards replace character = with LIKE operator
+    Replaces space character after SQL statement with a valid random blank character. Afterwards replace character '=' with operator LIKE
 
     Requirement:
         * Blue Coat SGOS with WAF activated as documented in
@@ -44,7 +43,7 @@ def tamper(payload, **kwargs):
     retVal = payload
 
     if payload:
-        retVal = re.sub(r"\b(?P<word>[A-Z_]+)(?=[^\w(]|\Z)", lambda match: process(match), retVal)
+        retVal = re.sub(r"\b(?P<word>[A-Z_]+)(?=[^\w(]|\Z)", process, retVal)
         retVal = re.sub(r"\s*=\s*", " LIKE ", retVal)
         retVal = retVal.replace("%09 ", "%09")
 

@@ -144,7 +144,7 @@ class eval(AuditPlugin):
             for delay_obj in self.WAIT_OBJ:
                 yield mutant, delay_obj, debugging_id
 
-    def _find_delay_in_mutant(self, (mutant, delay_obj, debugging_id)):
+    def _find_delay_in_mutant(self, xxx_todo_changeme):
         """
         Try to delay the response and save a vulnerability if successful
 
@@ -152,6 +152,7 @@ class eval(AuditPlugin):
         :param delay_obj: The delay to use
         :param debugging_id: The debugging ID for logging
         """
+        (mutant, delay_obj, debugging_id) = xxx_todo_changeme
         if self._has_bug(mutant):
             return
 

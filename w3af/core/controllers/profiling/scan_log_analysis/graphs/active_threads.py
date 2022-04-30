@@ -53,5 +53,5 @@ def draw_active_threads(scan_log_filename, scan):
     fig.plot(active_threads_timestamps,
              active_threads)
 
-    print(fig.show())
+    print((fig.show()))
     print('')

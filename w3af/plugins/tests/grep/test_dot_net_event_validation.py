@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
@@ -41,6 +42,7 @@ class TestEventValidation(PluginTest):
 
     target_url = get_moth_http('/grep/dot_net_event_validation/')
 
+    @pytest.mark.deprecated
     def test_found_vuln(self):
         self._scan(self.target_url, RUN_CONFIGS['cfg']['plugins'])
 
@@ -91,6 +93,7 @@ class TestEventValidationGrouping(PluginTest):
                                    body=html,
                                    method='GET', status=200)]
 
+    @pytest.mark.deprecated
     def test_grouped_vulnerabilities(self):
         self._scan(self.target_url, RUN_CONFIGS['cfg']['plugins'])
 
@@ -99,19 +102,19 @@ class TestEventValidationGrouping(PluginTest):
 
 
         expected_vulns = {('.NET Event Validation is disabled',
-                           u'The application contains 2 unique URLs which have'
-                           u' .NET Event Validation disabled. This programming'
-                           u' / configuration error should be manually'
-                           u' verified. The first two vulnerable URLs are:\n'
-                           u' - http://mock/2\n - http://mock/1\n'),
+                           'The application contains 2 unique URLs which have'
+                           ' .NET Event Validation disabled. This programming'
+                           ' / configuration error should be manually'
+                           ' verified. The first two vulnerable URLs are:\n'
+                           ' - http://mock/2\n - http://mock/1\n'),
 
                           ('.NET ViewState encryption is disabled',
-                           u'The application contains 2 unique URLs with .NET'
-                           u' ViewState encryption disabled. This programming'
-                           u' / configuration error can be exploited to decode'
-                           u' and inspect the ViewState contents. The first two'
-                           u' vulnerable URLs are:\n - http://mock/2\n'
-                           u' - http://mock/1\n')}
+                           'The application contains 2 unique URLs with .NET'
+                           ' ViewState encryption disabled. This programming'
+                           ' / configuration error can be exploited to decode'
+                           ' and inspect the ViewState contents. The first two'
+                           ' vulnerable URLs are:\n - http://mock/2\n'
+                           ' - http://mock/1\n')}
 
         vulns_set = set()
 

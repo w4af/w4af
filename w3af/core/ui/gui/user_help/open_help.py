@@ -49,7 +49,7 @@ def open_help(chapter=''):
     """
     try:
         current_branch = get_current_branch()
-    except git.exc.InvalidGitRepositoryError:
+    except git.InvalidGitRepositoryError:
         current_branch = 'latest'
     else:
         if current_branch in (DETACHED_HEAD, 'master'):

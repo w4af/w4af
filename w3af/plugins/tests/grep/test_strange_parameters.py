@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 import w3af.core.data.kb.knowledge_base as kb
@@ -41,50 +42,57 @@ class TestStrangeParameters(unittest.TestCase):
     def tearDown(self):
         self.plugin.end()
 
+    @pytest.mark.deprecated
     def test_strange_parameters_empty(self):
         body = ''
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 
+    @pytest.mark.deprecated
     def test_strange_parameters_not_find_1(self):
         body = '<html><a href="/?id=3">x</a></html>'
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 
+    @pytest.mark.deprecated
     def test_strange_parameters_not_find_2(self):
         body = '<html><a href="/?id=3&id=3&id=5&foo=bar">x</a></html>'
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 
+    @pytest.mark.deprecated
     def test_strange_parameters_not_find_3(self):
         body = '<html><a href="http://moth/abc.jsp?id=3&id=3&id=5&foo=bar">x</a></html>'
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 
+    @pytest.mark.deprecated
     def test_strange_parameters_find(self):
         body = '<html><a href="http://moth/abc.jsp?call=s(12,3)">x</a></html>'
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 1)
 
+    @pytest.mark.deprecated
     def test_strange_parameters_find_sql(self):
         body = ('<html>'
                 '<a href="http://moth/abc.jsp?sql=SELECT x FROM TABLE">x</a>'
                 '</html>')
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 1)
 
+    @pytest.mark.deprecated
     def test_multi(self):
         body = """<html>
                   <a href="http://moth/abc.jsp?sql=SELECT x FROM TABLE">x</a>
@@ -93,8 +101,9 @@ class TestStrangeParameters(unittest.TestCase):
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
         vulns = kb.kb.get('strange_parameters', 'strange_parameters')
-        self.assertEquals(len(vulns), 2, vulns)
+        self.assertEqual(len(vulns), 2, vulns)
 
+    @pytest.mark.deprecated
     def test_strange_parameters_sent_false_positive_01(self):
         body = ('<link rel="amphtml" href="http://w3af.org/?searchsubmit='
                 'S%C3%B6k&#038;s=echo+str_repeat%28%27ruvkt%27%2C5%29%3B&#038;amp">')
@@ -105,14 +114,15 @@ class TestStrangeParameters(unittest.TestCase):
         request = FuzzableRequest(url)
 
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 
+    @pytest.mark.deprecated
     def test_strange_parameters_sent_false_positive_02(self):
         body = '<a href="http://news.google.se/news/url?url=http%3A%2F%2Fwww.foo.com%2F">xyz</a>'
 
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 

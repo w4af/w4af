@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 import threading
 import time
@@ -91,31 +92,32 @@ class TestCachedQueue(unittest.TestCase):
         self.assertRaises(Exception, q.get, block=False)
 
         q.put(1)
-        self.assertEquals(q.get(), 1)
+        self.assertEqual(q.get(), 1)
 
+    @pytest.mark.slow
     def test_simple_rpm_speed(self):
         q = CachedQueue()
 
         self.assertEqual(0.0, q.get_input_rpm())
         self.assertEqual(0.0, q.get_output_rpm())
 
-        for i in xrange(4):
+        for i in range(4):
             q.put(i)
             # 20 RPM
             time.sleep(3)
 
         self.assertEqual(q.qsize(), 4)
 
-        self.assertGreater(q.get_input_rpm(), 19)
-        self.assertLess(q.get_input_rpm(), 20)
+        self.assertGreater(q.get_input_rpm(), 25)
+        self.assertLess(q.get_input_rpm(), 27)
 
-        for i in xrange(4):
+        for i in range(4):
             q.get()
             # 60 RPM
             time.sleep(1)
 
-        self.assertGreater(q.get_output_rpm(), 59)
-        self.assertLess(q.get_output_rpm(), 60)
+        self.assertGreater(q.get_output_rpm(), 75)
+        self.assertLess(q.get_output_rpm(), 85)
         self.assertEqual(q.qsize(), 0)
 
     def test_join_memory(self):

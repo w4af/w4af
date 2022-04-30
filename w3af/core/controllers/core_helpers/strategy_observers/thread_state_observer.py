@@ -27,7 +27,7 @@ import traceback
 
 import w3af.core.controllers.output_manager as om
 
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_unicode
 from .strategy_observer import StrategyObserver
 
 
@@ -37,9 +37,9 @@ class ThreadStateObserver(StrategyObserver):
     """
     ANALYZE_EVERY = 30
     STACK_TRACE_MIN_TIME = 120
-    DISCOVER_WORKER_RE = re.compile('<bound method CrawlInfrastructure._discover_worker'
-                                    ' of <CrawlInfrastructure\(CrawlInfraController,'
-                                    ' started daemon .*?\)>>')
+    DISCOVER_WORKER_RE = re.compile(r'<bound method CrawlInfrastructure._discover_worker'
+                                    r' of <CrawlInfrastructure\(CrawlInfraController,'
+                                    r' started daemon .*?\)>>')
 
     def __init__(self):
         super(ThreadStateObserver, self).__init__()
@@ -208,16 +208,20 @@ class ThreadStateObserver(StrategyObserver):
         #
         #   Find the workers in the thread list
         #
-        for thread_id, frame in sys._current_frames().items():
+        for thread_id, frame in list(sys._current_frames().items()):
             thread = self.get_thread_from_thread_id(thread_id)
 
             if thread is None:
                 continue
 
-            if not hasattr(thread, 'get_state'):
+            get_state = getattr(thread, 'get_state', None)
+            if get_state is None:
                 continue
 
-            state = thread.get_state()
+            if not callable(get_state):
+                continue
+
+            state = get_state()
             worker_id = state['worker_id']
 
             if worker_id not in workers_to_inspect:
@@ -313,9 +317,9 @@ class ThreadStateObserver(StrategyObserver):
                 try:
                     arg_repr = repr(arg)
                 except UnicodeEncodeError:
-                    arg_str = smart_str_ignore(arg)
+                    arg_str = smart_unicode(arg)
                 else:
-                    arg_str = smart_str_ignore(arg_repr)
+                    arg_str = smart_unicode(arg_repr)
 
                 if len(arg_str) > 80:
                     arg_str = arg_str[:80] + "...'"
@@ -325,22 +329,22 @@ class ThreadStateObserver(StrategyObserver):
             args_str = ', '.join(parts)
 
             short_kwargs = {}
-            for key, value in worker_state['kwargs']:
+            for key, value in worker_state['kwargs'].items():
                 try:
                     value_repr = repr(value)
                 except UnicodeEncodeError:
-                    value_str = smart_str_ignore(value)
+                    value_str = smart_unicode(value)
                 else:
-                    value_str = smart_str_ignore(value_repr)
+                    value_str = smart_unicode(value_repr)
 
                 if len(value_str) > 80:
                     value_str = value_str[:80] + "...'"
 
                 short_kwargs[key] = value_str
 
-            kwargs_str = smart_str_ignore(short_kwargs)
+            kwargs_str = str(short_kwargs)
 
-            func_name = smart_str_ignore(worker_state['func_name'])
+            func_name = smart_unicode(worker_state['func_name'])
             func_name = self.clean_function_name(func_name)
 
             message = ('Worker with ID %s(%s) has been running job %s for %.2f seconds.'

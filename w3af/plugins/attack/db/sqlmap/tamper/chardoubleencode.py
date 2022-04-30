@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -16,13 +16,10 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Double url-encodes all characters in a given payload (not processing
-    already encoded)
+    Double URL-encodes all characters in a given payload (not processing already encoded) (e.g. SELECT -> %2553%2545%254C%2545%2543%2554)
 
     Notes:
-        * Useful to bypass some weak web application firewalls that do not
-          double url-decode the request before processing it through their
-          ruleset
+        * Useful to bypass some weak web application firewalls that do not double URL-decode the request before processing it through their ruleset
 
     >>> tamper('SELECT FIELD FROM%20TABLE')
     '%2553%2545%254C%2545%2543%2554%2520%2546%2549%2545%254C%2544%2520%2546%2552%254F%254D%2520%2554%2541%2542%254C%2545'

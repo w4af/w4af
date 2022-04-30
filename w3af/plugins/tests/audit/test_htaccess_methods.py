@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 
@@ -45,17 +46,19 @@ class TestHTAccess(PluginTest):
                       MockResponse(target_url, 'Hidden treasure', method='POST',
                                    status=200)]
 
+    @pytest.mark.deprecated
+    @pytest.mark.deprecated
     def test_found_htaccess_methods(self):
         cfg = RUN_CONFIG['cfg']
         self._scan(self.target_url, cfg['plugins'])
         vulns = self.kb.get('htaccess_methods', 'auth')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEquals('Misconfigured access control', vuln.get_name())
-        self.assertEquals(self.target_url, str(vuln.get_url()))
+        self.assertEqual('Misconfigured access control', vuln.get_name())
+        self.assertEqual(self.target_url, str(vuln.get_url()))
 
 
 class TestHTAccessFalsePositiveGeneric(PluginTest):
@@ -67,20 +70,24 @@ class TestHTAccessFalsePositiveGeneric(PluginTest):
                       MockResponse(target_url, 'Bad credentials',
                                    method='POST', status=403)]
 
+    @pytest.mark.deprecated
+    @pytest.mark.deprecated
     def test_false_positive(self):
         cfg = RUN_CONFIG['cfg']
         self._scan(self.target_url, cfg['plugins'])
         vulns = self.kb.get('htaccess_methods', 'auth')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
+@pytest.mark.deprecated
 class TestHTaccessCheck1915_1(TestHTAccessFalsePositiveGeneric):
     # https://github.com/andresriancho/w3af/issues/1915
     MOCK_RESPONSES = [MockResponse(TestHTAccessFalsePositiveGeneric.target_url,
                                    'Bad credentials', method='GET', status=401)]
 
 
+@pytest.mark.deprecated
 class TestHTaccessCheck1915_2(TestHTAccessFalsePositiveGeneric):
     # https://github.com/andresriancho/w3af/issues/1915
     MOCK_RESPONSES = [MockResponse(TestHTAccessFalsePositiveGeneric.target_url,

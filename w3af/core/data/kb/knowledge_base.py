@@ -20,9 +20,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import collections
+from collections import Iterable
 import functools
 import threading
-import cPickle
+import pickle
 import copy
 
 # pylint: disable=E0401
@@ -354,7 +355,7 @@ class BasicKnowledgeBase(object):
         Those operations will call this method to translate the plugin instance
         into a string.
         """
-        if isinstance(data, basestring):
+        if isinstance(data, str):
             return data
         else:
             return data.get_name()
@@ -554,7 +555,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         if isinstance(obj, (Info, InfoSet)):
             return obj.get_uniq_id()
 
-        if isinstance(obj, collections.Iterable):
+        if isinstance(obj, Iterable):
             concat_all = ''.join([str(hash(i)) for i in obj])
             return str(hash(concat_all))
 
@@ -624,7 +625,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
             params = (location_a, location_b)
 
         for r in self.db.select(query % self.table_name, params):
-            obj = cPickle.loads(r[0])
+            obj = pickle.loads(r[0])
 
             if check_types and not isinstance(obj, (Info, InfoSet, Shell)):
                 raise TypeError('Use raw_write and raw_read to query the'
@@ -640,7 +641,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         result = self.db.select_one(query % self.table_name, params)
 
         if result is not None:
-            result = cPickle.loads(result[0])
+            result = pickle.loads(result[0])
 
         return result
 
@@ -720,7 +721,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         """
         # Note that I copy the items list in order to iterate though it without
         # any issues like the size changing
-        for _, observer in self.observers.items()[:]:
+        for _, observer in list(self.observers.items())[:]:
             functor = getattr(observer, method)
             functor(*args, **kwargs)
 
@@ -750,7 +751,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         results = self.db.select(query, parameters=exclude_ids)
 
         for uniq_id, serialized_obj, in results:
-            obj = cPickle.loads(serialized_obj)
+            obj = pickle.loads(serialized_obj)
             if isinstance(obj, klass):
                 yield obj
 
@@ -766,7 +767,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         result_lst = []
 
         for r in results:
-            obj = cPickle.loads(r[0])
+            obj = pickle.loads(r[0])
             if hasattr(obj, 'get_severity'):
                 severity = obj.get_severity()
                 if severity in (LOW, MEDIUM, HIGH):
@@ -785,7 +786,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         result_lst = []
 
         for r in results:
-            obj = cPickle.loads(r[0])
+            obj = pickle.loads(r[0])
             if hasattr(obj, 'get_severity'):
                 severity = obj.get_severity()
                 if severity in (INFORMATION,):
@@ -800,8 +801,8 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         query = 'SELECT location_a, location_b, pickle FROM %s'
         results = self.db.select(query % self.table_name)
 
-        for location_a, location_b, pickle in results:
-            obj = cPickle.loads(pickle)
+        for location_a, location_b, pickle_bytes in results:
+            obj = pickle.loads(pickle_bytes)
 
             if location_a not in result_dict:
                 result_dict[location_a] = {location_b: [obj,]}

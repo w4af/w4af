@@ -52,7 +52,8 @@ class TestNoDebugUnittest(unittest.TestCase):
             not 'test_' in unittest_file:
                 continue
             
-            test_code = file(unittest_file).read()
+            with open(unittest_file) as fh:
+                test_code = fh.read()
             
             if debug_scan.search(test_code):
                 msg = '%s unittest has debugging enabled in the scan method.'

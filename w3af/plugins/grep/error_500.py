@@ -92,7 +92,7 @@ class error_500(GrepPlugin):
         Some examples of URLs that trigger this false positive:
             - http://127.0.0.2/ext.ini.%00.txt
             - http://127.0.0.2/%00/
-            - http://127.0.0.2/%0a%0a<script>alert(\Vulnerable\)</script>.jsp
+            - http://127.0.0.2/%0a%0a<script>alert("Vulnerable")</script>.jsp
 
         :return: True if the response is a false positive.
         """

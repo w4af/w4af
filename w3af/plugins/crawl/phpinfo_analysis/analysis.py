@@ -120,7 +120,7 @@ def expose_php(response):
 
 
 def lowest_privilege_test(response):
-    regex_str = 'User/Group </td><td class="v">(.*?)\((\d.*?)\)/(\d.*?)</td>'
+    regex_str = r'User/Group </td><td class="v">(.*?)\((\d.*?)\)/(\d.*?)</td>'
     lowest_privilege_test_mo = re.search(regex_str, response.get_body(), re.I)
 
     if not lowest_privilege_test_mo:
@@ -189,7 +189,7 @@ def disable_functions(response):
 
 
 def curl_file_support(response):
-    regex_str = '<h1 class="p">PHP Version (\d).(\d).(\d)</h1>'
+    regex_str = r'<h1 class="p">PHP Version (\d).(\d).(\d)</h1>'
     curl_file_support_mo = re.search(regex_str, response.get_body(), re.I)
 
     if not curl_file_support_mo:
@@ -252,7 +252,7 @@ def cgi_force_redirect(response):
 
 
 def session_cookie_httponly(response):
-    regex_str = 'session\.cookie_httponly</td><td class="v">(Off|no|0)</td>'
+    regex_str = r'session\.cookie_httponly</td><td class="v">(Off|no|0)</td>'
     session_cookie_httponly_mo = re.search(regex_str, response.get_body(), re.I)
 
     if not session_cookie_httponly_mo:
@@ -268,7 +268,7 @@ def session_cookie_httponly(response):
 
 
 def session_save_path(response):
-    regex_str = 'session\.save_path</td><td class="v">(<i>no value</i>)</td>'
+    regex_str = r'session\.save_path</td><td class="v">(<i>no value</i>)</td>'
     session_save_path_mo = re.search(regex_str, response.get_body(), re.I)
 
     if not session_save_path_mo:
@@ -285,7 +285,7 @@ def session_save_path(response):
 
 
 def session_use_trans(response):
-    regex_str = 'session\.use_trans</td><td class="v">(On)</td>'
+    regex_str = r'session\.use_trans</td><td class="v">(On)</td>'
     session_use_trans_mo = re.search(regex_str, response.get_body(), re.I)
 
     if not session_use_trans_mo:
@@ -346,7 +346,7 @@ def enable_dl(response):
 
 
 def memory_limit(response):
-    regex_str = 'memory_limit</td><td class="v">(\d.*?)</td>'
+    regex_str = r'memory_limit</td><td class="v">(\d.*?)</td>'
     memory_limit_mo = re.search(regex_str, response.get_body(), re.I)
 
     if not memory_limit_mo:
@@ -371,7 +371,7 @@ def memory_limit(response):
 
 
 def post_max_size(response):
-    regex_str = 'post_max_size</td><td class="v">(\d.*?)</td>'
+    regex_str = r'post_max_size</td><td class="v">(\d.*?)</td>'
     post_max_size_mo = re.search(regex_str, response.get_body(), re.IGNORECASE)
 
     if not post_max_size_mo:
@@ -397,7 +397,7 @@ def post_max_size(response):
 
 
 def upload_max_filesize(response):
-    regex_str = 'upload_max_filesize</td><td class="v">(\d.*?)</td>'
+    regex_str = r'upload_max_filesize</td><td class="v">(\d.*?)</td>'
     upload_max_filesize_mo = re.search(regex_str, response.get_body(), re.IGNORECASE)
 
     if not upload_max_filesize_mo:
@@ -503,7 +503,7 @@ def open_basedir(response):
 
 
 def session_hash_function(response):
-    regex_str = 'session\.hash_function</td><td class="v">(.*?)</td>'
+    regex_str = r'session\.hash_function</td><td class="v">(.*?)</td>'
     session_hash_function_mo = re.search(regex_str, response.get_body(), re.I)
 
     if not session_hash_function_mo:

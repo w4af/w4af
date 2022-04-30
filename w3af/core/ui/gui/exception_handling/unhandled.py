@@ -43,7 +43,7 @@ def handle_crash(w3af_core, _type, value, tb, plugins=''):
     # Print the information to the console so everyone can see it
     exception = traceback.format_exception(_type, value, tb)
     exception = "".join(exception)
-    print exception
+    print(exception)
 
     # Do not disclose user information in bug reports
     clean_exception = cleanup_bug_report(exception)
@@ -76,7 +76,7 @@ def handle_keyboardinterrupt(w3af_core):
             repr_alive.sort()
             return pprint.pformat(repr_alive)
         
-        print nice_thread_repr(threading.enumerate())
+        print(nice_thread_repr(threading.enumerate()))
         
     om.manager.set_output_plugins(['console'])
     om.out.console(_('\nStopping after Ctrl+C. Thanks for using w3af, bye!'))

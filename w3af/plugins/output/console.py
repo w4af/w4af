@@ -32,6 +32,7 @@ from w3af.core.controllers.exceptions import ScanMustStopByKnownReasonExc
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_types import BOOL
 from w3af.core.data.options.option_list import OptionList
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 ERROR = 'Error'
@@ -45,7 +46,8 @@ def catch_ioerror(meth):
     def wrapper(self, *args, **kwargs):
         try:
             return meth(self, *args, **kwargs)
-        except IOError as (errno, strerror):
+        except IOError as xxx_todo_changeme:
+            (errno, strerror) = xxx_todo_changeme.args
             if errno == ENOSPC:
                 msg = 'No space left on device'
                 raise ScanMustStopByKnownReasonExc(msg)
@@ -73,7 +75,7 @@ class console(OutputPlugin):
         self.use_colors = True
 
     def _make_printable(self, a_string):
-        a_string = str(a_string)
+        a_string = str(smart_unicode(a_string))
         a_string = a_string.replace('\n', '\n\r')
         return ''.join(ch for ch in a_string if ch in string.printable)
 

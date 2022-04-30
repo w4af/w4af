@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from itertools import izip, repeat
+from itertools import repeat
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.parsers.parser_cache as parser_cache
@@ -124,11 +124,11 @@ class find_vhosts(InfrastructurePlugin):
             if not is_private_site(domain):
                 continue
 
-            desc = (u'The content of "%s" references a non existent domain: "%s".'
-                    u' This can be a broken link, or an internal domain name.')
+            desc = ('The content of "%s" references a non existent domain: "%s".'
+                    ' This can be a broken link, or an internal domain name.')
             desc %= (fuzzable_request.get_url(), domain)
 
-            i = Info(u'Internal hostname in HTML link', desc,
+            i = Info('Internal hostname in HTML link', desc,
                      original_response.id, self.get_name())
             i.set_url(fuzzable_request.get_url())
 
@@ -158,10 +158,10 @@ class find_vhosts(InfrastructurePlugin):
                 continue
 
             domain = fuzzable_request.get_url().get_domain()
-            desc = (u'Found a new virtual host at the target web server, the'
-                    u' virtual host name is: "%s". To access this site'
-                    u' you might need to change your DNS resolution settings'
-                    u' in order to point "%s" to the IP address of "%s".')
+            desc = ('Found a new virtual host at the target web server, the'
+                    ' virtual host name is: "%s". To access this site'
+                    ' you might need to change your DNS resolution settings'
+                    ' in order to point "%s" to the IP address of "%s".')
             desc %= (vhost, vhost, domain)
 
             ids = [vhost_response.id, original_response.id]
@@ -198,7 +198,7 @@ class find_vhosts(InfrastructurePlugin):
 
     def _send_in_threads(self, base_url, vhosts):
         base_url_repeater = repeat(base_url)
-        args_iterator = izip(base_url_repeater, vhosts)
+        args_iterator = zip(base_url_repeater, vhosts)
         http_get = return_args(one_to_many(self._http_get_vhost))
         pool_results = self.worker_pool.imap_unordered(http_get, args_iterator)
 
@@ -234,7 +234,7 @@ class find_vhosts(InfrastructurePlugin):
         for ne_domain in (non_existent_domain, non_existent_subdomain):
             try:
                 http_response = self._http_get_vhost(base_url, ne_domain)
-            except Exception, e:
+            except Exception as e:
                 msg = 'Failed to generate invalid domain fingerprint: %s'
                 om.out.debug(msg % e)
             else:

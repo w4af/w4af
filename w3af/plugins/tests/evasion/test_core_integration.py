@@ -19,9 +19,10 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
-from mock import MagicMock
+from unittest.mock import MagicMock
 from nose.plugins.attrib import attr
 
 from w3af.core.controllers.ci.moth import get_moth_http
@@ -39,6 +40,7 @@ class TestCoreIntegration(unittest.TestCase):
     def tearDown(self):
         self.w3afcore.quit()
             
+    @pytest.mark.deprecated
     def test_send_mangled(self):
         
         self.w3afcore.plugins.set_plugins(['self_reference'], 'evasion')

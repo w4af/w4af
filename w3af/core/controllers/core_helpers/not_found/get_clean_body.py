@@ -58,7 +58,7 @@ def get_clean_body_from_parts(body, uri, doc_type):
     The same works with file names.
     All of them, are removed url-decoded and "as is".
 
-    :return: A string that represents the "cleaned" response body of the
+    :return: A string that represents the "clean" response body of the
              response.
     """
     if not doc_type == HTTPResponse.DOC_TYPE_TEXT_OR_HTML:
@@ -76,7 +76,7 @@ def get_clean_body_from_parts(body, uri, doc_type):
 
     for base_url in base_urls:
         to_replace.extend([u.url_string for u in base_url.get_directories()])
-        to_replace.extend(base_url.url_string.split(u'/'))
+        to_replace.extend(base_url.url_string.split('/'))
         to_replace.extend([base_url.url_string,
                            base_url.all_but_scheme(),
                            base_url.get_path_qs(),

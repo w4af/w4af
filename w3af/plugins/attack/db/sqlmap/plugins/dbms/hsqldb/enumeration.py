@@ -1,24 +1,21 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
-from plugins.generic.enumeration import Enumeration as GenericEnumeration
+from lib.core.common import unArrayizeValue
 from lib.core.data import conf
 from lib.core.data import kb
 from lib.core.data import logger
 from lib.core.data import queries
-from lib.core.common import unArrayizeValue
 from lib.core.enums import DBMS
 from lib.core.settings import HSQLDB_DEFAULT_SCHEMA
 from lib.request import inject
+from plugins.generic.enumeration import Enumeration as GenericEnumeration
 
 class Enumeration(GenericEnumeration):
-    def __init__(self):
-        GenericEnumeration.__init__(self)
-
     def getBanner(self):
         if not conf.getBanner:
             return
@@ -32,7 +29,7 @@ class Enumeration(GenericEnumeration):
 
         return kb.data.banner
 
-    def getPrivileges(self, *args):
+    def getPrivileges(self, *args, **kwargs):
         warnMsg = "on HSQLDB it is not possible to enumerate the user privileges"
         logger.warn(warnMsg)
 
@@ -44,3 +41,9 @@ class Enumeration(GenericEnumeration):
 
     def getCurrentDb(self):
         return HSQLDB_DEFAULT_SCHEMA
+
+    def getStatements(self):
+        warnMsg = "on HSQLDB it is not possible to enumerate the SQL statements"
+        logger.warn(warnMsg)
+
+        return []

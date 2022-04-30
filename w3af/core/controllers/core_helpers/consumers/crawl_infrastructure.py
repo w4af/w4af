@@ -1,5 +1,5 @@
 """
-CrawlInfrastructure.py
+crawl_infrastructure.py
 
 Copyright 2012 Andres Riancho
 
@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import time
-import Queue
+import queue
 
 import w3af.core.data.kb.config as cf
 import w3af.core.data.kb.knowledge_base as kb
@@ -48,7 +48,9 @@ class CrawlInfrastructure(BaseConsumer):
     again for continuing with the discovery process.
     """
 
-    def __init__(self, crawl_infrastructure_plugins, w3af_core,
+    def __init__(self,
+                 crawl_infrastructure_plugins,
+                 w3af_core,
                  max_discovery_time):
         """
         :param crawl_infrastructure_plugins: Instances of CrawlInfrastructure
@@ -99,7 +101,7 @@ class CrawlInfrastructure(BaseConsumer):
                 # wait for .join()
                 continue
 
-            except Queue.Empty:
+            except queue.Empty:
                 # pylint: disable=E1120
                 try:
                     self._route_all_plugin_results()
@@ -113,7 +115,7 @@ class CrawlInfrastructure(BaseConsumer):
 
                     try:
                         self._process_poison_pill()
-                    except Exception, e:
+                    except Exception as e:
                         msg = 'An exception was found while processing poison pill: "%s"'
                         om.out.debug(msg % e)
                     finally:
@@ -124,7 +126,9 @@ class CrawlInfrastructure(BaseConsumer):
                 else:
                     # With specific error/success handling just for debugging
                     try:
+                        # pylint: disable=E1120
                         self._consume(work_unit)
+                        # pylint: enable=E1120
                     finally:
                         self.in_queue.task_done()
 
@@ -166,7 +170,7 @@ class CrawlInfrastructure(BaseConsumer):
                            ' scan must stop exception was raised')
                 self._log_end_took(msg_fmt, start_time, plugin)
 
-            except Exception, e:
+            except Exception as e:
                 msg_fmt = ('Spent %.2f seconds running %s.end() until an'
                            ' unhandled exception was found')
                 self._log_end_took(msg_fmt, start_time, plugin)
@@ -215,15 +219,15 @@ class CrawlInfrastructure(BaseConsumer):
         try:
             for observer in self._observers:
                 observer.crawl(self, fuzzable_request)
-        except Exception, e:
+        except Exception as e:
             self.handle_exception('CrawlInfrastructure',
                                   'CrawlInfrastructure._run_observers()',
                                   'CrawlInfrastructure._run_observers()', e)
 
     @task_decorator
     def _plugin_finished_cb(self,
-                            function_id,
-                            ((plugin, fuzzable_request), plugin_result)):
+                            function_id, xxx_todo_changeme):
+        ((plugin, fuzzable_request), plugin_result) = xxx_todo_changeme
         if not self._running:
             return
 
@@ -254,7 +258,7 @@ class CrawlInfrastructure(BaseConsumer):
 
             try:
                 fuzzable_request = plugin.output_queue.get_nowait()
-            except Queue.Empty:
+            except queue.Empty:
                 break
 
             else:
@@ -299,7 +303,7 @@ class CrawlInfrastructure(BaseConsumer):
         while True:
             try:
                 self.in_queue.get_nowait()
-            except Queue.Empty:
+            except queue.Empty:
                 break
             else:
                 self.in_queue.task_done()
@@ -354,14 +358,14 @@ class CrawlInfrastructure(BaseConsumer):
 
         tmp_url_list = ['- %s' % u.url_string for u in tmp_url_list]
         tmp_url_list.sort()
-        map(om.out.information, tmp_url_list)
+        list(map(om.out.information, tmp_url_list))
 
         # Now I simply print the list that I have after the filter.
         om.out.information('The list of fuzzable requests is:')
 
-        tmp_fr = [u'- %s' % unicode(fr) for fr in all_known_fuzzable_requests]
+        tmp_fr = ['- %s' % str(fr) for fr in all_known_fuzzable_requests]
         tmp_fr.sort()
-        map(om.out.information, tmp_fr)
+        list(map(om.out.information, tmp_fr))
 
     def _should_stop_discovery(self):
         """
@@ -528,16 +532,16 @@ class CrawlInfrastructure(BaseConsumer):
 
         try:
             result = plugin.discover_wrapper(fuzzable_request, debugging_id)
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = 'An exception was found while running "%s" with "%s": "%s" (did: %s)'
-            args = (plugin.get_name(), fuzzable_request, debugging_id)
-            om.out.error(msg % args, e)
+            args = (plugin.get_name(), fuzzable_request, e, debugging_id)
+            om.out.error(msg % args)
         except RunOnce:
             # Some plugins are meant to be run only once
             # that is implemented by raising a RunOnce
             # exception
             self._remove_discovery_plugin(plugin)
-        except Exception, e:
+        except Exception as e:
             self.handle_exception(plugin.get_type(),
                                   plugin.get_name(),
                                   fuzzable_request,

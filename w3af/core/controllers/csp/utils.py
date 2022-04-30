@@ -72,7 +72,7 @@ CSP_DIRECTIVE_VALUE_XSS_FILTER = "filter"
 # -> script-nonce
 
 # Valid Mime Types list
-MIME_TYPES = MimeTypes().types_map[1].values()
+MIME_TYPES = list(MimeTypes().types_map[1].values())
 
 # Define NamedTuple tuple subclass to represents a CSP vulnerability.
 # Declare type here in order to expose it with project visibility
@@ -542,7 +542,7 @@ def retrieve_csp_policies(response, select_only_reportonly_policies=False,
                     policies[directive_name].append(tmp_value)
     
     # Do cleanup: Remove directive name without any policies
-    policies = dict((k, v) for k, v in policies.iteritems() if len(v) > 0)
+    policies = dict((k, v) for k, v in policies.items() if len(v) > 0)
     
     # Add misspelled directives names list if dedicated flag is set
     if (select_also_misspelled_directives 
@@ -575,8 +575,8 @@ def merge_policies_dict(non_report_only_policies_dict, report_only_policies_dict
     
     merged_policies = {}
     # Create a list from union of directives names (remove duplicate items)
-    directives_names = list(set(non_report_only_policies_dict.keys() 
-                                + report_only_policies_dict.keys()))
+    directives_names = list(set(list(non_report_only_policies_dict.keys()) 
+                                + list(report_only_policies_dict.keys())))
     # Parse it to merge list of values for each key (remove duplicate items)
     for k in directives_names:
         values = []

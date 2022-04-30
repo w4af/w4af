@@ -117,7 +117,7 @@ class AproxDelayController(object):
 
         # We want to make sure that the multiplier actually works and
         # that the delay is stable
-        for _ in xrange(3):
+        for _ in range(3):
             original_rtt = self.uri_opener.get_average_rtt_for_mutant(mutant=self.mutant,
                                                                       debugging_id=self.get_debugging_id())
             delays, resp = self.multiplier_delays_response(multiplier,

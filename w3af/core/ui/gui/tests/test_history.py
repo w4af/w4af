@@ -24,6 +24,8 @@ import string
 import time
 import os
 
+import pytest
+
 from w3af.core.ui.gui.history import HistorySuggestion
 
 
@@ -41,12 +43,13 @@ class TestHistorySuggestion(unittest.TestCase):
 
     setUp = tearDown
 
+    @pytest.mark.deprecated
     def test_basic(self): 
         # Testing History with QUANT elements
         his = HistorySuggestion(self.TEST_FILE)
     
         texts = ["".join(random.choice(
-            string.letters) for x in xrange(self.LENGTH)) for y in xrange(self.QUANT)]
+            string.ascii_letters) for x in range(self.LENGTH)) for y in range(self.QUANT)]
     
         # Storing the elements
         for txt in texts:
@@ -59,4 +62,3 @@ class TestHistorySuggestion(unittest.TestCase):
         
         self.assertIn(texts[-1], his_loaded.get_texts())
         self.assertIn(texts[0], his_loaded.get_texts())
-        

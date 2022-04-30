@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import random
 
-from mock import MagicMock, Mock
+from unittest.mock import MagicMock, Mock
 
 from w3af.core.controllers.delay_detection.exact_delay_controller import ExactDelayController
 from w3af.core.controllers.delay_detection.exact_delay import ExactDelay
@@ -110,7 +110,7 @@ class TestExactDelay(unittest.TestCase):
             req = FuzzableRequest(url)
             mutant = QSMutant(req)
             mutant.set_dc(url.querystring)
-            mutant.set_token(('id', 0))
+            mutant.set_token((b'id', 0))
             
             ed = ExactDelayController(mutant, delay_obj, urllib)
             controlled, responses = ed.delay_is_controlled()
@@ -128,7 +128,7 @@ class TestExactDelay(unittest.TestCase):
             req = FuzzableRequest(url)
             mutant = QSMutant(req)
             mutant.set_dc(url.querystring)
-            mutant.set_token(('id', 0))
+            mutant.set_token((b'id', 0))
             
             ed = ExactDelayController(mutant, delay_obj, urllib)
             controlled, responses = ed.delay_is_controlled()

@@ -1,4 +1,6 @@
 """
+@pytest.mark.deprecated
+@pytest.mark.deprecated
 test_firefox_stealer.py
 
 Copyright 2012 Andres Riancho
@@ -18,6 +20,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from nose.plugins.attrib import attr
 from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
@@ -25,17 +28,18 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 class test_firefox_stealer(PayloadTestHelper):
 
-    EXPECTED_RESULT = {u'/home/moth/.mozilla/firefox/xmo3gf47.moth/cert8.db': 'Yes',
-                       u'/home/moth/.mozilla/firefox/xmo3gf47.moth/content-prefs.sqlite': 'Yes',
-                       u'/home/moth/.mozilla/firefox/xmo3gf47.moth/cookies.sqlite': 'Yes',
-                       u'/home/moth/.mozilla/firefox/xmo3gf47.moth/extensions.ini': 'Yes',
-                       u'/home/moth/.mozilla/firefox/xmo3gf47.moth/formhistory.sqlite': 'Yes',
-                       u'/home/moth/.mozilla/firefox/xmo3gf47.moth/key3.db': 'Yes',
-                       u'/home/moth/.mozilla/firefox/xmo3gf47.moth/permissions.sqlite': 'Yes',
-                       u'/home/moth/.mozilla/firefox/xmo3gf47.moth/places.sqlite': 'Yes',
-                       u'/home/moth/.mozilla/firefox/xmo3gf47.moth/signons.sqlite': 'Yes'}
+    EXPECTED_RESULT = {'/home/moth/.mozilla/firefox/xmo3gf47.moth/cert8.db': 'Yes',
+                       '/home/moth/.mozilla/firefox/xmo3gf47.moth/content-prefs.sqlite': 'Yes',
+                       '/home/moth/.mozilla/firefox/xmo3gf47.moth/cookies.sqlite': 'Yes',
+                       '/home/moth/.mozilla/firefox/xmo3gf47.moth/extensions.ini': 'Yes',
+                       '/home/moth/.mozilla/firefox/xmo3gf47.moth/formhistory.sqlite': 'Yes',
+                       '/home/moth/.mozilla/firefox/xmo3gf47.moth/key3.db': 'Yes',
+                       '/home/moth/.mozilla/firefox/xmo3gf47.moth/permissions.sqlite': 'Yes',
+                       '/home/moth/.mozilla/firefox/xmo3gf47.moth/places.sqlite': 'Yes',
+                       '/home/moth/.mozilla/firefox/xmo3gf47.moth/signons.sqlite': 'Yes'}
 
     @attr('ci_fails')
+    @pytest.mark.deprecated
     def test_firefox_stealer(self):
         result = exec_payload(self.shell, 'firefox_stealer', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

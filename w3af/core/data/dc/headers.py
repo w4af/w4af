@@ -25,6 +25,7 @@ from w3af.core.data.constants.encodings import UTF8
 from w3af.core.data.dc.generic.nr_kv_container import NonRepeatKeyValueContainer
 from w3af.core.data.misc.encoding import smart_unicode
 from w3af.core.data.dc.utils.token import DataToken
+from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 
 
 class Headers(NonRepeatKeyValueContainer):
@@ -37,8 +38,7 @@ class Headers(NonRepeatKeyValueContainer):
         cleaned_vals = self.clean_values(init_val)
 
         super(Headers, self).__init__(cleaned_vals,
-                                      encoding,
-                                      relaxed_order=True)
+                                      encoding)
 
     def get_type(self):
         return 'Headers'
@@ -70,7 +70,7 @@ class Headers(NonRepeatKeyValueContainer):
         """
         :return: A dictionary with lower-case key-headers and un-modified values
         """
-        return dict([(k.lower(), v) for k, v in self.iteritems()])
+        return dict([(k.lower(), v) for k, v in self.items()])
 
     def clean_values(self, init_val):
         if isinstance(init_val, NonRepeatKeyValueContainer)\
@@ -83,7 +83,7 @@ class Headers(NonRepeatKeyValueContainer):
         for key, value in init_val:
             # I can do this (key, value) thing because the headers do NOT
             # have multiple header values like query strings and post-data
-            if isinstance(value, basestring):
+            if isinstance(value, str):
                 value = smart_unicode(value)
             
             cleaned_vals.append((smart_unicode(key), value))
@@ -109,11 +109,10 @@ class Headers(NonRepeatKeyValueContainer):
         :param default: The default value to return if the header_name is not found
         :return: The value for a header given a name (be case insensitive)
         """
-        lower = string.lower
-        lower_header_name = lower(header_name)
+        lower_header_name = header_name.lower()
 
-        for stored_header_name, value in self.iteritems():
-            if lower_header_name == lower(stored_header_name):
+        for stored_header_name, value in self.items():
+            if lower_header_name == stored_header_name.lower():
                 return value, stored_header_name
 
         return default, None
@@ -151,21 +150,24 @@ class Headers(NonRepeatKeyValueContainer):
 
     # pylint: disable=E0102
     def __setitem__(self, k, v):
-        if isinstance(k, basestring):
+        if isinstance(k, bytes):
             k = smart_unicode(k, encoding=self.encoding)
-        else:
+        elif not isinstance(k, str):
             raise ValueError('Header name must be a string.')
 
-        if isinstance(v, basestring):
+        if isinstance(v, bytes):
             v = smart_unicode(v, encoding=self.encoding)
         elif isinstance(v, DataToken):
             encoded_str = smart_unicode(v.get_value(), encoding=self.encoding)
             v.set_value(encoded_str)
-        else:
+        elif not isinstance(k, str):
             raise ValueError('Header value must be a string.')
 
         super(Headers, self).__setitem__(k, v)
     # pylint: enable=E0102
+
+    def __bytes__(self):
+        return self.__str__().encode(DEFAULT_ENCODING)
 
     def __str__(self):
         """
@@ -196,17 +198,14 @@ class Headers(NonRepeatKeyValueContainer):
         
         :return: string representation of the Headers() object.
         """
-        header_str_unicode = self._to_str_with_separators(u': ', u'\r\n')
+        header_str_unicode = self._to_str_with_separators(': ', '\r\n')
         if header_str_unicode:
-            header_str_unicode += u'\r\n'
+            header_str_unicode += '\r\n'
 
-        return header_str_unicode.encode('utf-8')
+        return header_str_unicode
 
     def __unicode__(self):
         """
         :see: __str__ documentation.
         """
-        headers_unicode = self._to_str_with_separators(u': ', u'\r\n')
-        if headers_unicode:
-            headers_unicode += u'\r\n'
-        return headers_unicode
+        return self.__str__()

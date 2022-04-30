@@ -1,7 +1,7 @@
-import httplib
+import http.client
 import socket
 
-from urllib2 import (OpenerDirector, ProxyHandler, UnknownHandler, HTTPHandler,
+from urllib.request import (OpenerDirector, ProxyHandler, UnknownHandler, HTTPHandler,
                      HTTPDefaultErrorHandler, HTTPRedirectHandler,
                      HTTPErrorProcessor, HTTPSHandler, Request)
 
@@ -13,7 +13,7 @@ class CustomOpenerDirector(OpenerDirector):
         override my own HTTPRequest.timeout attribute.
         """
         # accept a URL or a Request object
-        if isinstance(full_url, basestring):
+        if isinstance(full_url, str):
             req = Request(full_url, data)
         else:
             req = full_url
@@ -22,7 +22,7 @@ class CustomOpenerDirector(OpenerDirector):
 
         # This is what I want to remove and the reason to override
         # req.timeout = timeout
-        protocol = req.get_type()
+        protocol = req.type
 
         # pre-process request
         meth_name = protocol+"_request"
@@ -53,13 +53,13 @@ def build_opener(director_klass, handlers):
     import types
 
     def isclass(obj):
-        return isinstance(obj, (types.ClassType, type))
+        return isinstance(obj, type)
 
     opener = director_klass()
     default_classes = [ProxyHandler, UnknownHandler, HTTPHandler,
                        HTTPDefaultErrorHandler, HTTPRedirectHandler,
                        HTTPErrorProcessor]
-    if hasattr(httplib, 'HTTPS'):
+    if hasattr(http.client, 'HTTPS'):
         default_classes.append(HTTPSHandler)
     skip = set()
     for klass in default_classes:

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import os
 import random
 
@@ -83,61 +84,65 @@ class FormAuthTest(GenericFormAuthTest):
     }
 
     @attr('smoke')
+    @pytest.mark.deprecated
     def test_found_credentials_post(self):
         self._scan(self.target_post_url, self.basic_config)
 
         # Assert the general results
         vulns = self.kb.get('form_auth', 'auth')
-        self.assertEquals(len(vulns), 1)
+        self.assertEqual(len(vulns), 1)
 
         vuln = vulns[0]
 
-        self.assertEquals(vuln.get_name(), 'Guessable credentials')
-        self.assertEquals(vuln.get_url().url_string, self.target_post_url)
-        self.assertEquals(vuln['user'], 'admin')
-        self.assertEquals(vuln['pass'], '1234')
+        self.assertEqual(vuln.get_name(), 'Guessable credentials')
+        self.assertEqual(vuln.get_url().url_string, self.target_post_url)
+        self.assertEqual(vuln['user'], 'admin')
+        self.assertEqual(vuln['pass'], '1234')
 
+    @pytest.mark.deprecated
     def test_found_credentials_get(self):
         self._scan(self.target_get_url, self.basic_config)
 
         # Assert the general results
         vulns = self.kb.get('form_auth', 'auth')
-        self.assertEquals(len(vulns), 1)
+        self.assertEqual(len(vulns), 1)
 
         vuln = vulns[0]
 
-        self.assertEquals(vuln.get_name(), 'Guessable credentials')
-        self.assertEquals(vuln.get_url().url_string, self.target_get_url)
-        self.assertEquals(vuln['user'], 'admin')
-        self.assertEquals(vuln['pass'], 'admin')
+        self.assertEqual(vuln.get_name(), 'Guessable credentials')
+        self.assertEqual(vuln.get_url().url_string, self.target_get_url)
+        self.assertEqual(vuln['user'], 'admin')
+        self.assertEqual(vuln['pass'], 'admin')
 
+    @pytest.mark.deprecated
     def test_found_credentials_password_only(self):
         self._scan(self.target_password_only_url, self.basic_config)
 
         # Assert the general results
         vulns = self.kb.get('form_auth', 'auth')
-        self.assertEquals(len(vulns), 1, vulns)
+        self.assertEqual(len(vulns), 1, vulns)
 
         vuln = vulns[0]
 
-        self.assertEquals(vuln.get_name(), 'Guessable credentials')
-        self.assertEquals(vuln.get_url().url_string,
+        self.assertEqual(vuln.get_name(), 'Guessable credentials')
+        self.assertEqual(vuln.get_url().url_string,
                           self.target_password_only_url)
-        self.assertEquals(vuln['user'], 'password-only-form')
-        self.assertEquals(vuln['pass'], '1234')
+        self.assertEqual(vuln['user'], 'password-only-form')
+        self.assertEqual(vuln['pass'], '1234')
 
+    @pytest.mark.deprecated
     def test_negative(self):
         self._scan(self.target_negative_url, self.negative_test)
 
         # Assert the general results
         vulns = self.kb.get('form_auth', 'auth')
-        self.assertEquals(len(vulns), 0)
+        self.assertEqual(len(vulns), 0)
 
 
 class TestFormAuthFailedLoginMatchTrivial(GenericFormAuthTest):
 
-    target_url = u'http://w3af.org/'
-    login_url = u'http://w3af.org/login'
+    target_url = 'http://w3af.org/'
+    login_url = 'http://w3af.org/login'
 
     FORM = ('<form method="POST" action="/login">'
             '    <input name="username" type="text" />'
@@ -173,25 +178,26 @@ class TestFormAuthFailedLoginMatchTrivial(GenericFormAuthTest):
 
     ]
 
+    @pytest.mark.deprecated
     def test_found_credentials(self):
         self._scan(self.target_url, self.basic_config)
 
         # Assert the general results
         vulns = self.kb.get('form_auth', 'auth')
-        self.assertEquals(len(vulns), 1)
+        self.assertEqual(len(vulns), 1)
 
         vuln = vulns[0]
 
-        self.assertEquals(vuln.get_name(), 'Guessable credentials')
-        self.assertEquals(vuln.get_url().url_string, self.login_url)
-        self.assertEquals(vuln['user'], 'admin')
-        self.assertEquals(vuln['pass'], 'admin')
+        self.assertEqual(vuln.get_name(), 'Guessable credentials')
+        self.assertEqual(vuln.get_url().url_string, self.login_url)
+        self.assertEqual(vuln['user'], 'admin')
+        self.assertEqual(vuln['pass'], 'admin')
 
 
 class TestFormAuthFailedLoginMatchWithStaticLargeResponse(GenericFormAuthTest):
 
-    target_url = u'http://w3af.org/'
-    login_url = u'http://w3af.org/login'
+    target_url = 'http://w3af.org/'
+    login_url = 'http://w3af.org/login'
 
     FORM = ('<form method="POST" action="/login">'
             '    <input name="username" type="text" />'
@@ -199,8 +205,8 @@ class TestFormAuthFailedLoginMatchWithStaticLargeResponse(GenericFormAuthTest):
             '    <input name="submit" type="submit" />'
             '</form>')
 
-    HEADER = 'abc <b>def</b> xyz'.join('\n' for _ in xrange(100))
-    FOOTER = 'abc <b>def</b> xyz'.join('\n' for _ in xrange(100))
+    HEADER = 'abc <b>def</b> xyz'.join('\n' for _ in range(100))
+    FOOTER = 'abc <b>def</b> xyz'.join('\n' for _ in range(100))
 
     def request_callback(self, request, uri, response_headers):
         response_headers['content-type'] = 'text/html'
@@ -234,25 +240,26 @@ class TestFormAuthFailedLoginMatchWithStaticLargeResponse(GenericFormAuthTest):
 
     ]
 
+    @pytest.mark.deprecated
     def test_found_credentials(self):
         self._scan(self.target_url, self.basic_config)
 
         # Assert the general results
         vulns = self.kb.get('form_auth', 'auth')
-        self.assertEquals(len(vulns), 1)
+        self.assertEqual(len(vulns), 1)
 
         vuln = vulns[0]
 
-        self.assertEquals(vuln.get_name(), 'Guessable credentials')
-        self.assertEquals(vuln.get_url().url_string, self.login_url)
-        self.assertEquals(vuln['user'], 'admin')
-        self.assertEquals(vuln['pass'], 'admin')
+        self.assertEqual(vuln.get_name(), 'Guessable credentials')
+        self.assertEqual(vuln.get_url().url_string, self.login_url)
+        self.assertEqual(vuln['user'], 'admin')
+        self.assertEqual(vuln['pass'], 'admin')
 
 
 class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponse(GenericFormAuthTest):
 
-    target_url = u'http://w3af.org/'
-    login_url = u'http://w3af.org/login'
+    target_url = 'http://w3af.org/'
+    login_url = 'http://w3af.org/login'
 
     FORM = ('<form method="POST" action="/login">'
             '    <input name="username" type="text" />'
@@ -260,8 +267,8 @@ class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponse(GenericFormAuthT
             '    <input name="submit" type="submit" />'
             '</form>')
 
-    HEADER = 'abc <b>def</b> xyz'.join('\n' for _ in xrange(100))
-    FOOTER = 'abc <b>def</b> xyz'.join('\n' for _ in xrange(100))
+    HEADER = 'abc <b>def</b> xyz'.join('\n' for _ in range(100))
+    FOOTER = 'abc <b>def</b> xyz'.join('\n' for _ in range(100))
 
     def request_callback(self, request, uri, response_headers):
         response_headers['content-type'] = 'text/html'
@@ -297,6 +304,7 @@ class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponse(GenericFormAuthT
 
     ]
 
+    @pytest.mark.deprecated
     def test_found_credentials(self):
         # Controls the numbers generated in the request_callback
         random.seed(1)
@@ -305,20 +313,20 @@ class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponse(GenericFormAuthT
 
         # Assert the general results
         vulns = self.kb.get('form_auth', 'auth')
-        self.assertEquals(len(vulns), 1)
+        self.assertEqual(len(vulns), 1)
 
         vuln = vulns[0]
 
-        self.assertEquals(vuln.get_name(), 'Guessable credentials')
-        self.assertEquals(vuln.get_url().url_string, self.login_url)
-        self.assertEquals(vuln['user'], 'admin')
-        self.assertEquals(vuln['pass'], 'admin')
+        self.assertEqual(vuln.get_name(), 'Guessable credentials')
+        self.assertEqual(vuln.get_url().url_string, self.login_url)
+        self.assertEqual(vuln['user'], 'admin')
+        self.assertEqual(vuln['pass'], 'admin')
 
 
 class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponseShortSuccess(GenericFormAuthTest):
 
-    target_url = u'http://w3af.org/'
-    login_url = u'http://w3af.org/login'
+    target_url = 'http://w3af.org/'
+    login_url = 'http://w3af.org/login'
 
     FORM = ('<form method="POST" action="/login">'
             '    <input name="username" type="text" />'
@@ -326,8 +334,8 @@ class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponseShortSuccess(Gene
             '    <input name="submit" type="submit" />'
             '</form>')
 
-    HEADER = 'abc <b>def</b> xyz'.join('\n' for _ in xrange(100))
-    FOOTER = 'abc <b>def</b> xyz'.join('\n' for _ in xrange(100))
+    HEADER = 'abc <b>def</b> xyz'.join('\n' for _ in range(100))
+    FOOTER = 'abc <b>def</b> xyz'.join('\n' for _ in range(100))
 
     def request_callback(self, request, uri, response_headers):
         response_headers['content-type'] = 'text/html'
@@ -361,6 +369,7 @@ class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponseShortSuccess(Gene
 
     ]
 
+    @pytest.mark.deprecated
     def test_found_credentials(self):
         # Controls the numbers generated in the request_callback
         random.seed(1)
@@ -369,14 +378,14 @@ class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponseShortSuccess(Gene
 
         # Assert the general results
         vulns = self.kb.get('form_auth', 'auth')
-        self.assertEquals(len(vulns), 1)
+        self.assertEqual(len(vulns), 1)
 
         vuln = vulns[0]
 
-        self.assertEquals(vuln.get_name(), 'Guessable credentials')
-        self.assertEquals(vuln.get_url().url_string, self.login_url)
-        self.assertEquals(vuln['user'], 'admin')
-        self.assertEquals(vuln['pass'], 'admin')
+        self.assertEqual(vuln.get_name(), 'Guessable credentials')
+        self.assertEqual(vuln.get_url().url_string, self.login_url)
+        self.assertEqual(vuln['user'], 'admin')
+        self.assertEqual(vuln['pass'], 'admin')
 
 
 captcha_count = 1
@@ -384,8 +393,8 @@ captcha_count = 1
 
 class TestFormAuthFailedLoginMatchWithCAPTCHA(GenericFormAuthTest):
 
-    target_url = u'http://w3af.org/'
-    login_url = u'http://w3af.org/login'
+    target_url = 'http://w3af.org/'
+    login_url = 'http://w3af.org/login'
 
     FORM = ('<form method="POST" action="/login">'
             '    <input name="username" type="text" />'
@@ -393,8 +402,8 @@ class TestFormAuthFailedLoginMatchWithCAPTCHA(GenericFormAuthTest):
             '    <input name="submit" type="submit" />'
             '</form>')
 
-    HEADER = 'abc <b>def</b> xyz'.join('\n' for _ in xrange(100))
-    FOOTER = 'abc <b>def</b> xyz'.join('\n' for _ in xrange(100))
+    HEADER = 'abc <b>def</b> xyz'.join('\n' for _ in range(100))
+    FOOTER = 'abc <b>def</b> xyz'.join('\n' for _ in range(100))
 
     def request_callback(self, request, uri, response_headers):
         response_headers['content-type'] = 'text/html'
@@ -437,6 +446,7 @@ class TestFormAuthFailedLoginMatchWithCAPTCHA(GenericFormAuthTest):
 
     ]
 
+    @pytest.mark.deprecated
     def test_not_found_credentials(self):
         # Controls the numbers generated in the request_callback
         random.seed(1)
@@ -445,4 +455,4 @@ class TestFormAuthFailedLoginMatchWithCAPTCHA(GenericFormAuthTest):
 
         # Assert the general results
         vulns = self.kb.get('form_auth', 'auth')
-        self.assertEquals(len(vulns), 0)
+        self.assertEqual(len(vulns), 0)

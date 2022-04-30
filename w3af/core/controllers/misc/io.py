@@ -18,12 +18,13 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from StringIO import StringIO
+from io import StringIO, BytesIO, IOBase
 
+from w3af.core.data.dc.utils.token import DataToken
 
-class NamedStringIO(StringIO, str):
+class NamedStringIO(StringIO):
     """
-    A file-like string.
+    A unicode file-like string.
     """
     def __new__(cls, *args, **kwargs):
         return super(NamedStringIO, cls).__new__(cls, args[0])
@@ -37,12 +38,24 @@ class NamedStringIO(StringIO, str):
     def name(self):
         return self._name
 
+class NamedBytesIO(BytesIO):
+    """
+    A binary file-like string.
+    """
+    def __new__(cls, *args, **kwargs):
+        return super(NamedBytesIO, cls).__new__(cls, args[0])
 
-FILE_ATTRS = ('read', 'write', 'name', 'seek', 'closed')
+    def __init__(self, the_bytes, name):
+        super(NamedBytesIO, self).__init__(the_bytes)
+        self._name = name
 
+    def __deepcopy__(self, memo):
+        return NamedBytesIO(self.getvalue(), self._name)
+
+    # pylint: disable=E0202
+    @property
+    def name(self):
+        return self._name
 
 def is_file_like(f):
-    # TODO: When w3af migrates to Python 3k this function will likely
-    # disappear as it'll be possible to do this check:
-    # >>> isinstance(f, io.IOBase)
-    return all(hasattr(f, at) for at in FILE_ATTRS)
+    return isinstance(f, IOBase) or (isinstance(f, DataToken) and isinstance(f.get_value(), IOBase))

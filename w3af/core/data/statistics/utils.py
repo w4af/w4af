@@ -1,10 +1,12 @@
+import math
+
 def median(numbers):
     numbers = sorted(numbers)
     center = len(numbers) / 2
     if len(numbers) % 2 == 0:
         return sum(numbers[center - 1:center + 1]) / 2.0
     else:
-        return numbers[center]
+        return numbers[math.floor(center)]
 
 
 def mean(data):
@@ -48,7 +50,7 @@ def drop_outliers(data_points, offset=1.0):
         if abs(i - _mean) <= _std_dev * offset:
             return i
 
-    return filter(_drop_outliers, data_points)
+    return list(filter(_drop_outliers, data_points))
 
 
 def outliers_modified_z_score(ys):

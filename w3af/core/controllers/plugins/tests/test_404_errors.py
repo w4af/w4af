@@ -18,9 +18,10 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import unittest
 
-from mock import patch, call
+from unittest.mock import patch, call
 
 import w3af.core.data.kb.knowledge_base as kb
 from w3af.core.data.url.HTTPResponse import HTTPResponse
@@ -41,6 +42,7 @@ class Test404Errors(unittest.TestCase):
     def tearDown(self):
         kb.kb.cleanup()
 
+    @pytest.mark.deprecated
     def test_handles_404_exception(self):
         body = '<meta test="user/pass"></script>'
         url = URL('http://www.w3af.com/')
@@ -61,6 +63,7 @@ class Test404Errors(unittest.TestCase):
             self.assertIn(ecall, om_mock.mock_calls)
             self.assertEqual(vulns, [])
 
+    @pytest.mark.deprecated
     def test_raises_other_exceptions(self):
         body = '<meta test="user/pass"></script>'
         url = URL('http://www.w3af.com/')
@@ -74,7 +77,7 @@ class Test404Errors(unittest.TestCase):
 
             try:
                 self.plugin.grep_wrapper(request, resp)
-            except Exception, e:
+            except Exception as e:
                 self.assertEqual(str(e), msg)
             else:
                 self.assertTrue(False, 'Expected exception, success found!')

@@ -20,6 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
 
 import msgpack
@@ -30,7 +31,7 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.dc.utils.token import DataToken
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
-
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 @attr('smoke')
 class TestHTTPRequest(unittest.TestCase):
@@ -42,6 +43,7 @@ class TestHTTPRequest(unittest.TestCase):
         self.assertEqual(req.get_full_url(), 'http://www.w3af.com/')
         self.assertEqual(req.get_uri().url_string, 'http://www.w3af.com/')
 
+    @pytest.mark.deprecated
     def test_to_from_dict(self):
         headers = Headers([('Host', 'www.w3af.com')])
         req = HTTPRequest(URL("http://www.w3af.com/"), data='spameggs',
@@ -50,10 +52,29 @@ class TestHTTPRequest(unittest.TestCase):
         msg = msgpack.dumps(req.to_dict())
         loaded_dict = msgpack.loads(msg)
         loaded_req = HTTPRequest.from_dict(loaded_dict)
+        self.assertEqual(loaded_req, req)
+        self.assertEqual(list(req.__dict__.values()),
+                         list(loaded_req.__dict__.values()))
 
-        self.assertEqual(req, loaded_req)
-        self.assertEqual(req.__dict__.values(),
-                         loaded_req.__dict__.values())
+    def test_with_no_data(self):
+        url = URL('http://www.w3af.com')
+        headers = Headers([('Host', 'www.w3af.com')])
+
+        req = HTTPRequest(url,
+                          data='',
+                          headers=headers,
+                          method='GET')
+
+        self.assertEqual(req.get_full_url(), 'http://www.w3af.com/')
+        self.assertEqual(req.get_uri().url_string, 'http://www.w3af.com/')
+        self.assertEqual(req.get_headers(), headers)
+        self.assertEqual(req.get_data(), '')
+
+        expected = '\r\n'.join(['GET http://www.w3af.com/ HTTP/1.1',
+                                'Host: www.w3af.com',
+                                '',
+                                ''])
+        self.assertEqual(req.dump(), expected)
 
     def test_to_dict_msgpack_with_data_token(self):
         token = DataToken('Host', 'www.w3af.com', ('Host',))
@@ -76,12 +97,12 @@ class TestHTTPRequest(unittest.TestCase):
         self.assertEqual(req.dump(), expected)
 
     def test_dump_case02(self):
-        expected = u'\r\n'.join([u'GET http://w3af.com/a/b/c.php HTTP/1.1',
-                                 u'Hola: Múndo',
-                                 u'',
-                                 u''])
+        expected = '\r\n'.join(['GET http://w3af.com/a/b/c.php HTTP/1.1',
+                                 'Hola: Múndo',
+                                 '',
+                                 ''])
         u = URL('http://w3af.com/a/b/c.php')
         headers = Headers([('Hola', 'Múndo')])
         req = HTTPRequest(u, headers=headers)
         
-        self.assertEqual(req.dump(), expected.encode('utf-8'))
+        self.assertEqual(smart_str_ignore(req.dump()), expected.encode('utf-8'))

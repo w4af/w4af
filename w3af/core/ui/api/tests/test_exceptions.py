@@ -21,12 +21,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import json
 
-from w3af.core.ui.api.tests.utils.api_unittest import APIUnitTest
+from w3af.core.ui.api.tests.utils.test_api import APIUnitTest
 from w3af.core.ui.api.tests.utils.test_profile import get_test_profile
 
 
 class ScanExceptionResourceTest(APIUnitTest):
-
+    @pytest.mark.deprecated
     def test_query_exceptions(self):
         profile, target_url = get_test_profile()
         data = {'scan_profile': profile,
@@ -57,13 +57,13 @@ class ScanExceptionResourceTest(APIUnitTest):
         self.assertIsInstance(exception['lineno'], int)
         exception.pop('lineno')
 
-        expected_summary = {u'exception': u'unittest',
-                            u'function_name': u'exception_creator',
-                            u'href': u'/scans/0/exceptions/0',
-                            u'id': 0,
+        expected_summary = {'exception': 'unittest',
+                            'function_name': 'exception_creator()',
+                            'href': '/scans/0/exceptions/0',
+                            'id': 0,
                             #u'lineno': 123,
-                            u'phase': u'phase',
-                            u'plugin': u'plugin'}
+                            'phase': 'phase',
+                            'plugin': 'plugin'}
         self.assertEqual(exception, expected_summary)
 
         response = self.app.get('/scans/%s/exceptions/0' % scan_id,

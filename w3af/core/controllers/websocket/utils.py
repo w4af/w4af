@@ -30,12 +30,12 @@ from w3af.core.controllers.exceptions import (BaseFrameworkException,
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.constants.websockets import (WEBSOCKET_UPGRADE_HEADERS,
                                                  DEFAULT_PROTOCOL_VERSION)
-
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 def gen_ws_sec_key():
     _set = string.ascii_uppercase + string.digits
     key = ''.join(random.choice(_set) for _ in range(16))
-    return base64.b64encode(key)
+    return base64.b64encode(smart_str_ignore(key))
 
 
 def build_ws_upgrade_request(web_socket_url, extra_headers=None,
@@ -54,7 +54,7 @@ def build_ws_upgrade_request(web_socket_url, extra_headers=None,
     request_headers = Headers()
     request_headers['Sec-WebSocket-Key'] = gen_ws_sec_key()
 
-    for key, value in WEBSOCKET_UPGRADE_HEADERS.items():
+    for key, value in list(WEBSOCKET_UPGRADE_HEADERS.items()):
         request_headers[key] = value
 
     if extra_headers is not None:

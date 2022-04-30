@@ -54,7 +54,7 @@ win2UnixMap = {
 
 def read(amt):
     res = ''
-    for i in xrange(amt):
+    for i in range(amt):
         res += msvcrt.getch()
     return res
 

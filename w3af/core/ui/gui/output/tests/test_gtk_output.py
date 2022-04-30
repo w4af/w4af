@@ -56,4 +56,4 @@ class TestGTKOutput(unittest.TestCase):
             ('error', '5'), ]
         )
 
-        self.assertEquals(set(messages), EXPECTED)
+        self.assertEqual(set(messages), EXPECTED)

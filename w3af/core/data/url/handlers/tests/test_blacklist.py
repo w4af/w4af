@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import re
 import unittest
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import httpretty
 
 import w3af.core.data.kb.config as cf
@@ -61,9 +61,9 @@ class TestBlacklistHandler(unittest.TestCase):
         blocked_url = URL(self.MOCK_URL)
         cf.cf.save('blacklist_http_request', [blocked_url])
         
-        opener = urllib2.build_opener(BlacklistHandler)
+        opener = urllib.request.build_opener(BlacklistHandler)
         
-        request = urllib2.Request(blocked_url.url_string)
+        request = urllib.request.Request(blocked_url.url_string)
         request.url_object = blocked_url
         response = opener.open(request)
         
@@ -77,9 +77,9 @@ class TestBlacklistHandler(unittest.TestCase):
                                body=self.MOCK_BODY,
                                status=200)
 
-        opener = urllib2.build_opener(BlacklistHandler)
+        opener = urllib.request.build_opener(BlacklistHandler)
         
-        request = urllib2.Request(self.MOCK_URL)
+        request = urllib.request.Request(self.MOCK_URL)
         request.url_object = URL(self.MOCK_URL)
         response = opener.open(request)
         

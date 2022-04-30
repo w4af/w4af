@@ -235,6 +235,7 @@ class HTMLParser(SGMLParser):
 
     def _handle_input_tag_inside_form(self, tag, tag_name, attrs):
         # We are working with the last form
+        assert(len(self._forms) > 0)
         form_params = self._forms[-1]
         form_params.add_field_by_attrs(attrs)
 

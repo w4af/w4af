@@ -24,7 +24,7 @@ import json
 import shlex
 import hashlib
 import tempfile
-import subprocess32 as subprocess
+import subprocess
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.constants.severity as severity
@@ -51,11 +51,11 @@ class retirejs(GrepPlugin):
     METHODS = ('GET',)
     HTTP_CODES = (200,)
 
-    RETIRE_CMD = 'retire -j --outputformat json --outputpath %s --jspath %s'
-    RETIRE_CMD_VERSION = 'retire --version'
-    RETIRE_CMD_JSREPO = 'retire -j --outputformat json --outputpath %s --jsrepo %s --jspath %s'
+    RETIRE_CMD = 'npx retire -j --outputformat json --outputpath %s --jspath %s'
+    RETIRE_CMD_VERSION = 'npx retire --version'
+    RETIRE_CMD_JSREPO = 'npx retire -j --outputformat json --outputpath %s --jsrepo %s --jspath %s'
 
-    RETIRE_VERSION = '2.'
+    RETIRE_VERSION = '3.'
 
     RETIRE_TIMEOUT = 5
     RETIRE_DB_URL = URL('https://raw.githubusercontent.com/RetireJS/retire.js/master/repository/jsrepository.json')
@@ -179,7 +179,7 @@ class retirejs(GrepPlugin):
                 http_response = self._uri_opener.GET(self._retire_db_url,
                                                      binary_response=True,
                                                      respect_size_limit=False)
-            except Exception, e:
+            except Exception as e:
                 msg = 'Failed to download the retirejs database: "%s"'
                 om.out.error(msg % e)
                 return
@@ -247,7 +247,7 @@ class retirejs(GrepPlugin):
             om.out.debug('Using a supported retirejs version')
             return True
 
-        om.out.error('Please install a supported retirejs version (2.x)')
+        om.out.error('Please install a supported retirejs version (3.x)')
         return False
 
     def _retire_smoke_test(self):
@@ -255,7 +255,7 @@ class retirejs(GrepPlugin):
                                                  suffix='.js',
                                                  delete=False,
                                                  dir=get_temp_dir())
-        check_file.write('')
+        check_file.write(b'')
         check_file.close()
 
         output_file = tempfile.NamedTemporaryFile(prefix='retirejs-output-',
@@ -269,7 +269,8 @@ class retirejs(GrepPlugin):
 
         process = subprocess.Popen(shlex.split(cmd),
                                    stdout=subprocess.DEVNULL,
-                                   stderr=subprocess.DEVNULL)
+                                   stderr=subprocess.DEVNULL,
+                                   close_fds=True)
 
         process.wait()
 
@@ -356,7 +357,7 @@ class retirejs(GrepPlugin):
                                          timeout=self.RETIRE_TIMEOUT)
         except subprocess.TimeoutExpired:
             # The process timed out and the returncode was never set
-            om.out.debug('The retirejs process for batch %s timeout out' % batch)
+            om.out.debug('The retirejs process for batch %s timed out' % batch)
             return dict()
 
         # retirejs will return code != 0 when a vulnerability is found
@@ -366,7 +367,8 @@ class retirejs(GrepPlugin):
             return dict()
 
         try:
-            file_contents = file(json_file.name).read()
+            with open(json_file.name) as fh:
+                file_contents = fh.read()
         except Exception:
             msg = 'Failed to read retirejs output file at %s'
             om.out.debug(msg % json_file.name)
@@ -376,7 +378,7 @@ class retirejs(GrepPlugin):
 
         try:
             json_doc = json.loads(file_contents)
-        except Exception, e:
+        except Exception as e:
             msg = ('Failed to parse retirejs output as JSON.'
                    ' Exception is "%s" and file content: "%s..."')
             args = (e, file_contents[:20])
@@ -492,11 +494,10 @@ class retirejs(GrepPlugin):
         """
         :return: Path to the retirejs binary
         """
-        paths_to_retire = which('retire')
 
         # The dependency check script guarantees that there will always be
         # at least one installation of the retirejs command.
-        return paths_to_retire[0]
+        return "npx retire"
 
     def get_options(self):
         """

@@ -39,7 +39,7 @@ def draw_queue_size_audit(scan_log_filename, scan):
         return
 
     print('Audit consumer queue size')
-    print('    Latest queue size value: %s' % auditor_queue_sizes[-1])
+    print(('    Latest queue size value: %s' % auditor_queue_sizes[-1]))
     print('')
 
     fig = plotille.Figure()
@@ -57,5 +57,5 @@ def draw_queue_size_audit(scan_log_filename, scan):
              auditor_queue_sizes,
              label='Audit')
 
-    print(fig.show())
+    print((fig.show()))
     print('')

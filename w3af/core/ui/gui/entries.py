@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import gtk
-import gobject
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 
 from w3af.core.ui.gui import history
 from w3af.core.ui.gui import helpers
@@ -58,6 +58,7 @@ class ValidatedEntry(gtk.Entry):
         self.connect("focus-out-event", self._setDefault)
         self.connect("key-release-event", self._key)
         self.orig_value = orig_value
+        self.default_value = orig_value
         self.esc_key = gtk.gdk.keyval_from_name("Escape")
         self.set_width_chars(50)
         
@@ -550,7 +551,7 @@ class TextDialog(gtk.Dialog):
     def __init__(self, title, tabnames=(), icon=None):
         super(TextDialog, self).__init__(title, None, gtk.DIALOG_MODAL,
              (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
-
+        self.modal = True
         self.textviews = []
         if len(tabnames) > 1:
             # The notebook
@@ -1042,7 +1043,7 @@ class ConfigOptions(gtk.VBox, Preferences):
 
     def _init_optionsView(self):
 
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             frame = gtk.Frame()
             label = gtk.Label('<b>%s</b>' % self.sections[section])
             label.set_use_markup(True)
@@ -1115,7 +1116,7 @@ class ConfigOptions(gtk.VBox, Preferences):
         """
         # check if all widgets are valid
         invalid = []
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             for opt in optList:
                 if hasattr(opt.widg, "is_valid"):
                     if not opt.widg.is_valid():
@@ -1132,11 +1133,11 @@ class ConfigOptions(gtk.VBox, Preferences):
             return
 
         # Get the value from the GTK widget and set it to the option object
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             for opt in optList:
                 opt.set_value(opt.widg.get_value())
 
-        for section, optList in self.options.items():
+        for section, optList in list(self.options.items()):
             for opt in optList:
                 opt.widg.save()
         self.w3af.mainwin.sb(_("Configuration saved successfully"))

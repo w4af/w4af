@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
-from lib.core.common import randomStr
+import re
+
+from lib.core.common import isListLike
+from lib.core.common import isTechniqueAvailable
 from lib.core.common import readInput
 from lib.core.common import safeSQLIdentificatorNaming
 from lib.core.common import unsafeSQLIdentificatorNaming
@@ -15,6 +18,7 @@ from lib.core.data import logger
 from lib.core.data import paths
 from lib.core.data import queries
 from lib.core.enums import DBMS
+from lib.core.enums import PAYLOAD
 from lib.core.exception import SqlmapMissingMandatoryOptionException
 from lib.core.exception import SqlmapNoneDataException
 from lib.core.exception import SqlmapUserQuitException
@@ -22,6 +26,8 @@ from lib.core.settings import CURRENT_DB
 from lib.utils.brute import columnExists
 from lib.utils.pivotdumptable import pivotDumpTable
 from plugins.generic.enumeration import Enumeration as GenericEnumeration
+from thirdparty import six
+from thirdparty.six.moves import zip as _zip
 
 class Enumeration(GenericEnumeration):
     def __init__(self):
@@ -43,12 +49,11 @@ class Enumeration(GenericEnumeration):
         logger.info(infoMsg)
 
         rootQuery = queries[DBMS.MAXDB].dbs
-        randStr = randomStr()
         query = rootQuery.inband.query
-        retVal = pivotDumpTable("(%s) AS %s" % (query, randStr), ['%s.schemaname' % randStr], blind=True)
+        retVal = pivotDumpTable("(%s) AS %s" % (query, kb.aliasName), ['%s.schemaname' % kb.aliasName], blind=True)
 
         if retVal:
-            kb.data.cachedDbs = retVal[0].values()[0]
+            kb.data.cachedDbs = next(six.itervalues(retVal[0]))
 
         if kb.data.cachedDbs:
             kb.data.cachedDbs.sort()
@@ -69,22 +74,22 @@ class Enumeration(GenericEnumeration):
         else:
             dbs = self.getDbs()
 
-        for db in filter(None, dbs):
+        for db in (_ for _ in dbs if _):
             dbs[dbs.index(db)] = safeSQLIdentificatorNaming(db)
 
         infoMsg = "fetching tables for database"
-        infoMsg += "%s: %s" % ("s" if len(dbs) > 1 else "", ", ".join(db if isinstance(db, basestring) else db[0] for db in sorted(dbs)))
+        infoMsg += "%s: %s" % ("s" if len(dbs) > 1 else "", ", ".join(db if isinstance(db, six.string_types) else db[0] for db in sorted(dbs)))
         logger.info(infoMsg)
 
         rootQuery = queries[DBMS.MAXDB].tables
 
         for db in dbs:
-            randStr = randomStr()
             query = rootQuery.inband.query % (("'%s'" % db) if db != "USER" else 'USER')
-            retVal = pivotDumpTable("(%s) AS %s" % (query, randStr), ['%s.tablename' % randStr], blind=True)
+            blind = not isTechniqueAvailable(PAYLOAD.TECHNIQUE.UNION)
+            retVal = pivotDumpTable("(%s) AS %s" % (query, kb.aliasName), ['%s.tablename' % kb.aliasName], blind=blind)
 
             if retVal:
-                for table in retVal[0].values()[0]:
+                for table in list(retVal[0].values())[0]:
                     if db not in kb.data.cachedTables:
                         kb.data.cachedTables[db] = [table]
                     else:
@@ -108,7 +113,7 @@ class Enumeration(GenericEnumeration):
             conf.db = self.getCurrentDb()
 
         elif conf.db is not None:
-            if  ',' in conf.db:
+            if ',' in conf.db:
                 errMsg = "only one database name is allowed when enumerating "
                 errMsg += "the tables' columns"
                 raise SqlmapMissingMandatoryOptionException(errMsg)
@@ -120,8 +125,8 @@ class Enumeration(GenericEnumeration):
         else:
             colList = []
 
-        if conf.excludeCol:
-            colList = [_ for _ in colList if _ not in conf.excludeCol.split(',')]
+        if conf.exclude:
+            colList = [_ for _ in colList if re.search(conf.exclude, _, re.I) is None]
 
         for col in colList:
             colList[colList.index(col)] = safeSQLIdentificatorNaming(col)
@@ -132,9 +137,9 @@ class Enumeration(GenericEnumeration):
             self.getTables()
 
             if len(kb.data.cachedTables) > 0:
-                tblList = kb.data.cachedTables.values()
+                tblList = list(kb.data.cachedTables.values())
 
-                if isinstance(tblList[0], (set, tuple, list)):
+                if tblList and isListLike(tblList[0]):
                     tblList = tblList[0]
             else:
                 errMsg = "unable to retrieve the tables "
@@ -184,9 +189,7 @@ class Enumeration(GenericEnumeration):
         rootQuery = queries[DBMS.MAXDB].columns
 
         for tbl in tblList:
-            if conf.db is not None and len(kb.data.cachedColumns) > 0 \
-              and conf.db in kb.data.cachedColumns and tbl in \
-              kb.data.cachedColumns[conf.db]:
+            if conf.db is not None and len(kb.data.cachedColumns) > 0 and conf.db in kb.data.cachedColumns and tbl in kb.data.cachedColumns[conf.db]:
                 infoMsg = "fetched tables' columns on "
                 infoMsg += "database '%s'" % unsafeSQLIdentificatorNaming(conf.db)
                 logger.info(infoMsg)
@@ -195,7 +198,7 @@ class Enumeration(GenericEnumeration):
 
             if dumpMode and colList:
                 table = {}
-                table[safeSQLIdentificatorNaming(tbl)] = dict((_, None) for _ in colList)
+                table[safeSQLIdentificatorNaming(tbl, True)] = dict((_, None) for _ in colList)
                 kb.data.cachedColumns[safeSQLIdentificatorNaming(conf.db)] = table
                 continue
 
@@ -204,15 +207,16 @@ class Enumeration(GenericEnumeration):
             infoMsg += "on database '%s'" % unsafeSQLIdentificatorNaming(conf.db)
             logger.info(infoMsg)
 
-            randStr = randomStr()
+            blind = not isTechniqueAvailable(PAYLOAD.TECHNIQUE.UNION)
+
             query = rootQuery.inband.query % (unsafeSQLIdentificatorNaming(tbl), ("'%s'" % unsafeSQLIdentificatorNaming(conf.db)) if unsafeSQLIdentificatorNaming(conf.db) != "USER" else 'USER')
-            retVal = pivotDumpTable("(%s) AS %s" % (query, randStr), ['%s.columnname' % randStr, '%s.datatype' % randStr, '%s.len' % randStr], blind=True)
+            retVal = pivotDumpTable("(%s) AS %s" % (query, kb.aliasName), ['%s.columnname' % kb.aliasName, '%s.datatype' % kb.aliasName, '%s.len' % kb.aliasName], blind=blind)
 
             if retVal:
                 table = {}
                 columns = {}
 
-                for columnname, datatype, length in zip(retVal[0]["%s.columnname" % randStr], retVal[0]["%s.datatype" % randStr], retVal[0]["%s.len" % randStr]):
+                for columnname, datatype, length in _zip(retVal[0]["%s.columnname" % kb.aliasName], retVal[0]["%s.datatype" % kb.aliasName], retVal[0]["%s.len" % kb.aliasName]):
                     columns[safeSQLIdentificatorNaming(columnname)] = "%s(%s)" % (datatype, length)
 
                 table[tbl] = columns
@@ -220,7 +224,7 @@ class Enumeration(GenericEnumeration):
 
         return kb.data.cachedColumns
 
-    def getPrivileges(self, *args):
+    def getPrivileges(self, *args, **kwargs):
         warnMsg = "on SAP MaxDB it is not possible to enumerate the user privileges"
         logger.warn(warnMsg)
 
@@ -233,3 +237,9 @@ class Enumeration(GenericEnumeration):
     def getHostname(self):
         warnMsg = "on SAP MaxDB it is not possible to enumerate the hostname"
         logger.warn(warnMsg)
+
+    def getStatements(self):
+        warnMsg = "on SAP MaxDB it is not possible to enumerate the SQL statements"
+        logger.warn(warnMsg)
+
+        return []
