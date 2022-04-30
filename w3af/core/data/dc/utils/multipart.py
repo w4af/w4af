@@ -94,7 +94,7 @@ def get_boundary():
 
     :return:
     """
-    return 'b08c02-53d780-e2bc43-1d5278-a3c0d9-a5c0d9'
+    return b'b08c02-53d780-e2bc43-1d5278-a3c0d9-a5c0d9'
 
 
 def multipart_encode(_vars, files, boundary=None, _buffer=None):
@@ -102,26 +102,26 @@ def multipart_encode(_vars, files, boundary=None, _buffer=None):
         boundary = get_boundary()
 
     if _buffer is None:
-        _buffer = ''
+        _buffer = b''
 
     for key, value in _vars:
-        _buffer += '--%s\r\n' % boundary
-        _buffer += 'Content-Disposition: form-data; name="%s"' % key
-        _buffer += '\r\n\r\n' + value + '\r\n'
+        _buffer += b'--%s\r\n' % boundary
+        _buffer += b'Content-Disposition: form-data; name="%s"' % smart_str(key)
+        _buffer += b'\r\n\r\n' + smart_str(value) + b'\r\n'
 
     for key, fd in files:
         fd.seek(0)
         filename = fd.name.split(os.path.sep)[-1]
 
         guessed_mime = mimetypes.guess_type(filename)[0]
-        content_type = guessed_mime or 'application/octet-stream'
+        content_type = guessed_mime or b'application/octet-stream'
         args = (smart_str(key, errors='ignore'), smart_str(filename, errors='ignore'))
 
-        _buffer += '--%s\r\n' % boundary
-        _buffer += 'Content-Disposition: form-data; name="%s"; filename="%s"\r\n' % args
-        _buffer += 'Content-Type: %s\r\n' % content_type
-        _buffer += '\r\n%s\r\n' % fd.read()
+        _buffer += b'--%s\r\n' % boundary
+        _buffer += b'Content-Disposition: form-data; name="%s"; filename="%s"\r\n' % args
+        _buffer += b'Content-Type: %s\r\n' % smart_str(content_type)
+        _buffer += b'\r\n%s\r\n' % fd.read()
 
-    _buffer += '--%s--\r\n\r\n' % boundary
+    _buffer += b'--%s--\r\n\r\n' % boundary
 
     return boundary, _buffer

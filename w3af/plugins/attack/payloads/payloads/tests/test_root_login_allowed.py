@@ -33,4 +33,4 @@ class test_root_login_allowed(PayloadTestHelper):
     @pytest.mark.deprecated
     def test_root_login_allowed(self):
         result = exec_payload(self.shell, 'root_login_allowed', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

@@ -34,7 +34,7 @@ class TestGetVersion(unittest.TestCase):
 
     @pytest.mark.deprecated
     def test_minimal(self):
-        self.assertTrue(get_minimalistic_version().startswith('1'))
+        self.assertTrue(get_minimalistic_version().startswith('2019'))
 
     def test_dict(self):
         version_dict = get_w3af_version_as_dict()

@@ -50,7 +50,7 @@ class TestCreateFuzzableRequestFromParts(unittest.TestCase):
         self.assertEqual(fr.get_url(), self.url)
         self.assertEqual(fr.get_headers(), Headers())
         self.assertEqual(fr.get_method(), 'GET')
-        self.assertIsInstance(fr.get_raw_data(), KeyValueContainer)
+        self.assertIsNone(fr.get_raw_data())
 
     def test_raw_url(self):
         raw_url = 'http://w3af.org/foo/'
@@ -59,7 +59,7 @@ class TestCreateFuzzableRequestFromParts(unittest.TestCase):
         self.assertEqual(fr.get_url().url_string, raw_url)
         self.assertEqual(fr.get_headers(), Headers())
         self.assertEqual(fr.get_method(), 'GET')
-        self.assertIsInstance(fr.get_raw_data(), KeyValueContainer)
+        self.assertIsNone(fr.get_raw_data())
 
     def test_headers(self):
         hdr = Headers([('foo', 'bar')])
@@ -68,7 +68,7 @@ class TestCreateFuzzableRequestFromParts(unittest.TestCase):
         self.assertEqual(fr.get_url(), self.url)
         self.assertEqual(fr.get_headers(), hdr)
         self.assertEqual(fr.get_method(), 'GET')
-        self.assertIsInstance(fr.get_raw_data(), KeyValueContainer)
+        self.assertIsNone(fr.get_raw_data())
 
     def test_headers_method(self):
         hdr = Headers([('foo', 'bar')])
@@ -77,7 +77,7 @@ class TestCreateFuzzableRequestFromParts(unittest.TestCase):
         self.assertEqual(fr.get_url(), self.url)
         self.assertEqual(fr.get_headers(), hdr)
         self.assertEqual(fr.get_method(), 'PUT')
-        self.assertIsInstance(fr.get_raw_data(), KeyValueContainer)
+        self.assertIsNone(fr.get_raw_data())
 
     def test_simple_post(self):
         post_data = 'a=b&d=3'
@@ -141,7 +141,7 @@ class TestCreateFuzzableRequestFromParts(unittest.TestCase):
 
     def test_multipart_post(self):
         boundary, post_data = multipart_encode([('a', 'bcd'), ], [])
-        multipart_boundary = 'multipart/form-data; boundary=%s'
+        multipart_boundary = b'multipart/form-data; boundary=%s'
 
         headers = Headers([('content-length', str(len(post_data))),
                            ('content-type', multipart_boundary % boundary)])
@@ -208,4 +208,4 @@ class TestCreateFuzzableRequestRequest(unittest.TestCase):
         self.assertEqual(fr.get_headers(), hdr)
         self.assertEqual(fr.get_method(), 'GET')
         self.assertIsInstance(fr, FuzzableRequest)
-        self.assertIsInstance(fr.get_raw_data(), KeyValueContainer)
+        self.assertIsNone(fr.get_raw_data())

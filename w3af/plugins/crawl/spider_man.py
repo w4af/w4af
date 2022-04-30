@@ -85,7 +85,7 @@ class spider_man(CrawlPlugin):
                                        plugin=self,
                                        target_domain=fuzzable_request.get_url().get_domain(),
                                        name='SpiderManProxyThread')
-        except ProxyException, proxy_exc:
+        except ProxyException as proxy_exc:
             om.out.error('%s' % proxy_exc)
         
         else:
@@ -195,7 +195,7 @@ class LoggingHandler(ProxyHandler):
 
                 # Send the request to the remote web server
                 http_response = self._send_http_request(http_request, grep=grep)
-        except Exception, e:
+        except Exception as e:
             trace = str(traceback.format_exc())
             http_response = self._create_error_response(http_request,
                                                         None,
@@ -233,12 +233,13 @@ class LoggingHandler(ProxyHandler):
             ('Content-type', 'image/vnd.microsoft.icon'),
         ))
 
-        http_response = HTTPResponse(200,
-                                     file(favicon, 'rb').read(),
-                                     headers,
-                                     http_response.get_uri(),
-                                     http_response.get_uri(),
-                                     msg='Ok')
+        with open(favicon, 'rb') as favicon_fh:
+            http_response = HTTPResponse(200,
+                                        favicon_fh.read(),
+                                        headers,
+                                        http_response.get_uri(),
+                                        http_response.get_uri(),
+                                        msg='Ok')
         return http_response
 
     def _is_terminate_request(self, http_request):

@@ -59,7 +59,7 @@ def draw_connection_pool_wait(scan_log_filename, scan):
     fig.plot(connection_pool_timestamps,
              connection_pool_waits)
 
-    print(fig.show())
+    print((fig.show()))
     print('')
     print('')
 
@@ -80,6 +80,6 @@ def draw_connection_pool_wait(scan_log_filename, scan):
 
     print('Time waiting for available TCP/IP connection')
     print('')
-    print(plotille.hist(connection_pool_waits, bins=25))
+    print((plotille.hist(connection_pool_waits, bins=25)))
     print('')
     print('')

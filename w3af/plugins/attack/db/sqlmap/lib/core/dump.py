@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
-import cgi
 import hashlib
 import os
 import re
@@ -17,16 +16,23 @@ from lib.core.common import Backend
 from lib.core.common import checkFile
 from lib.core.common import dataToDumpFile
 from lib.core.common import dataToStdout
+from lib.core.common import filterNone
 from lib.core.common import getSafeExString
-from lib.core.common import getUnicode
 from lib.core.common import isListLike
+from lib.core.common import isNoneValue
 from lib.core.common import normalizeUnicode
 from lib.core.common import openFile
 from lib.core.common import prioritySortColumns
 from lib.core.common import randomInt
 from lib.core.common import safeCSValue
-from lib.core.common import unicodeencode
+from lib.core.common import unArrayizeValue
 from lib.core.common import unsafeSQLIdentificatorNaming
+from lib.core.compat import xrange
+from lib.core.convert import getBytes
+from lib.core.convert import getConsoleLength
+from lib.core.convert import getText
+from lib.core.convert import getUnicode
+from lib.core.convert import htmlEscape
 from lib.core.data import conf
 from lib.core.data import kb
 from lib.core.data import logger
@@ -36,8 +42,8 @@ from lib.core.enums import CONTENT_TYPE
 from lib.core.enums import DBMS
 from lib.core.enums import DUMP_FORMAT
 from lib.core.exception import SqlmapGenericException
-from lib.core.exception import SqlmapValueException
 from lib.core.exception import SqlmapSystemException
+from lib.core.exception import SqlmapValueException
 from lib.core.replication import Replication
 from lib.core.settings import DUMP_FILE_BUFFER_SIZE
 from lib.core.settings import HTML_DUMP_CSS_STYLE
@@ -46,10 +52,12 @@ from lib.core.settings import METADB_SUFFIX
 from lib.core.settings import MIN_BINARY_DISK_DUMP_SIZE
 from lib.core.settings import TRIM_STDOUT_DUMP_SIZE
 from lib.core.settings import UNICODE_ENCODING
+from lib.core.settings import UNSAFE_DUMP_FILEPATH_REPLACEMENT
+from lib.core.settings import VERSION_STRING
 from lib.core.settings import WINDOWS_RESERVED_NAMES
+from lib.utils.safe2bin import safechardecode
+from thirdparty import six
 from thirdparty.magic import magic
-
-from extra.safe2bin.safe2bin import safechardecode
 
 class Dump(object):
     """
@@ -63,26 +71,27 @@ class Dump(object):
         self._lock = threading.Lock()
 
     def _write(self, data, newline=True, console=True, content_type=None):
-        if conf.api:
-            dataToStdout(data, content_type=content_type, status=CONTENT_STATUS.COMPLETE)
-            return
-
         text = "%s%s" % (data, "\n" if newline else " ")
 
-        if console:
+        if conf.api:
+            dataToStdout(data, contentType=content_type, status=CONTENT_STATUS.COMPLETE)
+
+        elif console:
             dataToStdout(text)
 
-        if kb.get("multiThreadMode"):
-            self._lock.acquire()
+        if self._outputFP:
+            multiThreadMode = kb.multiThreadMode
+            if multiThreadMode:
+                self._lock.acquire()
 
-        try:
-            self._outputFP.write(text)
-        except IOError, ex:
-            errMsg = "error occurred while writing to log file ('%s')" % getSafeExString(ex)
-            raise SqlmapGenericException(errMsg)
+            try:
+                self._outputFP.write(text)
+            except IOError as ex:
+                errMsg = "error occurred while writing to log file ('%s')" % getSafeExString(ex)
+                raise SqlmapGenericException(errMsg)
 
-        if kb.get("multiThreadMode"):
-            self._lock.release()
+            if multiThreadMode:
+                self._lock.release()
 
         kb.dataOutputFlag = True
 
@@ -94,25 +103,26 @@ class Dump(object):
                 pass
 
     def setOutputFile(self):
+        if conf.noLogging:
+            self._outputFP = None
+            return
+
         self._outputFile = os.path.join(conf.outputPath, "log")
         try:
             self._outputFP = openFile(self._outputFile, "ab" if not conf.flushSession else "wb")
-        except IOError, ex:
+        except IOError as ex:
             errMsg = "error occurred while opening log file ('%s')" % getSafeExString(ex)
             raise SqlmapGenericException(errMsg)
-
-    def getOutputFile(self):
-        return self._outputFile
 
     def singleString(self, data, content_type=None):
         self._write(data, content_type=content_type)
 
     def string(self, header, data, content_type=None, sort=True):
-        kb.stickyLevel = None
-
         if conf.api:
             self._write(data, content_type=content_type)
-            return
+
+        if isListLike(data) and len(data) == 1:
+            data = unArrayizeValue(data)
 
         if isListLike(data):
             self.lister(header, data, content_type, sort)
@@ -131,28 +141,25 @@ class Dump(object):
             if "\n" in _:
                 self._write("%s:\n---\n%s\n---" % (header, _))
             else:
-                self._write("%s:    %s" % (header, ("'%s'" % _) if isinstance(data, basestring) else _))
-        else:
-            self._write("%s:\tNone" % header)
+                self._write("%s: %s" % (header, ("'%s'" % _) if isinstance(data, six.string_types) else _))
 
     def lister(self, header, elements, content_type=None, sort=True):
         if elements and sort:
             try:
                 elements = set(elements)
                 elements = list(elements)
-                elements.sort(key=lambda x: x.lower() if isinstance(x, basestring) else x)
+                elements.sort(key=lambda _: _.lower() if hasattr(_, "lower") else _)
             except:
                 pass
 
         if conf.api:
             self._write(elements, content_type=content_type)
-            return
 
         if elements:
             self._write("%s [%d]:" % (header, len(elements)))
 
         for element in elements:
-            if isinstance(element, basestring):
+            if isinstance(element, six.string_types):
                 self._write("[*] %s" % element)
             elif isListLike(element):
                 self._write("[*] " + ", ".join(getUnicode(e) for e in element))
@@ -167,10 +174,10 @@ class Dump(object):
         self.string("current user", data, content_type=CONTENT_TYPE.CURRENT_USER)
 
     def currentDb(self, data):
-        if Backend.isDbms(DBMS.MAXDB):
-            self.string("current database (no practical usage on %s)" % Backend.getIdentifiedDbms(), data, content_type=CONTENT_TYPE.CURRENT_DB)
-        elif Backend.getIdentifiedDbms() in (DBMS.ORACLE, DBMS.PGSQL, DBMS.HSQLDB):
-            self.string("current schema (equivalent to database on %s)" % Backend.getIdentifiedDbms(), data, content_type=CONTENT_TYPE.CURRENT_DB)
+        if Backend.getIdentifiedDbms() in (DBMS.ORACLE, DBMS.PGSQL, DBMS.HSQLDB, DBMS.H2, DBMS.MONETDB, DBMS.VERTICA, DBMS.CRATEDB, DBMS.CACHE, DBMS.FRONTBASE):
+            self.string("current database (equivalent to schema on %s)" % Backend.getIdentifiedDbms(), data, content_type=CONTENT_TYPE.CURRENT_DB)
+        elif Backend.getIdentifiedDbms() in (DBMS.ALTIBASE, DBMS.DB2, DBMS.MIMERSQL, DBMS.MAXDB, DBMS.VIRTUOSO):
+            self.string("current database (equivalent to owner on %s)" % Backend.getIdentifiedDbms(), data, content_type=CONTENT_TYPE.CURRENT_DB)
         else:
             self.string("current database", data, content_type=CONTENT_TYPE.CURRENT_DB)
 
@@ -183,6 +190,9 @@ class Dump(object):
     def users(self, users):
         self.lister("database management system users", users, content_type=CONTENT_TYPE.USERS)
 
+    def statements(self, statements):
+        self.lister("SQL statements", statements, content_type=CONTENT_TYPE.STATEMENTS)
+
     def userSettings(self, header, userSettings, subHeader, content_type=None):
         self._areAdmins = set()
 
@@ -190,20 +200,19 @@ class Dump(object):
             self._areAdmins = userSettings[1]
             userSettings = userSettings[0]
 
-        users = userSettings.keys()
-        users.sort(key=lambda x: x.lower() if isinstance(x, basestring) else x)
+        users = [_ for _ in userSettings.keys() if _ is not None]
+        users.sort(key=lambda _: _.lower() if hasattr(_, "lower") else _)
 
         if conf.api:
             self._write(userSettings, content_type=content_type)
-            return
 
         if userSettings:
             self._write("%s:" % header)
 
         for user in users:
-            settings = userSettings[user]
+            settings = filterNone(userSettings[user])
 
-            if settings is None:
+            if isNoneValue(settings):
                 stringSettings = ""
             else:
                 stringSettings = " [%d]:" % len(settings)
@@ -229,7 +238,6 @@ class Dump(object):
         if isinstance(dbTables, dict) and len(dbTables) > 0:
             if conf.api:
                 self._write(dbTables, content_type=CONTENT_TYPE.TABLES)
-                return
 
             maxlength = 0
 
@@ -238,14 +246,14 @@ class Dump(object):
                     if table and isListLike(table):
                         table = table[0]
 
-                    maxlength = max(maxlength, len(unsafeSQLIdentificatorNaming(normalizeUnicode(table) or unicode(table))))
+                    maxlength = max(maxlength, getConsoleLength(unsafeSQLIdentificatorNaming(getUnicode(table))))
 
             lines = "-" * (int(maxlength) + 2)
 
             for db, tables in dbTables.items():
-                tables.sort()
+                tables = sorted(filter(None, tables))
 
-                self._write("Database: %s" % unsafeSQLIdentificatorNaming(db) if db else "Current database")
+                self._write("Database: %s" % unsafeSQLIdentificatorNaming(db) if db and METADB_SUFFIX not in db else "<current>")
 
                 if len(tables) == 1:
                     self._write("[1 table]")
@@ -259,7 +267,7 @@ class Dump(object):
                         table = table[0]
 
                     table = unsafeSQLIdentificatorNaming(table)
-                    blank = " " * (maxlength - len(normalizeUnicode(table) or unicode(table)))
+                    blank = " " * (maxlength - getConsoleLength(getUnicode(table)))
                     self._write("| %s%s |" % (table, blank))
 
                 self._write("+%s+\n" % lines)
@@ -272,7 +280,6 @@ class Dump(object):
         if isinstance(tableColumns, dict) and len(tableColumns) > 0:
             if conf.api:
                 self._write(tableColumns, content_type=content_type)
-                return
 
             for db, tables in tableColumns.items():
                 if not db:
@@ -284,8 +291,8 @@ class Dump(object):
 
                     colType = None
 
-                    colList = columns.keys()
-                    colList.sort(key=lambda x: x.lower() if isinstance(x, basestring) else x)
+                    colList = list(columns.keys())
+                    colList.sort(key=lambda _: _.lower() if hasattr(_, "lower") else _)
 
                     for column in colList:
                         colType = columns[column]
@@ -301,7 +308,7 @@ class Dump(object):
                         maxlength2 = max(maxlength2, len("TYPE"))
                         lines2 = "-" * (maxlength2 + 2)
 
-                    self._write("Database: %s\nTable: %s" % (unsafeSQLIdentificatorNaming(db) if db else "Current database", unsafeSQLIdentificatorNaming(table)))
+                    self._write("Database: %s\nTable: %s" % (unsafeSQLIdentificatorNaming(db) if db and METADB_SUFFIX not in db else "<current>", unsafeSQLIdentificatorNaming(table)))
 
                     if len(columns) == 1:
                         self._write("[1 column]")
@@ -346,7 +353,6 @@ class Dump(object):
         if isinstance(dbTables, dict) and len(dbTables) > 0:
             if conf.api:
                 self._write(dbTables, content_type=CONTENT_TYPE.COUNT)
-                return
 
             maxlength1 = len("Table")
             maxlength2 = len("Entries")
@@ -354,10 +360,10 @@ class Dump(object):
             for ctables in dbTables.values():
                 for tables in ctables.values():
                     for table in tables:
-                        maxlength1 = max(maxlength1, len(normalizeUnicode(table) or unicode(table)))
+                        maxlength1 = max(maxlength1, getConsoleLength(getUnicode(table)))
 
             for db, counts in dbTables.items():
-                self._write("Database: %s" % unsafeSQLIdentificatorNaming(db) if db else "Current database")
+                self._write("Database: %s" % unsafeSQLIdentificatorNaming(db) if db and METADB_SUFFIX not in db else "<current>")
 
                 lines1 = "-" * (maxlength1 + 2)
                 blank1 = " " * (maxlength1 - len("Table"))
@@ -368,7 +374,7 @@ class Dump(object):
                 self._write("| Table%s | Entries%s |" % (blank1, blank2))
                 self._write("+%s+%s+" % (lines1, lines2))
 
-                sortedCounts = counts.keys()
+                sortedCounts = list(counts.keys())
                 sortedCounts.sort(reverse=True)
 
                 for count in sortedCounts:
@@ -377,10 +383,10 @@ class Dump(object):
                     if count is None:
                         count = "Unknown"
 
-                    tables.sort(key=lambda x: x.lower() if isinstance(x, basestring) else x)
+                    tables.sort(key=lambda _: _.lower() if hasattr(_, "lower") else _)
 
                     for table in tables:
-                        blank1 = " " * (maxlength1 - len(normalizeUnicode(table) or unicode(table)))
+                        blank1 = " " * (maxlength1 - getConsoleLength(getUnicode(table)))
                         blank2 = " " * (maxlength2 - len(str(count)))
                         self._write("| %s%s | %d%s |" % (table, blank1, count, blank2))
 
@@ -405,35 +411,37 @@ class Dump(object):
 
         if conf.api:
             self._write(tableValues, content_type=CONTENT_TYPE.DUMP_TABLE)
-            return
 
-        dumpDbPath = os.path.join(conf.dumpPath, unsafeSQLIdentificatorNaming(db))
+        try:
+            dumpDbPath = os.path.join(conf.dumpPath, unsafeSQLIdentificatorNaming(db))
+        except UnicodeError:
+            try:
+                dumpDbPath = os.path.join(conf.dumpPath, normalizeUnicode(unsafeSQLIdentificatorNaming(db)))
+            except (UnicodeError, OSError):
+                tempDir = tempfile.mkdtemp(prefix="sqlmapdb")
+                warnMsg = "currently unable to use regular dump directory. "
+                warnMsg += "Using temporary directory '%s' instead" % tempDir
+                logger.warn(warnMsg)
+
+                dumpDbPath = tempDir
 
         if conf.dumpFormat == DUMP_FORMAT.SQLITE:
             replication = Replication(os.path.join(conf.dumpPath, "%s.sqlite3" % unsafeSQLIdentificatorNaming(db)))
         elif conf.dumpFormat in (DUMP_FORMAT.CSV, DUMP_FORMAT.HTML):
             if not os.path.isdir(dumpDbPath):
                 try:
-                    os.makedirs(dumpDbPath, 0755)
+                    os.makedirs(dumpDbPath)
                 except:
                     warnFile = True
 
-                    _ = unicodeencode(re.sub(r"[^\w]", "_", unsafeSQLIdentificatorNaming(db)))
-                    dumpDbPath = os.path.join(conf.dumpPath, "%s-%s" % (_, hashlib.md5(unicodeencode(db)).hexdigest()[:8]))
+                    _ = re.sub(r"[^\w]", UNSAFE_DUMP_FILEPATH_REPLACEMENT, unsafeSQLIdentificatorNaming(db))
+                    dumpDbPath = os.path.join(conf.dumpPath, "%s-%s" % (_, hashlib.md5(getBytes(db)).hexdigest()[:8]))
 
                     if not os.path.isdir(dumpDbPath):
                         try:
-                            os.makedirs(dumpDbPath, 0755)
-                        except Exception, ex:
-                            try:
-                                tempDir = tempfile.mkdtemp(prefix="sqlmapdb")
-                            except IOError, _:
-                                errMsg = "unable to write to the temporary directory ('%s'). " % _
-                                errMsg += "Please make sure that your disk is not full and "
-                                errMsg += "that you have sufficient write permissions to "
-                                errMsg += "create temporary files and/or directories"
-                                raise SqlmapSystemException(errMsg)
-
+                            os.makedirs(dumpDbPath)
+                        except Exception as ex:
+                            tempDir = tempfile.mkdtemp(prefix="sqlmapdb")
                             warnMsg = "unable to create dump directory "
                             warnMsg += "'%s' (%s). " % (dumpDbPath, getSafeExString(ex))
                             warnMsg += "Using temporary directory '%s' instead" % tempDir
@@ -441,7 +449,7 @@ class Dump(object):
 
                             dumpDbPath = tempDir
 
-            dumpFileName = os.path.join(dumpDbPath, "%s.%s" % (unsafeSQLIdentificatorNaming(table), conf.dumpFormat.lower()))
+            dumpFileName = os.path.join(dumpDbPath, re.sub(r'[\\/]', UNSAFE_DUMP_FILEPATH_REPLACEMENT, "%s.%s" % (unsafeSQLIdentificatorNaming(table), conf.dumpFormat.lower())))
             if not checkFile(dumpFileName, False):
                 try:
                     openFile(dumpFileName, "w+b").close()
@@ -450,10 +458,10 @@ class Dump(object):
                 except:
                     warnFile = True
 
-                    _ = re.sub(r"[^\w]", "_", normalizeUnicode(unsafeSQLIdentificatorNaming(table)))
+                    _ = re.sub(r"[^\w]", UNSAFE_DUMP_FILEPATH_REPLACEMENT, normalizeUnicode(unsafeSQLIdentificatorNaming(table)))
                     if len(_) < len(table) or IS_WIN and table.upper() in WINDOWS_RESERVED_NAMES:
-                        _ = unicodeencode(re.sub(r"[^\w]", "_", unsafeSQLIdentificatorNaming(table)))
-                        dumpFileName = os.path.join(dumpDbPath, "%s-%s.%s" % (_, hashlib.md5(unicodeencode(table)).hexdigest()[:8], conf.dumpFormat.lower()))
+                        _ = re.sub(r"[^\w]", UNSAFE_DUMP_FILEPATH_REPLACEMENT, unsafeSQLIdentificatorNaming(table))
+                        dumpFileName = os.path.join(dumpDbPath, "%s-%s.%s" % (_, hashlib.md5(getBytes(table)).hexdigest()[:8], conf.dumpFormat.lower()))
                     else:
                         dumpFileName = os.path.join(dumpDbPath, "%s.%s" % (_, conf.dumpFormat.lower()))
             else:
@@ -468,8 +476,7 @@ class Dump(object):
                                 shutil.copyfile(dumpFileName, candidate)
                             except IOError:
                                 pass
-                            finally:
-                                break
+                            break
                         else:
                             count += 1
 
@@ -480,7 +487,7 @@ class Dump(object):
         field = 1
         fields = len(tableValues) - 1
 
-        columns = prioritySortColumns(tableValues.keys())
+        columns = prioritySortColumns(list(tableValues.keys()))
 
         if conf.col:
             cols = conf.col.split(',')
@@ -493,7 +500,7 @@ class Dump(object):
                 separator += "+%s" % lines
 
         separator += "+"
-        self._write("Database: %s\nTable: %s" % (unsafeSQLIdentificatorNaming(db) if db else "Current database", unsafeSQLIdentificatorNaming(table)))
+        self._write("Database: %s\nTable: %s" % (unsafeSQLIdentificatorNaming(db) if db and METADB_SUFFIX not in db else "<current>", unsafeSQLIdentificatorNaming(table)))
 
         if conf.dumpFormat == DUMP_FORMAT.SQLITE:
             cols = []
@@ -531,6 +538,7 @@ class Dump(object):
         elif conf.dumpFormat == DUMP_FORMAT.HTML:
             dataToDumpFile(dumpFP, "<!DOCTYPE html>\n<html>\n<head>\n")
             dataToDumpFile(dumpFP, "<meta http-equiv=\"Content-type\" content=\"text/html;charset=%s\">\n" % UNICODE_ENCODING)
+            dataToDumpFile(dumpFP, "<meta name=\"generator\" content=\"%s\" />\n" % VERSION_STRING)
             dataToDumpFile(dumpFP, "<title>%s</title>\n" % ("%s%s" % ("%s." % db if METADB_SUFFIX not in db else "", table)))
             dataToDumpFile(dumpFP, HTML_DUMP_CSS_STYLE)
             dataToDumpFile(dumpFP, "\n</head>\n<body>\n<table>\n<thead>\n<tr>\n")
@@ -548,7 +556,7 @@ class Dump(object):
 
                 column = unsafeSQLIdentificatorNaming(column)
                 maxlength = int(info["length"])
-                blank = " " * (maxlength - len(column))
+                blank = " " * (maxlength - getConsoleLength(column))
 
                 self._write("| %s%s" % (column, blank), newline=False)
 
@@ -559,7 +567,7 @@ class Dump(object):
                         else:
                             dataToDumpFile(dumpFP, "%s%s" % (safeCSValue(column), conf.csvDel))
                     elif conf.dumpFormat == DUMP_FORMAT.HTML:
-                        dataToDumpFile(dumpFP, "<th>%s</th>" % cgi.escape(column).encode("ascii", "xmlcharrefreplace"))
+                        dataToDumpFile(dumpFP, "<th>%s</th>" % getUnicode(htmlEscape(column).encode("ascii", "xmlcharrefreplace")))
 
                 field += 1
 
@@ -603,26 +611,27 @@ class Dump(object):
 
                     values.append(value)
                     maxlength = int(info["length"])
-                    blank = " " * (maxlength - len(value))
+                    blank = " " * (maxlength - getConsoleLength(value))
                     self._write("| %s%s" % (value, blank), newline=False, console=console)
 
                     if len(value) > MIN_BINARY_DISK_DUMP_SIZE and r'\x' in value:
                         try:
-                            mimetype = magic.from_buffer(value, mime=True)
+                            mimetype = getText(magic.from_buffer(value, mime=True))
                             if any(mimetype.startswith(_) for _ in ("application", "image")):
                                 if not os.path.isdir(dumpDbPath):
-                                    os.makedirs(dumpDbPath, 0755)
+                                    os.makedirs(dumpDbPath)
 
-                                _ = re.sub(r"[^\w]", "_", normalizeUnicode(unsafeSQLIdentificatorNaming(column)))
+                                _ = re.sub(r"[^\w]", UNSAFE_DUMP_FILEPATH_REPLACEMENT, normalizeUnicode(unsafeSQLIdentificatorNaming(column)))
                                 filepath = os.path.join(dumpDbPath, "%s-%d.bin" % (_, randomInt(8)))
                                 warnMsg = "writing binary ('%s') content to file '%s' " % (mimetype, filepath)
                                 logger.warn(warnMsg)
 
-                                with open(filepath, "wb") as f:
+                                with openFile(filepath, "w+b", None) as f:
                                     _ = safechardecode(value, True)
                                     f.write(_)
-                        except magic.MagicException, err:
-                            logger.debug(str(err))
+
+                        except Exception as ex:
+                            logger.debug(getSafeExString(ex))
 
                     if conf.dumpFormat == DUMP_FORMAT.CSV:
                         if field == fields:
@@ -630,7 +639,7 @@ class Dump(object):
                         else:
                             dataToDumpFile(dumpFP, "%s%s" % (safeCSValue(value), conf.csvDel))
                     elif conf.dumpFormat == DUMP_FORMAT.HTML:
-                        dataToDumpFile(dumpFP, "<td>%s</td>" % cgi.escape(value).encode("ascii", "xmlcharrefreplace"))
+                        dataToDumpFile(dumpFP, "<td>%s</td>" % getUnicode(htmlEscape(value).encode("ascii", "xmlcharrefreplace")))
 
                     field += 1
 
@@ -650,7 +659,7 @@ class Dump(object):
 
         if conf.dumpFormat == DUMP_FORMAT.SQLITE:
             rtable.endTransaction()
-            logger.info("table '%s.%s' dumped to sqlite3 database '%s'" % (db, table, replication.dbpath))
+            logger.info("table '%s.%s' dumped to SQLITE database '%s'" % (db, table, replication.dbpath))
 
         elif conf.dumpFormat in (DUMP_FORMAT.CSV, DUMP_FORMAT.HTML):
             if conf.dumpFormat == DUMP_FORMAT.HTML:
@@ -668,7 +677,6 @@ class Dump(object):
     def dbColumns(self, dbColumnsDict, colConsider, dbs):
         if conf.api:
             self._write(dbColumnsDict, content_type=CONTENT_TYPE.COLUMNS)
-            return
 
         for column in dbColumnsDict.keys():
             if colConsider == "1":
@@ -676,30 +684,30 @@ class Dump(object):
             else:
                 colConsiderStr = " '%s' was" % unsafeSQLIdentificatorNaming(column)
 
-            msg = "column%s found in the " % colConsiderStr
-            msg += "following databases:"
-            self._write(msg)
-
-            _ = {}
-
+            found = {}
             for db, tblData in dbs.items():
                 for tbl, colData in tblData.items():
                     for col, dataType in colData.items():
                         if column.lower() in col.lower():
-                            if db in _:
-                                if tbl in _[db]:
-                                    _[db][tbl][col] = dataType
+                            if db in found:
+                                if tbl in found[db]:
+                                    found[db][tbl][col] = dataType
                                 else:
-                                    _[db][tbl] = {col: dataType}
+                                    found[db][tbl] = {col: dataType}
                             else:
-                                _[db] = {}
-                                _[db][tbl] = {col: dataType}
+                                found[db] = {}
+                                found[db][tbl] = {col: dataType}
 
                             continue
 
-            self.dbTableColumns(_)
+            if found:
+                msg = "column%s found in the " % colConsiderStr
+                msg += "following databases:"
+                self._write(msg)
 
-    def query(self, query, queryRes):
+                self.dbTableColumns(found)
+
+    def sqlQuery(self, query, queryRes):
         self.string(query, queryRes, content_type=CONTENT_TYPE.SQL_QUERY)
 
     def rFile(self, fileData):

@@ -29,8 +29,12 @@ NON_PRINTABLE_REPLACE = '.'
 
 
 def is_printable_chr(c):
-    return c in string.printable
+    return chr(c) in string.printable
 
+def smart_chr(c):
+    if type(c) == str:
+        return c
+    return chr(c)
 
 def filter_non_printable(_str):
     chars = []
@@ -45,4 +49,4 @@ def filter_non_printable(_str):
             elif chars[-1] != NON_PRINTABLE_REPLACE:
                 chars.append(NON_PRINTABLE_REPLACE)
 
-    return ''.join(chars)
+    return ''.join([ smart_chr(c) for c in chars ])

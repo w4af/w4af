@@ -20,11 +20,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
-import esmre
 
-from acora import AcoraBuilder
+from acora import AcoraBuilder, BytesAcora
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
-
+from w3af.core.data.quick_match import esmre
 
 class MultiRE(object):
 
@@ -71,15 +70,14 @@ class MultiRE(object):
             #
             if isinstance(item, tuple):
                 regex = item[0]
-                regex = regex.encode(DEFAULT_ENCODING)
                 self._re_cache[regex] = re.compile(regex, self._re_compile_flags)
 
                 if regex in self._translator:
                     raise ValueError('Duplicated regex "%s"' % regex)
 
                 self._translator[regex] = item[1:]
-            elif isinstance(item, basestring):
-                regex = item.encode(DEFAULT_ENCODING)
+            elif isinstance(item, str):
+                regex = item
                 self._re_cache[regex] = re.compile(regex, self._re_compile_flags)
             else:
                 raise ValueError('Can NOT build MultiRE with provided values.')
@@ -124,17 +122,16 @@ class MultiRE(object):
         :param target_str: The target string where the keywords need to be match
         :yield: (match_obj, re_str_N, compiled_regex)
         """
-        if isinstance(target_str, unicode):
-            target_str = target_str.encode(DEFAULT_ENCODING)
-
         #
         #   Match the regular expressions that have keywords and those
         #   keywords are found in the target string by acora
         #
         seen = set()
-        target_str = target_str.lower()
+        target_str = acora_query = target_str.lower()
+        if isinstance(self._acora, BytesAcora):
+            acora_query = target_str.encode(DEFAULT_ENCODING)
 
-        for match, position in self._acora.finditer(target_str):
+        for match, position in self._acora.finditer(acora_query):
             if match in seen:
                 continue
 

@@ -20,9 +20,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
+from nose.plugins.attrib import attr
+
 from w3af.core.controllers.auto_update.changelog import ChangeLog
 
-
+@attr('git')
 class TestChangeLog(unittest.TestCase):
     
     def test_changes_between(self):

@@ -33,7 +33,7 @@ class TestSSLCertificate(PluginTest):
     local_target_url = 'https://localhost:%s/'
 
     remote_url = 'https://www.yandex.com/'
-    EXPECTED_STRINGS = ('yandex.ru', 'Moscow', 'RU', 'yandex')
+    EXPECTED_STRINGS = ('yandex.ru', 'yandex')
 
     _run_configs = {
         'cfg': {
@@ -65,12 +65,12 @@ class TestSSLCertificate(PluginTest):
         #
         vulns = self.kb.get('ssl_certificate', 'invalid_ssl_cert')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEquals('Self-signed SSL certificate', vuln.get_name())
-        self.assertEquals(self.local_target_url % port, str(vuln.get_url()))
+        self.assertEqual('Self-signed SSL certificate', vuln.get_name())
+        self.assertEqual(self.local_target_url % port, str(vuln.get_url()))
 
     @attr('internet')
     @pytest.mark.deprecated
@@ -82,12 +82,12 @@ class TestSSLCertificate(PluginTest):
         #   Check the certificate information
         #
         info = self.kb.get('ssl_certificate', 'certificate')
-        self.assertEquals(1, len(info))
+        self.assertEqual(1, len(info))
 
         # Now some tests around specific details of the found info
         info = info[0]
-        self.assertEquals('SSL Certificate dump', info.get_name())
-        self.assertEquals(self.remote_url, str(info.get_url()))
+        self.assertEqual('SSL Certificate dump', info.get_name())
+        self.assertEqual(self.remote_url, str(info.get_url()))
 
         for estring in self.EXPECTED_STRINGS:
             self.assertIn(estring, info.get_desc())

@@ -85,7 +85,7 @@ def retry(tries, delay=1, backoff=2, exc_class=None, err_msg='', log_msg=None):
             while mtries >= 0:
                 try:
                     rv = f(*args, **kwargs)
-                except Exception, ex:
+                except Exception as ex:
                     # Ok, fail!
                     if mtries == 0:
                         if exc_class:
@@ -162,24 +162,24 @@ def rate_limited(max_per_second):
     Decorator that make functions not be called faster than
     """
     lock = threading.Lock()
-    min_interval = 1.0 / float(max_per_second)
+    min_interval = 1000000000 / float(max_per_second)
 
     def decorate(func):
-        last_time_called = [0.0]
+        last_time_called = [0]
 
         @wraps(func)
         def rate_limited_function(*args, **kwargs):
             lock.acquire()
-            elapsed = time.clock() - last_time_called[0]
+            elapsed = time.perf_counter_ns() - last_time_called[0]
             left_to_wait = min_interval - elapsed
 
             if left_to_wait > 0:
-                time.sleep(left_to_wait)
+                time.sleep(left_to_wait / 1000000000)
 
             lock.release()
 
             ret = func(*args, **kwargs)
-            last_time_called[0] = time.clock()
+            last_time_called[0] = time.perf_counter_ns()
             return ret
 
         return rate_limited_function

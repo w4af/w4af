@@ -31,9 +31,11 @@ from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
 from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal
 from w3af.core.data.fuzzer.fuzzer import create_mutants
 from w3af.core.data.fuzzer.mutants.headers_mutant import HeadersMutant
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 from w3af.core.data.kb.vuln import Vuln
 
+def empty_gen():
+    yield from ()
 
 COMMON_CSRF_NAMES = (
     'csrf_token',
@@ -188,9 +190,12 @@ class csrf(AuditPlugin):
         :return: A tuple with the first identified csrf token and value
         """
         post_data = freq.get_raw_data()
+        post_data_tokens = empty_gen()
+        if post_data is not None:
+            post_data_tokens = post_data.iter_tokens()
         querystring = freq.get_querystring()
         
-        for token in chain(post_data.iter_tokens(), querystring.iter_tokens()):
+        for token in chain(post_data_tokens, querystring.iter_tokens()):
             
             if self.is_csrf_token(token.get_name(), token.get_value()):
 
@@ -209,7 +214,7 @@ class csrf(AuditPlugin):
         :see: https://github.com/andresriancho/w3af/issues/120
         :return: True if the CSRF token is NOT verified by the web application
         """
-        token_pname_lst = token.keys()
+        token_pname_lst = list(token.keys())
         token_value = token[token_pname_lst[0]]
         
         # This will generate mutants for the original fuzzable request using
@@ -238,8 +243,8 @@ class csrf(AuditPlugin):
 
         entropy = 0
 
-        for x in xrange(256):
-            p_x = float(data.count(chr(x)))/len(data)
+        for x in range(256):
+            p_x = float(data.count(x))/len(data)
             if p_x > 0:
                 entropy += - p_x * log(p_x, 2)
 
@@ -252,7 +257,7 @@ class csrf(AuditPlugin):
         """
         min_length = 5
         max_length = 512
-        min_entropy = 2.4
+        min_entropy = 3.4
 
         # Check length
         if len(value) <= min_length:
@@ -267,7 +272,7 @@ class csrf(AuditPlugin):
         
         # Check for common CSRF token names
         for common_csrf_name in COMMON_CSRF_NAMES:
-            if common_csrf_name.lower() in key.lower():
+            if common_csrf_name.lower() in smart_unicode(key).lower():
                 return True
     
         # Calculate entropy

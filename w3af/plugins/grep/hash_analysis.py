@@ -39,7 +39,7 @@ class hash_analysis(GrepPlugin):
         self._already_reported = ScalableBloomFilter()
 
         # regex to split between words
-        self._split_re = re.compile('[^\w]')
+        self._split_re = re.compile(r'[^\w]')
 
     def grep(self, request, response):
         """
@@ -134,7 +134,7 @@ class hash_analysis(GrepPlugin):
                          'SHA384': 96,
                          'SHA512': 128,
                          }
-        for hash_type, hash_len in hash_type_len.items():                
+        for hash_type, hash_len in list(hash_type_len.items()):                
             if len(possible_hash) == hash_len:
                 return hash_type
             

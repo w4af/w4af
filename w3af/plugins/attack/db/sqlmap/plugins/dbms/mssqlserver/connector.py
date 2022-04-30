@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -13,7 +13,8 @@ except:
 
 import logging
 
-from lib.core.convert import utf8encode
+from lib.core.common import getSafeExString
+from lib.core.convert import getText
 from lib.core.data import conf
 from lib.core.data import logger
 from lib.core.exception import SqlmapConnectionException
@@ -21,9 +22,9 @@ from plugins.generic.connector import Connector as GenericConnector
 
 class Connector(GenericConnector):
     """
-    Homepage: http://pymssql.sourceforge.net/
-    User guide: http://pymssql.sourceforge.net/examples_pymssql.php
-    API: http://pymssql.sourceforge.net/ref_pymssql.php
+    Homepage: http://www.pymssql.org/en/stable/
+    User guide: http://www.pymssql.org/en/stable/pymssql_examples.html
+    API: http://www.pymssql.org/en/stable/ref/pymssql.html
     Debian package: python-pymssql
     License: LGPL
 
@@ -33,16 +34,15 @@ class Connector(GenericConnector):
     to work, get it from http://sourceforge.net/projects/pymssql/files/pymssql/1.0.2/
     """
 
-    def __init__(self):
-        GenericConnector.__init__(self)
-
     def connect(self):
         self.initConnection()
 
         try:
             self.connector = pymssql.connect(host="%s:%d" % (self.hostname, self.port), user=self.user, password=self.password, database=self.db, login_timeout=conf.timeout, timeout=conf.timeout)
-        except (pymssql.Error, _mssql.MssqlDatabaseException), msg:
-            raise SqlmapConnectionException(msg)
+        except (pymssql.Error, _mssql.MssqlDatabaseException) as ex:
+            raise SqlmapConnectionException(getSafeExString(ex))
+        except ValueError:
+            raise SqlmapConnectionException
 
         self.initCursor()
         self.printConnected()
@@ -50,20 +50,20 @@ class Connector(GenericConnector):
     def fetchall(self):
         try:
             return self.cursor.fetchall()
-        except (pymssql.Error, _mssql.MssqlDatabaseException), msg:
-            logger.log(logging.WARN if conf.dbmsHandler else logging.DEBUG, "(remote) %s" % str(msg).replace("\n", " "))
+        except (pymssql.Error, _mssql.MssqlDatabaseException) as ex:
+            logger.log(logging.WARN if conf.dbmsHandler else logging.DEBUG, "(remote) '%s'" % getSafeExString(ex).replace("\n", " "))
             return None
 
     def execute(self, query):
         retVal = False
 
         try:
-            self.cursor.execute(utf8encode(query))
+            self.cursor.execute(getText(query))
             retVal = True
-        except (pymssql.OperationalError, pymssql.ProgrammingError), msg:
-            logger.log(logging.WARN if conf.dbmsHandler else logging.DEBUG, "(remote) %s" % str(msg).replace("\n", " "))
-        except pymssql.InternalError, msg:
-            raise SqlmapConnectionException(msg)
+        except (pymssql.OperationalError, pymssql.ProgrammingError) as ex:
+            logger.log(logging.WARN if conf.dbmsHandler else logging.DEBUG, "(remote) '%s'" % getSafeExString(ex).replace("\n", " "))
+        except pymssql.InternalError as ex:
+            raise SqlmapConnectionException(getSafeExString(ex))
 
         return retVal
 

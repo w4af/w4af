@@ -20,9 +20,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import codecs
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import chardet
 import logging
+import io
 
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 
@@ -31,10 +32,9 @@ from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 logging.getLogger('chardet.charsetprober').setLevel(logging.WARNING)
 
 # Custom error handling schemes registration
-ESCAPED_CHAR = 'slash_escape_char'
+ESCAPED_CHAR = 'backslashreplace'
 PERCENT_ENCODE = 'percent_encode'
 HTML_ENCODE = 'html_encode_char'
-
 
 def _return_html_encoded(encodingexc):
     """
@@ -42,21 +42,9 @@ def _return_html_encoded(encodingexc):
     """
     st = encodingexc.start
     en = encodingexc.end
-    hex_encoded = "".join(hex(ord(c))[2:] for c in encodingexc.object[st:en])
+    hex_encoded = "".join(hex(c)[2:] for c in encodingexc.object[st:en])
 
-    return unicode('&#x' + hex_encoded), en
-
-
-def _return_escaped_char(encodingexc):
-    """
-    :return: \\xff when input is \xff
-    """
-    st = encodingexc.start
-    en = encodingexc.end
-
-    slash_x_XX = repr(encodingexc.object[st:en])[1:-1]
-    return unicode(slash_x_XX), en
-
+    return str('&#x' + hex_encoded), en
 
 def _percent_encode(encodingexc):
     if not isinstance(encodingexc, UnicodeEncodeError):
@@ -66,15 +54,12 @@ def _percent_encode(encodingexc):
     en = encodingexc.end
 
     return (
-        u'%s' % (urllib.quote(encodingexc.object[st:en].encode('utf8')),),
+        '%s' % (urllib.parse.quote(encodingexc.object[st:en].encode('utf8')),),
         en
     )
 
-
-codecs.register_error(ESCAPED_CHAR, _return_escaped_char)
 codecs.register_error(PERCENT_ENCODE, _percent_encode)
 codecs.register_error(HTML_ENCODE, _return_html_encoded)
-
 
 def smart_unicode(s,
                   encoding=DEFAULT_ENCODING,
@@ -83,13 +68,16 @@ def smart_unicode(s,
 
                   # http://jamesls.com/micro-optimizations-in-python-code-speeding-up-lookups.html
                   _isinstance=isinstance,
-                  _unicode=unicode,
-                  _str=str
+                  _unicode=str,
+                  _str=bytes
                   ):
     """
     Return the unicode representation of 's'. Decodes byte-strings using
     the 'encoding' codec.
     """
+    if s is None:
+        return ''
+
     if _isinstance(s, _unicode):
         return s
     
@@ -140,17 +128,26 @@ def smart_str(s,
 
               # http://jamesls.com/micro-optimizations-in-python-code-speeding-up-lookups.html
               _isinstance=isinstance,
-              _unicode=unicode,
-              _str=str):
+              _unicode=str,
+              _str=bytes):
     """
     Return a byte-string version of 's', encoded as specified in 'encoding'.
     """
+    if s is None:
+        return b''
+
     if _isinstance(s, _unicode):
         return s.encode(encoding, errors)
 
     # Already a byte-string, nothing to do here
     if _isinstance(s, _str):
         return s
+
+    if _isinstance(s, io.BytesIO):
+        return s.__str__()
+
+    if hasattr(s, '__bytes__'):
+        return s.__bytes__()
 
     # Handling objects is hard! Each implements __str__ in a different way
     # which might trigger issues

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -22,7 +22,7 @@ from lib.core.data import logger
 from lib.core.data import paths
 from lib.core.exception import SqlmapDataException
 
-class ICMPsh:
+class ICMPsh(object):
     """
     This class defines methods to call icmpsh for plugins.
     """

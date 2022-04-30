@@ -200,7 +200,7 @@ class TestNiktoTestParser(PluginTest):
         pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
-        line = u'"000003","0","1234576890ab","@CGIDIRScart32.exe","GET","200"'\
+        line = '"000003","0","1234576890ab","@CGIDIRScart32.exe","GET","200"'\
                 ',"","","","","request cart32.exe/cart32clientlist","",""'
         nikto_tests = [i for i in nikto_parser._parse_db_line(line)]
         
@@ -236,7 +236,7 @@ class TestNiktoTestParser(PluginTest):
         pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
-        line = u'"0","0","","/docs/JUNK(5)","GET","200"'\
+        line = '"0","0","","/docs/JUNK(5)","GET","200"'\
                 ',"","","","","","",""'
         nikto_tests = [i for i in nikto_parser._parse_db_line(line)]
         
@@ -254,7 +254,7 @@ class TestNiktoTestParser(PluginTest):
         pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
-        line = u'"0","0","","/docs/","GET","200"'\
+        line = '"0","0","","/docs/","GET","200"'\
                 ',"","","","","","",""'
         nikto_tests = [i for i in nikto_parser._parse_db_line(line)]
         
@@ -271,7 +271,7 @@ class TestNiktoTestParser(PluginTest):
         pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
-        line = u'"0","0","","@CGIDIRS","GET","200"'\
+        line = '"0","0","","@CGIDIRS","GET","200"'\
                 ',"","","","","","",""'
         nikto_tests = [i for i in nikto_parser._parse_db_line(line)]
         
@@ -290,7 +290,7 @@ class TestNiktoTestParser(PluginTest):
         pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
-        line = u'"0","0","","@ADMIN","GET","200"'\
+        line = '"0","0","","@ADMIN","GET","200"'\
                 ',"","","","","","",""'
         nikto_tests = [i for i in nikto_parser._parse_db_line(line)]
         
@@ -309,7 +309,7 @@ class TestNiktoTestParser(PluginTest):
         pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
-        line = u'"0","0","","@ADMIN@USERS","GET","200"'\
+        line = '"0","0","","@ADMIN@USERS","GET","200"'\
                 ',"","","","","","",""'
         nikto_tests = [i for i in nikto_parser._parse_db_line(line)]
         

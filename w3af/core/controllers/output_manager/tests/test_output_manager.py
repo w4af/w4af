@@ -23,7 +23,7 @@ import pytest
 import unittest
 import multiprocessing
 
-from mock import MagicMock, Mock
+from unittest.mock import MagicMock, Mock
 from nose.plugins.attrib import attr
 from tblib.decorators import Error
 
@@ -61,11 +61,11 @@ class TestOutputManager(unittest.TestCase):
 
             om.manager.process_all_messages()
 
-            plugin_action.assert_called_once_with(msg, True)
+            plugin_action.assert_called_once_with(msg.encode("utf-8"), True)
 
     def test_output_plugins_actions_with_unicode_message(self):
         """Call all actions on output plugins using a unicode message"""
-        msg = u'<< ÑñçÇyruZZ!! <<'
+        msg = '<< ÑñçÇyruZZ!! <<'
         utf8_encoded_msg = msg.encode('utf8')
 
         for action in TestOutputManager.OUTPUT_PLUGIN_ACTIONS:
@@ -87,7 +87,7 @@ class TestOutputManager(unittest.TestCase):
         catch-all, just the ones I define!"""
         try:
             self.assertRaises(AttributeError, om.out.foobar, ('abc',))
-        except AttributeError, ae:
+        except AttributeError as ae:
             self.assertTrue(True, ae)
 
     def test_kwds(self):
@@ -107,7 +107,7 @@ class TestOutputManager(unittest.TestCase):
 
         om.manager.process_all_messages()
 
-        plugin_action.assert_called_once_with(msg, False)
+        plugin_action.assert_called_once_with(msg.encode("utf-8"), False)
     
     def test_ignore_plugins(self):
         """The output manager implements ignore_plugins to avoid sending a
@@ -131,7 +131,7 @@ class TestOutputManager(unittest.TestCase):
         
         om.manager.process_all_messages()
 
-        plugin_action.assert_called_once_with(msg, False)        
+        plugin_action.assert_called_once_with(msg.encode('utf-8'), False)
 
     @pytest.mark.slow
     def test_error_handling(self):
@@ -151,6 +151,9 @@ class TestOutputManager(unittest.TestCase):
 
             def get_name(self):
                 return 'InvalidPlugin'
+
+            def log_crash(self, crash_message):
+                pass
 
         invalid_plugin = InvalidPlugin()
 
@@ -188,4 +191,4 @@ class TestOutputManager(unittest.TestCase):
 
         om.manager.process_all_messages()
 
-        plugin_action.assert_called_once_with(msg)
+        plugin_action.assert_called_once_with(msg.encode('utf-8'))

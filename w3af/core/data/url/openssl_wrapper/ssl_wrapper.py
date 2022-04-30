@@ -23,7 +23,7 @@ from OpenSSL.SSL import SysCallError
 from ndg.httpsclient.subj_alt_name import SubjectAltName
 from pyasn1.codec.der.decoder import decode as der_decoder
 
-from w3af.core.controllers.misc.poll import poll
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 CERT_NONE = ssl.CERT_NONE
 CERT_OPTIONAL = ssl.CERT_OPTIONAL
@@ -35,6 +35,66 @@ _openssl_cert_reqs = {
     CERT_REQUIRED: OpenSSL.SSL.VERIFY_PEER | \
             OpenSSL.SSL.VERIFY_FAIL_IF_NO_PEER_CERT
 }
+
+class SSLSocketFileWrapper(object):
+
+    def __init__(self, ssl_socket, mode):
+        self.ssl_socket = ssl_socket
+        self.mode = mode
+        self._rbuf = b""
+        self._rbufsize = 8096
+        self.closed = False
+
+    def readline(self, limit=-1):
+        i = self._rbuf.find(b'\n')
+
+        while i < 0 and not (0 < limit <= len(self._rbuf)):
+            new = self._raw_read(self._rbufsize)
+            if not new:
+                break
+            i = new.find(b'\n')
+            if i >= 0:
+                i += len(self._rbuf)
+            self._rbuf = self._rbuf + new
+
+        if i < 0:
+            i = len(self._rbuf)
+        else:
+            i += 1
+
+        if 0 <= limit < len(self._rbuf):
+            i = limit
+
+        data, self._rbuf = self._rbuf[:i], self._rbuf[i:]
+        return data
+
+    def read(self, amt):
+        while amt > len(self._rbuf):
+            new = self._raw_read(self._rbufsize)
+            if not new:
+                break
+            self._rbuf = self._rbuf + new
+
+        data, self._rbuf = self._rbuf[:amt], self._rbuf[amt:]
+        return data
+
+    def _raw_read(self, amt):
+        if self.ssl_socket is None:
+            return b""
+
+        if amt is not None:
+            # Amount is given, implement using readinto
+            return self.ssl_socket.recv(amt)
+
+    def flush(self):
+        pass
+
+    def close(self):
+        if self.closed:
+            return
+        self.closed = True
+        self.ssl_socket.close()
+        self.ssl_socket = None
 
 
 class SSLSocket(object):
@@ -96,7 +156,7 @@ class SSLSocket(object):
     def fileno(self):
         return self.sock.fileno()
 
-    def makefile(self, mode, bufsize):
+    def makefile(self, mode):
         """
         We need to use socket._fileobject because SSL.Connection
         doesn't have a 'dup'. Not exactly sure WHY this is, but
@@ -107,7 +167,7 @@ class SSLSocket(object):
         socket object and don't actually close until its count is 0.
         """
         self.refcount += 1
-        return socket._fileobject(self, mode, bufsize, close=True)
+        return SSLSocketFileWrapper(self, mode)
 
     def close(self):
         if self.closed:
@@ -117,7 +177,28 @@ class SSLSocket(object):
         if self.refcount != 0:
             return
 
-        self.closed = True
+            try:
+                self.shutdown()
+            except OpenSSL.SSL.SysCallError as syscall_error:
+                if syscall_error.args[1] in ('ECONNRESET', 'EPIPE'):
+                    # This was an EPIPE / ECONNRESET - we got data after connection close. we
+                    # can ignore this
+                    pass
+                else:
+                    raise
+            except OpenSSL.SSL.Error as ssl_error:
+                message = str(ssl_error)
+                if not message:
+                    # We get here when the remote end already closed the
+                    # connection. The shutdown() call to the OpenSSLConnection
+                    # simply fails with an exception without a message
+                    #
+                    # This was needed to support SSLServer (ssl_daemon.py)
+                    # but will also be useful for other real-life cases
+                    pass
+                else:
+                    # We don't know what's here, raise!
+                    raise
 
         #
         # We get some errors when the remote end already closed the
@@ -199,11 +280,11 @@ class SSLSocket(object):
         dns_name = []
         general_names = SubjectAltName()
 
-        for i in xrange(x509.get_extension_count()):
+        for i in range(x509.get_extension_count()):
             ext = x509.get_extension(i)
             ext_name = ext.get_short_name()
 
-            if ext_name != 'subjectAltName':
+            if ext_name != b'subjectAltName':
                 continue
 
             ext_dat = ext.get_data()
@@ -212,7 +293,7 @@ class SSLSocket(object):
             for name in decoded_dat:
                 if not isinstance(name, SubjectAltName):
                     continue
-                for entry in xrange(len(name)):
+                for entry in range(len(name)):
                     component = name.getComponentByPosition(entry)
                     if component.getName() != 'dNSName':
                         continue
@@ -261,19 +342,19 @@ def wrap_socket(sock, keyfile=None, certfile=None, server_side=False,
         ctx.use_privatekey_file(keyfile)
 
     if cert_reqs != OpenSSL.SSL.VERIFY_NONE:
-        ctx.set_verify(cert_reqs, lambda a, b, err_no, c, d: err_no == 0)
+        ctx.set_verify(cert_reqs) #, lambda a, b, err_no, c, d: err_no == 0)
 
     if ca_certs:
         try:
             ctx.load_verify_locations(ca_certs, None)
-        except OpenSSL.SSL.Error, e:
+        except OpenSSL.SSL.Error as e:
             raise ssl.SSLError('Bad ca_certs: %r' % ca_certs, e)
 
     cnx = OpenSSL.SSL.Connection(ctx, sock)
 
     # SNI support
     if server_hostname is not None:
-        cnx.set_tlsext_host_name(server_hostname)
+        cnx.set_tlsext_host_name(smart_str_ignore(server_hostname))
 
     cnx.set_connect_state()
 

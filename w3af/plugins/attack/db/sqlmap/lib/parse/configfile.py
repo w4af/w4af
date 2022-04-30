@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 from lib.core.common import checkFile
 from lib.core.common import getSafeExString
-from lib.core.common import getUnicode
 from lib.core.common import openFile
 from lib.core.common import unArrayizeValue
 from lib.core.common import UnicodeRawConfigParser
+from lib.core.convert import getUnicode
 from lib.core.data import cmdLineOptions
 from lib.core.data import conf
 from lib.core.data import logger
@@ -27,8 +27,6 @@ def configFileProxy(section, option, datatype):
     advanced dictionary.
     """
 
-    global config
-
     if config.has_option(section, option):
         try:
             if datatype == OPTION_TYPE.BOOLEAN:
@@ -39,7 +37,7 @@ def configFileProxy(section, option, datatype):
                 value = config.getfloat(section, option) if config.get(section, option) else 0.0
             else:
                 value = config.get(section, option)
-        except ValueError, ex:
+        except ValueError as ex:
             errMsg = "error occurred while processing the option "
             errMsg += "'%s' in provided configuration file ('%s')" % (option, getUnicode(ex))
             raise SqlmapSyntaxException(errMsg)
@@ -71,7 +69,7 @@ def configFileParser(configFile):
     try:
         config = UnicodeRawConfigParser()
         config.readfp(configFP)
-    except Exception, ex:
+    except Exception as ex:
         errMsg = "you have provided an invalid and/or unreadable configuration file ('%s')" % getSafeExString(ex)
         raise SqlmapSyntaxException(errMsg)
 
@@ -81,14 +79,14 @@ def configFileParser(configFile):
 
     mandatory = False
 
-    for option in ("direct", "url", "logFile", "bulkFile", "googleDork", "requestFile", "sitemapUrl", "wizard"):
+    for option in ("direct", "url", "logFile", "bulkFile", "googleDork", "requestFile", "wizard"):
         if config.has_option("Target", option) and config.get("Target", option) or cmdLineOptions.get(option):
             mandatory = True
             break
 
     if not mandatory:
         errMsg = "missing a mandatory option in the configuration file "
-        errMsg += "(direct, url, logFile, bulkFile, googleDork, requestFile, sitemapUrl or wizard)"
+        errMsg += "(direct, url, logFile, bulkFile, googleDork, requestFile or wizard)"
         raise SqlmapMissingMandatoryOptionException(errMsg)
 
     for family, optionData in optDict.items():

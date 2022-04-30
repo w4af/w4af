@@ -42,32 +42,8 @@ def dependency_check():
     errors = []
 
     try:
-        import pygtk
-    except ImportError:
-        errors.append('Failed to import module pygtk')
-    else:
-        try:
-            pygtk.require('2.0')
-        except:
-            errors.append('Failed to find required pygtk version 2.0')
-
-    try:
-        import gtk
-    except ImportError:
-        errors.append('Failed to import module gtk')
-    else:
-        try:
-            assert gtk.gtk_version >= (2, 12)
-        except AssertionError:
-            errors.append('Failed to find gtk version 2.12 or greater')
-
-        try:
-            assert gtk.pygtk_version >= (2, 12)
-        except AssertionError:
-            errors.append('Failed to find gtk / pygtk version 2.12 or greater')
-
-    try:
-        import gobject
+        from gi.repository import Gtk as gtk
+        from gi.repository import GObject as gobject
     except ImportError:
         errors.append('Failed to import module gobject')
 

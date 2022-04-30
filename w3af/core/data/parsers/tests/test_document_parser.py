@@ -37,7 +37,7 @@ from w3af.core.data.parsers.document_parser import (document_parser_factory,
 
 def _build_http_response(body_content, content_type):
     headers = Headers()
-    headers[u'content-type'] = content_type
+    headers['content-type'] = content_type
 
     url = URL('http://w3af.com')
 
@@ -64,15 +64,16 @@ class TestDocumentParserFactory(unittest.TestCase):
             self.assertEqual(parser.get_clear_text_body(), 'body')
 
     def test_html_upper(self):
-        parser = document_parser_factory(_build_http_response('', u'TEXT/HTML'))
+        parser = document_parser_factory(_build_http_response('', 'TEXT/HTML'))
 
         self.assertIsInstance(parser, DocumentParser)
         self.assertIsInstance(parser._parser, HTMLParser)
 
     def test_pdf_case01(self):
-        parser = document_parser_factory(
-            _build_http_response(file(self.PDF_FILE).read(),
-                                 u'application/pdf'))
+        with open(self.PDF_FILE, "rb") as f:
+            parser = document_parser_factory(
+                    _build_http_response(f.read(),
+                                        'application/pdf'))
 
         self.assertIsInstance(parser, DocumentParser)
         self.assertIsInstance(parser._parser, PDFParser)
@@ -87,8 +88,8 @@ class TestDocumentParserFactory(unittest.TestCase):
                               response)
 
     def test_no_parser_binary(self):
-        all_chars = ''.join([chr(i) for i in xrange(0,255)])
-        response = _build_http_response(all_chars, u'application/bar')
+        all_chars = ''.join([chr(i) for i in range(0,255)])
+        response = _build_http_response(all_chars, 'application/bar')
         self.assertRaises(BaseFrameworkException, document_parser_factory,
                           response)
         
@@ -96,9 +97,10 @@ class TestDocumentParserFactory(unittest.TestCase):
         """
         Issue to verify https://github.com/andresriancho/w3af/issues/106
         """
-        sharepoint_pl = file(self.HTML_FILE).read()
+        with open(self.HTML_FILE) as f:
+            sharepoint_pl = f.read()
         parser = document_parser_factory(_build_http_response(sharepoint_pl,
-                                                              u'text/html'))
+                                                              'text/html'))
 
         self.assertIsInstance(parser, DocumentParser)
         self.assertIsInstance(parser._parser, HTMLParser)

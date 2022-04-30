@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -23,17 +23,13 @@ class MySQLMap(Syntax, Fingerprint, Enumeration, Filesystem, Miscellaneous, Take
     def __init__(self):
         self.excludeDbsList = MYSQL_SYSTEM_DBS
         self.sysUdfs = {
-                         # UDF name:    UDF return data-type
-                         "sys_exec":    { "return": "int" },
-                         "sys_eval":    { "return": "string" },
-                         "sys_bineval": { "return": "int" }
-                       }
+            # UDF name: UDF return data-type
+            "sys_exec": {"return": "int"},
+            "sys_eval": {"return": "string"},
+            "sys_bineval": {"return": "int"}
+        }
 
-        Syntax.__init__(self)
-        Fingerprint.__init__(self)
-        Enumeration.__init__(self)
-        Filesystem.__init__(self)
-        Miscellaneous.__init__(self)
-        Takeover.__init__(self)
+        for cls in self.__class__.__bases__:
+            cls.__init__(self)
 
     unescaper[DBMS.MYSQL] = Syntax.escape

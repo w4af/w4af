@@ -19,9 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement
 
-import guess_language
+
+import polyglot
+from polyglot.text import Text
+import pycld2
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.knowledge_base as kb
@@ -69,8 +71,12 @@ class lang(GrepPlugin):
         body = body.lower()
 
         try:
-            guessed_lang = guess_language.guessLanguage(body)
+            text = Text(body)
+            guessed_lang = text.language.name
         except IndexError:
+            # I don't care about exception handling of the external lib
+            guessed_lang = UNKNOWN
+        except pycld2.error:
             # I don't care about exception handling of the external lib
             guessed_lang = UNKNOWN
 

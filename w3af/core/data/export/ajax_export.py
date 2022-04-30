@@ -102,7 +102,7 @@ make the request fail */
 
     # Now I add the headers:
     headers = http_request.get_headers()
-    for header_name, header_value in headers.iteritems():
+    for header_name, header_value in headers.items():
         res += 'xmlhttp.setRequestHeaders("' + ajax_escape_string(
             header_name) + '", "'
         res += ajax_escape_string(header_value) + '");\n'

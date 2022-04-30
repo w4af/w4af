@@ -37,6 +37,7 @@ from w3af.core.data.fuzzer.form_filler import smart_fill_file
 from w3af.core.data.dc.factory import (dc_from_hdrs_post,
                                        dc_from_form_params,
                                        dc_from_content_type_and_raw_params)
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class TestDCFactory(unittest.TestCase):
@@ -48,11 +49,11 @@ class TestDCFactory(unittest.TestCase):
         multipart_boundary = 'multipart/form-data; boundary=%s'
 
         headers = Headers([('content-length', str(len(post_data))),
-                           ('content-type', multipart_boundary % boundary)])
+                           ('content-type', multipart_boundary % smart_unicode(boundary))])
 
         dc = dc_from_hdrs_post(headers, post_data)
 
-        EXPECTED_PARAMS = [u'ax']
+        EXPECTED_PARAMS = ['ax']
 
         self.assertIsInstance(dc, MultipartContainer)
         self.assertEqual(dc.get_param_names(), EXPECTED_PARAMS)
@@ -61,8 +62,7 @@ class TestDCFactory(unittest.TestCase):
         headers = self.get_headers('application/json')
         dc = dc_from_hdrs_post(headers, COMPLEX_OBJECT)
 
-        EXPECTED_PARAMS = [u'object-second_key-list-0-string',
-                           u'object-key-string']
+        EXPECTED_PARAMS = ['object-key-string','object-second_key-list-0-string']
 
         self.assertIsInstance(dc, JSONContainer)
         self.assertEqual(dc.get_param_names(), EXPECTED_PARAMS)
@@ -82,8 +82,8 @@ class TestDCFactory(unittest.TestCase):
         dc = dc_from_hdrs_post(headers, 'a=3&b=2')
 
         self.assertIsInstance(dc, URLEncodedForm)
-        self.assertIn('a', dc)
-        self.assertIn('b', dc)
+        self.assertIn(b'a', dc)
+        self.assertIn(b'b', dc)
         self.assertEqual('a=3&b=2', str(dc))
 
     def test_unknown_default_form(self):
@@ -91,7 +91,7 @@ class TestDCFactory(unittest.TestCase):
         dc = dc_from_hdrs_post(headers, 'a=3&b=2')
 
         self.assertIsInstance(dc, PlainContainer)
-        self.assertEqual(headers.items(), dc.get_headers())
+        self.assertEqual(list(headers.items()), dc.get_headers())
         self.assertEqual(str(dc), 'a=3&b=2')
 
     def test_unknown_default_form_no_urlencoded(self):
@@ -99,7 +99,7 @@ class TestDCFactory(unittest.TestCase):
         dc = dc_from_hdrs_post(headers, 'a')
 
         self.assertIsInstance(dc, PlainContainer)
-        self.assertEqual(headers.items(), dc.get_headers())
+        self.assertEqual(list(headers.items()), dc.get_headers())
         self.assertEqual(str(dc), 'a')
 
     def test_dc_from_form_params_with_files(self):

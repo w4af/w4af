@@ -19,11 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement
+
 
 import socket
 import errno
-import BaseHTTPServer
+import http.server
 from functools import partial
 
 import w3af.core.controllers.output_manager as om
@@ -146,7 +146,7 @@ class rfi(AuditPlugin):
                 severity.HIGH: 3}
         
         # Get the one with the higher severity and report that one
-        for _, vulns_for_url_var in sorted_vulns.iteritems():
+        for _, vulns_for_url_var in sorted_vulns.items():
             
             highest_severity = -1
             highest_severity_vuln = None
@@ -182,7 +182,7 @@ class rfi(AuditPlugin):
                 bind_args = (listen_address, listen_port)
                 try:
                     s.bind(bind_args)
-                except socket.error, se:
+                except socket.error as se:
                     msg = 'Failed to bind to address %s:%s, error: %s'
                     fmt_args = list(bind_args)
                     fmt_args.append(se)
@@ -246,9 +246,8 @@ class rfi(AuditPlugin):
 
                 # Perform the real work
                 self._test_inclusion(freq, rfi_data, orig_response, debugging_id)
-            except socket.error, se:
-                errorcode = se[0]
-                if errorcode == errno.EADDRINUSE:
+            except socket.error as se:
+                if se.errno == errno.EADDRINUSE:
                     # We can't use this address because it is already in use
                     self._listen_address = None
 
@@ -257,7 +256,7 @@ class rfi(AuditPlugin):
                            'rfi plugin. The address is already in use by another process.')
                     om.out.error(msg)
 
-            except Exception, e:
+            except Exception as e:
                 msg = 'An error occurred while running local web server for' \
                       ' the remote file inclusion (rfi) plugin: "%s"'
                 om.out.error(msg % e)
@@ -481,7 +480,7 @@ class rfi(AuditPlugin):
         """
 
 
-class RFIWebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class RFIWebHandler(http.server.BaseHTTPRequestHandler):
 
     RESPONSE_BODY = None
 
@@ -491,7 +490,7 @@ class RFIWebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.send_header('Content-type', 'text/html')
             self.end_headers()
             self.wfile.write(self.RESPONSE_BODY)
-        except Exception, e:
+        except Exception as e:
             om.out.debug('[RFIWebHandler] Exception: "%s".' % e)
         finally:
             # Clean up

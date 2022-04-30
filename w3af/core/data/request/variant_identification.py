@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from itertools import chain, izip_longest
+from itertools import chain, zip_longest
 
 
 def are_variants(uri, other_uri):
@@ -50,12 +50,12 @@ def are_variants(uri, other_uri):
         dc = uri.querystring
         odc = other_uri.querystring
 
-        if dc.keys() != odc.keys():
+        if list(dc.keys()) != list(odc.keys()):
             return False
 
-        for vself, vother in izip_longest(
-            chain(*dc.values()),
-            chain(*odc.values()),
+        for vself, vother in zip_longest(
+            chain(*list(dc.values())),
+            chain(*list(odc.values())),
             fillvalue=None
         ):
             if None in (vself, vother) or \

@@ -41,15 +41,16 @@ class TestHTMLParserPerformance(unittest.TestCase):
 
     MEMORY_DUMP = 'manual-analysis-%s.dump'
 
-    HTML_FILE = os.path.join(ROOT_PATH, 'core', 'data', 'context', 'tests',
-                             'samples', 'django-500.html')
+    HTML_FILE = DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "context", "tests", "samples", "django-500.html")
 
+    @unittest.skip("Performance test")
     @attr('ci_ignore')
     @pytest.mark.slow
     def test_parse_html_performance(self):
         headers = Headers()
         headers['content-type'] = 'text/html'
-        body = file(self.HTML_FILE).read()
+        with open(self.HTML_FILE) as f:
+            body = f.read()
         url = URL('http://www.w3af.org/')
         response = HTTPResponse(200, body, headers, url, url, charset='utf-8')
 
@@ -57,7 +58,7 @@ class TestHTMLParserPerformance(unittest.TestCase):
 
         parsers = []
 
-        for _ in xrange(40):
+        for _ in range(40):
             p = HTMLParser(response)
             p.parse()
             #parsers.append(p)
@@ -80,22 +81,22 @@ class TestHTMLParserPerformance(unittest.TestCase):
         om.remove_expensive_references()
         summary = om.summarize()
 
-        print summary
+        print(summary)
 
         #print('runsnakemem %s' % self.MEMORY_DUMP)
 
         usage = resource.getrusage(resource.RUSAGE_SELF)
-        print 'maximum resident set size', usage.ru_maxrss
-        print 'shared memory size', usage.ru_ixrss
-        print 'unshared memory size', usage.ru_idrss
-        print 'unshared stack size', usage.ru_isrss
+        print('maximum resident set size', usage.ru_maxrss)
+        print('shared memory size', usage.ru_ixrss)
+        print('unshared memory size', usage.ru_idrss)
+        print('unshared stack size', usage.ru_isrss)
 
         import psutil
         self_pid = psutil.Process()
         # pylint: disable=E1101
-        print self_pid.memory_info()
+        print(self_pid.memory_info())
 
-
+@unittest.skip("Memory profiling")
 def test():
     """
     Run using:
@@ -103,7 +104,8 @@ def test():
 
     That will activate the profiler.
     """
-    body = file(OUTPUT_FILE).read()
+    with open(OUTPUT_FILE) as f:
+        body = f.read()
     url = URL('http://www.clarin.com.ar/')
     headers = Headers()
     headers['content-type'] = 'text/html'

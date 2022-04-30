@@ -45,7 +45,7 @@ def extract_link_from_header_simple(http_response, header_name, header_value):
     :see: https://github.com/andresriancho/w3af/issues/9493
     """
     if not header_value:
-        raise StopIteration
+        return
 
     try:
         yield http_response.get_url().url_join(header_value)
@@ -75,10 +75,10 @@ def extract_link_from_link_header(http_response, header_name, header_value):
         try:
             url_str = re_match.group(1)
         except IndexError:
-            raise StopIteration
+            return
 
         if not url_str:
-            raise StopIteration
+            return
 
         try:
             yield http_response.get_url().url_join(url_str)
@@ -105,9 +105,9 @@ def extract_link_from_set_cookie_header(http_response, header_name, header_value
     try:
         cookie = parse_cookie(header_value)
     except:
-        raise StopIteration
+        return
 
-    for key in cookie.keys():
+    for key in list(cookie.keys()):
         try:
             path = cookie[key]['path']
         except KeyError:
@@ -147,7 +147,7 @@ def headers_url_generator(fuzzable_request, http_response):
     """
     resp_headers = http_response.get_headers()
 
-    for parser, header_names in URL_HEADERS.iteritems():
+    for parser, header_names in URL_HEADERS.items():
         for header_name in header_names:
 
             header_value, _ = resp_headers.iget(header_name, None)

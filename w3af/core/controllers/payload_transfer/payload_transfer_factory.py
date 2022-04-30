@@ -74,12 +74,12 @@ class payload_transfer_factory(object):
         try:
             if not inbound_port:
                 inbound_port = self._es.get_inbound_port()
-        except BaseFrameworkException, w3:
+        except BaseFrameworkException as w3:
             msg = ('The extrusion scan failed, no reverse connect transfer '
                    'methods can be used. Trying inband echo transfer method.'
                    ' Error: "%s"')
             om.out.error(msg % w3)
-        except Exception, e:
+        except Exception as e:
             om.out.error('Unhandled exception: "%s"' % e)
         else:
             to_test.append(ReverseFTP(self._exec_method, os, inbound_port))
@@ -92,9 +92,7 @@ class payload_transfer_factory(object):
                 to_test.append(reverse)
 
             # Test the fastest first and return the fastest one...
-            def sort_function(x, y):
-                return cmp(y.get_speed(), x.get_speed())
-            to_test.sort(sort_function)
+            to_test.sort(key=lambda x: x.get_speed())
 
         for method in to_test:
 

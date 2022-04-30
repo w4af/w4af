@@ -14,7 +14,7 @@
 ### along with this program; if not, write to the Free Software
 ### Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335  USA
 
-from __future__ import generators
+
 import difflib
 
 
@@ -23,7 +23,7 @@ def _null_or_space(s):
 
 if 0:
     def _not_equal(s):
-        return filter(lambda x: x[0] != "equal", s)
+        return [x for x in s if x[0] != "equal"]
 else:
     def _not_equal(s):
         return s
@@ -59,7 +59,7 @@ class IncrementalSequenceMatcher(difflib.SequenceMatcher):
         yield 1
 
     def get_difference_opcodes(self):
-        return filter(lambda x: x[0] != "equal", self.get_opcodes())
+        return [x for x in self.get_opcodes() if x[0] != "equal"]
 
 ################################################################################
 #
@@ -304,7 +304,7 @@ class Differ(object):
             matcher = IncrementalSequenceMatcher(
                 None, sequences[1], sequences[0])
             work = matcher.initialise()
-            while work.next() is None:
+            while next(work) is None:
                 yield None
             diffs = [matcher.get_difference_opcodes(), []]
         elif len(sequences) == 3:
@@ -313,7 +313,7 @@ class Differ(object):
                 matcher = IncrementalSequenceMatcher(
                     None, sequences[1], sequences[i * 2])
                 work = matcher.initialise()
-                while work.next() is None:
+                while next(work) is None:
                     yield None
                 diffs[i] = matcher.get_difference_opcodes()
         else:

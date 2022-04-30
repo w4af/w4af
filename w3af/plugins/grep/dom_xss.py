@@ -34,15 +34,15 @@ class dom_xss(GrepPlugin):
     :author: Andres Riancho ((andres.riancho@gmail.com))
     """
 
-    JS_FUNCTIONS = ('document.write',
-                    'document.writeln',
-                    'document.execCommand',
-                    'document.open',
-                    'window.open',
-                    'eval',
-                    'window.execScript')
+    JS_FUNCTIONS = (r'document.write',
+                    r'document.writeln',
+                    r'document.execCommand',
+                    r'document.open',
+                    r'window.open',
+                    r'eval',
+                    r'window.execScript')
     
-    JS_FUNCTION_CALLS = [re.compile(js_f + ' *\((.*?)\)', re.IGNORECASE)
+    JS_FUNCTION_CALLS = [re.compile(js_f + r' *\((.*?)\)', re.IGNORECASE)
                          for js_f in JS_FUNCTIONS]
 
     DOM_USER_CONTROLLED = ('document.URL',
@@ -56,7 +56,7 @@ class dom_xss(GrepPlugin):
         GrepPlugin.__init__(self)
 
         # Compile the regular expressions
-        self._script_re = re.compile('< *script *>(.*?)</ *script *>',
+        self._script_re = re.compile(r'< *script *>(.*?)</ *script *>',
                                      re.IGNORECASE | re.DOTALL)
 
     def grep(self, request, response):

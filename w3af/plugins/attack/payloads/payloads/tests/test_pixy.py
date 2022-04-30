@@ -39,7 +39,7 @@ class test_pixy(PayloadTestHelper):
         temp_dir = tempfile.mkdtemp()
         result = exec_payload(
             self.shell, 'pixy', args=(temp_dir, temp_dir), use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)
 
     @attr('ci_fails')
     @pytest.mark.deprecated

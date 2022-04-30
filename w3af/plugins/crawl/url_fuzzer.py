@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from itertools import chain, repeat, izip
+from itertools import chain, repeat
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.knowledge_base as kb
@@ -97,7 +97,7 @@ class url_fuzzer(CrawlPlugin):
                                   self._mutate_file_type(url),
                                   self._mutate_domain_name(url))
             url_repeater = repeat(url)
-            args = izip(url_repeater, mutants_chain)
+            args = zip(url_repeater, mutants_chain)
 
             self.worker_pool.map_multi_args(self._do_request, args)
 
@@ -172,7 +172,7 @@ class url_fuzzer(CrawlPlugin):
         domain_path = url.get_domain_path()
 
         splitted_domain = domain.split('.')
-        for i in xrange(len(splitted_domain)):
+        for i in range(len(splitted_domain)):
             filename = '.'.join(splitted_domain[0: i + 1])
 
             for extension in self._backup_exts:

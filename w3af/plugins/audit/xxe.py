@@ -242,7 +242,7 @@ class xxe(AuditPlugin):
 
         try:
             original_value_str = smart_str_ignore(original_value)
-        except Exception, e:
+        except Exception as e:
             msg = ('Failed to encode unicode original value to string'
                    ' in _parse_xml(). Exception: "%s"')
             om.out.debug(msg % e)
@@ -255,7 +255,7 @@ class xxe(AuditPlugin):
 
         try:
             xml_root = etree.fromstring(original_value_str, parser=parser)
-        except Exception, e:
+        except Exception as e:
             msg = ('Failed to parse "%s..." as XML to inject XXE tests.'
                    ' The parameter name where injection failed was "%s".'
                    ' Exception: "%s"')

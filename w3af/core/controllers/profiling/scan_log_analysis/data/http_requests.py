@@ -50,7 +50,7 @@ def get_total_http_requests(scan_log_filename, scan):
             else:
                 urls[url] = 1
 
-    total = sum(count.itervalues())
+    total = sum(count.values())
 
     output = ListOutput('http_requests')
     output.append(ListOutputItem('Total HTTP requests sent', total))
@@ -64,7 +64,7 @@ def get_total_http_requests(scan_log_filename, scan):
     def by_value(a, b):
         return cmp(b[1], a[1])
 
-    count_list = count.items()
+    count_list = list(count.items())
     count_list.sort(by_value)
 
     responses_by_code = {}
@@ -75,7 +75,7 @@ def get_total_http_requests(scan_log_filename, scan):
     output.append(ListOutputItem('HTTP responses by code',
                                  responses_by_code))
 
-    methods_list = methods.items()
+    methods_list = list(methods.items())
     methods_list.sort(by_value)
 
     requests_by_method = {}
@@ -86,7 +86,7 @@ def get_total_http_requests(scan_log_filename, scan):
     output.append(ListOutputItem('HTTP request method analysis',
                                  requests_by_method))
 
-    urls_list = urls.items()
+    urls_list = list(urls.items())
     urls_list.sort(by_value)
     urls_list = urls_list[:10]
 

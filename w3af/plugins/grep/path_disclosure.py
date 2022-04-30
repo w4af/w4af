@@ -54,7 +54,7 @@ class path_disclosure(GrepPlugin):
         all_signatures = []
 
         for common_directory in get_common_directories():
-            regex_string = '[^A-Za-z0-9\._\-\\/\+~](%s.*?)[^A-Za-z0-9\._\-\\/\+~]'
+            regex_string = r'[^A-Za-z0-9\._\-\\/\+~](%s.*?)[^A-Za-z0-9\._\-\\/\+~]'
             regex_string = regex_string % common_directory
             all_signatures.append(regex_string)
             
@@ -89,7 +89,7 @@ class path_disclosure(GrepPlugin):
 
         # Sort by the longest match, this is needed for filtering out
         # some false positives. Please read the note below.
-        match_list.sort(longest_cmp)
+        match_list.sort(key=lambda a: 0-len(a))
 
         for match in match_list:
             # Avoid duplicated reports
@@ -158,7 +158,7 @@ class path_disclosure(GrepPlugin):
         return False
 
     def _is_attr_value(self, path_disclosure_string, response):
-        """
+        r"""
         This method was created to remove some false positives.
 
         This method consumes 99% of the CPU usage of the plugin, but there
@@ -208,7 +208,7 @@ class path_disclosure(GrepPlugin):
             return: False
         """
         for tag in parser_cache.dpc.get_tags_by_filter(response, None):
-            for value in tag.attrib.itervalues():
+            for value in tag.attrib.values():
                 if path_disclosure_string in value:
                     return True
 
@@ -275,7 +275,7 @@ class path_disclosure(GrepPlugin):
         """
         :return: A DETAILED description of the plugin functions and features.
         """
-        return """
+        return r"""
         This plugin greps every page for path disclosure vulnerabilities like:
 
             - C:\\www\\files\...
@@ -284,7 +284,3 @@ class path_disclosure(GrepPlugin):
         The results are saved to the KB, and used by all the plugins that need
         to know the location of a file inside the remote web server.
         """
-
-
-def longest_cmp(a, b):
-    return cmp(len(b), len(a))

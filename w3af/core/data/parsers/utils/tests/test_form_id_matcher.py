@@ -47,8 +47,8 @@ class TestFormIDMatcher(unittest.TestCase):
                                   'method': 'get'})
         form_idm = FormIDMatcher.from_json(json_string)
 
-        self.assertIsInstance(form_idm.hosted_at_url, re._pattern_type)
-        self.assertIsInstance(form_idm.action, re._pattern_type)
+        self.assertIsInstance(form_idm.hosted_at_url, re.Pattern)
+        self.assertIsInstance(form_idm.action, re.Pattern)
         self.assertEqual(form_idm.inputs, ['comment'])
         self.assertEqual(form_idm.attributes, {'class': 'comment-css'})
         self.assertEqual(form_idm.method, 'get')
@@ -60,7 +60,7 @@ class TestFormIDMatcher(unittest.TestCase):
         form_idm = FormIDMatcher.from_json(json_string)
 
         self.assertIsNone(form_idm.hosted_at_url)
-        self.assertIsInstance(form_idm.action, re._pattern_type)
+        self.assertIsInstance(form_idm.action, re.Pattern)
         self.assertEqual(form_idm.inputs, ['comment'])
         self.assertEqual(form_idm.attributes, {'class': 'comment-css'})
 
@@ -70,7 +70,7 @@ class TestFormIDMatcher(unittest.TestCase):
         form_idm = FormIDMatcher.from_json(json_string)
 
         self.assertIsNone(form_idm.hosted_at_url)
-        self.assertIsInstance(form_idm.action, re._pattern_type)
+        self.assertIsInstance(form_idm.action, re.Pattern)
         self.assertEqual(form_idm.inputs, ['comment'])
         self.assertIsNone(form_idm.attributes)
 

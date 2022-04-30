@@ -1,6 +1,6 @@
 #!/usr/bin/python -u
 
-from __future__ import print_function
+
 
 import requests
 import time
@@ -9,7 +9,8 @@ import sys
 
 def log(message):
     print(message)
-    file('rtt.log', 'a').write(message + '\n')
+    with open('rtt.log', 'a') as log_file:
+        log_file.write(message + '\n')
 
 
 def send_forever(target):

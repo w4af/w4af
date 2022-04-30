@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import unittest
+import codecs
 
 from w3af import ROOT_PATH
 from w3af.core.controllers.exceptions import BaseFrameworkException
@@ -43,11 +44,12 @@ class TestInputFileOption(unittest.TestCase):
 
     def test_valid_base64_data(self):
         value = '%s%s' % (InputFileOption.DATA_PROTO,
-                          'xyz'.encode('zlib').encode('base64').strip())
+                          codecs.encode(codecs.encode(b'xyz', 'zlib'), 'base64').strip().decode('utf-8'))
         opt = opt_factory('name', value, 'desc', INPUT_FILE, 'help', 'tab')
 
         self.assertEqual(opt.get_value_for_profile(), value)
-        self.assertEqual(file(opt.get_value()).read(), 'xyz')
+        with open(opt.get_value(), "rb") as f:
+            self.assertEqual(f.read(), b'xyz')
 
         self.assertEqual(opt.get_default_value(), opt.get_value())
 
@@ -74,7 +76,7 @@ class TestInputFileOption(unittest.TestCase):
         opt = opt_factory('name', self.INPUT_FILE, 'desc',
                           INPUT_FILE, 'help', 'tab')
 
-        self.assertEquals(opt.get_value(), self.INPUT_FILE)
+        self.assertEqual(opt.get_value(), self.INPUT_FILE)
 
     def test_relative_path_full_path_input(self):
         full_path = os.path.join(ROOT_PATH, 'core', 'data',
@@ -85,7 +87,7 @@ class TestInputFileOption(unittest.TestCase):
         opt = opt_factory('name', full_path, 'desc',
                           INPUT_FILE, 'help', 'tab')
 
-        self.assertEquals(opt.get_value(), relative_path)
+        self.assertEqual(opt.get_value(), relative_path)
 
     def test_relative_path_when_cwd_is_root(self):
         # Change the CWD to root
@@ -100,7 +102,7 @@ class TestInputFileOption(unittest.TestCase):
         opt = opt_factory('name', full_path, 'desc',
                           INPUT_FILE, 'help', 'tab')
 
-        self.assertEquals(opt.get_value(), relative_path)
+        self.assertEqual(opt.get_value(), relative_path)
 
         # Restore the previous CWD
         os.chdir(old_cwd)

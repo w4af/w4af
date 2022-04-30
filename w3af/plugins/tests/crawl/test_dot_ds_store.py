@@ -36,7 +36,7 @@ class TestDSStore(PluginTest):
         }
     }
 
-    DS_STORE = file(os.path.join(ROOT_PATH, 'plugins/tests/crawl/ds_store/DS_Store')).read()
+    DS_STORE = open(os.path.join(ROOT_PATH, 'plugins/tests/crawl/ds_store/DS_Store'), "rb").read()
 
     MOCK_RESPONSES = [MockResponse('http://mock/.DS_Store', DS_STORE),
                       MockResponse('http://mock/other', 'Secret directory'),
@@ -56,7 +56,7 @@ class TestDSStore(PluginTest):
         expected_urls = ('/', '/.DS_Store', '/other')
         urls = self.kb.get_all_known_urls()
 
-        self.assertEquals(
+        self.assertEqual(
             set(str(u) for u in urls),
             set((self.target_url + end) for end in expected_urls)
         )

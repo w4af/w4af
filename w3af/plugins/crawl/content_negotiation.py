@@ -21,9 +21,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import re
-import Queue
+import queue
 
-from itertools import izip, repeat
+from itertools import repeat
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.knowledge_base as kb
@@ -61,7 +61,7 @@ class content_negotiation(CrawlPlugin):
         #
         # Note that this queue can have ~20 items in the worse case scenario
         # it is not a risk to store it all in memory
-        self._to_bruteforce = Queue.Queue()
+        self._to_bruteforce = queue.Queue()
 
         # Run N checks to verify if content negotiation is enabled
         self._tries_left = 3
@@ -106,7 +106,7 @@ class content_negotiation(CrawlPlugin):
         while not self._to_bruteforce.empty():
             try:
                 self._to_bruteforce.get_nowait()
-            except Queue.Empty:
+            except queue.Empty:
                 continue
 
     def _find_new_resources(self, fuzzable_request):
@@ -155,7 +155,7 @@ class content_negotiation(CrawlPlugin):
         :return: A list of new fuzzable requests.
         """
         wl_url_generator = self._wordlist_url_generator()
-        args_generator = izip(wl_url_generator, repeat(Headers()))
+        args_generator = zip(wl_url_generator, repeat(Headers()))
 
         # Send the requests using threads:
         for base_url, alternates in self.worker_pool.map_multi_args(
@@ -176,7 +176,7 @@ class content_negotiation(CrawlPlugin):
         while not self._to_bruteforce.empty():
             try:
                 bf_url = self._to_bruteforce.get_nowait()
-            except Queue.Empty:
+            except queue.Empty:
                 break
             else:
                 directories = bf_url.get_directories()
@@ -185,9 +185,10 @@ class content_negotiation(CrawlPlugin):
                     if directory_url not in self._already_tested_dir:
                         self._already_tested_dir.add(directory_url)
 
-                        for word in file(self._wordlist):
-                            word = word.strip()
-                            yield directory_url.url_join(word)
+                        with open(self._wordlist) as word_fh:
+                            for word in word_fh:
+                                word = word.strip()
+                                yield directory_url.url_join(word)
 
     def _request_and_get_alternates(self, alternate_resource, headers):
         """

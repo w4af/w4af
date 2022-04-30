@@ -33,7 +33,7 @@ import w3af.core.controllers.output_manager as om
 from w3af import ROOT_PATH
 from w3af.core.controllers.daemons.proxy import ProxyHandler
 from w3af.core.controllers.exceptions import ProxyException
-
+from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 
 class Proxy(Process):
     """
@@ -149,9 +149,9 @@ class Proxy(Process):
         try:
             self._server = ProxyServer(self._config)
         except socket.error as se:
-            msg = 'Socket error while starting proxy: "%s"'
-            raise ProxyException(msg % se.strerror)
-        except Exception as pse:
+            raise ProxyException('Socket error while starting proxy: "%s"'
+                                 % se.strerror)
+        except ProxyServerError as pse:
             raise ProxyException('%s' % pse)
         else:
             # This is here to support port == 0, which will bind to the first

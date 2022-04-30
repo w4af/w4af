@@ -26,10 +26,10 @@
 >>> import urllib2
 >>> from keepalive import HTTPHandler
 >>> keepalive_handler = HTTPHandler()
->>> opener = urllib2.build_opener(keepalive_handler)
->>> urllib2.install_opener(opener)
+>>> opener = _urllib.request.build_opener(keepalive_handler)
+>>> _urllib.request.install_opener(opener)
 >>> 
->>> fo = urllib2.urlopen('http://www.python.org')
+>>> fo = _urllib.request.urlopen('http://www.python.org')
 
 If a connection to a given host is requested, and all of the existing
 connections are still in use, another connection will be opened.  If
@@ -103,12 +103,19 @@ EXTRA ATTRIBUTES AND METHODS
 
 """
 
-# $Id: keepalive.py,v 1.17 2006/12/08 00:14:16 mstenner Exp $
+from __future__ import print_function
 
-import urllib2
-import httplib
+try:
+    from thirdparty.six.moves import http_client as _http_client
+    from thirdparty.six.moves import range as _range
+    from thirdparty.six.moves import urllib as _urllib
+except ImportError:
+    from six.moves import http_client as _http_client
+    from six.moves import range as _range
+    from six.moves import urllib as _urllib
+
 import socket
-import thread
+import threading
 
 DEBUG = None
 
@@ -122,7 +129,7 @@ class ConnectionManager:
       * keep track of all existing
       """
     def __init__(self):
-        self._lock = thread.allocate_lock()
+        self._lock = threading.Lock()
         self._hostmap = {} # map hosts to a list of connections
         self._connmap = {} # map connections to host
         self._readymap = {} # map connection to ready state
@@ -130,7 +137,7 @@ class ConnectionManager:
     def add(self, host, connection, ready):
         self._lock.acquire()
         try:
-            if not self._hostmap.has_key(host): self._hostmap[host] = []
+            if host not in self._hostmap: self._hostmap[host] = []
             self._hostmap[host].append(connection)
             self._connmap[connection] = host
             self._readymap[connection] = ready
@@ -158,11 +165,11 @@ class ConnectionManager:
 
     def get_ready_conn(self, host):
         conn = None
-        self._lock.acquire()
         try:
-            if self._hostmap.has_key(host):
+            self._lock.acquire()
+            if host in self._hostmap:
                 for c in self._hostmap[host]:
-                    if self._readymap[c]:
+                    if self._readymap.get(c):
                         self._readymap[c] = 0
                         conn = c
                         break
@@ -214,7 +221,7 @@ class KeepAliveHandler:
     def do_open(self, req):
         host = req.host
         if not host:
-            raise urllib2.URLError('no host given')
+            raise _urllib.error.URLError('no host given')
 
         try:
             h = self._cm.get_ready_conn(host)
@@ -238,8 +245,8 @@ class KeepAliveHandler:
                 self._cm.add(host, h, 0)
                 self._start_transaction(h, req)
                 r = h.getresponse()
-        except (socket.error, httplib.HTTPException), err:
-            raise urllib2.URLError(err)
+        except (socket.error, _http_client.HTTPException) as err:
+            raise _urllib.error.URLError(err)
 
         if DEBUG: DEBUG.info("STATUS: %s, %s", r.status, r.reason)
 
@@ -274,7 +281,7 @@ class KeepAliveHandler:
             r = h.getresponse()
             # note: just because we got something back doesn't mean it
             # worked.  We'll check the version below, too.
-        except (socket.error, httplib.HTTPException):
+        except (socket.error, _http_client.HTTPException):
             r = None
         except:
             # adding this block just in case we've missed
@@ -307,41 +314,41 @@ class KeepAliveHandler:
 
     def _start_transaction(self, h, req):
         try:
-            if req.has_data():
+            if req.data:
                 data = req.data
                 if hasattr(req, 'selector'):
                     h.putrequest(req.get_method() or 'POST', req.selector, skip_host=req.has_header("Host"), skip_accept_encoding=req.has_header("Accept-encoding"))
                 else:
                     h.putrequest(req.get_method() or 'POST', req.get_selector(), skip_host=req.has_header("Host"), skip_accept_encoding=req.has_header("Accept-encoding"))
-                if not req.headers.has_key('Content-type'):
+                if 'Content-type' not in req.headers:
                     h.putheader('Content-type',
                                 'application/x-www-form-urlencoded')
-                if not req.headers.has_key('Content-length'):
+                if 'Content-length' not in req.headers:
                     h.putheader('Content-length', '%d' % len(data))
             else:
                 if hasattr(req, 'selector'):
                     h.putrequest(req.get_method() or 'GET', req.selector, skip_host=req.has_header("Host"), skip_accept_encoding=req.has_header("Accept-encoding"))
                 else:
                     h.putrequest(req.get_method() or 'GET', req.get_selector(), skip_host=req.has_header("Host"), skip_accept_encoding=req.has_header("Accept-encoding"))
-        except (socket.error, httplib.HTTPException), err:
-            raise urllib2.URLError(err)
+        except (socket.error, _http_client.HTTPException) as err:
+            raise _urllib.error.URLError(err)
 
-        if not req.headers.has_key('Connection'):
+        if 'Connection' not in req.headers:
             req.headers['Connection'] = 'keep-alive'
 
         for args in self.parent.addheaders:
-            if not req.headers.has_key(args[0]):
+            if args[0] not in req.headers:
                 h.putheader(*args)
         for k, v in req.headers.items():
             h.putheader(k, v)
         h.endheaders()
-        if req.has_data():
+        if req.data:
             h.send(data)
 
     def _get_connection(self, host):
         return NotImplementedError
 
-class HTTPHandler(KeepAliveHandler, urllib2.HTTPHandler):
+class HTTPHandler(KeepAliveHandler, _urllib.request.HTTPHandler):
     def __init__(self):
         KeepAliveHandler.__init__(self)
 
@@ -351,7 +358,7 @@ class HTTPHandler(KeepAliveHandler, urllib2.HTTPHandler):
     def _get_connection(self, host):
         return HTTPConnection(host)
 
-class HTTPSHandler(KeepAliveHandler, urllib2.HTTPSHandler):
+class HTTPSHandler(KeepAliveHandler, _urllib.request.HTTPSHandler):
     def __init__(self, ssl_factory=None):
         KeepAliveHandler.__init__(self)
         if not ssl_factory:
@@ -369,7 +376,7 @@ class HTTPSHandler(KeepAliveHandler, urllib2.HTTPSHandler):
         try: return self._ssl_factory.get_https_connection(host)
         except AttributeError: return HTTPSConnection(host)
 
-class HTTPResponse(httplib.HTTPResponse):
+class HTTPResponse(_http_client.HTTPResponse):
     # we need to subclass HTTPResponse in order to
     # 1) add readline() and readlines() methods
     # 2) add close_connection() methods
@@ -391,9 +398,9 @@ class HTTPResponse(httplib.HTTPResponse):
 
     def __init__(self, sock, debuglevel=0, strict=0, method=None):
         if method: # the httplib in python 2.3 uses the method arg
-            httplib.HTTPResponse.__init__(self, sock, debuglevel, method)
+            _http_client.HTTPResponse.__init__(self, sock, debuglevel, method)
         else: # 2.2 doesn't
-            httplib.HTTPResponse.__init__(self, sock, debuglevel)
+            _http_client.HTTPResponse.__init__(self, sock, debuglevel)
         self.fileno = sock.fileno
         self.code = None
         self._method = method
@@ -404,7 +411,7 @@ class HTTPResponse(httplib.HTTPResponse):
         self._url = None     # (same)
         self._connection = None # (same)
 
-    _raw_read = httplib.HTTPResponse.read
+    _raw_read = _http_client.HTTPResponse.read
 
     def close(self):
         if self.fp:
@@ -413,6 +420,10 @@ class HTTPResponse(httplib.HTTPResponse):
             if self._handler:
                 self._handler._request_closed(self, self._host,
                                               self._connection)
+
+    # Note: Patch for Python3 (otherwise, connections won't be reusable)
+    def _close_conn(self):
+        self.close()
 
     def close_connection(self):
         self._handler._remove_connection(self._host, self._connection, close=1)
@@ -468,11 +479,11 @@ class HTTPResponse(httplib.HTTPResponse):
         return list
 
 
-class HTTPConnection(httplib.HTTPConnection):
+class HTTPConnection(_http_client.HTTPConnection):
     # use the modified response class
     response_class = HTTPResponse
 
-class HTTPSConnection(httplib.HTTPSConnection):
+class HTTPSConnection(_http_client.HTTPSConnection):
     response_class = HTTPResponse
 
 #########################################################################
@@ -483,86 +494,86 @@ def error_handler(url):
     global HANDLE_ERRORS
     orig = HANDLE_ERRORS
     keepalive_handler = HTTPHandler()
-    opener = urllib2.build_opener(keepalive_handler)
-    urllib2.install_opener(opener)
+    opener = _urllib.request.build_opener(keepalive_handler)
+    _urllib.request.install_opener(opener)
     pos = {0: 'off', 1: 'on'}
     for i in (0, 1):
-        print "  fancy error handling %s (HANDLE_ERRORS = %i)" % (pos[i], i)
+        print("  fancy error handling %s (HANDLE_ERRORS = %i)" % (pos[i], i))
         HANDLE_ERRORS = i
         try:
-            fo = urllib2.urlopen(url)
+            fo = _urllib.request.urlopen(url)
             foo = fo.read()
             fo.close()
             try: status, reason = fo.status, fo.reason
             except AttributeError: status, reason = None, None
-        except IOError, e:
-            print "  EXCEPTION: %s" % e
+        except IOError as e:
+            print("  EXCEPTION: %s" % e)
             raise
         else:
-            print "  status = %s, reason = %s" % (status, reason)
+            print("  status = %s, reason = %s" % (status, reason))
     HANDLE_ERRORS = orig
     hosts = keepalive_handler.open_connections()
-    print "open connections:", hosts
+    print("open connections:", hosts)
     keepalive_handler.close_all()
 
 def continuity(url):
-    import md5
+    from hashlib import md5
     format = '%25s: %s'
 
     # first fetch the file with the normal http handler
-    opener = urllib2.build_opener()
-    urllib2.install_opener(opener)
-    fo = urllib2.urlopen(url)
+    opener = _urllib.request.build_opener()
+    _urllib.request.install_opener(opener)
+    fo = _urllib.request.urlopen(url)
     foo = fo.read()
     fo.close()
-    m = md5.new(foo)
-    print format % ('normal urllib', m.hexdigest())
+    m = md5(foo)
+    print(format % ('normal urllib', m.hexdigest()))
 
     # now install the keepalive handler and try again
-    opener = urllib2.build_opener(HTTPHandler())
-    urllib2.install_opener(opener)
+    opener = _urllib.request.build_opener(HTTPHandler())
+    _urllib.request.install_opener(opener)
 
-    fo = urllib2.urlopen(url)
+    fo = _urllib.request.urlopen(url)
     foo = fo.read()
     fo.close()
-    m = md5.new(foo)
-    print format % ('keepalive read', m.hexdigest())
+    m = md5(foo)
+    print(format % ('keepalive read', m.hexdigest()))
 
-    fo = urllib2.urlopen(url)
+    fo = _urllib.request.urlopen(url)
     foo = ''
     while 1:
         f = fo.readline()
         if f: foo = foo + f
         else: break
     fo.close()
-    m = md5.new(foo)
-    print format % ('keepalive readline', m.hexdigest())
+    m = md5(foo)
+    print(format % ('keepalive readline', m.hexdigest()))
 
 def comp(N, url):
-    print '  making %i connections to:\n  %s' % (N, url)
+    print('  making %i connections to:\n  %s' % (N, url))
 
     sys.stdout.write('  first using the normal urllib handlers')
     # first use normal opener
-    opener = urllib2.build_opener()
-    urllib2.install_opener(opener)
+    opener = _urllib.request.build_opener()
+    _urllib.request.install_opener(opener)
     t1 = fetch(N, url)
-    print '  TIME: %.3f s' % t1
+    print('  TIME: %.3f s' % t1)
 
     sys.stdout.write('  now using the keepalive handler       ')
     # now install the keepalive handler and try again
-    opener = urllib2.build_opener(HTTPHandler())
-    urllib2.install_opener(opener)
+    opener = _urllib.request.build_opener(HTTPHandler())
+    _urllib.request.install_opener(opener)
     t2 = fetch(N, url)
-    print '  TIME: %.3f s' % t2
-    print '  improvement factor: %.2f' % (t1/t2, )
+    print('  TIME: %.3f s' % t2)
+    print('  improvement factor: %.2f' % (t1/t2, ))
 
 def fetch(N, url, delay=0):
     import time
     lens = []
     starttime = time.time()
-    for i in range(N):
+    for i in _range(N):
         if delay and i > 0: time.sleep(delay)
-        fo = urllib2.urlopen(url)
+        fo = _urllib.request.urlopen(url)
         foo = fo.read()
         fo.close()
         lens.append(len(foo))
@@ -572,7 +583,7 @@ def fetch(N, url, delay=0):
     for i in lens[1:]:
         j = j + 1
         if not i == lens[0]:
-            print "WARNING: inconsistent length on read %i: %i" % (j, i)
+            print("WARNING: inconsistent length on read %i: %i" % (j, i))
 
     return diff
 
@@ -580,16 +591,16 @@ def test_timeout(url):
     global DEBUG
     dbbackup = DEBUG
     class FakeLogger:
-        def debug(self, msg, *args): print msg % args
+        def debug(self, msg, *args): print(msg % args)
         info = warning = error = debug
     DEBUG = FakeLogger()
-    print "  fetching the file to establish a connection"
-    fo = urllib2.urlopen(url)
+    print("  fetching the file to establish a connection")
+    fo = _urllib.request.urlopen(url)
     data1 = fo.read()
     fo.close()
 
     i = 20
-    print "  waiting %i seconds for the server to close the connection" % i
+    print("  waiting %i seconds for the server to close the connection" % i)
     while i > 0:
         sys.stdout.write('\r  %2i' % i)
         sys.stdout.flush()
@@ -597,33 +608,33 @@ def test_timeout(url):
         i -= 1
     sys.stderr.write('\r')
 
-    print "  fetching the file a second time"
-    fo = urllib2.urlopen(url)
+    print("  fetching the file a second time")
+    fo = _urllib.request.urlopen(url)
     data2 = fo.read()
     fo.close()
 
     if data1 == data2:
-        print '  data are identical'
+        print('  data are identical')
     else:
-        print '  ERROR: DATA DIFFER'
+        print('  ERROR: DATA DIFFER')
 
     DEBUG = dbbackup
 
 
 def test(url, N=10):
-    print "checking error hander (do this on a non-200)"
+    print("checking error hander (do this on a non-200)")
     try: error_handler(url)
-    except IOError, e:
-        print "exiting - exception will prevent further tests"
+    except IOError as e:
+        print("exiting - exception will prevent further tests")
         sys.exit()
-    print
-    print "performing continuity test (making sure stuff isn't corrupted)"
+    print()
+    print("performing continuity test (making sure stuff isn't corrupted)")
     continuity(url)
-    print
-    print "performing speed comparison"
+    print()
+    print("performing speed comparison")
     comp(N, url)
-    print
-    print "performing dropped-connection check"
+    print()
+    print("performing dropped-connection check")
     test_timeout(url)
 
 if __name__ == '__main__':
@@ -633,6 +644,6 @@ if __name__ == '__main__':
         N = int(sys.argv[1])
         url = sys.argv[2]
     except:
-        print "%s <integer> <url>" % sys.argv[0]
+        print("%s <integer> <url>" % sys.argv[0])
     else:
         test(url, N)

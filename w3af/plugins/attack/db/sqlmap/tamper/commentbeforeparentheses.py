@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -9,14 +9,14 @@ import re
 
 from lib.core.enums import PRIORITY
 
-__priority__ = PRIORITY.LOW
+__priority__ = PRIORITY.NORMAL
 
 def dependencies():
     pass
 
 def tamper(payload, **kwargs):
     """
-    Prepends (inline) comment before parentheses
+    Prepends (inline) comment before parentheses (e.g. ( -> /**/()
 
     Tested against:
         * Microsoft SQL Server
@@ -35,6 +35,6 @@ def tamper(payload, **kwargs):
     retVal = payload
 
     if payload:
-        retVal = re.sub(r"\b(\w+)\(", "\g<1>/**/(", retVal)
+        retVal = re.sub(r"\b(\w+)\(", r"\g<1>/**/(", retVal)
 
     return retVal

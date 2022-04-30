@@ -19,11 +19,12 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import codecs
 import os
 import sys
 import time
 
-from Queue import Empty
+from queue import Empty
 from functools import wraps
 from multiprocessing.dummy import Process
 
@@ -45,7 +46,7 @@ def task_decorator(method):
     
     @wraps(method)
     def _wrapper(self, *args, **kwds):
-        rnd_id = os.urandom(32).encode('hex')
+        rnd_id = codecs.encode(os.urandom(32), 'hex_codec')
         function_id = '%s_%s' % (method.__name__, rnd_id)
 
         self._add_task(function_id)
@@ -175,7 +176,7 @@ class BaseConsumer(Process):
             if work_unit == POISON_PILL:
                 try:
                     self._process_poison_pill()
-                except Exception, e:
+                except Exception as e:
                     msg = 'An exception was found while processing poison pill: "%s"'
                     om.out.debug(msg % e)
                 finally:
@@ -258,7 +259,7 @@ class BaseConsumer(Process):
 
         try:
             pool.close()
-        except Exception, e:
+        except Exception as e:
             args = ('closing', self.get_name(), e)
             om.out.debug(msg_fmt % args)
 
@@ -267,7 +268,7 @@ class BaseConsumer(Process):
 
         try:
             pool.join()
-        except Exception, e:
+        except Exception as e:
             args = ('joining', self.get_name(), e)
             om.out.debug(msg_fmt % args)
 
@@ -275,7 +276,7 @@ class BaseConsumer(Process):
             # tasks to complete. If that fails, then call terminate()
             try:
                 pool.terminate()
-            except Exception, e:
+            except Exception as e:
                 args = ('terminating', self.get_name(), e)
                 om.out.debug(msg_fmt % args)
             else:
@@ -289,7 +290,7 @@ class BaseConsumer(Process):
         # Finish this consumer and everyone consuming the output
         try:
             self._teardown()
-        except Exception, e:
+        except Exception as e:
             msg = 'Exception found while calling teardown() in %s consumer: "%s"'
             args = (self.get_name(), e)
             om.out.debug(msg % args)
@@ -544,7 +545,7 @@ class BaseConsumer(Process):
     def get_result_nowait(self):
         return self._out_queue.get_nowait()
 
-    def handle_exception(self, phase, plugin_name, fuzzable_request, _exception):
+    def handle_exception(self, phase, plugin_name, fuzzable_request, _exception, store_tb=False):
         """
         Get the exception information, and put it into the output queue
         then, the strategy will get the items from the output queue and
@@ -567,7 +568,7 @@ class BaseConsumer(Process):
                                        _exception,
                                        tb,
                                        enabled_plugins,
-                                       store_tb=False)
+                                       store_tb=store_tb)
         self._out_queue.put(exception_data)
 
     def add_observer(self, observer):

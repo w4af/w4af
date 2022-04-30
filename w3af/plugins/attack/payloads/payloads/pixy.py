@@ -70,22 +70,19 @@ class pixy(Payload):
                             self.result[vuln_type] = []
                         self.result[vuln_type].append(location)
 
-        def visitor(_, path, list_of_subitems):
-            for item in list_of_subitems:
-                full_path = os.path.join(path, item)
+        for directory, dirnames, filenames in os.walk(local_temp_dir):
+            for item in filenames:
+                full_path = os.path.join(directory, item)
 
-                if os.path.isfile(full_path):
-                    pixy_full_with_target = pixy_full + ' ' + full_path
-                    proc = subprocess.Popen(pixy_full_with_target,
-                                            shell=True,
-                                            stdout=subprocess.PIPE,
-                                            stderr=subprocess.PIPE,
-                                            )
-                    stdout_value = proc.communicate()[0]
+                pixy_full_with_target = pixy_full + ' ' + full_path
+                proc = subprocess.Popen(pixy_full_with_target,
+                                        shell=True,
+                                        stdout=subprocess.PIPE,
+                                        stderr=subprocess.PIPE,
+                                        )
+                stdout_value = proc.communicate()[0]
 
-                    extract_info(stdout_value)
-
-        os.path.walk(local_temp_dir, visitor, None)
+                extract_info(stdout_value)
 
         return self.result
 

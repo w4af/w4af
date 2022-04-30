@@ -53,7 +53,7 @@ class TestPathDisclosure(unittest.TestCase):
         res = self._create_response('header body footer')
         self.plugin.grep(self.request, res)
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     @pytest.mark.deprecated
     def test_path_disclosure_positive(self):
@@ -61,7 +61,7 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
 
         path = infos[0]['path']
         self.assertEqual(path, '/etc/passwd')
@@ -76,7 +76,7 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     @pytest.mark.deprecated
     def test_path_disclosure_calculated_webroot(self):
@@ -96,7 +96,7 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     @pytest.mark.deprecated
     def test_path_disclosure_false_positive_not_starting_with(self):
@@ -106,7 +106,7 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     @pytest.mark.deprecated
     def test_path_disclosure_tag_text(self):
@@ -116,7 +116,7 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
 
     @pytest.mark.deprecated
     def test_path_disclosure_tag_text_quotes(self):
@@ -126,4 +126,4 @@ class TestPathDisclosure(unittest.TestCase):
         self.plugin.grep(self.request, res)
 
         infos = kb.kb.get('path_disclosure', 'path_disclosure')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)

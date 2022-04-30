@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 from nose.plugins.attrib import attr
-from mock import patch
+from unittest.mock import patch
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
@@ -68,7 +68,7 @@ class TestPHPEggs(PluginTest):
         self.assertEqual(len(php_version), 1, php_version)
 
         php_version = php_version[0]
-        self.assertEqual(php_version['version'], [u'5.3.2', u'5.3.1'])
+        self.assertEqual(php_version['version'], ['5.3.2', '5.3.1'])
 
 
 @attr('smoke')

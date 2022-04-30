@@ -70,7 +70,7 @@ class CachedDiskDict(object):
         try:
             return self[key]
         except KeyError:
-            if default is not -456:
+            if default != -456:
                 return default
 
         raise KeyError()
@@ -224,13 +224,7 @@ class CachedDiskDict(object):
             yield key
 
     def iteritems(self):
-        """
-        Decided not to increase the access count when iterating through the
-        items. In most cases the iteration will be performed on all items,
-        thus increasing the access count +1 for each, which will leave all
-        access counts +1, forcing no movements between memory and disk.
-        """
-        for key, value in self._in_memory.iteritems():
+        for key, value in self._in_memory.items():
             yield key, value
 
         for key, value in self._disk_dict.iteritems():

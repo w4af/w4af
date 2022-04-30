@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
-import compiler
+import py_compile
 import subprocess
 import sys
 
@@ -30,9 +30,8 @@ from w3af.core.data.db.startup_cfg import StartUpConfig
 class TestW3afConsole(unittest.TestCase):
     def test_compiles(self):
         try:
-            compiler.compile(file('w3af_console').read(),
-                             '/tmp/foo.tmp', 'exec')
-        except SyntaxError, se:
+            py_compile.compile('w3af_console', '/tmp/foo.tmp', 'exec')
+        except SyntaxError as se:
             self.assertTrue(False, 'Error in w3af_console code "%s"' % se)
 
     def test_get_prompt(self):

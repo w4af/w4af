@@ -75,6 +75,6 @@ class ExactDelay(object):
         self._delay_multiplier = mult
 
     def __repr__(self):
-        return u'<ExactDelay (fmt:%s, delta:%s, mult:%s)>' % (self._delay_fmt,
+        return '<ExactDelay (fmt:%s, delta:%s, mult:%s)>' % (self._delay_fmt,
                                                               self._delay_delta,
                                                               self._delay_multiplier)

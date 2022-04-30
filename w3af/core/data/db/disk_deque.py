@@ -1,6 +1,8 @@
+from functools import total_ordering
+
 from w3af.core.data.db.disk_dict import DiskDict
 
-
+@total_ordering
 class DiskDeque(object):
     """
     The base code for this file comes from [0], I've modified it to use a
@@ -60,7 +62,7 @@ class DiskDeque(object):
     def rotate(self, n=1):
         if self:
             n %= len(self)
-            for i in xrange(n):
+            for i in range(n):
                 self.appendleft(self.pop())
 
     def __getitem__(self, i):
@@ -86,17 +88,25 @@ class DiskDeque(object):
         data = self.data
         if i < 0:
             i += size
-        for j in xrange(self.left+i, self.right-1):
+        for j in range(self.left+i, self.right-1):
             data[j] = data[j+1]
         self.pop()
 
     def __len__(self):
         return self.right - self.left
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
         if type(self) != type(other):
-            return cmp(type(self), type(other))
-        return cmp(list(self), list(other))
+            return False
+        return list(self) == list(other)
+
+    def __ne__(self, other):
+        if type(self) != type(other):
+            return True
+        return list(self) != list(other)
+
+    def __lt__(self, other):
+        return list(self) < list(other)
 
     def __repr__(self, _track=[]):
         if id(self) in _track:

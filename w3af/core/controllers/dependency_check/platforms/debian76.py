@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro
 
 from .ubuntu1204 import Ubuntu1204
 
@@ -28,5 +28,5 @@ class Debian76(Ubuntu1204):
     SYSTEM_NAME = 'Debian 7.6'
 
     def is_current_platform(self):
-        dist_name, dist_version, _ = platform.dist()
+        dist_name, dist_version, _ = distro.linux_distribution()
         return 'debian' == dist_name and '7.6' == dist_version

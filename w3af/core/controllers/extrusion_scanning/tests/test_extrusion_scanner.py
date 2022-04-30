@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 import unittest
-import commands
+import subprocess
 
 import w3af.core.data.kb.config as cf
 
@@ -30,13 +30,14 @@ from w3af.core.controllers.extrusion_scanning.extrusionScanner import extrusionS
 from w3af.plugins.tests.helper import onlyroot
 
 
+@attr('suspect')
 class TestExtrusionScanner(unittest.TestCase):
     """
     Test the extrusion scanner's basic features.
     """
     @pytest.mark.deprecated
     def test_basic(self):
-        es = extrusionScanner(commands.getoutput)
+        es = extrusionScanner(subprocess.getoutput)
 
         self.assertTrue(es.can_scan())
 
@@ -50,10 +51,10 @@ class TestExtrusionScanner(unittest.TestCase):
         # FIXME: This unittest will only work in Linux
         cf.cf.save('interface', 'lo')
         cf.cf.save('local_ip_address', '127.0.0.1')
-        es = extrusionScanner(commands.getoutput)
+        es = extrusionScanner(subprocess.getoutput)
 
         inbound_port = es.get_inbound_port()
-        self.assertEquals(inbound_port, 8080)
+        self.assertEqual(inbound_port, 8080)
 
     def test_zzz(self):
         """

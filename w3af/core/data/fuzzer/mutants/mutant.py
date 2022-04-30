@@ -19,10 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import abc
 import copy
 
 from w3af.core.data.constants.ignored_params import is_in_ignored_parameters
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_unicode
 from w3af.core.data.db.disk_item import DiskItem
 
 
@@ -45,10 +46,12 @@ class Mutant(DiskItem):
     def set_fuzzable_request(self, freq):
         self._freq = freq
 
+    @abc.abstractmethod
     def set_dc(self, data_container):
         msg = 'Mutant sub-class "%s" needs to implement set_dc'
         raise NotImplementedError(msg % self.__class__.__name__)
 
+    @abc.abstractmethod
     def get_dc(self):
         msg = 'Mutant sub-class "%s" needs to implement get_dc'
         raise NotImplementedError(msg % self.__class__.__name__)
@@ -145,9 +148,18 @@ class Mutant(DiskItem):
     def get_eq_attrs(self):
         return ['_freq', '_original_response_body']
 
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
+    def __getstate__(self):
+        return self.__dict__
+
     def __eq__(self, other):
         return (self.get_token() == other.get_token() and
                 self.get_fuzzable_request() == other.get_fuzzable_request())
+
+    def __deepcopy__(self, memo):
+        return self.__class__(copy.deepcopy(self._freq, memo))
 
     def found_at(self):
         """
@@ -160,12 +172,12 @@ class Mutant(DiskItem):
         token = dc.get_token()
 
         msg = '"%s", using HTTP method %s. The sent data was: "%s"'
-        msg %= (smart_str_ignore(self.get_url()),
-                smart_str_ignore(self.get_method()),
-                smart_str_ignore(dc_short))
+        msg %= (smart_unicode(self.get_url()),
+                smart_unicode(self.get_method()),
+                smart_unicode(dc_short))
 
         if token is not None:
-            msg += ' The modified parameter was "%s".' % smart_str_ignore(token.get_name())
+            msg += ' The modified parameter was "%s".' % smart_unicode(token.get_name())
 
         return msg
 
@@ -239,7 +251,7 @@ class Mutant(DiskItem):
                     dc_copy.smart_fill()
 
                 if append:
-                    if not isinstance(payload, basestring):
+                    if not isinstance(payload, str):
                         # This prevents me from flattening the special type to
                         # a string in a couple of lines below where I apply the
                         # string formatting

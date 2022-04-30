@@ -54,5 +54,5 @@ def draw_worker_pool_size(scan_log_filename, scan):
              worker_pool_sizes,
              label='Workers')
 
-    print(fig.show())
+    print((fig.show()))
     print('')

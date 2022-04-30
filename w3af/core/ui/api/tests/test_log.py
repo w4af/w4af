@@ -22,11 +22,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import pytest
 import json
 
-from w3af.core.ui.api.tests.utils.api_unittest import APIUnitTest
+from w3af.core.ui.api.tests.utils.test_api import APIUnitTest
 from w3af.core.ui.api.tests.utils.test_profile import (get_test_profile,
                                                        SLOW_TEST_PROFILE)
+from nose.plugins.attrib import attr
 
 
+@attr("moth")
 class ApiScanLogTest(APIUnitTest):
 
     @pytest.mark.deprecated
@@ -61,7 +63,7 @@ class ApiScanLogTest(APIUnitTest):
                          '/scans/%s/log?page=1' % scan_id)
 
         zero_entry = log_data_page_0['entries'][0]
-        self.assertEqual(zero_entry['message'], u'Called w3afCore.start()')
+        self.assertEqual(zero_entry['message'], 'Called w3afCore.start()')
         self.assertEqual(zero_entry['severity'], None)
         self.assertEqual(zero_entry['type'], 'debug')
         self.assertIsInstance(zero_entry['id'], int)
@@ -89,7 +91,7 @@ class ApiScanLogTest(APIUnitTest):
                          '/scans/%s/log?id=200' % scan_id)
 
         zero_entry = log_data_page_0['entries'][0]
-        self.assertEqual(zero_entry['message'], u'Called w3afCore.start()')
+        self.assertEqual(zero_entry['message'], 'Called w3afCore.start()')
         self.assertEqual(zero_entry['severity'], None)
         self.assertEqual(zero_entry['type'], 'debug')
         self.assertEqual(zero_entry['id'], 0)

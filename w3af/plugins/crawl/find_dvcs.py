@@ -160,7 +160,7 @@ class find_dvcs(CrawlPlugin):
 
         try:
             filenames = repo_get_files(http_response.get_raw_body())
-        except Exception, e:
+        except Exception as e:
             # We get here when the HTTP response is NOT a 404, but the response
             # body couldn't be properly parsed. This is usually because of a false
             # positive in the is_404 function, OR a new version-format of the file
@@ -229,7 +229,7 @@ class find_dvcs(CrawlPlugin):
         else:
             return set()
 
-        for _ in xrange(index_entries):
+        for _ in range(index_entries):
             offset += filename_offset - 1
             length, = struct.unpack('>B', body[offset:offset + 1])
             if length > (len(body) - offset):
@@ -277,7 +277,7 @@ class find_dvcs(CrawlPlugin):
 
         body = body.split('\x00')
         found = True
-        for offset in xrange(len(body)):
+        for offset in range(len(body)):
             filename = body[offset - 2]
             if body[offset] == 'd':
                 if found:
@@ -355,9 +355,8 @@ class find_dvcs(CrawlPlugin):
                                               delete=False,
                                               dir=get_temp_dir())
 
-        temp_db_fh = file(temp_db.name, 'w')
-        temp_db_fh.write(body)
-        temp_db_fh.close()
+        with open(temp_db.name, 'w') as temp_db_fh:
+            temp_db_fh.write(body)
 
         query = ('SELECT local_relpath, '
                  ' ".svn/pristine/" || substr(checksum,7,2) || "/" || substr(checksum,7) || ".svn-base" AS svn'
@@ -373,7 +372,7 @@ class find_dvcs(CrawlPlugin):
             for path, svn_path in query_result:
                 filenames.add(path)
                 filenames.add(svn_path)
-        except Exception, e:
+        except Exception as e:
             msg = 'Failed to extract filenames from wc.db file. The exception was: "%s"'
             args = (e,)
             om.out.debug(msg % args)

@@ -58,10 +58,10 @@ class SSLCertificate(object):
         cert.set_pubkey(key)
         cert.sign(key, 'sha256')
 
-        with open(self.cert_path, 'w') as f:
+        with open(self.cert_path, 'wb') as f:
             f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
 
-        with open(self.key_path, 'w') as f:
+        with open(self.key_path, 'wb') as f:
             f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, key))
 
     def get_cert_key(self, host=None):

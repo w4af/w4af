@@ -61,14 +61,14 @@ def url_encode(data,
 
         result.append(char)
 
-    return u''.join(result)
+    return ''.join(result)
 
 
 def generate_url_encoding_functions():
     by_code_replacers = (
         lambda c: c,
         lambda c: URL_HEX_FORMAT % HEX_MAP.get(c, c),
-        lambda c: URL_HEX_FORMAT % HEX_MAP.get(c, c) if c != u' ' else u'+'
+        lambda c: URL_HEX_FORMAT % HEX_MAP.get(c, c) if c != ' ' else '+'
     )
 
     replace_by_codes = (
@@ -76,16 +76,16 @@ def generate_url_encoding_functions():
         {},
 
         # RFC 2396 Uniform Resource Identifiers reserved
-        {u';', u'/', u'?', u':', u'@', u'&', u'=', u'+', u'$', u','},
+        {';', '/', '?', ':', '@', '&', '=', '+', '$', ','},
 
         # RFC 2396 Uniform Resource Identifiers reserved without the slash
-        {u';', u'?', u':', u'@', u'&', u'=', u'+', u'$', u','},
+        {';', '?', ':', '@', '&', '=', '+', '$', ','},
 
         # All not in printable
-        {unichr(c) for c in xrange(256) if unichr(c) not in string.printable},
+        {chr(c) for c in range(256) if chr(c) not in string.printable},
 
         # All not in digits, letters and dot
-        {unichr(c) for c in xrange(256) if unichr(c) not in string.digits + string.letters + u'.'},
+        {chr(c) for c in range(256) if chr(c) not in string.digits + string.ascii_letters + '.'},
 
         # All characters are replaced
         HEX_MAP,
@@ -145,7 +145,7 @@ def html_encode(data,
 
         result.append(char)
 
-    return u''.join(result)
+    return ''.join(result)
 
 
 def generate_html_encoding_functions():
@@ -164,8 +164,8 @@ def generate_html_encoding_functions():
     replace_by_codes = (
         {},
         SPECIAL_CHARS,
-        {u'&', u'<', u'>'},
-        {u'&', u'<', u'>', u'"'},
+        {'&', '<', '>'},
+        {'&', '<', '>', '"'},
         HEX_MAP,
     )
 
@@ -173,8 +173,8 @@ def generate_html_encoding_functions():
         {},
         SPECIAL_CHARS,
         HTML_ENCODE_NAMES,
-        {u'&', u'<', u'>'},
-        {u'&', u'<', u'>', u'"'},
+        {'&', '<', '>'},
+        {'&', '<', '>', '"'},
         HEX_MAP,
     )
 
@@ -202,10 +202,10 @@ def generate_html_encoding_functions():
 def unicode_escape(data):
     """
     This encoding is used in JSON:
-        Double quotes become: \u0022
-        Single quotes become: \u0027
+        Double quotes become: \\u0022
+        Single quotes become: \\u0027
     """
-    return data.replace(u'"', u'\\u0022').replace(u"'", u'\\u0027')
+    return data.replace('"', '\\u0022').replace("'", '\\u0027')
 
 
 def backslash_escape(data):
@@ -214,7 +214,7 @@ def backslash_escape(data):
         Double quotes become: \"
         Single quotes become: \'
     """
-    return data.replace(u'"', u'\\"').replace(u"'", u"\\'")
+    return data.replace('"', '\\"').replace("'", "\\'")
 
 
 JSON_ENCODING_FUNCTIONS = (

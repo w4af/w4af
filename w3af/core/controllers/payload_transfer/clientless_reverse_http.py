@@ -90,10 +90,9 @@ class ClientlessReverseHTTP(BasePayloadTransfer):
         # Create the file
         filename = rand_alpha(10)
         file_path = get_temp_dir() + os.path.sep + filename
-        f = file(file_path, 'w')
-        f.write(data_str)
-        f.close()
-
+        with open(file_path, "w") as f:
+            f.write(data_str)
+    
         # Start a web server on the inbound port and create the file that
         # will be fetched by the compromised host
         webserver.start_webserver(cf.cf.get('local_ip_address'),

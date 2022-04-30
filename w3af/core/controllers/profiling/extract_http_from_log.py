@@ -48,12 +48,14 @@ def extract(log_file, http_request_id):
 def main(args):
     try:
         request, response = extract(args.log_file, args.id)
-    except Exception, e:
+    except Exception as e:
         print(e)
         sys.exit(1)
 
-    file('%s.request' % args.id, 'w').write(request)
-    file('%s.response' % args.id, 'w').write(response)
+    with open('%s.request' % args.id, 'w') as request_fh:
+        request_fh.write(request)
+    with open('%s.response' % args.id, 'w') as response_fh:
+        response_fh.write(response)
 
 
 if __name__ == '__main__':

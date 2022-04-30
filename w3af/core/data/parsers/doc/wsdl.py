@@ -65,7 +65,7 @@ class WSDLParser(object):
                 self._proxy = SOAPpy.WSDL.Proxy(xmlData)
             except expat.ExpatError:
                 raise BaseFrameworkException('The body content is not a WSDL.')
-            except Exception, e:
+            except Exception as e:
                 msg = 'The body content is not a WSDL.'
                 msg += ' Unhandled exception in SOAPpy: "' + str(e) + '".'
                 om.out.debug(msg)
@@ -76,7 +76,7 @@ class WSDLParser(object):
         @method: The method name
         :return: The namespace of the WSDL
         """
-        if method in self._proxy.methods.keys():
+        if method in list(self._proxy.methods.keys()):
             return str(self._proxy.methods[method].namespace)
         else:
             raise BaseFrameworkException('Unknown method name.')
@@ -86,7 +86,7 @@ class WSDLParser(object):
         @methodName: The method name
         :return: The soap action as a URL object
         """
-        if methodName in self._proxy.methods.keys():
+        if methodName in list(self._proxy.methods.keys()):
             action_str = str(self._proxy.methods[methodName].soapAction)
             action_url = URL(action_str)
             return action_url
@@ -98,7 +98,7 @@ class WSDLParser(object):
         @methodName: The method name
         :return: The soap action.
         """
-        if methodName in self._proxy.methods.keys():
+        if methodName in list(self._proxy.methods.keys()):
             location_str = str(self._proxy.methods[methodName].location)
             location_url = URL(location_str)
             return location_url
@@ -111,7 +111,7 @@ class WSDLParser(object):
         :return: The methods defined in the WSDL
         """
         res = []
-        for methodName in self._proxy.methods.keys():
+        for methodName in list(self._proxy.methods.keys()):
             remoteMethodObject = remoteMethod()
             remoteMethodObject.set_methodName(str(methodName))
             remoteMethodObject.set_namespace(self.get_ns(methodName))
@@ -127,12 +127,12 @@ class WSDLParser(object):
         @methodName: The method name
         :return: The soap action.
         """
-        if not methodName in self._proxy.methods.keys():
+        if not methodName in list(self._proxy.methods.keys()):
             raise BaseFrameworkException('Unknown method name.')
         else:
             res = []
             inps = self._proxy.methods[methodName].inparams
-            for param in xrange(len(inps)):
+            for param in range(len(inps)):
                 details = inps[param]
                 parameterObject = parameter()
                 parameterObject.set_name(str(details.name))

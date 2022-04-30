@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -22,10 +22,9 @@ class _Getch(object):
     def __call__(self):
         return self.impl()
 
-
 class _GetchUnix(object):
     def __init__(self):
-        import tty
+        __import__("tty")
 
     def __call__(self):
         import sys
@@ -41,15 +40,13 @@ class _GetchUnix(object):
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return ch
 
-
 class _GetchWindows(object):
     def __init__(self):
-        import msvcrt
+        __import__("msvcrt")
 
     def __call__(self):
         import msvcrt
         return msvcrt.getch()
-
 
 class _GetchMacCarbon(object):
     """
@@ -60,10 +57,12 @@ class _GetchMacCarbon(object):
     """
     def __init__(self):
         import Carbon
-        Carbon.Evt  # see if it has this (in Unix, it doesn't)
+
+        getattr(Carbon, "Evt")  # see if it has this (in Unix, it doesn't)
 
     def __call__(self):
         import Carbon
+
         if Carbon.Evt.EventAvail(0x0008)[0] == 0:  # 0x0008 is the keyDownMask
             return ''
         else:
@@ -79,6 +78,4 @@ class _GetchMacCarbon(object):
             (what, msg, when, where, mod) = Carbon.Evt.GetNextEvent(0x0008)[1]
             return chr(msg & 0x000000FF)
 
-
 getch = _Getch()
-

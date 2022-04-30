@@ -34,4 +34,4 @@ class test_php_sca(PayloadTestHelper):
     @pytest.mark.deprecated
     def test_php_sca(self):
         result = exec_payload(self.shell, 'php_sca', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result.keys()[0])
+        self.assertEqual(self.EXPECTED_RESULT, list(result.keys())[0])

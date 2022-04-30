@@ -23,15 +23,15 @@ import pytest
 import os
 import ssl
 import time
-import Queue
+import queue
 import types
 import unittest
-import SocketServer
+import socketserver
 from multiprocessing.dummy import Process
 
 import httpretty
 from nose.plugins.attrib import attr
-from mock import patch
+from unittest.mock import patch
 
 from w3af import ROOT_PATH
 from w3af.core.data.url.extended_urllib import ExtendedUrllib
@@ -147,7 +147,9 @@ class TestXUrllib(unittest.TestCase):
         self.assertEqual(str(len(data)), request_headers['content-length'])
 
         self.assertEqual(httpretty.last_request().body, data)
+        # pylint: disable=E1101
         self.assertEqual(httpretty.last_request().path, '/')
+        # pylint: enable=E1101
 
     @httpretty.activate
     def test_GET_with_post_data_and_qs(self):
@@ -171,7 +173,9 @@ class TestXUrllib(unittest.TestCase):
         self.assertEqual(str(len(data)), request_headers['content-length'])
 
         self.assertEqual(httpretty.last_request().body, data)
+        # pylint: disable=E1101
         self.assertEqual(httpretty.last_request().path, '/' + qs)
+        # pylint: enable=E1101
 
     @pytest.mark.deprecated
     def test_post(self):
@@ -186,7 +190,7 @@ class TestXUrllib(unittest.TestCase):
     @pytest.mark.deprecated
     def test_post_special_chars(self):
         url = URL(get_moth_http('/audit/xss/simple_xss_form.py'))
-        test_data = u'abc<def>"-á-'
+        test_data = 'abc<def>"-á-'
 
         data = URLEncodedForm()
         data['text'] = [test_data]
@@ -221,7 +225,7 @@ class TestXUrllib(unittest.TestCase):
 
         try:
             self.uri_opener.GET(url)
-        except HTTPRequestException, hre:
+        except HTTPRequestException as hre:
             self.assertEqual(hre.value, "Bad HTTP response status line: ''")
         else:
             self.assertTrue(False, 'Expected HTTPRequestException.')
@@ -240,15 +244,15 @@ class TestXUrllib(unittest.TestCase):
         http_request_e = 0
         scan_must_stop_e = 0
 
-        for _ in xrange(MAX_ERROR_COUNT):
+        for _ in range(MAX_ERROR_COUNT):
             try:
                 self.uri_opener.GET(url)
             except HTTPRequestException:
                 http_request_e += 1
-            except ScanMustStopException, smse:
+            except ScanMustStopException as smse:
                 scan_must_stop_e += 1
                 break
-            except Exception, e:
+            except Exception as e:
                 msg = 'Not expecting "%s".'
                 self.assertTrue(False, msg % e.__class__.__name__)
 
@@ -369,7 +373,7 @@ class TestXUrllib(unittest.TestCase):
         self.assertRaises(ScanMustStopByUserRequest, self.uri_opener.GET, url)
 
     def test_pause(self):
-        output = Queue.Queue()
+        output = queue.Queue()
         self.uri_opener.pause(True)
 
         def send(uri_opener, output):
@@ -384,11 +388,11 @@ class TestXUrllib(unittest.TestCase):
         th.daemon = True
         th.start()
 
-        self.assertRaises(Queue.Empty, output.get, True, 2)
+        self.assertRaises(queue.Empty, output.get, True, 2)
 
     @pytest.mark.deprecated
     def test_pause_unpause(self):
-        output = Queue.Queue()
+        output = queue.Queue()
         self.uri_opener.pause(True)
 
         def send(uri_opener, output):
@@ -403,12 +407,12 @@ class TestXUrllib(unittest.TestCase):
         th.daemon = True
         th.start()
 
-        self.assertRaises(Queue.Empty, output.get, True, 2)
+        self.assertRaises(queue.Empty, output.get, True, 2)
 
         self.uri_opener.pause(False)
 
         http_response = output.get()
-        self.assertNotIsInstance(http_response, types.NoneType,
+        self.assertNotIsInstance(http_response, type(None),
                                  'Error in send thread.')
         
         th.join()
@@ -429,7 +433,7 @@ class TestXUrllib(unittest.TestCase):
         trace_fmt = 'db_unittest-%s_traces/'
         temp_dir = get_temp_dir()
         
-        for i in xrange(100):
+        for i in range(100):
             test_db_path = os.path.join(temp_dir, db_fmt % i)
             test_trace_path = os.path.join(temp_dir, trace_fmt % i)
             self.assertFalse(os.path.exists(test_db_path), test_db_path)
@@ -438,7 +442,7 @@ class TestXUrllib(unittest.TestCase):
     @pytest.mark.deprecated
     def test_special_char_header(self):
         url = URL(get_moth_http('/core/headers/echo-headers.py'))
-        header_content = u'name=ábc'
+        header_content = 'name=ábc'
         headers = Headers([('Cookie', header_content)])
         http_response = self.uri_opener.GET(url, cache=False, headers=headers)
         self.assertIn(header_content, http_response.body)
@@ -505,25 +509,25 @@ class TestXUrllib(unittest.TestCase):
         self.assertLessEqual(elapsed_time, _max)
 
 
-class EmptyTCPHandler(SocketServer.BaseRequestHandler):
+class EmptyTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
-        self.request.sendall('')
+        self.request.sendall(b'')
 
 
-class TimeoutTCPHandler(SocketServer.BaseRequestHandler):
+class TimeoutTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024).strip()
         time.sleep(60)
-        self.request.sendall('')
+        self.request.sendall(b'')
 
 
-class Ok200Handler(SocketServer.BaseRequestHandler):
-    body = 'abc'
+class Ok200Handler(socketserver.BaseRequestHandler):
+    body = b'abc'
 
     def handle(self):
         self.data = self.request.recv(1024).strip()
-        self.request.sendall('HTTP/1.0 200 Ok\r\n'
-                             'Connection: Close\r\n'
-                             'Content-Length: 3\r\n'
-                             '\r\n' + self.body)
+        self.request.sendall(b'HTTP/1.0 200 Ok\r\n'
+                             b'Connection: Close\r\n'
+                             b'Content-Length: 3\r\n'
+                             b'\r\n' + self.body)

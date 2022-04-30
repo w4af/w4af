@@ -35,7 +35,7 @@ class TestEvasion(unittest.TestCase):
         r = HTTPRequest(u)
         
         self.assertEqual(sr.modify_request(r).url_object.url_string,
-                         u'http://www.w3af.com/./')
+                         'http://www.w3af.com/./')
 
     def test_add_to_url_with_path(self):
         sr = self_reference()
@@ -44,7 +44,7 @@ class TestEvasion(unittest.TestCase):
         r = HTTPRequest(u)
         
         self.assertEqual(sr.modify_request(r).url_object.url_string,
-                         u'http://www.w3af.com/./abc/./')
+                         'http://www.w3af.com/./abc/./')
 
     def test_add_to_url_with_qs(self):
         sr = self_reference()
@@ -53,11 +53,11 @@ class TestEvasion(unittest.TestCase):
         r = HTTPRequest(u)
         
         self.assertEqual(sr.modify_request(r).url_object.url_string,
-                         u'http://www.w3af.com/./abc/./def.htm?id=1')
+                         'http://www.w3af.com/./abc/./def.htm?id=1')
 
         #
         #    The plugins should not modify the original request
         #
         self.assertEqual(u.url_string,
-                         u'http://www.w3af.com/abc/def.htm?id=1')
+                         'http://www.w3af.com/abc/def.htm?id=1')
 

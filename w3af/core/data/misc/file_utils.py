@@ -26,7 +26,7 @@ from datetime import datetime, date
 
 from git.cmd import Git, GitCommandError
 
-ALLOWED = string.digits + string.letters + '/.-_'
+ALLOWED = string.digits + string.ascii_letters + '/.-_'
 
 
 def replace_file_special_chars(filename_path):
@@ -66,7 +66,9 @@ def get_days_since_last_update(path):
     # We need to parse it, and then do some date math to return the result
     #
     # We ignore the UTC offset because it was "hard to parse" and we don't care
+    # pylint: disable=E1136
     last_commit_time = datetime.strptime(date_str[:-6], '%a %b %d %H:%M:%S %Y')
+    # pylint: enable=E1136
     last_commit_date = last_commit_time.date()
 
     today_date = date.today()

@@ -25,6 +25,7 @@ from w3af.core.controllers.plugins.grep_plugin import GrepPlugin
 from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
 from w3af.core.data.constants.cookies import ALL_COOKIES
 from w3af.core.data.kb.info import Info
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class url_session(GrepPlugin):
@@ -58,7 +59,7 @@ class url_session(GrepPlugin):
         sessid_in_uri = set()
         if uri.has_query_string():
             query_string = uri.get_querystring()
-            params = set(query_string.keys())
+            params = set([ smart_unicode(x) for x in query_string.keys() ])
             sessid_in_uri = self.SESSID_PARAMS.intersection(params)
         return sessid_in_uri
         

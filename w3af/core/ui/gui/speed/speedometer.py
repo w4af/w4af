@@ -19,10 +19,10 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import gtk
-import gobject
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+from gi.repository import Pango as pango
 import cairo
-import pango
 import random
 
 
@@ -147,7 +147,7 @@ class Speedometer(gtk.DrawingArea):
             # I have to rotate left (-)
             self.rot -= (self._old_speed - self._current_speed) * step
 
-        print self.rot
+        print(self.rot)
 
         # Now mess with scale too
         self.sx += 0  # Change to 0 to see if rotation is working...

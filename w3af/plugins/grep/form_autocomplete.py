@@ -60,7 +60,7 @@ class form_autocomplete(GrepPlugin):
             if form.get_autocomplete() is False:
                 continue
 
-            for form_field_list in form.meta.itervalues():
+            for form_field_list in form.meta.values():
                 for form_field in form_field_list:
                     if form_field.input_type != INPUT_TYPE_PASSWD:
                         continue

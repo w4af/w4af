@@ -23,13 +23,13 @@ import unittest
 import subprocess
 
 import git
-import pytest
+from nose.plugins.attrib import attr
 
 from w3af.core.controllers.auto_update.utils import (is_git_repo,
                                                      get_latest_commit,
                                                      get_current_branch)
 
-
+@attr('git')
 @pytest.mark.skip(reason='deprecated')
 class TestGitUtils(unittest.TestCase):
     
@@ -43,10 +43,10 @@ class TestGitUtils(unittest.TestCase):
         latest_commit = get_latest_commit()
         
         self.assertEqual(len(latest_commit), 40)
-        self.assertIsInstance(latest_commit, basestring)
+        self.assertIsInstance(latest_commit, str)
         
     def test_get_latest_commit_negative(self):
-        self.assertRaises(git.exc.InvalidGitRepositoryError, get_latest_commit, '/etc/')
+        self.assertRaises(git.InvalidGitRepositoryError, get_latest_commit, '/etc/')
 
     def test_get_current_branch(self):
         # For some strange reason jenkins creates a branch called
@@ -56,6 +56,6 @@ class TestGitUtils(unittest.TestCase):
         current_branch = get_current_branch()
         
         branches = subprocess.check_output(['git', 'branch']).splitlines()
-        parsed_branch = [l.strip()[2:] for l in branches if l.startswith('*')][0]
+        parsed_branch = [l.strip()[2:] for l in branches if l.startswith(b'*')][0].decode('utf-8')
         
         self.assertEqual(current_branch, parsed_branch)

@@ -39,4 +39,4 @@ class ColorLog(logging.Handler):
 
     def emit(self, record):
         color = self.COLORS.get(record.levelno, lambda x: x)
-        print(color(record.msg))
+        print((color(record.msg)))

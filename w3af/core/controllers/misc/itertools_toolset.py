@@ -43,7 +43,7 @@ def unique_everseen(iterable, key=None):
     seen = set()
     seen_add = seen.add
     if key is None:
-        for element in itertools.ifilterfalse(seen.__contains__, iterable):
+        for element in itertools.filterfalse(seen.__contains__, iterable):
             seen_add(element)
             yield element
     else:
@@ -63,10 +63,9 @@ def unique_justseen(iterable, key=None):
     >>> [x for x in unique_justseen('ABBCcAD', str.lower)]
     ['A', 'B', 'C', 'A', 'D']
     """
-    imap = itertools.imap
     itemgetter = operator.itemgetter
     groupby = itertools.groupby
-    return imap(next, imap(itemgetter(1), groupby(iterable, key)))
+    return map(next, map(itemgetter(1), groupby(iterable, key)))
 
 
 def unique_everseen_hash(iterable):

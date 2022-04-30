@@ -1,26 +1,28 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 import os
 
 from lib.core.agent import agent
+from lib.core.common import Backend
 from lib.core.common import checkFile
 from lib.core.common import dataToStdout
-from lib.core.common import Backend
+from lib.core.common import isDigit
 from lib.core.common import isStackingAvailable
 from lib.core.common import readInput
+from lib.core.common import unArrayizeValue
+from lib.core.compat import xrange
 from lib.core.data import conf
 from lib.core.data import logger
 from lib.core.data import queries
-from lib.core.enums import DBMS
 from lib.core.enums import CHARSET_TYPE
+from lib.core.enums import DBMS
 from lib.core.enums import EXPECTED
 from lib.core.enums import OS
-from lib.core.common import unArrayizeValue
 from lib.core.exception import SqlmapFilePathException
 from lib.core.exception import SqlmapMissingMandatoryOptionException
 from lib.core.exception import SqlmapUnsupportedFeatureException
@@ -28,7 +30,7 @@ from lib.core.exception import SqlmapUserQuitException
 from lib.core.unescaper import unescaper
 from lib.request import inject
 
-class UDF:
+class UDF(object):
     """
     This class defines methods to deal with User-Defined Functions for
     plugins.
@@ -108,7 +110,7 @@ class UDF:
         return output
 
     def udfCheckNeeded(self):
-        if (not conf.rFile or (conf.rFile and not Backend.isDbms(DBMS.PGSQL))) and "sys_fileread" in self.sysUdfs:
+        if (not any((conf.fileRead, conf.commonFiles)) or (any((conf.fileRead, conf.commonFiles)) and not Backend.isDbms(DBMS.PGSQL))) and "sys_fileread" in self.sysUdfs:
             self.sysUdfs.pop("sys_fileread")
 
         if not conf.osPwn:
@@ -128,7 +130,7 @@ class UDF:
         errMsg = "udfSetLocalPaths() method must be defined within the plugin"
         raise SqlmapUnsupportedFeatureException(errMsg)
 
-    def udfCreateFromSharedLib(self, udf=None, inpRet=None):
+    def udfCreateFromSharedLib(self, udf, inpRet):
         errMsg = "udfCreateFromSharedLib() method must be defined within the plugin"
         raise SqlmapUnsupportedFeatureException(errMsg)
 
@@ -300,7 +302,7 @@ class UDF:
             while True:
                 retType = readInput(msg, default=defaultType)
 
-                if isinstance(retType, basestring) and retType.isdigit():
+                if hasattr(retType, "isdigit") and retType.isdigit():
                     logger.warn("you need to specify the data-type of the return value")
                 else:
                     self.udfs[udfName]["return"] = retType
@@ -338,10 +340,8 @@ class UDF:
 
                 if choice == 'Q':
                     break
-                elif isinstance(choice, basestring) and choice.isdigit() and int(choice) > 0 and int(choice) <= len(udfList):
+                elif isDigit(choice) and int(choice) > 0 and int(choice) <= len(udfList):
                     choice = int(choice)
-                    break
-                elif isinstance(choice, int) and choice > 0 and choice <= len(udfList):
                     break
                 else:
                     warnMsg = "invalid value, only digits >= 1 and "

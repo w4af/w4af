@@ -52,7 +52,7 @@ class TestURLInSession(unittest.TestCase):
         self.plugin.grep(request, resp)
         
         infos = kb.kb.get('url_session', 'url_session')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
     
     @pytest.mark.deprecated
     def test_url_session_in_url(self):
@@ -65,7 +65,7 @@ class TestURLInSession(unittest.TestCase):
         self.plugin.grep(request, resp)
         
         infos = kb.kb.get('url_session', 'url_session')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
         
         info = infos[0]
         self.assertEqual(info.get_name(), 'Session ID in URL')       
@@ -82,7 +82,7 @@ class TestURLInSession(unittest.TestCase):
         self.plugin.grep(request, resp)
         
         infos = kb.kb.get('url_session', 'url_session')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
         
         info = infos[0]
         self.assertEqual(info.get_name(), 'Session ID in URL')
@@ -99,7 +99,7 @@ class TestURLInSession(unittest.TestCase):
         self.plugin.grep(request, resp)
         
         infos = kb.kb.get('url_session', 'url_session')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
         
         info = infos[0]
         self.assertEqual(info.get_name(), 'Session ID in URL')

@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 import random
 import string
 
+from lib.core.compat import xrange
 from lib.core.enums import PRIORITY
 
 __priority__ = PRIORITY.LOW
 
 def tamper(payload, **kwargs):
     """
-    Replaces space character (' ') with a dash comment ('--') followed by
-    a random string and a new line ('\n')
+    Replaces space character (' ') with a dash comment ('--') followed by a random string and a new line ('\n')
 
     Requirement:
         * MSSQL
@@ -28,7 +28,7 @@ def tamper(payload, **kwargs):
 
     >>> random.seed(0)
     >>> tamper('1 AND 9227=9227')
-    '1--nVNaVoPYeva%0AAND--ngNvzqu%0A9227=9227'
+    '1--upgPydUzKpMX%0AAND--RcDKhIr%0A9227=9227'
     """
 
     retVal = ""

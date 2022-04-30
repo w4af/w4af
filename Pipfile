@@ -1,0 +1,84 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+configparser = "*"
+distro = "*"
+pyClamd = "*"
+PyGithub = "*"
+GitPython = "*"
+pybloomfiltermmap3 = "*"
+phply = "*"
+nltk = "*"
+chardet = "*"
+tblib = "*"
+pdfminer = "*"
+pyOpenSSL = "==21.0.0"
+ndg-httpsclient = "*"
+pyasn1 = "*"
+lxml = "*"
+scapy = "*"
+cluster = "*"
+msgpack = "*"
+python-ntlm3 = "*"
+Jinja2 = "*"
+vulndb = "*"
+Markdown = "*"
+psutil = "*"
+ds-store = "*"
+termcolor = "*"
+PyYAML = "*"
+tldextract = "*"
+Pebble = "*"
+acora = "*"
+diff-match-patch = "*"
+bravado-core = "*"
+lz4 = "*"
+vulners = "*"
+ipaddresses = "*"
+xdot = "*"
+nocasedict = "*"
+urllib3 = "*"
+nose = "*"
+httpretty = "*"
+xunitparser = "*"
+pylint = "*"
+apispec = "*"
+memory-profiler = "*"
+marshmallow = "*"
+pypi-simple = "*"
+PyGObject = "*"
+apispec-webframeworks = "*"
+Flask = "*"
+jellyfish = "*"
+yappi = "*"
+SOAPpy = "*"
+ujson = "*"
+polyglot = "*"
+numpy = "*"
+pyicu = "*"
+pycld2 = "*"
+morfessor = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
+
+[packages.darts_util_lru]
+git = "https://github.com/codders/DartsPyLRU"
+editable = true
+
+[packages.mitmproxy]
+git = "https://github.com/codders/mitmproxy"
+editable = true
+
+[packages.netlib]
+git = "https://github.com/codders/netlib"
+editable = true
+
+[packages.halberd]
+git = "https://github.com/codders/halberd"
+editable = true

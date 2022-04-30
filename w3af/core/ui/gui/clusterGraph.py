@@ -19,9 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 # For window creation
-import gtk
-import gtk.gdk
-import gobject
+import gi
+from gi.repository import Gtk as gtk
+from gi.repository import Gdk as gdk
+from gi.repository import GObject as gobject
+
 import xdot
 
 from w3af.core.controllers.misc.fuzzy_string_cmp import relative_distance
@@ -142,7 +144,7 @@ class distance_function_selector(entries.RememberingWindow):
         button = gtk.Button("Select")
         button.connect_object("clicked", self._launch_graph_generator, None)
         box2.pack_start(button, True, True, 0)
-        button.set_flags(gtk.CAN_DEFAULT)
+        button.set_can_default(True)
         button.grab_default()
 
         # Show!
@@ -183,7 +185,7 @@ class distance_function_selector(entries.RememberingWindow):
             window = clusterGraphWidget(
                 self.w3af, self.data, distance_function=selected_function,
                 custom_code=custom_code)
-        except BaseFrameworkException, w3:
+        except BaseFrameworkException as w3:
             msg = str(w3)
             dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
                                     gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
@@ -218,7 +220,7 @@ class w3afDotWindow(xdot.DotWindow):
         gtk.Window.__init__(self)
         self.set_icon_from_file(W3AF_ICON)
 
-        self.graph = xdot.Graph()
+        self.graph = xdot.ui.elements.Graph()
 
         window = self
 
@@ -304,7 +306,7 @@ class clusterGraphWidget(w3afDotWindow):
             
             try:
                 callable_object = self._create_callable_object(custom_code)
-            except Exception, e:
+            except Exception as e:
                 # TODO: instead of hiding..., which may consume memory...
                 #       why don't killing?
                 self.hide()
@@ -315,7 +317,7 @@ class clusterGraphWidget(w3afDotWindow):
             try:
                 dotcode = self._generateDotCode(response_list,
                                                 distance_function=callable_object)
-            except Exception, e:
+            except Exception as e:
                 # TODO: instead of hiding..., which may consume memory...
                 # why don't killing?
                 self.hide()
@@ -367,7 +369,7 @@ class clusterGraphWidget(w3afDotWindow):
         """
         distance = 0.1
         for i in [100, 200, 300, 400, 500]:
-            if a.get_code() in xrange(i, i + 100) and not b.get_code() in xrange(i, i + 100):
+            if a.get_code() in range(i, i + 100) and not b.get_code() in range(i, i + 100):
                 distance = 1
                 return distance
         return distance
@@ -388,7 +390,7 @@ class clusterGraphWidget(w3afDotWindow):
         if n == 0:
             yield []
         else:
-            for i in xrange(len(items)):
+            for i in range(len(items)):
                 for cc in self._xunique_combinations(items[i + 1:], n - 1):
                     yield [items[i]] + cc
 
@@ -429,19 +431,19 @@ class clusterGraphWidget(w3afDotWindow):
         """
         # Find max
         max = 0
-        for d in dist_dict.values():
+        for d in list(dist_dict.values()):
             if d > max:
                 max = d
 
         # Find min
-        min = dist_dict.values()[0]
-        for d in dist_dict.values():
+        min = list(dist_dict.values())[0]
+        for d in list(dist_dict.values()):
             if d < min:
                 min = d
 
         # Find avg
         sum = 0
-        for d in dist_dict.values():
+        for d in list(dist_dict.values()):
             sum += d
         avg = sum / len(dist_dict)
 

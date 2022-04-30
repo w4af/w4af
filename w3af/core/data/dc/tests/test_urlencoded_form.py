@@ -19,9 +19,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import copy
-import cPickle
+import pickle
 
 from nose.plugins.attrib import attr
 
@@ -57,8 +57,8 @@ class TestURLEncodedForm(unittest.TestCase):
 
         form = URLEncodedForm.from_postdata(headers, post_data)
 
-        self.assertEqual(form['a'], ['2'])
-        self.assertEqual(form['c'], ['3'])
+        self.assertEqual(form[b'a'], [b'2'])
+        self.assertEqual(form[b'c'], [b'3'])
 
         self.assertFalse(form.is_login_form())
         self.assertFalse(form.is_password_change_form())
@@ -92,7 +92,7 @@ class TestURLEncodedForm(unittest.TestCase):
                           {'tagname': 'input', 'name': 'eggs', 'type': 'text'}]
 
         form = URLEncodedForm(create_form_params_helper(form_with_plus))
-        self.assertEqual(str(form), 'eggs=&foo=bar%2Bspam')
+        self.assertEqual(str(form), 'foo=bar%2Bspam&eggs=')
 
     def test_form_str_simple(self):
         form_data = [{'tagname': 'input',
@@ -137,20 +137,20 @@ class TestURLEncodedForm(unittest.TestCase):
 
         form = URLEncodedForm(form_params)
 
-        self.assertEqual(urllib.unquote(str(form)).decode('utf-8'),
-                         u'c=ñçÑÇ&address=bsas&v=áéíóú')
+        self.assertEqual(urllib.parse.unquote(str(form)),
+                         'v=áéíóú&c=ñçÑÇ&address=bsas')
 
     def test_form_str_radio_select(self):
         form_dict = form_with_radio + form_with_checkbox + form_select_cars
         form = URLEncodedForm(create_form_params_helper(form_dict))
-        self.assertEqual(str(form), 'cars=volvo&vehicle=Bike&sex=male')
+        self.assertEqual(str(form), 'sex=male&vehicle=Bike&cars=volvo')
 
     def test_form_copy(self):
         headers = Headers([('content-type', URLEncodedForm.ENCODING)])
         post_data = 'a=2&c=3'
 
         form = URLEncodedForm.from_postdata(headers, post_data)
-        form.set_token(('a', 0))
+        form.set_token((b'a', 0))
 
         form_copy = copy.deepcopy(form)
 
@@ -163,12 +163,12 @@ class TestURLEncodedForm(unittest.TestCase):
         post_data = 'a=2&c=3'
 
         form = URLEncodedForm.from_postdata(headers, post_data)
-        form.set_token(('a', 0))
+        form.set_token((b'a', 0))
 
-        pickled_form = cPickle.dumps(form)
-        unpickled_form = cPickle.loads(pickled_form)
+        pickled_form = pickle.dumps(form)
+        unpickled_form = pickle.loads(pickled_form)
 
         self.assertEqual(form, unpickled_form)
         self.assertEqual(form.get_token(), unpickled_form.get_token())
         self.assertIsNotNone(unpickled_form.get_token())
-        self.assertEqual(unpickled_form.keys(), ['a', 'c'])
+        self.assertEqual(list(unpickled_form.keys()), [b'a', b'c'])

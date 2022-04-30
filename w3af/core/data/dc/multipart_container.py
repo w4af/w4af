@@ -20,8 +20,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import cgi
-import StringIO
+import io
 
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
+from w3af.core.data.url.HTTPResponse import DEFAULT_CHARSET
 from w3af.core.data.dc.generic.form import Form
 from w3af.core.data.dc.utils.multipart import get_boundary, encode_as_multipart
 from w3af.core.data.parsers.utils.form_params import FormParameters
@@ -58,11 +60,13 @@ class MultipartContainer(Form):
         environ = {'REQUEST_METHOD': 'POST'}
 
         try:
-            fs = cgi.FieldStorage(fp=StringIO.StringIO(post_data),
+            fs = cgi.FieldStorage(fp=io.BytesIO(smart_str_ignore(post_data)),
                                   headers=headers.to_dict(),
                                   environ=environ)
         except ValueError:
             raise ValueError('Failed to create MultipartContainer.')
+        except Exception as e:
+            pass
         else:
             # Please note that the FormParameters is just a container for
             # the information.
@@ -113,9 +117,12 @@ class MultipartContainer(Form):
                  get_headers(), we'll include these. Hopefully this means that
                  the required headers will make it to the wire.
         """
-        return [('Content-Type', self.MULTIPART_HEADER % self.boundary)]
+        return [('Content-Type', self.MULTIPART_HEADER % smart_unicode(self.boundary))]
 
     def __str__(self):
+        return smart_unicode(encode_as_multipart(self, self.boundary))
+
+    def __bytes__(self):
         return encode_as_multipart(self, self.boundary)
 
     def __eq__(self, other):
@@ -127,4 +134,4 @@ class MultipartContainer(Form):
 
         Is not going to work.
         """
-        return self.items() == other.items()
+        return list(self.items()) == list(other.items())

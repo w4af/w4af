@@ -54,7 +54,8 @@ class IntegrationTest(unittest.TestCase):
 
         for _file in os.listdir(tempdir):
             if fnmatch.fnmatch(_file, 'w3af-crash*.txt'):
-                crash = file(os.path.join(tempdir, _file)).read()
+                with open(os.path.join(tempdir, _file)) as f:
+                    crash = f.read()
 
                 # https://circleci.com/gh/andresriancho/w3af/2041
                 if 'failing_spider' in crash:
@@ -69,7 +70,7 @@ class IntegrationTest(unittest.TestCase):
         Wait until the scan is in Running state
         :return: The HTTP response
         """
-        for _ in xrange(10):
+        for _ in range(10):
             time.sleep(0.5)
 
             response = requests.get('%s/scans/' % self.api_url, 
@@ -87,7 +88,7 @@ class IntegrationTest(unittest.TestCase):
         Wait until the scan is in Stopped state
         :return: The HTTP response
         """
-        for _ in xrange(wait_loops):
+        for _ in range(wait_loops):
             time.sleep(0.5)
 
             response = requests.get('%s/scans/' % self.api_url, 

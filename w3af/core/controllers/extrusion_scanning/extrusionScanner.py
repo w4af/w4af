@@ -206,7 +206,7 @@ class extrusionScanner(object):
         remoteFilename += '.' + extension
 
         # do the transfer
-        apply(self._transferHandler.transfer, (extrusionClient,
+        self._transferHandler.transfer(*(extrusionClient,
               remoteFilename))
 
         return interpreter, remoteFilename
@@ -216,7 +216,7 @@ class extrusionScanner(object):
         A wrapper for executing commands
         """
         om.out.debug('Executing: ' + command)
-        response = apply(self._exec_method, (command,))
+        response = self._exec_method(*(command,))
         om.out.debug('"' + command + '" returned: ' + response)
         return response
 
@@ -239,14 +239,15 @@ class extrusionScanner(object):
             - gcc compiler ?
         """
         ### TODO! Implement this!
-        if '6' in self._exec('python -c print+3+3'):
+        if '6' in self._exec('python -c print\(3+3\)'):
             # "python -c 'print 3+3'" fails with magic quotes on... but
             # this trick of the print+3+3 works ( returns 6 ) and ALSO evades
             # magic quotes
             filename = os.path.join(ROOT_PATH, 'core', 'controllers',
                                     'extrusion_scanning', 'client',
                                     'extrusionClient.py')
-            fileContent = file(filename).read()
+            with open(filename) as content:
+                fileContent = content.read()
             extension = 'py'
             interpreter = 'python'
         else:

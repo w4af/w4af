@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys
 import time
-import Queue
+import queue
 
 from multiprocessing import TimeoutError
 
@@ -133,7 +133,7 @@ class CoreStrategy(object):
 
             self._fuzzable_request_router()
 
-        except Exception, e:
+        except Exception as e:
 
             om.out.debug('strategy.start() found exception "%s"' % e)
             exc_info = sys.exc_info()
@@ -141,7 +141,7 @@ class CoreStrategy(object):
             try:
                 # Terminate the consumers, exceptions at this level stop the scan
                 self.terminate()
-            except Exception, e:
+            except Exception as e:
                 msg = 'strategy.start() found exception while terminating workers "%s"'
                 om.out.debug(msg % e)
             finally:
@@ -150,7 +150,7 @@ class CoreStrategy(object):
                 # too
                 self._w3af_core.worker_pool.finish()
 
-            raise exc_info[0], exc_info[1], exc_info[2]
+            raise exc_info[0](exc_info[1]).with_traceback(exc_info[2])
 
         else:
             # Wait for all consumers to finish
@@ -205,7 +205,7 @@ class CoreStrategy(object):
 
             try:
                 consumer_inst.terminate()
-            except Exception, e:
+            except Exception as e:
                 msg = '%s consumer terminate() raised exception: "%s"'
                 args = (consumer_inst.get_name(), e)
                 om.out.debug(msg % args)
@@ -283,12 +283,12 @@ class CoreStrategy(object):
         _input = [self._seed_producer,
                   self._discovery_consumer,
                   self._bruteforce_consumer]
-        _input = filter(None, _input)
+        _input = [_f for _f in _input if _f]
 
         output = [self._audit_consumer,
                   self._discovery_consumer,
                   self._bruteforce_consumer]
-        output = filter(None, output)
+        output = [_f for _f in output if _f]
 
         # Only check if these have exceptions and bring them to the main
         # thread in order to be handled by the ExceptionHandler and the
@@ -296,7 +296,7 @@ class CoreStrategy(object):
         _other = [self._audit_consumer,
                   self._auth_consumer,
                   self._grep_consumer]
-        _other = filter(None, _other)
+        _other = [_f for _f in _other if _f]
 
         finished = set()
         consumer_forced_end = set()
@@ -381,7 +381,7 @@ class CoreStrategy(object):
 
             try:
                 result_item = url_producer.get_result(timeout=0.1)
-            except (TimeoutError, Queue.Empty) as _:
+            except (TimeoutError, queue.Empty) as _:
                 if not url_producer.has_pending_work():
                     # This consumer is saying that it doesn't have any
                     # pending or in progress work
@@ -438,7 +438,7 @@ class CoreStrategy(object):
             while True:
                 try:
                     result_item = other_consumer.get_result_nowait()
-                except Queue.Empty:
+                except queue.Empty:
                     break
                 else:
                     if isinstance(result_item, ExceptionData):
@@ -495,7 +495,7 @@ class CoreStrategy(object):
                 except ScanMustStopByUserRequest:
                     # Not a real error, the user stopped the scan
                     raise
-                except Exception, e:
+                except Exception as e:
                     dbg = 'Exception found during verify_target_server_up: "%s"'
                     om.out.debug(dbg % e)
 
@@ -529,7 +529,7 @@ class CoreStrategy(object):
             except ScanMustStopByUserRequest:
                 # Not a real error, the user stopped the scan
                 raise
-            except Exception, e:
+            except Exception as e:
                 msg = 'Exception found during replace_targets_with_redir(): "%s"'
                 om.out.debug(msg % e)
                 raise ScanMustStopException(msg % e)
@@ -586,7 +586,7 @@ class CoreStrategy(object):
             except ScanMustStopByUserRequest:
                 # Not a real error, the user stopped the scan
                 raise
-            except Exception, e:
+            except Exception as e:
                 msg = 'Exception found during alert_if_target_is_301_all(): "%s"'
                 om.out.debug(msg % e)
                 raise ScanMustStopException(msg % e)
@@ -621,7 +621,7 @@ class CoreStrategy(object):
                 response = self._w3af_core.uri_opener.GET(url, cache=True)
             except ScanMustStopByUserRequest:
                 raise
-            except Exception, e:
+            except Exception as e:
                 msg = ('Failed to send HTTP request to the configured target'
                        ' URL "%s", the original exception was: "%s" (%s).')
                 args = (url, e, e.__class__.__name__)
@@ -631,7 +631,7 @@ class CoreStrategy(object):
                 current_target_is_404 = is_404(response)
             except ScanMustStopByUserRequest:
                 raise
-            except Exception, e:
+            except Exception as e:
                 msg = ('Failed to initialize the 404 detection using HTTP'
                        ' response from "%s", the original exception was: "%s"'
                        ' (%s).')

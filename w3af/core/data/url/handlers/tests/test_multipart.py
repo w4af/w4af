@@ -32,7 +32,7 @@ from w3af.core.data.dc.multipart_container import MultipartContainer
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.parsers.utils.form_params import FormParameters
-from w3af.core.controllers.misc.io import NamedStringIO
+from w3af.core.controllers.misc.io import NamedBytesIO
 from w3af.core.controllers.ci.moth import get_moth_http
 
 
@@ -70,7 +70,7 @@ class TestMultipartPostUpload(unittest.TestCase):
 
         mpc = MultipartContainer(form_params)
 
-        resp = self.opener.POST(self.MOTH_FILE_UP_URL, data=str(mpc),
+        resp = self.opener.POST(self.MOTH_FILE_UP_URL, data=bytes(mpc),
                                 headers=Headers(mpc.get_headers()))
 
         self.assertNotIn('was successfully uploaded', resp.get_body())
@@ -78,14 +78,14 @@ class TestMultipartPostUpload(unittest.TestCase):
     @pytest.mark.deprecated
     def test_file_upload(self):
         temp = tempfile.mkstemp(suffix=".tmp")
-        os.write(temp[0], 'file content')
+        os.write(temp[0], b'file content')
 
         _file = open(temp[1], "rb")
         self.upload_file(_file)
 
     @pytest.mark.deprecated
     def test_stringio_upload(self):
-        _file = NamedStringIO('file content', name='test.txt')
+        _file = NamedBytesIO(b'file content', name='test.txt')
         self.upload_file(_file)
 
     def upload_file(self, _file):
@@ -98,7 +98,7 @@ class TestMultipartPostUpload(unittest.TestCase):
         mpc = MultipartContainer(form_params)
         mpc['uploadedfile'][0] = _file
 
-        resp = self.opener.POST(self.MOTH_FILE_UP_URL, data=str(mpc),
+        resp = self.opener.POST(self.MOTH_FILE_UP_URL, data=bytes(mpc),
                                 headers=Headers(mpc.get_headers()))
 
         self.assertIn('was successfully uploaded', resp.get_body())
@@ -107,7 +107,7 @@ class TestMultipartPostUpload(unittest.TestCase):
     def test_upload_file_using_fuzzable_request(self):
         form_params = FormParameters()
         form_params.add_field_by_attr_items([('name', 'uploadedfile')])
-        form_params['uploadedfile'][0] = NamedStringIO('file content', name='test.txt')
+        form_params['uploadedfile'][0] = NamedBytesIO(b'file content', name='test.txt')
         form_params.add_field_by_attr_items([('name', 'MAX_FILE_SIZE'),
                        ('type', 'hidden'),
                        ('value', '10000')])

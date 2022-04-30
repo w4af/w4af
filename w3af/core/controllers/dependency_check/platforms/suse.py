@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro
 import subprocess
 
 from .base_platform import Platform
@@ -42,9 +42,10 @@ class SuSE(Platform):
     SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES,
                        GUI: GUI_SYSTEM_PACKAGES}
 
-    def os_package_is_installed(self, package_name):
-        not_installed = 'is not installed'
-        installed = 'Status: install ok installed'
+    @staticmethod
+    def os_package_is_installed(package_name):
+        not_installed = b'is not installed'
+        installed = b'Status: install ok installed'
 
         try:
             p = subprocess.Popen(['rpm', '-q', package_name],
@@ -62,5 +63,6 @@ class SuSE(Platform):
             else:
                 return None
 
-    def is_current_platform(self):
-        return 'SuSE' in platform.dist()[0]
+    @staticmethod
+    def is_current_platform():
+        return 'SuSE' in distro.linux_distribution()

@@ -49,7 +49,7 @@ class test_private_ip(unittest.TestCase):
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('private_ip', 'HTML')), 0)
+        self.assertEqual(len(kb.kb.get('private_ip', 'HTML')), 0)
 
     @pytest.mark.deprecated
     def test_private_ip_find(self):
@@ -59,7 +59,7 @@ class test_private_ip(unittest.TestCase):
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('private_ip', 'HTML')), 1)
+        self.assertEqual(len(kb.kb.get('private_ip', 'HTML')), 1)
 
     @pytest.mark.deprecated
     def test_private_ip_broken_html(self):
@@ -69,7 +69,7 @@ class test_private_ip(unittest.TestCase):
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('private_ip', 'HTML')), 1)
+        self.assertEqual(len(kb.kb.get('private_ip', 'HTML')), 1)
 
     @pytest.mark.deprecated
     def test_private_ip_find_10(self):
@@ -79,7 +79,7 @@ class test_private_ip(unittest.TestCase):
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('private_ip', 'HTML')), 1)
+        self.assertEqual(len(kb.kb.get('private_ip', 'HTML')), 1)
 
     @pytest.mark.deprecated
     def test_private_ip_find_header(self):
@@ -90,7 +90,7 @@ class test_private_ip(unittest.TestCase):
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('private_ip', 'header')), 1)
+        self.assertEqual(len(kb.kb.get('private_ip', 'header')), 1)
 
     @pytest.mark.deprecated
     def test_private_ip_find_header_group(self):
@@ -109,14 +109,14 @@ class test_private_ip(unittest.TestCase):
         self.plugin.grep(request_2, response_2)
 
         info_sets = kb.kb.get('private_ip', 'header')
-        self.assertEquals(len(info_sets), 1)
+        self.assertEqual(len(info_sets), 1)
 
         info_set = info_sets[0]
         expected_desc = 'A total of 2 HTTP responses contained the private IP' \
                         ' address 10.3.4.5 in the "x-via" response header. The' \
                         ' first ten matching URLs are:\n' \
-                        ' - http://www.w3af.com/2\n' \
-                        ' - http://www.w3af.com/1\n'
+                        ' - http://www.w3af.com/1\n' \
+                        ' - http://www.w3af.com/2\n'
         self.assertEqual(info_set.get_id(), [1, 2])
         self.assertEqual(info_set.get_desc(), expected_desc)
 
@@ -139,7 +139,7 @@ class test_private_ip(unittest.TestCase):
         self.plugin.grep(request_2, response_2)
 
         info_sets = kb.kb.get('private_ip', 'header')
-        self.assertEquals(len(info_sets), 2)
+        self.assertEqual(len(info_sets), 2)
 
     @pytest.mark.deprecated
     def test_private_ip_no(self):
@@ -150,5 +150,5 @@ class test_private_ip(unittest.TestCase):
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('private_ip', 'HTML')), 0)
-        self.assertEquals(len(kb.kb.get('private_ip', 'header')), 0)
+        self.assertEqual(len(kb.kb.get('private_ip', 'HTML')), 0)
+        self.assertEqual(len(kb.kb.get('private_ip', 'header')), 0)

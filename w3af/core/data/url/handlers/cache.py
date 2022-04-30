@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from w3af.core.data.url.handlers.cache_backend.db import SQLCachedResponse
 from w3af.core.controllers.misc.number_generator import (consecutive_number_generator
@@ -31,7 +31,7 @@ from w3af.core.controllers.misc.number_generator import (consecutive_number_gene
 CACHE_METHODS = ('GET', 'HEAD')
 
 
-class CacheHandler(urllib2.BaseHandler):
+class CacheHandler(urllib.request.BaseHandler):
     """
     Stores responses in a persistent on-disk cache.
 

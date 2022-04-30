@@ -1,6 +1,6 @@
-# sqlmap
+# sqlmap ![](https://i.imgur.com/fe85aVR.png)
 
-[![Build Status](https://api.travis-ci.org/sqlmapproject/sqlmap.svg?branch=master)](https://api.travis-ci.org/sqlmapproject/sqlmap) [![Python 2.6|2.7](https://img.shields.io/badge/python-2.6|2.7-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv2-red.svg)](https://raw.githubusercontent.com/sqlmapproject/sqlmap/master/LICENSE) [![Twitter](https://img.shields.io/badge/twitter-@sqlmap-blue.svg)](https://twitter.com/sqlmap)
+[![.github/workflows/tests.yml](https://github.com/sqlmapproject/sqlmap/actions/workflows/tests.yml/badge.svg)](https://github.com/sqlmapproject/sqlmap/actions/workflows/tests.yml) [![Python 2.6|2.7|3.x](https://img.shields.io/badge/python-2.6|2.7|3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv2-red.svg)](https://raw.githubusercontent.com/sqlmapproject/sqlmap/master/LICENSE) [![Twitter](https://img.shields.io/badge/twitter-@sqlmap-blue.svg)](https://twitter.com/sqlmap)
 
 sqlmap es una herramienta para pruebas de penetración "penetration testing" de software libre que automatiza el proceso de detección y explotación de fallos mediante inyección de SQL además de tomar el control de servidores de bases de datos. Contiene un poderoso motor de detección, así como muchas de las funcionalidades escenciales para el "pentester" y una amplia gama de opciones desde la recopilación de información para identificar el objetivo conocido como "fingerprinting" mediante la extracción de información de la base de datos, hasta el acceso al sistema de archivos subyacente para ejecutar comandos en el sistema operativo a través de conexiones alternativas conocidas como "Out-of-band".
 
@@ -19,7 +19,7 @@ Preferentemente, se puede descargar sqlmap clonando el repositorio [Git](https:/
 
     git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
 
-sqlmap funciona con las siguientes versiones de [Python](http://www.python.org/download/) ** 2.6.x** y ** 2.7.x** en cualquier plataforma.
+sqlmap funciona con las siguientes versiones de [Python](https://www.python.org/download/) **2.6**, **2.7** y **3.x** en cualquier plataforma.
 
 Uso
 ---
@@ -38,12 +38,12 @@ Para obtener una visión general de las capacidades de sqlmap, así como un list
 Enlaces
 ---
 
-* Página principal: http://sqlmap.org 
+* Página principal: https://sqlmap.org 
 * Descargar: [. tar.gz](https://github.com/sqlmapproject/sqlmap/tarball/master) o [.zip](https://github.com/sqlmapproject/sqlmap/zipball/master)
 * Fuente de Cambios "Commit RSS feed": https://github.com/sqlmapproject/sqlmap/commits/master.atom
 * Seguimiento de problemas "Issue tracker": https://github.com/sqlmapproject/sqlmap/issues
 * Manual de usuario: https://github.com/sqlmapproject/sqlmap/wiki
 * Preguntas frecuentes (FAQ): https://github.com/sqlmapproject/sqlmap/wiki/FAQ
 * Twitter: [@sqlmap](https://twitter.com/sqlmap)
-* Demostraciones: [http://www.youtube.com/user/inquisb/videos](http://www.youtube.com/user/inquisb/videos)
+* Demostraciones: [https://www.youtube.com/user/inquisb/videos](https://www.youtube.com/user/inquisb/videos)
 * Imágenes: https://github.com/sqlmapproject/sqlmap/wiki/Screenshots

@@ -38,7 +38,7 @@ def draw_queue_size_crawl(scan_log_filename, scan):
         return
 
     print('Crawl consumer queue size')
-    print('    Latest queue size value: %s' % crawl_queue_sizes[-1])
+    print(('    Latest queue size value: %s' % crawl_queue_sizes[-1]))
     print('')
 
     fig = plotille.Figure()
@@ -56,5 +56,5 @@ def draw_queue_size_crawl(scan_log_filename, scan):
              crawl_queue_sizes,
              label='Crawl')
 
-    print(fig.show())
+    print((fig.show()))
     print('')

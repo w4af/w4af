@@ -1,26 +1,24 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
-import base64
-
+from lib.core.convert import encodeBase64
 from lib.core.enums import PRIORITY
-from lib.core.settings import UNICODE_ENCODING
 
-__priority__ = PRIORITY.LOWEST
+__priority__ = PRIORITY.LOW
 
 def dependencies():
     pass
 
 def tamper(payload, **kwargs):
     """
-    Base64 all characters in a given payload
+    Base64-encodes all characters in a given payload
 
     >>> tamper("1' AND SLEEP(5)#")
     'MScgQU5EIFNMRUVQKDUpIw=='
     """
 
-    return base64.b64encode(payload.encode(UNICODE_ENCODING)) if payload else payload
+    return encodeBase64(payload, binary=False) if payload else payload

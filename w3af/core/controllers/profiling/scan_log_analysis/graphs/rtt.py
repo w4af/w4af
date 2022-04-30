@@ -53,5 +53,5 @@ def draw_rtt(scan_log_filename, scan):
              rtt,
              label='RTT')
 
-    print(fig.show())
+    print((fig.show()))
     print('')

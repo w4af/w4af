@@ -94,7 +94,8 @@ class TestStrategy(PluginTest):
         https://github.com/andresriancho/w3af/issues/1557
         """
         script = TEST_SCRIPT_1557 % (OUTPUT_PATH, get_wavsep_http())
-        file(SCRIPT_PATH, 'w').write(script)
+        with open(SCRIPT_PATH, "w") as f:
+            f.write(script)
 
         python_executable = sys.executable
 
@@ -104,8 +105,8 @@ class TestStrategy(PluginTest):
 
         loops = 2 if is_running_on_ci() else 10
 
-        for i in xrange(loops):
-            print('Start run #%s' % i)
+        for i in range(loops):
+            print(('Start run #%s' % i))
             found_vulns = set()
 
             p = subprocess.Popen([python_executable, 'w3af_console',
@@ -118,7 +119,7 @@ class TestStrategy(PluginTest):
 
             stdout, stderr = p.communicate()
             i_vuln_count = stdout.count(VULN_STRING)
-            print('%s vulnerabilities found' % i_vuln_count)
+            print(('%s vulnerabilities found' % i_vuln_count))
 
             self.assertNotEqual(i_vuln_count, 0, stdout)
 
@@ -159,5 +160,5 @@ class TestSameFuzzableRequestSet(PluginTest):
         id_after_fr = id(self.kb.get_all_known_fuzzable_requests())
         id_after_ur = id(self.kb.get_all_known_urls())
 
-        self.assertEquals(id_before_fr, id_after_fr)
-        self.assertEquals(id_before_ur, id_after_ur)
+        self.assertEqual(id_before_fr, id_after_fr)
+        self.assertEqual(id_before_ur, id_after_ur)

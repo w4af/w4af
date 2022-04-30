@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -16,6 +16,7 @@ from lib.core.common import normalizePath
 from lib.core.common import ntToPosixSlashes
 from lib.core.common import randomStr
 from lib.core.common import unArrayizeValue
+from lib.core.compat import LooseVersion
 from lib.core.data import kb
 from lib.core.data import logger
 from lib.core.data import paths
@@ -37,13 +38,13 @@ class Takeover(GenericTakeover):
 
         banVer = kb.bannerFp["dbmsVersion"]
 
-        if banVer >= "5.0.67":
+        if banVer and LooseVersion(banVer) >= LooseVersion("5.0.67"):
             if self.__plugindir is None:
                 logger.info("retrieving MySQL plugin directory absolute path")
                 self.__plugindir = unArrayizeValue(inject.getValue("SELECT @@plugin_dir"))
 
             # On MySQL 5.1 >= 5.1.19 and on any version of MySQL 6.0
-            if self.__plugindir is None and banVer >= "5.1.19":
+            if self.__plugindir is None and LooseVersion(banVer) >= LooseVersion("5.1.19"):
                 logger.info("retrieving MySQL base directory absolute path")
 
                 # Reference: http://dev.mysql.com/doc/refman/5.1/en/server-options.html#option_mysqld_basedir
@@ -67,10 +68,10 @@ class Takeover(GenericTakeover):
         # On MySQL 4.1 < 4.1.25 and on MySQL 4.1 >= 4.1.25 with NO plugin_dir set in my.ini configuration file
         # On MySQL 5.0 < 5.0.67 and on MySQL 5.0 >= 5.0.67 with NO plugin_dir set in my.ini configuration file
         else:
-            #logger.debug("retrieving MySQL data directory absolute path")
+            # logger.debug("retrieving MySQL data directory absolute path")
 
             # Reference: http://dev.mysql.com/doc/refman/5.1/en/server-options.html#option_mysqld_datadir
-            #self.__datadir = inject.getValue("SELECT @@datadir")
+            # self.__datadir = inject.getValue("SELECT @@datadir")
 
             # NOTE: specifying the relative path as './udf.dll'
             # saves in @@datadir on both MySQL 4.1 and MySQL 5.0

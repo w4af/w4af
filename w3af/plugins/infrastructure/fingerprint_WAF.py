@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import re
 
-from itertools import izip, repeat
+from itertools import repeat
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.knowledge_base as kb
@@ -79,7 +79,7 @@ class fingerprint_WAF(InfrastructurePlugin):
                    self._fingerprint_BinarySec,
                    self._fingerprint_HyperGuard]
 
-        args_iter = izip(methods, repeat(fuzzable_request))
+        args_iter = zip(methods, repeat(fuzzable_request))
         self.worker_pool.map_multi_args(self._worker, args_iter)
 
     def _worker(self, func, fuzzable_request):
@@ -95,7 +95,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         try:
             lock_response2 = self._uri_opener.GET(fuzzable_request.get_url(),
                                                   headers=headers, cache=True)
-        except BaseFrameworkException, w3:
+        except BaseFrameworkException as w3:
             om.out.debug(
                 'Failed to identify secure IIS, exception: ' + str(w3))
         else:
@@ -115,7 +115,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect Airlock')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^AL[_-]?(SESS|LB)(-S)?=', protected_by, re.IGNORECASE):
@@ -130,7 +130,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect Barracuda')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 # ToDo: not sure if this is always there (08jul08 Achim)
                 protected_by = response.get_headers()[header_name]
@@ -146,7 +146,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect CloudFlare')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^(cloudflare(-nginx)?|__cfduid)=', protected_by):
@@ -162,7 +162,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect dotDefender')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^X-dotDefender-denied=', protected_by):
@@ -178,7 +178,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect Deny All')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^sessioncookie=', protected_by):
@@ -195,7 +195,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect F5 ASM or TrafficShield')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^TS[a-zA-Z0-9]{3,6}=', protected_by):
@@ -214,7 +214,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect the older version F5 TrafficShield')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^ASINFO=', protected_by, re.IGNORECASE):
@@ -230,7 +230,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect FortiWeb')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^FORTIWAFSID=', protected_by, re.IGNORECASE):
@@ -246,7 +246,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect FortiWeb')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^(incap_ses|visid_incap)=', protected_by, re.IGNORECASE):
@@ -261,7 +261,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect IBM WebSphere')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^X-Backside-Transport=', protected_by, re.IGNORECASE):
@@ -276,7 +276,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect Profense')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^PLBSID==', protected_by, re.IGNORECASE):
@@ -295,7 +295,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect TEROS')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^st8id=', protected_by):
@@ -312,7 +312,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect NetContinuum')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^NCI__SessionId=', protected_by, re.IGNORECASE):
@@ -328,7 +328,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect BinarySec')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'server':
                 protected_by = response.get_headers()[header_name]
                 if re.match('BinarySec', protected_by, re.IGNORECASE):
@@ -343,7 +343,7 @@ class fingerprint_WAF(InfrastructurePlugin):
         """
         om.out.debug('detect HyperGuard')
         response = self._uri_opener.GET(fuzzable_request.get_url(), cache=True)
-        for header_name in response.get_headers().keys():
+        for header_name in list(response.get_headers().keys()):
             if header_name.lower() == 'set-cookie':
                 protected_by = response.get_headers()[header_name]
                 if re.match('^WODSESSION=', protected_by, re.IGNORECASE):

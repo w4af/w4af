@@ -68,8 +68,8 @@ class FormID(object):
                     return False
 
         if form_matcher.attributes is not None:
-            self_attribute_values = self.attributes.items()
-            for attribute, attribute_value in form_matcher.attributes.iteritems():
+            self_attribute_values = list(self.attributes.items())
+            for attribute, attribute_value in form_matcher.attributes.items():
                 if (attribute, attribute_value) not in self_attribute_values:
                     return False
 

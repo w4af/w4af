@@ -60,7 +60,7 @@ class ProfilesMenu(menu):
 
             try:
                 self._w3af.profiles.use_profile(profile, workdir=workdir)
-            except BaseFrameworkException, w3:
+            except BaseFrameworkException as w3:
                 om.out.console(str(w3))
 
             om.out.console('The plugins configured by the scan profile have '
@@ -72,7 +72,7 @@ class ProfilesMenu(menu):
             om.out.console('No parameters expected')
         else:
             table = [['Profile', 'Description'], []]
-            for profileInstance in self._profiles.values():
+            for profileInstance in list(self._profiles.values()):
                 table.append(
                     [profileInstance.get_name(), profileInstance.get_desc()])
 
@@ -115,7 +115,7 @@ class ProfilesMenu(menu):
         # Validate the profile name
         try:
             Profile.is_valid_profile_name(profile_name)
-        except BaseFrameworkException, bfe:
+        except BaseFrameworkException as bfe:
             om.out.console('%s' % bfe)
             return
 
@@ -128,7 +128,7 @@ class ProfilesMenu(menu):
 
     def _para_use(self, params, part):
         if not params:
-            return suggest(self._profiles.keys(), part)
+            return suggest(list(self._profiles.keys()), part)
         return []
 
     _para_save_as = _para_use

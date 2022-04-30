@@ -50,11 +50,11 @@ class TestTarget(unittest.TestCase):
 
             # Just verify that this doesn't crash and that the types
             # are correct
-            self.assertIsInstance(opt.get_name(), basestring)
-            self.assertIsInstance(opt.get_desc(), basestring)
-            self.assertIsInstance(opt.get_type(), basestring)
-            self.assertIsInstance(opt.get_help(), basestring)
-            self.assertIsInstance(opt.get_value_str(), basestring)
+            self.assertIsInstance(opt.get_name(), str)
+            self.assertIsInstance(opt.get_desc(), str)
+            self.assertIsInstance(opt.get_type(), str)
+            self.assertIsInstance(opt.get_help(), str)
+            self.assertIsInstance(opt.get_value_str(), str)
 
     def test_verify_url(self):
         ctarget = CoreTarget()
@@ -71,10 +71,9 @@ class TestTarget(unittest.TestCase):
         target_file = '/tmp/moth.target'
         target = 'file://%s' % target_file
         
-        target_file_handler = file(target_file, 'w')
-        target_file_handler.write('http://moth/1\n')
-        target_file_handler.write('http://moth/2\n')
-        target_file_handler.close()
+        with open(target_file, 'w') as target_file_handler:
+            target_file_handler.write('http://moth/1\n')
+            target_file_handler.write('http://moth/2\n')
         
         options = ctarget.get_options()
         options['target'].set_value(target)

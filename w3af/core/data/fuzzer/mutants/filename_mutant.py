@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 import copy
 
@@ -48,10 +48,10 @@ class FileNameMutant(URLPartsMutant):
 
         # Please note that this double encoding is needed if we want to work
         # with mod_rewrite
-        encoded = urllib.quote_plus(self._url_parts_dc[TOKEN].get_value(),
+        encoded = urllib.parse.quote_plus(self._url_parts_dc[TOKEN].get_value(),
                                     self._safe_encode_chars)
         if self._double_encoding:
-            encoded = urllib.quote_plus(encoded, safe=self._safe_encode_chars)
+            encoded = urllib.parse.quote_plus(encoded, safe=self._safe_encode_chars)
 
         domain_path.set_file_name('%s%s%s' % (self._url_parts_dc.url_start,
                                               encoded,

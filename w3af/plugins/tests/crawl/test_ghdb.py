@@ -23,7 +23,7 @@ import datetime
 
 from nose.plugins.skip import SkipTest
 from nose.plugins.attrib import attr
-from mock import patch, call
+from unittest.mock import patch, call
 
 import w3af.core.data.constants.severity as severity
 from w3af.plugins.tests.helper import PluginTest, PluginConfig

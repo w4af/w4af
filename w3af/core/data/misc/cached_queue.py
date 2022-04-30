@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import Queue
+import queue
 
 import w3af.core.controllers.output_manager as om
 
@@ -27,7 +27,7 @@ from w3af.core.data.db.disk_dict import DiskDict
 from w3af.core.data.misc.smart_queue import QueueSpeedMeasurement
 
 
-class CachedQueue(Queue.Queue, QueueSpeedMeasurement):
+class CachedQueue(queue.Queue, QueueSpeedMeasurement):
     """
     The framework uses the producer / consumer design pattern extensively.
     In order to avoid high memory usage in the queues connecting the different
@@ -66,7 +66,7 @@ class CachedQueue(Queue.Queue, QueueSpeedMeasurement):
 
         # We want to send zero to the maxsize of the Queue implementation
         # here because we can write an infinite number of items
-        Queue.Queue.__init__(self, maxsize=0)
+        queue.Queue.__init__(self, maxsize=0)
 
     def get_name(self):
         return self.name

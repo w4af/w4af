@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -10,6 +10,7 @@ import random
 import string
 
 from lib.core.common import singleTimeWarnMessage
+from lib.core.compat import xrange
 from lib.core.enums import DBMS
 from lib.core.enums import PRIORITY
 
@@ -20,8 +21,7 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Replaces space character (' ') with a pound character ('#') followed by
-    a random string and a new line ('\n')
+    Replaces (MySQL) instances of space character (' ') with a pound character ('#') followed by a random string and a new line ('\n')
 
     Requirement:
         * MySQL
@@ -36,7 +36,7 @@ def tamper(payload, **kwargs):
 
     >>> random.seed(0)
     >>> tamper('1 AND 9227=9227')
-    '1%23nVNaVoPYeva%0AAND%23ngNvzqu%0A9227=9227'
+    '1%23upgPydUzKpMX%0AAND%23RcDKhIr%0A9227=9227'
     """
 
     retVal = ""

@@ -76,12 +76,12 @@ class ExceptionHandler(object):
         # handled here. Raise them so that w3afCore.py, most likely to the
         # except lines around self.strategy.start(), can decide what to do
         #
-        if isinstance(exception_data.exception, self.NO_HANDLING):
-            raise exception_data.exception, None, exception_data.traceback
+        if isinstance(exception, self.NO_HANDLING):
+            raise exception.with_traceback(tb)
 
         stop_on_first_exception = cf.cf.get('stop_on_first_exception')
         if stop_on_first_exception:
-            raise exception_data.exception, None, exception_data.traceback
+            raise exception.with_traceback(tb)
 
         #
         # Now we really handle the exception that was produced by the plugin in
@@ -148,9 +148,9 @@ class ExceptionHandler(object):
         """
         filename = 'w3af-crash-%s.txt' % rand_alnum(5)
         filename = os.path.join(tempfile.gettempdir(), filename)
-        crash_dump = file(filename, "w")
-        crash_dump.write(edata.get_details())
-        crash_dump.close()
+        with open(filename, "w") as crash_dump:
+            crash_dump.write(edata.get_details())
+            crash_dump.close()
         return filename
 
     def clear(self):
@@ -255,7 +255,7 @@ class ExceptionHandler(object):
         if not self._scan_id:
             hash_data = str(random.randint(1, 50000000) * random.randint(1, 50000000))
 
-            m = hashlib.md5(hash_data)
+            m = hashlib.md5(hash_data.encode("utf-8"))
             self._scan_id = m.hexdigest()[:10]
 
         return self._scan_id

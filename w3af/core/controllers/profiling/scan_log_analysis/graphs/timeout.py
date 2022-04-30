@@ -54,5 +54,5 @@ def draw_timeout(scan_log_filename, scan):
              timeouts,
              label='Timeout')
 
-    print(fig.show())
+    print((fig.show()))
     print('')

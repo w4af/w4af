@@ -35,4 +35,4 @@ class test_smb_config_files(PayloadTestHelper):
     @pytest.mark.deprecated
     def test_smb_config_files(self):
         result = exec_payload(self.shell, 'smb_config_files', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

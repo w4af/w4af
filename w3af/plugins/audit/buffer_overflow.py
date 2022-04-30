@@ -107,7 +107,7 @@ class buffer_overflow(AuditPlugin):
         :param debugging_id: A unique identifier for this call to audit()
         """
         mutants = create_mutants(freq, self.BUFFER_TESTS, orig_resp=orig_response)
-        args = zip(repeat(self._send_request), mutants, repeat(debugging_id))
+        args = list(zip(repeat(self._send_request), mutants, repeat(debugging_id)))
 
         for result in self.worker_pool.imap_unordered(apply_with_return_error, args):
             # re-raise the thread exception in the main thread with this method

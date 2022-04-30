@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement
+
 
 import os
 import time
@@ -195,7 +195,7 @@ class HistoryItem(object):
 
         sql += ' LIMIT ' + str(result_limit)
         try:
-            for row in self._db.select(sql, where.values()):
+            for row in self._db.select(sql, list(where.values())):
                 item = self.__class__()
                 item._load_from_row(row)
                 result.append(item)
@@ -238,8 +238,9 @@ class HistoryItem(object):
             raise TraceReadException('Trace file %s does not exist' % file_name)
 
         # The file exists, but the contents might not be all on-disk yet
-        serialized_req_res = open(file_name, 'rb').read()
-        return self._load_from_string(serialized_req_res)
+        with open(file_name, 'rb') as res:
+            serialized_req_res = res.read()
+            return self._load_from_string(serialized_req_res)
 
     def _load_from_string(self, serialized_req_res):
         try:
@@ -278,7 +279,7 @@ class HistoryItem(object):
         #
         # Retry the read a few times to handle concurrency issues
         #
-        for _ in xrange(int(1 / wait_time)):
+        for _ in range(int(1 / wait_time)):
             try:
                 return self._load_from_trace_file(_id)
             except TraceReadException as e:
@@ -397,7 +398,7 @@ class HistoryItem(object):
         sql = 'SELECT * FROM ' + self._DATA_TABLE + ' WHERE id = ? '
         try:
             row = self._db.select_one(sql, (_id,))
-        except DBException, dbe:
+        except DBException as dbe:
             msg = ('An unexpected error occurred while searching for id "%s"'
                    ' in table "%s". Original exception: "%s".')
             raise DBException(msg % (_id, self._DATA_TABLE, dbe))
@@ -498,7 +499,7 @@ class HistoryItem(object):
             path, fname = os.path.split(path_fname)
             split_path = path.split('/')
 
-            for i in xrange(len(split_path) + 1):
+            for i in range(len(split_path) + 1):
                 test_path = '/'.join(split_path[:i])
                 if not os.path.exists(test_path):
                     msg = ('Directory does not exist: "%s" while trying to'
@@ -610,7 +611,7 @@ class HistoryItem(object):
         :return: None
         """
         session_dir = self._session_dir
-        trace_range = xrange(pending_compression.start, pending_compression.end + 1)
+        trace_range = range(pending_compression.start, pending_compression.end + 1)
 
         files = ['%s.%s' % (i, HistoryItem._EXTENSION) for i in trace_range]
         files = [os.path.join(session_dir, filename) for filename in files]

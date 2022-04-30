@@ -23,7 +23,7 @@ import pytest
 import unittest
 
 from itertools import repeat
-from mock import patch
+from unittest.mock import patch
 
 import w3af.core.data.kb.knowledge_base as kb
 

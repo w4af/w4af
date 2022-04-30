@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -14,12 +14,12 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Append a HTTP header 'X-originating-IP' to bypass
-    WAF Protection of Varnish Firewall
+    Appends a HTTP header 'X-originating-IP' to bypass Varnish Firewall
+
+    Reference:
+        * https://web.archive.org/web/20160815052159/http://community.hpe.com/t5/Protect-Your-Assets/Bypassing-web-application-firewalls-using-HTTP-headers/ba-p/6418366
 
     Notes:
-        Reference: http://h30499.www3.hp.com/t5/Fortify-Application-Security/Bypassing-web-application-firewalls-using-HTTP-headers/ba-p/6418366
-
         Examples:
         >> X-forwarded-for: TARGET_CACHESERVER_IP (184.189.250.X)
         >> X-remote-IP: TARGET_PROXY_IP (184.189.250.X)

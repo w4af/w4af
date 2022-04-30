@@ -53,12 +53,12 @@ class TestClickJackingVuln(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         v = vulns[0]
-        self.assertEquals(severity.MEDIUM, v.get_severity())
-        self.assertEquals('Click-Jacking vulnerability', v.get_name())
-        self.assertEquals(len(v.get_id()), 1, v.get_id())
+        self.assertEqual(severity.MEDIUM, v.get_severity())
+        self.assertEqual('Click-Jacking vulnerability', v.get_name())
+        self.assertEqual(len(v.get_id()), 1, v.get_id())
         self.assertIn('The application has no protection', v.get_desc())
 
 
@@ -92,7 +92,7 @@ class TestClickJackingProtectedXFrameOptions(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestClickJackingCSPNone(PluginTest):
@@ -125,7 +125,7 @@ class TestClickJackingCSPNone(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestClickJackingCSPWildcard(PluginTest):
@@ -158,7 +158,7 @@ class TestClickJackingCSPWildcard(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
 
 class TestClickJackingCSPSpecificDomain(PluginTest):
@@ -191,7 +191,7 @@ class TestClickJackingCSPSpecificDomain(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestClickJackingCSPSelf(PluginTest):
@@ -224,7 +224,7 @@ class TestClickJackingCSPSelf(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
 
 class TestClickJackingCSPSelfAndSpecificDomain(PluginTest):
@@ -257,4 +257,4 @@ class TestClickJackingCSPSelfAndSpecificDomain(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('click_jacking', 'click_jacking')
 
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))

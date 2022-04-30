@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro
 
 from .fedora import Fedora
 from ..requirements import CORE, GUI
@@ -43,5 +43,6 @@ class CentOS(Fedora):
     SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES,
                        GUI: GUI_SYSTEM_PACKAGES}
 
-    def is_current_platform(self):
-        return 'redhat' in platform.dist()
+    @staticmethod
+    def is_current_platform():
+        return 'redhat' in distro.linux_distribution()

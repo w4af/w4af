@@ -93,7 +93,7 @@ def get_payload_instance(payload_name, shell_obj):
     __import__(name)
     module = sys.modules[name]
     klass = getattr(module, payload_name)
-    return apply(klass, (shell_obj, ))
+    return klass(*(shell_obj, ))
 
 
 def get_payload_desc(payload_name):

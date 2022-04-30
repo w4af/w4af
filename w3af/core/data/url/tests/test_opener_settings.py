@@ -25,10 +25,10 @@ import unittest
 from w3af.core.data.url.opener_settings import OpenerSettings
 from w3af.core.data.options.option_types import (
     BOOL, INT, POSITIVE_INT, FLOAT, STRING, URL, IPPORT, LIST,
-    REGEX, COMBO, INPUT_FILE, OUTPUT_FILE, PORT)
+    REGEX, COMBO, INPUT_FILE, OUTPUT_FILE, PORT, URL_LIST)
 
 OPTION_TYPES = (BOOL, INT, POSITIVE_INT, FLOAT, STRING, URL, IPPORT, LIST,
-                REGEX, COMBO, INPUT_FILE, OUTPUT_FILE, PORT)
+                REGEX, COMBO, INPUT_FILE, OUTPUT_FILE, PORT, URL_LIST)
 
 
 class TestOpenerSettings(unittest.TestCase):
@@ -48,11 +48,11 @@ class TestOpenerSettings(unittest.TestCase):
 
             # Just verify that this doesn't crash and that the types
             # are correct
-            self.assertIsInstance(opt.get_name(), basestring)
-            self.assertIsInstance(opt.get_desc(), basestring)
-            self.assertIsInstance(opt.get_type(), basestring)
-            self.assertIsInstance(opt.get_help(), basestring)
-            self.assertIsInstance(opt.get_value_str(), basestring)
+            self.assertIsInstance(opt.get_name(), str)
+            self.assertIsInstance(opt.get_desc(), str)
+            self.assertIsInstance(opt.get_type(), str)
+            self.assertIsInstance(opt.get_help(), str)
+            self.assertIsInstance(opt.get_value_str(), str)
 
     def test_desc(self):
         self.os.get_desc()

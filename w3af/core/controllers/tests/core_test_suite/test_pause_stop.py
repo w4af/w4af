@@ -24,7 +24,7 @@ import time
 import pprint
 from multiprocessing.dummy import Process
 
-from mock import MagicMock
+from unittest.mock import MagicMock
 from nose.plugins.attrib import attr
 
 from w3af.core.data.parsers.doc.url import URL

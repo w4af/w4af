@@ -19,12 +19,12 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement
+
 
 import time
 
 from copy import deepcopy
-from itertools import izip, repeat
+from itertools import repeat
 
 import w3af.core.data.kb.knowledge_base as kb
 import w3af.core.controllers.output_manager as om
@@ -77,21 +77,21 @@ class form_auth(BruteforcePlugin):
 
         try:
             session = self._create_new_session(mutant, debugging_id)
-        except BaseFrameworkException, bfe:
+        except BaseFrameworkException as bfe:
             msg = 'Failed to create new session during form bruteforce setup: "%s"'
             om.out.debug(msg % bfe)
             return
 
         try:
             login_failed_bodies = self._id_failed_login_pages(mutant, session, debugging_id)
-        except BaseFrameworkException, bfe:
+        except BaseFrameworkException as bfe:
             msg = 'Failed to ID failed login page during form bruteforce setup: "%s"'
             om.out.debug(msg % bfe)
             return
 
         try:
             self._signature_test(mutant, session, login_failed_bodies, debugging_id)
-        except BaseFrameworkException, bfe:
+        except BaseFrameworkException as bfe:
             msg = 'Signature test failed during form bruteforce setup: "%s"'
             om.out.debug(msg % bfe)
             return
@@ -153,7 +153,7 @@ class form_auth(BruteforcePlugin):
         return session
 
     def _bruteforce_pool(self, mutant, login_failed_res, generator, session, debugging_id):
-        args_iter = izip(repeat(mutant),
+        args_iter = zip(repeat(mutant),
                          repeat(login_failed_res),
                          generator,
                          repeat(session),
@@ -222,7 +222,7 @@ class form_auth(BruteforcePlugin):
         #
         random_user_pass = []
 
-        for _ in xrange(2):
+        for _ in range(2):
             user, password = rand_alnum(8), rand_alnum(8)
             self._fill_form(form, user, password)
 
@@ -245,7 +245,7 @@ class form_auth(BruteforcePlugin):
         #
         random_user_empty_pass = []
 
-        for _ in xrange(2):
+        for _ in range(2):
             user, password = rand_alnum(8), ''
             self._fill_form(form, user, password)
 

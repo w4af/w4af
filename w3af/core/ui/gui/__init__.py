@@ -27,10 +27,10 @@ GUI_DATA_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)),
 try:
     _('blah')
 except:
-    import __builtin__
-    __builtin__.__dict__['_'] = lambda x: x
+    import builtins
+    builtins.__dict__['_'] = lambda x: x
 
 
 def setUpPackage():
-    import __builtin__
-    __builtin__.__dict__['_'] = lambda x: x
+    import builtins
+    builtins.__dict__['_'] = lambda x: x

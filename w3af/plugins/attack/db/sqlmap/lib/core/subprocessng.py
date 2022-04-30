@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
+
+from __future__ import division
 
 import errno
 import os
 import subprocess
-import sys
 import time
 
+from lib.core.compat import buffer
+from lib.core.convert import getBytes
 from lib.core.settings import IS_WIN
 
 if IS_WIN:
@@ -24,20 +27,15 @@ else:
     import select
     import fcntl
 
-    if (sys.hexversion >> 16) >= 0x202:
-        FCNTL = fcntl
-    else:
-        import FCNTL
-
 def blockingReadFromFD(fd):
     # Quick twist around original Twisted function
     # Blocking read from a non-blocking file descriptor
-    output = ""
+    output = b""
 
     while True:
         try:
             output += os.read(fd, 8192)
-        except (OSError, IOError), ioe:
+        except (OSError, IOError) as ioe:
             if ioe.args[0] in (errno.EAGAIN, errno.EINTR):
                 # Uncomment the following line if the process seems to
                 # take a huge amount of cpu time
@@ -58,7 +56,7 @@ def blockingWriteToFD(fd, data):
         try:
             data_length = len(data)
             wrote_data = os.write(fd, data)
-        except (OSError, IOError), io:
+        except (OSError, IOError) as io:
             if io.errno in (errno.EAGAIN, errno.EINTR):
                 continue
             else:
@@ -91,18 +89,18 @@ class Popen(subprocess.Popen):
         getattr(self, which).close()
         setattr(self, which, None)
 
-    if subprocess.mswindows:
+    if IS_WIN:
         def send(self, input):
             if not self.stdin:
                 return None
 
             try:
                 x = msvcrt.get_osfhandle(self.stdin.fileno())
-                (errCode, written) = WriteFile(x, input)
+                (_, written) = WriteFile(x, input)
             except ValueError:
                 return self._close('stdin')
-            except (subprocess.pywintypes.error, Exception), why:
-                if why[0] in (109, errno.ESHUTDOWN):
+            except Exception as ex:
+                if getattr(ex, "args", None) and ex.args[0] in (109, errno.ESHUTDOWN):
                     return self._close('stdin')
                 raise
 
@@ -115,15 +113,15 @@ class Popen(subprocess.Popen):
 
             try:
                 x = msvcrt.get_osfhandle(conn.fileno())
-                (read, nAvail, nMessage) = PeekNamedPipe(x, 0)
+                (read, nAvail, _) = PeekNamedPipe(x, 0)
                 if maxsize < nAvail:
                     nAvail = maxsize
                 if nAvail > 0:
-                    (errCode, read) = ReadFile(x, nAvail, None)
+                    (_, read) = ReadFile(x, nAvail, None)
             except (ValueError, NameError):
                 return self._close(which)
-            except (subprocess.pywintypes.error, Exception), why:
-                if why[0] in (109, errno.ESHUTDOWN):
+            except Exception as ex:
+                if getattr(ex, "args", None) and ex.args[0] in (109, errno.ESHUTDOWN):
                     return self._close(which)
                 raise
 
@@ -140,8 +138,8 @@ class Popen(subprocess.Popen):
 
             try:
                 written = os.write(self.stdin.fileno(), input)
-            except OSError, why:
-                if why[0] == errno.EPIPE:  # broken pipe
+            except OSError as ex:
+                if ex.args[0] == errno.EPIPE:  # broken pipe
                     return self._close('stdin')
                 raise
 
@@ -189,14 +187,16 @@ def recv_some(p, t=.1, e=1, tr=5, stderr=0):
             y.append(r)
         else:
             time.sleep(max((x - time.time()) / tr, 0))
-    return ''.join(y)
+    return b''.join(y)
 
 def send_all(p, data):
     if not data:
         return
 
+    data = getBytes(data)
+
     while len(data):
         sent = p.send(data)
         if not isinstance(sent, int):
             break
-        data = buffer(data, sent)
+        data = buffer(data[sent:])

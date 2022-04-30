@@ -35,7 +35,7 @@ class TestURLTree(unittest.TestCase):
         url = URL('http://w3af.org/')
         tree.add_url(url)
 
-        expected = {URLNode(u'http://w3af.org', 1): {}}
+        expected = {URLNode('http://w3af.org', 1): {}}
         self.assertEqual(tree.tree, expected)
 
     def test_two_independent_paths(self):

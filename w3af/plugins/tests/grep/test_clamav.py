@@ -25,7 +25,8 @@ import unittest
 from itertools import repeat
 
 import pyclamd
-from mock import patch, Mock
+from unittest.mock import patch, Mock
+from nose.plugins.attrib import attr
 
 import w3af.core.data.kb.knowledge_base as kb
 from w3af.plugins.grep.clamav import clamav
@@ -38,6 +39,7 @@ from w3af.core.controllers.threads.threadpool import Pool
 from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@attr('integration')
 class TestClamAV(unittest.TestCase):
 
     def setUp(self):
@@ -112,7 +114,7 @@ class TestClamAV(unittest.TestCase):
         self.plugin._report_result = lambda x: 42
         start_time = time.time()
         
-        for i in xrange(3):
+        for i in range(3):
             body = ''
             url = URL('http://www.w3af.com/%s' % i)
             headers = Headers([('content-type', 'text/html')])
@@ -152,7 +154,8 @@ class TestClamAV(unittest.TestCase):
         self.assertEqual(len(findings), 0)
         self.assertEqual(self.plugin._scan_http_response.call_count, 0)
 
- 
+
+@attr('integration')
 class TestClamAVScan(PluginTest):
  
     target_url = get_moth_http('/grep/clamav/')

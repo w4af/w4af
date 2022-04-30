@@ -35,11 +35,11 @@ class TestQueryStringOption(unittest.TestCase):
 
         qs_instance = opt.get_value()
 
-        self.assertIn('abc', qs_instance)
-        self.assertIn('def', qs_instance)
+        self.assertIn(b'abc', qs_instance)
+        self.assertIn(b'def', qs_instance)
 
-        self.assertEqual(qs_instance['abc'], ['1'])
-        self.assertEqual(qs_instance['def'], ['2'])
+        self.assertEqual(qs_instance[b'abc'], [b'1'])
+        self.assertEqual(qs_instance[b'def'], [b'2'])
 
     def test_empty_qs(self):
         value = ''

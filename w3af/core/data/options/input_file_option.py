@@ -21,11 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import zlib
+import binascii
 import base64
 import tempfile
+import codecs
 
 from w3af import ROOT_PATH
-from w3af.core.controllers.misc.temp_dir import get_temp_dir
+from w3af.core.controllers.misc.temp_dir import create_temp_dir
 from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af.core.data.options.baseoption import BaseOption
 from w3af.core.data.options.option_types import INPUT_FILE
@@ -95,7 +97,7 @@ class InputFileOption(BaseOption):
         if self_contained or self.should_base64_encode_file(self._value):
             try:
                 return self.encode_b64_data(self._value)
-            except Exception, e:
+            except Exception as e:
                 msg = ('An exception occurred while encoding "%s" for storing'
                        ' into the profile: "%s"')
                 raise BaseFrameworkException(msg % (self._value, e))
@@ -128,7 +130,7 @@ class InputFileOption(BaseOption):
             except zlib.error:
                 msg = 'The self contained file raised a zlib decoding error'
                 raise BaseFrameworkException(msg)
-            except TypeError:
+            except binascii.Error as e:
                 msg = 'The self contained file raised a base64 decode error'
                 raise BaseFrameworkException(msg)
 
@@ -189,7 +191,7 @@ class InputFileOption(BaseOption):
                                             suffix=self.DATA_SUFFIX,
                                             prefix=self.DATA_PREFIX,
                                             delete=False,
-                                            dir=get_temp_dir())
+                                            dir=create_temp_dir())
 
         data = self.decode_b64_data(encoded_data)
 
@@ -209,7 +211,7 @@ class InputFileOption(BaseOption):
         """
         encoded_data = encoded_data[len(self.DATA_PROTO):]
         encoded_data = base64.b64decode(encoded_data)
-        return encoded_data.decode('zlib')
+        return codecs.decode(encoded_data, 'zlib')
 
     def encode_b64_data(self, filename):
         """
@@ -219,6 +221,7 @@ class InputFileOption(BaseOption):
         :return: Encoded data which can be decoded using decode_b64_data, this
                  output is usually stored in a profile.
         """
-        data = base64.b64encode(file(filename).read().encode('zlib')).strip()
+        with open(filename, "rb") as f:
+            data = base64.b64encode(codecs.encode(f.read(), 'zlib')).strip().decode("utf-8")
         return '%s%s' % (self.DATA_PROTO, data)
 

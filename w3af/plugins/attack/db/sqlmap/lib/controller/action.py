@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -17,6 +17,7 @@ from lib.core.exception import SqlmapNoneDataException
 from lib.core.exception import SqlmapUnsupportedDBMSException
 from lib.core.settings import SUPPORTED_DBMS
 from lib.utils.brute import columnExists
+from lib.utils.brute import fileExists
 from lib.utils.brute import tableExists
 
 def action():
@@ -53,6 +54,8 @@ def action():
 
     conf.dumper.singleString(conf.dbmsHandler.getFingerprint())
 
+    kb.fingerprinted = True
+
     # Enumeration options
     if conf.getBanner:
         conf.dumper.banner(conf.dbmsHandler.getBanner())
@@ -72,10 +75,13 @@ def action():
     if conf.getUsers:
         conf.dumper.users(conf.dbmsHandler.getUsers())
 
+    if conf.getStatements:
+        conf.dumper.statements(conf.dbmsHandler.getStatements())
+
     if conf.getPasswordHashes:
         try:
             conf.dumper.userSettings("database management system users password hashes", conf.dbmsHandler.getPasswordHashes(), "password hash", CONTENT_TYPE.PASSWORDS)
-        except SqlmapNoneDataException, ex:
+        except SqlmapNoneDataException as ex:
             logger.critical(ex)
         except:
             raise
@@ -83,7 +89,7 @@ def action():
     if conf.getPrivileges:
         try:
             conf.dumper.userSettings("database management system users privileges", conf.dbmsHandler.getPrivileges(), "privilege", CONTENT_TYPE.PRIVILEGES)
-        except SqlmapNoneDataException, ex:
+        except SqlmapNoneDataException as ex:
             logger.critical(ex)
         except:
             raise
@@ -91,43 +97,96 @@ def action():
     if conf.getRoles:
         try:
             conf.dumper.userSettings("database management system users roles", conf.dbmsHandler.getRoles(), "role", CONTENT_TYPE.ROLES)
-        except SqlmapNoneDataException, ex:
+        except SqlmapNoneDataException as ex:
             logger.critical(ex)
         except:
             raise
 
     if conf.getDbs:
-        conf.dumper.dbs(conf.dbmsHandler.getDbs())
+        try:
+            conf.dumper.dbs(conf.dbmsHandler.getDbs())
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
     if conf.getTables:
-        conf.dumper.dbTables(conf.dbmsHandler.getTables())
+        try:
+            conf.dumper.dbTables(conf.dbmsHandler.getTables())
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
     if conf.commonTables:
-        conf.dumper.dbTables(tableExists(paths.COMMON_TABLES))
+        try:
+            conf.dumper.dbTables(tableExists(paths.COMMON_TABLES))
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
     if conf.getSchema:
-        conf.dumper.dbTableColumns(conf.dbmsHandler.getSchema(), CONTENT_TYPE.SCHEMA)
+        try:
+            conf.dumper.dbTableColumns(conf.dbmsHandler.getSchema(), CONTENT_TYPE.SCHEMA)
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
     if conf.getColumns:
-        conf.dumper.dbTableColumns(conf.dbmsHandler.getColumns(), CONTENT_TYPE.COLUMNS)
+        try:
+            conf.dumper.dbTableColumns(conf.dbmsHandler.getColumns(), CONTENT_TYPE.COLUMNS)
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
     if conf.getCount:
-        conf.dumper.dbTablesCount(conf.dbmsHandler.getCount())
+        try:
+            conf.dumper.dbTablesCount(conf.dbmsHandler.getCount())
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
     if conf.commonColumns:
-        conf.dumper.dbTableColumns(columnExists(paths.COMMON_COLUMNS))
+        try:
+            conf.dumper.dbTableColumns(columnExists(paths.COMMON_COLUMNS))
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
     if conf.dumpTable:
-        conf.dbmsHandler.dumpTable()
+        try:
+            conf.dbmsHandler.dumpTable()
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
     if conf.dumpAll:
-        conf.dbmsHandler.dumpAll()
+        try:
+            conf.dbmsHandler.dumpAll()
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
     if conf.search:
-        conf.dbmsHandler.search()
+        try:
+            conf.dbmsHandler.search()
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
-    if conf.query:
-        conf.dumper.query(conf.query, conf.dbmsHandler.sqlQuery(conf.query))
+    if conf.sqlQuery:
+        for query in conf.sqlQuery.strip(';').split(';'):
+            query = query.strip()
+            if query:
+                conf.dumper.sqlQuery(query, conf.dbmsHandler.sqlQuery(query))
 
     if conf.sqlShell:
         conf.dbmsHandler.sqlShell()
@@ -140,11 +199,19 @@ def action():
         conf.dbmsHandler.udfInjectCustom()
 
     # File system options
-    if conf.rFile:
-        conf.dumper.rFile(conf.dbmsHandler.readFile(conf.rFile))
+    if conf.fileRead:
+        conf.dumper.rFile(conf.dbmsHandler.readFile(conf.fileRead))
 
-    if conf.wFile:
-        conf.dbmsHandler.writeFile(conf.wFile, conf.dFile, conf.wFileType)
+    if conf.fileWrite:
+        conf.dbmsHandler.writeFile(conf.fileWrite, conf.fileDest, conf.fileWriteType)
+
+    if conf.commonFiles:
+        try:
+            conf.dumper.rFile(fileExists(paths.COMMON_FILES))
+        except SqlmapNoneDataException as ex:
+            logger.critical(ex)
+        except:
+            raise
 
     # Operating system options
     if conf.osCmd:

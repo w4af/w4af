@@ -29,10 +29,10 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 class test_apache_version(PayloadTestHelper):
 
-    EXPECTED_RESULT = {'version': [u'2.2.22']}
+    EXPECTED_RESULT = {'version': ['2.2.22']}
 
     @attr('ci_fails')
     @pytest.mark.deprecated
     def test_apache_version(self):
         result = exec_payload(self.shell, 'apache_version', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

@@ -30,7 +30,7 @@ from w3af.core.controllers.w3afCore import w3afCore
 def start_w3af_core(exception_handler):
     try:
         w3afCore()
-    except Exception, e:
+    except Exception as e:
         if exception_handler:
             exception_handler(e)
 
@@ -50,7 +50,7 @@ class TestW3afCore(unittest.TestCase):
         w3afCore
         """
         instances = []
-        for _ in xrange(5):
+        for _ in range(5):
             instances.append(w3afCore())
 
     def test_multiple_instances_in_different_dummy_processes(self):

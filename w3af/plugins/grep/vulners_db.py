@@ -129,13 +129,13 @@ class vulners_db(GrepPlugin):
                                                          software_version=detected_version,
                                                          check_type=matched_rule['type'].encode())
 
-                flattened_vulnerability_list = [item for sublist in vulnerabilities_map.values() for item in sublist]
+                flattened_vulnerability_list = [item for sublist in list(vulnerabilities_map.values()) for item in sublist]
                 for bulletin in flattened_vulnerability_list:
                     if bulletin['id'] not in vulnerabilities_summary:
                         vulnerabilities_summary[bulletin['id']] = bulletin
 
         # Now add KB's for found vulnerabilities
-        for bulletin in vulnerabilities_summary.values():
+        for bulletin in list(vulnerabilities_summary.values()):
 
             v = Vuln(name=bulletin['id'],
                      desc=bulletin['description'] or bulletin.get('sourceData', bulletin['title']),

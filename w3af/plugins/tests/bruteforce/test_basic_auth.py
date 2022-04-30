@@ -76,15 +76,15 @@ class TestBasicAuth(PluginTest):
 
         # Assert the general results
         vulns = self.kb.get('basic_auth', 'auth')
-        self.assertEquals(len(vulns), 1)
+        self.assertEqual(len(vulns), 1)
 
         vuln = vulns[0]
 
-        self.assertEquals(vuln.get_name(), 'Guessable credentials')
+        self.assertEqual(vuln.get_name(), 'Guessable credentials')
 
-        self.assertEquals(vuln.get_url().url_string, self.target_url_easy)
-        self.assertEquals(vuln['user'], 'admin')
-        self.assertEquals(vuln['pass'], 'admin')
+        self.assertEqual(vuln.get_url().url_string, self.target_url_easy)
+        self.assertEqual(vuln['user'], 'admin')
+        self.assertEqual(vuln['pass'], 'admin')
 
     @pytest.mark.deprecated
     def test_not_found_credentials(self):
@@ -94,4 +94,4 @@ class TestBasicAuth(PluginTest):
 
         # Assert the general results
         vulns = self.kb.get('basic_auth', 'auth')
-        self.assertEquals(len(vulns), 0)
+        self.assertEqual(len(vulns), 0)

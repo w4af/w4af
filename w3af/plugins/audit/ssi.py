@@ -178,7 +178,7 @@ class ssi(AuditPlugin):
         # Those two methods are faster and consume less memory than the things
         # I'm doing below now.
         #
-        expected_strings = self._expected_mutant_dict.keys()
+        expected_strings = list(self._expected_mutant_dict.keys())
         args = (len(expected_strings), debugging_id)
         om.out.debug('About to create MultiIn with %s keys (did=%s)' % args)
 

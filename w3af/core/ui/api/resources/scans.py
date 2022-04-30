@@ -64,7 +64,7 @@ def start_scan():
     # First make sure that there are no other scans running, remember that this
     # REST API is an MVP and we can only run one scan at the time (for now)
     #
-    scan_infos = SCANS.values()
+    scan_infos = list(SCANS.values())
     if not all([si is None for si in scan_infos]):
         abort(400, 'This version of the REST API does not support'
                    ' concurrent scans. Remember to DELETE finished scans'
@@ -80,7 +80,7 @@ def start_scan():
     try:
         w3af_core.profiles.use_profile(scan_profile_file_name,
                                        workdir=profile_path)
-    except BaseFrameworkException, bfe:
+    except BaseFrameworkException as bfe:
         abort(400, str(bfe))
     finally:
         remove_temp_profile(scan_profile_file_name)
@@ -102,7 +102,7 @@ def start_scan():
     try:
         target_option.set_value([URL(u) for u in target_urls])
         w3af_core.target.set_options(target_options)
-    except BaseFrameworkException, bfe:
+    except BaseFrameworkException as bfe:
         abort(400, str(bfe))
 
     scan_id = get_new_scan_id()
@@ -138,7 +138,7 @@ def list_scans():
     """
     data = []
 
-    for scan_id, scan_info in SCANS.iteritems():
+    for scan_id, scan_info in SCANS.items():
 
         if scan_info is None:
             continue

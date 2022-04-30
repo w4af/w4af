@@ -66,8 +66,8 @@ if __name__ == "__main__":
         tcpPorts = sys.argv[2].split(',')
         udpPorts = sys.argv[3].split(',')
     except:
-        print 'Bad parameters.'
+        print('Bad parameters.')
     else:
         ec = extrusionClient(ipAddress, tcpPorts, udpPorts)
         ec.start()
-        print 'OK.'
+        print('OK.')

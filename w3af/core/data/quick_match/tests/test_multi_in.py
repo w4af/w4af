@@ -80,7 +80,7 @@ class MultiInTest(unittest.TestCase):
         self.assertEqual(1, len(result))
         self.assertEqual('javax.naming.NameNotFoundException', result[0])
 
-        in_list = [u'abc(def)', u'foo(bar)']
+        in_list = ['abc(def)', 'foo(bar)']
         imi = MultiIn(in_list)
 
         result = to_list(imi.query('foo abc(def) bar'))
@@ -88,7 +88,7 @@ class MultiInTest(unittest.TestCase):
         self.assertEqual('abc(def)', result[0])
 
     def test_unicode(self):
-        in_list = [u'ñ', u'ý']
+        in_list = ['ñ', 'ý']
         imi = MultiIn(in_list)
 
         result = to_list(imi.query('abcn'))
@@ -112,7 +112,7 @@ class MultiInTest(unittest.TestCase):
         COUNT = 5000
 
         def generator(count):
-            for _ in xrange(count):
+            for _ in range(count):
                 a = rand_number(5)
                 yield a
 
@@ -132,7 +132,7 @@ class MultiInTest(unittest.TestCase):
     def test_dup_keys(self):
 
         def generator(count):
-            for _ in xrange(count):
+            for _ in range(count):
                 a = rand_number(5)
                 yield a
 
@@ -157,7 +157,7 @@ class MultiInTest(unittest.TestCase):
         prefix = '0000000'
 
         def generator(count):
-            for _ in xrange(count):
+            for _ in range(count):
                 a = rand_number(5)
                 yield prefix + a
 

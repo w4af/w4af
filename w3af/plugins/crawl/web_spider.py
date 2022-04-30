@@ -321,15 +321,20 @@ class web_spider(CrawlPlugin):
         #
         # Notes:
         #
-        # - I WANT to follow links that are in the 404 page.
-        #
-        # - With parsed_refs I'm 100% that it's really
-        #   something in the HTML that the developer intended to add.
-        #
-        # - The re_refs are the result of regular expressions,
-        #   which in some cases are just false positives.
-        #
-        parsed_refs, re_refs = doc_parser.get_references()
+        try:
+            doc_parser = parser_cache.dpc.get_document_parser_for(resp)
+        except BaseFrameworkException as w3:
+            om.out.debug('Failed to find a suitable document parser. '
+                         'Exception "%s"' % w3)
+        else:
+            # Note:
+            #
+            # - With parsed_refs I'm 100% that it's really
+            #   something in the HTML that the developer intended to add.
+            #
+            # - The re_refs are the result of regular expressions,
+            #   which in some cases are just false positives.
+            parsed_refs, re_refs = doc_parser.get_references()
 
         dirs = http_response.get_url().get_directories()
         only_re_refs = set(re_refs) - set(dirs + parsed_refs)
@@ -337,9 +342,9 @@ class web_spider(CrawlPlugin):
         all_refs = itertools.chain(parsed_refs, re_refs)
         resp_is_404 = is_404(http_response)
 
-        for ref in unique_justseen(sorted(all_refs)):
-            possibly_broken = resp_is_404 or (ref in only_re_refs)
-            yield ref, fuzzable_request, http_response, possibly_broken
+            for ref in unique_justseen(sorted(all_refs, key=lambda url: url.url_string)):
+                possibly_broken = resp_is_404 or (ref in only_re_refs)
+                yield ref, fuzzable_req, resp, possibly_broken
 
     def _uri_allowed_by_user_config(self, url):
         """

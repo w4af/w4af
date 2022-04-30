@@ -34,7 +34,7 @@ class TestEvasion(unittest.TestCase):
         u = URL('http://www.w3af.com/')
         r = HTTPRequest( u )
         self.assertEqual(rc.modify_request( r ).url_object.url_string,
-                         u'http://www.w3af.com/')
+                         'http://www.w3af.com/')
 
     def test_modify_path(self):
         rc = rnd_case()
@@ -50,7 +50,7 @@ class TestEvasion(unittest.TestCase):
         
         u = URL('http://www.w3af.com/')
         r = HTTPRequest( u, data='a=b' )
-        modified_data = rc.modify_request( r ).get_data()
+        modified_data = rc.modify_request( r ).data
         self.assertIn(modified_data, ['a=b','A=b','a=B','A=B'])
 
     def test_modify_path_file(self):
@@ -65,4 +65,4 @@ class TestEvasion(unittest.TestCase):
         #
         #    The plugins should not modify the original request
         #
-        self.assertEqual(u.url_string, u'http://www.w3af.com/a/B')
+        self.assertEqual(u.url_string, 'http://www.w3af.com/a/B')

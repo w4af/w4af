@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import gtk
+from gi.repository import Gtk as gtk
 
 from w3af.core.ui.gui import entries
 from w3af.core.ui.gui.tools.encdec import SimpleTextView
@@ -122,7 +122,7 @@ class export_request(entries.RememberingWindow):
 
         try:
             exported_request = func(self.http_request.get_text())
-        except BaseFrameworkException, w3:
+        except BaseFrameworkException as w3:
             error_msg = str(w3)
             self.exported_text.set_text(error_msg)
         else:
@@ -141,8 +141,8 @@ class export_request(entries.RememberingWindow):
             # Save the contents of the self.exported_text to the selected file
             filename = chooser.get_filename()
             try:
-                fh = file(filename, 'w')
-                fh.write(self.exported_text.get_text())
+                with open(filename, 'w') as fh:
+                    fh.write(self.exported_text.get_text())
             except:
                 msg = _("Failed to save exported data to file")
                 dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)

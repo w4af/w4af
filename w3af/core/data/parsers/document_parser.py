@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from w3af.core.data.parsers.doc.html import HTMLParser
 from w3af.core.data.parsers.doc.pdf import PDFParser
-from w3af.core.data.parsers.doc.swf import SWFParser
 from w3af.core.data.parsers.doc.wml_parser import WMLParser
 from w3af.core.data.parsers.doc.javascript import JavaScriptParser
 from w3af.core.controllers.exceptions import BaseFrameworkException
@@ -37,7 +36,6 @@ class DocumentParser(object):
     PARSERS = [WMLParser,
                JavaScriptParser,
                PDFParser,
-               SWFParser,
                HTMLParser]
 
     def __init__(self, http_resp):
@@ -45,7 +43,7 @@ class DocumentParser(object):
         Create the proper parser instance, please note that the order in which
         we ask for the type is not random, first we discard the images which
         account for a great % of the URLs in a site, then we ask for WML which
-        is a very specific thing to match, then we try JavaScript, PDF and SWF
+        is a very specific thing to match, then we try JavaScript, and PDF
         (also very specific) and finally we'll try to parse using the HTMLParser
         which will return True to "can_parse" in lots of cases (even when we're
         unsure that the response is really an HTML document).
@@ -104,8 +102,8 @@ class DocumentParser(object):
         """
         parsed_refs, re_refs = self._parser.get_references()
 
-        parsed_refs.sort(sort_by_url)
-        re_refs.sort(sort_by_url)
+        parsed_refs.sort(key=lambda url: url.url_string)
+        re_refs.sort(key=lambda url: url.url_string)
 
         return parsed_refs, re_refs
 
@@ -177,7 +175,3 @@ class DocumentParser(object):
 
 def document_parser_factory(http_resp):
     return DocumentParser(http_resp)
-
-
-def sort_by_url(url_a, url_b):
-    return cmp(url_a.url_string, url_b.url_string)

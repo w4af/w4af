@@ -85,7 +85,7 @@ class Cookie(KeyValueContainer):
         # Get data from RESPONSE
         response_headers = http_response.get_headers()
 
-        for hname, hvalue in response_headers.iteritems():
+        for hname, hvalue in response_headers.items():
             if 'cookie' in hname.lower():
                 cookies.append(hvalue)
 

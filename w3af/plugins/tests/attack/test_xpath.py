@@ -18,8 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import pytest
-from mock import MagicMock
+from unittest.mock import MagicMock
 from nose.plugins.attrib import attr
 
 from w3af.core.controllers.ci.moth import get_moth_http
@@ -55,11 +54,11 @@ class TestXPathShell(PluginTest):
 
         # Assert the general results
         vulns = self.kb.get('xpath', 'xpath')
-        self.assertEquals(1, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
         
         vuln = vulns[0]
         
-        self.assertEquals(vuln.get_name(), "XPATH injection vulnerability")
+        self.assertEqual(vuln.get_name(), "XPATH injection vulnerability")
         
         vuln_to_exploit_id = vuln.get_id()
         self._exploit_xpath(vuln_to_exploit_id)

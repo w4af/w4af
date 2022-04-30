@@ -23,8 +23,9 @@ import re
 import base64
 import binascii
 
+from w3af.core.data.misc.encoding import smart_unicode, smart_str_ignore
 
-BASE64_RE = re.compile('^(?:[a-zA-Z0-9+/]{4})*(?:[a-zA-Z0-9+/]{2}==|[a-zA-Z0-9+/]{3}=|[a-zA-Z0-9+/]{4})$')
+BASE64_RE = re.compile(r'^(?:[a-zA-Z0-9+/]{4})*(?:[a-zA-Z0-9+/]{2}==|[a-zA-Z0-9+/]{3}=|[a-zA-Z0-9+/]{4})$')
 
 
 def decode_base64(data):
@@ -33,10 +34,11 @@ def decode_base64(data):
     :param data: Base64 data as an ASCII byte string
     :returns: The decoded byte string.
     """
+    data = smart_str_ignore(data)
     missing_padding = len(data) % 4
     if missing_padding != 0:
         data += b'=' * (4 - missing_padding)
-    return base64.decodestring(data)
+    return base64.decodebytes(data)
 
 
 def is_base64(data):
@@ -67,7 +69,7 @@ def maybe_decode_base64(data):
     if len(data) < 16:
         return False, None
 
-    if not BASE64_RE.match(data):
+    if not BASE64_RE.match(smart_unicode(data)):
         return False, None
 
     try:

@@ -3,8 +3,8 @@
 # This is a sample implementation of an editor.
 
 import os
-import pluginEditorDialogs
-import gtk
+from . import pluginEditorDialogs
+from gi.repository import Gtk as gtk
 
 from w3af import ROOT_PATH
 

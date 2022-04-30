@@ -46,8 +46,8 @@ if user_wants_psutil():
     try:
         # User's don't need this module
         import psutil
-    except ImportError, ie:
-        print('Failed to import psutil: %s' % ie)
+    except ImportError as ie:
+        print(('Failed to import psutil: %s' % ie))
         sys.exit(-1)
 
 
@@ -88,7 +88,7 @@ def dump_psutil():
         except psutil.NoSuchProcess:
             pass
         else:
-            for info_name, info_data in pinfo.iteritems():
+            for info_name, info_data in pinfo.items():
                 if hasattr(info_data, '_asdict'):
                     pinfo[info_name] = dict(info_data._asdict())
                 else:
@@ -97,12 +97,12 @@ def dump_psutil():
             process_info[pinfo['pid']] = pinfo
 
     netinfo = psutil.net_io_counters(pernic=True)
-    for key, value in netinfo.iteritems():
+    for key, value in netinfo.items():
         netinfo[key] = value._asdict()
 
     # Get the memory usage from ps_mem
     pids_to_show = []
-    for pid, pinfo in process_info.iteritems():
+    for pid, pinfo in process_info.items():
         cmd = ' '.join(pinfo['cmdline'])
 
         if 'python' in cmd and 'w3af' in cmd:
@@ -133,7 +133,8 @@ def dump_psutil():
                    'Thread CPU usage': get_threads_cpu_percent(),
                    'Main Process': is_main_process()}
     
-    json.dump(psutil_data, file(output_file, 'w'), indent=4, sort_keys=True)
+    with open(output_file, 'w') as output_fh:
+        json.dump(psutil_data, output_fh, indent=4, sort_keys=True)
 
 
 def ps_mem_to_json(sorted_cmds, shareds, count, total):

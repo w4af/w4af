@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import unittest
 import httpretty
 
@@ -54,14 +54,14 @@ class TestRedirectHandlerLowLevel(unittest.TestCase):
                                body=self.OK_BODY, status=FOUND)
 
         redirect_url = URL(self.REDIR_SRC)
-        opener = urllib2.build_opener(HTTP30XHandler)
+        opener = urllib.request.build_opener(HTTP30XHandler)
         
-        request = urllib2.Request(redirect_url.url_string)
+        request = urllib.request.Request(redirect_url.url_string)
 
         # This is because the 30x handler doesn't implement default error handling
         # which is in another part of the w3af framework and this is just a urllib2
         # level test
-        self.assertRaises(urllib2.HTTPError, opener.open, request)
+        self.assertRaises(urllib.error.HTTPError, opener.open, request)
 
     @httpretty.activate
     def test_handler_order(self):
@@ -105,7 +105,7 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
     def tearDown(self):
         self.uri_opener.end()
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_redirect_302_simple_no_follow(self):
 
         httpretty.register_uri(httpretty.GET, self.REDIR_SRC,
@@ -120,7 +120,7 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
         self.assertEqual(response.get_code(), FOUND)
         self.assertEqual(response.get_id(), 1)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_redirect_302_simple_follow(self):
 
         httpretty.register_uri(httpretty.GET, self.REDIR_SRC,
@@ -139,7 +139,7 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
         self.assertEqual(response.get_url(), URL(self.REDIR_SRC))
         self.assertEqual(response.get_id(), 2)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_redirect_301_loop(self):
 
         httpretty.register_uri(httpretty.GET, self.REDIR_SRC,
@@ -158,7 +158,7 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
         self.assertEqual(response.get_body(), '')
         self.assertEqual(response.get_id(), 9)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_redirect_302_without_location_returns_302_response(self):
         # Breaks the RFC
         httpretty.register_uri(httpretty.GET, self.REDIR_SRC,
@@ -172,7 +172,7 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
         self.assertEqual(response.get_body(), '')
         self.assertEqual(response.get_id(), 1)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_redirect_no_follow_file_proto(self):
         httpretty.register_uri(httpretty.GET, self.REDIR_SRC,
                                body='', status=FOUND,

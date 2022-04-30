@@ -18,9 +18,9 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import gtk
-import gobject
-import Queue
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+import queue
 
 from collections import namedtuple
 
@@ -97,7 +97,7 @@ class KBTree(gtk.TreeView):
 
         # this structure will keep the items that were inserted into the tree
         self.treeholder = []
-        self.pending_insert = Queue.Queue()
+        self.pending_insert = queue.Queue()
         self.need_complete_tree_update = False
         
         # container for exploitable vulns.
@@ -125,7 +125,7 @@ class KBTree(gtk.TreeView):
 
         # make sure we update the knowledge base view
         kb.kb.add_observer(VulnerabilityObserver(self))
-        gobject.timeout_add(100, self._update_tree().next)
+        gobject.timeout_add(100, self._update_tree().__next__)
         self.postcheck = False
             
         self.show()
@@ -182,7 +182,7 @@ class KBTree(gtk.TreeView):
         
             try:
                 data = self.pending_insert.get_nowait()
-            except Queue.Empty:
+            except queue.Empty:
                 pass
             else:
                 # Do all the GUI stuff only if the filter is right

@@ -19,7 +19,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import Cookie
+import abc
+import http.cookies
 import re
 
 import w3af.core.data.kb.knowledge_base as kb
@@ -44,8 +45,8 @@ class analyze_cookies(GrepPlugin):
 
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
-    SECURE_RE = re.compile('; *?secure([\s;, ]|$)', re.I)
-    HTTPONLY_RE = re.compile('; *?httponly([\s;, ]|$)', re.I)
+    SECURE_RE = re.compile(r'; *?secure([\s;, ]|$)', re.I)
+    HTTPONLY_RE = re.compile(r'; *?httponly([\s;, ]|$)', re.I)
 
     def __init__(self):
         GrepPlugin.__init__(self)
@@ -153,7 +154,7 @@ class analyze_cookies(GrepPlugin):
         try:
             # Note to self: This line may print some chars to the console
             return parse_cookie(cookie_header_value)
-        except Cookie.CookieError:
+        except http.cookies.CookieError:
             desc = 'The remote Web application sent a cookie with an' \
                    ' incorrect format: "%s" that does NOT respect the RFC.'
             desc = desc % cookie_header_value
@@ -265,7 +266,7 @@ class analyze_cookies(GrepPlugin):
 
         :return: True if the cookie was fingerprinted
         """
-        cookie_keys = cookie_obj.keys()
+        cookie_keys = list(cookie_obj.keys())
         for cookie_key in cookie_keys:
             if cookie_key in self._cookie_key_failed_fingerprint:
                 cookie_keys.remove(cookie_key)
@@ -389,10 +390,14 @@ class CookieMixIn(object):
     def set_cookie_object(self, cookie_object):
         self[COOKIE_OBJECT] = cookie_object
         self.set_cookie_string(cookie_object.output(header='').strip())
-        self.set_cookie_keys(cookie_object.keys())
+        self.set_cookie_keys(list(cookie_object.keys()))
 
     def get_cookie_object(self):
         return self[COOKIE_OBJECT]
+
+    @abc.abstractmethod
+    def add_to_highlight(self, cookie_string):
+        pass
     
 
 class CookieInfo(Info, CookieMixIn):

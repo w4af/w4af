@@ -25,7 +25,7 @@ import os
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.config as cf
 
-from w3af.core.controllers.misc.io import NamedStringIO
+from w3af.core.controllers.misc.io import NamedBytesIO
 from w3af.core.controllers.misc.decorators import memoized
 from w3af.core.data.constants.file_templates.file_templates import get_file_from_template
 
@@ -38,7 +38,7 @@ PARAM_NAME_KNOWLEDGE = {
               'nachname'],
 
     'FrAmE30.': ['pass', 'word', 'pswd', 'pwd', 'auth', 'password', 'passwort',
-                 u'contraseña', 'senha', 'key', 'hash', 'pword', 'passe'],
+                 'contraseña', 'senha', 'key', 'hash', 'pword', 'passe'],
 
     'w3af@email.com': ['mail', 'email', 'e-mail', 'correo', 'correio', 'to',
                        'cc', 'bcc'],
@@ -46,40 +46,40 @@ PARAM_NAME_KNOWLEDGE = {
                              'web', 'url', 'page', 'homepage'],
 
     'AK': ['state', 'estado'],
-    'Argentina': ['location', 'country', 'pais', u'país', 'land'],
+    'Argentina': ['location', 'country', 'pais', 'país', 'land'],
     'English': ['language', 'lang', 'idioma'],
     'Buenos Aires': ['city', 'ciudad', 'cidade', 'stadt'],
-    'Bonsai Street 123': ['addr', 'address', 'residence', u'dirección', 'direccion',
-                          'residencia', u'endereço', 'endereco', u'residência',
+    'Bonsai Street 123': ['addr', 'address', 'residence', 'dirección', 'direccion',
+                          'residencia', 'endereço', 'endereco', 'residência',
                           'addresse', 'wohnsitz', 'wohnort', 'street', 'calle'],
 
     'Bonsai': ['company', 'empresa', 'companhia', 'unternehmen'],
-    'Manager': ['position', 'jon', 'cargo', u'posição', 'unternehmung', 'position'],
+    'Manager': ['position', 'jon', 'cargo', 'posição', 'unternehmung', 'position'],
 
-    '90210': ['postal', 'zip', 'postleitzahl', 'plz', 'postais'],
+    '90210': ['postal', 'postalcode', 'zip', 'postleitzahl', 'plz', 'postais'],
     '3419': ['pin', 'id', 'suffix'],
     '22': ['floor', 'age', 'piso', 'edad', 'stock', 'alter', 'port', 'puerto',
-           'number', 'numero', u'número', 'int', 'integer', 'entero'],
+           'number', 'numero', 'número', 'int', 'integer', 'entero'],
     '7.8': ['float', 'long', 'decimal'],
     '555': ['area', 'prefijo', 'prefix'],
     '55550178': ['phone', 'fax', 'code', 'telefono',
-                 u'código', 'codigo', 'telefon', 'tel', 'code', 'nummer', 'call',
+                 'código', 'codigo', 'telefon', 'tel', 'code', 'nummer', 'call',
                  'llamar', 'passport', 'pasaporte'],
     '987654320': ['ssn', 'social'],
     'C00001234': ['passport'],
-    '7': ['month', 'day', 'birthday', 'birthmonth', 'mes', 'dia', u'día', 'monat', 'tag',
-          'geburts', u'mês', 'amount', 'cantidad', 'precio', 'price', 'value',
+    '7': ['month', 'day', 'birthday', 'birthmonth', 'mes', 'dia', 'día', 'monat', 'tag',
+          'geburts', 'mês', 'amount', 'cantidad', 'precio', 'price', 'value',
           'type', 'tipo', 'article', 'score', 'puntos', 'hour', 'hora', 'minute',
           'minuto', 'second', 'segundo', 'weight', 'peso', 'largo', 'length',
           'height', 'altura', 'step', 'pageid'],
-    '1982': ['year', 'birthyear', u'año', 'ano', 'jahr', 'since', 'desde'],
+    '1982': ['year', 'birthyear', 'año', 'ano', 'jahr', 'since', 'desde'],
 
     'Hello World': ['content', 'text', 'words', 'query', 'search', 'keyword',
                     'title', 'desc', 'data', 'payload', 'answer', 'respuesta',
                     'description', 'descripcion', 'message', 'mensaje', 'excerpt',
                     'comment', 'comentario'],
 
-    'Spam or Eggs?': ['question', 'pregunta'],
+    'Spam or Eggs?': ['q', 'question', 'pregunta'],
 
     '<html>w3af</html>': ['html', 'wysiwyg'],
 
@@ -103,17 +103,6 @@ FILE_NAME_KNOWLEDGE = {
     'txt': ['text', 'ascii', 'texto', 'csv', 'note', 'nota'],
     'html': ['html', 'page', 'info', 'htm', 'design'],
 }
-
-
-def sortfunc(x_obj, y_obj):
-    """
-    A simple sort function to sort the values of a list using the second item
-    of each item.
-
-    :return: The answer to: which one is greater?
-    """
-    return cmp(y_obj[1], x_obj[1])
-
 
 def get_match_rate(variable_name, variable_name_db):
     """
@@ -142,7 +131,7 @@ def smart_fill(variable_name, db=PARAM_NAME_KNOWLEDGE, default='56'):
 
     possible_results = []
 
-    for filled_value, variable_name_list in db.items():
+    for filled_value, variable_name_list in list(db.items()):
 
         for variable_name_db in variable_name_list:
 
@@ -166,7 +155,7 @@ def smart_fill(variable_name, db=PARAM_NAME_KNOWLEDGE, default='56'):
     #   possible_results
     #
     if possible_results:
-        possible_results.sort(sortfunc)
+        possible_results.sort(key=lambda x: x[1])
         return possible_results[0][0]
 
     else:
@@ -179,7 +168,7 @@ def smart_fill(variable_name, db=PARAM_NAME_KNOWLEDGE, default='56'):
 @memoized
 def smart_fill_file(var_name, file_name):
     """
-    This function will return a NamedStringIO, ready to use in multipart forms.
+    This function will return a NamedBytesIO, ready to use in multipart forms.
 
     The contents of the file and its extension are carefully chosen to try to
     go through any form filters the web application might be implementing.
@@ -187,9 +176,9 @@ def smart_fill_file(var_name, file_name):
     extension = guess_extension(var_name, file_name)
     _, file_content, file_name = get_file_from_template(extension)
 
-    # I have to create the NamedStringIO with a "name",
+    # I have to create the NamedBytesIO with a "name",
     # required for MultipartContainer to properly encode this as multipart/post
-    return NamedStringIO(file_content, name=file_name)
+    return NamedBytesIO(file_content, name=file_name)
 
 
 def guess_extension(var_name, file_name):

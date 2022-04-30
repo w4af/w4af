@@ -48,7 +48,7 @@ class JSONContainer(DataContainer):
         """
         DataContainer.__init__(self, encoding=encoding)
 
-        if not isinstance(json_post_data, basestring):
+        if not isinstance(json_post_data, str):
             raise TypeError(ERR_MSG % json_post_data)
 
         if not JSONContainer.is_json(json_post_data):
@@ -129,7 +129,7 @@ class JSONContainer(DataContainer):
         if token_value is None:
             return True
 
-        if isinstance(token_value, basestring):
+        if isinstance(token_value, str):
             return True
 
         return False
@@ -173,10 +173,10 @@ class JSONContainer(DataContainer):
         return list(self._headers.items())
 
     def set_header(self, name, value):
-        if not isinstance(name, basestring):
+        if not isinstance(name, str):
             raise TypeError('Header name must be a string.')
 
-        if not isinstance(value, basestring):
+        if not isinstance(value, str):
             raise TypeError('Header value must be a string.')
 
         self._headers[name] = value

@@ -23,7 +23,7 @@ import unittest
 
 from nose.plugins.attrib import attr
 from nose.plugins.skip import SkipTest
-from mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 from w3af.core.ui.gui.exception_handling.unhandled import handle_crash, set_except_hook
 

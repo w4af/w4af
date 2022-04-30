@@ -20,8 +20,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import division
 import pytest
+
 
 import unittest
 
@@ -33,22 +33,22 @@ class TestGenerate404Filename(unittest.TestCase):
     def test_404_generation(self):
 
         tests = [
-            ('ab-23', 'ae-23'),
-            ('abc-12', 'aec-12'),
-            ('ab-23.html', 'ae-23.html'),
-            ('a1a2', 'a4a2'),
-            ('a1a2.html', 'a4a2.html'),
-            ('hello.html', 'hhllo.html'),
-            ('r57_Mohajer22.php', 'r87_Mohajer22.php'),
+            ('ab-23', 'ab-53'),
+            ('abc-12', 'abc-21'),
+            ('ab-23.html', 'ab-53.html'),
+            ('a1a2', 'a1d2'),
+            ('a1a2.html', 'a1d2.html'),
+            ('hello.html', 'heolo.html'),
+            ('r57_Mohajer22.php', 'r57_oMahejr22.php'),
 
             # overflow handling
-            ('Z', '6dfZZ'),
+            ('Z', 'iK2ZZ'),
         ]
 
         for fname, modfname in tests:
             self.assertEqual(generate_404_filename(fname), modfname)
 
     def test_404_generation_twice(self):
-        self.assertEqual(generate_404_filename('Entries'), 'Enrties')
-        self.assertEqual(generate_404_filename('Entries', seed=2), 'nEtries')
-        self.assertEqual(generate_404_filename('Entries', seed=3), 'Entuies')
+        self.assertEqual(generate_404_filename('Entries'), 'Entreis')
+        self.assertEqual(generate_404_filename('Entries', seed=2), 'Enrteis')
+        self.assertEqual(generate_404_filename('Entries', seed=3), 'nErteis')

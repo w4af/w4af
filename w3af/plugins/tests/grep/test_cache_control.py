@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 import unittest
+from unittest.mock import patch
+from itertools import repeat
 
 import w3af.core.data.kb.knowledge_base as kb
 from w3af.core.data.url.HTTPResponse import HTTPResponse
@@ -57,7 +59,7 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     @pytest.mark.deprecated
     def test_cache_control_images(self):
@@ -75,7 +77,7 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
     @pytest.mark.deprecated
     def test_cache_control_empty_body(self):
@@ -93,10 +95,10 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
         
-    @pytest.mark.deprecated
-    def test_cache_control_correct_headers(self):
+    @patch('w3af.plugins.grep.cache_control.is_404', side_effect=repeat(False))
+    def test_cache_control_correct_headers(self, *args):
         """
         Sensitive content with cache control headers so NO BUG is stored in KB.
         """
@@ -112,10 +114,10 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
-    @pytest.mark.deprecated
-    def test_cache_control_correct_meta(self):
+    @patch('w3af.plugins.grep.cache_control.is_404', side_effect=repeat(False))
+    def test_cache_control_correct_meta(self, *args):
         """
         Sensitive content with cache control meta tags so no bug is stored in KB.
         """
@@ -134,10 +136,10 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 0)
+        self.assertEqual(len(infos), 0)
 
-    @pytest.mark.deprecated
-    def test_cache_control_incorrect_headers(self):
+    @patch('w3af.plugins.grep.cache_control.is_404', side_effect=repeat(False))
+    def test_cache_control_incorrect_headers(self, *args):
         """
         Sensitive content with INCORRECT cache control headers bug should be
         stored in KB.
@@ -154,10 +156,10 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
         
-    @pytest.mark.deprecated
-    def test_cache_control_no_headers(self):
+    @patch('w3af.plugins.grep.cache_control.is_404', side_effect=repeat(False))
+    def test_cache_control_no_headers(self, *args):
         """
         Sensitive content without cache control headers so bug is stored in KB.
         """
@@ -171,7 +173,7 @@ class TestCacheControl(unittest.TestCase):
         self.plugin.end()
         
         infos = kb.kb.get('cache_control', 'cache_control')
-        self.assertEquals(len(infos), 1)
+        self.assertEqual(len(infos), 1)
         
         info = infos[0]
         self.assertEqual(info.get_name(), 'Missing cache control for HTTPS content')

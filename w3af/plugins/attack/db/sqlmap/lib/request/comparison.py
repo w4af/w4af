@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
+
+from __future__ import division
 
 import re
 
@@ -11,8 +13,10 @@ from lib.core.common import extractRegexResult
 from lib.core.common import getFilteredPageContent
 from lib.core.common import listToStrValue
 from lib.core.common import removeDynamicContent
+from lib.core.common import getLastRequestHTTPError
 from lib.core.common import wasLastResponseDBMSError
 from lib.core.common import wasLastResponseHTTPError
+from lib.core.convert import getBytes
 from lib.core.data import conf
 from lib.core.data import kb
 from lib.core.data import logger
@@ -20,14 +24,15 @@ from lib.core.exception import SqlmapNoneDataException
 from lib.core.settings import DEFAULT_PAGE_ENCODING
 from lib.core.settings import DIFF_TOLERANCE
 from lib.core.settings import HTML_TITLE_REGEX
-from lib.core.settings import MIN_RATIO
+from lib.core.settings import LOWER_RATIO_BOUND
 from lib.core.settings import MAX_DIFFLIB_SEQUENCE_LENGTH
 from lib.core.settings import MAX_RATIO
+from lib.core.settings import MIN_RATIO
 from lib.core.settings import REFLECTED_VALUE_MARKER
-from lib.core.settings import LOWER_RATIO_BOUND
 from lib.core.settings import UPPER_RATIO_BOUND
 from lib.core.settings import URI_HTTP_HEADER
 from lib.core.threads import getCurrentThreadData
+from thirdparty import six
 
 def comparison(page, headers, code=None, getRatioValue=False, pageLength=None):
     _ = _adjust(_comparison(page, headers, code, getRatioValue, pageLength), getRatioValue)
@@ -59,13 +64,19 @@ def _comparison(page, headers, code, getRatioValue, pageLength):
     if any((conf.string, conf.notString, conf.regexp)):
         rawResponse = "%s%s" % (listToStrValue(_ for _ in headers.headers if not _.startswith("%s:" % URI_HTTP_HEADER)) if headers else "", page)
 
-        # String to match in page when the query is True and/or valid
+        # String to match in page when the query is True
         if conf.string:
             return conf.string in rawResponse
 
-        # String to match in page when the query is False and/or invalid
+        # String to match in page when the query is False
         if conf.notString:
-            return conf.notString not in rawResponse
+            if conf.notString in rawResponse:
+                return False
+            else:
+                if kb.errorIsNone and (wasLastResponseDBMSError() or wasLastResponseHTTPError()):
+                    return None
+                else:
+                    return True
 
         # Regular expression to match in page when the query is True and/or valid
         if conf.regexp:
@@ -81,7 +92,8 @@ def _comparison(page, headers, code, getRatioValue, pageLength):
     if page:
         # In case of an DBMS error page return None
         if kb.errorIsNone and (wasLastResponseDBMSError() or wasLastResponseHTTPError()) and not kb.negativeLogic:
-            return None
+            if not (wasLastResponseHTTPError() and getLastRequestHTTPError() in (conf.ignoreCode or [])):
+                return None
 
         # Dynamic content lines to be excluded before comparison
         if not kb.nullConnection:
@@ -105,17 +117,22 @@ def _comparison(page, headers, code, getRatioValue, pageLength):
     else:
         # Preventing "Unicode equal comparison failed to convert both arguments to Unicode"
         # (e.g. if one page is PDF and the other is HTML)
-        if isinstance(seqMatcher.a, str) and isinstance(page, unicode):
-            page = page.encode(kb.pageEncoding or DEFAULT_PAGE_ENCODING, 'ignore')
-        elif isinstance(seqMatcher.a, unicode) and isinstance(page, str):
-            seqMatcher.a = seqMatcher.a.encode(kb.pageEncoding or DEFAULT_PAGE_ENCODING, 'ignore')
+        if isinstance(seqMatcher.a, six.binary_type) and isinstance(page, six.text_type):
+            page = getBytes(page, kb.pageEncoding or DEFAULT_PAGE_ENCODING, "ignore")
+        elif isinstance(seqMatcher.a, six.text_type) and isinstance(page, six.binary_type):
+            seqMatcher.a = getBytes(seqMatcher.a, kb.pageEncoding or DEFAULT_PAGE_ENCODING, "ignore")
 
-        if seqMatcher.a and page and seqMatcher.a == page:
-            ratio = 1
+        if any(_ is None for _ in (page, seqMatcher.a)):
+            return None
+        elif seqMatcher.a and page and seqMatcher.a == page:
+            ratio = 1.
         elif kb.skipSeqMatcher or seqMatcher.a and page and any(len(_) > MAX_DIFFLIB_SEQUENCE_LENGTH for _ in (seqMatcher.a, page)):
-            ratio = 1.0 * len(seqMatcher.a) / len(page)
-            if ratio > 1:
-                ratio = 1. / ratio
+            if not page or not seqMatcher.a:
+                return float(seqMatcher.a == page)
+            else:
+                ratio = 1. * len(seqMatcher.a) / len(page)
+                if ratio > 1:
+                    ratio = 1. / ratio
         else:
             seq1, seq2 = None, None
 
@@ -132,10 +149,24 @@ def _comparison(page, headers, code, getRatioValue, pageLength):
             seq1 = seq1.replace(REFLECTED_VALUE_MARKER, "")
             seq2 = seq2.replace(REFLECTED_VALUE_MARKER, "")
 
+            if kb.heavilyDynamic:
+                seq1 = seq1.split("\n")
+                seq2 = seq2.split("\n")
+
+                key = None
+            else:
+                key = (hash(seq1), hash(seq2))
+
             seqMatcher.set_seq1(seq1)
             seqMatcher.set_seq2(seq2)
 
-            ratio = round(seqMatcher.quick_ratio(), 3)
+            if key in kb.cache.comparison:
+                ratio = kb.cache.comparison[key]
+            else:
+                ratio = round(seqMatcher.quick_ratio() if not kb.heavilyDynamic else seqMatcher.ratio(), 3)
+
+            if key:
+                kb.cache.comparison[key] = ratio
 
     # If the url is stable and we did not set yet the match ratio and the
     # current injected value changes the url page content

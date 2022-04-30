@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import os
+import yappi
 
 from .utils import get_filename_fmt, dump_data_every_thread, cancel_thread
 
@@ -54,15 +55,10 @@ def start_cpu_profiling():
 
     :return: None
     """
-    import yappi
-    yappi.start()
-
     dump_data_every_thread(dump_data, DELAY_MINUTES, SAVE_THREAD_PTR)
 
 
 def dump_data():
-    import yappi
-
     # pylint: disable=E1101
     yappi.get_func_stats().save(PROFILING_OUTPUT_FMT % get_filename_fmt(),
                                 type="pstat")

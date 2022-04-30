@@ -33,7 +33,7 @@ class TestLDAPConfigFiles(PayloadTestHelper):
     @pytest.mark.deprecated
     def test_ldap_config_files(self):
         result = exec_payload(self.shell, 'ldap_config_files', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)
 
     @attr('ci_fails')
     @pytest.mark.deprecated

@@ -97,7 +97,7 @@ class grep(BaseConsumer):
         self._log_queue_sizes_calls = 0
 
         self._consumer_plugin_dict = dict((plugin.get_name(), plugin) for plugin in self._consumer_plugins)
-        self._first_plugin_name = self._consumer_plugin_dict.keys()[0]
+        self._first_plugin_name = list(self._consumer_plugin_dict.keys())[0]
 
         self._request_response_lru = SynchronizedLRUDict(thread_pool_size * 3)
         self._request_response_processes = dict()
@@ -171,7 +171,7 @@ class grep(BaseConsumer):
         headers_inst = Headers(request.header_items())
         request = FuzzableRequest.from_parts(request.url_object,
                                              request.get_method(),
-                                             request.get_data() or '',
+                                             request.data or '',
                                              headers_inst)
 
         return request, response
@@ -322,7 +322,7 @@ class grep(BaseConsumer):
 
         try:
             plugin.grep_wrapper(request, response)
-        except Exception, e:
+        except Exception as e:
             self.handle_exception('grep', plugin_name, request, e)
         else:
             took_line.send()
@@ -345,7 +345,7 @@ class grep(BaseConsumer):
         for observer in self._observers:
             try:
                 observer.grep(self, request, response)
-            except Exception, e:
+            except Exception as e:
                 self.handle_exception('grep',
                                       'grep._run_observers()',
                                       'grep._run_observers()',

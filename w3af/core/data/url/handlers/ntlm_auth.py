@@ -12,11 +12,11 @@
 # License along with this library.  If not, see <http://www.gnu.org/licenses/>
 # or <http://www.gnu.org/licenses/lgpl.txt>.
 
-import urllib2
-from ntlm import ntlm
+import urllib.request, urllib.error, urllib.parse
+from ntlm3 import ntlm
 
 
-class AbstractNtlmAuthHandler(urllib2.BaseHandler):
+class AbstractNtlmAuthHandler(urllib.request.BaseHandler):
     """
     urllib2 handler which adds NTLM v1 support.
     
@@ -28,7 +28,7 @@ class AbstractNtlmAuthHandler(urllib2.BaseHandler):
 
     def __init__(self, password_mgr=None):
         if password_mgr is None:
-            password_mgr = urllib2.HTTPPasswordMgr()
+            password_mgr = urllib.request.HTTPPasswordMgr()
         self.passwd = password_mgr
         self.add_password = self.passwd.add_password
         self.retried = 0
@@ -54,7 +54,7 @@ class AbstractNtlmAuthHandler(urllib2.BaseHandler):
             # prompting for the information. Crap. This isn't great
             # but it's better than the current 'repeat until recursion
             # depth exceeded' approach <wink>
-            raise urllib2.HTTPError(req.get_full_url(), 401,
+            raise urllib.error.HTTPError(req.get_full_url(), 401,
                                     "NTLM auth failed",
                                     headers, None)
         else:
@@ -67,7 +67,7 @@ class AbstractNtlmAuthHandler(urllib2.BaseHandler):
                                                    None, headers)
         
     def retry_using_http_NTLM_auth(self, request, auth_header_field, realm, headers):
-        auth_header_value = headers.getheader(auth_header_field, None)
+        auth_header_value = headers.get(auth_header_field, None)
         if auth_header_value is not None:
             server_data = auth_header_value[5:]
             try:

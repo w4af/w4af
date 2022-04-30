@@ -27,7 +27,7 @@ def generate_crawl_graph(scan_log_filename, scan):
     def sort_by_len(a, b):
         return cmp(len(a), len(b))
 
-    referers = data.keys()
+    referers = list(data.keys())
     referers.sort(sort_by_len)
 
     print('')
@@ -41,9 +41,9 @@ def generate_crawl_graph(scan_log_filename, scan):
         for new_link in new_links:
             if referer is previous_referer:
                 spaces = ' ' * len('%s -> ' % previous_referer)
-                print('%s%s' % (spaces, new_link))
+                print(('%s%s' % (spaces, new_link)))
             else:
-                print('%s -> %s' % (referer, new_link))
+                print(('%s -> %s' % (referer, new_link)))
                 previous_referer = referer
 
     print('')

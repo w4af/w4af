@@ -72,7 +72,7 @@ class request(object):
             else:
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((HOST, PORT))
-        except Exception, e:
+        except Exception as e:
             msg = 'hmap connection failed to %s:%s. Exception: "%s"'
             args = (HOST, PORT, e)
             raise BaseFrameworkException(msg % args)
@@ -81,7 +81,7 @@ class request(object):
         if useSSL:
             try:
                 s2 = ssl.wrap_socket(s)
-            except Exception, e:
+            except Exception as e:
                 msg = 'hmap SSL connection failed to %s:%s. Exception: "%s"'
                 args = (HOST, PORT, e)
                 raise BaseFrameworkException(msg % args)
@@ -107,7 +107,7 @@ class request(object):
             # Send the "HTTP request" to the socket
             try:
                 s.send(str(self))
-            except Exception, e:
+            except Exception as e:
                 om.out.debug('hmap failed to send data to socket: "%s"' % e)
 
                 # Try again
@@ -134,10 +134,10 @@ class request(object):
 
                     # we were able to read from the socket, append and try again
                     data += temp
-            except KeyboardInterrupt, e:
+            except KeyboardInterrupt as e:
                 raise e
 
-            except socket.sslerror, ssl_err:
+            except ssl.SSLError as ssl_err:
                 # When the remote server has no more data to send
                 # It simply closes the remote connection, which raises:
                 # (6, 'TLS/SSL connection has been closed')
@@ -145,7 +145,7 @@ class request(object):
                     return response(data)
 
                 msg = 'hmap found an SSL error while reading data from socket: "%s"'
-                om.out.debug(msg % ssl_err)
+                om.out.debug(msg % str(ssl_err))
 
                 # Try again
                 tries -= 1
@@ -155,7 +155,7 @@ class request(object):
 
                 continue
 
-            except Exception, e:
+            except Exception as e:
                 msg = 'hmap found an exception while reading data from socket: "%s"'
                 om.out.debug(msg % e)
 
@@ -198,7 +198,7 @@ class response(object):
             self.response_text = 'NONE'
             return
 
-        if not re.search('^HTTP/1\.[01] [0-9]{3} [A-Z]{,10}', text):
+        if not re.search(r'^HTTP/1\.[01] [0-9]{3} [A-Z]{,10}', text):
             self.response_code = 'NO_RESPONSE_CODE'  # HTTP/0.9 like
             self.response_text = 'NONE'
             self.body = text
@@ -216,7 +216,7 @@ class response(object):
         response_lines = text.split(line_splitter)
         self.response_line = response_lines[0]
         response_line_match = re.search(
-            '(HTTP/1\.[01]) ([0-9]{3}) ([^\r\n]*)', text)
+            r'(HTTP/1\.[01]) ([0-9]{3}) ([^\r\n]*)', text)
         self.response_code, self.response_text = response_line_match.groups(
         )[1:]
 
@@ -233,18 +233,18 @@ class response(object):
         return self.response_code, self.response_text
 
     def describe(self):
-        print '-' * 70
-        print 'RESPONSE LINE:'
+        print('-' * 70)
+        print('RESPONSE LINE:')
         if hasattr(self, 'response_line'):
-            print self.response_line
-        print '-' * 70
-        print 'HEADERS:'
+            print(self.response_line)
+        print('-' * 70)
+        print('HEADERS:')
         if hasattr(self, 'headers'):
-            print self.headers
-        print '-' * 70
-        print 'BODY:'
+            print(self.headers)
+        print('-' * 70)
+        print('BODY:')
         if hasattr(self, 'body'):
-            print self.body
+            print(self.body)
 
     def has_header(self, name):
         for h in self.headers:
@@ -285,7 +285,7 @@ def get_fingerprint(url, threads):
 
         try:
             result = test(url)
-        except Exception, e:
+        except Exception as e:
             args = (test.__name__, e)
             om.out.debug('[hmap] Test %s raised an exception: "%s"' % args)
             raise
@@ -492,10 +492,10 @@ def malformed_method_line(url):
                           'GET %2F HTTP/1.0',  # 90
                           'GET%20/ HTTP/1.0',
                           'GET / FTP/1.0',
-                          'GET \ HTTP/1.0',  # windows style
+                          'GET \\ HTTP/1.0',  # windows style
                           #'GET \./',
                           #'GET \.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\.\. HTTP/1.0'
-                          'GET C:\ HTTP/1.0',
+                          'GET C:\\ HTTP/1.0',
                           'HTTP/1.0 / GET',  # and other permutations
                           # try various escape sequences from c etal
                           # \a = bell
@@ -512,7 +512,7 @@ def malformed_method_line(url):
                           )
 
     #print len(malformed_methods)
-    for index, mm in zip(range(len(malformed_methods)), malformed_methods):
+    for index, mm in zip(list(range(len(malformed_methods))), malformed_methods):
         req = request(url)
         req.adhoc_method_line = mm
         res = req.submit()
@@ -556,7 +556,7 @@ def find_halfways(ranges):
             continue
         hw = ((smallest_next[0] - largest_previous[0]) / 2) + largest_previous[0]
         if VERBOSE:
-            print largest_previous, hw, smallest_next
+            print(largest_previous, hw, smallest_next)
         halfways.append(hw)
 
     return halfways
@@ -696,7 +696,7 @@ def add_characteristic(category, name, value, data_type=None):
 
 def get_characteristics(test_name, res):
     if VERBOSE:
-        print 'processing', test_name
+        print('processing', test_name)
 
     response_code, response_text = res.return_code()
     claimed_servername = res.servername()
@@ -774,12 +774,12 @@ def winnow_ordered_list(ordered_list):
         #print 'ordered_list too small to look at'
         return
 
-    ordered_list.sort(lambda a, b: cmp(len(a), len(b)))
+    ordered_list.sort(key=lambda a: len(a))
     #print 'sorted order', ordered_list
 
     index = 0
     result = []
-    for (index, elem) in zip(range(len(ordered_list) - 1), ordered_list):
+    for (index, elem) in zip(list(range(len(ordered_list) - 1)), ordered_list):
         is_ok = 1
         for other in ordered_list[index + 1:]:
             if is_partial_ordered_sublist(elem, other):
@@ -926,7 +926,7 @@ def partial_same_order(list1, list2):
     #common_items = [common_items[k] = v for k,v in common if v == 2]
     for k, v in common:
         if v == 2:
-            common[k] = v
+            common_items[k] = v
     common1 = []  # is there a simple way??
     common2 = []
     for i in list1:
@@ -946,7 +946,7 @@ def partial_same_order(list1, list2):
 
 
 def usage():
-    print """
+    print("""
 hmap is a web server fingerprinter.
 
 hmap [-hpgn] {url | filename}
@@ -961,7 +961,7 @@ e.g.
 -p         run with a prefetched file
 -g         gather only (don't do comparison)
 -c         show this many closest matches
-"""
+""")
     sys.exit()
 
 ######################################################################
@@ -990,23 +990,22 @@ def testServer(ssl, server, port, matchCount, generateFP, threads):
     # Read the fingerprint db
     known_servers = []
     for f in glob.glob(fingerprintDir + '*'):
-        ksf = file(f)
-        try:
-            ### FIXME: This eval is awful, I should change it to pickle.
-            ks = eval(ksf.read())
-        except Exception, e:
-            raise BaseFrameworkException(
-                'The signature file "' + f + '" has an invalid syntax.')
-        else:
-            known_servers.append(ks)
-            ksf.close()
+        with open(f) as ksf:
+            try:
+                ### FIXME: This eval is awful, I should change it to pickle.
+                ks = eval(ksf.read())
+            except Exception as e:
+                raise BaseFrameworkException(
+                    'The signature file "' + f + '" has an invalid syntax.')
+            else:
+                known_servers.append(ks)
 
     # Generate the fingerprint file
     if generateFP:
-        for i in xrange(10):
+        for i in range(10):
             try:
                 fd = open('hmap-fingerprint-' + server + '-' + str(i), 'w')
-            except Exception, e:
+            except Exception as e:
                 raise BaseFrameworkException(
                     'Cannot open fingerprint file. Error:' + str(e))
             else:
@@ -1019,15 +1018,7 @@ def testServer(ssl, server, port, matchCount, generateFP, threads):
     # Compare
     scores = find_most_similar(known_servers, fp)
 
-    def score_cmp(score1, score2):
-        (server1, (matches1, mismatches1, unknowns1)) = score1
-        (server2, (matches2, mismatches2, unknowns2)) = score2
-
-        if -cmp(matches1, matches2) != 0:
-            return -cmp(matches1, matches2)
-
-        return cmp(server1, server2)
-    scores.sort(score_cmp)
+    scores.sort(key=lambda score: (score[0], score[1][0]))
 
     res = []
     for (server, (matches, mismatches, unknowns)) in scores[:MATCH_COUNT]:

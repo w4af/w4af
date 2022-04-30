@@ -35,7 +35,7 @@ from w3af.core.data.dc.cookie import Cookie
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.data.kb.info_set import InfoSet
 from w3af.core.data.dc.factory import dc_from_hdrs_post
-
+from w3af.core.data.misc.encoding import smart_unicode
 
 class serialized_object(GrepPlugin):
     """
@@ -48,7 +48,7 @@ class serialized_object(GrepPlugin):
 
     SERIALIZED_OBJECT_RE = {
         'PHP': [
-            re.compile('^(a|O):\d{1,3}:({[sai]|")'),
+            re.compile(r'^(a|O):\d{1,3}:({[sai]|")'),
         ]
     }
 
@@ -70,7 +70,7 @@ class serialized_object(GrepPlugin):
             if self._should_skip_analysis(parameter_value):
                 continue
 
-            for language, regular_expressions in self.SERIALIZED_OBJECT_RE.iteritems():
+            for language, regular_expressions in self.SERIALIZED_OBJECT_RE.items():
                 for serialized_object_re in regular_expressions:
 
                     self._analyze_param(request,
@@ -130,8 +130,8 @@ class serialized_object(GrepPlugin):
         :return: None. We just save the vulnerability to the KB
         """
         try:
-            match_object = serialized_object_re.search(parameter_value)
-        except Exception, e:
+            match_object = serialized_object_re.search(smart_unicode(parameter_value))
+        except Exception as e:
             args = (e, parameter_value)
             om.out.debug('An exception was found while trying to find a'
                          ' serialized object in a parameter value. The exception'
@@ -153,7 +153,7 @@ class serialized_object(GrepPlugin):
 
         v.set_url(response.get_url())
         v.add_to_highlight(parameter_value)
-        v[SerializedObjectInfoSet.ITAG] = parameter_name
+        v[SerializedObjectInfoSet.ITAG] = smart_unicode(parameter_name)
 
         self.kb_append_uniq_group(self,
                                   'serialized_object', v,

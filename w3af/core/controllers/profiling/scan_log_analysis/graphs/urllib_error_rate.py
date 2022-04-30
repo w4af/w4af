@@ -60,5 +60,5 @@ def draw_extended_urllib_error_rate(scan_log_filename, scan):
              error_rate,
              label='Error rate')
 
-    print(fig.show())
+    print((fig.show()))
     print('')

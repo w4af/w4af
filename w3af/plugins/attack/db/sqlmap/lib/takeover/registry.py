@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 import os
 
+from lib.core.common import openFile
 from lib.core.common import randomStr
 from lib.core.data import conf
 from lib.core.data import logger
 from lib.core.enums import REGISTRY_OPERATION
 
-class Registry:
+class Registry(object):
     """
     This class defines methods to read and write Windows registry keys
     """
@@ -33,22 +34,22 @@ class Registry:
             readParse = "REG QUERY \"" + self._regKey + "\" /v \"" + self._regValue + "\""
 
         self._batRead = (
-                           "@ECHO OFF\r\n",
-                           readParse,
-                        )
+            "@ECHO OFF\r\n",
+            readParse,
+        )
 
         self._batAdd = (
-                           "@ECHO OFF\r\n",
-                           "REG ADD \"%s\" /v \"%s\" /t %s /d %s /f" % (self._regKey, self._regValue, self._regType, self._regData),
-                       )
+            "@ECHO OFF\r\n",
+            "REG ADD \"%s\" /v \"%s\" /t %s /d %s /f" % (self._regKey, self._regValue, self._regType, self._regData),
+        )
 
         self._batDel = (
-                           "@ECHO OFF\r\n",
-                           "REG DELETE \"%s\" /v \"%s\" /f" % (self._regKey, self._regValue),
-                       )
+            "@ECHO OFF\r\n",
+            "REG DELETE \"%s\" /v \"%s\" /f" % (self._regKey, self._regValue),
+        )
 
     def _createLocalBatchFile(self):
-        self._batPathFp = open(self._batPathLocal, "w")
+        self._batPathFp = openFile(self._batPathLocal, "w")
 
         if self._operation == REGISTRY_OPERATION.READ:
             lines = self._batRead

@@ -25,13 +25,14 @@ import time
 
 from PIL import Image
 from nose.plugins.attrib import attr
-from mock import patch
+from unittest.mock import patch
 
 from w3af import ROOT_PATH
 from w3af.core.ui.tests.wrappers.xvfb_server import XVFBServer
 from w3af.core.ui.tests.wrappers.tests.utils import is_black_image
 
 
+@attr('gui')
 class TestEnvironment(unittest.TestCase):
 
     X_TEST_COMMAND = 'python %s' % os.path.join(ROOT_PATH, 'core', 'ui', 'tests',

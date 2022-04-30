@@ -65,13 +65,13 @@ class test_strange_http_codes(unittest.TestCase):
         for resp in KNOWN_GOOD:
             kb.kb.cleanup()
             self.plugin.grep(request, resp)
-            self.assertEquals(len(kb.kb.get('strange_http_codes',
+            self.assertEqual(len(kb.kb.get('strange_http_codes',
                                             'strange_http_codes')), 0)
 
         for resp in KNOWN_BAD:
             kb.kb.cleanup()
             self.plugin.grep(request, resp)
-            self.assertEquals(len(kb.kb.get('strange_http_codes',
+            self.assertEqual(len(kb.kb.get('strange_http_codes',
                                             'strange_http_codes')), 1)
 
     @pytest.mark.deprecated
@@ -90,13 +90,13 @@ class test_strange_http_codes(unittest.TestCase):
         self.plugin.grep(request_2, resp_2)
 
         info_sets = kb.kb.get('strange_http_codes', 'strange_http_codes')
-        self.assertEquals(len(info_sets), 1, info_sets)
+        self.assertEqual(len(info_sets), 1, info_sets)
 
-        expected_desc = (u'The remote web server sent 2 HTTP responses with'
-                         u' the uncommon response status code 666 using "OK"'
-                         u' as message. The first ten URLs which sent the' 
-                         u' uncommon status code are:\n' 
-                         u' - http://www.w3af.com/2\n - http://www.w3af.com/1\n')
+        expected_desc = ('The remote web server sent 2 HTTP responses with'
+                         ' the uncommon response status code 666 using "OK"'
+                         ' as message. The first ten URLs which sent the' 
+                         ' uncommon status code are:\n' 
+                         ' - http://www.w3af.com/1\n - http://www.w3af.com/2\n')
         info_set = info_sets[0]
         self.assertEqual(info_set.get_id(), [1, 2])
         self.assertEqual(info_set.get_desc(), expected_desc)
@@ -117,7 +117,7 @@ class test_strange_http_codes(unittest.TestCase):
         self.plugin.grep(request_2, resp_2)
 
         info_sets = kb.kb.get('strange_http_codes', 'strange_http_codes')
-        self.assertEquals(len(info_sets), 2, info_sets)
+        self.assertEqual(len(info_sets), 2, info_sets)
 
     @pytest.mark.deprecated
     def test_strange_http_codes_heavy_load(self):
@@ -133,5 +133,5 @@ class test_strange_http_codes(unittest.TestCase):
         for resp in KNOWN_BAD:
             kb.kb.cleanup()
             self.plugin.grep(request, resp)
-            self.assertEquals(len(kb.kb.get('strange_http_codes',
+            self.assertEqual(len(kb.kb.get('strange_http_codes',
                                             'heavy_load')), 1)

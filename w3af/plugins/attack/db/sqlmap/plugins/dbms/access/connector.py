@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -12,6 +12,7 @@ except:
 
 import logging
 
+from lib.core.common import getSafeExString
 from lib.core.data import conf
 from lib.core.data import logger
 from lib.core.exception import SqlmapConnectionException
@@ -21,15 +22,11 @@ from plugins.generic.connector import Connector as GenericConnector
 
 class Connector(GenericConnector):
     """
-    Homepage: http://pyodbc.googlecode.com/
-    User guide: http://code.google.com/p/pyodbc/wiki/GettingStarted
-    API: http://code.google.com/p/pyodbc/w/list
+    Homepage: https://github.com/mkleehammer/pyodbc
+    User guide: https://github.com/mkleehammer/pyodbc/wiki
     Debian package: python-pyodbc
     License: MIT
     """
-
-    def __init__(self):
-        GenericConnector.__init__(self)
 
     def connect(self):
         if not IS_WIN:
@@ -42,8 +39,8 @@ class Connector(GenericConnector):
 
         try:
             self.connector = pyodbc.connect('Driver={Microsoft Access Driver (*.mdb)};Dbq=%s;Uid=Admin;Pwd=;' % self.db)
-        except (pyodbc.Error, pyodbc.OperationalError), msg:
-            raise SqlmapConnectionException(msg[1])
+        except (pyodbc.Error, pyodbc.OperationalError) as ex:
+            raise SqlmapConnectionException(getSafeExString(ex))
 
         self.initCursor()
         self.printConnected()
@@ -51,17 +48,17 @@ class Connector(GenericConnector):
     def fetchall(self):
         try:
             return self.cursor.fetchall()
-        except pyodbc.ProgrammingError, msg:
-            logger.log(logging.WARN if conf.dbmsHandler else logging.DEBUG, "(remote) %s" % msg[1])
+        except pyodbc.ProgrammingError as ex:
+            logger.log(logging.WARN if conf.dbmsHandler else logging.DEBUG, "(remote) %s" % getSafeExString(ex))
             return None
 
     def execute(self, query):
         try:
             self.cursor.execute(query)
-        except (pyodbc.OperationalError, pyodbc.ProgrammingError), msg:
-            logger.log(logging.WARN if conf.dbmsHandler else logging.DEBUG, "(remote) %s" % msg[1])
-        except pyodbc.Error, msg:
-            raise SqlmapConnectionException(msg[1])
+        except (pyodbc.OperationalError, pyodbc.ProgrammingError) as ex:
+            logger.log(logging.WARN if conf.dbmsHandler else logging.DEBUG, "(remote) %s" % getSafeExString(ex))
+        except pyodbc.Error as ex:
+            raise SqlmapConnectionException(getSafeExString(ex))
 
         self.connector.commit()
 

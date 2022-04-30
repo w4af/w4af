@@ -26,7 +26,8 @@ DEFAULT_WAVSEP = 'wavsep-fallback:80'
 
 def get_wavsep_http(path='/'):
     try:
-        wavsep_netloc = file(HTTP_WAVSEP).read().strip()
+        with open(HTTP_WAVSEP) as f:
+            wavsep_netloc = f.read().strip()
     except IOError:
         wavsep_netloc = DEFAULT_WAVSEP
 

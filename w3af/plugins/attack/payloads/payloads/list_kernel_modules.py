@@ -37,7 +37,7 @@ class list_kernel_modules(Payload):
             rows.append(['Module', 'Used by'])
             rows.append([])
 
-            modules = api_result.keys()
+            modules = list(api_result.keys())
             modules.sort()
 
             for module in modules:

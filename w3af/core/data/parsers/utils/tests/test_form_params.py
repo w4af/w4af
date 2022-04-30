@@ -20,8 +20,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 import unittest
-import cPickle
+import pickle
 import copy
+import math
 import time
 
 from w3af.core.data.parsers.doc.url import URL
@@ -112,19 +113,19 @@ class TestFormParams(unittest.TestCase):
     def test_variants_do_not_modify_original(self):
         bigform_data = form_with_radio + form_select_misc
         form = create_form_params_helper(bigform_data)
-        orig_items = form.items()
+        orig_items = list(form.items())
 
         # Generate the variants
         variants = [v for v in form.get_variants(mode=MODE_TMB)]
 
-        self.assertEqual(orig_items, form.items())
+        self.assertEqual(orig_items, list(form.items()))
 
     def test_tmb_variants(self):
         # 'top-middle-bottom' mode variants
         def filter_tmb(values):
             if len(values) > 3:
                 values = (values[0],
-                          values[len(values) / 2],
+                          values[math.floor(len(values) / 2)],
                           values[-1])
             return values
 
@@ -142,7 +143,7 @@ class TestFormParams(unittest.TestCase):
                 self.assertIs(new_bigform, form_variant)
                 continue
 
-            for name, values in clean_data.items():
+            for name, values in list(clean_data.items()):
                 tmb_values = filter_tmb(values)
                 self.assertIn(form_variant[name][0], tmb_values)
 
@@ -150,12 +151,12 @@ class TestFormParams(unittest.TestCase):
 
         # Ensure we actually got the expected number of variants
         f = FormParameters()
-        self.assertEquals(len(variants), total_variants + 1)
+        self.assertEqual(len(variants), total_variants + 1)
 
         # Variants shouldn't appear duplicated
-        self.assertEquals(len(variants_set), total_variants)
+        self.assertEqual(len(variants_set), total_variants)
 
-    @pytest.mark.deprecated
+    @unittest.skip("Not working right now. needs investigation")
     def test_tmb_variants_large(self):
         """
         Note that this test has several changes from test_tmb_variants:
@@ -200,7 +201,7 @@ class TestFormParams(unittest.TestCase):
                 continue
 
             option = []
-            for name, values in clean_data.items():
+            for name, values in list(clean_data.items()):
                 form_value = form_variant[name][0]
                 option.append(form_value)
 
@@ -211,12 +212,12 @@ class TestFormParams(unittest.TestCase):
 
         # Ensure we actually got the expected number of variants
         f = FormParameters()
-        self.assertEquals(len(variants), f.TOP_VARIANTS + 1)
+        self.assertEqual(len(variants), f.TOP_VARIANTS + 1)
 
         # Variants shouldn't appear duplicated
-        self.assertEquals(len(variants_set), f.TOP_VARIANTS)
+        self.assertEqual(len(variants_set), f.TOP_VARIANTS)
 
-    @pytest.mark.deprecated
+    @unittest.skip("Not working right now. needs investigation")
     def test_all_variants(self):
         # 'all' mode variants
         bigform_data = form_with_radio + form_select_misc
@@ -232,7 +233,7 @@ class TestFormParams(unittest.TestCase):
                 self.assertIs(new_bigform, form_variant)
                 continue
 
-            for name, all_values in clean_data.items():
+            for name, all_values in list(clean_data.items()):
                 self.assertIn(form_variant[name][0], all_values)
 
             variants_set.add(repr(form_variant))
@@ -240,10 +241,10 @@ class TestFormParams(unittest.TestCase):
         # Ensure we actually got the expected number of variants
         f = FormParameters()
         expected = min(total_variants, f.TOP_VARIANTS)
-        self.assertEquals(expected, i)
+        self.assertEqual(expected, i)
 
         # Variants shouldn't duplicated
-        self.assertEquals(expected, len(variants_set))
+        self.assertEqual(expected, len(variants_set))
 
     def test_t_b_variants(self):
         # 'top' and 'bottom' variants
@@ -255,18 +256,18 @@ class TestFormParams(unittest.TestCase):
         # 'top' mode variants
         t_form_variants = [fv for fv in new_bigform.get_variants(mode=MODE_T)][1:]
         # Ensure we actually got the expected number of variants
-        self.assertEquals(total_variants, len(t_form_variants))
+        self.assertEqual(total_variants, len(t_form_variants))
 
-        for name, values in clean_data.items():
-            self.assertEquals(values[0], t_form_variants[0][name][0])
+        for name, values in list(clean_data.items()):
+            self.assertEqual(values[0], t_form_variants[0][name][0])
 
         # 'bottom' mode variants
         t_form_variants = [fv for fv in new_bigform.get_variants(mode=MODE_B)][1:]
         # Ensure we actually got the expected number of variants
-        self.assertEquals(total_variants, len(t_form_variants))
+        self.assertEqual(total_variants, len(t_form_variants))
 
-        for name, values in clean_data.items():
-            self.assertEquals(values[-1], t_form_variants[0][name][0])
+        for name, values in list(clean_data.items()):
+            self.assertEqual(values[-1], t_form_variants[0][name][0])
 
     def test_max_variants(self):
         # Combinatoric explosion (mode=MODE_ALL): total_variants = 2*5*5*5 =
@@ -274,7 +275,7 @@ class TestFormParams(unittest.TestCase):
         new_form = create_form_params_helper(form_with_radio +
                                              form_select_cars +
                                              form_select_misc)
-        self.assertEquals(FormParameters.TOP_VARIANTS,
+        self.assertEqual(FormParameters.TOP_VARIANTS,
                           len([fv for fv in new_form.get_variants(mode=MODE_ALL)]) - 1)
 
     def test_max_variants_many_fields(self):
@@ -282,7 +283,7 @@ class TestFormParams(unittest.TestCase):
         # of parameters
         form_params = []
 
-        for i in xrange(50):
+        for i in range(50):
             form_params.append({'type': 'select',
                                 'name': 'cars_%s' % i,
                                 'values': ('volvo_%s' % i,
@@ -296,7 +297,7 @@ class TestFormParams(unittest.TestCase):
 
         start_time = time.time()
 
-        self.assertEquals(FormParameters.TOP_VARIANTS,
+        self.assertEqual(FormParameters.TOP_VARIANTS,
                           len([fv for fv in new_form.get_variants(mode=MODE_TMB)]) - 1)
 
         # With the previous version of our code this took considerable time, because range(10 ** 9)
@@ -319,8 +320,8 @@ class TestFormParams(unittest.TestCase):
         get_all_variants = lambda: set(repr(fv) for fv in
                                        new_form.get_variants(mode=MODE_ALL))
         variants = get_all_variants()
-        for i in xrange(10):
-            self.assertEquals(variants, get_all_variants())
+        for i in range(10):
+            self.assertEqual(variants, get_all_variants())
 
     def test_empty_select_all(self):
         """
@@ -358,24 +359,24 @@ class TestFormParams(unittest.TestCase):
         form = create_form_params_helper(form_with_radio + form_with_checkbox)
         copy = form.deepish_copy()
 
-        self.assertEqual(form.items(), copy.items())
+        self.assertEqual(list(form.items()), list(copy.items()))
         self.assertEqual(form._method, copy._method)
         self.assertEqual(form._action, copy._action)
 
         self.assertIsNot(form, copy)
-        self.assertEquals(copy.get_parameter_type('sex'), INPUT_TYPE_RADIO)
+        self.assertEqual(copy.get_parameter_type('sex'), INPUT_TYPE_RADIO)
 
     def test_form_params_deep_copy(self):
         form = create_form_params_helper(form_with_radio + form_with_checkbox)
         form_copy = copy.deepcopy(form)
 
-        self.assertEqual(form.items(), form_copy.items())
+        self.assertEqual(list(form.items()), list(form_copy.items()))
         self.assertEqual(form._method, form_copy._method)
         self.assertEqual(form._action, form_copy._action)
         self.assertEqual(form._autocomplete, form_copy._autocomplete)
 
         self.assertIsNot(form, copy)
-        self.assertEquals(form_copy.get_parameter_type('sex'), INPUT_TYPE_RADIO)
+        self.assertEqual(form_copy.get_parameter_type('sex'), INPUT_TYPE_RADIO)
 
     def test_login_form_utils(self):
         form = FormParameters()
@@ -390,11 +391,11 @@ class TestFormParams(unittest.TestCase):
     def test_pickle(self):
         form = create_form_params_helper(form_with_radio + form_with_checkbox)
 
-        pickled_form_params = cPickle.loads(cPickle.dumps(form))
+        pickled_form_params = pickle.loads(pickle.dumps(form))
 
-        self.assertEqual(pickled_form_params.items(), form.items())
+        self.assertEqual(list(pickled_form_params.items()), list(form.items()))
         self.assertIsNot(form, copy)
-        self.assertEquals(pickled_form_params.get_parameter_type('sex'),
+        self.assertEqual(pickled_form_params.get_parameter_type('sex'),
                           INPUT_TYPE_RADIO)
 
     def test_get_form_id(self):

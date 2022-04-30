@@ -129,7 +129,6 @@ def process_cmd_args_config(app):
         try:
             yaml_conf = yaml.safe_load(args.config_file)
         except:
-            file.close(args.config_file)
             raise ArgumentTypeError('Error loading config file %s. Please check'
                                     ' it exists and is a valid YAML file.'
                                     % args.config_file.name)
@@ -148,8 +147,6 @@ def process_cmd_args_config(app):
                 # also be modified by setting them in the config YAML:
                 # http://flask.pocoo.org/docs/latest/config/
                 app.config[k.upper()] = yaml_conf[k]
-
-        file.close(args.config_file)
 
     for i in vars(args):
         if type(vars(args)[i]).__name__ not in ('str', 'int', 'bool'):

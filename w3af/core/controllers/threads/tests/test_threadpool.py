@@ -45,11 +45,11 @@ class TestWorkerPool(unittest.TestCase):
 
             return foo
 
-        answers = worker_pool.imap_unordered(raise_on_1, xrange(3))
+        answers = worker_pool.imap_unordered(raise_on_1, range(3))
 
         try:
             [i for i in answers]
-        except TypeError, te:
+        except TypeError as te:
             self.assertEqual(str(te), '1 Boom!')
             # pylint: disable=E1101
             self.assertIn("raise TypeError('%s Boom!' % foo)", te.original_traceback_string)
@@ -60,7 +60,7 @@ class TestWorkerPool(unittest.TestCase):
                            worker_names='WorkerThread',
                            maxtasksperchild=3)
 
-        for _ in xrange(12):
+        for _ in range(12):
             result = worker_pool.apply_async(func=noop)
             self.assertEqual(result.get(), 3)
 
@@ -71,7 +71,7 @@ class TestWorkerPool(unittest.TestCase):
                            worker_names='WorkerThread',
                            maxtasksperchild=3)
 
-        for _ in xrange(12):
+        for _ in range(12):
             worker_pool.apply_async(func=delay)
 
         pool_sizes = worker_pool.get_pool_queue_sizes()
@@ -80,7 +80,7 @@ class TestWorkerPool(unittest.TestCase):
 
         worker_pool.terminate_join()
 
-    @pytest.mark.deprecated
+    @unittest.skip("Takes too long to run reliably")
     def test_output_pool_size(self):
         worker_pool = Pool(processes=4,
                            worker_names='WorkerThread',
@@ -88,7 +88,7 @@ class TestWorkerPool(unittest.TestCase):
 
         results = []
 
-        for _ in xrange(12):
+        for _ in range(12):
             result = worker_pool.apply_async(func=delay)
             results.append(result)
 
@@ -99,7 +99,7 @@ class TestWorkerPool(unittest.TestCase):
 
         # Give the result handler task inside the pool set the results on the
         # result instances stored in the results lists
-        time.sleep(1)
+        time.sleep(20)
 
         # There should be no pending tasks in the output queue
         self.assertEqual(pool_sizes['outqueue_size'], 0)
@@ -128,7 +128,7 @@ class TestWorkerPool(unittest.TestCase):
 
         self.assertEqual(worker_pool.get_worker_count(), 4)
 
-        for _ in xrange(12):
+        for _ in range(12):
             result = worker_pool.apply_async(func=noop)
             self.assertEqual(result.get(), 3)
 
@@ -139,7 +139,7 @@ class TestWorkerPool(unittest.TestCase):
         # It takes some time...
         self.assertEqual(worker_pool.get_worker_count(), 4)
 
-        for _ in xrange(12):
+        for _ in range(12):
             result = worker_pool.apply_async(func=noop)
             self.assertEqual(result.get(), 3)
 
@@ -155,7 +155,7 @@ class TestWorkerPool(unittest.TestCase):
 
         self.assertEqual(worker_pool.get_worker_count(), 2)
 
-        for _ in xrange(12):
+        for _ in range(12):
             result = worker_pool.apply_async(func=noop)
             self.assertEqual(result.get(), 3)
 

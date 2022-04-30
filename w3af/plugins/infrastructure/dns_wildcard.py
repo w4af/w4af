@@ -40,7 +40,7 @@ class dns_wildcard(InfrastructurePlugin):
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
 
-    SIMPLE_IP_RE = re.compile('\d?\d?\d\.\d?\d?\d\.\d?\d?\d\.\d?\d?\d')
+    SIMPLE_IP_RE = re.compile(r'\d?\d?\d\.\d?\d?\d\.\d?\d?\d\.\d?\d?\d')
 
     @runonce(exc_class=RunOnce)
     def discover(self, fuzzable_request, debugging_id):

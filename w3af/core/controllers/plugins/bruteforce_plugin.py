@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os.path
 
-from itertools import izip, repeat
+from itertools import repeat
 
 import w3af.core.data.kb.knowledge_base as kb
 
@@ -132,7 +132,7 @@ class BruteforcePlugin(AuditPlugin):
                              call to audit(). Plugins need to send this ID to
                              the ExtendedUrllib to get improved logging.
         """
-        args_iter = izip(repeat(url),
+        args_iter = zip(repeat(url),
                          combinations,
                          repeat(debugging_id))
 

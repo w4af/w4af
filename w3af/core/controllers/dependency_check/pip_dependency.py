@@ -48,3 +48,6 @@ class PIPDependency(object):
     def __repr__(self):
         return '<PIPDependency (%s|%s)>' % (self.package_name,
                                             self.package_version)
+    
+    def __hash__(self):
+        return hash(str(self))

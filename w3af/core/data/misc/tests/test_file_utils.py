@@ -22,11 +22,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import os
 
+from nose.plugins.attrib import attr
+
 from w3af import ROOT_PATH
 from w3af.core.data.misc.file_utils import (days_since_file_update,
                                             get_days_since_last_update)
 
-
+@attr('git')
 class TestFileUtils(unittest.TestCase):
 
     def test_days_since_file_update_true(self):

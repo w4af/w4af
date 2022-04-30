@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 from w3af.plugins.audit.sqli import sqli
@@ -32,7 +32,7 @@ class TestGenericOnly(PluginTest):
 
     class GenericErrorMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
 
             if uri.endswith('1/0'):
                 body = 'Error found!'
@@ -51,13 +51,13 @@ class TestGenericOnly(PluginTest):
         
         vulns = self.kb.get('generic', 'generic')
         
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEquals('Unhandled error in web application', vuln.get_name())
-        self.assertEquals('http://mock/?id=1/0', str(vuln.get_uri()))
-        self.assertEquals(vuln.get_mutant().get_token_name(), 'id')
+        self.assertEqual('Unhandled error in web application', vuln.get_name())
+        self.assertEqual('http://mock/?id=1/0', str(vuln.get_uri()))
+        self.assertEqual(vuln.get_mutant().get_token_name(), 'id')
 
 
 class TestGenericExtensive(PluginTest):
@@ -66,7 +66,7 @@ class TestGenericExtensive(PluginTest):
 
     class GenericErrorMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
 
             if uri.endswith('Infinity'):
                 body = 'Error found!'
@@ -86,13 +86,13 @@ class TestGenericExtensive(PluginTest):
 
         vulns = self.kb.get('generic', 'generic')
 
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEquals('Unhandled error in web application', vuln.get_name())
-        self.assertEquals('http://mock/?id=Infinity', str(vuln.get_uri()))
-        self.assertEquals(vuln.get_mutant().get_token_name(), 'id')
+        self.assertEqual('Unhandled error in web application', vuln.get_name())
+        self.assertEqual('http://mock/?id=Infinity', str(vuln.get_uri()))
+        self.assertEqual(vuln.get_mutant().get_token_name(), 'id')
 
 
 class TestGenericSQLInjection(PluginTest):
@@ -101,7 +101,7 @@ class TestGenericSQLInjection(PluginTest):
 
     class SQLIMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.unquote(uri)
+            uri = urllib.parse.unquote(uri)
 
             if uri.endswith('1/0') or uri.endswith(sqli.SQLI_STRINGS[0]):
                 body = 'PostgreSQL query failed:'
@@ -120,7 +120,7 @@ class TestGenericSQLInjection(PluginTest):
         self._scan(self.target_url, self.CONFIG)
 
         vulns = self.kb.get('generic', 'generic')
-        self.assertEquals(0, len(vulns))
+        self.assertEqual(0, len(vulns))
 
         vulns = self.kb.get('sqli', 'sqli')
-        self.assertEquals(1, len(vulns))
+        self.assertEqual(1, len(vulns))

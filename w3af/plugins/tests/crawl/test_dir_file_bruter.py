@@ -117,9 +117,9 @@ class TestDirFileBruter(PluginTest):
         self._scan(self._run_directory_files['target'],
                    self._run_directory_files['plugins'])
 
-        expected_urls = (u'/crawl/dir_bruter/',
-                         u'/crawl/dir_bruter/hidden-inside-dir.txt',
-                         u'/crawl/dir_bruter/spameggs/')
+        expected_urls = ('/crawl/dir_bruter/',
+                         '/crawl/dir_bruter/hidden-inside-dir.txt',
+                         '/crawl/dir_bruter/spameggs/')
         self.assertAllURLsFound(expected_urls)
 
     @pytest.mark.deprecated
@@ -127,7 +127,7 @@ class TestDirFileBruter(PluginTest):
         self._scan(self._run_recursive['target'],
                    self._run_recursive['plugins'])
 
-        expected_urls = (u'/crawl/dir_bruter/',
-                         u'/crawl/dir_bruter/spameggs/foobar/',
-                         u'/crawl/dir_bruter/spameggs/')
+        expected_urls = ('/crawl/dir_bruter/',
+                         '/crawl/dir_bruter/spameggs/foobar/',
+                         '/crawl/dir_bruter/spameggs/')
         self.assertAllURLsFound(expected_urls)

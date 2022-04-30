@@ -30,4 +30,4 @@ class TestHosts(PayloadTestHelper):
     @pytest.mark.deprecated
     def test_hosts(self):
         result = exec_payload(self.shell, 'hosts', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result.keys())
+        self.assertEqual(self.EXPECTED_RESULT, list(result.keys()))

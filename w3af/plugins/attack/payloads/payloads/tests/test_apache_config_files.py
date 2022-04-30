@@ -39,5 +39,5 @@ class test_apache_config_files(PayloadTestHelper):
     @pytest.mark.deprecated
     def test_apache_config_files(self):
         result = exec_payload(self.shell, 'apache_config_files', use_api=True)
-        self.assertEquals(
+        self.assertEqual(
             set(self.EXPECTED_RESULT), set(result['apache_config'].keys()))

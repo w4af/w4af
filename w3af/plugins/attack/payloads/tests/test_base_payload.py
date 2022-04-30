@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 from w3af.plugins.attack.payloads.base_payload import Payload
 from w3af.plugins.attack.payloads.payloads.tests.test_payload_handler import (FakeReadShell,

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 from collections import defaultdict
-
+from functools import total_ordering
 
 class OrderedIterDefaultDict(defaultdict):
     def iteritems(self):
@@ -30,7 +30,7 @@ class OrderedIterDefaultDict(defaultdict):
 
     def __repr__(self):
         _repr = dict()
-        for k, v in self.iteritems():
+        for k, v in self.items():
             _repr[k] = v
         return repr(_repr)
 
@@ -39,6 +39,7 @@ def url_tree_factory():
     return OrderedIterDefaultDict(url_tree_factory)
 
 
+@total_ordering
 class URLNode(object):
     __slots__ = ('path', 'is_leaf')
 
@@ -63,8 +64,11 @@ class URLNode(object):
     def __eq__(self, other):
         return self.path == other.path
 
-    def __cmp__(self, other):
-        return cmp(self.path, other.path)
+    def __ne__(self, other):
+        return not (self.path == other.path)
+
+    def __lt__(self, other):
+        return (self.path < other.path)
 
 
 class URLTree(object):
@@ -85,6 +89,7 @@ class URLTree(object):
                 parent = self.tree[node]
             else:
                 self._update_leaf_flag(parent, node)
+                # pylint: disable=E1136
                 parent = parent[node]
 
     def _update_leaf_flag(self, parent, node):
@@ -101,7 +106,7 @@ class URLTree(object):
                 n.set_is_leaf(True)
 
     def iteritems(self):
-        for k, v in self.tree.iteritems():
+        for k, v in self.tree.items():
             yield k, v
 
     def _url_to_tree_nodes(self, url):
@@ -116,11 +121,11 @@ class URLTree(object):
         """
         tree_path = []
 
-        protocol_domain = u'%s://%s' % (url.get_protocol(), url.get_net_location())
+        protocol_domain = '%s://%s' % (url.get_protocol(), url.get_net_location())
         tree_path.append(protocol_domain)
 
         path = url.get_path()
-        split_path = path.split(u'/')
+        split_path = path.split('/')
 
         tree_path.extend(split_path)
 

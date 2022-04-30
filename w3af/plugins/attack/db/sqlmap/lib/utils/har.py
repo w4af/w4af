@@ -1,32 +1,34 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 import base64
-import BaseHTTPServer
 import datetime
-import httplib
+import io
 import re
-import StringIO
 import time
 
 from lib.core.bigarray import BigArray
+from lib.core.convert import getBytes
+from lib.core.convert import getText
 from lib.core.settings import VERSION
+from thirdparty.six.moves import BaseHTTPServer as _BaseHTTPServer
+from thirdparty.six.moves import http_client as _http_client
 
 # Reference: https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/HAR/Overview.html
 #            http://www.softwareishard.com/har/viewer/
 
-class HTTPCollectorFactory:
+class HTTPCollectorFactory(object):
     def __init__(self, harFile=False):
         self.harFile = harFile
 
     def create(self):
         return HTTPCollector()
 
-class HTTPCollector:
+class HTTPCollector(object):
     def __init__(self):
         self.messages = BigArray()
         self.extendedArguments = {}
@@ -46,10 +48,10 @@ class HTTPCollector:
             "entries": [pair.toEntry().toDict() for pair in self.messages],
         }}
 
-class RawPair:
+class RawPair(object):
     def __init__(self, request, response, startTime=None, endTime=None, extendedArguments=None):
-        self.request = request
-        self.response = response
+        self.request = getBytes(request)
+        self.response = getBytes(response)
         self.startTime = startTime
         self.endTime = endTime
         self.extendedArguments = extendedArguments or {}
@@ -59,7 +61,7 @@ class RawPair:
                      startTime=self.startTime, endTime=self.endTime,
                      extendedArguments=self.extendedArguments)
 
-class Entry:
+class Entry(object):
     def __init__(self, request, response, startTime, endTime, extendedArguments):
         self.request = request
         self.response = response
@@ -83,7 +85,7 @@ class Entry:
         out.update(self.extendedArguments)
         return out
 
-class Request:
+class Request(object):
     def __init__(self, method, path, httpVersion, headers, postBody=None, raw=None, comment=None):
         self.method = method
         self.path = path
@@ -119,20 +121,20 @@ class Request:
             "queryString": [],
             "headersSize": -1,
             "bodySize": -1,
-            "comment": self.comment,
+            "comment": getText(self.comment),
         }
 
         if self.postBody:
             contentType = self.headers.get("Content-Type")
             out["postData"] = {
                 "mimeType": contentType,
-                "text": self.postBody.rstrip("\r\n"),
+                "text": getText(self.postBody).rstrip("\r\n"),
             }
 
         return out
 
-class Response:
-    extract_status = re.compile(r'\((\d{3}) (.*)\)')
+class Response(object):
+    extract_status = re.compile(b'\\((\\d{3}) (.*)\\)')
 
     def __init__(self, httpVersion, status, statusText, headers, content, raw=None, comment=None):
         self.raw = raw
@@ -146,24 +148,24 @@ class Response:
     @classmethod
     def parse(cls, raw):
         altered = raw
-        comment = ""
+        comment = b""
 
-        if altered.startswith("HTTP response [") or altered.startswith("HTTP redirect ["):
-            io = StringIO.StringIO(raw)
-            first_line = io.readline()
+        if altered.startswith(b"HTTP response [") or altered.startswith(b"HTTP redirect ["):
+            stream = io.BytesIO(raw)
+            first_line = stream.readline()
             parts = cls.extract_status.search(first_line)
-            status_line = "HTTP/1.0 %s %s" % (parts.group(1), parts.group(2))
-            remain = io.read()
-            altered = status_line + "\r\n" + remain
+            status_line = "HTTP/1.0 %s %s" % (getText(parts.group(1)), getText(parts.group(2)))
+            remain = stream.read()
+            altered = getBytes(status_line) + b"\r\n" + remain
             comment = first_line
 
-        response = httplib.HTTPResponse(FakeSocket(altered))
+        response = _http_client.HTTPResponse(FakeSocket(altered))
         response.begin()
 
         try:
-            content = response.read(-1)
-        except httplib.IncompleteRead:
-            content = raw[raw.find("\r\n\r\n") + 4:].rstrip("\r\n")
+            content = response.read()
+        except _http_client.IncompleteRead:
+            content = raw[raw.find(b"\r\n\r\n") + 4:].rstrip(b"\r\n")
 
         return cls(httpVersion="HTTP/1.1" if response.version == 11 else "HTTP/1.0",
                    status=response.status,
@@ -180,10 +182,12 @@ class Response:
             "size": len(self.content or "")
         }
 
-        binary = set(['\0', '\1'])
+        binary = set([b'\0', b'\1'])
         if any(c in binary for c in self.content):
             content["encoding"] = "base64"
-            content["text"] = base64.b64encode(self.content)
+            content["text"] = getText(base64.b64encode(self.content))
+        else:
+            content["text"] = getText(content["text"])
 
         return {
             "httpVersion": self.httpVersion,
@@ -195,29 +199,29 @@ class Response:
             "headersSize": -1,
             "bodySize": -1,
             "redirectURL": "",
-            "comment": self.comment,
+            "comment": getText(self.comment),
         }
 
-class FakeSocket:
+class FakeSocket(object):
     # Original source:
     # https://stackoverflow.com/questions/24728088/python-parse-http-response-string
 
     def __init__(self, response_text):
-        self._file = StringIO.StringIO(response_text)
+        self._file = io.BytesIO(response_text)
 
     def makefile(self, *args, **kwargs):
         return self._file
 
-class HTTPRequest(BaseHTTPServer.BaseHTTPRequestHandler):
+class HTTPRequest(_BaseHTTPServer.BaseHTTPRequestHandler):
     # Original source:
     # https://stackoverflow.com/questions/4685217/parse-raw-http-headers
 
     def __init__(self, request_text):
         self.comment = None
-        self.rfile = StringIO.StringIO(request_text)
+        self.rfile = io.BytesIO(request_text)
         self.raw_requestline = self.rfile.readline()
 
-        if self.raw_requestline.startswith("HTTP request ["):
+        if self.raw_requestline.startswith(b"HTTP request ["):
             self.comment = self.raw_requestline
             self.raw_requestline = self.rfile.readline()
 

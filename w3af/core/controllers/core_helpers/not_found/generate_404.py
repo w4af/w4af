@@ -39,16 +39,16 @@ def should_flip(index, seed):
     return rnd.randint(1, 100) % 5 in (0, 1, 2)
 
 
-def generate_404_without_filename():
-    return rand_alnum(5)
+def generate_404_without_filename(seed=1):
+    return rand_alnum(5, seed=seed)
 
 
-def generate_404_without_name(extension):
-    return u'%s.%s' % (rand_alnum(5), extension)
+def generate_404_without_name(extension, seed=1):
+    return '%s.%s' % (rand_alnum(5, seed=seed), extension)
 
 
-def generate_404_for_short_filename(filename, extension):
-    mod_filename = u'%s%s' % (rand_alnum(4), filename)
+def generate_404_for_short_filename(filename, extension, seed=1):
+    mod_filename = '%s%s' % (rand_alnum(4, seed), filename)
     return append_extension_if_exists(mod_filename, extension)
 
 
@@ -56,7 +56,7 @@ def generate_404_by_rot3(filename, extension, seed=1):
     plus_three_filename = [c for c in filename]
     mod_filename = ''.join(plus_three_filename)
 
-    letters = string.letters
+    letters = string.ascii_letters
     digits = string.digits
 
     letters_len = len(letters)
@@ -108,7 +108,7 @@ def generate_404_by_flipping_bytes(filename, extension, seed=1):
             mod_filename += y + x
             continue
 
-        if x in string.letters and y in string.letters:
+        if x in string.ascii_letters and y in string.ascii_letters:
             mod_filename += y + x
             continue
 
@@ -141,13 +141,13 @@ def append_extension_if_exists(filename, extension):
     final_result = filename
 
     if extension is not None:
-        final_result += u'.%s' % extension
+        final_result += '.%s' % extension
 
     return final_result
 
 
 def split_filename(filename):
-    split = filename.rsplit(u'.', 1)
+    split = filename.rsplit('.', 1)
 
     if len(split) == 2:
         orig_filename, extension = split
@@ -188,7 +188,7 @@ def generate_404_filename(filename, seed=1):
     :return: A mutated filename
     """
     if not filename:
-        return generate_404_without_filename()
+        return generate_404_without_filename(seed=seed)
 
     orig_filename, extension = split_filename(filename)
 
@@ -197,7 +197,7 @@ def generate_404_filename(filename, seed=1):
     # such as .env.
     #
     if not orig_filename:
-        return generate_404_without_name(extension)
+        return generate_404_without_name(extension, seed=seed)
 
     #
     # This handles the case of files which have really short names
@@ -206,7 +206,7 @@ def generate_404_filename(filename, seed=1):
     # or another one that also exists in the path
     #
     if len(orig_filename) in (1, 2):
-        return generate_404_for_short_filename(orig_filename, extension)
+        return generate_404_for_short_filename(orig_filename, extension, seed=seed)
 
     #
     # Flip some bytes to generate a new filename
@@ -246,7 +246,7 @@ def grouper(iterable, n, fillvalue=None):
     """
     # grouper('ABCDEFG', 3, 'x') --> ABC DEF Gxx
     args = [iter(iterable)] * n
-    return itertools.izip_longest(fillvalue=fillvalue, *args)
+    return itertools.zip_longest(fillvalue=fillvalue, *args)
 
 
 def send_request_generate_404(uri_opener, http_response, debugging_id, exclude=None):
@@ -257,7 +257,7 @@ def send_request_generate_404(uri_opener, http_response, debugging_id, exclude=N
     #
     url_404 = None
 
-    for seed in xrange(25):
+    for seed in range(25):
         url_404 = get_url_for_404_request(http_response, seed=seed)
         if url_404.url_string not in exclude:
             break
@@ -305,7 +305,7 @@ def send_404(uri_opener, url_404, debugging_id=None):
                                   cache=True,
                                   grep=False,
                                   debugging_id=debugging_id)
-    except HTTPRequestException, hre:
+    except HTTPRequestException as hre:
         message = 'Exception found while detecting 404: "%s" (did:%s)'
         args = (hre, debugging_id)
         om.out.debug(message % args)

@@ -20,7 +20,9 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from w3af.core.data.misc.encoding import smart_str
+import copy
+
+from w3af.core.data.misc.encoding import smart_unicode, smart_str_ignore
 
 
 class DataToken(object):
@@ -71,10 +73,10 @@ class DataToken(object):
                                              self.get_value())
 
     def __str__(self):
-        return smart_str(self._value, errors='ignore')
+        return smart_unicode(self._value, on_error_guess=False)
 
-    def __unicode__(self):
-        return unicode(self._value)
+    def __bytes__(self):
+        return smart_str_ignore(self._value)
 
     def __eq__(self, other):
         if isinstance(other, DataToken):
@@ -82,7 +84,7 @@ class DataToken(object):
                     self.get_value() == other.get_value() and
                     self.get_path() == other.get_path())
 
-        elif isinstance(other, basestring):
+        elif isinstance(other, str):
             return self.get_value() == other
 
         elif other is None:
@@ -105,6 +107,21 @@ class DataToken(object):
 
         # proxy to the wrapped object
         return getattr(self._value, attr)
+
+    def __deepcopy__(self, memo):
+        res = self.__class__(
+            copy.deepcopy(self._name, memo),
+            copy.deepcopy(self._value, memo),
+            copy.deepcopy(self._path, memo)
+        )
+        res._original_value = copy.deepcopy(self._original_value, memo)
+        return res
+
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
 
     def __len__(self):
         return len(str(self))

@@ -25,7 +25,7 @@ import datetime
 
 import pytest
 from nose.plugins.attrib import attr
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 from w3af.core.data.db.startup_cfg import StartUpConfig
 from w3af.core.controllers.auto_update.version_manager import VersionMgr
@@ -33,8 +33,7 @@ from w3af.core.controllers.auto_update.changelog import ChangeLog
 from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
 from w3af.core.controllers.auto_update.git_client import GitClient
 
-
-@pytest.mark.skip(reason='deprecated')
+@attr('git')
 class TestVersionMgr(unittest.TestCase):
 
     def setUp(self):

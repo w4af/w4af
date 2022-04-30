@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import pytest
 import re
 
-from mock import patch
+from unittest.mock import patch
 from httpretty.http import STATUSES
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 

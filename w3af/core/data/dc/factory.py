@@ -58,11 +58,8 @@ def dc_from_hdrs_post(headers, post_data):
             pass
     else:
         content_type, _ = headers.iget('content-type', 'None')
-        msg = ('Unknown post-data, failed to create a data container.'
-               ' Content-type: "%s" and / or post-data "%s..." is not'
-               ' supported.')
-        args = (content_type, post_data[:50])
-        om.out.debug(msg % args)
+        msg = 'Unknown post-data. Content-type: "%s" and/or post-data "%s"'
+        om.out.debug(msg % (content_type, str(post_data)[:50]))
 
         return PlainContainer.from_postdata(headers, post_data)
 
@@ -119,7 +116,7 @@ def _create_instance_from_json_string(data_container_cls, params):
 def _create_instance_from_form_params(data_container_cls, params):
     form_params = FormParameters()
 
-    for param_name, param_value in params.iteritems():
+    for param_name, param_value in params.items():
         form_params.add_field_by_attrs({'name': param_name, 'value': param_value})
 
     return data_container_cls(form_params)

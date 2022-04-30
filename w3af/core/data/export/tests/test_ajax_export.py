@@ -153,4 +153,4 @@ class TestAjaxExport(unittest.TestCase):
                        'a=1'
         ajax_code = ajax_export(http_request)
 
-        self.assertEquals(ajax_code, EXPECTED_POST)
+        self.assertEqual(ajax_code, EXPECTED_POST)

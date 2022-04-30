@@ -53,9 +53,9 @@ class TestThreadTime(unittest.TestCase):
         start_thread = thread_active_time()
         start_wall = time.time()
 
-        for i in xrange(1000000):
+        for i in range(1000000):
             h = hashlib.sha512()
-            h.update('%s' % i)
+            h.update(str(i).encode("utf-8"))
             h.hexdigest()
 
         spent_thread = thread_active_time() - start_thread

@@ -22,8 +22,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import functools
 import os
 
-import gtk
-import gobject
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 
 from w3af import ROOT_PATH
 from w3af.core.ui.gui import helpers, entries
@@ -37,7 +37,7 @@ from w3af.core.controllers.exceptions import (HTTPRequestException,
 
 
 FUZZY_REQUEST_EXAMPLE = """\
-GET http://localhost/$xrange(10)$ HTTP/1.0
+GET http://localhost/$range(10)$ HTTP/1.0
 Host: www.some_host.com
 User-Agent: w3af.org
 Pragma: no-cache
@@ -71,7 +71,7 @@ window: you could be executing OS commands in your box.
 For example, you can do:
 <tt>
   Numbers from 0 to 4: $range(5)$
-  First ten letters: $string.lowercase[:10]$
+  First ten letters: $string.ascii_lowercase[:10]$
   The words "spam" and "eggs": $['spam', 'eggs']$
   The content of a file:
       $[l.strip() for l in file('input.txt').readlines()]$
@@ -113,7 +113,7 @@ class PreviewWindow(entries.RememberingWindow):
 
     def page_change(self, page):
         while len(self.pages) <= page:
-            it = self.generator.next()
+            it = next(self.generator)
             self.pages.append(it)
         (txtup, txtdn) = self.pages[page]
         self.panes.show_raw(txtup, txtdn)
@@ -397,7 +397,7 @@ class FuzzyRequests(entries.RememberingWindow):
             return True
 
         try:
-            realreq, realbody = requestGenerator.next()
+            realreq, realbody = next(requestGenerator)
         except StopIteration:
             # finished with all the requests!
             self._send_stop()
@@ -412,12 +412,12 @@ class FuzzyRequests(entries.RememberingWindow):
                                                               fixContentLength)
             error_msg = None
             self.result_ok += 1
-        except HTTPRequestException, e:
+        except HTTPRequestException as e:
             # One HTTP request failed
             error_msg = str(e)
             http_resp = None
             self.result_err += 1
-        except ScanMustStopException, e:
+        except ScanMustStopException as e:
             # Many HTTP requests failed and the URL library wants to stop
             error_msg = str(e)
             self.result_err += 1

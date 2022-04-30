@@ -41,7 +41,7 @@ class TestFileNameMutant(unittest.TestCase):
         m.set_dc(parts)
 
         self.assertEqual(m.get_url().url_string,
-                         u'http://www.w3af.com/foo/ping%21.htm')
+                         'http://www.w3af.com/foo/ping%21.htm')
 
         expected_found_at = '"http://www.w3af.com/foo/ping%21.htm", using HTTP'\
                             ' method GET. The modified parameter was the URL'\

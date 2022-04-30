@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro
 
 from .ubuntu1604 import Ubuntu1604
 from ..requirements import CORE, GUI
@@ -41,6 +41,7 @@ class Ubuntu1804(Ubuntu1604):
     def __init__(self):
         super(Ubuntu1804, self).__init__()
 
-    def is_current_platform(self):
-        return 'Ubuntu' in platform.dist() and '18.04' in platform.dist()
+    @staticmethod
+    def is_current_platform():
+        return 'Ubuntu' in distro.linux_distribution() and '18.04' in distro.linux_distribution()
 

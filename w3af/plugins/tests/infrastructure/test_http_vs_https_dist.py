@@ -23,8 +23,8 @@ import copy
 import unittest
 
 from nose.plugins.attrib import attr
-from mock import MagicMock, Mock
-from mock import patch, call
+from unittest.mock import MagicMock, Mock
+from unittest.mock import patch, call
 
 import w3af.plugins.infrastructure.http_vs_https_dist as hvshsdist
 import w3af.core.controllers.output_manager as om

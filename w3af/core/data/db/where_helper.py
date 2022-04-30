@@ -79,4 +79,4 @@ class WhereHelper(object):
         return result
 
     def __str__(self):
-        return self.sql() + ' | ' + str(self.values())
+        return self.sql() + ' | ' + str(list(self.values()))

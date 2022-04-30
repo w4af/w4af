@@ -50,7 +50,7 @@ class test_feeds(unittest.TestCase):
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
 
-        self.assertEquals(len(kb.kb.get('feeds', 'feeds')), 1)
+        self.assertEqual(len(kb.kb.get('feeds', 'feeds')), 1)
         i = kb.kb.get('feeds', 'feeds')[0]
         self.assertTrue('RSS' in i.get_desc())
         self.assertTrue('3' in i.get_desc())
@@ -64,7 +64,7 @@ class test_feeds(unittest.TestCase):
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
 
-        self.assertEquals(len(kb.kb.get('feeds', 'feeds')), 1)
+        self.assertEqual(len(kb.kb.get('feeds', 'feeds')), 1)
         i = kb.kb.get('feeds', 'feeds')[0]
         self.assertTrue('OPML' in i.get_desc())
         self.assertTrue('3' in i.get_desc())
@@ -78,7 +78,7 @@ class test_feeds(unittest.TestCase):
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
 
-        self.assertEquals(len(kb.kb.get('feeds', 'feeds')), 1)
+        self.assertEqual(len(kb.kb.get('feeds', 'feeds')), 1)
         i = kb.kb.get('feeds', 'feeds')[0]
         self.assertTrue('OPML' in i.get_desc())
         self.assertTrue('3' in i.get_desc())
@@ -92,7 +92,7 @@ class test_feeds(unittest.TestCase):
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
 
-        self.assertEquals(len(kb.kb.get('feeds', 'feeds')), 0)
+        self.assertEqual(len(kb.kb.get('feeds', 'feeds')), 0)
 
     @pytest.mark.deprecated
     def test_no_version(self):
@@ -103,7 +103,7 @@ class test_feeds(unittest.TestCase):
         request = FuzzableRequest(url, method='GET')
         self.plugin.grep(request, response)
 
-        self.assertEquals(len(kb.kb.get('feeds', 'feeds')), 1)
+        self.assertEqual(len(kb.kb.get('feeds', 'feeds')), 1)
         i = kb.kb.get('feeds', 'feeds')[0]
         self.assertTrue('RSS' in i.get_desc())
         self.assertTrue('unknown' in i.get_desc())

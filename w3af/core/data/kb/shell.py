@@ -19,6 +19,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import abc
+
 import w3af.plugins.attack.payloads.payload_handler as payload_handler
 import w3af.core.controllers.output_manager as om
 
@@ -144,6 +146,7 @@ class Shell(ExploitResult):
         """
         return True
 
+    @abc.abstractmethod
     def specific_user_input(self, command, parameters):
         """
         This method is called when a user writes a command in the shell and hits
@@ -207,7 +210,7 @@ class Shell(ExploitResult):
                 payload = payload_handler.get_payload_instance(
                     payload_name, self)
                 result = payload.get_desc()
-            except ValueError, ve:
+            except ValueError as ve:
                 # We get here when one of the parameters provided by the user is
                 # not of the correct type, or something like that.
                 result = str(ve)
@@ -247,6 +250,9 @@ class Shell(ExploitResult):
         msg = 'You should implement the get_name method for classes that'\
               'inherit from "shell"'
         raise NotImplementedError(msg)
+
+    def __hash__(self):
+        return hash(self.id)
 
     def identify_os(self):
         """

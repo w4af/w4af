@@ -32,7 +32,7 @@ from w3af.core.data.options.option_list import OptionList
 from w3af.core.data.parsers.doc.url import parse_qs
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.kb.vuln import Vuln
-
+from w3af.core.data.misc.encoding import smart_unicode, smart_str_ignore
 
 class BaseTemplate(Configurable):
     """
@@ -101,19 +101,19 @@ class BaseTemplate(Configurable):
             msg = 'This vulnerability requires data to be configured.'
             raise ValueError(msg)
 
-        if self.vulnerable_parameter not in self.data:
+        if smart_str_ignore(self.vulnerable_parameter) not in self.data:
             msg = ('The vulnerable parameter was not found in the configured'
                    ' data field. Please enter one of the following values: %s.')
-            raise ValueError(msg % ', '.join(self.data))
+            raise ValueError(msg % ', '.join(smart_unicode(self.data)))
 
         try:
             self.create_vuln()
             
-        except RuntimeError, rte:
+        except RuntimeError as rte:
             # https://github.com/andresriancho/w3af/issues/4310
             raise ValueError('%s' % rte)
 
-        except KeyError, ke:
+        except KeyError as ke:
             # https://github.com/andresriancho/w3af/issues/4310
             raise ValueError('The vulnerable parameter "%s" was not found' % ke)
 
@@ -165,7 +165,7 @@ class BaseTemplate(Configurable):
 
         mutant = self.create_mutant_from_params()
         mutant.set_dc(self.data)
-        mutant.set_token((self.vulnerable_parameter, 0))
+        mutant.set_token((smart_str_ignore(self.vulnerable_parameter), 0))
 
         v.set_mutant(mutant)
 

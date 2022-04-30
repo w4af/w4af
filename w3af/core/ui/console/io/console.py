@@ -24,7 +24,7 @@ import w3af.core.controllers.output_manager as om
 from w3af.core.controllers.exceptions import BaseFrameworkException
 
 
-CTRL_CODES = range(1, 27)
+CTRL_CODES = list(range(1, 27))
 CTRL_CODES.remove(9)
 CTRL_CODES.remove(13)
 
@@ -134,13 +134,14 @@ try:
     import tty
     import termios
     from w3af.core.ui.console.io.unixctrl import *
-except Exception, e:
+except Exception as e:
     # We aren't on unix !
     try:
+        # pylint: disable=E0401
         import msvcrt
         from w3af.core.ui.console.io.winctrl import *
-    except Exception, a:
-        print str(e + '\n' + a)
+    except Exception as a:
+        print(str(e + '\n' + a))
         # We arent on windows nor unix
         raise BaseFrameworkException(
             'w3af support for OS X isn\'t available yet! Please contribute.')

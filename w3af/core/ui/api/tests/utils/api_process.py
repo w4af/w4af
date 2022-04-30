@@ -48,7 +48,7 @@ def start_api():
     cmd = [python_executable,
            'w3af_api',
            '-p',
-           sha512(api_auth[1]).hexdigest(),
+           sha512(api_auth[1].encode('utf-8')).hexdigest(),
            '127.0.0.1:%s' % port]
 
     process = subprocess.Popen(cmd,
@@ -60,7 +60,7 @@ def start_api():
     api_url = 'https://127.0.0.1:%s' % port
 
     # Now we wait until the API is ready to answer requests
-    for i in xrange(75):
+    for i in range(75):
         time.sleep(0.5)
 
         try:

@@ -69,7 +69,7 @@ class URLEncodedForm(Form):
         parsed_data = parse_qs(post_data)
         urlencoded_form = cls()
 
-        for key, value_list in parsed_data.iteritems():
+        for key, value_list in parsed_data.items():
             for value in value_list:
                 form_field = GenericFormField(INPUT_TYPE_TEXT, key, value)
                 urlencoded_form.add_form_field(form_field)
@@ -88,14 +88,17 @@ class URLEncodedForm(Form):
         :return: string representation of the Form object.
         """
         d = dict()
-        d.update(self.items())
+        d.update(list(self.items()))
 
+        output = dict()
         for key in d:
             key_type = self.get_parameter_type(key, default=None)
             if key_type in self.AVOID_STR_DUPLICATES:
-                d[key] = d[key][:1]
+                output[key] = d[key][:1]
+            else:
+                output[key] = d[key]
 
-        return urlencode(d, encoding=self.encoding, safe='')
+        return urlencode(output, encoding=self.encoding, safe='')
 
     def get_type(self):
         return 'URL encoded form'

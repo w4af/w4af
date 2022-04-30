@@ -24,7 +24,7 @@ import copy
 import uuid
 import unittest
 
-from mock import Mock
+from unittest.mock import Mock
 
 from w3af.core.controllers.threads.threadpool import Pool
 from w3af.core.controllers.exceptions import DBException
@@ -880,10 +880,10 @@ class TestKnowledgeBase(unittest.TestCase):
         self.assertIsInstance(info_set, InfoSet)
         self.assertEqual(len(info_set.infos), 2)
 
-    @pytest.mark.deprecated
+    @unittest.skip("Doesn't seem to work with nosetests")
     def test_multiple_append_uniq_group(self):
         def multi_append():
-            for i in xrange(InfoSet.MAX_INFO_INSTANCES * 2):
+            for i in range(InfoSet.MAX_INFO_INSTANCES * 2):
                 vuln = MockVuln()
                 kb.append_uniq_group('a', 'b', vuln, group_klass=MockInfoSetTrue)
 
@@ -950,16 +950,16 @@ class TestKnowledgeBase(unittest.TestCase):
         #
         vuln = MockVuln(name='Foos')
 
-        for _ in xrange(MockInfoSetNames.MAX_INFO_INSTANCES + 1):
+        for _ in range(MockInfoSetNames.MAX_INFO_INSTANCES + 1):
             kb.append_uniq_group('a', 'b', vuln, group_klass=MockInfoSetNames)
 
         info_set_before = kb.get('a', 'b')[0]
 
         # Now some rounds of testing
-        for _ in xrange(5):
-            info_set_after, _ = kb.append_uniq_group('a', 'b', vuln,
-                                                     group_klass=MockInfoSetNames)
+        for _ in range(5):
+            kb.append_uniq_group('a', 'b', vuln, group_klass=MockInfoSetNames)
 
+            info_set_after = kb.get('a', 'b')[0]
             self.assertEqual(info_set_before.get_uniq_id(),
                              info_set_after.get_uniq_id())
 

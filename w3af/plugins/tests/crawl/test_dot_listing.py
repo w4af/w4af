@@ -38,7 +38,7 @@ class TestDotListing(PluginTest):
         }
     }
 
-    DOT_LISTING = file(os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl', 'dot_listing', 'listing_test_1.txt')).read()
+    DOT_LISTING = open(os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl', 'dot_listing', 'listing_test_1.txt')).read()
 
     MOCK_RESPONSES = [MockResponse('http://mock/.listing', DOT_LISTING),
                       MockResponse('http://mock/wasadhiya-7.mp3', 'Secret file'),
@@ -58,7 +58,7 @@ class TestDotListing(PluginTest):
         expected_urls = ('/', '/.listing', '/wasadhiya-7.mp3')
         urls = self.kb.get_all_known_urls()
 
-        self.assertEquals(
+        self.assertEqual(
             set(str(u) for u in urls),
             set((self.target_url + end) for end in expected_urls)
         )
@@ -74,10 +74,11 @@ class TestDotListing(PluginTest):
         groups = set()
         files = set()
 
-        for i in xrange(1, 4):
+        for i in range(1, 4):
             file_name = file_name_fmt % i
             file_path = os.path.join(listing_files_path, file_name)
-            file_content = file(file_path).read()
+            with open(file_path) as fh:
+                file_content = fh.read()
             for user, group, filename in dot_listing_inst._extract_info_from_listing(file_content):
                 users.add(user)
                 groups.add(group)

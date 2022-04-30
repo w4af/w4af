@@ -108,8 +108,8 @@ class strange_headers(GrepPlugin):
 
         # Check header names
         headers = response.get_headers()
-        response_header_names = headers.keys()
-        strange_header_list = filter(is_strange, response_header_names)
+        response_header_names = list(headers.keys())
+        strange_header_list = list(filter(is_strange, response_header_names))
 
         # Create a new info object and save it to the KB
         for header_name in strange_header_list:

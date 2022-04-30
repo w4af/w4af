@@ -84,7 +84,7 @@ class TestGetAverageRTT(unittest.TestCase):
         average_rtt = self.uri_opener.get_average_rtt_for_mutant(fuzzable_request)
 
         # Check the response
-        self.assertGreater(average_rtt, 0.45)
+        self.assertGreater(average_rtt, 0.43)
         self.assertGreater(0.55, average_rtt)
 
     @httpretty.activate

@@ -18,10 +18,10 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from __future__ import division
 
-import gtk
-import gobject
+
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 import time
 import itertools
 
@@ -85,11 +85,11 @@ class LogGraph(gtk.DrawingArea, MessageConsumer):
         """
         # gtk.MAPPED: the widget can be displayed on the screen.
         # flags: http://pygtk.org/docs/pygtk/class-gtkobject.html#method-gtkobject--flags
-        if self.flags() & gtk.MAPPED:
+        if self.get_mapped():
             if self._redraw_gen is None:
                 self._redraw_gen = self._redraw_all()
 
-            reset = self._redraw_gen.next()
+            reset = next(self._redraw_gen)
             if reset:
                 self._redraw_gen = None
         

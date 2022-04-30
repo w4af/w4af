@@ -19,16 +19,16 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import gzip
 import zlib
 
-from cStringIO import StringIO
+from io import BytesIO
 
 from w3af.core.data.url.handlers.cache import SQLCachedResponse
 
 
-class HTTPGzipProcessor(urllib2.BaseHandler):
+class HTTPGzipProcessor(urllib.request.BaseHandler):
 
     # response processing before HTTPEquivProcessor
     handler_order = 200
@@ -63,7 +63,7 @@ class HTTPGzipProcessor(urllib2.BaseHandler):
         return response
 
     def _gzip_0(self, body):
-        return gzip.GzipFile(fileobj=StringIO(body)).read()
+        return gzip.decompress(body)
 
     def _zlib_0(self, body):
         # RFC 1950
@@ -113,7 +113,11 @@ class HTTPGzipProcessor(urllib2.BaseHandler):
         :return: True if the HTTP response contains headers that indicate the
                  content is compressed and this handler should decompress it
         """
-        for enc_hdr in response.info().getheaders('Content-encoding'):
+        content_encoding_headers = response.info().get_all('Content-encoding')
+        if content_encoding_headers is None:
+            return False
+
+        for enc_hdr in content_encoding_headers:
             if 'gzip' in enc_hdr:
                 return True
 

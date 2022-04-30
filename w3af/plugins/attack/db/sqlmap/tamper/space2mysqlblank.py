@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -9,6 +9,7 @@ import os
 import random
 
 from lib.core.common import singleTimeWarnMessage
+from lib.core.compat import xrange
 from lib.core.enums import DBMS
 from lib.core.enums import PRIORITY
 
@@ -19,8 +20,7 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Replaces space character (' ') with a random blank character from a
-    valid set of alternate characters
+    Replaces (MySQL) instances of space character (' ') with a random blank character from a valid set of alternate characters
 
     Requirement:
         * MySQL
@@ -33,7 +33,7 @@ def tamper(payload, **kwargs):
 
     >>> random.seed(0)
     >>> tamper('SELECT id FROM users')
-    'SELECT%A0id%0BFROM%0Cusers'
+    'SELECT%A0id%0CFROM%0Dusers'
     """
 
     # ASCII table:

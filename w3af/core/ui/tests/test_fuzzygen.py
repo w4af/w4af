@@ -38,7 +38,7 @@ class TestAll(unittest.TestCase):
         fg = FuzzyGenerator("$range(2)$ dnd$'as'$", "pp")
         self.assertEqual(fg.calculate_quantity(), 4)
 
-        fg = FuzzyGenerator("$range(2)$ n$'as'$", "p$string.lowercase[:2]$")
+        fg = FuzzyGenerator("$range(2)$ n$'as'$", "p$string.ascii_lowercase[:2]$")
         self.assertEqual(fg.calculate_quantity(), 8)
 
     def test_generations(self):
@@ -47,7 +47,7 @@ class TestAll(unittest.TestCase):
             ('0 dnda', 'pp'), ('0 dnds', 'pp'),
             ('1 dnda', 'pp'), ('1 dnds', 'pp')])
 
-        fg = FuzzyGenerator("$range(2)$ d$'as'$", "p$string.lowercase[:2]$")
+        fg = FuzzyGenerator("$range(2)$ d$'as'$", "p$string.ascii_lowercase[:2]$")
         self.assertEqual(list(fg.generate()), [
             ('0 da', 'pa'), ('0 da', 'pb'), ('0 ds', 'pa'), ('0 ds', 'pb'),
             ('1 da', 'pa'), ('1 da', 'pb'), ('1 ds', 'pa'), ('1 ds', 'pb'),
@@ -77,7 +77,7 @@ class TestAll(unittest.TestCase):
     def test_double_token_together(self):
         # from bug 2393362, the idea is to generate 00 to 99
         # using to generators (I'm doing less iterations here)
-        fg = FuzzyGenerator("-$xrange(2)$$xrange(2)$-", "")
+        fg = FuzzyGenerator("-$range(2)$$range(2)$-", "")
         self.assertEqual(list(fg.generate()), [
             ("-00-", ""), ("-01-", ""), ("-10-", ""), ("-11-", "")])
 

@@ -82,5 +82,5 @@ def draw_parser_errors(scan_log_filename, scan):
              label='Memory errors',
              lc=200)
 
-    print(fig.show(legend=True))
+    print((fig.show(legend=True)))
     print('')

@@ -21,10 +21,10 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import cgi
+import html
 
 from w3af.core.data.parsers.doc.http_request_parser import http_request_parser
-
+from w3af.core.data.misc.encoding import smart_unicode
 
 def html_export(request_string):
     """
@@ -42,18 +42,18 @@ def html_export(request_string):
         <title>Exported HTTP Request from w3af</title>
     </head>
     <body>\n"""
-    res += '<form action="' + cgi.escape(http_request.get_uri()
+    res += '<form action="' + html.escape(http_request.get_uri()
                                          .url_string, True)
-    res += '" method="' + cgi.escape(http_request.get_method(), True) + '">\n'
+    res += '" method="' + html.escape(http_request.get_method(), True) + '">\n'
 
     if http_request.get_data() and http_request.get_data() != '\n':
         post_data = http_request.get_raw_data()
 
         for token in post_data.iter_tokens():
-            res += '<label>' + cgi.escape(token.get_name()) + '</label>\n'
+            res += '<label>' + html.escape(smart_unicode(token.get_name())) + '</label>\n'
             res += '<input type="text" name="' + \
-                cgi.escape(token.get_name().strip(), True)
-            res += '" value="' + cgi.escape(token.get_value(), True) + '">\n'
+                html.escape(smart_unicode(token.get_name().strip()), True)
+            res += '" value="' + html.escape(smart_unicode(token.get_value()), True) + '">\n'
 
     res += '<input type="submit">\n'
     res += '</form>\n'

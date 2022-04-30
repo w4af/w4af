@@ -23,12 +23,12 @@ import pytest
 import socket
 import unittest
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import os
 
 import psutil
 
-from mock import MagicMock, Mock
+from unittest.mock import MagicMock, Mock
 from nose.plugins.attrib import attr
 
 from w3af.core.controllers.ci.moth import get_moth_http
@@ -168,7 +168,7 @@ class TestKeepalive(unittest.TestCase):
     def close_all_sockets(self, wait):
         keep_alive_http = HTTPHandler()
 
-        uri_opener = urllib2.build_opener(keep_alive_http)
+        uri_opener = urllib.request.build_opener(keep_alive_http)
 
         request = HTTPRequest(URL(get_moth_http()))
         response = uri_opener.open(request)
@@ -203,8 +203,8 @@ class TestConnectionMgr(unittest.TestCase):
         self.request.get_netloc = lambda: 'w3af.org'
 
         self.cm.MAX_CONNECTIONS_PER_HOST = 1  # Only a single connection
-        self.assertEquals(0, len(self.cm._used_conns))
-        self.assertEquals(0, len(self.cm._free_conns))
+        self.assertEqual(0, len(self.cm._used_conns))
+        self.assertEqual(0, len(self.cm._free_conns))
 
         # Get connection
         def conn_factory(request):
@@ -214,13 +214,13 @@ class TestConnectionMgr(unittest.TestCase):
             return mock
 
         conn_1 = self.cm.get_available_connection(self.request, conn_factory)
-        self.assertEquals(1, len(self.cm._used_conns))
-        self.assertEquals(0, len(self.cm._free_conns))
+        self.assertEqual(1, len(self.cm._used_conns))
+        self.assertEqual(0, len(self.cm._free_conns))
 
         # Return it to the pool
         self.cm.free_connection(conn_1)
-        self.assertEquals(0, len(self.cm._used_conns))
-        self.assertEquals(1, len(self.cm._free_conns))
+        self.assertEqual(0, len(self.cm._used_conns))
+        self.assertEqual(1, len(self.cm._free_conns))
 
         # Ask for a conn again, since we don't need a new connection, it should
         # return one from the pool
@@ -232,19 +232,19 @@ class TestConnectionMgr(unittest.TestCase):
         self.request.new_connection = True
 
         self.cm.MAX_CONNECTIONS_PER_HOST = 2
-        self.assertEquals(0, len(self.cm._used_conns))
-        self.assertEquals(0, len(self.cm._free_conns))
+        self.assertEqual(0, len(self.cm._used_conns))
+        self.assertEqual(0, len(self.cm._free_conns))
 
         # Get connection
         cf = lambda h: Mock()
         conn_1 = self.cm.get_available_connection(self.request, cf)
-        self.assertEquals(1, len(self.cm._used_conns))
-        self.assertEquals(0, len(self.cm._free_conns))
+        self.assertEqual(1, len(self.cm._used_conns))
+        self.assertEqual(0, len(self.cm._free_conns))
 
         # Return it to the pool
         self.cm.free_connection(conn_1)
-        self.assertEquals(0, len(self.cm._used_conns))
-        self.assertEquals(1, len(self.cm._free_conns))
+        self.assertEqual(0, len(self.cm._used_conns))
+        self.assertEqual(1, len(self.cm._free_conns))
 
         # Ask for another connection, it should return a new one
         conn_2 = self.cm.get_available_connection(self.request, cf)
@@ -261,10 +261,10 @@ class TestConnectionMgr(unittest.TestCase):
         new_conn = self.cm.replace_connection(bad_conn, self.request, cf)
 
         # Must be different conn objects
-        self.assertNotEquals(bad_conn, new_conn)
+        self.assertNotEqual(bad_conn, new_conn)
 
         # The len must be the same
-        self.assertEquals(self.cm.get_connection_count(), old_len)
+        self.assertEqual(self.cm.get_connections_total(), old_len)
 
     def test_remove_conn(self):
         self.assertEqual(self.cm.get_connection_count(), 0)

@@ -20,7 +20,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from w3af.core.data.constants.encodings import UTF8
 from w3af.core.data.misc.encoding import is_known_encoding
@@ -85,41 +85,12 @@ class BaseParser(object):
         """
         enc = self._encoding
 
-        if isinstance(url_string, unicode):
+        if isinstance(url_string, str):
             url_string = url_string.encode(enc)
 
-        dec_url = urllib.unquote(url_string)
+        dec_url = urllib.parse.unquote(url_string, errors='backslashreplace')
         for sch, repl in self.SAFE_CHARS:
             dec_url = dec_url.replace(sch, repl)
-
-        # Always return unicode
-        # TODO: Any improvement for this? We're certainly losing
-        # information by using the 'ignore' error handling
-
-        try:
-            dec_url = dec_url.decode(UTF8)
-        except UnicodeDecodeError:
-            dec_url = dec_url.decode(enc, 'ignore')
-        #
-        # TODO: Lines below will remain commented until we make a
-        # decision regarding which is the (right?) way to decode URLs.
-        # The tests made on FF and Chrome revealed that if strange
-        # (i.e. non ASCII) characters are present in a URL the browser
-        # will urlencode the URL string encoded until the beginning
-        # of the query string using the page charset and the query
-        # string itself encoded in UTF-8.
-        #
-        # Apparently this is not a universal practice. We've found
-        # some static sites having URL's encoded *only* in Windows-1255
-        # (hebrew) for example.
-        #
-        # This is what de W3C recommends (not a universal practice though):
-        #    http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.2
-        #
-        #        index = dec_url.find('?')
-        #        if index > -1:
-        #            dec_url = (dec_url[:index].decode(enc, 'ignore') +
-        #                       dec_url[index:].decode('utf-8', 'ignore'))
 
         return dec_url
 

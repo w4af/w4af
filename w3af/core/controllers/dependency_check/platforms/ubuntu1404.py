@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro
 
 from .ubuntu1204 import Ubuntu1204
 
@@ -30,6 +30,7 @@ class Ubuntu1404(Ubuntu1204):
     CORE_SYSTEM_PACKAGES = Ubuntu1204.CORE_SYSTEM_PACKAGES[:]
     CORE_SYSTEM_PACKAGES.append('libjpeg-dev')
 
-    def is_current_platform(self):
-        return 'Ubuntu' in platform.dist() and '14.04' in platform.dist()
+    @staticmethod
+    def is_current_platform():
+        return 'Ubuntu' in distro.linux_distribution() and '14.04' in distro.linux_distribution()
 

@@ -37,4 +37,4 @@ class test_ssh_version(PayloadTestHelper):
     @pytest.mark.deprecated
     def test_ssh_version(self):
         result = exec_payload(self.shell, 'ssh_version', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

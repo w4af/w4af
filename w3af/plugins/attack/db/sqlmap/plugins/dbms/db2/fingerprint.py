@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
-
 from lib.core.common import Backend
 from lib.core.common import Format
+from lib.core.compat import xrange
 from lib.core.data import conf
 from lib.core.data import kb
 from lib.core.data import logger
@@ -64,14 +64,16 @@ class Fingerprint(GenericFingerprint):
             value += DBMS.DB2
             return value
 
-        actVer      = Format.getDbms()
-        blank       = " " * 15
-        value      += "active fingerprint: %s" % actVer
+        actVer = Format.getDbms()
+        blank = " " * 15
+        value += "active fingerprint: %s" % actVer
 
         if kb.bannerFp:
-            banVer = kb.bannerFp["dbmsVersion"] if 'dbmsVersion' in kb.bannerFp else None
-            banVer = Format.getDbms([banVer])
-            value += "\n%sbanner parsing fingerprint: %s" % (blank, banVer)
+            banVer = kb.bannerFp.get("dbmsVersion")
+
+            if banVer:
+                banVer = Format.getDbms([banVer])
+                value += "\n%sbanner parsing fingerprint: %s" % (blank, banVer)
 
         htmlErrorFp = Format.getErrorParsedDBMSes()
 
@@ -95,11 +97,20 @@ class Fingerprint(GenericFingerprint):
             logMsg = "confirming %s" % DBMS.DB2
             logger.info(logMsg)
 
-            version = self._versionCheck()
+            result = inject.checkBooleanExpression("JULIAN_DAY(CURRENT DATE) IS NOT NULL")
 
+            if not result:
+                warnMsg = "the back-end DBMS is not %s" % DBMS.DB2
+                logger.warn(warnMsg)
+
+                return False
+
+            version = self._versionCheck()
             if version:
                 Backend.setVersion(version)
                 setDbms("%s %s" % (DBMS.DB2, Backend.getVersion()))
+            else:
+                setDbms(DBMS.DB2)
 
             return True
         else:
@@ -127,12 +138,14 @@ class Fingerprint(GenericFingerprint):
         infoMsg = "the back-end DBMS operating system is %s" % Backend.getOs()
 
         if result:
-            versions = { "2003": ("5.2", (2, 1)),
+            versions = {
+                "2003": ("5.2", (2, 1)),
                 "2008": ("7.0", (1,)),
                 "2000": ("5.0", (4, 3, 2, 1)),
                 "7": ("6.1", (1, 0)),
                 "XP": ("5.1", (2, 1)),
-                "NT": ("4.0", (6, 5, 4, 3, 2, 1)) }
+                "NT": ("4.0", (6, 5, 4, 3, 2, 1))
+            }
 
             # Get back-end DBMS underlying operating system version
             for version, data in versions.items():

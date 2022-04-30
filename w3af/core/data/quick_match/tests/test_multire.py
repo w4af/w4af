@@ -95,7 +95,7 @@ class MultiReTest(unittest.TestCase):
         self.assertEqual('ab.*cdef', result[0][1])
 
     def test_unicode_re(self):
-        re_list = [u'ñandú', u'ýandex']
+        re_list = ['ñandú', 'ýandex']
         mre = MultiRE(re_list)
 
         result = to_list(mre.query('abcn'))
@@ -107,7 +107,7 @@ class MultiReTest(unittest.TestCase):
         self.assertEqual('ñandú', result[0][1])
 
     def test_unicode_query(self):
-        re_list = [u'abc321', u'def123']
+        re_list = ['abc321', 'def123']
         mre = MultiRE(re_list)
 
         result = to_list(mre.query('abc321ñ'))
@@ -120,7 +120,7 @@ class MultiReTest(unittest.TestCase):
         self.assertEqual(set(re_list), match_res)
 
     def test_special_char(self):
-        re_list = [u'\x00\x01\x02\x03']
+        re_list = ['\x00\x01\x02\x03']
         mre = MultiRE(re_list)
 
         result = to_list(mre.query('abc\x00\x01\x02\x03def'))

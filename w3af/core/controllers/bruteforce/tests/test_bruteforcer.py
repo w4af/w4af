@@ -83,7 +83,7 @@ class TestUserPasswordBruteforcer(unittest.TestCase):
         ]
 
         combo_filename = os.path.join(self.temp_dir, 'combo.txt')
-        combo_fd = file(combo_filename, 'w')
+        combo_fd = open(combo_filename, 'w')
 
         for user, password in expected_combinations:
             combo_fd.write('%s:%s\n' % (user, password))

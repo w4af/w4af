@@ -37,4 +37,4 @@ class test_read_mail(PayloadTestHelper):
     @pytest.mark.deprecated
     def test_read_mail(self):
         result = exec_payload(self.shell, 'read_mail', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

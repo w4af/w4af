@@ -2,16 +2,15 @@
 
 # example helloworld.py
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 
 class HelloWorld:
 
     # This is a callback function. The data arguments are ignored
     # in this example. More on callbacks below.
     def hello(self, widget, data=None):
-        print "Hello World"
+        print("Hello World")
 
     def delete_event(self, widget, event, data=None):
         # If you return FALSE in the "delete_event" signal handler,
@@ -19,14 +18,14 @@ class HelloWorld:
         # you don't want the window to be destroyed.
         # This is useful for popping up 'are you sure you want to quit?'
         # type dialogs.
-        print "delete event occurred"
+        print("delete event occurred")
 
         # Change FALSE to TRUE and the main window will not be destroyed
         # with a "delete_event".
         return False
 
     def destroy(self, widget, data=None):
-        print "destroy signal occurred"
+        print("destroy signal occurred")
         gtk.main_quit()
 
     def __init__(self):

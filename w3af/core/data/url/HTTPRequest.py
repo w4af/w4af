@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import copy
 import socket
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.dc.utils.token import DataToken
@@ -30,7 +30,7 @@ from w3af.core.data.request.request_mixin import RequestMixIn
 from w3af.core.data.url.constants import MAX_HTTP_RETRIES
 
 
-class HTTPRequest(RequestMixIn, urllib2.Request):
+class HTTPRequest(RequestMixIn, urllib.request.Request):
 
     def __init__(self, url,
                  data=None,
@@ -62,6 +62,7 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
         # Save some information for later access in an easier way
         #
         self.url_object = url
+        self._Request__original = url.url_string
         self.cookies = cookies
         self.session = session
         self.get_from_cache = cache
@@ -85,7 +86,7 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
         headers = dict(headers)
 
         # Call the base class constructor
-        urllib2.Request.__init__(self, url.url_encode(), data,
+        urllib.request.Request.__init__(self, url.url_encode(), data,
                                  headers, origin_req_host, unverifiable)
         RequestMixIn.__init__(self)
     
@@ -93,7 +94,7 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
         return (self.get_method() == other.get_method() and
                 self.get_uri() == other.get_uri() and
                 self.get_headers() == other.get_headers() and
-                self.get_data() == other.get_data() and
+                self.data == other.data and
                 self.get_timeout() == other.get_timeout())
 
     def with_binary_response(self):
@@ -135,8 +136,8 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
         self.url_object = url_object
     
     def get_headers(self):
-        headers = Headers(self.headers.items())
-        headers.update(self.unredirected_hdrs.items())
+        headers = Headers(list(self.headers.items()))
+        headers.update(list(self.unredirected_hdrs.items()))
         return headers
 
     def set_headers(self, headers):
@@ -161,7 +162,7 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
         sdict['method'] = self.get_method()
         sdict['uri'] = self.get_uri().url_string
         sdict['headers'] = dict(self.get_headers())
-        sdict['data'] = self.get_data()
+        sdict['data'] = self.data
         sdict['cookies'] = self.cookies
         sdict['session'] = self.session
         sdict['cache'] = self.get_from_cache
@@ -183,7 +184,7 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
                  in the FuzzableRequest passed as parameter
         """
         host = fuzzable_request.get_url().get_domain()
-        data = fuzzable_request.get_data()
+        data = fuzzable_request.data
         headers = fuzzable_request.get_headers()
         headers.tokens_to_value()
 
@@ -207,7 +208,7 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
         cookies = udict['cookies']
         session = udict['session']
         cache = udict['cache']
-        timeout = socket.getdefaulttimeout() if udict['timeout'] is None else udict['timeout']
+        timeout = socket._GLOBAL_DEFAULT_TIMEOUT if udict['timeout'] is None else udict['timeout']
         new_connection = udict['new_connection']
         follow_redirects = udict['follow_redirects']
         use_basic_auth = udict['use_basic_auth']
@@ -215,7 +216,7 @@ class HTTPRequest(RequestMixIn, urllib2.Request):
         debugging_id = udict['debugging_id']
         binary_response = udict['binary_response']
 
-        headers_inst = Headers(headers.items())
+        headers_inst = Headers(list(headers.items()))
         url = URL(uri)
         
         return cls(url, data=data, headers=headers_inst,

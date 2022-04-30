@@ -47,7 +47,7 @@ class TestStrangeParameters(unittest.TestCase):
         body = ''
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 
     @pytest.mark.deprecated
@@ -55,7 +55,7 @@ class TestStrangeParameters(unittest.TestCase):
         body = '<html><a href="/?id=3">x</a></html>'
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 
     @pytest.mark.deprecated
@@ -63,7 +63,7 @@ class TestStrangeParameters(unittest.TestCase):
         body = '<html><a href="/?id=3&id=3&id=5&foo=bar">x</a></html>'
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 
     @pytest.mark.deprecated
@@ -71,7 +71,7 @@ class TestStrangeParameters(unittest.TestCase):
         body = '<html><a href="http://moth/abc.jsp?id=3&id=3&id=5&foo=bar">x</a></html>'
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 
     @pytest.mark.deprecated
@@ -79,7 +79,7 @@ class TestStrangeParameters(unittest.TestCase):
         body = '<html><a href="http://moth/abc.jsp?call=s(12,3)">x</a></html>'
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 1)
 
     @pytest.mark.deprecated
@@ -89,7 +89,7 @@ class TestStrangeParameters(unittest.TestCase):
                 '</html>')
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 1)
 
     @pytest.mark.deprecated
@@ -101,7 +101,7 @@ class TestStrangeParameters(unittest.TestCase):
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
         vulns = kb.kb.get('strange_parameters', 'strange_parameters')
-        self.assertEquals(len(vulns), 2, vulns)
+        self.assertEqual(len(vulns), 2, vulns)
 
     @pytest.mark.deprecated
     def test_strange_parameters_sent_false_positive_01(self):
@@ -114,7 +114,7 @@ class TestStrangeParameters(unittest.TestCase):
         request = FuzzableRequest(url)
 
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 
     @pytest.mark.deprecated
@@ -123,6 +123,6 @@ class TestStrangeParameters(unittest.TestCase):
 
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('strange_parameters',
+        self.assertEqual(len(kb.kb.get('strange_parameters',
                                         'strange_parameters')), 0)
 

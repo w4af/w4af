@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import gtk
-import gobject
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
 import os
 
 from w3af.core.ui.gui import GUI_DATA_PATH
@@ -335,7 +335,7 @@ class PluginTree(gtk.TreeView):
 
         # if anything is changed, you can not start scanning
         isallok = all([all(
-            children.values()) for children in self.config_status.values()])
+            children.values()) for children in list(self.config_status.values())])
         self.mainwin.scanok.change(self, isallok)
 
     def _get_plugin_inst(self, path):
@@ -421,7 +421,7 @@ class PluginTree(gtk.TreeView):
         # Reload the plugin
         try:
             self.w3af.plugins.reload_modified_plugin(plugin_type, plugin_name)
-        except Exception, e:
+        except Exception as e:
             msg = 'The plugin you modified raised the following exception'
             msg += ' while trying to reload it: "%s",' % str(e)
             msg += ' please fix this issue before continuing or w3af will crash.'

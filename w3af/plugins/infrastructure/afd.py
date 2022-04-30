@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.knowledge_base as kb
@@ -62,7 +62,7 @@ class afd(InfrastructurePlugin):
         try:
             filtered, not_filtered = self._send_requests(fuzzable_request,
                                                          debugging_id)
-        except BaseFrameworkException, bfe:
+        except BaseFrameworkException as bfe:
             om.out.error(str(bfe))
         else:
             self._analyze_results(filtered, not_filtered)
@@ -85,7 +85,7 @@ class afd(InfrastructurePlugin):
             http_resp = self._uri_opener.GET(original_url,
                                              cache=True,
                                              debugging_id=debugging_id)
-        except BaseFrameworkException, bfe:
+        except BaseFrameworkException as bfe:
             msg = ('Active filter detection plugin failed to receive a'
                    ' response for the first request. The exception was: "%s".'
                    ' Can not perform analysis.')
@@ -181,7 +181,7 @@ class afd(InfrastructurePlugin):
                'exec xp_cmdshell dir',
                '<script>alert(1)</script>']
 
-        res = [urllib.quote_plus(x) for x in res]
+        res = [urllib.parse.quote_plus(x) for x in res]
 
         return res
 

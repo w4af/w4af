@@ -32,4 +32,4 @@ class test_get_hashes(PayloadTestHelper):
     @pytest.mark.deprecated
     def test_get_hashes(self):
         result = exec_payload(self.shell, 'get_hashes', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)

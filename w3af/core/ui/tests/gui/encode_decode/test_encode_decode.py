@@ -24,7 +24,10 @@ import os
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
 
+from nose.plugins.attrib import attr
 
+
+@attr('gui')
 class TestEncodeDecode(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'encode_decode', 'images')

@@ -109,7 +109,7 @@ class basic_auth(BruteforcePlugin):
                                                     cache=False,
                                                     grep=False,
                                                     debugging_id=debugging_id)
-        except BaseFrameworkException, w3:
+        except BaseFrameworkException as w3:
             msg = ('Exception raised while brute-forcing basic authentication,'
                    ' error message: "%s".')
             om.out.debug(msg % w3)

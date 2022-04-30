@@ -17,7 +17,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement
+
 
 import os
 import re
@@ -124,21 +124,20 @@ class user_defined_regex(GrepPlugin):
             self._regex_file_path = regex_file_path
 
             try:
-                f = file(self._regex_file_path)
-            except Exception, e:
+                with open(self._regex_file_path) as f:
+                    for regex in f:
+                        current_regex = regex.strip()
+                        try:
+                            re_inst = re.compile(current_regex, re.I | re.DOTALL)
+                        except:
+                            msg = 'Invalid regex in input file: "%s"'
+                            raise BaseFrameworkException(msg % current_regex)
+                        else:
+                            self._regexlist_compiled.append((re_inst, None))
+                            tmp_not_compiled_all.append(current_regex)
+            except OSError as e:
                 msg = 'Unable to open file "%s", error: "%s".'
                 raise BaseFrameworkException(msg % (self._regex_file_path, e))
-            else:
-                for regex in f:
-                    current_regex = regex.strip()
-                    try:
-                        re_inst = re.compile(current_regex, re.I | re.DOTALL)
-                    except:
-                        msg = 'Invalid regex in input file: "%s"'
-                        raise BaseFrameworkException(msg % current_regex)
-                    else:
-                        self._regexlist_compiled.append((re_inst, None))
-                        tmp_not_compiled_all.append(current_regex)
 
         #
         #   Add the single regex

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import pytest
 import os
 import re
-from cStringIO import StringIO
+from io import StringIO
 
 from lxml import etree
 
@@ -74,7 +74,7 @@ class TestHTMLOutput(PluginTest):
 
         self.assertGreaterEqual(len(xss_vulns), 2)
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_url() for v in xss_vulns])),
             set(sorted([v.get_url() for v in file_vulns]))
         )
@@ -85,14 +85,15 @@ class TestHTMLOutput(PluginTest):
         vuln_url_re = re.compile('<li>Vulnerable URL: <a href="(.*?)">')
         vulns = []
 
-        for line in file(self.OUTPUT_FILE):
+        with open(self.OUTPUT_FILE) as output_fh:
+            for line in output_fh:
 
-            mo = vuln_url_re.search(line)
-            if mo:
-                url = URL(mo.group(1))
-                v = MockVuln('TestCase', None, 'High', 1, 'plugin')
-                v.set_url(url)
-                vulns.append(v)
+                mo = vuln_url_re.search(line)
+                if mo:
+                    url = URL(mo.group(1))
+                    v = MockVuln('TestCase', None, 'High', 1, 'plugin')
+                    v.set_url(url)
+                    vulns.append(v)
 
         return vulns
 
@@ -108,7 +109,8 @@ class TestHTMLOutput(PluginTest):
             return msg
 
         try:
-            parser = etree.XML(file(self.OUTPUT_FILE).read(), parser)
+            with open(self.OUTPUT_FILE) as output_fh:
+                parser = etree.XML(output_fh.read(), parser)
         except etree.XMLSyntaxError:
             self.assertTrue(False, generate_msg(parser))
         else:
@@ -170,11 +172,11 @@ class TestHTMLRendering(PluginTest):
     @pytest.mark.deprecated
     def test_render(self):
         output = StringIO()
-        template = file(self.plugin._template, 'r')
-
-        result = self.plugin._render_html_file(template, self.CONTEXT, output)
+        with open(self.plugin._template) as template:
+            result = self.plugin._render_html_file(template, self.CONTEXT, output)
 
         self.assertTrue(result)
 
         output.seek(0)
-        file(os.path.expanduser(self.plugin._output_file_name), 'w').write(output.read())
+        with open(os.path.expanduser(self.plugin._output_file_name), 'w') as output_fh:
+            output_fh.write(output.read())

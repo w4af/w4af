@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 import os
 import string
 
-from lib.core.enums import PRIORITY
 from lib.core.common import singleTimeWarnMessage
+from lib.core.enums import PRIORITY
 
 __priority__ = PRIORITY.LOW
 
@@ -18,7 +18,7 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Adds a percentage sign ('%') infront of each character
+    Adds a percentage sign ('%') infront of each character (e.g. SELECT -> %S%E%L%E%C%T)
 
     Requirement:
         * ASP

@@ -66,7 +66,7 @@ class TestCORSOriginScan(PluginTest):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('cors_origin', 'cors_origin')
-        self.assertEquals(2, len(vulns), vulns)
+        self.assertEqual(2, len(vulns), vulns)
 
         EXPECTED_NAMES = ['Insecure Access-Control-Allow-Origin',
                           'Insecure Access-Control-Allow-Origin']
@@ -167,7 +167,7 @@ class TestCORSOrigin(PluginTest):
         allow_origin = 'http://w3af.org/'
         allow_credentials = 'false'
 
-        for i in xrange(InfoSet.MAX_INFO_INSTANCES + 2):
+        for i in range(InfoSet.MAX_INFO_INSTANCES + 2):
 
             self.co._allow_methods(self.request, self.url, self.origin,
                                    self.response, allow_origin,

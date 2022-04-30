@@ -32,6 +32,6 @@ if __name__ == '__main__':
     ids = sys.argv[2:]
 
     for _id in ids:
-        print('Processing response %s' % _id)
+        print(('Processing response %s' % _id))
         response = read_response(filename, _id)
         file('response-%s.txt' % _id, 'w').write(response)

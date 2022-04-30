@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import time
 import select
-import thread
+import _thread
 import getopt
 import os
 import sys
@@ -248,13 +248,13 @@ class ConnectionManager(threading.Thread):
     def gen_connections(self, number):
         # Connect to the w3afAgentServer and store the connections in the
         # connection pool
-        for i in xrange(number - len(self._connections)):
+        for i in range(number - len(self._connections)):
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             try:
                 s.connect((self._w3afAgentServer_address,
                           self._w3afAgentServer_port))
-            except Exception, e:
+            except Exception as e:
                 log.debug('Failed to connect to the w3afAgentServer, exception: ' + str(e))
                 sys.exit(1)
             else:
@@ -350,12 +350,12 @@ class SocksHandler(threading.Thread):
             - handle_bind: handles BIND requests
         """
 
-        log.debug(thread.get_ident(), '-' * 40)
-        log.debug(thread.get_ident(
+        log.debug(_thread.get_ident(), '-' * 40)
+        log.debug(_thread.get_ident(
         ), 'New socks connection request from w3afAgentServer.')
 
         try:
-            log.debug(thread.get_ident(), 'Decoded request:', req)
+            log.debug(_thread.get_ident(), 'Decoded request:', req)
 
             # Let's add socks4a support
             self.validate_socks4a(req)
@@ -371,22 +371,22 @@ class SocksHandler(threading.Thread):
         # Global SOCKS errors handling.
         except Request_Failed_No_Identd:
             self.answer_rejected(REQUEST_REJECTED_NO_IDENTD)
-            log.error('Request', thread.get_ident(), 'failed, no identd.')
+            log.error('Request', _thread.get_ident(), 'failed, no identd.')
         except Request_Failed_Ident_failed:
             self.answer_rejected(REQUEST_REJECTED_IDENT_FAILED)
-            log.error('Request', thread.get_ident(), 'failed, ident failed.')
+            log.error('Request', _thread.get_ident(), 'failed, ident failed.')
         except Request_Error:
             self.answer_rejected()
             log.error(
-                'Request', thread.get_ident(), 'failed, invalid request.')
+                'Request', _thread.get_ident(), 'failed, invalid request.')
         except Remote_Connection_Failed:
             self.answer_rejected()
             log.error('Remote connection failed while processing request',
-                      thread.get_ident())
+                      _thread.get_ident())
         except Bind_TimeOut_Expired:
             self.answer_rejected()
             log.error('Bind timeout expired while processing request',
-                      thread.get_ident())
+                      _thread.get_ident())
         # Once established, if the remote or the client connection is closed
         # we must exit silently. This exception is in fact the way the function
         # used to forward data between the client and the remote server tells
@@ -523,7 +523,7 @@ class SocksHandler(threading.Thread):
         try:
             try:
                 # Connection to the remote server
-                log.debug(thread.get_ident(), 'Connecting to', req['address'])
+                log.debug(_thread.get_ident(), 'Connecting to', req['address'])
 
                 # Possible way to handle the timeout defined in the protocol!
                 # Make the connect non-blocking, then do a select and keep
@@ -583,7 +583,7 @@ factorised because all answers follow the same format."""
             packet += chr(code)  # Error code
             packet += port
             packet += ip
-            log.debug(thread.get_ident(), 'Sending back:',
+            log.debug(_thread.get_ident(), 'Sending back:',
                       code, string2port(port), socket.inet_ntoa(ip))
             self.client_socketet.send(packet)
         except:
@@ -599,7 +599,7 @@ simultaneously and to implement an inactivity timeout."""
 
         # Once we're here, we are not supposed to "speak" with the client
         # anymore. So any error means for us to close the connection.
-        log.debug(thread.get_ident(), 'Forwarding.')
+        log.debug(_thread.get_ident(), 'Forwarding.')
         # These are not used to anything significant now, but I keep them in
         # case I would want to do some statistics/logging.
         octets_in, octets_out = 0, 0
@@ -660,7 +660,7 @@ simultaneously and to implement an inactivity timeout."""
                     raise Connection_Closed
                 raise
         finally:
-            log.debug(thread.get_ident(), octets_in, 'octets in and',
+            log.debug(_thread.get_ident(), octets_in, 'octets in and',
                       octets_out, 'octets out. Connection closed.')
 
 

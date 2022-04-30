@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -11,7 +11,7 @@ __priority__ = PRIORITY.HIGH
 
 def tamper(payload, **kwargs):
     """
-    Appends 'sp_password' to the end of the payload for automatic obfuscation from DBMS logs
+    Appends (MsSQL) function 'sp_password' to the end of the payload for automatic obfuscation from DBMS logs
 
     Requirement:
         * MSSQL

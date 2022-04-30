@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement, print_function
+
 
 import os
 import psutil
@@ -85,7 +85,7 @@ class MultiProcessingDocumentParser(object):
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
     DEBUG = core_profiling_is_enabled()
-    MAX_WORKERS = 2 if is_running_on_ci() else (multiprocessing.cpu_count() / 2) or 1
+    MAX_WORKERS = 2 if is_running_on_ci() else int(multiprocessing.cpu_count() / 2) or 1
 
     # Increasing the timeout when profiling is enabled seems to fix issue #9713
     #
@@ -163,7 +163,7 @@ class MultiProcessingDocumentParser(object):
             future = self._pool.schedule(apply_with_return_error,
                                          args=(apply_args,),
                                          timeout=self.PARSER_TIMEOUT)
-        except RuntimeError, rte:
+        except RuntimeError as rte:
             # Remove the temp file used to send data to the process
             remove_file_if_exists(filename)
 
@@ -212,7 +212,7 @@ class MultiProcessingDocumentParser(object):
 
         try:
             parser_output = load_object_from_temp_file(process_result)
-        except Exception, e:
+        except Exception as e:
             msg = 'Failed to deserialize sub-process result. Exception: "%s"'
             args = (e,)
             raise Exception(msg % args)
@@ -266,7 +266,7 @@ class MultiProcessingDocumentParser(object):
             future = self._pool.schedule(apply_with_return_error,
                                          args=(apply_args,),
                                          timeout=self.PARSER_TIMEOUT)
-        except RuntimeError, rte:
+        except RuntimeError as rte:
             # Remove the temp file used to send data to the process
             remove_file_if_exists(filename)
 
@@ -306,7 +306,7 @@ class MultiProcessingDocumentParser(object):
 
         try:
             filtered_tags = load_tags_from_temp_file(process_result)
-        except Exception, e:
+        except Exception as e:
             msg = 'Failed to deserialize sub-process result. Exception: "%s"'
             args = (e,)
             raise Exception(msg % args)
@@ -360,7 +360,7 @@ def process_document_parser(filename, debug):
     try:
         # Parse
         document_parser = DocumentParser(http_resp)
-    except Exception, e:
+    except Exception as e:
         if debug:
             msg = ('[mp_document_parser] PID %s finished parsing %s with'
                    ' exception: "%s"')

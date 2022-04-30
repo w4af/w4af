@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import SocketServer
+import socketserver
 import threading
 import socket
 import time
@@ -28,10 +28,10 @@ import os
 
 from .upper_daemon import UpperDaemon, UpperTCPHandler
 
-HTTP_RESPONSE = "HTTP/1.1 200 Ok\r\n"\
-                "Connection: close\r\n"\
-                "Content-Type: text/html\r\n"\
-                "Content-Length: 3\r\n\r\nabc"
+HTTP_RESPONSE = b"HTTP/1.1 200 Ok\r\n"\
+                b"Connection: close\r\n"\
+                b"Content-Type: text/html\r\n"\
+                b"Content-Length: 3\r\n\r\nabc"
 
 
 class RawSSLDaemon(UpperDaemon):
@@ -39,31 +39,31 @@ class RawSSLDaemon(UpperDaemon):
     Echo the data sent by the client, but upper case it first. SSL version of
     UpperDaemon.
     """
-    def __init__(self, handler=UpperTCPHandler, ssl_version=ssl.PROTOCOL_TLSv1):
+    def __init__(self, handler=UpperTCPHandler, ssl_version=ssl.PROTOCOL_TLS):
         super(RawSSLDaemon, self).__init__(handler=handler)
         self.ssl_version = ssl_version
 
     def run(self):
-        self.server = SocketServer.TCPServer(self.server_address, self.handler,
+        self.server = socketserver.TCPServer(self.server_address, self.handler,
                                              bind_and_activate=False)
 
         key_file = os.path.join(os.path.dirname(__file__), 'unittest.key')
         cert_file = os.path.join(os.path.dirname(__file__), 'unittest.crt')
 
-        self.server.socket = ssl.wrap_socket(self.server.socket,
-                                             keyfile=key_file,
-                                             certfile=cert_file,
-                                             cert_reqs=ssl.CERT_NONE,
-                                             ssl_version=self.ssl_version)
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(cert_file, key_file)
 
-        self.server.server_bind()
-        self.server.server_activate()
-        self.server.serve_forever()
+        with context.wrap_socket(self.server.socket, server_side=True) as ssl_sock:
+            self.server.socket = ssl_sock
+
+            self.server.server_bind()
+            self.server.server_activate()
+            self.server.serve_forever()
 
 
 class SSLServer(threading.Thread):
 
-    def __init__(self, listen, port, certfile, proto=ssl.PROTOCOL_TLSv1,
+    def __init__(self, listen, port, certfile, proto=ssl.PROTOCOL_TLSv1_2,
                  http_response=HTTP_RESPONSE):
         threading.Thread.__init__(self)
         self.daemon = True
@@ -95,8 +95,10 @@ class SSLServer(threading.Thread):
         newsocket, fromaddr = self.sock.accept()
 
         try:
+            # pylint: disable=E1101
             newsocket.do_handshake()
-        except Exception, e:
+            # pylint: enable=E1101
+        except:
             # The ssl certificate might request a connection with
             # SSL protocol v2 and that will "break" the handshake
             newsocket.close()
@@ -105,7 +107,7 @@ class SSLServer(threading.Thread):
         # print 'Connection from %s port %s, sending HTTP response' % fromaddr
         try:
             newsocket.send(self.http_response)
-        except Exception, e:
+        except Exception as e:
             self.errors.append(e)
             # print 'Failed to send HTTP response to client: "%s"' % e
         finally:

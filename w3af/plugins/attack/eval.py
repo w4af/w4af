@@ -96,7 +96,7 @@ class eval(AttackPlugin):
 
             try:
                 http_res = self._uri_opener.send_mutant(mutant)
-            except BaseFrameworkException, w3:
+            except BaseFrameworkException as w3:
                 msg = 'An error occurred while trying to exploit the eval()'\
                       ' vulnerability. Original exception: "%s".'
                 om.out.debug(msg % w3)
@@ -154,7 +154,7 @@ class EvalShell(ExecShell):
 
         try:
             response = self._uri_opener.send_mutant(mutant)
-        except BaseFrameworkException, w3:
+        except BaseFrameworkException as w3:
             msg = 'An error occurred while trying to exploit the eval()'\
                   ' vulnerability (sending command %s). Original exception:' \
                   ' "%s".'

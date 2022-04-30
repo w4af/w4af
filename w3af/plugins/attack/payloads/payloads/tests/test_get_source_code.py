@@ -46,14 +46,15 @@ class test_get_source_code(PayloadTestHelper):
         result = exec_payload(self.shell, 'get_source_code', args=(temp_dir,),
                               use_api=True)
 
-        self.assertEqual(len(self.EXPECTED_RESULT.keys()), 1)
+        self.assertEqual(len(list(self.EXPECTED_RESULT.keys())), 1)
 
-        expected_url = self.EXPECTED_RESULT.keys()[0]
-        downloaded_url = result.items()[0][0].url_string
-        self.assertEquals(expected_url, downloaded_url)
+        expected_url = list(self.EXPECTED_RESULT.keys())[0]
+        downloaded_url = list(result.items())[0][0].url_string
+        self.assertEqual(expected_url, downloaded_url)
 
-        downloaded_file_path = result.items()[0][1][1]
-        downloaded_file_content = file(downloaded_file_path).read()
+        downloaded_file_path = list(result.items())[0][1][1]
+        with open(downloaded_file_path) as download_fh:
+            downloaded_file_content = download_fh.read()
         self.assertTrue(self.CONTENT in downloaded_file_content)
 
         shutil.rmtree(temp_dir)

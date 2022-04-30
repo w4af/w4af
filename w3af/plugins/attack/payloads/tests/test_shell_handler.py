@@ -55,20 +55,20 @@ class TestShellHandler(unittest.TestCase):
         shells = get_shell_code('', self.TEST_CMD)
         
         self.assertEqual(len(shells), 2)
-        php_shell_code, lang, shellcode_generator = shells[0]
+        py_shell_code, lang, shellcode_generator = shells[0]
         
-        self.assertEqual(lang, 'php')
-        self.assertIn('echo ', php_shell_code)
+        self.assertEqual(lang, 'py')
+        self.assertIn('import ', py_shell_code)
 
     @pytest.mark.deprecated
     def test_get_shell_code_invalid_extension(self):
         shells = get_shell_code('123456', self.TEST_CMD)
         
         self.assertEqual(len(shells), 2)
-        php_shell_code, lang, shellcode_generator = shells[0]
+        py_shell_code, lang, shellcode_generator = shells[0]
         
-        self.assertEqual(lang, 'php')
-        self.assertIn('echo ', php_shell_code)
+        self.assertEqual(lang, 'py')
+        self.assertIn('import ', py_shell_code)
         
     @pytest.mark.deprecated
     def test_get_web_shell_extension(self):

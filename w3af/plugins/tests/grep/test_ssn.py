@@ -49,7 +49,7 @@ class test_ssn(unittest.TestCase):
         response = HTTPResponse(200, body, headers, self.url, self.url, _id=1)
         self.plugin._already_inspected = set()
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('ssn', 'ssn')), 0)
+        self.assertEqual(len(kb.kb.get('ssn', 'ssn')), 0)
 
     @pytest.mark.deprecated
     def test_ssn_separated(self):
@@ -91,7 +91,7 @@ class test_ssn(unittest.TestCase):
         headers = Headers([('content-type', 'text/html')])
         response = HTTPResponse(200, body, headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
-        self.assertEquals(len(kb.kb.get('ssn', 'ssn')), 1)
+        self.assertEqual(len(kb.kb.get('ssn', 'ssn')), 1)
 
     @pytest.mark.deprecated
     def test_ssn_extra_number(self):

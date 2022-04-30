@@ -94,12 +94,11 @@ class ReadShell(Shell):
             return 'Remote file does not exist.'
         else:
             try:
-                fh = file(local_filename, 'w')
+                with open(local_filename, 'w') as fh:
+                    fh.write(remote_content)
             except:
                 return 'Failed to open local file for writing.'
             else:
-                fh.write(remote_content)
-                fh.close()
                 return 'Success.'
 
     def specific_user_input(self, command, parameters, return_err=True):

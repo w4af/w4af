@@ -35,7 +35,7 @@ class test_iis_root_directory(PayloadTestHelper):
     @pytest.mark.deprecated
     def test_iis_root_directory(self):
         result = exec_payload(self.shell, 'iis_root_directory', use_api=True)
-        self.assertEquals(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.EXPECTED_RESULT, result)
 
     @attr('ci_fails')
     @pytest.mark.deprecated

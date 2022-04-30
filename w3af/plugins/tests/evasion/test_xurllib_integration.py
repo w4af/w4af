@@ -41,4 +41,4 @@ class TestXurllibIntegration(unittest.TestCase):
         
         http_response = xurllib.GET(url)
         self.assertEqual(http_response.get_url().url_string,
-                         u'http://moth/./')
+                         'http://moth/./')

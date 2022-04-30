@@ -24,7 +24,7 @@ import unittest
 import threading
 import httpretty
 
-from mock import Mock
+from unittest.mock import Mock
 from nose.plugins.attrib import attr
 
 from w3af.core.controllers.ci.moth import get_moth_http
@@ -93,7 +93,7 @@ class TestStrategy(unittest.TestCase):
         thread_names_set = set(thread_names)
         expected_names = {'PoolTaskHandler',
                           'PoolResultHandler',
-                          'WorkerThread',
+                          'OutputManagerWorkerThread',
                           'PoolWorkerHandler',
                           'MainThread',
                           'SQLiteExecutor',
@@ -152,7 +152,7 @@ class TestStrategy(unittest.TestCase):
         
         try:
             strategy.start()
-        except ScanMustStopException, wmse:
+        except ScanMustStopException as wmse:
             message = str(wmse)
             self.assertIn('Please verify your target configuration', message)
         else:

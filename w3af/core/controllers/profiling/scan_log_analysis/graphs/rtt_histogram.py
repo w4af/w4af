@@ -35,5 +35,5 @@ def draw_rtt_histogram(scan_log_filename, scan):
 
     print('[rtt_histogram]')
     print('')
-    print(plotille.hist(rtts, bins=25))
+    print((plotille.hist(rtts, bins=25)))
     print('')

@@ -19,9 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import pytest
-import ssl
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import unittest
 
 import websocket
@@ -49,10 +47,10 @@ class TestProxy(unittest.TestCase):
 
         # Build the proxy opener
         proxy_url = 'http://%s:%s' % (self.IP_ADDRESS, port)
-        proxy_handler = urllib2.ProxyHandler({'http': proxy_url,
+        proxy_handler = urllib.request.ProxyHandler({'http': proxy_url,
                                               'https': proxy_url})
-        self.proxy_opener = urllib2.build_opener(proxy_handler,
-                                                 urllib2.HTTPHandler)
+        self.proxy_opener = urllib.request.build_opener(proxy_handler,
+                                                 urllib.request.HTTPHandler)
 
     @pytest.mark.deprecated
     def tearDown(self):
@@ -66,9 +64,10 @@ class TestProxy(unittest.TestCase):
         # Basic check
         self.assertGreater(len(resp_body), 0)
 
-        # Get response with and without the proxy
-        proxy_resp = self.proxy_opener.open(self.HTTP_URL)
-        direct_resp = urllib2.urlopen(self.HTTP_URL)
+        # Get response using the proxy
+        proxy_resp = self.proxy_opener.open(get_moth_http())
+        # Get it without any proxy
+        direct_resp = urllib.request.urlopen(get_moth_http())
 
         # Must be equal
         self.assertEqual(direct_resp.read(), proxy_resp.read())
@@ -95,9 +94,10 @@ class TestProxy(unittest.TestCase):
         # Basic check
         self.assertTrue(len(resp_body) > 0)
 
-        # Get response with and without the proxy
-        proxy_resp = self.proxy_opener.open(self.HTTPS_URL)
-        direct_resp = urllib2.urlopen(self.HTTPS_URL)
+        # Get response using the proxy
+        proxy_resp = self.proxy_opener.open(get_moth_https())
+        # Get it without any proxy
+        direct_resp = urllib.request.urlopen(get_moth_https())
 
         # Must be equal
         self.assertEqual(direct_resp.read(), proxy_resp.read())
@@ -124,7 +124,7 @@ class TestProxy(unittest.TestCase):
         proxy_resp = self.proxy_opener.open(self.HTTP_URL).read()
 
         # Get it without the proxy
-        resp = urllib2.urlopen(self.HTTP_URL).read()
+        resp = urllib.request.urlopen(get_moth_http()).read()
 
         self.assertEqual(resp, proxy_resp)
     
@@ -144,7 +144,7 @@ class TestProxy(unittest.TestCase):
 
         try:
             self.proxy_opener.open(self.HTTP_URL).read()
-        except urllib2.HTTPError, hte:
+        except urllib.error.HTTPError as hte:
             # By default urllib2 handles 500 errors as exceptions, so we match
             # against this exception object
             self.assertEqual(hte.code, 500)

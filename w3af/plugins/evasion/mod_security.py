@@ -39,7 +39,7 @@ class mod_security(EvasionPlugin):
                         the evasion plugin
         :return: The modified request
         """
-        data = str(request.get_data())
+        data = str(request.data)
 
         if not data:
             return request
@@ -58,7 +58,7 @@ class mod_security(EvasionPlugin):
         new_req.set_headers(headers_copy)
         new_req.set_data(data)
 
-        return request
+        return new_req
 
     def get_priority(self):
         """

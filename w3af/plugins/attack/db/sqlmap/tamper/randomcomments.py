@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
 import re
 
 from lib.core.common import randomRange
+from lib.core.compat import xrange
 from lib.core.data import kb
 from lib.core.enums import PRIORITY
 
@@ -15,12 +16,12 @@ __priority__ = PRIORITY.LOW
 
 def tamper(payload, **kwargs):
     """
-    Add random comments to SQL keywords
+    Add random inline comments inside SQL keywords (e.g. SELECT -> S/**/E/**/LECT)
 
     >>> import random
     >>> random.seed(0)
     >>> tamper('INSERT')
-    'I/**/N/**/SERT'
+    'I/**/NS/**/ERT'
     """
 
     retVal = payload

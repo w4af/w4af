@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'doc/COPYING' for copying permission
 """
 
+from lib.core.compat import xrange
 from lib.core.enums import PRIORITY
 
 __priority__ = PRIORITY.HIGHEST
@@ -14,7 +15,7 @@ def dependencies():
 
 def tamper(payload, **kwargs):
     """
-    Replaces instances like 'IFNULL(A, B)' with 'CASE WHEN ISNULL(A) THEN (B) ELSE (A) END'
+    Replaces instances like 'IFNULL(A, B)' with 'CASE WHEN ISNULL(A) THEN (B) ELSE (A) END' counterpart
 
     Requirement:
         * MySQL
@@ -61,5 +62,3 @@ def tamper(payload, **kwargs):
                 break
 
     return payload
-
-

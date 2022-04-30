@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import platform
+import distro 
 
 from .ubuntu1204 import Ubuntu1204
 
@@ -42,8 +42,11 @@ cd w3af
 class Kali(Ubuntu1204):
     SYSTEM_NAME = 'Kali'
 
-    def after_hook(self):
+    @staticmethod
+    def after_hook():
         print(KALI_MESSAGE)
 
-    def is_current_platform(self):
-        return 'debian' in platform.dist() and 'kali' in platform.release()
+    @staticmethod
+    def is_current_platform():
+        return 'debian' in distro.linux_distribution() and 'kali' in distro.linux_distribution()
+

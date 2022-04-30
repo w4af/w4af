@@ -71,7 +71,7 @@ class TestUtils(unittest.TestCase):
         hrds[CSP_HEADER_W3C] = CSP_DIRECTIVE_SCRIPT + " 'self';" + \
             CSP_DIRECTIVE_REPORT_URI + " /myrelativeuri"
         
-        csp_headers = Headers(hrds.items())
+        csp_headers = Headers(list(hrds.items()))
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         
         self.assertFalse(unsafe_inline_enabled(http_response))
@@ -90,7 +90,7 @@ class TestUtils(unittest.TestCase):
         hrds[CSP_HEADER_W3C] = CSP_DIRECTIVE_SCRIPT + " 'self';" + \
             CSP_DIRECTIVE_REPORT_URI + " /myrelativeuri"
         
-        csp_headers = Headers(hrds.items())
+        csp_headers = Headers(list(hrds.items()))
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         
         self.assertFalse(unsafe_inline_enabled(http_response))
@@ -106,7 +106,7 @@ class TestUtils(unittest.TestCase):
         hrds[CSP_HEADER_W3C] = CSP_DIRECTIVE_SCRIPT + " 'self';" + \
             CSP_DIRECTIVE_REPORT_URI + " /myrelativeuri"
         
-        csp_headers = Headers(hrds.items())
+        csp_headers = Headers(list(hrds.items()))
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         
         self.assertTrue(unsafe_inline_enabled(http_response))
@@ -122,7 +122,7 @@ class TestUtils(unittest.TestCase):
         hrds[CSP_HEADER_W3C] = CSP_DIRECTIVE_SCRIPT + " 'self';" + \
             CSP_DIRECTIVE_REPORT_URI + " /myrelativeuri"
         
-        csp_headers = Headers(hrds.items())
+        csp_headers = Headers(list(hrds.items()))
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         
         self.assertTrue(unsafe_inline_enabled(http_response))
@@ -131,7 +131,7 @@ class TestUtils(unittest.TestCase):
         """
         Test case in which site do not provides CSP report uri.
         """
-        hrds = {}.items()
+        hrds = list({}.items())
         csp_headers = Headers(hrds)
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         uri_set = retrieve_csp_report_uri(http_response)
@@ -148,7 +148,7 @@ class TestUtils(unittest.TestCase):
         hrds[CSP_HEADER_W3C] = CSP_DIRECTIVE_SCRIPT + " 'self';" + \
             CSP_DIRECTIVE_REPORT_URI + " /myrelativeuri"
         
-        csp_headers = Headers(hrds.items())
+        csp_headers = Headers(list(hrds.items()))
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         uri_set = retrieve_csp_report_uri(http_response)
         
@@ -160,7 +160,7 @@ class TestUtils(unittest.TestCase):
         """
         Test case in which site do not provides CSP features.
         """
-        hrds = {}.items()
+        hrds = list({}.items())
         csp_headers = Headers(hrds)
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         self.assertFalse(provides_csp_features(http_response))
@@ -173,7 +173,7 @@ class TestUtils(unittest.TestCase):
         #     default-src -> default-source
         #     img-src -> image-src
         header_value = "default-source 'self'; image-src *"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -188,7 +188,7 @@ class TestUtils(unittest.TestCase):
         #     default-src -> default-source
         #     img-src -> image-src
         header_value = "default-src ' '; img-src ' '"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -204,7 +204,7 @@ class TestUtils(unittest.TestCase):
                        " object-src media1.example.com media2.example.com"\
                        " *.cdn.example.com; script-src"\
                        " trustedscripts.example.com"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -220,7 +220,7 @@ class TestUtils(unittest.TestCase):
                        " media1.example.com media2.example.com"\
                        " *.cdn.example.com; script-src"\
                        " trustedscripts.example.com"
-        hrds = {CSP_HEADER_W3C_REPORT_ONLY: header_value}.items()
+        hrds = list({CSP_HEADER_W3C_REPORT_ONLY: header_value}.items())
         csp_headers = Headers(hrds)
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -235,7 +235,7 @@ class TestUtils(unittest.TestCase):
         hrds = {}
         hrds[CSP_HEADER_W3C] = CSP_DIRECTIVE_OBJECT + " 'self'"
         hrds[CSP_HEADER_W3C_REPORT_ONLY] = CSP_DIRECTIVE_CONNECTION + " *"
-        csp_headers = Headers(hrds.items())
+        csp_headers = Headers(list(hrds.items()))
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         
@@ -245,7 +245,7 @@ class TestUtils(unittest.TestCase):
         """
         Test case in which no policies are specified into HTTP response.
         """
-        hrds = {}.items()
+        hrds = list({}.items())
         csp_headers = Headers(hrds)
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         policies = retrieve_csp_policies(http_response)
@@ -260,7 +260,7 @@ class TestUtils(unittest.TestCase):
         hrds[CSP_HEADER_W3C] = CSP_DIRECTIVE_OBJECT + " 'self'"
         hrds[CSP_HEADER_FIREFOX] = CSP_DIRECTIVE_OBJECT + " *"
         hrds[CSP_HEADER_CHROME] = CSP_DIRECTIVE_OBJECT + " *.sample.com"
-        csp_headers = Headers(hrds.items())
+        csp_headers = Headers(list(hrds.items()))
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         
@@ -283,7 +283,7 @@ class TestUtils(unittest.TestCase):
                        " form-action /ctxroot/action1 /ctxroot/action2;"\
                        " plugin-types application/pdf application/x-java-applet;"\
                        " reflected-xss block"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -321,7 +321,7 @@ class TestUtils(unittest.TestCase):
         hrds[CSP_HEADER_FIREFOX] = CSP_DIRECTIVE_IMAGE + " *"
         hrds[CSP_HEADER_CHROME] = CSP_DIRECTIVE_CONNECTION + \
             " trust.sample.com"
-        csp_headers = Headers(hrds.items())
+        csp_headers = Headers(list(hrds.items()))
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         policies = retrieve_csp_policies(http_response)
@@ -348,7 +348,7 @@ class TestUtils(unittest.TestCase):
             " trust.sample.com"
         hrds[CSP_HEADER_W3C_REPORT_ONLY] = CSP_DIRECTIVE_SCRIPT + \
             " report.sample.com"
-        csp_headers = Headers(hrds.items())
+        csp_headers = Headers(list(hrds.items()))
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         policies = retrieve_csp_policies(http_response)
@@ -375,7 +375,7 @@ class TestUtils(unittest.TestCase):
             " trust.sample.com"
         hrds[CSP_HEADER_W3C_REPORT_ONLY] = CSP_DIRECTIVE_SCRIPT + \
             " report.sample.com"
-        csp_headers = Headers(hrds.items())
+        csp_headers = Headers(list(hrds.items()))
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         policies = retrieve_csp_policies(http_response, True)
@@ -391,7 +391,7 @@ class TestUtils(unittest.TestCase):
         with empty value.
         """
         header_value = "sandbox ; script-nonce "
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -410,7 +410,7 @@ class TestUtils(unittest.TestCase):
         """
         header_value = "sandbox allow-forms allow-scripts ;"\
                        " script-nonce AABBCCDDEE"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -432,7 +432,7 @@ class TestUtils(unittest.TestCase):
                        "style-src '*';img-src '*';media-src '*';" \
                        "frame-src '*';font-src '*';" \
                        "form-action '*';connect-src '*';plugin-types '*';"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)  
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -499,7 +499,7 @@ class TestUtils(unittest.TestCase):
         """ 
         header_value = "sandbox allow-invalid; script-nonce aaa,bbb;"\
         "plugin-types app/titi application/pdf; reflected-xss disallow;"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)  
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -533,7 +533,7 @@ class TestUtils(unittest.TestCase):
         header_value = "sandbox allow-* allow-forms allow-same-origin " \
                        "allow-scripts allow-top-navigation;"\
                        "reflected-xss allow;"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)  
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -561,7 +561,7 @@ class TestUtils(unittest.TestCase):
                        "form-action '/myCtx/act';connect-src 'self';"\
                        "plugin-types application/pdf;reflected-xss filter;"\
                        "script-nonce AABBCCDDEE;"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)  
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -578,7 +578,7 @@ class TestUtils(unittest.TestCase):
                        "form-src '/myCtx/act';connect-src 'self';"\
                        "plugin-types application/pdf;reflected-xss filter;"\
                        "script-nonce AABBCCDDEE;"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)  
         
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
@@ -593,7 +593,7 @@ class TestUtils(unittest.TestCase):
         """
         Test case in witch site do not provide CSP features.
         """
-        hrds = {}.items()
+        hrds = list({}.items())
         csp_headers = Headers(hrds)          
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         site_protected = site_protected_against_xss_by_csp(http_response)
@@ -605,7 +605,7 @@ class TestUtils(unittest.TestCase):
         on Script policies.
         """
         header_value = "script-src *;"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)          
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         site_protected = site_protected_against_xss_by_csp(http_response)
@@ -618,7 +618,7 @@ class TestUtils(unittest.TestCase):
         accept theses configurations.
         """
         header_value = "script-src 'self' unsafe-inline; script-nonce 'AADD'"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)          
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         site_protected = site_protected_against_xss_by_csp(http_response)
@@ -631,7 +631,7 @@ class TestUtils(unittest.TestCase):
         accept theses configurations.
         """
         header_value = "script-src 'self' unsafe-eval; script-nonce 'AADD'"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)          
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         site_protected = site_protected_against_xss_by_csp(http_response)
@@ -645,7 +645,7 @@ class TestUtils(unittest.TestCase):
         """
         header_value = "script-src 'self' unsafe-eval unsafe-inline; "\
                        "script-nonce 'AADD'"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)          
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         site_protected = site_protected_against_xss_by_csp(http_response,
@@ -658,7 +658,7 @@ class TestUtils(unittest.TestCase):
         Test case in witch site is secure
         """
         header_value = "default-src 'self'"
-        hrds = {CSP_HEADER_W3C: header_value}.items()
+        hrds = list({CSP_HEADER_W3C: header_value}.items())
         csp_headers = Headers(hrds)          
         http_response = HTTPResponse(200, '', csp_headers, self.url, self.url)
         site_protected = site_protected_against_xss_by_csp(http_response)

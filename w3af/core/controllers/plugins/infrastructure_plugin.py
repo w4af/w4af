@@ -50,7 +50,7 @@ class InfrastructurePlugin(Plugin):
 
         try:
             return self.discover(fuzzable_request_copy, debugging_id)
-        except FourOhFourDetectionException, ffde:
+        except FourOhFourDetectionException as ffde:
             # We simply ignore any exceptions we find during the 404 detection
             # process. FYI: This doesn't break the xurllib error handling which
             # happens at lower layers.

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 import xml.sax
-import cgi
+import html
 
 from w3af.core.data.parsers.doc.xmlrpc import XmlRpcReadHandler, XmlRpcWriteHandler
 
@@ -65,9 +65,9 @@ class TestXMLRPC(unittest.TestCase):
         handler = XmlRpcReadHandler()
         xml.sax.parseString(XML_WITH_FUZZABLE, handler)
 
-        EXPECTED = [(u'string', [u'Foo bar']), (u'base64', [u'Spam eggs'])]
+        EXPECTED = [('string', ['Foo bar']), ('base64', [b'Spam eggs'])]
 
-        self.assertEqual(handler.get_data_container().items(), EXPECTED)
+        self.assertEqual(list(handler.get_data_container().items()), EXPECTED)
 
     def test_writer(self):
         handler = XmlRpcReadHandler()
@@ -79,7 +79,7 @@ class TestXMLRPC(unittest.TestCase):
 
         handler = XmlRpcWriteHandler(data_container)
 
-        fuzzed = XML_WITH_FUZZABLE.replace('Foo bar', cgi.escape(payload))
+        fuzzed = XML_WITH_FUZZABLE.replace('Foo bar', html.escape(payload))
 
         xml.sax.parseString(XML_WITH_FUZZABLE, handler)
         self.assertEqual(handler.fuzzed_xml_string, fuzzed)

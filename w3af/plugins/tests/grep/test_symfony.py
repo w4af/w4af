@@ -96,7 +96,7 @@ class test_symfony(unittest.TestCase):
             read=self.PROTECTED_BODY, headers=self.SYMFONY_HEADERS)
         request = FuzzableRequest(self.url, method='GET')
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('symfony', 'symfony')), 0)
+        self.assertEqual(len(kb.kb.get('symfony', 'symfony')), 0)
 
     @pytest.mark.deprecated
     def test_symfony_unprotected(self):
@@ -104,4 +104,4 @@ class test_symfony(unittest.TestCase):
         response = self.http_resp(
             read=self.UNPROTECTED_BODY, headers=self.SYMFONY_HEADERS)
         self.plugin.grep(request, response)
-        self.assertEquals(len(kb.kb.get('symfony', 'symfony')), 1)
+        self.assertEqual(len(kb.kb.get('symfony', 'symfony')), 1)

@@ -20,32 +20,28 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
-import mimetools
+import io
 import mimetypes
 import os
+import re
 import stat
-import StringIO
 import sys
-import urllib
-import urllib2
 
+from lib.core.compat import choose_boundary
+from lib.core.convert import getBytes
 from lib.core.exception import SqlmapDataException
-
-
-class Callable:
-    def __init__(self, anycallable):
-        self.__call__ = anycallable
+from thirdparty.six.moves import urllib as _urllib
 
 # Controls how sequences are uncoded. If true, elements may be given
 # multiple values by assigning a sequence.
 doseq = 1
 
 
-class MultipartPostHandler(urllib2.BaseHandler):
-    handler_order = urllib2.HTTPHandler.handler_order - 10 # needs to run first
+class MultipartPostHandler(_urllib.request.BaseHandler):
+    handler_order = _urllib.request.HTTPHandler.handler_order - 10 # needs to run first
 
     def http_request(self, request):
-        data = request.get_data()
+        data = request.data
 
         if isinstance(data, dict):
             v_files = []
@@ -53,16 +49,16 @@ class MultipartPostHandler(urllib2.BaseHandler):
 
             try:
                 for(key, value) in data.items():
-                    if isinstance(value, file) or hasattr(value, "file") or isinstance(value, StringIO.StringIO):
+                    if hasattr(value, "fileno") or hasattr(value, "file") or isinstance(value, io.IOBase):
                         v_files.append((key, value))
                     else:
                         v_vars.append((key, value))
             except TypeError:
                 systype, value, traceback = sys.exc_info()
-                raise SqlmapDataException, "not a valid non-string sequence or mapping object", traceback
+                raise SqlmapDataException("not a valid non-string sequence or mapping object '%s'" % traceback)
 
             if len(v_files) == 0:
-                data = urllib.urlencode(v_vars, doseq)
+                data = _urllib.parse.urlencode(v_vars, doseq)
             else:
                 boundary, data = self.multipart_encode(v_vars, v_files)
                 contenttype = "multipart/form-data; boundary=%s" % boundary
@@ -70,43 +66,49 @@ class MultipartPostHandler(urllib2.BaseHandler):
                 #    print "Replacing %s with %s" % (request.get_header("content-type"), "multipart/form-data")
                 request.add_unredirected_header("Content-Type", contenttype)
 
-            request.add_data(data)
+            request.data = data
+
+        # NOTE: https://github.com/sqlmapproject/sqlmap/issues/4235
+        if request.data:
+            for match in re.finditer(b"(?i)\\s*-{20,}\\w+(\\s+Content-Disposition[^\\n]+\\s+|\\-\\-\\s*)", request.data):
+                part = match.group(0)
+                if b'\r' not in part:
+                    request.data = request.data.replace(part, part.replace(b'\n', b"\r\n"))
+
         return request
 
-    def multipart_encode(vars, files, boundary=None, buf=None):
+    def multipart_encode(self, vars, files, boundary=None, buf=None):
         if boundary is None:
-            boundary = mimetools.choose_boundary()
+            boundary = choose_boundary()
 
         if buf is None:
-            buf = ""
+            buf = b""
 
         for (key, value) in vars:
             if key is not None and value is not None:
-                buf += "--%s\r\n" % boundary
-                buf += "Content-Disposition: form-data; name=\"%s\"" % key
-                buf += "\r\n\r\n" + value + "\r\n"
+                buf += b"--%s\r\n" % getBytes(boundary)
+                buf += b"Content-Disposition: form-data; name=\"%s\"" % getBytes(key)
+                buf += b"\r\n\r\n" + getBytes(value) + b"\r\n"
 
         for (key, fd) in files:
-            file_size = os.fstat(fd.fileno())[stat.ST_SIZE] if isinstance(fd, file) else fd.len
+            file_size = fd.len if hasattr(fd, "len") else os.fstat(fd.fileno())[stat.ST_SIZE]
             filename = fd.name.split("/")[-1] if "/" in fd.name else fd.name.split("\\")[-1]
             try:
-                contenttype = mimetypes.guess_type(filename)[0] or "application/octet-stream"
+                contenttype = mimetypes.guess_type(filename)[0] or b"application/octet-stream"
             except:
                 # Reference: http://bugs.python.org/issue9291
-                contenttype = "application/octet-stream"
-            buf += "--%s\r\n" % boundary
-            buf += "Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"\r\n" % (key, filename)
-            buf += "Content-Type: %s\r\n" % contenttype
-            # buf += "Content-Length: %s\r\n" % file_size
+                contenttype = b"application/octet-stream"
+            buf += b"--%s\r\n" % getBytes(boundary)
+            buf += b"Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"\r\n" % (getBytes(key), getBytes(filename))
+            buf += b"Content-Type: %s\r\n" % getBytes(contenttype)
+            # buf += b"Content-Length: %s\r\n" % file_size
             fd.seek(0)
 
-            buf = str(buf) if not isinstance(buf, unicode) else buf.encode("utf8")
-            buf += "\r\n%s\r\n" % fd.read()
+            buf += b"\r\n%s\r\n" % fd.read()
 
-        buf += "--%s--\r\n\r\n" % boundary
+        buf += b"--%s--\r\n\r\n" % getBytes(boundary)
+        buf = getBytes(buf)
 
         return boundary, buf
-
-    multipart_encode = Callable(multipart_encode)
 
     https_request = http_request

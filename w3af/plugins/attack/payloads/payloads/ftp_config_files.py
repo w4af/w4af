@@ -45,7 +45,7 @@ class ftp_config_files(Payload):
         result = []
         if api_result:
             result.append('FTP Config Files')
-            for file_, content in api_result.iteritems():
+            for file_, content in api_result.items():
                 result.append('-------------------------')
                 result.append(file_)
                 result.append('-------------------------')

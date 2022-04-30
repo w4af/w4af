@@ -49,7 +49,7 @@ class TestHistorySuggestion(unittest.TestCase):
         his = HistorySuggestion(self.TEST_FILE)
     
         texts = ["".join(random.choice(
-            string.letters) for x in xrange(self.LENGTH)) for y in xrange(self.QUANT)]
+            string.ascii_letters) for x in range(self.LENGTH)) for y in range(self.QUANT)]
     
         # Storing the elements
         for txt in texts:

@@ -87,7 +87,7 @@ def dump_data(w3af_core):
                 'Output manager input queue size': om.manager.get_in_queue().qsize(),
 
                 'Cache stats': get_parser_cache_stats()}
-    except Exception, e:
+    except Exception as e:
         exc_type, exc_value, exc_tb = sys.exc_info()
         tback = traceback.format_exception(exc_type, exc_value, exc_tb)
 
@@ -96,7 +96,8 @@ def dump_data(w3af_core):
 
     json_data = json.dumps(data, indent=4)
     output_file = PROFILING_OUTPUT_FMT % get_filename_fmt()
-    file(output_file, 'w').write(json_data)
+    with open(output_file, 'w') as output_fh:
+        output_fh.write(json_data)
 
 
 @should_profile_core

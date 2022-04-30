@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2017 sqlmap developers (http://sqlmap.org/)
+Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -12,7 +12,7 @@ from lib.core.data import logger
 from lib.core.exception import SqlmapFilePathException
 from lib.core.exception import SqlmapUndefinedMethod
 
-class Connector:
+class Connector(object):
     """
     This class defines generic dbms protocol functionalities for plugins.
     """
@@ -20,6 +20,7 @@ class Connector:
     def __init__(self):
         self.connector = None
         self.cursor = None
+        self.hostname = None
 
     def initConnection(self):
         self.user = conf.dbmsUser or ""
@@ -29,14 +30,14 @@ class Connector:
         self.db = conf.dbmsDb
 
     def printConnected(self):
-        infoMsg = "connection to %s server %s" % (conf.dbms, self.hostname)
-        infoMsg += ":%d established" % self.port
-        logger.info(infoMsg)
+        if self.hostname and self.port:
+            infoMsg = "connection to %s server '%s:%d' established" % (conf.dbms, self.hostname, self.port)
+            logger.info(infoMsg)
 
     def closed(self):
-        infoMsg = "connection to %s server %s" % (conf.dbms, self.hostname)
-        infoMsg += ":%d closed" % self.port
-        logger.info(infoMsg)
+        if self.hostname and self.port:
+            infoMsg = "connection to %s server '%s:%d' closed" % (conf.dbms, self.hostname, self.port)
+            logger.info(infoMsg)
 
         self.connector = None
         self.cursor = None
@@ -50,8 +51,8 @@ class Connector:
                 self.cursor.close()
             if self.connector:
                 self.connector.close()
-        except Exception, msg:
-            logger.debug(msg)
+        except Exception as ex:
+            logger.debug(ex)
         finally:
             self.closed()
 
@@ -62,20 +63,20 @@ class Connector:
 
     def connect(self):
         errMsg = "'connect' method must be defined "
-        errMsg += "into the specific DBMS plugin"
+        errMsg += "inside the specific DBMS plugin"
         raise SqlmapUndefinedMethod(errMsg)
 
     def fetchall(self):
         errMsg = "'fetchall' method must be defined "
-        errMsg += "into the specific DBMS plugin"
+        errMsg += "inside the specific DBMS plugin"
         raise SqlmapUndefinedMethod(errMsg)
 
     def execute(self, query):
         errMsg = "'execute' method must be defined "
-        errMsg += "into the specific DBMS plugin"
+        errMsg += "inside the specific DBMS plugin"
         raise SqlmapUndefinedMethod(errMsg)
 
     def select(self, query):
         errMsg = "'select' method must be defined "
-        errMsg += "into the specific DBMS plugin"
+        errMsg += "inside the specific DBMS plugin"
         raise SqlmapUndefinedMethod(errMsg)

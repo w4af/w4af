@@ -23,7 +23,8 @@ import pytest
 import os
 import base64
 import os.path
-import StringIO
+import io
+import re
 import unittest
 import xml.etree.ElementTree as ElementTree
 
@@ -87,22 +88,23 @@ class TestXMLOutput(PluginTest):
 
         self.assertEqual(len(kb_vulns), 1, kb_vulns)
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_url() for v in kb_vulns])),
             set(sorted([v.get_url() for v in file_vulns]))
         )
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_name() for v in kb_vulns])),
             set(sorted([v.get_name() for v in file_vulns]))
         )
 
-        self.assertEquals(
+        self.assertEqual(
             set(sorted([v.get_plugin_name() for v in kb_vulns])),
             set(sorted([v.get_plugin_name() for v in file_vulns]))
         )
 
-        self.assertEqual(validate_xml(file(self.FILENAME).read(), self.XSD), '')
+        with open(self.FILENAME) as file_h:
+            self.assertEqual(validate_xml(file_h.read(), self.XSD), '')
 
     def tearDown(self):
         super(TestXMLOutput, self).tearDown()
@@ -237,8 +239,8 @@ class XMLParser(object):
             data = ''.join(self._data_parts)
 
             data_decoded = base64.b64decode(data)
-            assert 'syntax error' in data_decoded, data_decoded
-            assert 'near' in data_decoded, data_decoded
+            assert b'syntax error' in data_decoded, data_decoded
+            assert b'near' in data_decoded, data_decoded
             
             self._inside_body = False
             self._data_parts = []
@@ -257,7 +259,8 @@ class XMLParser(object):
 def get_vulns_from_xml(filename):
     xp = XMLParser()
     parser = etree.XMLParser(target=xp)
-    vulns = etree.fromstring(file(filename).read(), parser)
+    with open(filename, "rb") as file_h:
+        vulns = etree.fromstring(file_h.read(), parser)
     return vulns
 
 
@@ -270,7 +273,7 @@ def validate_xml(content, schema_content):
     """
     xml_schema_doc = etree.parse(schema_content)
     xml_schema = etree.XMLSchema(xml_schema_doc)
-    xml = etree.parse(StringIO.StringIO(content))
+    xml = etree.parse(io.StringIO(content))
 
     # Validate the content against the schema.
     try:
@@ -290,7 +293,7 @@ class TestXMLOutputBinary(PluginTest):
 
     MOCK_RESPONSES = [
               MockResponse(url='http://rpm-path-binary/',
-                           body=file(TEST_FILE).read(),
+                           body=open(TEST_FILE, "rb").read(),
                            content_type='text/plain',
                            method='GET', status=200),
     ]
@@ -316,12 +319,12 @@ class TestXMLOutputBinary(PluginTest):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
 
-        self.assertEquals(len(self.kb.get_all_findings()), 1)
+        self.assertEqual(len(self.kb.get_all_findings()), 1)
 
         try:
             tree = ElementTree.parse(self.FILENAME)
             tree.getroot()
-        except Exception, e:
+        except Exception as e:
             self.assertTrue(False, 'Generated invalid XML: "%s"' % e)
 
     def tearDown(self):
@@ -343,7 +346,7 @@ class TestXML0x0B(PluginTest):
 
     MOCK_RESPONSES = [
               MockResponse(url='http://0x0b-path-binary/',
-                           body=file(TEST_FILE).read(),
+                           body=open(TEST_FILE).read(),
                            content_type='text/plain',
                            method='GET', status=200),
     ]
@@ -369,12 +372,12 @@ class TestXML0x0B(PluginTest):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
 
-        self.assertEquals(len(self.kb.get_all_findings()), 1)
+        self.assertEqual(len(self.kb.get_all_findings()), 1)
 
         try:
             tree = ElementTree.parse(self.FILENAME)
             tree.getroot()
-        except Exception, e:
+        except Exception as e:
             self.assertTrue(False, 'Generated invalid XML: "%s"' % e)
 
     def tearDown(self):
@@ -389,11 +392,11 @@ class TestXML0x0B(PluginTest):
 
 class TestSpecialCharacterInURL(PluginTest):
 
-    target_url = u'http://hello.se/%C3%93%C3%B6'
+    target_url = 'http://hello.se/%C3%93%C3%B6'
 
     MOCK_RESPONSES = [
               MockResponse(url=target_url,
-                           body=u'hi there á! /var/www/site/x.php path',
+                           body='hi there á! /var/www/site/x.php path',
                            content_type='text/plain',
                            method='GET', status=200),
     ]
@@ -419,12 +422,12 @@ class TestSpecialCharacterInURL(PluginTest):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
 
-        self.assertEquals(len(self.kb.get_all_findings()), 1)
+        self.assertEqual(len(self.kb.get_all_findings()), 1)
 
         try:
             tree = ElementTree.parse(self.FILENAME)
             tree.getroot()
-        except Exception, e:
+        except Exception as e:
             self.assertTrue(False, 'Generated invalid XML: "%s"' % e)
 
     def tearDown(self):
@@ -478,21 +481,21 @@ class TestHTTPTransaction(XMLNodeGeneratorTest):
         http_transaction = HTTPTransaction(x._get_jinja2_env(), _id)
         xml = http_transaction.to_string()
 
-        expected = (u'<http-transaction id="1">\n\n'
-                    u'    <http-request>\n'
-                    u'        <status>POST http://w3af.com/a/b/c.php HTTP/1.1</status>\n'
-                    u'        <headers>\n'
-                    u'            <header field="User-agent" content="w3af" />\n'
-                    u'        </headers>\n'
-                    u'        <body content-encoding="base64">YT0x\n</body>\n'
-                    u'    </http-request>\n\n'
-                    u'    <http-response>\n'
-                    u'        <status>HTTP/1.1 200 OK</status>\n'
-                    u'        <headers>\n'
-                    u'            <header field="Content-Type" content="text/html" />\n'
-                    u'        </headers>\n'
-                    u'        <body content-encoding="base64">PGh0bWw+\n</body>\n'
-                    u'    </http-response>\n\n</http-transaction>')
+        expected = ('<http-transaction id="1">\n\n'
+                    '    <http-request>\n'
+                    '        <status>POST http://w3af.com/a/b/c.php HTTP/1.1</status>\n'
+                    '        <headers>\n'
+                    '            <header field="User-agent" content="w3af" />\n'
+                    '        </headers>\n'
+                    '        <body content-encoding="base64">YT0x</body>\n'
+                    '    </http-request>\n\n'
+                    '    <http-response>\n'
+                    '        <status>HTTP/1.1 200 OK</status>\n'
+                    '        <headers>\n'
+                    '            <header field="Content-Type" content="text/html" />\n'
+                    '        </headers>\n'
+                    '        <body content-encoding="base64">PGh0bWw+</body>\n'
+                    '    </http-response>\n\n</http-transaction>')
 
         self.assertEqual(expected, xml)
         self.assertValidXML(xml)
@@ -523,21 +526,21 @@ class TestHTTPTransaction(XMLNodeGeneratorTest):
         # Writes to cache
         xml = http_transaction.to_string()
 
-        expected = (u'<http-transaction id="2">\n\n'
-                    u'    <http-request>\n'
-                    u'        <status>POST http://w3af.com/a/b/c.php HTTP/1.1</status>\n'
-                    u'        <headers>\n'
-                    u'            <header field="User-agent" content="w3af" />\n'
-                    u'        </headers>\n'
-                    u'        <body content-encoding="base64">YT0x\n</body>\n'
-                    u'    </http-request>\n\n'
-                    u'    <http-response>\n'
-                    u'        <status>HTTP/1.1 200 OK</status>\n'
-                    u'        <headers>\n'
-                    u'            <header field="Content-Type" content="text/html" />\n'
-                    u'        </headers>\n'
-                    u'        <body content-encoding="base64">PGh0bWw+\n</body>\n'
-                    u'    </http-response>\n\n</http-transaction>')
+        expected = ('<http-transaction id="2">\n\n'
+                    '    <http-request>\n'
+                    '        <status>POST http://w3af.com/a/b/c.php HTTP/1.1</status>\n'
+                    '        <headers>\n'
+                    '            <header field="User-agent" content="w3af" />\n'
+                    '        </headers>\n'
+                    '        <body content-encoding="base64">YT0x</body>\n'
+                    '    </http-request>\n\n'
+                    '    <http-response>\n'
+                    '        <status>HTTP/1.1 200 OK</status>\n'
+                    '        <headers>\n'
+                    '            <header field="Content-Type" content="text/html" />\n'
+                    '        </headers>\n'
+                    '        <body content-encoding="base64">PGh0bWw+</body>\n'
+                    '    </http-response>\n\n</http-transaction>')
         self.assertEqual(expected, xml)
 
         # Yup, we're cached
@@ -585,37 +588,43 @@ class TestScanInfo(XMLNodeGeneratorTest):
         scan_info = ScanInfo(x._get_jinja2_env(), scan_target, plugins_dict, options_dict)
         xml = scan_info.to_string()
 
-        expected = (u'<scan-info target="https://w3af.org">\n'
-                    u'    <audit>\n'
-                    u'            <plugin name="sqli">\n'
-                    u'            </plugin>\n'
-                    u'    </audit>\n'
-                    u'    <infrastructure>\n'
-                    u'    </infrastructure>\n'
-                    u'    <bruteforce>\n'
-                    u'    </bruteforce>\n'
-                    u'    <grep>\n'
-                    u'    </grep>\n'
-                    u'    <evasion>\n'
-                    u'    </evasion>\n'
-                    u'    <output>\n'
-                    u'    </output>\n'
-                    u'    <mangle>\n'
-                    u'    </mangle>\n'
-                    u'    <crawl>\n'
-                    u'            <plugin name="web_spider">\n'
-                    u'                        <config parameter="only_forward" value="False"/>\n'
-                    u'                        <config parameter="follow_regex" value=".*"/>\n'
-                    u'                        <config parameter="ignore_regex" value=""/>\n'
-                    u'            </plugin>\n'
-                    u'    </crawl>\n'
-                    u'    <auth>\n'
-                    u'    </auth>\n'
-                    u'</scan-info>')
+        expected = ('<scan-info target="https://w3af.org">\n'
+                    '    <audit>\n'
+                    '            <plugin name="sqli">\n'
+                    '            </plugin>\n'
+                    '    </audit>\n'
+                    '    <grep>\n'
+                    '    </grep>\n'
+                    '    <bruteforce>\n'
+                    '    </bruteforce>\n'
+                    '    <crawl>\n'
+                    '            <plugin name="web_spider">\n'
+                    '                        <config parameter="only_forward" value="False"/>\n'
+                    '                        <config parameter="follow_regex" value=".*"/>\n'
+                    '                        <config parameter="ignore_regex" value=""/>\n'
+                    '                        <config parameter="ignore_extensions" value=""/>\n'
+                    '            </plugin>\n'
+                    '    </crawl>\n'
+                    '    <evasion>\n'
+                    '    </evasion>\n'
+                    '    <mangle>\n'
+                    '    </mangle>\n'
+                    '    <output>\n'
+                    '    </output>\n'
+                    '    <auth>\n'
+                    '    </auth>\n'
+                    '    <infrastructure>\n'
+                    '    </infrastructure>\n'
+                    '</scan-info>')
 
         self.assertEqual(xml, expected)
         self.assertValidXML(xml)
 
+def clear_variable_tags(xml_string):
+    for tag in ('rpm', 'sent-request-count'):
+        tagr = re.compile(r"<%s>.*</%s>" % (tag, tag))
+        xml_string = re.sub(tagr, "<%s></%s>" % (tag, tag), xml_string)
+    return xml_string
 
 class TestScanStatus(XMLNodeGeneratorTest):
     def setUp(self):
@@ -649,72 +658,72 @@ class TestScanStatus(XMLNodeGeneratorTest):
         scan_status = ScanStatus(x._get_jinja2_env(), status, total_urls, known_urls)
         xml = scan_status.to_string()
         self.maxDiff = None
-        expected = (u'<scan-status>\n'
-                    u'    <status>Running</status>\n'
-                    u'    <is-paused>False</is-paused>\n'
-                    u'    <is-running>True</is-running>\n'
-                    u'\n'
-                    u'    <active-plugin>\n'
-                    u'        <crawl>web_spider</crawl>\n'
-                    u'        <audit>None</audit>\n'
-                    u'    </active-plugin>\n'
-                    u'\n'
-                    u'    <current-request>\n'
-                    u'        <crawl>None</crawl>\n'
-                    u'        <audit>None</audit>\n'
-                    u'    </current-request>\n'
-                    u'\n'
-                    u'    <queues>\n'
-                    u'        <crawl>\n'
-                    u'            <input-speed>0</input-speed>\n'
-                    u'            <output-speed>0</output-speed>\n'
-                    u'            <length>0</length>\n'
-                    u'            <processed-tasks>0</processed-tasks>\n'
-                    u'        </crawl>\n'
-                    u'\n'
-                    u'        <audit>\n'
-                    u'            <input-speed>0</input-speed>\n'
-                    u'            <output-speed>0</output-speed>\n'
-                    u'            <length>0</length>\n'
-                    u'            <processed-tasks>0</processed-tasks>\n'
-                    u'        </audit>\n'
-                    u'\n'
-                    u'        <grep>\n'
-                    u'            <input-speed>0</input-speed>\n'
-                    u'            <output-speed>0</output-speed>\n'
-                    u'            <length>0</length>\n'
-                    u'            <processed-tasks>None</processed-tasks>\n'
-                    u'        </grep>\n'
-                    u'    </queues>\n'
-                    u'\n'
-                    u'    <eta>\n'
-                    u'        <crawl>0 seconds.</crawl>\n'
-                    u'        <audit>0 seconds.</audit>\n'
-                    u'        <grep>0 seconds.</grep>\n'
-                    u'        <all>0 seconds.</all>\n'
-                    u'    </eta>\n'
-                    u'\n'
-                    u'    <rpm>0</rpm>\n'
-                    u'    <sent-request-count>0</sent-request-count>\n'
-                    u'    <progress>100</progress>\n'
-                    u'\n'
-                    u'    <total-urls>150</total-urls>\n'
-                    u'    <known-urls>    \n'   
-                    u'    <node url="http://w3af.org">\n'
-                    u'                        \n'
-                    u'        <node url="foo">\n'
-                    u'                                            \n'
-                    u'            <node url="bar" />                            \n'
-                    u'            <node url="abc.html" />\n'
-                    u'                        \n'
-                    u'        </node>                        \n'
-                    u'        <node url="123.txt" />\n'
-                    u'                    \n'
-                    u'    </node>\n'
-                    u'    </known-urls>\n'
-                    u'</scan-status>')
+        expected = ('<scan-status>\n'
+                    '    <status>Running</status>\n'
+                    '    <is-paused>False</is-paused>\n'
+                    '    <is-running>True</is-running>\n'
+                    '\n'
+                    '    <active-plugin>\n'
+                    '        <crawl>web_spider</crawl>\n'
+                    '        <audit>None</audit>\n'
+                    '    </active-plugin>\n'
+                    '\n'
+                    '    <current-request>\n'
+                    '        <crawl>None</crawl>\n'
+                    '        <audit>None</audit>\n'
+                    '    </current-request>\n'
+                    '\n'
+                    '    <queues>\n'
+                    '        <crawl>\n'
+                    '            <input-speed>0</input-speed>\n'
+                    '            <output-speed>0</output-speed>\n'
+                    '            <length>0</length>\n'
+                    '            <processed-tasks>0</processed-tasks>\n'
+                    '        </crawl>\n'
+                    '\n'
+                    '        <audit>\n'
+                    '            <input-speed>0</input-speed>\n'
+                    '            <output-speed>0</output-speed>\n'
+                    '            <length>0</length>\n'
+                    '            <processed-tasks>0</processed-tasks>\n'
+                    '        </audit>\n'
+                    '\n'
+                    '        <grep>\n'
+                    '            <input-speed>0</input-speed>\n'
+                    '            <output-speed>0</output-speed>\n'
+                    '            <length>0</length>\n'
+                    '            <processed-tasks>None</processed-tasks>\n'
+                    '        </grep>\n'
+                    '    </queues>\n'
+                    '\n'
+                    '    <eta>\n'
+                    '        <crawl>0 seconds</crawl>\n'
+                    '        <audit>0 seconds</audit>\n'
+                    '        <grep>0 seconds</grep>\n'
+                    '        <all>0 seconds</all>\n'
+                    '    </eta>\n'
+                    '\n'
+                    '    <rpm>0</rpm>\n'
+                    '    <sent-request-count>0</sent-request-count>\n'
+                    '    <progress>100</progress>\n'
+                    '\n'
+                    '    <total-urls>150</total-urls>\n'
+                    '    <known-urls>    \n'   
+                    '    <node url="http://w3af.org" exists="1">\n'
+                    '                                        \n'
+                    '        <node url="123.txt" exists="1" />        \n'
+                    '        <node url="foo" exists="1">\n'
+                    '                                            \n'
+                    '            <node url="abc.html" exists="1" />                            \n'
+                    '            <node url="bar" exists="1" />\n'
+                    '                        \n'
+                    '        </node>\n'
+                    '                    \n'
+                    '    </node>\n'
+                    '    </known-urls>\n'
+                    '</scan-status>')
 
-        self.assertEqual(xml, expected)
+        self.assertEqual(clear_variable_tags(xml), clear_variable_tags(expected))
         self.assertValidXML(xml)
 
 
@@ -756,27 +765,27 @@ class TestFinding(XMLNodeGeneratorTest):
         finding = Finding(x._get_jinja2_env(), vuln)
         xml = finding.to_string()
 
-        expected = (u'<vulnerability id="[2]" method="GET" name="TestCase" plugin="plugin_name" severity="High" url="None" var="None">\n'
-                    u'    <description>Foo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggs</description>\n\n\n'
-                    u'    <http-transactions>\n'
-                    u'            <http-transaction id="2">\n\n'
-                    u'    <http-request>\n'
-                    u'        <status>POST http://w3af.com/a/b/c.php HTTP/1.1</status>\n'
-                    u'        <headers>\n'
-                    u'            <header field="User-agent" content="w3af" />\n'
-                    u'        </headers>\n'
-                    u'        <body content-encoding="base64">YT0x\n</body>\n'
-                    u'    </http-request>\n\n'
-                    u'    <http-response>\n'
-                    u'        <status>HTTP/1.1 200 OK</status>\n'
-                    u'        <headers>\n'
-                    u'            <header field="Content-Type" content="text/html" />\n'
-                    u'        </headers>\n'
-                    u'        <body content-encoding="base64">PGh0bWw+\n</body>\n'
-                    u'    </http-response>\n\n'
-                    u'</http-transaction>\n'
-                    u'    </http-transactions>\n'
-                    u'</vulnerability>')
+        expected = ('<vulnerability id="[2]" method="GET" name="TestCase" plugin="plugin_name" severity="High" url="None" var="None">\n'
+                    '    <description>Foo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggs</description>\n\n\n'
+                    '    <http-transactions>\n'
+                    '            <http-transaction id="2">\n\n'
+                    '    <http-request>\n'
+                    '        <status>POST http://w3af.com/a/b/c.php HTTP/1.1</status>\n'
+                    '        <headers>\n'
+                    '            <header field="User-agent" content="w3af" />\n'
+                    '        </headers>\n'
+                    '        <body content-encoding="base64">YT0x</body>\n'
+                    '    </http-request>\n\n'
+                    '    <http-response>\n'
+                    '        <status>HTTP/1.1 200 OK</status>\n'
+                    '        <headers>\n'
+                    '            <header field="Content-Type" content="text/html" />\n'
+                    '        </headers>\n'
+                    '        <body content-encoding="base64">PGh0bWw+</body>\n'
+                    '    </http-response>\n\n'
+                    '</http-transaction>\n'
+                    '    </http-transactions>\n'
+                    '</vulnerability>')
 
         self.assertEqual(xml, expected)
         self.assertValidXML(xml)
@@ -890,7 +899,7 @@ class TestFinding(XMLNodeGeneratorTest):
         finding = Finding(x._get_jinja2_env(), vuln)
         xml = finding.to_string()
 
-        self.assertIn(u'á', xml)
+        self.assertIn('á', xml)
         self.assertValidXML(xml)
 
     @pytest.mark.deprecated
@@ -900,8 +909,8 @@ class TestFinding(XMLNodeGeneratorTest):
         _id = 2
         vuln = MockVuln(_id=_id)
 
-        url = URL(u'https://w3af.com/._basebind/node_modules/lodash._basecreate/'
-                  u'LICENSE.txt\x00=ڞ')
+        url = URL('https://w3af.com/._basebind/node_modules/lodash._basecreate/'
+                  'LICENSE.txt\x00=ڞ')
         hdr = Headers([('User-Agent', 'w3af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
@@ -922,27 +931,27 @@ class TestFinding(XMLNodeGeneratorTest):
         finding = Finding(x._get_jinja2_env(), vuln)
         xml = finding.to_string()
 
-        expected = (u'<vulnerability id="[2]" method="GET" name="TestCase" plugin="plugin_name" severity="High" url="https://w3af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt&lt;character code=&quot;0000&quot;/&gt;=\u069e" var="None">\n'
-                    u'    <description>Foo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggs</description>\n\n\n'
-                    u'    <http-transactions>\n'
-                    u'            <http-transaction id="2">\n\n'
-                    u'    <http-request>\n'
-                    u'        <status>POST https://w3af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt%00=%DA%9E HTTP/1.1</status>\n'
-                    u'        <headers>\n'
-                    u'            <header field="User-agent" content="w3af" />\n'
-                    u'        </headers>\n'
-                    u'        <body content-encoding="base64">YT0x\n</body>\n'
-                    u'    </http-request>\n\n'
-                    u'    <http-response>\n'
-                    u'        <status>HTTP/1.1 200 OK</status>\n'
-                    u'        <headers>\n'
-                    u'            <header field="Content-Type" content="text/html" />\n'
-                    u'        </headers>\n'
-                    u'        <body content-encoding="base64">PGh0bWw+\n</body>\n'
-                    u'    </http-response>\n\n'
-                    u'</http-transaction>\n'
-                    u'    </http-transactions>\n'
-                    u'</vulnerability>')
+        expected = ('<vulnerability id="[2]" method="GET" name="TestCase" plugin="plugin_name" severity="High" url="https://w3af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt&lt;character code=&quot;0000&quot;/&gt;=\u069e" var="None">\n'
+                    '    <description>Foo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggs</description>\n\n\n'
+                    '    <http-transactions>\n'
+                    '            <http-transaction id="2">\n\n'
+                    '    <http-request>\n'
+                    '        <status>POST https://w3af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt%00=%DA%9E HTTP/1.1</status>\n'
+                    '        <headers>\n'
+                    '            <header field="User-agent" content="w3af" />\n'
+                    '        </headers>\n'
+                    '        <body content-encoding="base64">YT0x</body>\n'
+                    '    </http-request>\n\n'
+                    '    <http-response>\n'
+                    '        <status>HTTP/1.1 200 OK</status>\n'
+                    '        <headers>\n'
+                    '            <header field="Content-Type" content="text/html" />\n'
+                    '        </headers>\n'
+                    '        <body content-encoding="base64">PGh0bWw+</body>\n'
+                    '    </http-response>\n\n'
+                    '</http-transaction>\n'
+                    '    </http-transactions>\n'
+                    '</vulnerability>')
 
         self.assertEqual(xml, expected)
         self.assertValidXML(xml)
@@ -987,7 +996,7 @@ class TestFindingsCache(XMLNodeGeneratorTest):
         # Cache starts empty
         #
         cache = FindingsCache()
-        self.assertEquals(cache.list(), [])
+        self.assertEqual(cache.list(), [])
 
         #
         # Create two vulnerabilities with their HTTP requests and responses
@@ -1042,7 +1051,7 @@ class TestFindingsCache(XMLNodeGeneratorTest):
         x = xml_file()
         list(x.findings())
 
-        self.assertEquals(cache.list(), [vuln1.get_uniq_id()])
+        self.assertEqual(cache.list(), [vuln1.get_uniq_id()])
 
         #
         # Save another vulnerability to the KB and call the cache-user
@@ -1052,7 +1061,7 @@ class TestFindingsCache(XMLNodeGeneratorTest):
         list(x.findings())
 
         expected = {vuln1.get_uniq_id(), vuln2.get_uniq_id()}
-        self.assertEquals(set(cache.list()), expected)
+        self.assertEqual(set(cache.list()), expected)
 
         #
         # Remove one vulnerability and see how it is removed from the cache
@@ -1062,13 +1071,13 @@ class TestFindingsCache(XMLNodeGeneratorTest):
         list(x.findings())
 
         expected = {vuln1.get_uniq_id()}
-        self.assertEquals(set(cache.list()), expected)
+        self.assertEqual(set(cache.list()), expected)
 
 
 class TestAttrValueEscapeFilter(unittest.TestCase):
     def test_invalid_ascii(self):
         result = jinja2_attr_value_escape_filter('é')
 
-        self.assertIsInstance(result, unicode)
-        self.assertEqual(result, u'é')
+        self.assertIsInstance(result, str)
+        self.assertEqual(result, 'é')
 

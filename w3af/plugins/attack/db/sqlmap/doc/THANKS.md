@@ -112,6 +112,9 @@ Alessio Dalla Piazza, <alessio.dallapiazza(at)gmail.com>
 Sherif El-Deeb, <archeldeeb(at)gmail.com>
 * for reporting a minor bug
 
+Thomas Etrillard, <thomas.etrillard(at)synacktiv.com>
+* for contributing the IBM DB2 error-based payloads (RAISE_ERROR)
+
 Stefano Di Paola, <stefano.dipaola(at)wisec.it>
 * for suggesting good features
 
@@ -147,11 +150,6 @@ Giorgio Fedon, <giorgio.fedon(at)gmail.com>
 
 Kasper Fons, <thefeds(at)mail.dk>
 * for reporting several bugs
-
-Jose Fonseca, <jose.r.fonseca(at)gmail.com>
-* for his Gprof2Dot utility for converting profiler output to dot graph(s) and for his XDot utility to render nicely dot graph(s), both included in sqlmap tree inside extra folder. These libraries are used for sqlmap development purposes only
-    http://code.google.com/p/jrfonseca/wiki/Gprof2Dot
-    http://code.google.com/p/jrfonseca/wiki/XDot
 
 Alan Franzoni, <alan.franzoni(at)gmail.com>
 * for helping out with Python subprocess library
@@ -202,7 +200,7 @@ Tate Hansen, <tate(at)clearnetsec.com>
 Mario Heiderich, <mario.heiderich(at)gmail.com>
 Christian Matthies, <ch0012(at)gmail.com>
 Lars H. Strojny, <lars(at)strojny.net>
-* for their great tool PHPIDS included in sqlmap tree as a set of rules for testing payloads against IDS detection, http://php-ids.org
+* for their great tool PHPIDS included in sqlmap tree as a set of rules for testing payloads against IDS detection, https://github.com/PHPIDS/PHPIDS
 
 Kristian Erik Hermansen, <kristian.hermansen(at)gmail.com>
 * for reporting a bug
@@ -316,6 +314,9 @@ Michael Majchrowicz, <mmajchrowicz(at)gmail.com>
 
 Vinícius Henrique Marangoni, <vinicius_marangoni1(at)hotmail.com>
 * for contributing a Portuguese translation of README.md
+
+Francesco Marano, <francesco.mrn24(at)gmail.com>
+* for contributing the Microsoft SQL Server/Sybase error-based - Stacking (EXEC) payload
 
 Ahmad Maulana, <matdhule(at)gmail.com>
 * for contributing a tamper script halfversionedmorekeywords.py
@@ -486,6 +487,9 @@ Marek Sarvas, <marek.sarvas(at)gmail.com>
 Philippe A. R. Schaeffer, <schaeff(at)compuphil.de>
 * for reporting a minor bug
 
+Henri Salo <henri(at)nerv.fi>
+* for a donation
+
 Mohd Zamiri Sanin, <zamiri.sanin(at)gmail.com>
 * for reporting a minor bug
 
@@ -565,6 +569,9 @@ Efrain Torres, <et(at)metasploit.com>
 * for helping out to improve the Metasploit Framework sqlmap auxiliary module and for committing it on the Metasploit official subversion repository
 * for his great Metasploit WMAP Framework
 
+Jennifer Torres, <jtorresf42(at)gmail.com>
+* for contributing a tamper script luanginx.py
+
 Sandro Tosi, <matrixhasu(at)gmail.com>
 * for helping to create sqlmap Debian package correctly
 
@@ -597,6 +604,7 @@ Carlos Gabriel Vergara, <carlosgabrielvergara(at)gmail.com>
 
 Patrick Webster, <patrick(at)aushack.com>
 * for suggesting an enhancement
+* for donating to sqlmap development (from OSI.Security)
 
 Ed Williams, <ed.williams(at)ngssecure.com>
 * for suggesting a minor enhancement
@@ -726,6 +734,9 @@ rmillet, <rmillet42(at)gmail.com>
 Rub3nCT, <rub3nct(at)gmail.com>
 * for reporting a minor bug
 
+sapra, <amanistaken(at)gmail.com>
+* for helping out with Python multiprocessing library on MacOS
+
 shiftzwei, <shiftzwei(at)gmail.com>
 * for reporting a couple of bugs
 
@@ -759,6 +770,12 @@ ultramegaman, <seclists(at)ultramegaman.com>
 
 Vinicius, <viniciusmaxdaloop(at)gmail.com>
 * for reporting a minor bug
+
+virusdefender
+* for contributing WAF scripts safeline.py
+
+w8ay
+* for contributing an implementation for chunked transfer-encoding (switch --chunked)
 
 wanglei, <wanglei(at)17uxi.cn>
 * for reporting a minor bug

@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import unittest
 import tempfile
 import os
@@ -33,12 +33,12 @@ class TestWebserver(unittest.TestCase):
 
     IP = '127.0.0.1'
     PORT = REMOTEFILEINCLUDE
-    TESTSTRING = 'abc<>def'
+    TESTSTRING = b'abc<>def'
 
     def setUp(self):
         self.tempdir = tempfile.gettempdir()
         
-        for port in xrange(self.PORT, self.PORT + 15):
+        for port in range(self.PORT, self.PORT + 15):
             try:
                 self.server = start_webserver(self.IP, port, self.tempdir)
             except:
@@ -49,14 +49,13 @@ class TestWebserver(unittest.TestCase):
 
     def test_GET_404(self):
         # Raises a 404
-        self.assertRaises(urllib2.HTTPError, urllib2.urlopen,
+        self.assertRaises(urllib.error.HTTPError, urllib.request.urlopen,
                           'http://%s:%s' % (self.IP, self.PORT))
 
     def _create_file(self):
         # Create a file and request it
-        test_fh = file(os.path.join(self.tempdir, 'foofile.txt'), 'w')
-        test_fh.write(self.TESTSTRING)
-        test_fh.close()
+        with open(os.path.join(self.tempdir, 'foofile.txt'), 'wb') as test_fh:
+            test_fh.write(self.TESTSTRING)
 
     def test_is_down(self):
         # pylint: disable=E1103
@@ -67,7 +66,7 @@ class TestWebserver(unittest.TestCase):
         self._create_file()
 
         url = 'http://%s:%s/foofile.txt' % (self.IP, self.PORT)
-        response_body = urllib2.urlopen(url).read()
+        response_body = urllib.request.urlopen(url).read()
         
         self.assertEqual(response_body, self.TESTSTRING)
     
@@ -76,7 +75,7 @@ class TestWebserver(unittest.TestCase):
         _, server, port = start_webserver_any_free_port(self.IP, self.tempdir)
         
         url = 'http://%s:%s/foofile.txt' % (self.IP, port)
-        response_body = urllib2.urlopen(url).read()
+        response_body = urllib.request.urlopen(url).read()
         
         self.assertEqual(response_body, self.TESTSTRING)
         server.shutdown()

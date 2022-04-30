@@ -198,7 +198,7 @@ def get_query_string_for_page(page_num, parameters_per_page):
 
     query_string = []
 
-    for qs_num in xrange(int(parameters_per_page)):
+    for qs_num in range(int(parameters_per_page)):
         param_name = generate_parameter_name(page_num, qs_num, qs_num)
         param_value = '1'
 
@@ -227,7 +227,7 @@ def get_probabilistic_count(count):
     decimal_part = count - integer
     decimal_part *= 100
 
-    print random.randint(0, 100) , decimal_part
+    print(random.randint(0, 100) , decimal_part)
     if random.randint(0, 100) > decimal_part:
         return integer + 1
 
@@ -240,7 +240,7 @@ def generate_site(pages, parameters_per_page, forms, form_params, output):
 
     generate_index_html(output)
 
-    for page_num in xrange(pages):
+    for page_num in range(pages):
         #
         # Where will we save the page in the local file system?
         #
@@ -280,14 +280,14 @@ def generate_site(pages, parameters_per_page, forms, form_params, output):
         #
         generated_forms = []
 
-        for form_num in xrange(int(forms_i)):
+        for form_num in range(int(forms_i)):
             action_num = random.randint(0, pages)
 
             form_path = generate_page_path(action_num)
             form_filename = generate_page_filename(action_num)
             action = '/' + form_path + '/' + form_filename
 
-            params = [generate_parameter_name(page_num, form_num, i) for i in xrange(int(form_params_i))]
+            params = [generate_parameter_name(page_num, form_num, i) for i in range(int(form_params_i))]
 
             generated_forms.append(Form(action, params))
 

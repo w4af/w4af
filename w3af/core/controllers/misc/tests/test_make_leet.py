@@ -28,11 +28,11 @@ from w3af.core.controllers.misc.make_leet import make_leet
 class TestMakeLeet(unittest.TestCase):
 
     def test_make_leet(self):
-        self.assertEqual(make_leet('adminstradores'), ['admin57radore5',
+        self.assertEqual(set(make_leet('adminstradores')), set(['admin57radore5',
                                                        '4dm1nstr4d0r3s',
-                                                       '4dm1n57r4d0r35'])
+                                                       '4dm1n57r4d0r35']))
         
-        self.assertEqual(make_leet('pepepito'), ['pepepi7o', 'p3p3p170',
-                                                 'p3p3p1t0'])
+        self.assertEqual(set(make_leet('pepepito')), set(['pepepi7o', 'p3p3p170',
+                                                 'p3p3p1t0']))
         
         self.assertEqual(make_leet('sS '), ['55 '])

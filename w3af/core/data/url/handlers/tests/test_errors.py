@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 import unittest
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from nose.plugins.attrib import attr
 
@@ -54,6 +54,6 @@ class TestErrorHandler(unittest.TestCase):
         request = HTTPRequest(fail_url)
         try:
             opener.open(request)
-        except urllib2.HTTPError, response:
+        except urllib.error.HTTPError as response:
             self.assertEqual(response.code, NOT_FOUND)
             self.assertEqual(response.id, 1)

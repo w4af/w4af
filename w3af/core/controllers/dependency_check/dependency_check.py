@@ -117,8 +117,8 @@ def write_instructions_to_console(platform, failed_deps, os_packages, script_pat
         msg += ('On %s systems please install the following operating'
                 ' system packages before running the pip installer:\n'
                 '    %s %s\n')
-        print(msg % (platform.SYSTEM_NAME, platform.PKG_MANAGER_CMD,
-                     missing_pkgs))
+        print((msg % (platform.SYSTEM_NAME, platform.PKG_MANAGER_CMD,
+                     missing_pkgs)))
 
     #
     #    Report all missing python modules
@@ -156,17 +156,17 @@ def write_instructions_to_console(platform, failed_deps, os_packages, script_pat
         print('External programs used by w3af are not installed or were not found.'
               ' Run these commands to install them on your system:\n')
         for cmd in external_commands:
-            print('    %s' % cmd)
+            print(('    %s' % cmd))
 
         print('')
 
     platform.after_hook()
 
     msg = 'A script with these commands has been created for you at %s'
-    print(msg % script_path)
+    print((msg % script_path))
 
 
-def dependency_check(dependency_set=CORE, exit_on_failure=True):
+def dependency_check(dependency_set=CORE, exit_on_failure=True, skip_external_commands=False):
     """
     This function verifies that the dependencies that are needed by the
     framework core are met.
@@ -182,7 +182,10 @@ def dependency_check(dependency_set=CORE, exit_on_failure=True):
 
     failed_deps = get_missing_pip_packages(platform, dependency_set)
     os_packages = get_missing_os_packages(platform, dependency_set)
-    external_commands = get_missing_external_commands(platform)
+    if skip_external_commands:
+        external_commands = []
+    else:
+        external_commands = get_missing_external_commands(platform)
 
     enable_warnings()
 

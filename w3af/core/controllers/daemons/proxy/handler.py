@@ -22,9 +22,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import threading
 import traceback
 
+from nocasedict import NocaseDict
+from libmproxy.controller import Master
+from libmproxy.protocol.http import HTTPResponse as LibMITMProxyHTTPResponse
 from mitmproxy.controller import Master, handler
 from mitmproxy.models import HTTPResponse as MITMProxyHTTPResponse
-
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.url.HTTPRequest import HTTPRequest
 from w3af.core.data.url.HTTPResponse import HTTPResponse
@@ -32,7 +34,6 @@ from w3af.core.data.dc.headers import Headers
 from w3af.core.data.misc.encoding import smart_str, smart_unicode
 from w3af.core.controllers.daemons.proxy.templates.utils import render
 from w3af.core.controllers.daemons.proxy.empty_handler import EmptyHandler
-
 
 class ProxyHandler(Master, EmptyHandler):
     """
@@ -155,9 +156,9 @@ class ProxyHandler(Master, EmptyHandler):
                                 mitmproxy_request.path)
 
         return HTTPRequest(URL(url),
-                           data=mitmproxy_request.content,
-                           headers=mitmproxy_request.headers.items(),
-                           method=mitmproxy_request.method)
+                           data=request.content,
+                           headers=list(request.headers.items()),
+                           method=request.method)
 
     def _to_mitmproxy_response(self, w3af_response):
         """
@@ -169,13 +170,13 @@ class ProxyHandler(Master, EmptyHandler):
 
         body = smart_str(w3af_response.body, charset, errors='ignore')
 
-        for header_name, header_value in w3af_response.headers.items():
-            if header_name.lower() == content_encoding:
-                continue
-
+        header_items = []
+        for header_name, header_value in list(response.headers.items()):
             header_name = smart_str(header_name, charset, errors='ignore')
             header_value = smart_str(header_value, charset, errors='ignore')
             header_items.append((header_name, header_value))
+
+        headers = NocaseDict(header_items)
 
         # This is an important step! The ExtendedUrllib will gunzip the body
         # for us, which is great, but we need to change the content-encoding
@@ -278,5 +279,18 @@ class LazyHTTPResponse(object):
         if self._set_event is not None:
             self._set_event.wait()
 
-        self._set_event = None
-        return getattr(self._http_response, item)
+        :param flow: A libmproxy flow containing the request
+        """
+        http_request = self._to_w3af_request(flow.request)
+
+        try:
+            # Send the request to the remote webserver
+            http_response = self._send_http_request(http_request)
+        except Exception as e:
+            trace = str(traceback.format_exc())
+            http_response = self._create_error_response(http_request, None, e,
+                                                        trace=trace)
+
+        # Send the response (success|error) to the browser
+        http_response = self._to_libmproxy_response(flow.request, http_response)
+        flow.reply(http_response)

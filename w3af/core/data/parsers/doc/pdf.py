@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import StringIO
+import io
 
 from pdfminer.converter import HTMLConverter
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
@@ -65,7 +65,7 @@ class PDFParser(BaseParser):
         # things like %%EOF\n , or %%EOF\r, or %%EOF\r\n.
         #
         # So... just to be sure I search in the last 12 characters.
-        if document.startswith('%PDF-') and '%%EOF' in document[-12:]:
+        if document.startswith(b'%PDF-') and b'%%EOF' in document[-12:]:
             return True
 
         return False
@@ -109,16 +109,16 @@ def pdf_to_text(pdf_string):
     :return: A string with the content of the PDF file.
     """
     rsrcmgr = PDFResourceManager(caching=True)
-    output = StringIO.StringIO()
+    output = io.StringIO()
 
     # According to https://github.com/euske/pdfminer/issues/61 it is a good idea
     # to set laparams to None, which will speed-up parsing
-    device = NoPageHTMLConverter(rsrcmgr, output, codec='utf-8',
+    device = NoPageHTMLConverter(rsrcmgr, output,
                                  layoutmode='normal',
                                  laparams=None, imagewriter=None,
                                  showpageno=False)
 
-    document_io = StringIO.StringIO(pdf_string)
+    document_io = io.BytesIO(pdf_string)
     pagenos = set()
     try:
         interpreter = PDFPageInterpreter(rsrcmgr, device)
@@ -127,11 +127,11 @@ def pdf_to_text(pdf_string):
             page.rotate = (page.rotate + 0) % 360
             interpreter.process_page(page)
     except PDFSyntaxError:
-        return u''
+        return ''
     
     device.close()
     output.seek(0)
-    output_str = output.read().decode('utf-8')
+    output_str = output.read()
     return SGMLParser.ANY_TAG_MATCH.sub('', output_str)
 
 

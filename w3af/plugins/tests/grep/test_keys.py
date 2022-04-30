@@ -54,8 +54,8 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
         
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 1)
-        self.assertEquals(type(data[0]), Vuln)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(type(data[0]), Vuln)
 
     @pytest.mark.deprecated
     def test_public_key(self):
@@ -67,8 +67,8 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
 
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 1)
-        self.assertEquals(type(data[0]), Info)        
+        self.assertEqual(len(data), 1)
+        self.assertEqual(type(data[0]), Info)        
 
     @pytest.mark.deprecated
     def test_xml_key(self):
@@ -80,7 +80,7 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
 
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 1)  
+        self.assertEqual(len(data), 1)  
 
     @pytest.mark.deprecated
     def test_public_ecdsa_key(self):
@@ -92,8 +92,8 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
 
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 1)
-        self.assertEquals(type(data[0]), Info)        
+        self.assertEqual(len(data), 1)
+        self.assertEqual(type(data[0]), Info)        
 
     @pytest.mark.deprecated
     def test_multi_match(self):
@@ -108,7 +108,7 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
 
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 3)
+        self.assertEqual(len(data), 3)
 
     @pytest.mark.deprecated
     def test_no_match(self):
@@ -120,4 +120,4 @@ class TestKeys(PluginTest):
         self.plugin.grep(request, response)
 
         data = kb.kb.get('keys', 'keys')
-        self.assertEquals(len(data), 0)
+        self.assertEqual(len(data), 0)

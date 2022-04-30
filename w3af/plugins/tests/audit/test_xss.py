@@ -122,7 +122,7 @@ class TestXSS(PluginTest):
         expected_data = self.normalize_expected_data(self.XSS_URL_SMOKE,
                                                      EXPECTED)
         
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
@@ -144,7 +144,7 @@ class TestXSS(PluginTest):
         expected_data = self.normalize_expected_data(self.WAVSEP_PATH,
                                                      EXPECTED)
 
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
@@ -162,7 +162,7 @@ class TestXSS(PluginTest):
 
         xss_vulns = self.kb.get('xss', 'xss')
         
-        self.assertEquals(0, len(xss_vulns), xss_vulns)
+        self.assertEqual(0, len(xss_vulns), xss_vulns)
 
     def scan_file_upload_fuzz_files(self):
         cfg = self._run_configs['cfg']
@@ -202,7 +202,7 @@ class TestXSS(PluginTest):
         EXPECTED = [('txt_uploader.php', 'txt_file', ['txt_file']), ]
         expected_data = self.normalize_expected_data(target_path, EXPECTED)
 
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
@@ -248,7 +248,7 @@ class TestXSS(PluginTest):
         expected_data = self.normalize_expected_data(self.XSS_PATH,
                                                      expected)
 
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
@@ -284,7 +284,7 @@ class TestXSS(PluginTest):
         expected_data = self.normalize_expected_data(self.XSS_302_URL,
                                                      expected)
         
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
@@ -336,7 +336,7 @@ class TestXSS(PluginTest):
         expected_data = self.normalize_expected_data(self.WAVSEP_PATH,
                                                      expected)
         
-        self.assertEquals(
+        self.assertEqual(
             set(expected_data),
             set(kb_data),
         )
@@ -352,7 +352,9 @@ class TestXSSPayloadsBreak(TestCase):
 
                 try:
                     # Most contexts
+                    # pylint: disable=E1120
                     context = context_klass(payload, '')
+                    # pylint: enable=E1120
                 except TypeError:
                     # Attribute contexts
                     context = context_klass(payload, '', '')

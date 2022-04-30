@@ -79,7 +79,7 @@ def dump_processes():
             else:
                 child_data['args'].append(arg)
 
-        for key, value in child._kwargs.iteritems():
+        for key, value in child._kwargs.items():
             try:
                 json.dumps(value)
             except (TypeError, UnicodeDecodeError):
@@ -92,7 +92,8 @@ def dump_processes():
 
         data[pid] = child_data
 
-    json.dump(data, file(output_file, 'w'), indent=4)
+    with open(output_file, 'w') as output_fh:
+        json.dump(data, output_fh, indent=4)
 
 
 @should_dump_processes

@@ -75,10 +75,10 @@ class TestOptionFactory(unittest.TestCase):
                 self.assertEqual(opt.get_help(), 'help')
                 self.assertEqual(opt.get_tabid(), 'tab1')
     
-                self.assertIsInstance(opt.get_name(), basestring)
-                self.assertIsInstance(opt.get_desc(), basestring)
-                self.assertIsInstance(opt.get_type(), basestring)
-                self.assertIsInstance(opt.get_help(), basestring)
+                self.assertIsInstance(opt.get_name(), str)
+                self.assertIsInstance(opt.get_desc(), str)
+                self.assertIsInstance(opt.get_type(), str)
+                self.assertIsInstance(opt.get_help(), str)
 
     def test_factory_unknown_type(self):
         self.assertRaises(KeyError, opt_factory, 'name', 'value', 'desc',
@@ -128,7 +128,7 @@ class TestOptionFactory(unittest.TestCase):
                 PORT: (12345, 12345)
                 }
 
-        for _type, (user_value, parsed_value) in data.iteritems():
+        for _type, (user_value, parsed_value) in data.items():
             opt = opt_factory('name', user_value, 'desc', _type)
 
             self.assertEqual(opt.get_name(), 'name')
@@ -137,10 +137,10 @@ class TestOptionFactory(unittest.TestCase):
             self.assertEqual(opt.get_default_value(), parsed_value)
             self.assertEqual(opt.get_value(), parsed_value)
 
-            self.assertIsInstance(opt.get_name(), basestring)
-            self.assertIsInstance(opt.get_desc(), basestring)
-            self.assertIsInstance(opt.get_type(), basestring)
-            self.assertIsInstance(opt.get_help(), basestring)
+            self.assertIsInstance(opt.get_name(), str)
+            self.assertIsInstance(opt.get_desc(), str)
+            self.assertIsInstance(opt.get_type(), str)
+            self.assertIsInstance(opt.get_help(), str)
 
     def test_root_path_variable_get(self):
         opt = opt_factory('name', self.INPUT_FILE, 'desc', INPUT_FILE,

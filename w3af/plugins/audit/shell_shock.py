@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from __future__ import with_statement
+
 
 import w3af.core.data.constants.severity as severity
 
@@ -103,9 +103,9 @@ class shell_shock(AuditPlugin):
         header_value, header_name = response.get_headers().iget(injected_header)
 
         if header_value is not None and injected_value in header_value.lower():
-            desc = u'Shell shock was found at: %s' % mutant.found_at()
+            desc = 'Shell shock was found at: %s' % mutant.found_at()
 
-            v = Vuln.from_mutant(u'Shell shock vulnerability', desc,
+            v = Vuln.from_mutant('Shell shock vulnerability', desc,
                                  severity.HIGH, [response.id],
                                  self.get_name(), mutant)
 
@@ -150,7 +150,7 @@ class shell_shock(AuditPlugin):
             mutant = self.create_mutant(freq, TEST_HEADER)
             yield mutant, delay_obj, debugging_id
 
-    def _find_delay_in_mutant(self, (mutant, delay_obj, debugging_id)):
+    def _find_delay_in_mutant(self, xxx_todo_changeme):
         """
         Try to delay the response and save a vulnerability if successful
 
@@ -158,6 +158,7 @@ class shell_shock(AuditPlugin):
         :param delay_obj: The delay to use
         :param debugging_id: The debugging ID for logging
         """
+        (mutant, delay_obj, debugging_id) = xxx_todo_changeme
         ed = ExactDelayController(mutant, delay_obj, self._uri_opener)
         ed.set_debugging_id(debugging_id)
         success, responses = ed.delay_is_controlled()
@@ -166,9 +167,9 @@ class shell_shock(AuditPlugin):
             return False
 
         mutant.set_token_value(delay_obj.get_string_for_delay(3))
-        desc = u'Shell shock was found at: %s' % mutant.found_at()
+        desc = 'Shell shock was found at: %s' % mutant.found_at()
 
-        v = Vuln.from_mutant(u'Shell shock vulnerability', desc,
+        v = Vuln.from_mutant('Shell shock vulnerability', desc,
                              severity.HIGH, [r.id for r in responses],
                              self.get_name(), mutant)
 

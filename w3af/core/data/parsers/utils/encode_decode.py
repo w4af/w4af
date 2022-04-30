@@ -21,10 +21,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import sys
 
-from htmlentitydefs import name2codepoint
+from html.entities import name2codepoint
 
 from w3af.core.data.dc.utils.token import DataToken
 from w3af.core.data.misc.encoding import HTML_ENCODE
@@ -48,13 +48,13 @@ def htmldecode(text, use_repr=False):
         # in unichr, that's why I need to have a try/except
         try:
             if entity.startswith('#x'):
-                return unichr(int(entity[2:], 16))
+                return chr(int(entity[2:], 16))
 
             elif entity.startswith('#'):
-                return unichr(int(entity[1:]))
+                return chr(int(entity[1:]))
 
             elif entity in name2codepoint:
-                return unichr(name2codepoint[entity])
+                return chr(name2codepoint[entity])
             else:
                 return match.group(0)
         except:
@@ -76,7 +76,7 @@ def htmldecode(text, use_repr=False):
     #
     # My understanding of this isinstance is that we're basically preventing
     # a "double decode" which can trigger UnicodeDecodeError
-    if not isinstance(text, unicode):
+    if not isinstance(text, str):
         text = text.decode(DEFAULT_ENCODING, errors=HTML_ENCODE)
 
     # "main"
@@ -104,7 +104,7 @@ def urlencode(query, encoding, safe='/<>"\'=:()'):
     """
     if hasattr(query, "items"):
         # mapping objects
-        query = query.items()
+        query = list(query.items())
     else:
         # it's a bother at times that strings and string-like objects are
         # sequences...
@@ -120,16 +120,16 @@ def urlencode(query, encoding, safe='/<>"\'=:()'):
         except TypeError:
             tb = sys.exc_info()[2]
             msg = "not a valid non-string sequence or mapping object"
-            raise TypeError, msg, tb
+            raise TypeError(msg).with_traceback(tb)
 
     l = []
 
     for k, v in query:
         # first work with keys
         k = to_encodable_string(k, encoding)
-        k = urllib.quote(k, safe)
+        k = urllib.parse.quote(k, safe)
 
-        if isinstance(v, basestring):
+        if isinstance(v, str) or isinstance(v, DataToken):
             v = [v]
         else:
             try:
@@ -143,7 +143,7 @@ def urlencode(query, encoding, safe='/<>"\'=:()'):
                 to_append = k + '='
             else:
                 ele = to_encodable_string(ele, encoding)
-                to_append = k + '=' + urllib.quote(ele, safe)
+                to_append = k + '=' + urllib.parse.quote(ele, safe)
                 
             l.append(to_append)
 
@@ -167,7 +167,7 @@ def to_encodable_string(obj, encoding):
     if isinstance(obj, DataToken):
         obj = obj.get_value()
 
-    if isinstance(obj, unicode):
+    if isinstance(obj, str):
         # https://github.com/andresriancho/w3af/issues/10267
         #
         # Forced to use "ignore" here because there is not better
@@ -177,7 +177,7 @@ def to_encodable_string(obj, encoding):
         # be ignored by the server. Thus I just ignore the offending
         # char(s) and continue with the rest of the ele content
         obj = obj.encode(encoding, errors='ignore')
-    else:
-        obj = str(obj)
+    elif not isinstance(obj, bytes):
+        obj = str(obj).encode(encoding, errors='ignore')
 
     return obj

@@ -23,7 +23,7 @@ import pytest
 import json
 
 from w3af.core.ui.api.middlewares.require_json import NO_HEADER, INVALID_JSON
-from w3af.core.ui.api.tests.utils.api_unittest import APIUnitTest
+from w3af.core.ui.api.tests.utils.test_api import APIUnitTest
 from w3af.core.ui.api.tests.utils.test_profile import get_test_profile
 
 

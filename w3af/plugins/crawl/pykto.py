@@ -150,7 +150,7 @@ class pykto(CrawlPlugin):
 
         try:
             http_response = function_ptr(nikto_test.uri)
-        except BaseFrameworkException, e:
+        except BaseFrameworkException as e:
             msg = ('An exception was raised while requesting "%s", the error'
                    ' message is: "%s".')
             om.out.error(msg % (nikto_test.uri, e))
@@ -333,7 +333,7 @@ class NiktoTestParser(object):
         self.url = url
         
         self._kb_server = None
-        self._junk_re = re.compile('JUNK\((.*?)\)')
+        self._junk_re = re.compile(r'JUNK\((.*?)\)')
         self.ignored = []
     
     def test_generator(self):
@@ -346,7 +346,7 @@ class NiktoTestParser(object):
         """
         try:
             db_file = codecs.open(self.filename, "r", "utf-8" )
-        except Exception, e:
+        except Exception as e:
             msg = 'Failed to open the scan database. Exception: "%s".'
             om.out.error(msg % e)
             raise StopIteration
@@ -361,7 +361,7 @@ class NiktoTestParser(object):
             #
             # A line could generate more than one request...
             # (think about @CGIDIRS)
-            for nikto_test in itertools.ifilter(self._filter_special,
+            for nikto_test in filter(self._filter_special,
                                                 self._parse_db_line(line)):
                 yield (nikto_test,)
                 
@@ -430,7 +430,7 @@ class NiktoTestParser(object):
                  response matched (match_1, match_1_or, match_1_and, fail_1,
                  fail_2).
         """
-        if not isinstance(line, unicode):
+        if not isinstance(line, str):
             raise TypeError('Database information needs to be sent as unicode.')
         
         line = line.strip()
@@ -452,7 +452,7 @@ class NiktoTestParser(object):
         #    fail_2 = splitted_line[9]
         #
         # If and only if they aren't response codes
-        for test_index in xrange(5,10):
+        for test_index in range(5,10):
             test_value = splitted_line[test_index]
             
             if len(test_value) == 3 and test_value.isdigit():
@@ -504,7 +504,7 @@ class NiktoTestParser(object):
         v_list_replace = [v_list for var, v_list in VAR_LIST if var in uri]
         variable_replace = [var for var, v_list in VAR_LIST if var in uri]
 
-        for prod_result in apply(itertools.product, v_list_replace):
+        for prod_result in itertools.product(*v_list_replace):
 
             current_uri = self._replace_JUNK(uri)
 

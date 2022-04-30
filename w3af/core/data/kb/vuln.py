@@ -104,7 +104,7 @@ class Vuln(Info):
         inst._string_matches = other_vuln.get_to_highlight()
         inst._mutant = other_vuln.get_mutant()
 
-        for k in other_vuln.keys():
+        for k in list(other_vuln.keys()):
             inst[k] = other_vuln[k]
 
         return inst        

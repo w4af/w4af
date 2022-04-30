@@ -22,11 +22,14 @@ import pytest
 import os
 import subprocess
 
+from nose.plugins.attrib import attr
+
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
 from w3af.core.data.db.startup_cfg import StartUpConfig
 
 
+@attr('gui')
 class TestDisclaimer(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'disclaimer_accept', 'images')
