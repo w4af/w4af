@@ -612,8 +612,8 @@ class TestScanInfo(XMLNodeGeneratorTest):
 
 def clear_variable_tags(xml_string):
     for tag in ('rpm', 'sent-request-count'):
-        tagr = re.compile("<%s>.*</%s>" % (tag, tag))
-        xml_string = re.sub(tagr, xml_string, "<%s></%s>" % (tag, tag))
+        tagr = re.compile(r"<%s>.*</%s>" % (tag, tag))
+        xml_string = re.sub(tagr, "<%s></%s>" % (tag, tag), xml_string)
     return xml_string
 
 class TestScanStatus(XMLNodeGeneratorTest):
