@@ -117,8 +117,8 @@ class TestMetaTagsRaw(unittest.TestCase):
                         ' attribute value set to "user/pass" which looks' \
                         ' interesting and should be manually reviewed. The' \
                         ' first ten URLs which sent the tag are:\n' \
-                        ' - http://www.w3af.com/2\n' \
-                        ' - http://www.w3af.com/1\n'
+                        ' - http://www.w3af.com/1\n' \
+                        ' - http://www.w3af.com/2\n'
 
         # pylint: disable=E1103
         info_set = kb.kb.get_one('meta_tags', 'meta_tags')

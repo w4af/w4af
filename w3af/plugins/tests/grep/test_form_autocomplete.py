@@ -91,8 +91,8 @@ class TestFormAutocompleteRaw(unittest.TestCase):
                          ' <form> element which has auto-complete enabled'
                          ' for password fields. The first two vulnerable'
                          ' URLs are:\n'
-                         ' - http://www.w3af.com/2\n'
-                         ' - http://www.w3af.com/1\n')
+                         ' - http://www.w3af.com/1\n'
+                         ' - http://www.w3af.com/2\n')
 
         # pylint: disable=E1103
         info_set = kb.kb.get_one('form_autocomplete', 'form_autocomplete')

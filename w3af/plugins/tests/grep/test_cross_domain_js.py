@@ -127,8 +127,8 @@ class TestCrossDomainJSRaw(unittest.TestCase):
                         ' third party site. This practice is not recommended' \
                         ' because it delegates the security of the site to' \
                         ' an external entity. The first two vulnerable URLs' \
-                        ' are:\n - http://www.w3af.com/2\n' \
-                        ' - http://www.w3af.com/1\n'
+                        ' are:\n - http://www.w3af.com/1\n' \
+                        ' - http://www.w3af.com/2\n'
 
         # pylint: disable=E1103
         info_set = kb.kb.get_one('cross_domain_js', 'cross_domain_js')

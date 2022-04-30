@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import unittest
+import math
 
 import w3af.core.data.kb.knowledge_base as kb
 
@@ -104,7 +105,7 @@ class TestCreditCards(unittest.TestCase):
         html_file = os.path.join(ROOT_PATH, 'plugins/tests/grep/data/test-3.html')
         with open(html_file) as fh:
             html = fh.read()
-        html = html[:len(html) / 2] + ' ' + credit_card + ' ' + html[len(html) / 2:]
+        html = html[:math.floor(len(html) / 2)] + ' ' + credit_card + ' ' + html[math.floor(len(html) / 2):]
 
         url = URL('http://www.w3af.com/')
         headers = Headers([('content-type', 'text/html')])

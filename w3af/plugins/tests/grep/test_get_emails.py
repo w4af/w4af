@@ -101,7 +101,7 @@ class RawTestGetEmail(unittest.TestCase):
         expected_desc = 'The application discloses the "one@w3af.com" email' \
                         ' address in 2 different HTTP responses. The first' \
                         ' ten URLs which sent the email are:\n' \
-                        ' - http://www.w3af.com/2\n - http://www.w3af.com/1\n'
+                        ' - http://www.w3af.com/1\n - http://www.w3af.com/2\n'
 
         info_set = info_sets[0]
         self.assertEqual(info_set.get_id(), [1, 2])

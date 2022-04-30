@@ -117,7 +117,7 @@ class TestAnalyzeCookies(unittest.TestCase):
 
         expected_desc = 'The application sent the "abc" cookie in 2' \
                         ' different URLs. The first ten URLs are:\n' \
-                        ' - http://www.w3af.com/2\n - http://www.w3af.com/1\n'
+                        ' - http://www.w3af.com/1\n - http://www.w3af.com/2\n'
         info_set = cookie_infosets[0]
         self.assertEqual(len(info_set.infos), 2)
         self.assertEqual(info_set.get_desc(), expected_desc)
@@ -235,7 +235,7 @@ class TestAnalyzeCookies(unittest.TestCase):
                         ' accessing the cookie value through Cross-Site' \
                         ' Scripting attacks. The first ten URLs which sent' \
                         ' the insecure cookie are:\n' \
-                        ' - http://www.w3af.com/2\n - http://www.w3af.com/1\n'
+                        ' - http://www.w3af.com/1\n - http://www.w3af.com/2\n'
         self.assertEqual(info_set.get_desc(), expected_desc)
         self.assertEqual(info_set.get_id(), [1, 2])
         self.assertEqual(len(info_set.infos), 2)

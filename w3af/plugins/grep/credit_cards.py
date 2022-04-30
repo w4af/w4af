@@ -26,6 +26,7 @@ import w3af.core.data.constants.severity as severity
 from w3af.core.controllers.plugins.grep_plugin import GrepPlugin
 from w3af.core.data.kb.vuln import Vuln
 
+SPACE_RE = re.compile(r'\s+')
 
 def passes_luhn_check(value):
     """
@@ -35,25 +36,30 @@ def passes_luhn_check(value):
     Example credit card numbers can be found here:
 
     https://www.paypal.com/en_US/vhelp/paypalmanager_help/credit_card_numbers.htm
-
-    :author: Alexander Berezhnoy (alexander.berezhnoy |at| gmail.com)
     """
-    # Prepare the value to be analyzed.
-    arr = []
-    for c in value:
-        if c.isdigit():
-            arr.append(int(c))
-    arr.reverse()
+    value = re.sub(SPACE_RE, '', value)
+    nDigits = len(value)
+    nSum = 0
+    isSecond = False
 
-    # Analyze
-    for idx in [i for i in range(len(arr)) if i % 2]:
-        d = arr[idx] * 2
-        if d > 9:
-            d = d / 10 + d % 10
-        arr[idx] = d
+    for i in range(nDigits - 1, -1, -1):
+        d = ord(value[i]) - ord('0')
 
-    sm = sum(arr)
-    return not (sm % 10)
+        if (isSecond == True):
+            d = d * 2
+
+        # We add two digits to handle
+        # cases that make two digits after
+        # doubling
+        nSum += d // 10
+        nSum += d % 10
+
+        isSecond = not isSecond
+
+    if (nSum % 10 == 0):
+        return True
+    else:
+        return False
 
 
 class credit_cards(GrepPlugin):
@@ -66,7 +72,7 @@ class credit_cards(GrepPlugin):
     def __init__(self):
         GrepPlugin.__init__(self)
 
-        cc_regex = r'((^|\s)\d{4}[- ]?(\d{4}[- ]?\d{4}|\d{6})[- ]?(\d{5}|\d{4})($|\s))'
+        cc_regex = r'((^|\s)\d{4}[- ]?(\d{4}[- ]?\d{4}|\d{6})[- ]?(\d{5}|\d{4})?($|\s))'
         #    (^|[^\d])                        Match the start of the string, or something that's NOT a digit
         #    \d{4}[- ]?                       Match four digits, and then (optionally) a "-" or a space
         #    (\d{4}[- ]?\d{4}|\d{6})          Match one of the following:

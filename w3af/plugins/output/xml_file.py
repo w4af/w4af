@@ -384,6 +384,7 @@ class xml_file(OutputPlugin):
         jinja2_env.loader = FileSystemLoader(TEMPLATE_ROOT)
         jinja2_env.filters['escape_attr'] = jinja2_attr_value_escape_filter
         jinja2_env.filters['escape_text'] = jinja2_text_value_escape_filter
+        jinja2_env.filters['smart_unicode'] = jinja2_text_value_smart_unicode_filter
         return jinja2_env
 
     @took
@@ -897,6 +898,9 @@ TEXT_VALUE_ESCAPES.update(dict((chr(i), '<character code="%04x"/>' % i)
 
 TEXT_VALUE_ESCAPES_IGNORE = {'\n', '\r'}
 
+
+def jinja2_text_value_smart_unicode_filter(value):
+    return smart_unicode(value)
 
 def jinja2_text_value_escape_filter(value):
     """

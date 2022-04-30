@@ -234,8 +234,8 @@ class XMLParser(object):
             data = ''.join(self._data_parts)
 
             data_decoded = base64.b64decode(data)
-            assert 'syntax error' in data_decoded, data_decoded
-            assert 'near' in data_decoded, data_decoded
+            assert b'syntax error' in data_decoded, data_decoded
+            assert b'near' in data_decoded, data_decoded
             
             self._inside_body = False
             self._data_parts = []
@@ -254,7 +254,7 @@ class XMLParser(object):
 def get_vulns_from_xml(filename):
     xp = XMLParser()
     parser = etree.XMLParser(target=xp)
-    with open(filename) as file_h:
+    with open(filename, "rb") as file_h:
         vulns = etree.fromstring(file_h.read(), parser)
     return vulns
 
@@ -478,14 +478,14 @@ class TestHTTPTransaction(XMLNodeGeneratorTest):
                     '        <headers>\n'
                     '            <header field="User-agent" content="w3af" />\n'
                     '        </headers>\n'
-                    '        <body content-encoding="base64">YT0x\n</body>\n'
+                    '        <body content-encoding="base64">YT0x</body>\n'
                     '    </http-request>\n\n'
                     '    <http-response>\n'
                     '        <status>HTTP/1.1 200 OK</status>\n'
                     '        <headers>\n'
                     '            <header field="Content-Type" content="text/html" />\n'
                     '        </headers>\n'
-                    '        <body content-encoding="base64">PGh0bWw+\n</body>\n'
+                    '        <body content-encoding="base64">PGh0bWw+</body>\n'
                     '    </http-response>\n\n</http-transaction>')
 
         self.assertEqual(expected, xml)
@@ -522,14 +522,14 @@ class TestHTTPTransaction(XMLNodeGeneratorTest):
                     '        <headers>\n'
                     '            <header field="User-agent" content="w3af" />\n'
                     '        </headers>\n'
-                    '        <body content-encoding="base64">YT0x\n</body>\n'
+                    '        <body content-encoding="base64">YT0x</body>\n'
                     '    </http-request>\n\n'
                     '    <http-response>\n'
                     '        <status>HTTP/1.1 200 OK</status>\n'
                     '        <headers>\n'
                     '            <header field="Content-Type" content="text/html" />\n'
                     '        </headers>\n'
-                    '        <body content-encoding="base64">PGh0bWw+\n</body>\n'
+                    '        <body content-encoding="base64">PGh0bWw+</body>\n'
                     '    </http-response>\n\n</http-transaction>')
         self.assertEqual(expected, xml)
 
@@ -582,27 +582,28 @@ class TestScanInfo(XMLNodeGeneratorTest):
                     '            <plugin name="sqli">\n'
                     '            </plugin>\n'
                     '    </audit>\n'
-                    '    <infrastructure>\n'
-                    '    </infrastructure>\n'
-                    '    <bruteforce>\n'
-                    '    </bruteforce>\n'
                     '    <grep>\n'
                     '    </grep>\n'
-                    '    <evasion>\n'
-                    '    </evasion>\n'
-                    '    <output>\n'
-                    '    </output>\n'
-                    '    <mangle>\n'
-                    '    </mangle>\n'
+                    '    <bruteforce>\n'
+                    '    </bruteforce>\n'
                     '    <crawl>\n'
                     '            <plugin name="web_spider">\n'
                     '                        <config parameter="only_forward" value="False"/>\n'
                     '                        <config parameter="follow_regex" value=".*"/>\n'
                     '                        <config parameter="ignore_regex" value=""/>\n'
+                    '                        <config parameter="ignore_extensions" value=""/>\n'
                     '            </plugin>\n'
                     '    </crawl>\n'
+                    '    <evasion>\n'
+                    '    </evasion>\n'
+                    '    <mangle>\n'
+                    '    </mangle>\n'
+                    '    <output>\n'
+                    '    </output>\n'
                     '    <auth>\n'
                     '    </auth>\n'
+                    '    <infrastructure>\n'
+                    '    </infrastructure>\n'
                     '</scan-info>')
 
         self.assertEqual(xml, expected)
@@ -679,10 +680,10 @@ class TestScanStatus(XMLNodeGeneratorTest):
                     '    </queues>\n'
                     '\n'
                     '    <eta>\n'
-                    '        <crawl>0 seconds.</crawl>\n'
-                    '        <audit>0 seconds.</audit>\n'
-                    '        <grep>0 seconds.</grep>\n'
-                    '        <all>0 seconds.</all>\n'
+                    '        <crawl>0 seconds</crawl>\n'
+                    '        <audit>0 seconds</audit>\n'
+                    '        <grep>0 seconds</grep>\n'
+                    '        <all>0 seconds</all>\n'
                     '    </eta>\n'
                     '\n'
                     '    <rpm>0</rpm>\n'
@@ -691,15 +692,15 @@ class TestScanStatus(XMLNodeGeneratorTest):
                     '\n'
                     '    <total-urls>150</total-urls>\n'
                     '    <known-urls>    \n'   
-                    '    <node url="http://w3af.org">\n'
-                    '                        \n'
-                    '        <node url="foo">\n'
+                    '    <node url="http://w3af.org" exists="1">\n'
+                    '                                        \n'
+                    '        <node url="123.txt" exists="1" />        \n'
+                    '        <node url="foo" exists="1">\n'
                     '                                            \n'
-                    '            <node url="bar" />                            \n'
-                    '            <node url="abc.html" />\n'
+                    '            <node url="abc.html" exists="1" />                            \n'
+                    '            <node url="bar" exists="1" />\n'
                     '                        \n'
-                    '        </node>                        \n'
-                    '        <node url="123.txt" />\n'
+                    '        </node>\n'
                     '                    \n'
                     '    </node>\n'
                     '    </known-urls>\n'
@@ -755,14 +756,14 @@ class TestFinding(XMLNodeGeneratorTest):
                     '        <headers>\n'
                     '            <header field="User-agent" content="w3af" />\n'
                     '        </headers>\n'
-                    '        <body content-encoding="base64">YT0x\n</body>\n'
+                    '        <body content-encoding="base64">YT0x</body>\n'
                     '    </http-request>\n\n'
                     '    <http-response>\n'
                     '        <status>HTTP/1.1 200 OK</status>\n'
                     '        <headers>\n'
                     '            <header field="Content-Type" content="text/html" />\n'
                     '        </headers>\n'
-                    '        <body content-encoding="base64">PGh0bWw+\n</body>\n'
+                    '        <body content-encoding="base64">PGh0bWw+</body>\n'
                     '    </http-response>\n\n'
                     '</http-transaction>\n'
                     '    </http-transactions>\n'
@@ -916,14 +917,14 @@ class TestFinding(XMLNodeGeneratorTest):
                     '        <headers>\n'
                     '            <header field="User-agent" content="w3af" />\n'
                     '        </headers>\n'
-                    '        <body content-encoding="base64">YT0x\n</body>\n'
+                    '        <body content-encoding="base64">YT0x</body>\n'
                     '    </http-request>\n\n'
                     '    <http-response>\n'
                     '        <status>HTTP/1.1 200 OK</status>\n'
                     '        <headers>\n'
                     '            <header field="Content-Type" content="text/html" />\n'
                     '        </headers>\n'
-                    '        <body content-encoding="base64">PGh0bWw+\n</body>\n'
+                    '        <body content-encoding="base64">PGh0bWw+</body>\n'
                     '    </http-response>\n\n'
                     '</http-transaction>\n'
                     '    </http-transactions>\n'

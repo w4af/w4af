@@ -87,7 +87,7 @@ def parse_qs(qstr, ignore_exc=True, encoding=DEFAULT_ENCODING):
     :param qstr: The string to parse
     :return: A QueryString object (a dict wrapper).
     """
-    if not isinstance(qstr, str):
+    if not isinstance(qstr, (str, bytes)):
         raise TypeError('parse_qs requires a basestring as input.')
     
     qs = QueryString(encoding=encoding)

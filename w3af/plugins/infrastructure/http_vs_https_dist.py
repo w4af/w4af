@@ -119,9 +119,9 @@ class http_vs_https_dist(InfrastructurePlugin):
         if not (https_troute and http_troute):
             return
 
-        https_ip_tuples = list(https_troute.values())[0].values()
+        https_ip_tuples = list(list(https_troute.values())[0].values())
         last_https_ip = https_ip_tuples[-1]
-        http_ip_tuples = list(http_troute.values())[0].values()
+        http_ip_tuples = list(list(http_troute.values())[0].values())
         last_http_ip = http_ip_tuples[-1]
 
         # Last IP should be True; otherwise the dest wasn't reached

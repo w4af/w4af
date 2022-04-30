@@ -55,7 +55,7 @@ class retirejs(GrepPlugin):
     RETIRE_CMD_VERSION = 'npx retire --version'
     RETIRE_CMD_JSREPO = 'npx retire -j --outputformat json --outputpath %s --jsrepo %s --jspath %s'
 
-    RETIRE_VERSION = '2.'
+    RETIRE_VERSION = '3.'
 
     RETIRE_TIMEOUT = 5
     RETIRE_DB_URL = URL('https://raw.githubusercontent.com/RetireJS/retire.js/master/repository/jsrepository.json')
@@ -247,7 +247,7 @@ class retirejs(GrepPlugin):
             om.out.debug('Using a supported retirejs version')
             return True
 
-        om.out.error('Please install a supported retirejs version (2.x)')
+        om.out.error('Please install a supported retirejs version (3.x)')
         return False
 
     def _retire_smoke_test(self):

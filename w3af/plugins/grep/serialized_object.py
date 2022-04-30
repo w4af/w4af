@@ -153,7 +153,7 @@ class serialized_object(GrepPlugin):
 
         v.set_url(response.get_url())
         v.add_to_highlight(parameter_value)
-        v[SerializedObjectInfoSet.ITAG] = parameter_name
+        v[SerializedObjectInfoSet.ITAG] = smart_unicode(parameter_name)
 
         self.kb_append_uniq_group(self,
                                   'serialized_object', v,

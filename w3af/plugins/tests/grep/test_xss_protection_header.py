@@ -103,8 +103,8 @@ class TestXSSProtectionHeader(unittest.TestCase):
                         ' the X-XSS-Protection header with a value of "0",' \
                         ' which disables Internet Explorer\'s XSS filter.' \
                         ' The first ten URLs which sent the insecure header' \
-                        ' are:\n - http://www.w3af.com/2\n' \
-                        ' - http://www.w3af.com/1\n'
+                        ' are:\n - http://www.w3af.com/1\n' \
+                        ' - http://www.w3af.com/2\n'
 
         info_set = info_sets[0]
         self.assertEqual(info_set.get_id(), [1, 3])

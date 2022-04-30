@@ -91,7 +91,7 @@ class test_strange_http_codes(unittest.TestCase):
                          ' the uncommon response status code 666 using "OK"'
                          ' as message. The first ten URLs which sent the' 
                          ' uncommon status code are:\n' 
-                         ' - http://www.w3af.com/2\n - http://www.w3af.com/1\n')
+                         ' - http://www.w3af.com/1\n - http://www.w3af.com/2\n')
         info_set = info_sets[0]
         self.assertEqual(info_set.get_id(), [1, 2])
         self.assertEqual(info_set.get_desc(), expected_desc)

@@ -79,14 +79,14 @@ class TestECTSecurity(unittest.TestCase):
 
         info_set = findings[0]
         expected_desc = 'The remote web server sent 1 HTTPS responses which' \
-                        ' do not contain the Strict-Transport-Security' \
+                        ' do not contain the Expect-CT' \
                         ' header. The first ten URLs which did not send the' \
                         ' header are:\n - https://www.w3af.com/\n'
 
         self.assertEqual(info_set.get_id(), [1])
         self.assertEqual(info_set.get_desc(), expected_desc)
         self.assertEqual(info_set.get_name(),
-                         'Missing Expect-CT header')
+                         'Missing Expect CT header')
 
     def test_https_without_ect_group_by_domain(self):
         body = ''
@@ -119,4 +119,4 @@ class TestECTSecurity(unittest.TestCase):
         self.assertEqual(info_set.get_id(), [1, 2])
         self.assertEqual(info_set.get_desc(), expected_desc)
         self.assertEqual(info_set.get_name(),
-                         'Missing Expect-CT header')
+                         'Missing Expect CT header')
