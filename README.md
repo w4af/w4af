@@ -1,7 +1,7 @@
-![Unit Tests](https://github.com/codders/w3af-python3/actions/workflows/python-app.yml/badge.svg)
-## w3af-python3 - Web Application Attack and Audit Framework for Python3
+![Unit Tests](https://github.com/w4f/w4af/actions/workflows/python-app.yml/badge.svg)
+## w4af - Web Advanced Application Attack and Audit Framework for Python3
 
-[w3af-python3](http://w3af.org/) is an [open source](https://www.gnu.org/licenses/gpl-2.0.txt)
+[w4af](https://w4af.readthedocs.io/en/latest/) is an [open source](https://www.gnu.org/licenses/gpl-2.0.txt)
 web application security scanner which helps developers and penetration testers
 identify and exploit vulnerabilities in their web applications.
 
@@ -12,7 +12,7 @@ including [Cross-Site Scripting](w3af/plugins/audit/xss.py),
 
 ## Python3 Port Progress
 
-The original w3af code only supports python up to version 2.7. This repository / fork is an
+The original w3af code only supports python up to version 2.7. This repository is an
 attempt to add python3 support.
 
 At time of writing, a subsection of the core tests are running and passing:
@@ -52,12 +52,17 @@ Use `nosetests` to run the unit tests:
 $ nosetests
 ```
 
+## Vision
+The purpose of this software is to help security researches to scan their sites to find vulnerabilities.
+
+## Disclaimer
+You are only allowed to scan websites that you own and/or have permissions to scan. The developers can not be made responsible for any damage that occurs by using this software. Use at your own risk.
+
 ## Contributing
 
 Pull requests are always welcome! If you're not sure where to start, please take
-a look at the [First steps as a contributor](w3af/wiki/First-steps-as-a-contributor)
+a look at the TODO [First steps as a contributor](w4af/wiki/First-steps-as-a-contributor)
 document in our wiki. All contributions, no matter how small, are welcome.
 
 ## Links and documentation
- * [w3af's main site](http://w3af.org/)
- * [Project documentation](http://docs.w3af.org/en/latest/)
+ * [Project documentation](https://w4af.readthedocs.io/en/latest/)
