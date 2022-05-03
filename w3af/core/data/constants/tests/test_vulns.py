@@ -178,13 +178,14 @@ class TestVulnsConstants(unittest.TestCase):
             return
 
         missing_list = []
-        for line in file(missing):
-            line = line.strip()
+        with open(missing) as missing_file:
+            for line in missing_file:
+                line = line.strip()
 
-            if not line:
-                continue
+                if not line:
+                    continue
 
-            missing_list.append(line)
+                missing_list.append(line)
 
         missing_list = list(set(missing_list))
         missing_list.sort()
