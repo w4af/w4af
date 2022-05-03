@@ -26,7 +26,7 @@ import w3af.core.data.parsers.parser_cache as parser_cache
 from w3af.plugins.grep.password_profiling_plugins.base_plugin import BasePwdProfilingPlugin
 
 
-WORD_SPLIT_RE = re.compile("[^\w]", re.UNICODE)
+WORD_SPLIT_RE = re.compile(r"[^\w]", re.UNICODE)
 
 
 class html(BasePwdProfilingPlugin):

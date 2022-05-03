@@ -506,7 +506,8 @@ class FindingsCache(object):
         filename = self.get_filename_from_uniq_id(uniq_id)
 
         try:
-            node = lz4.frame.decompress(open(filename, 'rb').read())
+            with open(filename, 'rb') as f:
+                node = lz4.frame.decompress(f.read())
         except (IOError, RuntimeError):
             return None
 
@@ -515,7 +516,8 @@ class FindingsCache(object):
     def save_finding_to_cache(self, uniq_id, node):
         filename = self.get_filename_from_uniq_id(uniq_id)
         node = node.encode('utf-8')
-        open(filename, 'wb').write(lz4.frame.compress(node))
+        with open(filename, 'wb') as f:
+            f.write(lz4.frame.compress(node))
 
     def evict_from_cache(self, uniq_id):
         filename = self.get_filename_from_uniq_id(uniq_id)
@@ -567,7 +569,8 @@ class CachedXMLNode(XMLNode):
         filename = self.get_filename()
 
         try:
-            node = lz4.frame.decompress(open(filename, 'rb').read())
+            with open(filename, 'rb') as f:
+                node = lz4.frame.decompress(f.read())
         except (IOError, RuntimeError):
             return None
 
@@ -576,7 +579,8 @@ class CachedXMLNode(XMLNode):
     def save_node_to_cache(self, node):
         filename = self.get_filename()
         node = node.encode('utf-8')
-        open(filename, 'wb').write(lz4.frame.compress(node))
+        with open(filename, 'wb') as f:
+            f.write(lz4.frame.compress(node))
 
 
 class HTTPTransaction(CachedXMLNode):

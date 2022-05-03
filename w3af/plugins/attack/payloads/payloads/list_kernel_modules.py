@@ -12,7 +12,7 @@ class list_kernel_modules(Payload):
 
         def parse_module_info(modules_file):
             info = re.findall(
-                '(.*?)\s(\d{0,6}) \d\d? (.*?),? -?\s?Live', modules_file)
+                r'(.*?)\s(\d{0,6}) \d\d? (.*?),? -?\s?Live', modules_file)
             return info
 
         for info in parse_module_info(self.shell.read('/proc/modules')):

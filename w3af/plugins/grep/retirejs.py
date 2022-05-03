@@ -240,7 +240,8 @@ class retirejs(GrepPlugin):
             return False
 
         retire_version_fd.close()
-        current_retire_version = open(retire_version_fd.name).read()
+        with open(retire_version_fd.name) as f:
+            current_retire_version = f.read()
         self._remove_file(retire_version_fd.name)
 
         if current_retire_version.startswith(self.RETIRE_VERSION):

@@ -15,14 +15,14 @@ class apache_root_directory(Payload):
         directory = []
 
         def parse_etc_passwd(etc_passwd, user):
-            root = re.search('(?<=' + user + ':/)(.*?)\:', etc_passwd)
+            root = re.search(r'(?<=' + user + ':/)(.*?)\:', etc_passwd)
             if root:
                 return root.group(1)
             else:
                 return ''
 
         def parse_config_file(config_file):
-            root = re.search('(?<=DocumentRoot )(.*)', config_file)
+            root = re.search(r'(?<=DocumentRoot )(.*)', config_file)
             if root:
                 return root.group(1)
             else:

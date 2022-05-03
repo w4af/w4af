@@ -23,7 +23,7 @@ class tcp(Payload):
 
         def get_username(etc_passwd, user):
             user = re.search(
-                '(\w*):(\w*):\d*:' + user, etc_passwd, re.MULTILINE)
+                r'(\w*):(\w*):\d*:' + user, etc_passwd, re.MULTILINE)
             if user:
                 return user.group(1)
             else:

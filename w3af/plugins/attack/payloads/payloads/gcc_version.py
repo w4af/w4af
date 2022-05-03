@@ -11,7 +11,7 @@ class gcc_version(Payload):
         result = {}
 
         def parse_gcc_version(proc_version):
-            gcc_version = re.search('(?<=gcc version ).*?\)', proc_version)
+            gcc_version = re.search(r'(?<=gcc version ).*?\)', proc_version)
             if gcc_version:
                 return gcc_version.group(0)
             else:

@@ -12,8 +12,8 @@ class apache_version(Payload):
         result['version'] = []
 
         def parse_apache_binary(binary):
-            version = re.search('(?<=/build/buildd/)(.*?)/', binary)
-            version2 = re.search('(?<=Apache)/(\d\.\d\.\d*)(.*?) ', binary)
+            version = re.search(r'(?<=/build/buildd/)(.*?)/', binary)
+            version2 = re.search(r'(?<=Apache)/(\d\.\d\.\d*)(.*?) ', binary)
             if version and version2:
                 return [version.group(1), version2.group(1)]
             elif version:
