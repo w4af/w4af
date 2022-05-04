@@ -7,7 +7,7 @@ from utils.utils import (get_first_timestamp,
                          get_line_epoch)
 
 
-CACHE_RATE = re.compile('The 404 cache has a (\d*).*? % hit rate')
+CACHE_RATE = re.compile(r'The 404 cache has a (\d*).*? % hit rate')
 
 
 def get_not_found_cache_rate_data(scan_log_filename, scan):

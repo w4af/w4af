@@ -120,6 +120,8 @@ class MacOSX(Platform):
 
         #check if scapy is correctly installed/working on OSX
         try:
+            # This will generate a CryptographyDeprecationWarning on recent versions
+            # of python because of the deprecation of ciphers used by scapy
             from scapy.all import traceroute
         except ImportError:
             # The user just needs to work on his dependencies.

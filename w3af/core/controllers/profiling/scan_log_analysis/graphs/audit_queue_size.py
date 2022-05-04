@@ -6,7 +6,7 @@ from utils.utils import (get_first_timestamp,
                          get_last_timestamp,
                          get_line_epoch)
 
-AUDITOR_DISK_DICT = re.compile('The current AuditorIn DiskDict size is (\d*).')
+AUDITOR_DISK_DICT = re.compile(r'The current AuditorIn DiskDict size is (\d*).')
 
 
 def get_queue_size_audit_data(scan_log_filename, scan):

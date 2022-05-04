@@ -57,7 +57,7 @@ class TestCookieHandler(unittest.TestCase):
         else:
             return 200, headers, 'Cookie not sent'
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_low_level(self):
 
         httpretty.register_uri(httpretty.GET,

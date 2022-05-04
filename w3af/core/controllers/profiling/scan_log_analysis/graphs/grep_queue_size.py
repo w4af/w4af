@@ -6,7 +6,7 @@ from utils.utils import (get_first_timestamp,
                          get_last_timestamp,
                          get_line_epoch)
 
-GREP_DISK_DICT = re.compile('The current GrepIn DiskDict size is (\d*)\.')
+GREP_DISK_DICT = re.compile(r'The current GrepIn DiskDict size is (\d*)\.')
 
 
 def get_queue_size_grep_data(scan_log_filename, scan):

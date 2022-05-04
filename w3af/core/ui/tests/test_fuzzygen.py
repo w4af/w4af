@@ -26,13 +26,13 @@ from w3af.core.ui.gui.tools.helpers.fuzzygen import FuzzyGenerator, FuzzyError
 class TestAll(unittest.TestCase):
     def test_simple_doubledollar(self):
         fg = FuzzyGenerator(r"Hola \$mundo\ncruel", "")
-        self.assertEqual(fg.sane1, ["Hola $mundo\ncruel"])
+        self.assertEqual(fg.sane1, ["Hola $mundo\\ncruel"])
 
         fg = FuzzyGenerator(r"Hola \$mundo\ncruel\$", "")
-        self.assertEqual(fg.sane1, ["Hola $mundo\ncruel$"])
+        self.assertEqual(fg.sane1, ["Hola $mundo\\ncruel$"])
 
         fg = FuzzyGenerator(r"Hola \$mundo\ncruel\$asdfg\$\$gh", "")
-        self.assertEqual(fg.sane1, ["Hola $mundo\ncruel$asdfg$$gh"])
+        self.assertEqual(fg.sane1, ["Hola $mundo\\ncruel$asdfg$$gh"])
 
     def test_quantities(self):
         fg = FuzzyGenerator("$range(2)$ dnd$'as'$", "pp")

@@ -6,7 +6,7 @@ from utils.utils import (get_first_timestamp,
                          get_last_timestamp,
                          get_line_epoch)
 
-CRAWLINFRA_DISK_DICT = re.compile('The current CrawlInfraIn DiskDict size is (\d*).')
+CRAWLINFRA_DISK_DICT = re.compile(r'The current CrawlInfraIn DiskDict size is (\d*).')
 
 
 def get_queue_size_crawl_data(scan_log_filename, scan):

@@ -51,13 +51,13 @@ class FileSeekBloomFilter(GenericBloomFilter):
         self.num_chars = (self.num_bits + 7) // 8
 
         self._file_name = temp_file
-        file_handler = open(self._file_name, 'wb')
-        file_handler.write(python2x3.null_byte * self.num_chars) 
-        file_handler.flush()
+        with open(self._file_name, 'wb') as file_handler:
+            file_handler.write(python2x3.null_byte * self.num_chars)
+            file_handler.flush()
         
-        file_handler = open(self._file_name, 'r+b')
-        self._mmapped_file = mmap.mmap(file_handler.fileno(), 0)
-        self._mmapped_file.seek(0)
+        with open(self._file_name, 'r+b') as file_handler:
+            self._mmapped_file = mmap.mmap(file_handler.fileno(), 0)
+            self._mmapped_file.seek(0)
         
         random.seed(42)
         self.hash_seeds = ([str(random.getrandbits(32)).encode('utf-8') for _ in

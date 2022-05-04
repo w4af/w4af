@@ -190,3 +190,4 @@ class TestOutputManager(unittest.TestCase):
         om.manager.process_all_messages()
 
         plugin_action.assert_called_once_with(msg.encode('utf-8'))
+        _pool.close()
