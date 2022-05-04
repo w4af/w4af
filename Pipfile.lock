@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "68d474620dbb2850da03a7cd3ea5c2f8ca19f3fa8e500762ce8d0162b81724a6"
+            "sha256": "bc5d88f6efbba6e6b39ab367bd021cb1da7df3934f42cad4384c8a307b072b63"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1595,7 +1595,7 @@
         "vulndb": {
             "editable": true,
             "git": "https://github.com/codders/vulndb-python-sdk",
-            "ref": "72500c6f0ef82acb425bd90b84e5613beed284f5"
+            "ref": "bee4f4f5222741a8119e7e214de83b340d44fb27"
         },
         "vulners": {
             "hashes": [

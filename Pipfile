@@ -69,6 +69,7 @@ python_version = "3.9"
 [packages.vulndb]
 git = "https://github.com/codders/vulndb-python-sdk"
 editable = true
+ref = "bee4f4f5222741a8119e7e214de83b340d44fb27"
 
 [packages.darts_util_lru]
 git = "https://github.com/codders/DartsPyLRU"

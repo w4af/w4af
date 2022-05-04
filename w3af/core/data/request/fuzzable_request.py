@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import base64
 import hashlib
 import collections
+from collections.abc import Iterable
 
 from itertools import chain
 from urllib.parse import unquote, quote, quote_plus
@@ -455,7 +456,7 @@ class FuzzableRequest(RequestMixIn, DiskItem):
         if headers is None:
             raise TypeError('headers should not be null')
 
-        if not isinstance(headers, collections.Iterable):
+        if not isinstance(headers, Iterable):
             raise TypeError(TYPE_ERROR % ('_force_fuzzing_headers', 'iterable'))
 
         self._force_fuzzing_headers = set(headers)
