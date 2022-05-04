@@ -32,6 +32,16 @@ from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_list import OptionList
 from w3af.core.data.options.option_types import STRING
 
+class ClamdConnection:
+    def __init__(self, socket_name):
+        self.socket_name = socket_name
+
+    def __enter__(self):
+        self.socket = pyclamd.ClamdUnixSocket(filename=self.socket_name)
+        return self.socket
+
+    def __exit__(self):
+        self.socket.shutdown()
 
 class clamav(GrepPlugin):
     """
@@ -111,25 +121,17 @@ class clamav(GrepPlugin):
         :return: True if it was possible to connect to the configured socket
         """
         try:
-            cd = self._get_connection()
-            return cd.ping() is True
+            with ClamdConnection(self._clamd_socket) as cd:
+                return cd.ping() is True
         except:
             return False
-    
-    def _get_connection(self):
-        """
-        :return: A different connection for each time you call the method.
-                 Thought about having a connection pool, but it doesn't make
-                 much sense; plus it adds complexity due to the threads.
-        """
-        return pyclamd.ClamdUnixSocket(filename=self._clamd_socket)
-    
+
     def _get_clamd_version(self):
         """
         :return: A string which contains the ClamAV version.
         """
-        cd = self._get_connection()
-        return cd.version()
+        with ClamdConnection(self._clamd_socket) as cd:
+            return cd.version()
     
     def _scan_http_response(self, request, response):
         """
@@ -143,8 +145,8 @@ class clamav(GrepPlugin):
         body = str(response.get_body())
 
         try:
-            cd = self._get_connection()
-            result_dict = cd.scan_stream(body)
+            with ClamdConnection(self._clamd_socket) as cd:
+                result_dict = cd.scan_stream(body)
         except Exception as e:
             msg = ('The ClamAV plugin failed to connect to clamd using'
                    ' the provided unix socket: "%s". Please verify your'
