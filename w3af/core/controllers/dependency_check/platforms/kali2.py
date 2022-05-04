@@ -29,6 +29,6 @@ class Kali2(Kali):
 
     @staticmethod
     def is_current_platform():
-        return 'Kali' in distro.linux_distribution() and '2.0' in distro.linux_distribution()
+        return 'Kali' in distro.name() and '2.0' in distro.version()
 
 

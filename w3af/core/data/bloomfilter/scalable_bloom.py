@@ -115,3 +115,8 @@ class ScalableBloomFilter(object):
     def __len__(self):
         """Returns the total number of elements stored in this SBF"""
         return sum([len(f) for f in self.filters])
+
+    def close(self):
+        if hasattr(self.filter_impl, 'close'):
+            for filt in self.filters:
+                filt.close()

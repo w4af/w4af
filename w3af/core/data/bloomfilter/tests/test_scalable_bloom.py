@@ -38,6 +38,9 @@ class WrappedFileSeekBloomFilter(GenericBloomFilter):
         temp_file = self.get_temp_file()
         self.bf = FileSeekBloomFilter(capacity, error_rate, temp_file)
 
+    def close(self):
+        self.bf.close()
+
 
 @attr('smoke')
 class TestScalableBloomFilterLargeCmmap(GenericFilterTest):
@@ -49,6 +52,9 @@ class TestScalableBloomFilterLargeCmmap(GenericFilterTest):
         self.filter = ScalableBloomFilter(
             mode=ScalableBloomFilter.LARGE_SET_GROWTH)
 
+    def tearDown(self):
+        self.filter.close()
+
 
 class TestScalableBloomfilterSmallCmmap(GenericFilterTest):
 
@@ -58,6 +64,9 @@ class TestScalableBloomfilterSmallCmmap(GenericFilterTest):
         super(TestScalableBloomfilterSmallCmmap, self).setUp()
         self.filter = ScalableBloomFilter(
             mode=ScalableBloomFilter.LARGE_SET_GROWTH)
+
+    def tearDown(self):
+        self.filter.close()
 
 
 class TestScalableBloomFilterLargeSeekFile(GenericFilterTest):
@@ -70,6 +79,9 @@ class TestScalableBloomFilterLargeSeekFile(GenericFilterTest):
             mode=ScalableBloomFilter.LARGE_SET_GROWTH,
             filter_impl=WrappedFileSeekBloomFilter)
 
+    def tearDown(self):
+        self.filter.close()
+
 
 @attr('smoke')
 class TestScalableBloomfilterSmallSeekFile(GenericFilterTest):
@@ -81,3 +93,6 @@ class TestScalableBloomfilterSmallSeekFile(GenericFilterTest):
         self.filter = ScalableBloomFilter(
             mode=ScalableBloomFilter.LARGE_SET_GROWTH,
             filter_impl=WrappedFileSeekBloomFilter)
+
+    def tearDown(self):
+        self.filter.close()

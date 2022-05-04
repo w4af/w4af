@@ -42,4 +42,4 @@ class CentOS65(CentOS):
 
     @staticmethod
     def is_current_platform():
-        return 'centos' in distro.linux_distribution() and '6.5' in distro.linux_distribution()
+        return 'centos' in distro.id() and '6.5' in distro.version()

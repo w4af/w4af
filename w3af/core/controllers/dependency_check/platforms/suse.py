@@ -65,4 +65,4 @@ class SuSE(Platform):
 
     @staticmethod
     def is_current_platform():
-        return 'SuSE' in distro.linux_distribution()
+        return 'SuSE' in distro.name()

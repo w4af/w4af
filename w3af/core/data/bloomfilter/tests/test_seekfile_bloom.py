@@ -35,6 +35,9 @@ class TestFileSeekBloomFilterLarge(GenericFilterTest):
         self.filter = FileSeekBloomFilter(self.CAPACITY, self.ERROR_RATE,
                                           temp_file)
 
+    def tearDown(self):
+        self.filter.close()
+
 
 class TestFileSeekBloomFilterSmall(GenericFilterTest):
 
@@ -46,3 +49,6 @@ class TestFileSeekBloomFilterSmall(GenericFilterTest):
         temp_file = GenericBloomFilter.get_temp_file()
         self.filter = FileSeekBloomFilter(self.CAPACITY, self.ERROR_RATE,
                                           temp_file)
+
+    def tearDown(self):
+        self.filter.close()

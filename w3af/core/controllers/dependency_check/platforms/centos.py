@@ -45,4 +45,4 @@ class CentOS(Fedora):
 
     @staticmethod
     def is_current_platform():
-        return 'redhat' in distro.linux_distribution()
+        return 'redhat' in distro.id()

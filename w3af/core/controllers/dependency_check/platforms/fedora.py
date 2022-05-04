@@ -65,4 +65,4 @@ class Fedora(Platform):
 
     @staticmethod
     def is_current_platform():
-        return 'fedora' in distro.linux_distribution()
+        return 'fedora' in distro.id()

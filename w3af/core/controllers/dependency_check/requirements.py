@@ -46,7 +46,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('ntlm', 'python-ntlm3', '1.0.2'),
                      PIPDependency('Halberd', 'halberd', '0.2.5'),
                      PIPDependency('darts.lib.utils', 'darts-util-lru', '0.5'),
-                     PIPDependency('jinja2', 'Jinja2', '3.1.1'),
+                     PIPDependency('jinja2', 'Jinja2', '3.1.2'),
                      PIPDependency('vulndb', 'vulndb', '0.1.3'),
                      PIPDependency('markdown', 'markdown', '3.3.6'),
 
@@ -65,7 +65,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
 
                      # Only used by the REST API, but in the future the console
                      # and GUI will consume it so it's ok to put this here
-                     PIPDependency('Flask', 'Flask', '2.1.1'),
+                     PIPDependency('Flask', 'Flask', '2.1.2'),
                      PIPDependency('yaml', 'PyYAML', '6.0'),
 
                      # For language detection
@@ -73,10 +73,10 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('numpy', 'numpy', '1.22.3'),
                      PIPDependency('polyglot', 'polyglot', '16.7.4'),
                      PIPDependency('pycld2', 'pycld2', '0.41'),
-                     PIPDependency('pyicu', 'pyicu', '2.8.1'),
+                     PIPDependency('pyicu', 'pyicu', '2.9'),
 
                      # tldextract extracts the tld from any domain name
-                     PIPDependency('tldextract', 'tldextract', '3.2.0'),
+                     PIPDependency('tldextract', 'tldextract', '3.2.1'),
 
                      # pebble multiprocessing
                      PIPDependency('pebble', 'pebble', '4.6.3'),

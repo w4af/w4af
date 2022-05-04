@@ -15,7 +15,7 @@ class apache_root_directory(Payload):
         directory = []
 
         def parse_etc_passwd(etc_passwd, user):
-            root = re.search(r'(?<=' + user + ':/)(.*?)\:', etc_passwd)
+            root = re.search(r'(?<=' + user + r':/)(.*?)\:', etc_passwd)
             if root:
                 return root.group(1)
             else:

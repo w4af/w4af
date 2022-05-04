@@ -29,4 +29,4 @@ class ElementaryOS02(Ubuntu1204):
 
     @staticmethod
     def is_current_platform():
-        return '"elementary OS"' in distro.linux_distribution() and '0.2' in distro.linux_distribution()
+        return '"elementary OS"' in distro.name() and '0.2' in distro.version()

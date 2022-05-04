@@ -489,9 +489,8 @@ class profile(object):
             self.profile_file_name = file_name
 
         try:
-            file_handler = open(self.profile_file_name, 'w')
+            with open(self.profile_file_name, 'w') as file_handler:
+                self._config.write(file_handler)
         except:
             msg = 'Failed to open profile file: "%s"'
             raise BaseFrameworkException(msg % self.profile_file_name)
-        else:
-            self._config.write(file_handler)

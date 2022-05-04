@@ -48,5 +48,5 @@ class Kali(Ubuntu1204):
 
     @staticmethod
     def is_current_platform():
-        return 'debian' in distro.linux_distribution() and 'kali' in distro.linux_distribution()
+        return 'debian' in distro.id() and 'kali' in distro.name()
 

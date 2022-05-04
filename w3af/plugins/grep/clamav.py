@@ -40,7 +40,7 @@ class ClamdConnection:
         self.socket = pyclamd.ClamdUnixSocket(filename=self.socket_name)
         return self.socket
 
-    def __exit__(self):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.socket.shutdown()
 
 class clamav(GrepPlugin):

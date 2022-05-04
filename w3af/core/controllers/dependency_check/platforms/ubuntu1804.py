@@ -43,5 +43,5 @@ class Ubuntu1804(Ubuntu1604):
 
     @staticmethod
     def is_current_platform():
-        return 'Ubuntu' in distro.linux_distribution() and '18.04' in distro.linux_distribution()
+        return 'Ubuntu' in distro.name() and '18.04' in distro.version()
 

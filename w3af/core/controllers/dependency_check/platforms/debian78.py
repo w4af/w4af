@@ -29,5 +29,4 @@ class Debian78(Ubuntu1204):
 
     @staticmethod
     def is_current_platform():
-        dist_name, dist_version, _ = distro.linux_distribution()
-        return 'debian' == dist_name and '7.8' == dist_version
+        return 'debian' == distro.id() and '7.8' == distro.version()
