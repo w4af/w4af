@@ -24,6 +24,8 @@ import pyclamd
 
 from collections import namedtuple
 
+from pyclamd import ConnectionError
+
 import w3af.core.controllers.output_manager as om
 
 from w3af.core.controllers.plugins.grep_plugin import GrepPlugin
@@ -41,7 +43,10 @@ class ClamdConnection:
         return self.socket
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.socket.shutdown()
+        try:
+            self.socket.shutdown()
+        except ConnectionError:
+            self.socket._close_socket()
 
 class clamav(GrepPlugin):
     """
