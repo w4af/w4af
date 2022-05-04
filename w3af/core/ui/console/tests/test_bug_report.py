@@ -104,7 +104,7 @@ class TestConsoleBugReport(ConsoleTestHelper):
         expected = ('During the current scan (with id: ',
                     'A "Exception" exception was found while running crawl.failing_spider on ',
                     'New URL found by failing_spider plugin: ',
-                    '    [1/1] Bug with id 0 reported at https://github.com/andresriancho/w3af/issues/')
+                    '    [1/1] Bug with id 0 reported at https://github.com/w4af/w4af/issues/')
 
         self.console = ConsoleUI(commands=commands_to_run, do_upd=False)
         self.console.sh()
@@ -123,14 +123,14 @@ class TestConsoleBugReport(ConsoleTestHelper):
         self.console._w3af.exception_handler.clear()
         
         # Close issue from github
-        issue_id_re = re.compile('https://github.com/andresriancho/w3af/issues/(\d*)')
+        issue_id_re = re.compile(r'https://github.com/w4af/w4af/issues/(\d*)')
         for line in self._mock_stdout.messages:
             mo = issue_id_re.search(line)
             if mo is not None:
                 issue_id = mo.group(1)
                 
                 gh = Github(OAUTH_TOKEN)
-                repo = gh.get_user('andresriancho').get_repo('w3af')
+                repo = gh.get_user('w4af').get_repo('w4af')
                 issue = repo.get_issue(int(issue_id))
                 issue.edit(state='closed')                 
                 

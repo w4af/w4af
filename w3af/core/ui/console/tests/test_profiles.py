@@ -189,7 +189,7 @@ class TestProfilesConsoleUI(ConsoleTestHelper):
         # Extract the temp file from the plugin configuration and read it
         #
         for line in self._mock_stdout.messages:
-            match = re.search('(w3af-.*-sc\.dat)', line)
+            match = re.search(r'(w3af-.*-sc\.dat)', line)
             if not match:
                 continue
 

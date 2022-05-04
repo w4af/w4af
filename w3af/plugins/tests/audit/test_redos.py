@@ -58,7 +58,7 @@ class TestREDoS(PluginTest):
     }
 
     MOCK_RESPONSES = [
-              ReDosMockResponse(url=re.compile('http://httpretty/re\?redos=.*'),
+              ReDosMockResponse(url=re.compile(r'http://httpretty/re\?redos=.*'),
                                 body='dummy'),
     ]
 
@@ -85,7 +85,7 @@ class TestREDoSNegative(PluginTest):
     }
 
     MOCK_RESPONSES = [
-            MockResponse(url=re.compile('http://httpretty/re\?redos=.*'),
+            MockResponse(url=re.compile(r'http://httpretty/re\?redos=.*'),
                          body='dummy',
                          delay=0.1),
     ]

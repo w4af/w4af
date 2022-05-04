@@ -25,13 +25,13 @@ from w3af.core.ui.gui.tools.helpers.fuzzygen import FuzzyGenerator, FuzzyError
 
 class TestAll(unittest.TestCase):
     def test_simple_doubledollar(self):
-        fg = FuzzyGenerator("Hola \$mundo\ncruel", "")
+        fg = FuzzyGenerator(r"Hola \$mundo\ncruel", "")
         self.assertEqual(fg.sane1, ["Hola $mundo\ncruel"])
 
-        fg = FuzzyGenerator("Hola \$mundo\ncruel\$", "")
+        fg = FuzzyGenerator(r"Hola \$mundo\ncruel\$", "")
         self.assertEqual(fg.sane1, ["Hola $mundo\ncruel$"])
 
-        fg = FuzzyGenerator("Hola \$mundo\ncruel\$asdfg\$\$gh", "")
+        fg = FuzzyGenerator(r"Hola \$mundo\ncruel\$asdfg\$\$gh", "")
         self.assertEqual(fg.sane1, ["Hola $mundo\ncruel$asdfg$$gh"])
 
     def test_quantities(self):
@@ -68,7 +68,7 @@ class TestAll(unittest.TestCase):
 
     def test_inside_doubledollar(self):
         fg = FuzzyGenerator(
-            "GET http://localhost/$['aaa\$b', 'b\$ccc']$ HTTP/1.0", "")
+            r"GET http://localhost/$['aaa\$b', 'b\$ccc']$ HTTP/1.0", "")
         self.assertEqual(list(fg.generate()), [
             ("GET http://localhost/aaa$b HTTP/1.0", ""),
             ("GET http://localhost/b$ccc HTTP/1.0", ""),

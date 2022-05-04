@@ -27,7 +27,7 @@ except ImportError:
     # this is to easy the test when executing this file directly
     BaseFrameworkException = Exception
 
-REPP = re.compile("\$.*?\$")
+REPP = re.compile(r"\$.*?\$")
 
 
 class FuzzyError(BaseFrameworkException):
@@ -35,7 +35,7 @@ class FuzzyError(BaseFrameworkException):
 
 
 class FuzzyGenerator(object):
-    """Handles two texts with the fuzzy syntax.
+    r"""Handles two texts with the fuzzy syntax.
 
     Syntax rules:
         - the "$" is the delimiter
@@ -111,7 +111,7 @@ class FuzzyGenerator(object):
         #
 
         # remove the \$
-        txt = txt.replace("\$", "\x00")
+        txt = txt.replace(r"\$", "\x00")
 
         # separate sane texts from what is to be replaced
         toreplace = REPP.findall(txt)

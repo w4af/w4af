@@ -43,8 +43,8 @@ class TestTookHelper(unittest.TestCase):
             sent_message = om_mock.debug.call_args[0][0]
 
             self.assertRegex(sent_message,
-                                     'plugin_name.method_name\(test="yes",did="ML7aEYsa"\)'
-                                     ' took .*?s to run')
+                                     r'plugin_name.method_name\(test="yes",did="ML7aEYsa"\)'
+                                     r' took .*?s to run')
 
     def test_took_with_rtt(self):
         debugging_id = 'ML7aEYsa'
@@ -65,5 +65,5 @@ class TestTookHelper(unittest.TestCase):
             sent_message = om_mock.debug.call_args[0][0]
 
             self.assertRegex(sent_message,
-                                     'plugin_name.method_name\(test="yes",did="ML7aEYsa"\)'
-                                     ' took .*?s to run \(1.80s .*% sending HTTP requests\)')
+                                     r'plugin_name.method_name\(test="yes",did="ML7aEYsa"\)'
+                                     r' took .*?s to run \(1.80s .*% sending HTTP requests\)')

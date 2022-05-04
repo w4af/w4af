@@ -4,8 +4,8 @@ from utils.utils import epoch_to_string
 from utils.output import KeyValueOutput
 from utils.output import ListOutput, ListOutputItem
 
-SCAN_TOOK_RE = re.compile('took (\d*\.\d\d)s to run')
-PLUGIN_TOOK_RE = re.compile('\] (.*?)\.(grep|audit|discover)\(.*?\) took (.*?)s to run')
+SCAN_TOOK_RE = re.compile(r'took (\d*\.\d\d)s to run')
+PLUGIN_TOOK_RE = re.compile(r'\] (.*?)\.(grep|audit|discover)\(.*?\) took (.*?)s to run')
 
 
 def show_generic_spent_time(scan, name, must_have):

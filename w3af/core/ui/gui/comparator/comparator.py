@@ -161,12 +161,12 @@ class Prefs(object):
     color_edited_bg = "gray90"
     color_edited_fg = "Black"
     regexes = [
-        "CVS keywords\t0\t\$\\w+(:[^\\n$]+)?\$",
-        "C++ comment\t0\t//.*",
-        "C comment\t0\t/\*.*?\*/",
-        "All whitespace\t0\t[ \\t\\r\\f\\v]*",
-        "Leading whitespace\t0\t^[ \\t\\r\\f\\v]*",
-        "Script comment\t0\t#.*",
+        r"CVS keywords\t0\t\$\\w+(:[^\\n$]+)?\$",
+        r"C++ comment\t0\t//.*",
+        r"C comment\t0\t/\*.*?\*/",
+        r"All whitespace\t0\t[ \\t\\r\\f\\v]*",
+        r"Leading whitespace\t0\t^[ \\t\\r\\f\\v]*",
+        r"Script comment\t0\t#.*",
     ]
     tab_size = 4
     supply_newline = 1

@@ -324,8 +324,8 @@ class Test404FuzzyStringMatch(unittest.TestCase):
         It was slower, but no improvement on fail rate.
         """
         def tokenized_set(str_a, str_b, ratio):
-            set_a = set(re.split('(\w+)', str_a))
-            set_b = set(re.split('(\w+)', str_b))
+            set_a = set(re.split(r'(\w+)', str_a))
+            set_b = set(re.split(r'(\w+)', str_b))
             maxl = max(len(set_a), len(set_b))
             return (len(set_a.intersection(set_b)) / maxl) > ratio
 

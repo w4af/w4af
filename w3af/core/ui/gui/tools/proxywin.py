@@ -188,7 +188,7 @@ class ProxiedRequests(entries.RememberingWindow):
 
         d = _("Ignored extensions")
         h = _('Filename extensions that will NOT be intercepted')
-        default_value = ".*\.(gif|jpg|png|css|js|ico|swf|axd|tif)$"
+        default_value = r".*\.(gif|jpg|png|css|js|ico|swf|axd|tif)$"
         o = opt_factory("notrap", default_value, d, option_types.REGEX, help=h)
         proxy_options.add(o)
 

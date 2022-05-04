@@ -82,7 +82,7 @@ class TestAFDShortResponses(PluginTest):
 
     MOCK_RESPONSES = [MockResponse(target_url, 'hello world'),
                       MockResponse(BAD_SIG_URI, MOD_SECURITY_ANSWER, status=403),
-                      MockResponse(re.compile(target_url + '\?.*'), 'hello world')]
+                      MockResponse(re.compile(target_url + r'\?.*'), 'hello world')]
 
     def test_afd_found(self):
         cfg = self._run_configs['cfg']

@@ -36,7 +36,7 @@ GOOGLE_MSG = ('This test fails randomly based on Google\'s anti automation'
               ' protection, if it fails you should run it again in a couple of'
               ' minutes. Many consecutive failures show that our code is NOT'
               ' working anymore.')
-URL_REGEX = re.compile('((http|ftp|https)://([\w:@\-\./]*?)/[^ \n\r\t"\'<>]*)',
+URL_REGEX = re.compile(r'((http|ftp|https)://([\w:@\-\./]*?)/[^ \n\r\t"\'<>]*)',
                        re.U)
 
 

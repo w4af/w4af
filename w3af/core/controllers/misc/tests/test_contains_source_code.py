@@ -145,7 +145,7 @@ class TestContainsSourceCode(unittest.TestCase):
 
     def test_code_false_positive_ruby_04(self):
         """
-        Will not match because of the </a> before end. End requires a space (\s)
+        Will not match because of the </a> before end. End requires a space (\\s)
         before the token.
         """
         source = self.create_response('class IPs on VPS or Dedicated Server'
