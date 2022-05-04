@@ -24,7 +24,6 @@ cluster = "*"
 msgpack = "*"
 python-ntlm3 = "*"
 Jinja2 = "*"
-vulndb = "*"
 Markdown = "*"
 psutil = "*"
 ds-store = "*"
@@ -58,14 +57,18 @@ SOAPpy = "*"
 ujson = "*"
 polyglot = "*"
 numpy = "*"
-pyicu = "*"
+PyICU = "*"
 pycld2 = "*"
-morfessor = "*"
+Morfessor = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.9"
+
+[packages.vulndb]
+git = "https://github.com/codders/vulndb-python-sdk"
+editable = true
 
 [packages.darts_util_lru]
 git = "https://github.com/codders/DartsPyLRU"
