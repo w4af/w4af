@@ -43,15 +43,16 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'w3af - Web application attack and audit framework'
-copyright = '2014, Andres Riancho'
+project = 'w4af - Web application attack and audit framework'
+copyright = '2022, w4af team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = file('../../w3af/core/data/constants/version.txt').read().strip()
+with open('../../w3af/core/data/constants/version.txt', encoding='utf-8', errors='replace') as versionfile:
+     version = versionfile.read()
 # The full version, including alpha/beta/rc tags.
 release = version
 
