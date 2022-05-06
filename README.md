@@ -5,20 +5,20 @@
 web application security scanner which helps developers and penetration testers
 identify and exploit vulnerabilities in their web applications.
 
-The scanner is able to identify [200+ vulnerabilities](w3af/core/data/constants/vulns.py),
-including [Cross-Site Scripting](w3af/plugins/audit/xss.py),
-[SQL injection](w3af/plugins/audit/sqli.py) and
-[OS commanding](w3af/plugins/audit/os_commanding.py).
+The scanner is able to identify [200+ vulnerabilities](w4af/core/data/constants/vulns.py),
+including [Cross-Site Scripting](w4af/plugins/audit/xss.py),
+[SQL injection](w4af/plugins/audit/sqli.py) and
+[OS commanding](w4af/plugins/audit/os_commanding.py).
 
 ## Python3 Port Progress
 
-The original w3af code only supports python up to version 2.7. This repository is an
+The original w4af code only supports python up to version 2.7. This repository is an
 attempt to add python3 support.
 
 At time of writing, a subsection of the core tests are running and passing:
 
 ```
-nosetests -A 'not moth and not internet and not fails' -w ./w3af/core/data/ -x -v
+nosetests -A 'not moth and not internet and not fails' -w ./w4af/core/data/ -x -v
 ```
 
 You might have some limited success running scans with the current code, but very likely it will fail with mysterious errors. More updates as they become available.
@@ -34,7 +34,7 @@ python -m pip install --upgrade pipenv wheel
 pipenv install
 ```
 
-Running `pipenv shell` with then launch a shell from which it is possible to run w3af.
+Running `pipenv shell` with then launch a shell from which it is possible to run w4af.
 
 ### Node
 
