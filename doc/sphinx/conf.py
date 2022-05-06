@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# w3af - Web application attack and audit framework documentation build configuration file, created by
+# w4af - Web application attack and audit framework documentation build configuration file, created by
 # sphinx-quickstart on Fri Mar  7 15:24:37 2014.
 #
 # This file is execfile()d with the current directory set to its
