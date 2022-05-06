@@ -39,6 +39,7 @@ try:
     from w3af.core.ui.console.auto_update.auto_update import ConsoleUIUpdater
     
     from w3af.core.data.constants.disclaimer import DISCLAIMER
+    from w3af.core.data.constants.errorreports import ERRORREPORTS
     from w3af.core.data.db.startup_cfg import StartUpConfig
 
     from w3af.core.controllers.w3afCore import w3afCore
@@ -130,6 +131,32 @@ class ConsoleUI(object):
 
         if user_response == 'y' or user_response == 'yes':
             startup_cfg.accepted_disclaimer = True
+            startup_cfg.save()
+            return True
+
+        return False
+
+    def accept_errorreports(self):
+        """
+        :return: True/False depending on the user's answer to our errorreport.
+        """
+        startup_cfg = StartUpConfig()
+
+        if startup_cfg.accepted_disclaimer:
+            return True
+
+        QUESTION = 'Do you allow us sending crash reports to sentry.io [N|y] '
+        msg = ERRORREPORTS + '\n\n' + QUESTION
+        try:
+            user_response = input(msg)
+        except (KeyboardInterrupt, EOFError):
+            print('')
+            user_response = ''
+
+        user_response = user_response.lower()
+
+        if user_response == 'y' or user_response == 'yes':
+            startup_cfg.accepted_errorreports = True
             startup_cfg.save()
             return True
 

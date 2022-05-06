@@ -34,6 +34,7 @@ class StartUpConfig(object):
     Holds the configuration for the VersionMgr update/commit process
     """
     CFG_FILE = os.path.join(get_home_dir(), 'startup.conf')
+    print(CFG_FILE)
 
     ISO_DATE_FMT = '%Y-%m-%d'
     # Frequency constants
@@ -44,6 +45,7 @@ class StartUpConfig(object):
     DEFAULTS = {'auto-update': 'true', 'frequency': 'D',
                 'last-update': 'None', 'last-commit': '',
                 'accepted-disclaimer': 'false',
+                'accepted-crashreports': 'false',
                 'skip-dependencies-check': 'false',}
 
     def __init__(self, cfg_file=CFG_FILE):
@@ -55,7 +57,7 @@ class StartUpConfig(object):
         configs = self._load_cfg()
 
         (self._autoupd, self._freq, self._lastupd, self._last_commit_id,
-         self._accepted_disclaimer, self._skip_dependencies_check) = configs
+         self._accepted_disclaimer, self.crashreports, self._skip_dependencies_check) = configs
 
     ### METHODS #
     
@@ -86,6 +88,18 @@ class StartUpConfig(object):
         self._accepted_disclaimer = accepted_decision
         value = 'true' if accepted_decision else 'false'
         self._config.set(self._start_section, 'accepted-disclaimer',
+                         value)
+
+    def get_accepted_crashreports(self):
+        return self._accepted_crashreports
+
+    def set_accepted_crashreports(self, accepted_decision):
+        """
+        :param datevalue: datetime.date value
+        """
+        self._accepted_crashreports = accepted_decision
+        value = 'true' if accepted_decision else 'false'
+        self._config.set(self._start_section, 'accepted-crashreports',
                          value)
 
     def get_last_commit_id(self):
@@ -130,10 +144,12 @@ class StartUpConfig(object):
         try:
             # Read from file
             with codecs.open(self._start_cfg_file, "r", UTF8) as config_file:
+                print("_start_cfg_file" + _start_cfg_file)
                 config.read_file(config_file)
 
                 auto_upd = self._get_bool_val('auto-update')
                 accepted_disclaimer = self._get_bool_val('accepted-disclaimer')
+                accepted_crashreports= self._get_bool_val('accepted-crashreports')
                 skip_dependencies_check = self._get_bool_val('skip-dependencies-check')
 
                 freq = config.get(startsection, 'frequency', raw=True).upper()
@@ -152,9 +168,9 @@ class StartUpConfig(object):
                     lastrev = config.get(startsection, 'last-commit')
                 except TypeError:
                     lastrev = 0
-                return (auto_upd, freq, lastupd, lastrev, accepted_disclaimer, skip_dependencies_check)
+                return (auto_upd, freq, lastupd, lastrev, accepted_disclaimer, accepted_crashreports, skip_dependencies_check)
         except FileNotFoundError as fnf:
-            return (False, StartUpConfig.FREQ_DAILY, date.today() - timedelta(days=31), '', False, False)
+            return (False, StartUpConfig.FREQ_DAILY, date.today() - timedelta(days=31), '', False, False, False)
 
     def save(self):
         """
@@ -169,5 +185,6 @@ class StartUpConfig(object):
     auto_upd = property(get_auto_upd)
     last_commit_id = property(get_last_commit_id, set_last_commit_id)
     accepted_disclaimer = property(get_accepted_disclaimer, set_accepted_disclaimer)
+    accepted_crashreports = property(get_accepted_crashreports, set_accepted_crashreports)
     last_upd = property(get_last_upd, set_last_upd)
     
