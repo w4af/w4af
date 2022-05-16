@@ -60,6 +60,7 @@ numpy = "*"
 PyICU = "*"
 pycld2 = "*"
 Morfessor = "*"
+coverage = "*"
 
 [dev-packages]
 

@@ -48,7 +48,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('darts.lib.utils', 'darts-util-lru', '0.5'),
                      PIPDependency('jinja2', 'Jinja2', '3.1.2'),
                      PIPDependency('vulndb', 'vulndb', '0.1.3'),
-                     PIPDependency('markdown', 'markdown', '3.3.6'),
+                     PIPDependency('markdown', 'markdown', '3.3.7'),
 
                      # This was used for testing, but now it's required for
                      # regular users too, do not remove!
@@ -76,7 +76,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('pyicu', 'pyicu', '2.9'),
 
                      # tldextract extracts the tld from any domain name
-                     PIPDependency('tldextract', 'tldextract', '3.2.1'),
+                     PIPDependency('tldextract', 'tldextract', '3.3.0'),
 
                      # pebble multiprocessing
                      PIPDependency('pebble', 'pebble', '4.6.3'),

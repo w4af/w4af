@@ -78,7 +78,7 @@ def query_byte_string(string):
         string = string.encode('utf-8')
     if not isinstance(string, bytes):
         raise TypeError("Unknown type %s for query byte string" % type(string))
-    return re.sub(b'\\\\x(\d\d)', lambda x: bytes.fromhex(x[1].decode('utf-8')), string)
+    return re.sub(b'\\\\x(\\d\\d)', lambda x: bytes.fromhex(x[1].decode('utf-8')), string)
 
 def parse_qs(qstr, ignore_exc=True, encoding=DEFAULT_ENCODING):
     """
