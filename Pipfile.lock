@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3d1c2384f20462c226c119f2efaf297cb855f07b34298708b33a3dd6bb69d55d"
+            "sha256": "8de17b6710bc468ec5963abd4a0c8f1082335620550addba7e9b4e3877c93fa2"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -293,8 +293,7 @@
         },
         "darts-util-lru": {
             "editable": true,
-            "git": "https://github.com/codders/DartsPyLRU",
-            "ref": "e88070ca1596f96135722cc69754f4de0b804045"
+            "git": "https://github.com/w4af/DartsPyLRU"
         },
         "defusedxml": {
             "hashes": [
@@ -385,7 +384,7 @@
         },
         "halberd": {
             "editable": true,
-            "git": "https://github.com/codders/halberd"
+            "git": "https://github.com/w4af/halberd"
         },
         "hpack": {
             "hashes": [
@@ -413,6 +412,7 @@
                 "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff",
                 "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"
             ],
+            "markers": "python_version >= '3'",
             "version": "==3.3"
         },
         "importlib-metadata": {
@@ -726,7 +726,7 @@
         },
         "mitmproxy": {
             "editable": true,
-            "git": "https://github.com/codders/mitmproxy",
+            "git": "https://github.com/w4af/mitmproxy",
             "ref": "25e49bcb3996a623fee7e7dbad52b12d46e5812d"
         },
         "morfessor": {
@@ -788,7 +788,7 @@
         },
         "netlib": {
             "editable": true,
-            "git": "https://github.com/codders/netlib",
+            "git": "https://github.com/w4af/netlib",
             "ref": "f9e8bda8c83878e0a758e6ea2f0a4f2043de7a8c"
         },
         "nltk": {
@@ -1640,7 +1640,7 @@
         },
         "vulndb": {
             "editable": true,
-            "git": "https://github.com/codders/vulndb-python-sdk",
+            "git": "https://github.com/w4af/vulndb-python-sdk",
             "ref": "bee4f4f5222741a8119e7e214de83b340d44fb27"
         },
         "vulners": {

@@ -68,22 +68,22 @@ coverage = "*"
 python_version = "3.9"
 
 [packages.vulndb]
-git = "https://github.com/codders/vulndb-python-sdk"
+git = "https://github.com/w4af/vulndb-python-sdk"
 editable = true
 ref = "bee4f4f5222741a8119e7e214de83b340d44fb27"
 
 [packages.darts_util_lru]
-git = "https://github.com/codders/DartsPyLRU"
-editable = true
-
-[packages.mitmproxy]
-git = "https://github.com/codders/mitmproxy"
+git = "https://github.com/w4af/DartsPyLRU"
 editable = true
 
 [packages.netlib]
-git = "https://github.com/codders/netlib"
+git = "https://github.com/w4af/netlib"
 editable = true
 
 [packages.halberd]
-git = "https://github.com/codders/halberd"
+git = "https://github.com/w4af/halberd"
+editable = true
+
+[packages.mitmproxy]
+git = "https://github.com/w4af/mitmproxy"
 editable = true
