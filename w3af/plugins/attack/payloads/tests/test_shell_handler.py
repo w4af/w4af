@@ -50,18 +50,20 @@ class TestShellHandler(unittest.TestCase):
 
     def test_get_shell_code_no_extension(self):
         shells = get_shell_code('', self.TEST_CMD)
+        shells.sort(key=lambda x: x[1])
         
         self.assertEqual(len(shells), 2)
-        py_shell_code, lang, shellcode_generator = shells[0]
+        py_shell_code, lang, shellcode_generator = shells[1]
         
         self.assertEqual(lang, 'py')
         self.assertIn('import ', py_shell_code)
 
     def test_get_shell_code_invalid_extension(self):
         shells = get_shell_code('123456', self.TEST_CMD)
-        
+        shells.sort(key=lambda x: x[1])
+
         self.assertEqual(len(shells), 2)
-        py_shell_code, lang, shellcode_generator = shells[0]
+        py_shell_code, lang, shellcode_generator = shells[1]
         
         self.assertEqual(lang, 'py')
         self.assertIn('import ', py_shell_code)
