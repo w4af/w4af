@@ -50,7 +50,7 @@ class bing(SearchEngine):
         This method is based from the msn.py file from the massive enumeration
         toolset, coded by pdp and released under GPL v2.
         """
-        url = 'http://www.bing.com/search?'
+        url = 'https://www.bing.com/?'
         query = urllib.parse.urlencode({'q': query,
                                   'first': start + 1,
                                   'FORM': 'PERE'})

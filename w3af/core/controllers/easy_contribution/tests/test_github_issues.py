@@ -43,11 +43,11 @@ class TestGithubIssues(unittest.TestCase):
         ticket_id, ticket_url = gh.report_bug(summary, userdesc)
         self.assertIsInstance(ticket_id, int)
         self.assertTrue(ticket_url.startswith(
-            'https://github.com/andresriancho/w3af/issues/'))
+            'https://github.com/w4af/w4af/issues/'))
         
         # Remove the ticket I've just created
         gh = Github(OAUTH_TOKEN)
-        repo = gh.get_user('andresriancho').get_repo('w3af')
+        repo = gh.get_organization('w4af').get_repo('w4af')
         issue = repo.get_issue(ticket_id)
         issue.edit(state='closed')
 
