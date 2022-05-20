@@ -51,7 +51,7 @@ OAUTH_AUTH_FAILED = """Failed to authenticate with github.com , please try\
  current w3af version is outdated and is not allowed to report any new\
  issues."""
 
-TICKET_URL_FMT = 'https://github.com/andresriancho/w3af/issues/%s'
+TICKET_URL_FMT = 'https://github.com/w4af/w4af/issues/%s'
 
 #
 # There is no way to report issues to github in an anonymous way, so the second
@@ -64,7 +64,7 @@ TICKET_URL_FMT = 'https://github.com/andresriancho/w3af/issues/%s'
 #
 # Password stored in lastpass. The token should never expire.
 #
-OAUTH_TOKEN = 'bab698f08a4fd15931c4aa44ae399666552ef9e5'
+OAUTH_TOKEN = 'aL9iY3QLUOVI3v0SZtwQgC5zBJjOvAxxsFeQ_phg'
 OAUTH_TOKEN = OAUTH_TOKEN[::-1]
 
 
@@ -120,7 +120,7 @@ class GithubIssues(object):
                                                      tback, fname, plugins,
                                                      autogen, email)
         
-        w3af_repo = self.gh.get_user('andresriancho').get_repo('w3af')
+        w3af_repo = self.gh.get_user('w4af').get_repo('w4af')
         labels = []
         # Github doesn't allow users that do NOT own the repository to assign
         # labels to new issues
