@@ -72,7 +72,7 @@ def fuzzy_equal(a_str, b_str, threshold=0.6):
 
     # Bad, we can't optimize anything better, just calculate the relative distance
     distance = relative_distance(a_str, b_str)
-    return distance > threshold
+    return distance >= threshold
 
 
 def fuzzy_equal_return_distance(a_str, b_str, threshold=0.6):
@@ -164,6 +164,10 @@ def relative_distance(a_str, b_str):
     """
     a_split = split_by_sep(a_str)
     b_split = split_by_sep(b_str)
+    if len(a_split) == 1:
+        a_split = a_split[0]
+    if len(b_split) == 1:
+        b_split = b_split[0]
 
     return difflib.SequenceMatcher(None,
                                    a_split,

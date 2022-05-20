@@ -34,11 +34,10 @@ from w3af.core.data.dc.headers import Headers
 from w3af.core.data.url.extended_urllib import ExtendedUrllib
 from w3af.core.controllers.core_helpers.fingerprint_404 import Fingerprint404
 from w3af.core.controllers.misc.fuzzy_string_cmp import MAX_FUZZY_LENGTH
-from w3af.core.data.db.dbms import clear_default_temp_db_instance
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 from nose.plugins.attrib import attr
 
-@attr('suspect')
 class Generic404Test(unittest.TestCase):
 
     def get_body(self, unique_parts):
@@ -55,7 +54,7 @@ class Generic404Test(unittest.TestCase):
 
         body = '\n'.join(parts)
 
-        return body
+        return smart_str_ignore(body)
 
     def setUp(self):
         self.urllib = ExtendedUrllib()
@@ -65,7 +64,6 @@ class Generic404Test(unittest.TestCase):
 
     def tearDown(self):
         self.urllib.end()
-        clear_default_temp_db_instance()
 
 
 class Test404Detection(Generic404Test):
@@ -88,7 +86,6 @@ class Test404Detection(Generic404Test):
 
 class Test404FalseNegative(Generic404Test):
 
-    @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
     def test_false_negative_with_500(self):
         server_error = ('500 error that does NOT\n'
@@ -113,7 +110,7 @@ class Test404FalseNegative(Generic404Test):
         headers = Headers([('Content-Type', 'text/html')])
         server_error_resp = HTTPResponse(500, server_error, headers, foo_url, foo_url)
 
-        self.assertTrue(self.fingerprint_404.is_404(server_error_resp))
+        self.assertFalse(self.fingerprint_404.is_404(server_error_resp))
 
 
 class Test404FalsePositiveLargeResponsesRandomShort(Generic404Test):
@@ -132,6 +129,7 @@ class Test404FalsePositiveLargeResponsesRandomShort(Generic404Test):
 
         httpretty.register_uri(httpretty.GET,
                                re.compile('w3af.com/(.*)'),
+                               adding_headers={ 'Content-Type': 'text/html' },
                                body=self.request_callback,
                                status=200)
 
@@ -149,7 +147,6 @@ class Test404FalsePositiveLargeResponsesRandomShort(Generic404Test):
         success_200 = HTTPResponse(200, body, headers, success_url, success_url)
         self.assertFalse(self.fingerprint_404.is_404(success_200))
 
-    @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
     def test_page_marked_as_404_with_large_response_random(self):
 
@@ -176,7 +173,7 @@ class Test404With1ByteRandomShort(Generic404Test):
 
     def __init__(self, methodName='runTest'):
         super(Test404With1ByteRandomShort, self).__init__(methodName=methodName)
-        self.application_server_ids = [1, 2, 2]
+        self.application_server_ids = [1, 2, 3]
         self.application_server_idx = 0
 
     def request_callback(self, request, uri, headers):
@@ -197,6 +194,7 @@ class Test404With1ByteRandomShort(Generic404Test):
 
         httpretty.register_uri(httpretty.GET,
                                re.compile('w3af.com/(.*)'),
+                               adding_headers={ 'Content-Type': 'text/html' },
                                body=self.request_callback,
                                status=200)
 
@@ -206,7 +204,7 @@ class Test404With1ByteRandomShort(Generic404Test):
         #        was unable to find the root cause.
         success_url = URL('http://w3af.com/search/feed/CVS/Entries')
 
-        body = self.get_short_body()
+        body = "This was a triumph"
         headers = Headers([('Content-Type', 'text/html')])
         success_200 = HTTPResponse(200, body, headers, success_url, success_url)
         self.assertFalse(self.fingerprint_404.is_404(success_200))
@@ -216,7 +214,7 @@ class Test404With1ByteRandomLarge(Generic404Test):
 
     def __init__(self, methodName='runTest'):
         super(Test404With1ByteRandomLarge, self).__init__(methodName=methodName)
-        self.application_server_ids = [1, 2, 2]
+        self.application_server_ids = [1, 2, 3]
         self.application_server_idx = 0
 
     def request_callback(self, request, uri, headers):
@@ -238,12 +236,12 @@ class Test404With1ByteRandomLarge(Generic404Test):
 
         return '\n'.join(parts)
 
-    @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
     def test_1byte_large_is_404(self):
 
         httpretty.register_uri(httpretty.GET,
                                re.compile('w3af.com/(.*)'),
+                               adding_headers={ 'Content-Type': 'text/html' },
                                body=self.request_callback,
                                status=200)
 
@@ -263,6 +261,7 @@ class Test404With1ByteRandomLarge(Generic404Test):
 
         httpretty.register_uri(httpretty.GET,
                                re.compile('w3af.com/(.*)'),
+                               adding_headers={ 'Content-Type': 'text/html' },
                                body=self.request_callback,
                                status=200)
 
@@ -309,7 +308,6 @@ class Test404FalsePositiveLargeResponsesEqual404s(Generic404Test):
         success_200 = HTTPResponse(200, body, headers, success_url, success_url)
         self.assertFalse(self.fingerprint_404.is_404(success_200))
 
-    @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
     def test_page_marked_as_404_with_large_response(self):
 
@@ -341,12 +339,12 @@ class Test404FalsePositiveLargeResponsesWithCSRFToken(Generic404Test):
         body = self.get_body(unique_parts)
         return 200, headers, body
 
-    @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
     def test_is_404_with_csrf_token(self):
 
         httpretty.register_uri(httpretty.GET,
                                re.compile("w3af.com/(.*)"),
+                               adding_headers={ 'Content-Type': 'text/html' },
                                body=self.request_callback,
                                status=200)
 
@@ -399,12 +397,12 @@ class Test404FalsePositiveLargeResponsesWithCSRFTokenPartiallyEqual(Generic404Te
         body = self.get_body(unique_parts)
         return 200, headers, body
 
-    @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
     def test_false_positive(self):
 
         httpretty.register_uri(httpretty.GET,
                                re.compile("w3af.com/(.*)"),
+                               adding_headers={ 'Content-Type': 'text/html' },
                                body=self.request_callback,
                                status=200)
 
@@ -548,12 +546,12 @@ class Test404HandleAllIs404(GenericIgnoredPartTest):
         body = self.ALL_SAME_BODY
         return 200, headers, body
 
-    @unittest.skip("Some hard-to-debug issue in 404 fingerprinting")
     @httpretty.activate(allow_net_connect=False)
     def test_handle_really_a_404(self):
 
         httpretty.register_uri(httpretty.GET,
                                re.compile('w3af.com/(.*)'),
+                               adding_headers={ 'Content-Type': 'text/html' },
                                body=self.request_callback,
                                status=200)
 

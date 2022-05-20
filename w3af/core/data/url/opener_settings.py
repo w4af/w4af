@@ -117,7 +117,7 @@ class OpenerSettings(Configurable):
         cfg.save('ntlm_auth_url', '')
 
         cfg.save('ignore_session_cookies', False)
-        cfg.save('max_file_size', 400000)
+        cfg.save('max_file_size', 500000)
         cfg.save('max_http_retries', MAX_HTTP_RETRIES)
         cfg.save('max_requests_per_second', 0)
 

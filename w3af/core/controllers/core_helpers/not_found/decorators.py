@@ -47,6 +47,12 @@ class LRUCache404(Decorator):
     """
     This decorator caches the 404 responses to reduce CPU usage and,
     in some cases, HTTP requests being sent.
+
+    # The current LRUCache404 implementation causes the fingerprint_404 unit tests to
+    # fail, leading me to believe that it's not a clean cache implementation. Disabling
+    # this for now.
+    # TODO - Fix and re-enable LRUCache404
+
     """
 
     MAX_IN_MEMORY_RESULTS = 5000

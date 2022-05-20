@@ -185,7 +185,11 @@ class Fingerprint404(object):
 
         return self._is_404_complex_impl(http_response, query)
 
-    @LRUCache404
+    # This method used to be decorated with @LRUCache404, in an attempt to reduce
+    # the amount of caching / diffing work. But LRUCache404 causes the unit tests to
+    # fail, leading me to believe that it's not a clean cache implementation. Disabling
+    # this for now.
+    # TODO - Fix and re-enable LRUCache404
     def _is_404_complex_impl(self, http_response, query):
         """
         Verifies if the response is a 404 by comparing it with other responses

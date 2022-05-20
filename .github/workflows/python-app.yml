@@ -33,7 +33,7 @@ jobs:
       uses: GabrielBB/xvfb-action@v1
       with:
         run: |
-          pipenv run nosetests -A "not moth and not internet and not fails and not git and not gui and not suspect and not integration and not ci_ignore" --with-coverage --cover-xml --cover-package=w3af .
+          pipenv run nosetests -A "not moth and not internet and not fails and not git and not gui and not integration and not ci_ignore" --with-coverage --cover-xml --cover-package=w3af .
     - name: "Upload coverage to Codecov"
       uses: codecov/codecov-action@v2
       with:

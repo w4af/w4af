@@ -29,7 +29,6 @@ from w3af.core.controllers.extrusion_scanning.extrusionScanner import extrusionS
 from w3af.plugins.tests.helper import onlyroot
 
 
-@attr('suspect')
 class TestExtrusionScanner(unittest.TestCase):
     """
     Test the extrusion scanner's basic features.

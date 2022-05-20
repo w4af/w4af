@@ -490,15 +490,6 @@ class SQLiteExecutor(Process):
 temp_default_db = None
 
 
-def clear_default_temp_db_instance():
-    global temp_default_db
-    
-    if temp_default_db is not None:
-        temp_default_db.close()
-        temp_default_db = None
-        os.unlink('%s/main.db' % get_temp_dir())
-
-
 def get_default_temp_db_instance():
     global temp_default_db
     
