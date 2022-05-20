@@ -1,5 +1,6 @@
 [![Unit tests](https://github.com/w4af/w4af/actions/workflows/python-app.yml/badge.svg)](https://github.com/w4af/w4af/actions/workflows/python-app.yml)
 [![Code Coverage](https://codecov.io/gh/w4af/w4af/branch/main/graph/badge.svg?token=GCXS9IDNKM)](https://codecov.io/gh/w4af/w4af)
+[![License](https://img.shields.io/github/license/w4af/w4af.svg)](https://img.shields.io/github/license/w4af/w4af.svg)
 ## w4af - Web Advanced Application Attack and Audit Framework for Python3
 
 [w4af](https://w4af.readthedocs.io/en/latest/) is an [open source](https://www.gnu.org/licenses/gpl-2.0.txt)
