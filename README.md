@@ -56,6 +56,14 @@ $ nosetests --help
 
 By default, nosetests will run all tests, including tests that depend on internet connection, a clean git checkout, and a running integration environment. We will add more detailed information about how to run the tests as the porting work progresses.
 
+### Building documentation
+First install sphinx within a virtual environment and then build documentation
+```
+python -m pip install sphinx
+sphinx-build -b html doc/sphinx/ doc/sphinx/_build/
+```
+
+
 ## Vision
 The purpose of this software is to help security researches to scan their sites to find vulnerabilities.
 
