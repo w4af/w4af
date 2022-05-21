@@ -61,6 +61,10 @@ If we don't support your distribution, we'll default to Ubuntu.
 Installation in Kali
 --------------------
 
+.. warning::
+
+   Currently it is not possible to install w3af on kali as pygtk is not any more in the kali packages. So the following instructions currently won' work. You could try building pygtk from source though. 
+
 The easiest way to install ``w3af`` in Kali is:
 
 .. code-block:: console
