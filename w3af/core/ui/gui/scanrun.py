@@ -192,10 +192,10 @@ class FullKBTree(KBTree):
         self.kbbrowser.rrV.response.clear_panes()
         self.kbbrowser.rrV.set_sensitive(False)
 
-    def _show_message(self, title, msg, gtkLook=gtk.MESSAGE_WARNING):
+    def _show_message(self, title, msg, gtkLook=gtk.MessageType.WARNING):
         """Show message to user as GTK dialog."""
-        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtkLook,
-                                gtk.BUTTONS_OK, msg)
+        dlg = gtk.MessageDialog(None, gtk.DialogType.MODAL, gtkLook,
+                                gtk.ButtonsType.OK, msg)
         dlg.set_title(title)
         dlg.run()
         dlg.destroy()

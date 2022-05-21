@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk as gdk
 
 from w3af.core.ui.gui.constants import W3AF_ICON
 from w3af.core.controllers.dependency_check.platforms.mac import MacOSX
@@ -45,10 +46,10 @@ class Splash(gtk.Window):
 
         # content
         splash = os.path.join(ROOT_PATH, 'core', 'ui', 'gui', 'data', 'splash.png')
-        img = gtk.image_new_from_file(splash)
-        vbox.pack_start(img)
+        img = gtk.Image.new_from_file(splash)
+        vbox.pack_start(img, False, False, 0)
         self.label = gtk.Label()
-        vbox.pack_start(self.label)
+        vbox.pack_start(self.label, False, False, 0)
 
         # Splash screen doesn't have decoration (at least where supported)
         # https://github.com/andresriancho/w3af/issues/9084
@@ -56,9 +57,9 @@ class Splash(gtk.Window):
             self.set_decorated(False)
 
         # color and position
-        color = gtk.gdk.color_parse('#f2f2ff')
-        self.modify_bg(gtk.STATE_NORMAL, color)
-        self.set_position(gtk.WIN_POS_CENTER)
+        color = gdk.color_parse('#f2f2ff')
+        self.modify_bg(gtk.StateFlags.NORMAL, color)
+        self.set_position(gtk.WindowPosition.CENTER)
         self.set_size_request(644, 315)
 
         # ensure it is rendered immediately

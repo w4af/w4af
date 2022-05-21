@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
+from gi.repository import Gdk as gdk
 
 import w3af.core.data.kb.knowledge_base as kb
 import w3af.core.data.kb
@@ -128,7 +129,7 @@ class FoundExceptionsStatusBar(gtk.EventBox):
         self.hbox.pack_start(self.exceptions.label, False, False, padding=2)
 
         self.add(self.hbox)
-        self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
+        self.add_events(gdk.EventMask.BUTTON_PRESS_MASK)
 
         self.connect("button-press-event", self._report_bug)
 

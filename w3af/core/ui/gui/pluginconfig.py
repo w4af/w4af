@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
+from gi.repository import Gdk as gdk
+from gi.repository import GdkPixbuf
 import os
 
 from w3af.core.ui.gui import GUI_DATA_PATH
@@ -112,7 +114,7 @@ class ConfigPanel(gtk.VBox):
             self.add(lab)
         else:
             # put image
-            img = gtk.image_new_from_file(os.path.join(GUI_DATA_PATH,
+            img = gtk.Image.new_from_file(os.path.join(GUI_DATA_PATH,
                                                        'w3af_logo.png'))
             self.widg = img
             img.show()
@@ -207,7 +209,7 @@ class PluginTree(gtk.TreeView):
         # 5. a image to show if the plugin is configurable
         self.treestore = gtk.TreeStore(str, gobject.TYPE_BOOLEAN,
                                        gobject.TYPE_BOOLEAN, str,
-                                       gtk.gdk.Pixbuf)
+                                       gobject.TYPE_OBJECT)
 
         # decide which type in function of style
         if style == "standard":
@@ -239,7 +241,7 @@ class PluginTree(gtk.TreeView):
                 None, [plugintype, activ, incons, plugintype, None])
 
             dlg = gtk.Dialog()
-            editpixbuf = dlg.render_icon(gtk.STOCK_EDIT, gtk.ICON_SIZE_MENU)
+            editpixbuf = dlg.render_icon(gtk.STOCK_EDIT, gtk.IconSize.MENU)
             for plugin in sorted(w3af.plugins.get_plugin_list(plugintype)):
                 activ = int(plugin in activated)
                 if self._getEditablePlugin(plugin, plugintype):
@@ -426,7 +428,7 @@ class PluginTree(gtk.TreeView):
             msg += ' while trying to reload it: "%s",' % str(e)
             msg += ' please fix this issue before continuing or w3af will crash.'
             dlg = gtk.MessageDialog(
-                None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, msg)
+                None, gtk.DialogFlags.MODAL, gtk.MessageType.INFO, gtk.ButtonsType.OK, msg)
             dlg.run()
             dlg.destroy()
         else:
@@ -618,14 +620,14 @@ class PluginConfigBody(gtk.VBox):
         advbut.connect("clicked", self._advanced_target)
         targetbox.pack_start(advbut, expand=False, fill=False, padding=5)
         targetbox.show_all()
-        self.pack_start(targetbox, expand=False, fill=False)
+        self.pack_start(targetbox, expand=False, fill=False, padding=0)
 
         # the pan with all the configs
         self.pan = self._buildpan()
-        self.pack_start(self.pan, padding=5)
+        self.pack_start(self.pan, expand=False, fill=False, padding=5)
 
         # key binding
-        self.key_l = gtk.gdk.keyval_from_name("l")
+        self.key_l = gdk.keyval_from_name("l")
         mainwin.window.connect("key-press-event", self._key)
 
         self.show()
@@ -638,7 +640,7 @@ class PluginConfigBody(gtk.VBox):
 
         # upper left
         scrollwin1u = gtk.ScrolledWindow()
-        scrollwin1u.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scrollwin1u.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
         self.std_plugin_tree = PluginTree(self.w3af, "standard",
                                           self.config_panel)
         scrollwin1u.add(self.std_plugin_tree)
@@ -646,7 +648,7 @@ class PluginConfigBody(gtk.VBox):
 
         # lower left
         scrollwin1l = gtk.ScrolledWindow()
-        scrollwin1l.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scrollwin1l.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
         self.out_plugin_tree = PluginTree(self.w3af, "output",
                                           self.config_panel)
         scrollwin1l.add(self.out_plugin_tree)
@@ -659,7 +661,7 @@ class PluginConfigBody(gtk.VBox):
 
         # rigth
         scrollwin2 = gtk.ScrolledWindow()
-        scrollwin2.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scrollwin2.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
         scrollwin2.add_with_viewport(self.config_panel)
         scrollwin2.show()
 
@@ -747,7 +749,7 @@ class PluginConfigBody(gtk.VBox):
         pan = self.get_children()[0]
         newpan = self._buildpan(profile_description)
         self.remove(self.pan)
-        self.pack_start(newpan)
+        self.pack_start(newpan, expand=False, fill=False, padding=0)
         self.pan = newpan
 
     def _key(self, widg, event):

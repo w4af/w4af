@@ -4,6 +4,7 @@ import re
 import difflib
 import struct
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk as gdk
 from gi.repository import GObject as gobject
 from gi.repository import Pango as pango
 from . import diffutil
@@ -182,12 +183,12 @@ MASK_SHIFT, MASK_CTRL, MASK_ALT = 1, 2, 3
 class FileDiff(object):
     """Two or three way diff of text files."""
 
-    keylookup = {gtk.keysyms.Shift_L: MASK_SHIFT,
-                 gtk.keysyms.Control_L: MASK_CTRL,
-                 gtk.keysyms.Alt_L: MASK_ALT,
-                 gtk.keysyms.Shift_R: MASK_SHIFT,
-                 gtk.keysyms.Control_R: MASK_CTRL,
-                 gtk.keysyms.Alt_R: MASK_ALT}
+    keylookup = {gdk.KEY_Shift_L: MASK_SHIFT,
+                 gdk.KEY_Control_L: MASK_CTRL,
+                 gdk.KEY_Alt_L: MASK_ALT,
+                 gdk.KEY_Shift_R: MASK_SHIFT,
+                 gdk.KEY_Control_R: MASK_CTRL,
+                 gdk.KEY_Alt_R: MASK_ALT}
 
     def _genLinkMap(self):
         da = gtk.DrawingArea()

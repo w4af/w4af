@@ -100,9 +100,9 @@ class report_bug_show_result(gtk.MessageDialog):
         """
         gtk.MessageDialog.__init__(self,
                                    None,
-                                   gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                                   gtk.MESSAGE_INFO,
-                                   gtk.BUTTONS_OK,
+                                   gtk.DialogFlags.MODAL | gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                   gtk.MessageType.INFO,
+                                   gtk.ButtonsType.OK,
                                    None)
 
         self.bug_report_function = bug_report_function

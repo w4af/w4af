@@ -444,10 +444,10 @@ class httpLogTab(RememberingHPaned):
         if not appendMode:
             self._sw.show_all()
 
-    def _show_message(self, title, msg, gtkLook=gtk.MESSAGE_INFO):
+    def _show_message(self, title, msg, gtkLook=gtk.MessageType.INFO):
         """Show message to user as GTK dialog."""
-        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtkLook,
-                                gtk.BUTTONS_OK, msg)
+        dlg = gtk.MessageDialog(None, gtk.DialogFlags.MODAL, gtkLook,
+                                gtk.ButtonsType.OK, msg)
         dlg.set_title(title)
         dlg.run()
         dlg.destroy()

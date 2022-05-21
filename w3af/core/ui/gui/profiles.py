@@ -161,9 +161,9 @@ class ProfileList(gtk.TreeView):
             for i in invalid_profiles:
                 message += '\n\t- ' + i
             message += '\n\nPlease click OK to continue without these profiles.'
-            dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
-                                    gtk.MESSAGE_WARNING,
-                                    gtk.BUTTONS_OK, message)
+            dlg = gtk.MessageDialog(None, gtk.DialogFlags.MODAL,
+                                    gtk.MessageType.WARNING,
+                                    gtk.ButtonsType.OK, message)
             dlg.run()
             dlg.destroy()
 

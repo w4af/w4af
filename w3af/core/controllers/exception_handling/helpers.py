@@ -70,19 +70,16 @@ def get_platform_dist():
 
 def get_versions():
     try:
-        import gtk
+        from gi.repository import gtk
     except ImportError:
         gtk_version = 'No GTK module installed'
-        pygtk_version = 'No GTK module installed'
     else:
-        gtk_version = '.'.join(str(x) for x in gtk.gtk_version)
-        pygtk_version = '.'.join(str(x) for x in gtk.pygtk_version)
+        gtk_version = '%s.x' % (gtk.MAJOR_VERSION)
 
     # String containing the versions for python, gtk and pygtk
     versions = ('  Python version: %s\n'
                 '  Platform: %s\n'
                 '  GTK version: %s\n'
-                '  PyGTK version: %s\n'
                 '  w3af version:\n    %s')
     
     w3af_version = '\n    '.join(get_w3af_version().split('\n'))
@@ -90,7 +87,6 @@ def get_versions():
     versions = versions % (sys.version.replace('\n', ''),
                            get_platform_dist(),
                            gtk_version,
-                           pygtk_version,
                            w3af_version)
         
     return versions

@@ -895,7 +895,7 @@ class _RememberingPane(object):
         except ValueError:
             # https://github.com/andresriancho/w3af/issues/332
             # ValueError: invalid operation on closed shelf
-            self.signal = self.connect('expose-event', self.exposed)
+            self.signal = self.connect('draw', self.draw)
         else:
             if widgname in self.winconfig:
                 self.set_position(self.winconfig[widgname])
@@ -903,7 +903,7 @@ class _RememberingPane(object):
                 self.set_position(defaultInitPos)
                 self.winconfig[self.widgname] = defaultInitPos
             else:
-                self.signal = self.connect('expose-event', self.exposed)
+                self.signal = self.connect('draw', self.draw)
 
     def move_handle(self, widg, what):
         """
@@ -918,7 +918,7 @@ class _RememberingPane(object):
                 # https://github.com/andresriancho/w3af/issues/8890
                 pass
 
-    def exposed(self, area, event):
+    def draw(self, area, event):
         """Adjust the handle to the remembered position.
 
         This is done only once.
@@ -972,8 +972,8 @@ class StatusBar(gtk.Statusbar):
         
         # add the others
         for oth in others[::-1]:
-            self.pack_end(oth, False)
-            self.pack_end(gtk.VSeparator(), False)
+            self.pack_end(oth, False, False, 0)
+            self.pack_end(gtk.VSeparator(), False, False, 0)
 
         if initmsg is not None:
             self.__call__(initmsg)
@@ -1157,8 +1157,8 @@ class ConfigOptions(gtk.VBox, Preferences):
         :param widg: the widget who generated the signal
         :param helpmsg: the message to show in the dialog
         """
-        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO,
-                                gtk.BUTTONS_OK, helpmsg)
+        dlg = gtk.MessageDialog(None, gtk.DialogFlags.MODAL, gtk.MessageType.INFO,
+                                gtk.ButtonsType.OK, helpmsg)
         dlg.set_title('Plugin help')
         dlg.run()
         dlg.destroy()

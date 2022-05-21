@@ -199,8 +199,8 @@ class OnlyOptions(gtk.VBox):
         :param widg: the widget who generated the signal
         :param helpmsg: the message to show in the dialog
         """
-        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO,
-                                gtk.BUTTONS_OK, helpmsg)
+        dlg = gtk.MessageDialog(None, gtk.DialogFlags.MODAL, gtk.MessageType.INFO,
+                                gtk.ButtonsType.OK, helpmsg)
         dlg.set_title('Configuration help')
         dlg.run()
         dlg.destroy()

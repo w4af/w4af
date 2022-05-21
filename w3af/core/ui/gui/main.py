@@ -29,6 +29,7 @@ import time
 import sys
 
 from gi.repository import Gtk as gtk
+from gi.repository import Gdk as gdk
 from gi.repository import GObject as gobject
 
 from multiprocessing.dummy import Process
@@ -76,8 +77,8 @@ if sys.platform == "win32":
     # Load the theme, this fixes bug 2022433: Windows buttons without images
     gtk.rc_add_default_file('%USERPROFILE%/.gtkrc-2.0')
 else:
-    gtk.gdk.threads_init()
-    gtk.gdk.threads_enter()
+    gdk.threads_init()
+    gdk.threads_enter()
 # pylint: enable=E1101
 
 class FakeShelve(dict):
@@ -195,7 +196,7 @@ class MainApp(object):
         splash = Splash()
 
         # Create a new window
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window = gtk.Window(gtk.WindowType.TOPLEVEL)
         self.window.set_icon_from_file(W3AF_ICON)
         self.window.connect("delete_event", self.quit)
         self.window.connect('key_press_event', self.help_f1)
@@ -360,9 +361,9 @@ class MainApp(object):
 
         # menubar and toolbar
         menubar = uimanager.get_widget('/MenuBar')
-        mainvbox.pack_start(menubar, False)
+        mainvbox.pack_start(menubar, False, False, 0)
         toolbar = uimanager.get_widget('/Toolbar')
-        mainvbox.pack_start(toolbar, False)
+        mainvbox.pack_start(toolbar, False, False, 0)
 
         # put both start/stop buttons inside the wrapper
         self.startstopbtns = helpers.BroadcastWrapper()
@@ -406,7 +407,7 @@ class MainApp(object):
         splash.push(_("Building the main screen..."))
         self.nb = gtk.Notebook()
         self.nb.connect("switch-page", self.nb_changed_page)
-        mainvbox.pack_start(self.nb, True)
+        mainvbox.pack_start(self.nb, True, False, 0)
         self.nb.show()
 
         # scan config tab
@@ -444,7 +445,7 @@ class MainApp(object):
         self.notetabs[_("Exploit")] = exploit_tab_body
 
         # status bar
-        mainvbox.pack_start(self.sb, False)
+        mainvbox.pack_start(self.sb, False, False, 0)
 
         # communication between different windows
         self.commCompareTool = WindowsCommunication(self.w3af, compare.Compare)
@@ -497,7 +498,7 @@ class MainApp(object):
         self.pcbody.edit_selected_plugin()
 
     def on_window_state_event(self, widget, event, data=None):
-        mask = gtk.gdk.WINDOW_STATE_MAXIMIZED
+        mask = gdk.WINDOW_STATE_MAXIMIZED
         self.is_maximized = widget.get_window().get_state() & mask == mask
     
     def quit(self, widget, event, data=None):
@@ -923,7 +924,7 @@ class MainApp(object):
         wizard.WizardChooser(self.w3af)
 
     def help_f1(self, widget, event):
-        if event.keyval != 65470:  # F1, check: gtk.gdk.keyval_name(event.keyval)
+        if event.keyval != 65470:  # F1, check: gdk.keyval_name(event.keyval)
             return
 
         chapter = self.w3af.helpChapters["main"]

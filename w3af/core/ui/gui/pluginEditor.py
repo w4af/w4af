@@ -283,8 +283,8 @@ class EditWindow(gtk.Window):
         self._search(self.search_string, self.last_search_iter)
 
     def help_about(self, mi):
-        dlg = gtk.MessageDialog(self, gtk.DIALOG_DESTROY_WITH_PARENT,
-                                gtk.MESSAGE_INFO, gtk.BUTTONS_OK,
+        dlg = gtk.MessageDialog(self, gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                gtk.MessageType.INFO, gtk.ButtonsType.OK,
                                 _("Text editor creators:\n\n") +
                                 _("Copyright (C)\n") +
                                 _("1998 James Henstridge\n") +

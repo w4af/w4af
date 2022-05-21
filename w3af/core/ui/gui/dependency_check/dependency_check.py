@@ -40,15 +40,16 @@ def dependency_check():
     should_exit = mdep_check(dependency_set=GUI, exit_on_failure=False)
     
     try:
+        import gi
+        gi.require_version('Gtk', '3.0')
         from gi.repository import Gtk as gtk
         from gi.repository import GObject as gobject
-        assert gtk.gtk_version >= (2, 12)
-        assert gtk.pygtk_version >= (2, 12)
-    except:
+        assert gtk.MAJOR_VERSION >= 3
+    except Exception as e:
         msg = 'The GTK package requirements are not met, please make sure your'\
               ' system meets these requirements:\n'\
-              '    - PyGTK >= 2.12\n'\
-              '    - GTK >= 2.12\n'
+              '    - PyGTK >= 3.0\n'\
+              '    - GTK >= 3.0\n'
         print(msg)
         should_exit = True
 
