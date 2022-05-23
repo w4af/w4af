@@ -26,8 +26,8 @@ from unittest.mock import patch, call
 
 import w3af.core.data.constants.severity as severity
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.plugins.crawl.ghdb import GoogleHack, google
-from w3af.core.data.search_engines.google import GoogleResult
+from w3af.plugins.crawl.ghdb import GoogleHack, bing
+from w3af.core.data.search_engines.bing import BingResult
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.misc.file_utils import days_since_file_update
 
@@ -50,8 +50,8 @@ class TestGHDB(PluginTest):
         with patch('w3af.plugins.crawl.web_diff.om.out') as om_mock:
             self._scan(self.private_url, cfg['plugins'])
 
-            msg = 'There is no point in searching google for "site:moth".' \
-                  ' Google doesn\'t index private pages.'
+            msg = 'There is no point in searching bing for "site:moth".' \
+                  ' Bing doesn\'t index private pages.'
 
             self.assertIn(call.information(msg), om_mock.mock_calls)
 
@@ -74,12 +74,12 @@ class TestGHDB(PluginTest):
 
         pmodule = 'w3af.plugins.crawl.ghdb.%s'
         with patch(pmodule % 'is_private_site') as private_site_mock:
-            with patch.object(google, 'get_n_results') as google_mock_method:
+            with patch.object(bing, 'get_n_results') as google_mock_method:
 
                 # Mock
                 private_site_mock.return_value = False
 
-                google_result = GoogleResult(
+                google_result = BingResult(
                     URL('http://moth/w3af/crawl/ghdb/'))
                 google_mock_method.side_effect = [[], ] * 50 + [[google_result, ]] +\
                                                  [[], ] * 50000

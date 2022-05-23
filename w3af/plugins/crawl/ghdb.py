@@ -38,7 +38,7 @@ from w3af.core.controllers.exceptions import BaseFrameworkException, RunOnce
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.search_engines.google import google as google
+from w3af.core.data.search_engines.bing import bing
 from w3af.core.data.kb.vuln import Vuln
 
 
@@ -69,8 +69,8 @@ class ghdb(CrawlPlugin):
         domain = fuzzable_request.get_url().get_domain()
 
         if is_private_site(domain):
-            msg = ('There is no point in searching google for "site:%s".'
-                   ' Google does not index private pages.')
+            msg = ('There is no point in searching bing for "site:%s".'
+                   ' Bing does not index private pages.')
             om.out.information(msg % domain)
             return
 
@@ -80,7 +80,7 @@ class ghdb(CrawlPlugin):
         """
         In classic GHDB, i search google for every term in the ghdb.
         """
-        self._google_se = google(self._uri_opener)
+        self._search_se = bing(self._uri_opener)
 
         google_hack_list = self._read_ghdb()
         # Don't get discovered by google [at least try...] and avoid dups
@@ -100,7 +100,7 @@ class ghdb(CrawlPlugin):
         """
         Perform the searches and store the results in the kb.
         """
-        google_list = self._google_se.get_n_results(search_term, 9)
+        google_list = self._search_se.get_n_results(search_term, 9)
 
         for result in google_list:
             # I found a vuln in the site!

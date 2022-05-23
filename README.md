@@ -20,7 +20,7 @@ attempt to add python3 support.
 At time of writing, most of the core unit tests are running and passing:
 
 ```
-nosetests -A "not moth and not internet and not fails and not git and not gui and not suspect and not integration and not ci_ignore" -x -v .
+nosetests -A "not moth and not fails and not git and not gui and not suspect and not integration and not ci_ignore" -x -v .
 ```
 
 You might have some limited success running scans with the current code, but very likely it will fail with mysterious errors. More updates as they become available.

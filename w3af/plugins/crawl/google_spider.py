@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.search_engines.google import google as google
+from w3af.core.data.search_engines.bing import bing as bing
 
 from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
 from w3af.core.controllers.exceptions import BaseFrameworkException, RunOnce
@@ -31,7 +31,7 @@ from w3af.core.controllers.misc.decorators import runonce
 
 class google_spider(CrawlPlugin):
     """
-    Search google using google API to get new URLs
+    Search bing using bing API to get new URLs
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
 
@@ -48,22 +48,22 @@ class google_spider(CrawlPlugin):
         :param fuzzable_request: A fuzzable_request instance that contains
                                     (among other things) the URL to test.
         """
-        google_se = google(self._uri_opener)
+        bing_se = bing(self._uri_opener)
 
         domain = fuzzable_request.get_url().get_domain()
         if is_private_site(domain):
-            msg = 'There is no point in searching google for "site:%s".'\
-                  ' Google doesn\'t index private pages.'
+            msg = 'There is no point in searching bing for "site:%s".'\
+                  ' Bing doesn\'t index private pages.'
             raise BaseFrameworkException(msg % domain)
 
         try:
-            g_results = google_se.get_n_results('site:' + domain,
+            b_results = bing_se.get_n_results('site:' + domain,
                                                 self._result_limit)
         except:
             pass
         else:
             self.worker_pool.map(self.http_get_and_parse,
-                                    [r.URL for r in g_results])
+                                    [r.URL for r in b_results])
 
     def get_options(self):
         """
@@ -71,7 +71,7 @@ class google_spider(CrawlPlugin):
         """
         ol = OptionList()
 
-        d = 'Fetch the first "result_limit" results from the Google search'
+        d = 'Fetch the first "result_limit" results from the Bing search'
         o = opt_factory('result_limit', self._result_limit, d, 'integer')
         ol.add(o)
 
@@ -92,7 +92,7 @@ class google_spider(CrawlPlugin):
         :return: A DETAILED description of the plugin functions and features.
         """
         return """
-        This plugin finds new URL's using google. It will search for
+        This plugin finds new URL's using bing. It will search for
         "site:domain.com" and do GET requests all the URL's found in the result.
 
         One configurable parameter exists:
