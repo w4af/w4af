@@ -61,7 +61,7 @@ class CrawlInfrastructure(BaseConsumer):
                                                   w3af_core,
                                                   thread_name=self.get_name(),
                                                   max_pool_queued_tasks=100)
-        self._max_discovery_time = int(max_discovery_time)
+        self._max_discovery_time = max_discovery_time
 
         # For filtering fuzzable requests found by plugins:
         self._variant_db = VariantDB()

@@ -51,7 +51,7 @@ class TestTimeLimit(PluginTest):
         #
         #    First scan
         #
-        cf.cf.save('max_discovery_time', 1)
+        cf.cf.save('max_discovery_time', 0.05)
         cfg = self._run_configs['basic']
         
         start_time = time.time()
@@ -62,8 +62,8 @@ class TestTimeLimit(PluginTest):
         first_scan_time = end_time - start_time
 
         len_first_urls = len(self.kb.get_all_known_urls())
-        self.assertGreater(len_first_urls, 500)
-        self.assertLess(first_scan_time, 120)
+        self.assertGreater(len_first_urls, 100)
+        self.assertLess(first_scan_time, 30)
         
         # Cleanup
         self.w3afcore.quit()
@@ -73,7 +73,7 @@ class TestTimeLimit(PluginTest):
         #
         #    Second scan
         #
-        cf.cf.save('max_discovery_time', 2)
+        cf.cf.save('max_discovery_time', 1)
         cfg = self._run_configs['basic']
         
         start_time = time.time()
@@ -84,18 +84,8 @@ class TestTimeLimit(PluginTest):
         second_scan_time = end_time - start_time
 
         len_second_urls = len(self.kb.get_all_known_urls())
-        self.assertGreater(len_second_urls, 900)
+        self.assertGreater(len_second_urls, 200)
         self.assertGreater(len_second_urls, len_first_urls)
-        self.assertLess(second_scan_time, 150)
+        self.assertLess(second_scan_time, 60)
         
-        # The setup delta is the time it takes w3af to setup the scan, and
-        # finish once the should_stop_scan method returns true. The 60 in the
-        # next line is the initial scan time of 1 minute
-        setup_delta = first_scan_time - 60
-        
-        # Scan should take at least the setup time, 2 minutes which is the time
-        # delay and because the setup_delta might be a little bit off, we just
-        # substract some seconds from it
-        at_least_takes = setup_delta + 120 - 10
-        
-        self.assertGreater(second_scan_time, at_least_takes)
+        self.assertGreater(second_scan_time, first_scan_time)
