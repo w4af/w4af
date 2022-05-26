@@ -26,6 +26,7 @@ import urllib.request, urllib.parse, urllib.error
 import socket
 import ssl
 import os
+import httpretty
 
 import OpenSSL
 
@@ -245,6 +246,11 @@ class SSLNegotiatorConnection(http.client.HTTPSConnection, UniqueID):
         Make the socket SSL aware
         """
         try:
+            """Play nicely here with httpretty's mocking of SSL sockets"""
+            if (isinstance(sock, httpretty.core.fakesock.socket)):
+                self.sock = sock
+                return sock
+
             ssl_sock = wrap_socket(sock,
                                    keyfile=self.key_file,
                                    certfile=self.cert_file,

@@ -154,7 +154,7 @@ class TestStrategy(unittest.TestCase):
         else:
             self.assertTrue(False)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_alert_if_target_is_301_all_proto_redir(self):
         """
         Tests that the protocol redirection is detected and reported in
@@ -184,7 +184,7 @@ class TestStrategy(unittest.TestCase):
         infos = kb.get('core', 'core')
         self.assertEqual(len(infos), 1, infos)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_alert_if_target_is_301_all_domain_redir(self):
         """
         Tests that the domain redirection is detected and reported in
@@ -214,7 +214,7 @@ class TestStrategy(unittest.TestCase):
         infos = kb.get('core', 'core')
         self.assertEqual(len(infos), 1, infos)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_alert_if_target_is_301_all_internal_redir(self):
         """
         Tests that no info is created if the site redirects internally

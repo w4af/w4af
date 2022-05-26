@@ -56,14 +56,19 @@ testenv:
 # WAVSEP
 #
 wavsep:
-  image: andresriancho/wavsep:latest
+  image: w4af/wavsep:latest
   ports:
     - "8098:8080"
   links:
     - wavsepdb
+  environment:
+    - DB_HOST=wavsepdb
+    - DB_PORT=3306
+    - DB_USERNAME=root
+    - DB_PASSWORD=wavsep
 
 wavsepdb:
-  image: mysql
+  image: w4af/wavsep-mysql
   environment:
     - MYSQL_ROOT_PASSWORD=wavsep
 

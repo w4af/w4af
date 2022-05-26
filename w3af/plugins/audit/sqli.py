@@ -28,6 +28,7 @@ from w3af.core.data.fuzzer.fuzzer import create_mutants
 from w3af.core.data.quick_match.multi_re import MultiRE
 from w3af.core.data.quick_match.multi_in import MultiIn
 from w3af.core.data.kb.vuln import Vuln
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class sqli(AuditPlugin):
@@ -37,106 +38,106 @@ class sqli(AuditPlugin):
     """
     SQL_ERRORS_STR = (
         # ASP / MSSQL
-        (b'System.Data.OleDb.OleDbException', dbms.MSSQL),
-        (b'[SQL Server]', dbms.MSSQL),
-        (b'[Microsoft][ODBC SQL Server Driver]', dbms.MSSQL),
-        (b'[SQLServer JDBC Driver]', dbms.MSSQL),
-        (b'[SqlException', dbms.MSSQL),
-        (b'System.Data.SqlClient.SqlException', dbms.MSSQL),
-        (b'Unclosed quotation mark after the character string', dbms.MSSQL),
-        (b"'80040e14'", dbms.MSSQL),
-        (b'mssql_query()', dbms.MSSQL),
-        (b'odbc_exec()', dbms.MSSQL),
-        (b'Microsoft OLE DB Provider for ODBC Drivers', dbms.MSSQL),
-        (b'Microsoft OLE DB Provider for SQL Server', dbms.MSSQL),
-        (b'Incorrect syntax near', dbms.MSSQL),
-        (b'Sintaxis incorrecta cerca de', dbms.MSSQL),
-        (b'Syntax error in string in query expression', dbms.MSSQL),
-        (b'ADODB.Field (0x800A0BCD)<br>', dbms.MSSQL),
-        (b"ADODB.Recordset'", dbms.MSSQL),
-        (b"Unclosed quotation mark before the character string", dbms.MSSQL),
-        (b"'80040e07'", dbms.MSSQL),
-        (b'Microsoft SQL Native Client error', dbms.MSSQL),
-        (b'SQL Server Native Client', dbms.MSSQL),
-        (b'Invalid SQL statement', dbms.MSSQL),
+        ('System.Data.OleDb.OleDbException', dbms.MSSQL),
+        ('[SQL Server]', dbms.MSSQL),
+        ('[Microsoft][ODBC SQL Server Driver]', dbms.MSSQL),
+        ('[SQLServer JDBC Driver]', dbms.MSSQL),
+        ('[SqlException', dbms.MSSQL),
+        ('System.Data.SqlClient.SqlException', dbms.MSSQL),
+        ('Unclosed quotation mark after the character string', dbms.MSSQL),
+        ("'80040e14'", dbms.MSSQL),
+        ('mssql_query()', dbms.MSSQL),
+        ('odbc_exec()', dbms.MSSQL),
+        ('Microsoft OLE DB Provider for ODBC Drivers', dbms.MSSQL),
+        ('Microsoft OLE DB Provider for SQL Server', dbms.MSSQL),
+        ('Incorrect syntax near', dbms.MSSQL),
+        ('Sintaxis incorrecta cerca de', dbms.MSSQL),
+        ('Syntax error in string in query expression', dbms.MSSQL),
+        ('ADODB.Field (0x800A0BCD)<br>', dbms.MSSQL),
+        ("ADODB.Recordset'", dbms.MSSQL),
+        ("Unclosed quotation mark before the character string", dbms.MSSQL),
+        ("'80040e07'", dbms.MSSQL),
+        ('Microsoft SQL Native Client error', dbms.MSSQL),
+        ('SQL Server Native Client', dbms.MSSQL),
+        ('Invalid SQL statement', dbms.MSSQL),
 
         # DB2
-        (b'SQLCODE', dbms.DB2),
-        (b'DB2 SQL error:', dbms.DB2),
-        (b'SQLSTATE', dbms.DB2),
-        (b'[CLI Driver]', dbms.DB2),
-        (b'[DB2/6000]', dbms.DB2),
+        ('SQLCODE', dbms.DB2),
+        ('DB2 SQL error:', dbms.DB2),
+        ('SQLSTATE', dbms.DB2),
+        ('[CLI Driver]', dbms.DB2),
+        ('[DB2/6000]', dbms.DB2),
 
         # Sybase
-        (b"Sybase message:", dbms.SYBASE),
-        (b"Sybase Driver", dbms.SYBASE),
-        (b"[SYBASE]", dbms.SYBASE),
+        ("Sybase message:", dbms.SYBASE),
+        ("Sybase Driver", dbms.SYBASE),
+        ("[SYBASE]", dbms.SYBASE),
 
         # Access
-        (b'Syntax error in query expression', dbms.ACCESS),
-        (b'Data type mismatch in criteria expression.', dbms.ACCESS),
-        (b'Microsoft JET Database Engine', dbms.ACCESS),
-        (b'[Microsoft][ODBC Microsoft Access Driver]', dbms.ACCESS),
+        ('Syntax error in query expression', dbms.ACCESS),
+        ('Data type mismatch in criteria expression.', dbms.ACCESS),
+        ('Microsoft JET Database Engine', dbms.ACCESS),
+        ('[Microsoft][ODBC Microsoft Access Driver]', dbms.ACCESS),
 
         # ORACLE
-        (b'Microsoft OLE DB Provider for Oracle', dbms.ORACLE),
-        (b'wrong number or types', dbms.ORACLE),
+        ('Microsoft OLE DB Provider for Oracle', dbms.ORACLE),
+        ('wrong number or types', dbms.ORACLE),
 
         # POSTGRE
-        (b'PostgreSQL query failed:', dbms.POSTGRE),
-        (b'supplied argument is not a valid PostgreSQL result', dbms.POSTGRE),
-        (b'unterminated quoted string at or near', dbms.POSTGRE),
-        (b'pg_query() [:', dbms.POSTGRE),
-        (b'pg_exec() [:', dbms.POSTGRE),
+        ('PostgreSQL query failed:', dbms.POSTGRE),
+        ('supplied argument is not a valid PostgreSQL result', dbms.POSTGRE),
+        ('unterminated quoted string at or near', dbms.POSTGRE),
+        ('pg_query() [:', dbms.POSTGRE),
+        ('pg_exec() [:', dbms.POSTGRE),
 
         # MYSQL
-        (b'supplied argument is not a valid MySQL', dbms.MYSQL),
-        (b'Column count doesn\'t match value count at row', dbms.MYSQL),
-        (b'mysql_fetch_array()', dbms.MYSQL),
-        (b'mysql_', dbms.MYSQL),
-        (b'on MySQL result index', dbms.MYSQL),
-        (b'You have an error in your SQL syntax;', dbms.MYSQL),
-        (b'You have an error in your SQL syntax near', dbms.MYSQL),
-        (b'MySQL server version for the right syntax to use', dbms.MYSQL),
-        (b'Division by zero in', dbms.MYSQL),
-        (b'not a valid MySQL result', dbms.MYSQL),
-        (b'[MySQL][ODBC', dbms.MYSQL),
-        (b"Column count doesn't match", dbms.MYSQL),
-        (b"the used select statements have different number of columns",
+        ('supplied argument is not a valid MySQL', dbms.MYSQL),
+        ('Column count doesn\'t match value count at row', dbms.MYSQL),
+        ('mysql_fetch_array()', dbms.MYSQL),
+        ('mysql_', dbms.MYSQL),
+        ('on MySQL result index', dbms.MYSQL),
+        ('You have an error in your SQL syntax;', dbms.MYSQL),
+        ('You have an error in your SQL syntax near', dbms.MYSQL),
+        ('MySQL server version for the right syntax to use', dbms.MYSQL),
+        ('Division by zero in', dbms.MYSQL),
+        ('not a valid MySQL result', dbms.MYSQL),
+        ('[MySQL][ODBC', dbms.MYSQL),
+        ("Column count doesn't match", dbms.MYSQL),
+        ("the used select statements have different number of columns",
             dbms.MYSQL),
-        (b"DBD::mysql::st execute failed", dbms.MYSQL),
-        (b"DBD::mysql::db do failed:", dbms.MYSQL),
+        ("DBD::mysql::st execute failed", dbms.MYSQL),
+        ("DBD::mysql::db do failed:", dbms.MYSQL),
 
         # Informix
-        (b'com.informix.jdbc', dbms.INFORMIX),
-        (b'Dynamic Page Generation Error:', dbms.INFORMIX),
-        (b'An illegal character has been found in the statement',
+        ('com.informix.jdbc', dbms.INFORMIX),
+        ('Dynamic Page Generation Error:', dbms.INFORMIX),
+        ('An illegal character has been found in the statement',
             dbms.INFORMIX),
-        (b'[Informix]', dbms.INFORMIX),
-        (b'<b>Warning</b>:  ibase_', dbms.INTERBASE),
-        (b'Dynamic SQL Error', dbms.INTERBASE),
+        ('[Informix]', dbms.INFORMIX),
+        ('<b>Warning</b>:  ibase_', dbms.INTERBASE),
+        ('Dynamic SQL Error', dbms.INTERBASE),
 
         # DML
-        (b'[DM_QUERY_E_SYNTAX]', dbms.DMLDATABASE),
-        (b'has occurred in the vicinity of:', dbms.DMLDATABASE),
-        (b'A Parser Error (syntax error)', dbms.DMLDATABASE),
+        ('[DM_QUERY_E_SYNTAX]', dbms.DMLDATABASE),
+        ('has occurred in the vicinity of:', dbms.DMLDATABASE),
+        ('A Parser Error (syntax error)', dbms.DMLDATABASE),
 
         # Java
-        (b'java.sql.SQLException', dbms.JAVA),
-        (b'Unexpected end of command in statement', dbms.JAVA),
+        ('java.sql.SQLException', dbms.JAVA),
+        ('Unexpected end of command in statement', dbms.JAVA),
 
         # Coldfusion
-        (b'[Macromedia][SQLServer JDBC Driver]', dbms.MSSQL),
+        ('[Macromedia][SQLServer JDBC Driver]', dbms.MSSQL),
 
         # SQLite
-        (b'could not prepare statement', dbms.SQLITE),
+        ('could not prepare statement', dbms.SQLITE),
 
         # Generic errors..
-        (b'Unknown column', dbms.UNKNOWN),
-        (b'where clause', dbms.UNKNOWN),
-        (b'SqlServer', dbms.UNKNOWN),
-        (b'syntax error', dbms.UNKNOWN),
-        (b'Microsoft OLE DB Provider', dbms.UNKNOWN),
+        ('Unknown column', dbms.UNKNOWN),
+        ('where clause', dbms.UNKNOWN),
+        ('SqlServer', dbms.UNKNOWN),
+        ('syntax error', dbms.UNKNOWN),
+        ('Microsoft OLE DB Provider', dbms.UNKNOWN),
     )
     _multi_in = MultiIn(x[0] for x in SQL_ERRORS_STR)
 
@@ -217,11 +218,11 @@ class sqli(AuditPlugin):
         """
         res = []
 
-        for match in self._multi_in.query(response.body):
+        for match in self._multi_in.query(smart_unicode(response.body)):
             om.out.information(self.SQLI_MESSAGE % (match, response.id))
             dbms_types = [x[1] for x in self.SQL_ERRORS_STR if x[0] == match]
             if len(dbms_types) > 0:
-                res.append((match.decode('utf-8'), dbms_types[0]))
+                res.append((match, dbms_types[0]))
 
         for match, _, regex_comp, dbms_type in self._multi_re.query(response.body):
             om.out.information(self.SQLI_MESSAGE % (match.group(0), response.id))
