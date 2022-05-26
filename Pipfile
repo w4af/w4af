@@ -61,6 +61,7 @@ PyICU = "*"
 pycld2 = "*"
 Morfessor = "*"
 coverage = "*"
+pytest = "*"
 
 [dev-packages]
 

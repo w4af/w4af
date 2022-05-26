@@ -102,7 +102,7 @@ class TestInterceptProxy(unittest.TestCase):
         response = result_queue.get()
         
         self.assertEqual(response.code, 403)
-        self.assertIn('HTTP request drop by user', response.read())
+        self.assertIn(b'HTTP request drop by user', response.read())
     
     def test_request_trapped_send(self):
         def send_request(proxy_opener, result_queue):
@@ -130,7 +130,7 @@ class TestInterceptProxy(unittest.TestCase):
         
         self._proxy.on_request_edit_finished(request,
                                              request.dump_request_head(),
-                                             request.get_data())
+                                             request.data)
         
         response = result_queue.get()
         
@@ -179,7 +179,7 @@ class TestInterceptProxy(unittest.TestCase):
         # It doesn't modify it
         self._proxy.on_request_edit_finished(request,
                                              request.dump_request_head(),
-                                             request.get_data())
+                                             request.data)
 
         # And we get the corresponding response
         response = result_queue.get()
@@ -222,7 +222,7 @@ class TestInterceptProxy(unittest.TestCase):
         # It doesn't modify it
         self._proxy.on_request_edit_finished(request,
                                              request.dump_request_head(),
-                                             request.get_data())
+                                             request.data)
 
         # And we get the corresponding response
         response = result_queue.get()
