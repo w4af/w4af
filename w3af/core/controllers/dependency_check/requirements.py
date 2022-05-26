@@ -52,7 +52,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
 
                      # This was used for testing, but now it's required for
                      # regular users too, do not remove!
-                     PIPDependency('psutil', 'psutil', '5.9.0'),
+                     PIPDependency('psutil', 'psutil', '5.9.1'),
 
                      # Added for the crawl.ds_store plugin
                      PIPDependency('ds_store', 'ds-store', '1.3.0'),
@@ -70,7 +70,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
 
                      # For language detection
                      PIPDependency('morfessor', 'morfessor', '2.0.6'),
-                     PIPDependency('numpy', 'numpy', '1.22.3'),
+                     PIPDependency('numpy', 'numpy', '1.22.4'),
                      PIPDependency('polyglot', 'polyglot', '16.7.4'),
                      PIPDependency('pycld2', 'pycld2', '0.41'),
                      PIPDependency('pyicu', 'pyicu', '2.9'),
@@ -93,7 +93,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('bravado_core', 'bravado-core', '5.17.0'),
 
                      # Fast compression library
-                     PIPDependency('lz4', 'lz4', '4.0.0'),
+                     PIPDependency('lz4', 'lz4', '4.0.1'),
 
                      # Vulners API plugin needs this lib
                      PIPDependency('vulners', 'vulners', '2.0.2'),

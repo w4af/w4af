@@ -110,7 +110,7 @@ class ProxyHandler(Master):
         """
         http_method = getattr(self.uri_opener, http_request.get_method())
         return http_method(http_request.get_uri(),
-                           data=http_request.get_data(),
+                           data=http_request.data,
                            headers=http_request.get_headers(),
                            grep=grep,
                            # This is an important one, which needs to be

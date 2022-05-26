@@ -37,8 +37,8 @@ from w3af.core.data.url.extended_urllib import ExtendedUrllib
 class TestInterceptProxy(unittest.TestCase):
     
     IP = '127.0.0.2'
-    MOTH_MESSAGE = '<title>moth: vulnerable web application</title>'
-    PAGE_NOT_FOUND = 'Page not found'
+    MOTH_MESSAGE = b'<title>moth: vulnerable web application</title>'
+    PAGE_NOT_FOUND = b'Page not found'
     
     def setUp(self):
         # Start the proxy server
