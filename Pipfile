@@ -62,6 +62,7 @@ pycld2 = "*"
 Morfessor = "*"
 coverage = "*"
 pytest = "*"
+pillow = "*"
 
 [dev-packages]
 
