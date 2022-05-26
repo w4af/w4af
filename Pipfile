@@ -81,9 +81,9 @@ editable = true
 git = "https://github.com/w4af/halberd"
 editable = true
 
-[packages.netlib]
-git = "https://git@github.com/w4af/netlib"
-ref = "137ae524c958cea9c96990587dafdd05b8d9cca0"
-
 [packages.mitmproxy]
 git = "https://github.com/w4af/mitmproxy"
+
+[packages.netlib]
+git = "https://github.com/w4af/netlib"
+ref = "dcb2e24293cf0495374400e74b06799d33c445a8"
