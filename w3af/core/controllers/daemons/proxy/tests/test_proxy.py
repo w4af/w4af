@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import urllib.request, urllib.error, urllib.parse
 import unittest
+from nocasedict import NocaseDict
 
 from nose.plugins.attrib import attr
 
@@ -70,8 +71,8 @@ class TestProxy(unittest.TestCase):
         # Have to remove the Date header because in some cases they differ
         # because one request was sent in second X and the other in X+1, which
         # makes the test fail
-        direct_resp_headers = dict(direct_resp.info())
-        proxy_resp_headers = dict(proxy_resp.info())
+        direct_resp_headers = NocaseDict(direct_resp.info())
+        proxy_resp_headers = NocaseDict(proxy_resp.info())
 
         # Make sure that a change in the seconds returned in date doesn't break
         # the test
@@ -102,8 +103,8 @@ class TestProxy(unittest.TestCase):
         # Have to remove the Date header because in some cases they differ
         # because one request was sent in second X and the other in X+1, which
         # makes the test fail
-        direct_resp_headers = dict(direct_resp.info())
-        proxy_resp_headers = dict(proxy_resp.info())
+        direct_resp_headers = NocaseDict(direct_resp.info())
+        proxy_resp_headers = NocaseDict(proxy_resp.info())
         del direct_resp_headers['date']
         del proxy_resp_headers['date']
 
@@ -153,8 +154,8 @@ class TestProxy(unittest.TestCase):
             self.assertEqual(hte.code, 500)
 
             body = hte.read()
-            self.assertIn('Proxy error', body)
-            self.assertIn('HTTP request', body)
+            self.assertIn(b'Proxy error', body)
+            self.assertIn(b'HTTP request', body)
 
     def test_proxy_gzip_encoding(self):
         """
@@ -169,8 +170,8 @@ class TestProxy(unittest.TestCase):
         url = get_sqlmap_testenv_http('/sqlmap/mysql/get_int.php?id=1')
         resp = self.proxy_opener.open(url)
 
-        headers = dict(resp.headers)
+        headers = NocaseDict(resp.headers)
         content_encoding = headers.get('content-encoding')
 
-        self.assertIn('luther', resp.read())
+        self.assertIn(b'luther', resp.read())
         self.assertEqual('identity', content_encoding)

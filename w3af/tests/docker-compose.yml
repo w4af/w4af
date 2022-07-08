@@ -33,19 +33,10 @@ w3afmoth:
 #
 # testenv
 #
-
-mydb:
-  image: mysql
-  environment:
-    - MYSQL_ROOT_PASSWORD=testpass
-
-
 testenv:
-  image: andresriancho/testenv:latest
+  image: w4af/sqlmap-testenv:latest
   ports:
     - "8998:80"
-  links:
-    - mydb
   environment:
     - APACHE_RUN_USER=www-data
     - APACHE_RUN_GROUP=www-data

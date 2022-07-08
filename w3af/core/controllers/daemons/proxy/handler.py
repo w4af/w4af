@@ -91,7 +91,7 @@ class ProxyHandler(Master):
         # for us, which is great, but we need to change the content-encoding
         # for the response in order to match the decoded body and avoid the
         # HTTP client using the proxy from failing
-        headers['content-encoding'] = ['identity']
+        headers[b'content-encoding'] = [b'identity']
 
         return LibMITMProxyHTTPResponse(request.httpversion,
                                         response.get_code(),
