@@ -63,7 +63,7 @@ class RawSSLDaemon(UpperDaemon):
 
 class SSLServer(threading.Thread):
 
-    def __init__(self, listen, port, certfile, proto=ssl.PROTOCOL_TLSv1_2,
+    def __init__(self, listen, port, certfile, proto=ssl.PROTOCOL_TLS_SERVER,
                  http_response=HTTP_RESPONSE):
         threading.Thread.__init__(self)
         self.daemon = True
@@ -80,15 +80,15 @@ class SSLServer(threading.Thread):
         self.sock.listen(5)
 
         self.errors = []
+        self.context = ssl.SSLContext(self.proto)
+        self.context.load_cert_chain(self.cert)
+        self.context.verify_mode = ssl.CERT_NONE
 
     def accept(self):
-        self.sock = ssl.wrap_socket(self.sock,
-                                    server_side=True,
-                                    certfile=self.cert,
-                                    cert_reqs=ssl.CERT_NONE,
-                                    ssl_version=self.proto,
-                                    do_handshake_on_connect=False,
-                                    suppress_ragged_eofs=True)
+        self.sock = self.context.wrap_socket(self.sock,
+                                                server_side=True,
+                                                do_handshake_on_connect=False,
+                                                suppress_ragged_eofs=True)
 
         newsocket, fromaddr = self.sock.accept()
 

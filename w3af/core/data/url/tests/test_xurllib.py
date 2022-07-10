@@ -109,13 +109,13 @@ class TestXUrllib(unittest.TestCase):
         http_response = self.uri_opener.GET(url, cache=False)
         self.assertIn('root:x:0', http_response.body)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_GET_with_post_data(self):
         httpretty.register_uri(httpretty.GET, self.MOCK_URL,
                                body=self.MOTH_MESSAGE, status=200)
 
         mock_url = URL(self.MOCK_URL)
-        data = 'abc=123&def=456'
+        data = b'abc=123&def=456'
         response = self.uri_opener.GET(mock_url, data=data)
 
         # Check the response
@@ -134,14 +134,14 @@ class TestXUrllib(unittest.TestCase):
         self.assertEqual(httpretty.last_request().path, '/')
         # pylint: enable=E1101
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def test_GET_with_post_data_and_qs(self):
         httpretty.register_uri(httpretty.GET, self.MOCK_URL,
                                body=self.MOTH_MESSAGE, status=200)
 
         qs = '?qs=1'
         mock_url = URL(self.MOCK_URL + qs)
-        data = 'abc=123&def=456'
+        data = b'abc=123&def=456'
         response = self.uri_opener.GET(mock_url, data=data)
 
         # Check the response
@@ -204,7 +204,7 @@ class TestXUrllib(unittest.TestCase):
         try:
             self.uri_opener.GET(url)
         except HTTPRequestException as hre:
-            self.assertEqual(hre.value, "Bad HTTP response status line: ''")
+            self.assertEqual(str(hre.value), "RemoteDisconnected('Remote end closed connection without response')")
         else:
             self.assertTrue(False, 'Expected HTTPRequestException.')
 
@@ -293,6 +293,7 @@ class TestXUrllib(unittest.TestCase):
 
     @attr('internet')
     @attr('ci_fails')
+    @unittest.skip("Need to find an example of a domain that we know is SNI (but most things kinda are by now")
     def test_ssl_sni(self):
         """
         Test is our HTTP client supports SSL SNI
@@ -424,10 +425,10 @@ class TestXUrllib(unittest.TestCase):
 
         :see: https://github.com/andresriancho/w3af/issues/8125
         """
-        raw_http_response = ('HTTP/1.1 200 Ok\r\n'
-                             'Connection: close\r\n'
-                             'Content-Type: text/html\r\n'
-                             'Content-Length: 3\r\n\r\nabc')
+        raw_http_response = (b'HTTP/1.1 200 Ok\r\n'
+                             b'Connection: close\r\n'
+                             b'Content-Type: text/html\r\n'
+                             b'Content-Length: 3\r\n\r\nabc')
         certfile = os.path.join(ROOT_PATH, 'plugins', 'tests', 'audit',
                                 'certs', 'invalid_cert.pem')
         port = get_unused_port()
@@ -444,10 +445,8 @@ class TestXUrllib(unittest.TestCase):
         self.assertEqual(body, http_response.body)
         s.stop()
 
-        # This error is expected, it's generated when the xurllib negotiates
-        # the different SSL protocols with the server
-        self.assertEqual(set([e.strerror for e in s.errors]),
-                         {'Bad file descriptor'})
+        # Expected no error here
+        self.assertEqual(0, len(s.errors))
 
     def test_rate_limit_high(self):
         self.rate_limit_generic(500, 0.009, 0.4)
@@ -458,7 +457,7 @@ class TestXUrllib(unittest.TestCase):
     def test_rate_limit_zero(self):
         self.rate_limit_generic(0, 0.005, 0.4)
 
-    @httpretty.activate
+    @httpretty.activate(allow_net_connect=False)
     def rate_limit_generic(self, max_requests_per_second, _min, _max):
         mock_url = 'http://mock/'
         url = URL(mock_url)
