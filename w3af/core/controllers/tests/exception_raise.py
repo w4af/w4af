@@ -36,5 +36,5 @@ class exception_raise(CrawlPlugin):
     def __init__(self):
         CrawlPlugin.__init__(self)
 
-    def crawl(self, fuzzable_req):
+    def crawl(self, fuzzable_req, debugging_id):
         raise self.exception_to_raise('Test exception.')

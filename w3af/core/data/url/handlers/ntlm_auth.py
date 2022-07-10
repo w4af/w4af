@@ -41,7 +41,7 @@ class AbstractNtlmAuthHandler(urllib.request.BaseHandler):
         if ntlm_auth_header is None:
             user, pw = self.passwd.find_user_password(None, request.get_full_url())
             if pw is not None:
-                auth = 'NTLM %s' % ntlm.create_NTLM_NEGOTIATE_MESSAGE(user)
+                auth = b'NTLM %s' % ntlm.create_NTLM_NEGOTIATE_MESSAGE(user)
                 request.add_unredirected_header(self.auth_header, auth)
         return request
     
@@ -80,7 +80,7 @@ class AbstractNtlmAuthHandler(urllib.request.BaseHandler):
                 user_parts = user.split('\\', 1)
                 domain_name = user_parts[0].upper()
                 user_name = user_parts[1]
-                auth = 'NTLM %s' % ntlm.create_NTLM_AUTHENTICATE_MESSAGE(challenge,
+                auth = b'NTLM %s' % ntlm.create_NTLM_AUTHENTICATE_MESSAGE(challenge,
                                                                          user_name,
                                                                          domain_name,
                                                                          pw, flags)

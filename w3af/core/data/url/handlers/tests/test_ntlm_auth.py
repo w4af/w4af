@@ -24,14 +24,14 @@ import urllib.request, urllib.error, urllib.parse
 from nose.plugins.attrib import attr
 
 from w3af.core.data.url.handlers.ntlm_auth import HTTPNtlmAuthHandler
-
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 
 @attr('moth')
 class TestNTLMHandler(unittest.TestCase):
     
     @attr('ci_fails')
     def test_auth_valid_creds(self):
-        url = "http://moth/w3af/core/ntlm_auth/ntlm_v1/"
+        url = get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/")
         user = 'moth\\admin'
         password = 'admin'
     
@@ -44,10 +44,10 @@ class TestNTLMHandler(unittest.TestCase):
         urllib.request.install_opener(opener)
     
         response = urllib.request.urlopen(url).read()
-        self.assertTrue(response.startswith('You are admin from MOTH/'), response)
+        self.assertTrue(response.startswith(b'You are admin from MOTH/'), response)
     
     def test_auth_invalid_creds(self):
-        url = "http://moth/w3af/core/ntlm_auth/ntlm_v1/"
+        url = get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/")
         user = 'moth\\invalid'
         password = 'invalid'
     
@@ -62,7 +62,7 @@ class TestNTLMHandler(unittest.TestCase):
         self.assertRaises(urllib.error.URLError, urllib.request.urlopen, url)
 
     def test_auth_invalid_proto(self):
-        url = "http://moth/w3af/core/ntlm_auth/ntlm_v2/"
+        url = get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v2/")
         user = 'moth\\admin'
         password = 'admin'
     

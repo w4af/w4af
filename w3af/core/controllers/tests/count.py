@@ -42,7 +42,7 @@ class count(CrawlPlugin):
         self.count = 0
         self.loops = 20
 
-    def crawl(self, fuzzable_req):
+    def crawl(self, fuzzable_req, debugging_id):
         for i in range(self.loops):
             self._uri_opener.GET(URL(get_moth_http('/%s' % i)))
             self.count += 1

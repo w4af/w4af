@@ -20,12 +20,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 
-HTTP_PHP_MOTH = '/tmp/w3af-moth.txt'
-DEFAULT_PHP_MOTH = 'w3af-moth-fallback:80'
+HTTP_W3AF_MOTH = '/tmp/w3af-moth.txt'
+DEFAULT_W3AF_MOTH = 'w3af-moth-fallback:80'
 
 
 def get_w3af_moth_http(path='/'):
-    return 'http://moth:9008%s' % path
+    try:
+        with open(HTTP_W3AF_MOTH) as f:
+            w3af_moth_netloc = f.read().strip()
+    except IOError:
+        w3af_moth_netloc = DEFAULT_W3AF_MOTH
+    return 'http://%s%s' % (w3af_moth_netloc, path)
 
 
 
