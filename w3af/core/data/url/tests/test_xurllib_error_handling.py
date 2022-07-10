@@ -91,20 +91,20 @@ class TestXUrllibDelayOnError(unittest.TestCase):
 
             # Note that the timeouts are increasing based on the error rate and
             # SOCKET_ERROR_DELAY
-            expected_calls = [call(1.5),
-                              call(3.0),
-                              call(4.5),
+            expected_calls = [call(2.0),
+                              call(4.0),
                               call(6.0),
-                              call(7.5),
-                              call(9.0),
-                              call(10.5),
+                              call(8.0),
+                              call(10.0),
                               call(12.0),
-                              call(13.5)]
+                              call(14.0),
+                              call(16.0),
+                              call(18.0)]
 
             expected_log = {0: False, 70: True, 40: True, 10: True, 80: True,
                             50: True, 20: True, 90: True, 60: True, 30: True,
                             100: False}
-            self.assertEqual(expected_calls, sleepm.call_args_list)
+            self.assertEqual(expected_calls, [ l for l in sleepm.call_args_list if l.args[0] > 0.5 ])
             self.assertEqual(http_exception_count, 100)
             self.assertEqual(self.uri_opener._sleep_log, expected_log)
 
@@ -252,7 +252,7 @@ class TestXUrllibErrorHandling(PluginTest):
         vulns = self.kb.get('lfi', 'lfi')
 
         # Verify the specifics about the vulnerabilities
-        expected = [('5', 'g')]
+        expected = [('5', b'g')]
 
         self.assertAllVulnNamesEqual('Local file inclusion vulnerability', vulns)
         self.assertExpectedVulnsFound(expected, vulns)
@@ -260,23 +260,23 @@ class TestXUrllibErrorHandling(PluginTest):
 
 
 class MultipleTimeoutsTCPHandler(socketserver.BaseRequestHandler):
-    RESPONSE = ('HTTP/1.0 200 Ok\r\n'
-                'Connection: Close\r\n'
-                'Content-Length: %s\r\n'
-                'Content-Type: text/html\r\n'
-                '\r\n%s')
+    RESPONSE = (b'HTTP/1.0 200 Ok\r\n'
+                b'Connection: Close\r\n'
+                b'Content-Length: %d\r\n'
+                b'Content-Type: text/html\r\n'
+                b'\r\n%s')
 
-    KA_RESPONSE = ('HTTP/1.0 200 Ok\r\n'
-                   'Connection: Keep-Alive\r\n'
-                   'Content-Length: %s\r\n'
-                   'Content-Type: text/html\r\n'
-                   '\r\n%s')
+    KA_RESPONSE = (b'HTTP/1.0 200 Ok\r\n'
+                   b'Connection: Keep-Alive\r\n'
+                   b'Content-Length: %d\r\n'
+                   b'Content-Type: text/html\r\n'
+                   b'\r\n%s')
 
-    RESPONSE_404 = ('HTTP/1.0 404 Not Found\r\n'
-                    'Connection: Close\r\n'
-                    'Content-Length: %s\r\n'
-                    'Content-Type: text/html\r\n'
-                    '\r\n%s')
+    RESPONSE_404 = (b'HTTP/1.0 404 Not Found\r\n'
+                    b'Connection: Close\r\n'
+                    b'Content-Length: %d\r\n'
+                    b'Content-Type: text/html\r\n'
+                    b'\r\n%s')
 
     def handle(self):
         fake_file = self.request.makefile()
@@ -285,28 +285,25 @@ class MultipleTimeoutsTCPHandler(socketserver.BaseRequestHandler):
         # Note the space after the =, these requests are to get the original
         # response and shouldn't be delayed
         if '?f= ' in header or '?g= ' in header:
-            body = 'Empty parameter'
+            body = b'Empty parameter'
             self.request.sendall(self.RESPONSE % (len(body), body))
 
         # Handling of the delayed+keep-alive responses
         elif '?f=' in header:
             time.sleep(TIMEOUT_SECS * 3)
-            body = 'Slow response'
+            body = b'Slow response'
             self.request.sendall(self.KA_RESPONSE % (len(body), body))
 
         # Handling of the vulnerability mock
         elif 'etc%2Fpasswd' in header:
-            body = 'Header %s Footer' % FILE_PATTERNS[0]
+            body = b'Header %s Footer' % FILE_PATTERNS[0].encode("utf-8")
             self.request.sendall(self.RESPONSE % (len(body), body))
 
         elif ' / ' in header:
             # Handling the index
-            links = ('<a href="/1?f=">1</a>'
-                     #'<a href="/2?f=">2</a>'
-                     #'<a href="/3?f=">3</a>'
-                     #'<a href="/4?f=">4</a>'
-                     '<a href="/5?g=">5</a>')
+            links = (b'<a href="/1?f=">1</a>'
+                     b'<a href="/5?g=">5</a>')
             self.request.sendall(self.RESPONSE % (len(links), links))
         else:
-            body = 'Not found'
+            body = b'Not found'
             self.request.sendall(self.RESPONSE_404 % (len(body), body))

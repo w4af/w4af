@@ -293,7 +293,7 @@ class TestXUrllib(unittest.TestCase):
 
     @attr('internet')
     @attr('ci_fails')
-    @unittest.skip("Need to find an example of a domain that we know is SNI (but most things kinda are by now")
+    @unittest.skip("Need to find an example of a domain that we know is SNI (but most things kinda are by now)")
     def test_ssl_sni(self):
         """
         Test is our HTTP client supports SSL SNI
@@ -475,8 +475,8 @@ class TestXUrllib(unittest.TestCase):
 
         end_time = time.time()
         elapsed_time = end_time - start_time
-        self.assertGreaterEqual(elapsed_time, _min)
-        self.assertLessEqual(elapsed_time, _max)
+        self.assertGreaterEqual(elapsed_time, _min - 0.005)
+        self.assertLessEqual(elapsed_time, _max + 0.005)
 
 
 class EmptyTCPHandler(socketserver.BaseRequestHandler):
