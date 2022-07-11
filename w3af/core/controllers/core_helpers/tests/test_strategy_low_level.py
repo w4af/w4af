@@ -22,6 +22,7 @@ import re
 import unittest
 import threading
 import httpretty
+from time import sleep
 
 from unittest.mock import Mock
 from nose.plugins.attrib import attr
@@ -38,6 +39,16 @@ class TestStrategy(unittest.TestCase):
     
     TARGET_URL = get_moth_http('/audit/sql_injection/'
                                'where_integer_qs.py?id=1')
+    EXPECTED_THREAD_NAMES = {
+        'PoolTaskHandler',
+        'PoolResultHandler',
+        'OutputManagerWorkerThread',
+        'PoolWorkerHandler',
+        'MainThread',
+        'SQLiteExecutor',
+        'OutputManager',
+        'QueueFeederThread'
+    }
 
     def setUp(self):
         kb.cleanup()
@@ -80,28 +91,37 @@ class TestStrategy(unittest.TestCase):
 
         self._assert_thread_names()
 
+    def _get_running_threads(self):
+        threads = [t for t in threading.enumerate()]
+        thread_names = [t.name for t in threads]
+
+        return set(thread_names)
+
+
+    def _await_correct_thread_names(self):
+        """
+        Makes sure that the threads which are living in my process are the
+        ones that I want.
+        """
+        thread_names_set = self._get_running_threads()
+
+        wait = 0
+        while self.EXPECTED_THREAD_NAMES != thread_names_set and wait < 30:
+            print("Unexpected thread running... waiting for it to die")
+            sleep(3)
+            wait += 3
+
     def _assert_thread_names(self):
         """
         Makes sure that the threads which are living in my process are the
         ones that I want.
         """
-        threads = [t for t in threading.enumerate()]
-        thread_names = [t.name for t in threads]
+        thread_names_set = self._get_running_threads()
 
-        thread_names_set = set(thread_names)
-        expected_names = {'PoolTaskHandler',
-                          'PoolResultHandler',
-                          'OutputManagerWorkerThread',
-                          'PoolWorkerHandler',
-                          'MainThread',
-                          'SQLiteExecutor',
-                          'OutputManager',
-                          'QueueFeederThread'}
-
-        self.assertEqual(thread_names_set, expected_names)
+        self.assertEqual(thread_names_set, self.EXPECTED_THREAD_NAMES)
 
     def test_strategy_exception(self):
-        self._assert_thread_names()
+        self._await_correct_thread_names()
 
         core = w3afCore()
         

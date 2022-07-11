@@ -74,6 +74,8 @@ from w3af.core.data.url.constants import (MAX_ERROR_COUNT,
                                           TIMEOUT_INCREASE_MULT,
                                           TIMEOUT_UPDATE_ELAPSED_MIN)
 
+def backoff(backoff_period):
+    time.sleep(backoff_period)
 
 class ExtendedUrllib(object):
     """
@@ -404,7 +406,7 @@ class ExtendedUrllib(object):
             om.out.debug(msg % args)
 
             # The actual delay
-            time.sleep(error_sleep)
+            backoff(error_sleep)
 
             # Record this delay
             self._sleep_log[lower_error_rate] = True

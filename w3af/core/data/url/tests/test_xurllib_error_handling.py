@@ -75,7 +75,7 @@ class TestXUrllibDelayOnError(unittest.TestCase):
         loops = 100
 
         # Now check the delays
-        with patch('w3af.core.data.url.extended_urllib.time.sleep') as sleepm:
+        with patch('w3af.core.data.url.extended_urllib.backoff') as sleepm:
             for i in range(loops):
                 try:
                     self.uri_opener.GET(url, cache=False)
@@ -104,7 +104,7 @@ class TestXUrllibDelayOnError(unittest.TestCase):
             expected_log = {0: False, 70: True, 40: True, 10: True, 80: True,
                             50: True, 20: True, 90: True, 60: True, 30: True,
                             100: False}
-            self.assertEqual(expected_calls, [ l for l in sleepm.call_args_list if l.args[0] > 0.5 ])
+            self.assertEqual(expected_calls, sleepm.call_args_list) #[ l for l in sleepm.call_args_list if l.args[0] > 0.5 ])
             self.assertEqual(http_exception_count, 100)
             self.assertEqual(self.uri_opener._sleep_log, expected_log)
 
