@@ -27,6 +27,7 @@ from nose.plugins.skip import SkipTest
 
 
 from w3af.core.controllers.ci.moth import get_moth_http
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 from w3af.core.data.url.opener_settings import OpenerSettings
 from w3af.core.data.url.extended_urllib import ExtendedUrllib
 from w3af.core.data.parsers.doc.url import URL
@@ -43,7 +44,7 @@ class TestXUrllibIntegration(unittest.TestCase):
     @attr('ci_fails')
     def test_ntlm_auth_not_configured(self):
         self.uri_opener = ExtendedUrllib()
-        url = URL("http://moth/w3af/core/ntlm_auth/ntlm_v1/")
+        url = URL(get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/"))
         http_response = self.uri_opener.GET(url, cache=False)
         self.assertIn('Must authenticate.', http_response.body)
 
@@ -62,12 +63,12 @@ class TestXUrllibIntegration(unittest.TestCase):
         ntlm_domain.set_value('moth') 
         ntlm_user.set_value('admin')
         ntlm_pass.set_value('admin')
-        ntlm_url.set_value('http://moth/w3af/core/ntlm_auth/ntlm_v1/')
+        ntlm_url.set_value(get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/"))
         
         settings.set_options(options)
         self.uri_opener.settings = settings
         
-        url = URL("http://moth/w3af/core/ntlm_auth/ntlm_v1/")
+        url = URL(get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/"))
         http_response = self.uri_opener.GET(url, cache=False)
         self.assertIn('You are admin from MOTH/', http_response.body)
 

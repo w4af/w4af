@@ -33,7 +33,7 @@ from w3af.core.data.options.option_list import OptionList
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.url.constants import MAX_HTTP_RETRIES, USER_AGENT
 from w3af.core.data.url.director import CustomOpenerDirector, build_opener
-from w3af.core.data.url.handlers.ntlm_auth import HTTPNtlmAuthHandler
+from w3af.core.data.url.handlers.ntlm_auth import HTTPNtlmAuthHandler, HTTP401Handler
 from w3af.core.data.url.handlers.fast_basic_auth import FastHTTPBasicAuthHandler
 from w3af.core.data.url.handlers.cookie_handler import CookieHandler
 from w3af.core.data.url.handlers.gzip_handler import HTTPGzipProcessor
@@ -227,7 +227,7 @@ class OpenerSettings(Configurable):
         """
         :return: The cookies that were collected during this scan.
         """
-        return self._cookie_handler.cookiejar
+        return self._cookie_handler.get_cookie_jar(None)
     
     def clear_cookies(self):
         self._cookie_handler.clear_cookies()
@@ -386,6 +386,7 @@ class OpenerSettings(Configurable):
                         self._url_parameter_handler,
                         self._cache_handler,
                         ErrorHandler,
+                        HTTP401Handler,
                         NoOpErrorHandler]:
             if handler:
                 handlers.append(handler)

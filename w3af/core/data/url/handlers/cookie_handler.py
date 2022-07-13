@@ -44,7 +44,7 @@ class CookieHandler(HTTPCookieProcessor):
 
         :return: The cookiejar instance
         """
-        if request.session is None:
+        if request is None or request.session is None:
             return self.default_cookiejar
 
         session = self.jars.get(request.session, None)

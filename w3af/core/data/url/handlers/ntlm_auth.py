@@ -13,6 +13,7 @@
 # or <http://www.gnu.org/licenses/lgpl.txt>.
 
 import urllib.request, urllib.error, urllib.parse
+from urllib.request import HTTPErrorProcessor
 from ntlm3 import ntlm
 
 
@@ -89,6 +90,20 @@ class AbstractNtlmAuthHandler(urllib.request.BaseHandler):
         else:
             return None
 
+class HTTP401Handler(HTTPErrorProcessor):
+    """Process HTTP401 error responses."""
+    handler_order = 1000  # after all other processing
+
+    def http_response(self, request, response):
+        code, msg, hdrs = response.code, response.msg, response.info()
+
+        if code == 401:
+            response = self.parent.error(
+                'http', request, response, code, msg, hdrs)
+
+        return response
+
+    https_response = http_response
 
 class HTTPNtlmAuthHandler(AbstractNtlmAuthHandler):
 
