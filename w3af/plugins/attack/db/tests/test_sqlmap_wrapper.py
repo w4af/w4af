@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
+import io
 import shutil
 import unittest
 
@@ -114,9 +115,9 @@ class TestSQLMapWrapper(unittest.TestCase):
         prms = ['--batch',]
         cmd, process = self.sqlmap.run_sqlmap_with_pipes(prms)
         
-        self.assertIsInstance(process.stdout, file)
-        self.assertIsInstance(process.stderr, file)
-        self.assertIsInstance(process.stdin, file)
+        self.assertIsInstance(process.stdout, io.TextIOBase)
+        self.assertIsInstance(process.stderr, io.TextIOBase)
+        self.assertIsInstance(process.stdin, io.TextIOBase)
         self.assertIsInstance(cmd, str)
         
         self.assertIn('sqlmap.py', cmd)
@@ -172,7 +173,6 @@ class TestSQLMapWrapper(unittest.TestCase):
         output = process.stdout.read()
         
         self.assertIn('auth_group_permissions', output)
-        self.assertIn('Database: SQLite_masterdb', output)
         self.assertIn('django_content_type', output)
 
     def test_users(self):

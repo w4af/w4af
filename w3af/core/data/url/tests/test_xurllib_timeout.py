@@ -246,20 +246,20 @@ class TestXUrllibTimeout(unittest.TestCase):
 
 
 class Ok200SmallDelayHandler(socketserver.BaseRequestHandler):
-    body = 'abc'
+    body = b'abc'
     sleep = 0.1
 
     def handle(self):
         self.data = self.request.recv(1024).strip()
         time.sleep(self.sleep)
-        self.request.sendall('HTTP/1.0 200 Ok\r\n'
-                             'Connection: Close\r\n'
-                             'Content-Length: 3\r\n'
-                             '\r\n' + self.body)
+        self.request.sendall(b'HTTP/1.0 200 Ok\r\n'
+                             b'Connection: Close\r\n'
+                             b'Content-Length: 3\r\n'
+                             b'\r\n' + self.body)
 
 
 class Ok200SmallDelayWithLongTriggeredTimeoutHandler(socketserver.BaseRequestHandler):
-    body = 'abc'
+    body = b'abc'
     regular_sleep = 0.1
     long_sleep = 7.0
 
@@ -268,10 +268,10 @@ class Ok200SmallDelayWithLongTriggeredTimeoutHandler(socketserver.BaseRequestHan
         time.sleep(self.regular_sleep)
 
         # When /timeout is in the request, we sleep some extra seconds
-        if '/timeout' in self.data:
+        if b'/timeout' in self.data:
             time.sleep(self.long_sleep)
 
-        self.request.sendall('HTTP/1.0 200 Ok\r\n'
-                             'Connection: Close\r\n'
-                             'Content-Length: 3\r\n'
-                             '\r\n' + self.body)
+        self.request.sendall(b'HTTP/1.0 200 Ok\r\n'
+                             b'Connection: Close\r\n'
+                             b'Content-Length: 3\r\n'
+                             b'\r\n' + self.body)

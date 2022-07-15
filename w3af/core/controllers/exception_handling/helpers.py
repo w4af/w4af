@@ -62,10 +62,10 @@ def get_platform_dist():
     :return: A human readable representation of platform.dist() , unknown if
              the module returned none / ''
     """
-    if distro.linux_distribution() == ('', '', ''):
+    if distro.id() == '' and distro.version() == '' and distro.name() == '':
         return 'Unknown'
 
-    return ' '.join(distro.linux_distribution())
+    return '%s %s %s' % (distro.id(), distro.name(), distro.version())
 
 
 def get_versions():

@@ -183,7 +183,7 @@ class Info(dict):
                 references.append(data)
 
         _data = {'url': str(self.get_url()),
-                 'var': self.get_token_name(),
+                 'var': smart_unicode(self.get_token_name()),
                  'response_ids': self.get_id(),
                  'vulndb_id': self.get_vulndb_id(),
                  'name': self.get_name(),

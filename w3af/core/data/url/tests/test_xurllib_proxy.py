@@ -91,5 +91,5 @@ class TestExtendedUrllibProxy(unittest.TestCase):
     
     def test_POST_via_proxy(self):
         url = URL(get_moth_http('/audit/xss/simple_xss_form.py'))
-        http_response = self.uri_opener.POST(url, data='text=123456abc', cache=False)
+        http_response = self.uri_opener.POST(url, data=b'text=123456abc', cache=False)
         self.assertIn('123456abc', http_response.body)

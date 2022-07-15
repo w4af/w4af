@@ -131,7 +131,7 @@ class APIScanTest(IntegrationTest):
         self.assertIn('request', traffic_data)
         self.assertIn('response', traffic_data)
 
-        self.assertIn('GET ', base64.b64decode(traffic_data['request']))
+        self.assertIn(b'GET ', base64.b64decode(traffic_data['request']))
 
         #
         # Get the scan log
@@ -143,8 +143,8 @@ class APIScanTest(IntegrationTest):
 
         log_data = response.json()
         self.assertGreater(len(log_data['entries']), 100)
-        self.assertEqual(log_data['next'], None)
-        self.assertEqual(log_data['next_url'], None)
+        self.assertEqual(log_data['next'], 1)
+        self.assertEqual(log_data['next_url'], "/scans/%s/log?page=1" % scan_id)
 
         zero_entry = log_data['entries'][0]
         self.assertEqual(zero_entry['message'], 'Called w3afCore.start()')

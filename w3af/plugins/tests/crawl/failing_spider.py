@@ -35,7 +35,7 @@ class failing_spider(web_spider):
 
         self.blacklist = ('2.html',)
 
-    def crawl(self, fuzzable_req):
+    def crawl(self, fuzzable_req, debugging_id):
         """
         Raises an exception if the fuzzable_req ends with something in the
         blacklist.
@@ -45,4 +45,4 @@ class failing_spider(web_spider):
                 raise Exception('UnitTest')
 
         # pylint: disable=E1120
-        return super(failing_spider, self).crawl(fuzzable_req)
+        return super(failing_spider, self).crawl(fuzzable_req, debugging_id)

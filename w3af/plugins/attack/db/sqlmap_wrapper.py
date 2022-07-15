@@ -46,11 +46,13 @@ class SQLMapWrapper(object):
     # https://github.com/andresriancho/w3af/issues/10538
     #
     INSTALLED_DEFAULT_ARGS = ['sqlmap',
+                              '--ignore-stdin',
                               '--output-dir=%s' % OUTPUT_DIR]
 
     # The embedded sqlmap (the whole directory) is removed in Debian
     EMBEDDED_DEFAULT_ARGS = [sys.executable,
                              'sqlmap.py',
+                             '--ignore-stdin',
                              '--output-dir=%s' % OUTPUT_DIR]
 
     SQLMAP_LOCATION = os.path.join(ROOT_PATH,

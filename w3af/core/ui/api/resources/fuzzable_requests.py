@@ -28,6 +28,7 @@ from w3af.core.ui.api import app
 from w3af.core.ui.api.utils.error import abort
 from w3af.core.ui.api.utils.auth import requires_auth
 from w3af.core.ui.api.utils.scans import get_scan_info_from_id
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 @app.route('/scans/<int:scan_id>/fuzzable-requests/', methods=['GET'])
@@ -46,6 +47,6 @@ def get_fuzzable_request_list(scan_id):
     data = []
 
     for fuzzable_request in kb.kb.get_all_known_fuzzable_requests():
-        data.append(b64encode(fuzzable_request.dump()))
+        data.append(smart_unicode(b64encode(smart_str_ignore(fuzzable_request.dump()))))
 
     return jsonify({'items': data})

@@ -29,12 +29,12 @@ from nose.plugins.attrib import attr
 
 
 EXPECTED_FUZZABLE_REQUESTS = [
-    'GET http://127.0.0.1:8000/audit/sql_injection/ HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\n',
-    'GET http://127.0.0.1:8000/audit/sql_injection/where_integer_form.py HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\n',
-    'POST http://127.0.0.1:8000/audit/sql_injection/where_integer_form.py HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\ntext=&Submit=Submit',
-    'GET http://127.0.0.1:8000/audit/sql_injection/where_string_single_qs.py?uname=pablo HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\n',
-    'GET http://127.0.0.1:8000/audit/sql_injection/ HTTP/1.1\r\n\r\n',
-    'GET http://127.0.0.1:8000/audit/sql_injection/where_integer_qs.py?id=1 HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\n',
+    b'GET http://127.0.0.1:8000/audit/sql_injection/ HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\n',
+    b'GET http://127.0.0.1:8000/audit/sql_injection/where_integer_form.py HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\n',
+    b'POST http://127.0.0.1:8000/audit/sql_injection/where_integer_form.py HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\ntext=&Submit=Submit',
+    b'GET http://127.0.0.1:8000/audit/sql_injection/where_string_single_qs.py?uname=pablo HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\n',
+    b'GET http://127.0.0.1:8000/audit/sql_injection/ HTTP/1.1\r\n\r\n',
+    b'GET http://127.0.0.1:8000/audit/sql_injection/where_integer_qs.py?id=1 HTTP/1.1\r\nReferer: http://127.0.0.1:8000/\r\n\r\n',
 ]
 
 @attr("moth")

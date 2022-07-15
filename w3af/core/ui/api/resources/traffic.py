@@ -28,6 +28,7 @@ from w3af.core.ui.api.utils.auth import requires_auth
 from w3af.core.ui.api.utils.scans import get_scan_info_from_id
 from w3af.core.data.db.history import HistoryItem
 from w3af.core.controllers.exceptions import DBException
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 @app.route('/scans/<int:scan_id>/traffic/<int:traffic_id>', methods=['GET'])
@@ -55,7 +56,7 @@ def get_traffic_details(scan_id, traffic_id):
         abort(404, msg)
         return
 
-    data = {'request': b64encode(details.request.dump()),
-            'response': b64encode(details.response.dump())}
+    data = {'request': smart_unicode(b64encode(smart_str_ignore(details.request.dump()))),
+            'response': smart_unicode(b64encode(smart_str_ignore(details.response.dump())))}
 
     return jsonify(data)
