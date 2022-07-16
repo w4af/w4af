@@ -21,19 +21,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 from nose.plugins.attrib import attr
 from nose.plugins.skip import SkipTest
 
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_apache_ssl(PayloadTestHelper):
-
-    EXPECTED_RESULT = {'apache_ssl_certificate': {}, 'apache_ssl_key': {}}
+class test_apache_ssl(ApachePayloadTestHelper):
 
     @attr('ci_fails')
     def test_apache_ssl(self):
         result = exec_payload(self.shell, 'apache_ssl', use_api=True)
-        self.assertEqual(self.EXPECTED_RESULT, result)
-
-    @attr('ci_fails')
-    def test_a_positive_test(self):
-        raise SkipTest('FIXME: I need a positive test where SSL cert and keys are found.')
+        self.assertEqual(1, len(result['apache_ssl_certificate']))
+        self.assertIn('/etc/ssl/certs/ssl-cert-snakeoil.pem', result['apache_ssl_certificate'])
+        self.assertEqual(1, len(result['apache_ssl_key']))
+        self.assertIn('/etc/ssl/certs/ssl-cert-snakeoil.pem', result['apache_ssl_certificate'])

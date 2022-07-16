@@ -17,6 +17,8 @@ class apache_mod_security(Payload):
 
         modules.append('mods-available/mod-security.load')
         modules.append('mods-available/mod-security2.load')
+        modules.append('mods-available/security.load')
+        modules.append('mods-available/security2.load')
 
         def parse_version(binary):
             version = re.search('(?<=ModSecurity for Apache/)(.*?) ', binary)
@@ -69,14 +71,21 @@ class apache_mod_security(Payload):
                 if version_location:
                     result['version'][version_location] = 'Yes'
 
-        files.append(dir + 'conf/mod_security.conf')
-        files.append(dir + 'conf.d/mod_security.conf')
-        files.append(dir + 'mod_security.d/mod_security_crs_10_config.conf')
-        files.append(
-            dir + 'mod_security.d/mod_security_crs_10_global_config.conf')
-        files.append(dir + 'mod_security.d/mod_security_localrules.conf')
-        files.append(dir + 'conf/mod_security.conf')
-        files.append(dir + 'mods-available/mod-security.conf')
+        if apache_config_dir:
+            for dir in apache_config_dir:
+                files.append(dir + 'conf/security.conf')
+                files.append(dir + 'conf.d/security.conf')
+                files.append(dir + 'conf/security2.conf')
+                files.append(dir + 'conf.d/security2.conf')
+                files.append(dir + 'conf.d/mod_security.conf')
+                files.append(dir + 'mod_security.d/mod_security_crs_10_config.conf')
+                files.append(
+                    dir + 'mod_security.d/mod_security_crs_10_global_config.conf')
+                files.append(dir + 'mod_security.d/mod_security_localrules.conf')
+                files.append(dir + 'conf/mod_security.conf')
+                files.append(dir + 'mods-available/mod-security.conf')
+                files.append(dir + 'mods-available/security.conf')
+                files.append(dir + 'mods-available/security2.conf')
 
         for file in files:
             file_content = self.shell.read(file)

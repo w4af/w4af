@@ -13,7 +13,7 @@ class apache_ssl(Payload):
         result['apache_ssl_key'] = {}
 
         def parse_ssl_cert(apache_config):
-            cert = re.search('(?<=SSLCertificateFile)(?! directive)    (.*)',
+            cert = re.search(r'(?<=SSLCertificateFile)(?! directive)\s+(.*)',
                              apache_config)
             if cert:
                 return cert.group(1)
@@ -21,7 +21,7 @@ class apache_ssl(Payload):
                 return ''
 
         def parse_ssl_key(apache_config):
-            key = re.search('(?<=SSLCertificateKeyFile )(.*)', apache_config)
+            key = re.search(r'(?<=SSLCertificateKeyFile)\s+(.*)', apache_config)
             if key:
                 return key.group(1)
             else:
@@ -31,17 +31,22 @@ class apache_ssl(Payload):
             'apache_config_files')['apache_config']
         for file in apache_files:
             content = self.shell.read(file)
-            if parse_ssl_cert(content) != '':
-                cert_content = self.shell.read(parse_ssl_cert(content))
+            certificate_file = parse_ssl_cert(content)
+            if certificate_file != '':
+                cert_content = self.shell.read(certificate_file)
                 if cert_content:
                     result['apache_ssl_certificate'][
-                        parse_ssl_cert(content)] = cert_content
+                        certificate_file] = cert_content
 
-            if parse_ssl_key(content) != '':
-                key_content = self.shell.read(parse_ssl_key(content))
+            key_file = parse_ssl_key(content)
+            if key_file != '':
+                key_content = self.shell.read(key_file)
                 if key_content:
                     result['apache_ssl_key'][
-                        parse_ssl_key(content)] = key_content
+                        key_file] = key_content
+                else:
+                    result['apache_ssl_key'][key_file] = ''
+
 
         return result
 

@@ -19,13 +19,13 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_apache_version(PayloadTestHelper):
+class test_apache_version(ApachePayloadTestHelper):
 
-    EXPECTED_RESULT = {'version': ['2.2.22']}
+    EXPECTED_RESULT = {'version': ['2.4.29']}
 
     @attr('ci_fails')
     def test_apache_version(self):

@@ -19,15 +19,16 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_apache_mod_security(PayloadTestHelper):
 
-    EXPECTED_RESULT = {'file': {'/etc/apache2/mods-available/mod-security.conf':
+class test_apache_mod_security(ApachePayloadTestHelper):
+
+    EXPECTED_RESULT = {'file': {'/etc/apache2/mods-available/security2.conf':
                                 '<IfModule security2_module>\n\t# Default ...'},
-                       'version': {'2.6.3 ': 'Yes'}}
+                       'version': {'2.9.2 ': 'Yes'}}
     
     maxDiff = None
     
@@ -36,7 +37,7 @@ class test_apache_mod_security(PayloadTestHelper):
         result = exec_payload(self.shell, 'apache_mod_security', use_api=True)
         
         self.assertEqual(self.EXPECTED_RESULT['version'], result['version'])
-        self.assertIn('/etc/apache2/mods-available/mod-security.conf', result['file'])
+        self.assertIn('/etc/apache2/mods-available/security2.conf', result['file'])
         
-        file_content = result['file']['/etc/apache2/mods-available/mod-security.conf']
+        file_content = result['file']['/etc/apache2/mods-available/security2.conf']
         self.assertIn('<IfModule security2_module>', file_content)

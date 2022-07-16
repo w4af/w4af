@@ -19,17 +19,15 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_apache_root_directory(PayloadTestHelper):
-
-    EXPECTED_RESULT = {'apache_root_directory': ['/var/www/',
-                                                 '/var/www/moth/']}
+class test_apache_root_directory(ApachePayloadTestHelper):
 
     @attr('ci_fails')
     def test_apache_root_directory(self):
         result = exec_payload(
             self.shell, 'apache_root_directory', use_api=True)
-        self.assertEqual(self.EXPECTED_RESULT, result)
+        self.assertIn('apache_root_directory', result)
+        self.assertSetEqual(set(result['apache_root_directory']), set(['/var/www/html/', '/var/www/']))

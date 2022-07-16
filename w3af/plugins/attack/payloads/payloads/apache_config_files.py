@@ -17,7 +17,9 @@ class apache_config_files(Payload):
         files.append('ports.conf')
         files.append('conf.d/security')
         files.append('sites-available/default')
+        files.append('sites-available/000-default.conf')
         files.append('sites-available/default-ssl')
+        files.append('sites-available/default-ssl.conf')
         files.append('conf.d/subversion.conf')
         files.append('workers.properties')
 

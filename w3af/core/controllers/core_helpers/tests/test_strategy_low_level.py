@@ -177,6 +177,9 @@ class TestStrategy(unittest.TestCase):
             self.assertTrue(False)
         core.scan_end_hook()
 
+        self._assert_thread_names()
+
+
     @httpretty.activate(allow_net_connect=False)
     def test_alert_if_target_is_301_all_proto_redir(self):
         """
@@ -207,6 +210,9 @@ class TestStrategy(unittest.TestCase):
         infos = kb.get('core', 'core')
         self.assertEqual(len(infos), 1, infos)
         core.scan_end_hook()
+
+        self._assert_thread_names()
+
 
     @httpretty.activate(allow_net_connect=False)
     def test_alert_if_target_is_301_all_domain_redir(self):
@@ -239,6 +245,9 @@ class TestStrategy(unittest.TestCase):
         self.assertEqual(len(infos), 1, infos)
         core.scan_end_hook()
 
+        self._assert_thread_names()
+
+
     @httpretty.activate(allow_net_connect=False)
     def test_alert_if_target_is_301_all_internal_redir(self):
         """
@@ -268,3 +277,5 @@ class TestStrategy(unittest.TestCase):
         infos = kb.get('core', 'core')
         self.assertEqual(len(infos), 0, infos)
         core.scan_end_hook()
+
+        self._assert_thread_names()

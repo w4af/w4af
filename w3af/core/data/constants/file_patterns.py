@@ -38,4 +38,10 @@ FILE_PATTERNS = (
 
         # win.ini
         "[fonts]",
+
+        # PHP script
+        "<?php",
+
+        # Executable script"
+        "#!/",
     )

@@ -19,18 +19,18 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_apache_config_files(PayloadTestHelper):
+class test_apache_config_files(ApachePayloadTestHelper):
 
     EXPECTED_RESULT = ['/etc/apache2/envvars',
                        '/etc/apache2/magic',
                        '/etc/apache2/ports.conf',
                        '/etc/apache2/apache2.conf',
-                       '/etc/apache2/conf.d/security',
-                       '/etc/apache2/sites-enabled/moth']
+                       '/etc/apache2/sites-available/000-default.conf',
+                       '/etc/apache2/sites-available/default-ssl.conf']
 
     @attr('ci_fails')
     def test_apache_config_files(self):
