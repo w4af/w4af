@@ -7,17 +7,17 @@ class gcc_version(Payload):
     """
     This payload shows the current GCC Version
     """
+    def parse_gcc_version(self, proc_version):
+        gcc_version = re.search(r'(?<=gcc version ).*?\)|(gcc-(\d+ (\([^\)]+\) )*[^\)]+))\)', proc_version)
+        if gcc_version:
+            return gcc_version.group(0)
+        else:
+            return ''
+
     def api_read(self):
         result = {}
 
-        def parse_gcc_version(proc_version):
-            gcc_version = re.search(r'(?<=gcc version ).*?\)', proc_version)
-            if gcc_version:
-                return gcc_version.group(0)
-            else:
-                return ''
-
-        version = parse_gcc_version(self.shell.read('/proc/version'))
+        version = self.parse_gcc_version(self.shell.read('/proc/version'))
         if version:
             result['gcc_version'] = version
 

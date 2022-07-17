@@ -22,13 +22,14 @@ import tempfile
 import shutil
 
 from nose.plugins.attrib import attr
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 
 
-class test_get_source_code(PayloadTestHelper):
+class test_get_source_code(ApachePayloadTestHelper):
 
-    EXPECTED_RESULT = {"https://moth/w3af/audit/local_file_read/local_file_read.php":
+    EXPECTED_RESULT = {"/w3af/audit/local_file_read/local_file_read.php":
                        (
                        '/var/www/moth/w3af/audit/local_file_read/local_file_read.php',
                        'tmp__random__/var/www/moth/w3af/audit/local_file_read/local_file_read.php')
@@ -44,7 +45,7 @@ class test_get_source_code(PayloadTestHelper):
 
         self.assertEqual(len(list(self.EXPECTED_RESULT.keys())), 1)
 
-        expected_url = list(self.EXPECTED_RESULT.keys())[0]
+        expected_url = get_w3af_moth_http(list(self.EXPECTED_RESULT.keys())[0])
         downloaded_url = list(result.items())[0][0].url_string
         self.assertEqual(expected_url, downloaded_url)
 

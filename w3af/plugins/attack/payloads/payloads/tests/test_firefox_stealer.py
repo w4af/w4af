@@ -19,18 +19,18 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_firefox_stealer(PayloadTestHelper):
+class test_firefox_stealer(ApachePayloadTestHelper):
 
-    EXPECTED_RESULT = {'/home/moth/.mozilla/firefox/xmo3gf47.moth/cert8.db': 'Yes',
+    EXPECTED_RESULT = {'/home/moth/.mozilla/firefox/xmo3gf47.moth/cert9.db': 'Yes',
                        '/home/moth/.mozilla/firefox/xmo3gf47.moth/content-prefs.sqlite': 'Yes',
                        '/home/moth/.mozilla/firefox/xmo3gf47.moth/cookies.sqlite': 'Yes',
                        '/home/moth/.mozilla/firefox/xmo3gf47.moth/extensions.ini': 'Yes',
                        '/home/moth/.mozilla/firefox/xmo3gf47.moth/formhistory.sqlite': 'Yes',
-                       '/home/moth/.mozilla/firefox/xmo3gf47.moth/key3.db': 'Yes',
+                       '/home/moth/.mozilla/firefox/xmo3gf47.moth/key4.db': 'Yes',
                        '/home/moth/.mozilla/firefox/xmo3gf47.moth/permissions.sqlite': 'Yes',
                        '/home/moth/.mozilla/firefox/xmo3gf47.moth/places.sqlite': 'Yes',
                        '/home/moth/.mozilla/firefox/xmo3gf47.moth/signons.sqlite': 'Yes'}

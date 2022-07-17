@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import re
 from nose.plugins.attrib import attr
 
 from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
@@ -27,10 +28,25 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 @attr('smoke')
 class test_cpu_info(PayloadTestHelper):
 
-    EXPECTED_RESULT = {'cpu_cores': '1',
-                       'cpu_info': 'AMD Phenom(tm) II X4 945 Processor'}
+    def parse_cpu_info(self, cpu_info):
+        processor = re.search('(?<=model name\t: )(.*)', cpu_info)
+        if processor:
+            processor_string = processor.group(1)
+            splitted = processor_string.split(' ')
+            splitted = [i for i in splitted if i != '']
+            processor_string = ' '.join(splitted)
+            return processor_string
+        else:
+            return ''
+
+    def read_cpu_info(self):
+        with open("/proc/cpuinfo") as info:
+            cpu_info = info.read()
+            cores = re.search('(?<=cpu cores\t: )(.*)', cpu_info).group(1)
+            processor = self.parse_cpu_info(cpu_info)
+            return { 'cpu_cores': cores, 'cpu_info': processor }
 
     @attr('ci_fails')
     def test_cpu_info(self):
         result = exec_payload(self.shell, 'cpu_info', use_api=True)
-        self.assertEqual(self.EXPECTED_RESULT, result)
+        self.assertEqual(self.read_cpu_info(), result)
