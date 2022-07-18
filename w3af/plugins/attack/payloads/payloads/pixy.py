@@ -36,7 +36,7 @@ class pixy(Payload):
                                 stderr=subprocess.PIPE,
                                 )
         stdout_value = proc.communicate()[0]
-        if 'usage: check [options] file' not in stdout_value:
+        if b'usage: check [options] file' not in stdout_value:
             ValueError('Please specify the correct pixy location')
 
         #

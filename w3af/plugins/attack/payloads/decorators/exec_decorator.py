@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 from functools import wraps
 
 import w3af.core.controllers.output_manager as om
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 def exec_debug(fn):
@@ -31,17 +32,17 @@ def exec_debug(fn):
         #   Run the original function
         result = fn(self, command)
         result = result if result is not None else ''
-        no_newline_result = result.replace('\n', '')
-        no_newline_result = no_newline_result.replace('\r', '')
+        no_newline_result = result.replace(b'\n', b'')
+        no_newline_result = no_newline_result.replace(b'\r', b'')
 
         #   Format the message
         if len(no_newline_result) > 25:
-            exec_result = '"%s..."' % no_newline_result[:25]
+            exec_result = b'"%s..."' % no_newline_result[:25]
         else:
-            exec_result = '"%s"' % no_newline_result[:25]
+            exec_result = b'"%s"' % no_newline_result[:25]
 
-        msg = 'exec("%s", %s) == %s bytes' % (command, exec_result,
-                                              len(exec_result))
+        msg = b'exec("%s", %s) == %d bytes' % (smart_str_ignore(command), exec_result,
+                                               len(exec_result))
 
         #   Print the message to the debug output
         om.out.debug(msg)

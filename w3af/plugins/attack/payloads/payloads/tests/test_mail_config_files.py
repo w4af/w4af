@@ -19,11 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_mail_config_files(PayloadTestHelper):
+class test_mail_config_files(ApachePayloadTestHelper):
 
     EXPECTED_RESULT = set(['/etc/postfix/main.cf', '/etc/postfix/master.cf'])
 

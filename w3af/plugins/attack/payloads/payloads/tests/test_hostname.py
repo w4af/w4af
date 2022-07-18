@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import re
 import socket
 
 from nose.plugins.attrib import attr
@@ -27,9 +28,9 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 class test_hostname(PayloadTestHelper):
 
-    EXPECTED_RESULT = {'hostname': [socket.gethostname(),]}
-
     @attr('ci_fails')
     def test_hostname(self):
         result = exec_payload(self.shell, 'hostname', use_api=True)
-        self.assertEqual(self.EXPECTED_RESULT, result)
+        self.assertEqual(1, len(result))
+        self.assertIn('hostname', result)
+        self.assertTrue(re.search(r'[a-z0-9]{12}', result['hostname'][0]))

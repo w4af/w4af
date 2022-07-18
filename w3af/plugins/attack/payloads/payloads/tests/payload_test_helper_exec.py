@@ -30,7 +30,7 @@ class PayloadTestHelperExec(PluginTest):
 
     _run_configs = {
         'cfg': {
-            'target': target_rce + '?file=section.php',
+            'target': target_rce + '?file=abc.txt',
             'plugins': {
                 'audit': (PluginConfig('rfi'),),
             }

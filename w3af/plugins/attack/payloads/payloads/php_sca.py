@@ -24,7 +24,7 @@ import w3af.core.data.constants.severity as severity
 import w3af.core.data.kb.knowledge_base as kb
 import w3af.core.controllers.output_manager as om
 
-from w3af.core.data.dc.generic.data_container import DataContainer
+from w3af.core.data.dc.generic.nr_kv_container import NonRepeatKeyValueContainer
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.controllers.sca.sca import PhpSCA
 from w3af.core.ui.console.tables import table
@@ -60,7 +60,8 @@ class php_sca(Payload):
                 
                 v = Vuln(name, desc, vuln_sev, 1, 'PHP Static Code Analyzer')
                 v.set_uri(url)
-                v.set_token((f.vulnsources[0], 0))
+                dc = NonRepeatKeyValueContainer()
+                dc.update({(f.vulnsources[0], 0): None})
 
                 args = list(vulndata['kb_key']) + [v]
 
@@ -72,7 +73,7 @@ class php_sca(Payload):
 
                 # TODO: Extract all the other variables that are
                 # present in the PHP file using the SCA
-                v.set_dc(DataContainer())
+                v.set_dc(dc)
 
                 #
                 # TODO: This needs to be checked! OS Commanding specific

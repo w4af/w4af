@@ -25,7 +25,7 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 class test_list_kernel_modules(PayloadTestHelper):
 
-    EXPECTED_RESULT = set(['ext2', 'lp', 'snd', 'parport_pc', 'vesafb'])
+    EXPECTED_RESULT = set(['kvm', 'rng_core', 'ext4', 'parport_pc'])
 
     @attr('ci_fails')
     def test_list_kernel_modules(self):
