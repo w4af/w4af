@@ -20,11 +20,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
 
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_ssh_version(PayloadTestHelper):
+class test_ssh_version(ApachePayloadTestHelper):
 
     # Please note that this only works IF the remote end allows us to use
     # php wrappers and read the binary file with base64

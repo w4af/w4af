@@ -20,15 +20,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
 
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
 @attr('slow')
 @attr('fails')
-class test_spider(PayloadTestHelper):
+class test_spider(ApachePayloadTestHelper):
 
     def test_spider(self):
         result = exec_payload(self.shell, 'spider', args=(2,), use_api=True)
-        self.assertTrue('/home/moth/keys.txt' in result)
-        self.assertTrue(result['/home/moth/keys.txt'])
+        self.assertTrue('/home/moth/key.txt' in result)
+        self.assertTrue(result['/home/moth/key.txt'])

@@ -30,8 +30,8 @@ class route(Payload):
             q = []
             while d > 0:
                 m, n = divmod(n, d)
-                q.append(str(m))
-                d /= 256
+                q.append(str(int(m)))
+                d = int(d/256)
             q.reverse()
             return '.'.join(q)
 

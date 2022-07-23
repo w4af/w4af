@@ -20,14 +20,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
 
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
 @attr('fails')
-class test_interesting_files(PayloadTestHelper):
+class test_interesting_files(ApachePayloadTestHelper):
 
-    EXPECTED_RESULT = {'/home/moth/keys.txt': None}
+    EXPECTED_RESULT = {'/home/moth/key.txt': None}
 
     def test_interesting_files(self):
         result = exec_payload(self.shell, 'interesting_files', use_api=True)

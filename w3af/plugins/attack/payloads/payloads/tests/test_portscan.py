@@ -25,15 +25,15 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 class test_portscan(PayloadTestHelperExec):
 
-    RESULT_22 = {'localhost': ['22']}
+    RESULT_80 = {'localhost': ['80']}
     RESULT_23 = {'localhost': []}
 
     @attr('ci_fails')
     def test_portscan(self):
         result = exec_payload(self.shell, 'portscan',
-                              args=('localhost', '22'),
+                              args=('localhost', '80'),
                               use_api=True)
-        self.assertEqual(self.RESULT_22, result)
+        self.assertEqual(self.RESULT_80, result)
 
         result = exec_payload(self.shell, 'portscan',
                               args=('localhost', '23'),

@@ -19,11 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_read_mail(PayloadTestHelper):
+class test_read_mail(ApachePayloadTestHelper):
 
     EXPECTED_RESULT = {'/var/mail/moth': 'Yes',
                        '/var/mail/www-data': 'Yes',
