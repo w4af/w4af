@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from nose.plugins.attrib import attr
+import unittest
 
 from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
@@ -30,7 +30,7 @@ class test_ssh_version(ApachePayloadTestHelper):
     # php wrappers and read the binary file with base64
     EXPECTED_RESULT = {'ssh_version': 'OpenSSH_5.9p1 Debian-5ubuntu1'}
 
-    @attr('ci_fails')
+    @unittest.skip("Binary base64 PHP requires not working, and not clear SSH binary contains version info")
     def test_ssh_version(self):
         result = exec_payload(self.shell, 'ssh_version', use_api=True)
         self.assertEqual(self.EXPECTED_RESULT, result)
