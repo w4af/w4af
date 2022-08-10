@@ -23,6 +23,7 @@ import w3af.core.controllers.output_manager as om
 
 from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af.core.data.fuzzer.utils import rand_alnum
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 def os_detection_exec(exec_method):
@@ -37,7 +38,7 @@ def os_detection_exec(exec_method):
     except BaseFrameworkException:
         pass
     else:
-        if b'w3af' in linux1 and linux2.count(b':') > 3:
+        if b'w3af' in smart_str_ignore(linux1) and smart_str_ignore(linux2).count(b':') > 3:
             om.out.debug('Identified remote OS as Linux, returning "linux".')
             return 'linux'
 
@@ -48,7 +49,7 @@ def os_detection_exec(exec_method):
     except BaseFrameworkException:
         pass
     else:
-        if '[fonts]' in win1 and 'ECHO' in win2:
+        if b'[fonts]' in smart_str_ignore(win1) and b'ECHO' in smart_str_ignore(win2):
             om.out.debug(
                 'Identified remote OS as Windows, returning "windows".')
             return 'windows'

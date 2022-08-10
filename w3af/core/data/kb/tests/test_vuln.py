@@ -28,6 +28,7 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
 from w3af.core.data.dc.generic.nr_kv_container import NonRepeatKeyValueContainer
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class MockVuln(Vuln):
@@ -89,4 +90,4 @@ class TestVuln(unittest.TestCase):
         self.assertEqual(inst.get_url(), mutant.get_url())
         self.assertEqual(inst.get_method(), mutant.get_method())
         self.assertEqual(inst.get_dc(), mutant.get_dc())
-        self.assertEqual(inst.get_token_name(), mutant.get_token().get_name())
+        self.assertEqual(smart_str_ignore(inst.get_token_name()), smart_str_ignore(mutant.get_token().get_name()))
