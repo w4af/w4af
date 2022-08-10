@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 from functools import wraps
 
 import w3af.core.controllers.output_manager as om
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 def read_debug(fn):
@@ -29,15 +30,15 @@ def read_debug(fn):
     @wraps(fn)
     def new(self, filename):
         #   Run the original function
-        result = fn(self, filename)
-        no_newline_result = result.replace('\n', '')
-        no_newline_result = no_newline_result.replace('\r', '')
+        result = smart_str_ignore(fn(self, filename))
+        no_newline_result = result.replace(b'\n', b'')
+        no_newline_result = no_newline_result.replace(b'\r', b'')
 
         #   Format the message
         if len(no_newline_result) > 25:
-            file_content = '"' + no_newline_result[:25] + '...' + '"'
+            file_content = '"' + smart_unicode(no_newline_result[:25]) + '...' + '"'
         else:
-            file_content = '"' + no_newline_result[:25] + '"'
+            file_content = '"' + smart_unicode(no_newline_result[:25]) + '"'
 
         msg = 'read( "' + filename + '" , ' + file_content + \
             ') == ' + str(len(file_content)) + ' bytes.'

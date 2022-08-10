@@ -735,7 +735,7 @@ class ExtendedUrllib(object):
         with raise_size_limit(respect_size_limit):
             return self.send(req, grep=grep)
 
-    def POST(self, uri, data='', headers=None, grep=True, cache=False,
+    def POST(self, uri, data=None, headers=None, grep=True, cache=False,
              cookies=True, session=None, error_handling=True, timeout=None,
              follow_redirects=None, use_basic_auth=True, use_proxy=True,
              debugging_id=None, new_connection=False,

@@ -29,6 +29,7 @@ from w3af.core.data.dc.headers import Headers
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.data.kb.info import Info
 from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class dav(AuditPlugin):
@@ -84,12 +85,12 @@ class dav(AuditPlugin):
         """
         Test SEARCH method.
         """
-        content = ("<?xml version='1.0'?>\r\n"
-                   "<g:searchrequest xmlns:g='DAV:'>\r\n"
-                   "<g:sql>\r\n"
-                   "Select 'DAV:displayname' from scope()\r\n"
-                   "</g:sql>\r\n"
-                   "</g:searchrequest>\r\n")
+        content = (b"<?xml version='1.0'?>\r\n"
+                   b"<g:searchrequest xmlns:g='DAV:'>\r\n"
+                   b"<g:sql>\r\n"
+                   b"Select 'DAV:displayname' from scope()\r\n"
+                   b"</g:sql>\r\n"
+                   b"</g:searchrequest>\r\n")
 
         res = self._uri_opener.SEARCH(domain_path, data=content,
                                       headers=self.CONTENT_TYPE)
@@ -113,12 +114,12 @@ class dav(AuditPlugin):
         """
         Test PROPFIND method
         """
-        content = ("<?xml version='1.0'?>\r\n"
-                   "<a:propfind xmlns:a='DAV:'>\r\n"
-                   "<a:prop>\r\n"
-                   "<a:displayname:/>\r\n"
-                   "</a:prop>\r\n"
-                   "</a:propfind>\r\n")
+        content = (b"<?xml version='1.0'?>\r\n"
+                   b"<a:propfind xmlns:a='DAV:'>\r\n"
+                   b"<a:prop>\r\n"
+                   b"<a:displayname:/>\r\n"
+                   b"</a:prop>\r\n"
+                   b"</a:propfind>\r\n")
 
         headers = copy.deepcopy(self.CONTENT_TYPE)
         headers['Depth'] = '1'
@@ -145,7 +146,7 @@ class dav(AuditPlugin):
         """
         # upload
         url = domain_path.url_join(rand_alpha(5))
-        rnd_content = rand_alnum(6)
+        rnd_content = smart_str_ignore(rand_alnum(6))
         headers = Headers([('content-type', 'text/plain')])
 
         put_response = self._uri_opener.PUT(url, data=rnd_content,

