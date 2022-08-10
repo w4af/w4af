@@ -30,8 +30,8 @@ def read_debug(fn):
     @wraps(fn)
     def new(self, filename):
         #   Run the original function
-        result = smart_str_ignore(fn(self, filename))
-        no_newline_result = result.replace(b'\n', b'')
+        result = fn(self, filename)
+        no_newline_result = smart_str_ignore(result).replace(b'\n', b'')
         no_newline_result = no_newline_result.replace(b'\r', b'')
 
         #   Format the message
