@@ -19,8 +19,11 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import copy
+
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
 from w3af.core.data.misc.encoding import smart_unicode
+from w3af.core.controllers.misc.io import NamedBytesIO
 
 FILENAME_TOKEN = 'file-5692fef3f5dcd97'
 PATH_TOKEN = 'path-0fb923a04c358a37c'
@@ -41,6 +44,11 @@ def clean_data_container(data_container):
     result = []
 
     for key, value, path, setter in data_container.iter_setters():
+
+        if isinstance(value, NamedBytesIO):
+            value = copy.deepcopy(value)
+            value.seek(0)
+            value = value.read()
 
         if value is None:
             _type = 'none'

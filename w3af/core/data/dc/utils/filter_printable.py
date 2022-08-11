@@ -21,8 +21,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import string
+import copy
 
 from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.controllers.misc.io import NamedBytesIO
 
 
 NON_PRINTABLE_REPLACE = '.'
@@ -38,6 +40,11 @@ def smart_chr(c):
 
 def filter_non_printable(_str):
     chars = []
+
+    if isinstance(_str, NamedBytesIO):
+        _str = copy.deepcopy(_str)
+        _str.seek(0)
+        _str = _str.read()
 
     for c in smart_str_ignore(_str):
         if is_printable_chr(c):

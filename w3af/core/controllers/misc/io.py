@@ -33,10 +33,16 @@ class NamedStringIO(StringIO):
         super(NamedStringIO, self).__init__(the_str)
         self._name = name
 
+    def __bytes__(self):
+        return self.getvalue().encode('utf-8')
+
     # pylint: disable=E0202
     @property
     def name(self):
         return self._name
+
+    def __getnewargs__(self):
+        return (self.getvalue(), self.name)
 
 class NamedBytesIO(BytesIO):
     """
@@ -56,6 +62,9 @@ class NamedBytesIO(BytesIO):
     @property
     def name(self):
         return self._name
+
+    def __getnewargs__(self):
+        return (self.getvalue(), self.name)
 
 def is_file_like(f):
     return isinstance(f, IOBase) or (isinstance(f, DataToken) and isinstance(f.get_value(), IOBase))

@@ -25,6 +25,7 @@ import mimetypes
 from w3af.core.controllers.misc.io import is_file_like
 from w3af.core.data.misc.encoding import smart_str
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
+from w3af.core.data.dc.utils.token import DataToken
 
 
 def encode_as_multipart(multipart_container, boundary):
@@ -94,7 +95,7 @@ def get_boundary():
 
     :return:
     """
-    return b'b08c02-53d780-e2bc43-1d5278-a3c0d9-a5c0d9'
+    return b'd08c02-53d780-e2bc43-1d5278-a3c0d9-a5c0d9'
 
 
 def multipart_encode(_vars, files, boundary=None, _buffer=None):
@@ -110,6 +111,8 @@ def multipart_encode(_vars, files, boundary=None, _buffer=None):
         _buffer += b'\r\n\r\n' + smart_str(value) + b'\r\n'
 
     for key, fd in files:
+        if isinstance(fd, DataToken):
+            fd = fd.get_value()
         fd.seek(0)
         filename = fd.name.split(os.path.sep)[-1]
 
@@ -120,7 +123,7 @@ def multipart_encode(_vars, files, boundary=None, _buffer=None):
         _buffer += b'--%s\r\n' % boundary
         _buffer += b'Content-Disposition: form-data; name="%s"; filename="%s"\r\n' % args
         _buffer += b'Content-Type: %s\r\n' % smart_str(content_type)
-        _buffer += b'\r\n%s\r\n' % fd.read()
+        _buffer += b'\r\n%s\r\n' % smart_str(fd.read())
 
     _buffer += b'--%s--\r\n\r\n' % boundary
 

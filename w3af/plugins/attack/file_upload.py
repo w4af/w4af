@@ -28,6 +28,7 @@ from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af.core.controllers.plugins.attack_plugin import AttackPlugin
 from w3af.core.controllers.misc.io import NamedStringIO
 from w3af.plugins.attack.payloads.decorators.exec_decorator import exec_debug
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class file_upload(AttackPlugin):
@@ -124,7 +125,7 @@ class file_upload(AttackPlugin):
         exploit_url.querystring = 'cmd='
         response = self._uri_opener.GET(exploit_url)
 
-        if shell_handler.SHELL_IDENTIFIER in response.get_body():
+        if smart_str_ignore(shell_handler.SHELL_IDENTIFIER) in smart_str_ignore(response.get_body()):
             return exploit_url
 
         return None

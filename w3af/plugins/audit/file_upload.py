@@ -33,7 +33,7 @@ import w3af.core.data.constants.severity as severity
 import w3af.core.data.parsers.parser_cache as parser_cache
 
 from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.controllers.misc.io import NamedStringIO
+from w3af.core.controllers.misc.io import NamedBytesIO
 from w3af.core.controllers.exceptions import BaseFrameworkException
 
 from w3af.core.data.parsers.utils.re_extract import ReExtract
@@ -44,6 +44,7 @@ from w3af.core.data.options.option_list import OptionList
 from w3af.core.data.fuzzer.fuzzer import create_mutants
 from w3af.core.data.fuzzer.utils import rand_alnum
 from w3af.core.data.kb.vuln import Vuln
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class file_upload(AuditPlugin):
@@ -96,7 +97,7 @@ class file_upload(AuditPlugin):
             return
 
         # Unique payload for the files we upload
-        payload = rand_alnum(239)
+        payload = smart_str_ignore(rand_alnum(239))
 
         for file_parameter in freq.get_file_vars():
             for extension in self._extensions:
@@ -104,9 +105,9 @@ class file_upload(AuditPlugin):
                 _, file_content, file_name = get_template_with_payload(extension, payload)
 
                 # Only file handlers are passed to the create_mutants functions
-                named_stringio = NamedStringIO(file_content, file_name)
+                named_bytesio = NamedBytesIO(file_content, file_name)
                 mutants = create_mutants(freq,
-                                         [named_stringio],
+                                         [named_bytesio],
                                          fuzzable_param_list=[file_parameter])
 
                 for mutant in mutants:
@@ -293,7 +294,7 @@ class file_upload(AuditPlugin):
                                         grep=False,
                                         debugging_id=debugging_id)
 
-        if mutant.file_payload not in response.body:
+        if mutant.file_payload not in smart_str_ignore(response.body):
             return
 
         if self._has_bug(mutant):
