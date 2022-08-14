@@ -47,6 +47,7 @@ from w3af.core.data.options.option_list import OptionList
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.kb.read_shell import ReadShell
 from w3af.core.data.kb.info_set import InfoSet
+from w3af.core.data.misc.encoding import smart_str
 
 
 os.chdir(W3AF_LOCAL_PATH)
@@ -247,7 +248,8 @@ class PluginTest(unittest.TestCase):
               debug=False,
               assert_exceptions=True,
               verify_targets=True,
-              misc_settings=None):
+              misc_settings=None,
+              target_os='unknown'):
         """
         Setup env and start scan. Typically called from children's
         test methods.
@@ -256,7 +258,7 @@ class PluginTest(unittest.TestCase):
         :param plugins: PluginConfig objects to activate and setup before
             the test runs.
         """
-        self._set_target(target, verify_targets)
+        self._set_target(target, verify_targets, target_os)
         self._set_enabled_plugins(plugins)
         self._set_output_manager(debug)
         self._set_uri_opener_settings()
@@ -268,7 +270,7 @@ class PluginTest(unittest.TestCase):
             # This prevents configurations from one test affecting the others
             self.misc_settings.set_default_values()
 
-    def _set_target(self, target, verify_targets):
+    def _set_target(self, target, verify_targets, target_os='unknown'):
         if not isinstance(target, (str, tuple)):
             raise TypeError('Expected basestring or tuple in scan target.')
         
@@ -281,7 +283,7 @@ class PluginTest(unittest.TestCase):
         if verify_targets and not self.MOCK_RESPONSES:
             self._verify_targets_up(target)
         
-        target_opts = create_target_option_list(*target)
+        target_opts = create_target_option_list_with_os(target_os, *target)
         self.w3afcore.target.set_options(target_opts)
 
     def _set_enabled_plugins(self, plugins):
@@ -501,7 +503,7 @@ class ReadExploitTest(PluginTest):
         # Now I start testing the shell itself!
         #
         shell = exploit_result[0]
-        etc_passwd = shell.generic_user_input('read', ['/etc/passwd'])
+        etc_passwd = smart_str(shell.generic_user_input('read', ['/etc/passwd']))
         self.assertIn(b'root', etc_passwd)
         self.assertIn(b'/bin/bash', etc_passwd)
 
@@ -562,25 +564,40 @@ def onlyroot(meth):
     test_inner_onlyroot.root = True
     return test_inner_onlyroot
 
-
-def create_target_option_list(*target):
-    opts = OptionList()
-
+def _extend_options_with_target(opts, *target):
     opt = opt_factory('target', '', '', URL_LIST)
     opt.set_value(','.join([u.url_string for u in target]))
     opts.add(opt)
-    
+
+    return opts
+
+def _extend_options_with_target_os(opts, target_os):
     opt = opt_factory('target_os', ('unknown', 'unix', 'windows'), '', 'combo')
+    if target_os is not None:
+        opt.set_value(target_os)
     opts.add(opt)
-    
+
+    return opts
+
+def _extend_options_with_target_framework(opts):
     opt = opt_factory('target_framework',
                       ('unknown', 'php', 'asp', 'asp.net',
                        'java', 'jsp', 'cfm', 'ruby', 'perl'),
                       '', 'combo')
     opts.add(opt)
-    
     return opts
 
+def create_target_option_list(*target):
+    return create_target_option_list_with_os(None, *target)
+
+def create_target_option_list_with_os(target_os, *target):
+    opts = OptionList()
+
+    _extend_options_with_target(opts, *target)
+    _extend_options_with_target_os(opts, target_os)
+    _extend_options_with_target_framework(opts)
+
+    return opts
 
 class MockResponse(object):
     NO_MOCK = 'httpretty can not mock this method'

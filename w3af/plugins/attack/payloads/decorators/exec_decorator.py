@@ -32,7 +32,7 @@ def exec_debug(fn):
         #   Run the original function
         result = fn(self, command)
         result = result if result is not None else ''
-        no_newline_result = result.replace(b'\n', b'')
+        no_newline_result = smart_str_ignore(result).replace(b'\n', b'')
         no_newline_result = no_newline_result.replace(b'\r', b'')
 
         #   Format the message

@@ -18,12 +18,15 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import w3af.core.data.kb.config as cf
+
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.data.kb.vuln_templates.os_commanding_template import OSCommandingTemplate
 from w3af.plugins.tests.helper import PluginConfig, ExecExploitTest
 from w3af.plugins.attack.os_commanding import (FullPathExploitStrategy,
                                           CmdsInPathExploitStrategy,
                                           BasicExploitStrategy)
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class TestOSCommandingShell(ExecExploitTest):
@@ -33,6 +36,7 @@ class TestOSCommandingShell(ExecExploitTest):
     _run_configs = {
         'cfg': {
             'target': target_url,
+            'target_os': 'unix',
             'plugins': {
                 'audit': (PluginConfig('os_commanding'),),
             }
@@ -42,7 +46,7 @@ class TestOSCommandingShell(ExecExploitTest):
     def test_found_exploit_osc(self):
         # Run the scan
         cfg = self._run_configs['cfg']
-        self._scan(cfg['target'], cfg['plugins'])
+        self._scan(cfg['target'], cfg['plugins'], target_os=cfg['target_os'])
 
         # Assert the general results
         vulns = self.kb.get('os_commanding', 'os_commanding')
@@ -51,7 +55,7 @@ class TestOSCommandingShell(ExecExploitTest):
         vuln = vulns[0]
         self.assertEqual(vuln.get_name(), 'OS commanding vulnerability')
         self.assertEqual(vuln.get_url().get_file_name(), 'trivial_osc.py')
-        self.assertEqual(vuln.get_mutant().get_token_name(), 'cmd')
+        self.assertEqual(vuln.get_mutant().get_token_name(), b'cmd')
 
         vuln_to_exploit_id = vuln.get_id()
 
@@ -77,7 +81,7 @@ class TestOSCommandingShell(ExecExploitTest):
             shell = exploit_result[0]
             etc_passwd = shell.generic_user_input('exec', ['cat', '/etc/passwd'])
     
-            self.assertTrue('root' in etc_passwd)
+            self.assertTrue(b'root' in smart_str_ignore(etc_passwd))
     
             lsp = shell.generic_user_input('lsp', [])
             self.assertTrue('apache_config_directory' in lsp)
@@ -86,9 +90,9 @@ class TestOSCommandingShell(ExecExploitTest):
                                                ['apache_config_directory'])
             self.assertTrue(payload is None)
             
-            _help = shell.help(None)
-            self.assertIn('execute', _help)
-            self.assertIn('upload', _help)
+            _help = smart_str_ignore(shell.help(None))
+            self.assertIn(b'execute', _help)
+            self.assertIn(b'upload', _help)
     
     def test_from_template(self):
         osct = OSCommandingTemplate()

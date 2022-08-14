@@ -129,7 +129,7 @@ class FullPathExploitStrategy(SeparatorExploitStrategy):
         
         # For some reason that I don't care about, rev adds a \n to the string
         # it reverses, even when I run the echo with "-n".
-        expected_output = '%s\n' % rand[::-1]
+        expected_output = b'%s\n' % rand[::-1].encode('utf-8')
         
         http_response = self.send(cmd, opener)
         return expected_output == self.extract_result(http_response)
@@ -185,7 +185,7 @@ class ShellShock(ExploitStrategy):
 
         test_command = 'echo -n w3af'
         http_response = self.send(self.generate_command(test_command), opener)
-        return self.extract_result(http_response) == 'w3af'
+        return self.extract_result(http_response) == b'w3af'
 
     def generate_command(self, command):
         return self.PAYLOAD_FMT % command
