@@ -42,6 +42,7 @@ from w3af.core.data.fuzzer.fuzzer import create_mutants
 from w3af.core.data.fuzzer.utils import rand_alnum
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.kb.vuln import Vuln
+from w3af.core.data.misc.encoding import smart_str
 
 
 CONFIG_OK = 'Ok'
@@ -489,7 +490,7 @@ class RFIWebHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            self.wfile.write(self.RESPONSE_BODY)
+            self.wfile.write(smart_str(self.RESPONSE_BODY))
         except Exception as e:
             om.out.debug('[RFIWebHandler] Exception: "%s".' % e)
         finally:
