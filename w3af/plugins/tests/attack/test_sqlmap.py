@@ -60,7 +60,7 @@ class TestSQLMapShell(ReadExploitTest):
         self.assertTrue(all(["SQL injection" == v.get_name() for v in vulns]))
 
         # Verify the specifics about the vulnerabilities
-        EXPECTED = [('get_int.php', 'id')]
+        EXPECTED = [('get_int.php', b'id')]
 
         found_vulns = [(v.get_url().get_file_name(),
                         v.get_mutant().get_token_name()) for v in vulns]
@@ -85,7 +85,7 @@ class TestSQLMapShell(ReadExploitTest):
         vuln = vulns[0]
 
         self.assertEqual('Blind SQL injection vulnerability', vuln.get_name())
-        self.assertEqual('id', vuln.get_mutant().get_token_name())
+        self.assertEqual(b'id', vuln.get_mutant().get_token_name())
         self.assertEqual('get_int_noerror.php', vuln.get_url().get_file_name())
         
         vuln_to_exploit_id = vuln.get_id()

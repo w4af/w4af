@@ -35,6 +35,8 @@ w3afmoth:
 #
 testenv:
   image: w4af/sqlmap-testenv:latest
+  security_opt:
+    - seccomp:unconfined
   ports:
     - "8998:80"
   environment:
