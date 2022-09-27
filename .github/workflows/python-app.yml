@@ -19,7 +19,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
       with:
-        python-version: "3.9"
+        python-version: "3.10"
     - name: Install Gtk
       run: sudo apt-get update && sudo apt-get install -y libgirepository1.0-dev gir1.2-gtk-3.0 libgtk-3-dev gir1.2-pango-1.0 libpango1.0-dev gir1.2-gtksource-4 libgtksourceview-4-dev libicu-dev gir1.2-webkit2-4.0 libwebkit2gtk-4.0-dev graphviz libssl-dev libffi-dev libsqlite3-dev libxml2-dev git
     - name: Install node packages
