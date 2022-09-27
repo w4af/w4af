@@ -39,7 +39,6 @@ ipaddresses = "*"
 xdot = "*"
 nocasedict = "*"
 urllib3 = "*"
-nose = "*"
 httpretty = "*"
 xunitparser = "*"
 pylint = "*"
@@ -88,3 +87,7 @@ git = "https://github.com/w4af/mitmproxy"
 [packages.netlib]
 git = "https://github.com/w4af/netlib"
 ref = "dcb2e24293cf0495374400e74b06799d33c445a8"
+
+[packages.nose]
+git = "https://github.com/w4af/nose"
+ref = "376fc6792a0ddb519db6832bdd630ab11e2d6a08"
