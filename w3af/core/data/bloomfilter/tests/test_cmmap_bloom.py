@@ -34,7 +34,7 @@ class TestCMmapBloomfilterLarge(GenericFilterTest):
     def setUp(self):
         super(TestCMmapBloomfilterLarge, self).setUp()
         temp_file = GenericBloomFilter.get_temp_file()
-        self.filter = CMmapFilter(self.CAPACITY, self.ERROR_RATE, temp_file)
+        self.filter = CMmapFilter(max_elements=self.CAPACITY, error_rate=self.ERROR_RATE, filename=(temp_file,-1))
 
 
 @attr('smoke')
@@ -46,4 +46,4 @@ class TestCMmapBloomfilterSmall(GenericFilterTest):
     def setUp(self):
         super(TestCMmapBloomfilterSmall, self).setUp()
         temp_file = GenericBloomFilter.get_temp_file()
-        self.filter = CMmapFilter(self.CAPACITY, self.ERROR_RATE, temp_file)
+        self.filter = CMmapFilter(max_elements=self.CAPACITY, error_rate=self.ERROR_RATE, filename=(temp_file,-1))

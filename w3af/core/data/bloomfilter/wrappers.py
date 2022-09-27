@@ -37,6 +37,7 @@ class GenericBloomFilter(object):
     def __init__(self, capacity, error_rate=0.01):
         self.capacity = capacity
         self.error_rate = error_rate
+        self.size = 0
         self.bf = None
 
     def __contains__(self, key):
@@ -45,7 +46,7 @@ class GenericBloomFilter(object):
         # pylint: enable=E1135
 
     def __len__(self):
-        return len(self.bf)
+        return self.size
 
     def __repr__(self):
         return repr(self.bf)
@@ -54,6 +55,7 @@ class GenericBloomFilter(object):
         return str(self.bf)
 
     def add(self, key):
+        self.size += 1
         return self.bf.add(key)
 
     @staticmethod
