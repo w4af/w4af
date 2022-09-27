@@ -157,9 +157,8 @@ additional-builtins=_
 
 [TYPECHECK]
 
-# Tells whether missing members accessed in mixin class should be ignored. A
-# mixin class is detected if its name ends with "mixin" (case insensitive).
-ignore-mixin-members=yes
+# Define which checks to skip on mixin members
+ignored-checks-for-mixins=no-member,not-async-context-manager,not-context-manager,attribute-defined-outside-init
 
 # List of classes names for which member attributes should not be checked
 # (useful for classes with attributes dynamically set).

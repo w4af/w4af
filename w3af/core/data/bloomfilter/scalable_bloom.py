@@ -22,6 +22,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from w3af.core.data.bloomfilter.bloomfilter import BloomFilter
 
+def make_hashable(key):
+    if hasattr(key, '__divmod__'):
+        return key
+    if isinstance(key, (str, bytes, list, tuple)) and not key:
+        return key
+    if isinstance(key, (str, bytes)):
+        return key
+    if hasattr(key[0], '__divmod__'):
+        int_list = key
+    if isinstance(key[0], str):
+        return key
+    return "-".join([ str(x) for x in key ])
 
 class ScalableBloomFilter(object):
     SMALL_SET_GROWTH = 2  # slower, but takes up less memory
@@ -66,8 +78,9 @@ class ScalableBloomFilter(object):
         True
 
         """
+        hashable_key = make_hashable(key)
         for f in reversed(self.filters):
-            if key in f:
+            if hashable_key in f:
                 return True
         return False
 
@@ -86,7 +99,8 @@ class ScalableBloomFilter(object):
         False
 
         """
-        if key in self:
+        hashable_key = make_hashable(key)
+        if hashable_key in self:
             return False
 
         _filter = self.filters[-1] if self.filters else None
@@ -100,7 +114,7 @@ class ScalableBloomFilter(object):
                                        error_rate=new_error_rate)
 
             self.filters.append(_filter)
-        _filter.add(key)
+        _filter.add(hashable_key)
         return True
 
     @property
