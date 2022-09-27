@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from nose.plugins.attrib import attr
 
-from pybloomfilter import BloomFilter as CMmapFilter
+from bloom_filter2 import BloomFilter as CMmapFilter
 from w3af.core.data.bloomfilter.tests.generic_filter_test import GenericFilterTest
 from w3af.core.data.bloomfilter.wrappers import GenericBloomFilter
 

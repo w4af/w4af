@@ -99,30 +99,35 @@ class HTTPResponse(http.client.HTTPResponse):
                 self.close()
                 return b""
 
+        if self.chunked:
+            return self._read_chunked(amt)
+
         if amt is not None:
-            # Amount is given, implement using readinto
-            b = bytearray(amt)
-            n = self.readinto(b)
-            return memoryview(b)[:n].tobytes()
+            if self.length is not None and amt > self.length:
+                # clip the read to the "end of response"
+                amt = self.length
+            s = self.fp.read(amt)
+            if not s and amt:
+                # Ideally, we would raise IncompleteRead if the content-length
+                # wasn't satisfied, but it might break compatibility.
+                self._close_conn()
+            elif self.length is not None:
+                self.length -= len(s)
+                if not self.length:
+                    self._close_conn()
+            return s
         else:
             # Amount is not given (unbounded read) so we must check self.length
-            # and self.chunked
-
-            if self.chunked:
-                s = self._readall_chunked()
-                self.close()
-                return s
-
             if self.length is None:
                 s = self.fp.read()
             else:
                 try:
                     s = self._safe_read(self.length)
                 except IncompleteRead:
-                    self.close()
+                    self._close_conn()
                     raise
                 self.length = 0
-            self.close()        # we read everything
+            self._close_conn()        # we read everything
             return s
 
     def begin(self):

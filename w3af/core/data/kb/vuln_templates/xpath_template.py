@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from w3af.core.data.kb.vuln_templates.base_template import BaseTemplate
+from w3af.core.data.misc.encoding import smart_str
 
 
 class XPathTemplate(BaseTemplate):
@@ -36,7 +37,7 @@ class XPathTemplate(BaseTemplate):
         
         mutant = self.create_mutant_from_params()
         mutant.set_dc(self.data)
-        mutant.set_token((self.vulnerable_parameter, 0))
+        mutant.set_token((smart_str(self.vulnerable_parameter), 0))
 
         v.set_mutant(mutant)
         

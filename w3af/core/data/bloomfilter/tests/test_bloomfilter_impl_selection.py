@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 
 from w3af.core.data.bloomfilter.bloomfilter import BloomFilter
-from pybloomfilter import BloomFilter as CMmapFilter
+from bloom_filter2 import BloomFilter as CMmapFilter
 
 
 class TestImplementationSelection(unittest.TestCase):
