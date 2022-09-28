@@ -27,10 +27,10 @@ GUI = 2
 CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('github', 'PyGithub', '1.55'),
                      PIPDependency('git.util', 'GitPython', '3.1.27'),
-                     PIPDependency('pybloomfilter', 'pybloomfiltermmap3', '0.5.5'),
+                     PIPDependency('bloom-filter2', 'bloom-filter2', '2.0.0'),
                      PIPDependency('phply', 'phply', '1.2.5'),
                      PIPDependency('nltk', 'nltk', '3.7'),
-                     PIPDependency('chardet', 'chardet', '4.0.0'),
+                     PIPDependency('chardet', 'chardet', '5.0.0'),
                      PIPDependency('tblib', 'tblib', '1.7.0'),
                      PIPDependency('pdfminer', 'pdfminer', '20191125'),
                      PIPDependency('OpenSSL', 'pyOpenSSL', '21.0.0'),
@@ -39,47 +39,47 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      # We need 0.1.8 because of mitmproxy
                      PIPDependency('pyasn1', 'pyasn1', '0.4.8'),
 
-                     PIPDependency('lxml', 'lxml', '4.8.0'),
-                     PIPDependency('scapy.config', 'scapy', '2.4.5'),
+                     PIPDependency('lxml', 'lxml', '4.9.1'),
+                     PIPDependency('scapy.config', 'scapy', '2.5.0rc1'),
                      PIPDependency('cluster', 'cluster', '1.4.1.post3'),
-                     PIPDependency('msgpack', 'msgpack', '1.0.3'),
+                     PIPDependency('msgpack', 'msgpack', '1.0.4'),
                      PIPDependency('ntlm', 'python-ntlm3', '1.0.2'),
                      PIPDependency('Halberd', 'halberd', '0.2.5'),
                      PIPDependency('darts.lib.utils', 'darts-util-lru', '0.5'),
                      PIPDependency('jinja2', 'Jinja2', '3.1.2'),
                      PIPDependency('vulndb', 'vulndb', '0.1.3'),
-                     PIPDependency('markdown', 'markdown', '3.3.7'),
+                     PIPDependency('markdown', 'markdown', '3.4.1'),
 
                      # This was used for testing, but now it's required for
                      # regular users too, do not remove!
-                     PIPDependency('psutil', 'psutil', '5.9.1'),
+                     PIPDependency('psutil', 'psutil', '5.9.2'),
 
                      # Added for the crawl.ds_store plugin
                      PIPDependency('ds_store', 'ds-store', '1.3.0'),
 
                      # Console colors
-                     PIPDependency('termcolor', 'termcolor', '1.1.0'),
+                     PIPDependency('termcolor', 'termcolor', '2.0.1'),
 
                      # We "outsource" the HTTP proxy feature to mitmproxy
                      PIPDependency('mitmproxy', 'mitmproxy', '0.13'),
 
                      # Only used by the REST API, but in the future the console
                      # and GUI will consume it so it's ok to put this here
-                     PIPDependency('Flask', 'Flask', '2.1.2'),
+                     PIPDependency('Flask', 'Flask', '2.2.2'),
                      PIPDependency('yaml', 'PyYAML', '6.0'),
 
                      # For language detection
                      PIPDependency('morfessor', 'morfessor', '2.0.6'),
-                     PIPDependency('numpy', 'numpy', '1.22.4'),
+                     PIPDependency('numpy', 'numpy', '1.23.3'),
                      PIPDependency('polyglot', 'polyglot', '16.7.4'),
                      PIPDependency('pycld2', 'pycld2', '0.41'),
                      PIPDependency('pyicu', 'pyicu', '2.9'),
 
                      # tldextract extracts the tld from any domain name
-                     PIPDependency('tldextract', 'tldextract', '3.3.0'),
+                     PIPDependency('tldextract', 'tldextract', '3.3.1'),
 
                      # pebble multiprocessing
-                     PIPDependency('pebble', 'pebble', '4.6.3'),
+                     PIPDependency('pebble', 'pebble', '5.0.0'),
 
                      # acora speeds up string search, for regular expressions
                      # we use esmre to extract the string literals from the re
@@ -90,17 +90,17 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('diff_match_patch', 'diff-match-patch', '20200713'),
 
                      # OpenAPI documentation parser
-                     PIPDependency('bravado_core', 'bravado-core', '5.17.0'),
+                     PIPDependency('bravado_core', 'bravado-core', '5.17.1'),
 
                      # Fast compression library
-                     PIPDependency('lz4', 'lz4', '4.0.1'),
+                     PIPDependency('lz4', 'lz4', '4.0.2'),
 
                      # Vulners API plugin needs this lib
-                     PIPDependency('vulners', 'vulners', '2.0.2'),
+                     PIPDependency('vulners', 'vulners', '2.0.4'),
 
                      PIPDependency('ipaddresses', 'ipaddresses', '0.0.2'),
 
-                     PIPDependency('nocasedict', 'nocasedict', '1.0.3')
+                     PIPDependency('nocasedict', 'nocasedict', '1.0.4')
                      ]
 
 GUI_PIP_EXTRAS = [PIPDependency('xdot', 'xdot', '1.2')]

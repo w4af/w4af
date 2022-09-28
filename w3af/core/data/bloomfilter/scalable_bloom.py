@@ -27,8 +27,12 @@ def make_hashable(key):
         return key
     if isinstance(key, (str, bytes, list, tuple)) and not key:
         return key
+    if isinstance(key, tuple):
+        return "-".join([ str(x) for x in key ])
     if isinstance(key, (str, bytes)):
         return key
+    if not hasattr(key, '__getitem__'):
+        return str(key)
     if hasattr(key[0], '__divmod__'):
         int_list = key
     if isinstance(key[0], str):

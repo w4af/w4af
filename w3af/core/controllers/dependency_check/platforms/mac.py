@@ -70,8 +70,6 @@ class MacOSX(Platform):
     # pybloomfilter is broken in Mac OS X, so we don't require it
     # https://github.com/andresriancho/w3af/issues/485
     MAC_CORE_PIP_PACKAGES = CORE_PIP_PACKAGES[:]
-    MAC_CORE_PIP_PACKAGES.remove(PIPDependency('pybloomfilter',
-                                               'pybloomfiltermmap3', '0.5.5'))
 
     MAC_GUI_PIP_PACKAGES = MAC_CORE_PIP_PACKAGES[:]
     MAC_GUI_PIP_PACKAGES.extend(GUI_PIP_EXTRAS)
