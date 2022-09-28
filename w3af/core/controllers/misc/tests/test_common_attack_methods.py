@@ -130,7 +130,7 @@ class TestCommonAttackMethods(unittest.TestCase):
         self.assertEqual(self.cam._cut(another_body), another_content)
 
     @pytest.mark.ci_fails
-    @pytest.skip
+    @pytest.mark.skip
     def test_guess_cut_no_header(self):
         """
         This one fails but I don't really have time to fix it now and it is not
