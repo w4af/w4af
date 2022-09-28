@@ -24,6 +24,7 @@ import urllib.request, urllib.error, urllib.parse
 import pickle
 import warnings
 import unittest
+import pytest
 
 import multiprocessing
 
