@@ -21,12 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 import pickle
+import pytest
 import os
 from random import choice
 
 import msgpack
-from nose.plugins.attrib import attr
-from nose.plugins.skip import SkipTest
 
 from w3af.core.data.url.HTTPResponse import HTTPResponse, DEFAULT_CHARSET
 from w3af.core.data.misc.encoding import smart_unicode, ESCAPED_CHAR
@@ -44,7 +43,7 @@ TEST_RESPONSES = {
 }
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestHTTPResponse(unittest.TestCase):
 
     def setUp(self):
@@ -251,7 +250,7 @@ class TestHTTPResponse(unittest.TestCase):
 
     def test_http_response_with_binary_no_escape(self):
 
-        raise SkipTest('See: https://github.com/andresriancho/w3af/issues/15741')
+        pytest.skip('See: https://github.com/andresriancho/w3af/issues/15741')
 
         # This test reproduces issue
         # https://github.com/andresriancho/w3af/issues/15741

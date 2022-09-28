@@ -24,10 +24,10 @@ import json
 from w3af.core.ui.api.tests.utils.test_api import APIUnitTest
 from w3af.core.ui.api.tests.utils.test_profile import (get_test_profile,
                                                        SLOW_TEST_PROFILE)
-from nose.plugins.attrib import attr
+import pytest
 
 
-@attr("moth")
+@pytest.mark.moth
 class ApiScanLogTest(APIUnitTest):
 
     def test_scan_log(self):

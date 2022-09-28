@@ -24,7 +24,7 @@ import unittest
 import pickle
 import copy
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.dc.utils.token import DataToken
 from w3af.core.data.dc.generic.form import Form
@@ -32,7 +32,7 @@ from w3af.core.data.parsers.utils.form_constants import INPUT_TYPE_PASSWD
 from w3af.core.data.parsers.utils.form_params import FormParameters
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestForm(unittest.TestCase):
 
     def test_require_implementation(self):

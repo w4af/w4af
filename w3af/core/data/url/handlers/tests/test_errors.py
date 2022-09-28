@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import urllib.request, urllib.error, urllib.parse
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.misc.number_generator import consecutive_number_generator
 from w3af.core.controllers.ci.moth import get_moth_http
@@ -37,7 +37,7 @@ class TestErrorHandler(unittest.TestCase):
     def setUp(self):
         consecutive_number_generator.reset()
     
-    @attr('moth')
+    @pytest.mark.moth
     def test_error_handler_id(self):
         """
         Verify that the error handler works as expected, in other words, do NOT

@@ -27,8 +27,6 @@ import unittest
 
 import multiprocessing
 
-from nose.plugins.skip import SkipTest
-
 from w3af.core.data.parsers.doc.url import URL, parse_qs
 from w3af.core.data.dc.query_string import QueryString
 from w3af.core.data.dc.urlencoded_form import URLEncodedForm
@@ -172,7 +170,7 @@ class TestURLParser(unittest.TestCase):
                ' and the parsing being done when creating a new URL. If you'
                ' add a "print self.querystring" at the end of URL.__init__'
                ' it shows the problem: id=1%2B2 and then id=1%202')
-        raise SkipTest(msg)
+        pytest.skip(msg)
 
         qs_value = self.decode_get_qs('http://w3af.com/?id=1%2B2')
         expected = '1+2'
@@ -543,7 +541,7 @@ class TestURLParser(unittest.TestCase):
                ' in this test does NOT make any sense and will yield unexpected'
                ' results.')
 
-        raise SkipTest(msg)
+        pytest.skip(msg)
 
         # url = URL('http://w3af.com/a/b/%E1%BA%BC.php?x=%E1%BA%BC')
         # self.assertEqual(str(url), '#fail')

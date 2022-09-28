@@ -29,7 +29,7 @@ import socketserver
 from multiprocessing.dummy import Process
 
 import httpretty
-from nose.plugins.attrib import attr
+import pytest
 from unittest.mock import patch
 
 from w3af import ROOT_PATH
@@ -49,8 +49,8 @@ from w3af.core.controllers.exceptions import (ScanMustStopByUserRequest,
                                               ScanMustStopException)
 
 
-@attr('moth')
-@attr('smoke')
+@pytest.mark.moth
+@pytest.mark.smoke
 class TestXUrllib(unittest.TestCase):
 
     MOTH_MESSAGE = '<title>moth: vulnerable web application</title>'
@@ -291,8 +291,8 @@ class TestXUrllib(unittest.TestCase):
         resp = self.uri_opener.GET(url)
         self.assertEqual(resp.get_body(), Ok200Handler.body)
 
-    @attr('internet')
-    @attr('ci_fails')
+    @pytest.mark.internet
+    @pytest.mark.ci_fails
     @unittest.skip("Need to find an example of a domain that we know is SNI (but most things kinda are by now)")
     def test_ssl_sni(self):
         """

@@ -18,14 +18,14 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.ui.console.console_ui import ConsoleUI
 from w3af.core.ui.console.tests.helper import ConsoleTestHelper
 
 
-@attr('moth')
+@pytest.mark.moth
 class TestScanRunConsoleUI(ConsoleTestHelper):
     """
     Run scans from the console UI.
@@ -69,8 +69,8 @@ class TestScanRunConsoleUI(ConsoleTestHelper):
 
         self.assertFalse(found_errors)
 
-    @attr('smoke')
-    @attr('ci_fails')
+    @pytest.mark.smoke
+    @pytest.mark.ci_fails
     def test_two_scans(self):
         target_1 = get_moth_http('/audit/sql_injection/where_string_single_qs.py')
         qs_1 = '?uname=pablo'

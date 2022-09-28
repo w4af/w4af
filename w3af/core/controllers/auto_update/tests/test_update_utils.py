@@ -22,13 +22,13 @@ import unittest
 import subprocess
 
 import git
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.auto_update.utils import (is_git_repo,
                                                      get_latest_commit,
                                                      get_current_branch)
 
-@attr('git')
+@pytest.mark.git
 class TestGitUtils(unittest.TestCase):
     
     def test_is_git_repo(self):

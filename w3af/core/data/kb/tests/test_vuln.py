@@ -20,8 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
-
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.data.parsers.doc.url import URL
@@ -42,7 +41,7 @@ class MockVuln(Vuln):
                                        _id, plugin_name)
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestVuln(unittest.TestCase):
     
     def test_from_vuln(self):

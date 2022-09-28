@@ -23,13 +23,13 @@ import subprocess
 import datetime
 import sys
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
 from w3af.core.data.db.startup_cfg import StartUpConfig
 
-@attr('gui')
+@pytest.mark.gui
 class TestAutoUpdate(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'auto_update', 'images')

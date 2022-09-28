@@ -23,7 +23,7 @@ import unittest
 import copy
 import os
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.misc.io import NamedBytesIO
 from w3af.core.data.dc.utils.multipart import multipart_encode
@@ -47,7 +47,7 @@ GIF89aAAAAAAAAAAAAAAAAA;
 '''
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestMultipartContainer(unittest.TestCase):
 
     def test_multipart_post(self):

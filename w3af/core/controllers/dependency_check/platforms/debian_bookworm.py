@@ -1,7 +1,7 @@
 """
-test_mail_config_files.py
+debian11.py
 
-Copyright 2012 Andres Riancho
+Copyright 2022 Arthur Taylor
 
 This file is part of w3af, http://w3af.org/ .
 
@@ -17,17 +17,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 """
-import pytest
-from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
-from w3af.plugins.attack.payloads.payload_handler import exec_payload
+import distro
+
+from .ubuntu1204 import Ubuntu1204
 
 
-class test_mail_config_files(ApachePayloadTestHelper):
+class DebianBookworm(Ubuntu1204):
+    SYSTEM_NAME = 'Debian Bookworm'
 
-    EXPECTED_RESULT = set(['/etc/postfix/main.cf', '/etc/postfix/master.cf'])
-
-    @pytest.mark.ci_fails
-    def test_mail_config_files(self):
-        result = exec_payload(self.shell, 'mail_config_files', use_api=True)
-        self.assertEqual(self.EXPECTED_RESULT, set(result.keys()))
+    @staticmethod
+    def is_current_platform():
+        return 'debian' == distro.id() and 'bookworm' == distro.codename()

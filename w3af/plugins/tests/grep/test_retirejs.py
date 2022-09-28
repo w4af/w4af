@@ -26,10 +26,10 @@ from w3af.core.controllers.misc.temp_dir import create_temp_dir
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 from w3af.plugins.grep.retirejs import retirejs
 
-from nose.plugins.attrib import attr
+import pytest
 
 
-@attr('internet')
+@pytest.mark.internet
 class TestRetireJSNotAnalyzeHTMLContentType(PluginTest):
 
     target_url = 'http://httpretty'
@@ -83,7 +83,7 @@ A JavaScript library with known vulnerabilities was identified at http://httpret
 Consider updating to the latest stable release of the affected library.'''
 
 
-@attr('internet')
+@pytest.mark.internet
 class TestRetireJS(PluginTest):
 
     target_url = 'http://httpretty'
@@ -133,7 +133,7 @@ class TestRetireJS(PluginTest):
         self.assertEqual(vuln.get_desc(with_id=False), EXPECTED_VULN_DESC)
 
 
-@attr('internet')
+@pytest.mark.internet
 class TestRetireJSClass(unittest.TestCase):
     def setUp(self):
         create_temp_dir()

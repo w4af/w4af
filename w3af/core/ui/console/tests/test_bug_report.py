@@ -23,7 +23,7 @@ import re
 import shutil
 
 from github import Github
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af import ROOT_PATH
 from w3af.core.ui.console.console_ui import ConsoleUI
@@ -34,8 +34,8 @@ from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.controllers.easy_contribution.github_issues import OAUTH_TOKEN
 
 
-@attr('moth')
-@attr('internet')
+@pytest.mark.moth
+@pytest.mark.internet
 class TestConsoleBugReport(ConsoleTestHelper):
     """
     Run a scan from the console UI (which fails with a bug) and report it to

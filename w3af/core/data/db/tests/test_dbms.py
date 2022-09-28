@@ -22,10 +22,10 @@ import unittest
 import string
 import time
 import os
+import pytest
 
 from itertools import repeat, starmap
 from random import choice
-from nose.plugins.skip import SkipTest
 
 from w3af.core.data.db.dbms import SQLiteDBMS, get_default_temp_db_instance
 from w3af.core.controllers.exceptions import DBException, NoSuchTableException
@@ -84,7 +84,7 @@ class TestDBMS(unittest.TestCase):
         self.assertEqual(result2.rowcount, 0)
 
     def test_performance_with_multiple_cursors(self):
-        raise SkipTest('This test is very specific to my workstation and was written just'
+        pytest.skip('This test is very specific to my workstation and was written just'
                        ' to make sure that my changes did not break the performance of a'
                        ' critical part of the framework.'
                        ''

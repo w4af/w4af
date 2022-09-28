@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 import random
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af import ROOT_PATH
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
@@ -82,7 +82,7 @@ class FormAuthTest(GenericFormAuthTest):
                                      PluginConfig.BOOL),),)
     }
 
-    @attr('smoke')
+    @pytest.mark.smoke
     def test_found_credentials_post(self):
         self._scan(self.target_post_url, self.basic_config)
 

@@ -20,16 +20,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 import subprocess
+import pytest
 
 from unittest.mock import MagicMock
-from nose.plugins.skip import SkipTest
-from nose.plugins.attrib import attr
 
 from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
 from w3af.core.controllers.auto_update.git_client import GitClient
 from w3af.core.controllers.auto_update.utils import get_current_branch
 
-@attr('git')
+@pytest.mark.git
 class TestGitClient(unittest.TestCase):
     
     def test_get_URL(self):
@@ -63,7 +62,7 @@ class TestGitClient(unittest.TestCase):
         # jenkins-<job name> during the build, which makes this test FAIL
         # if we don't take that into account
         if get_current_branch().startswith('jenkins-'):
-            raise SkipTest('Workaround for Jenkins Git plugin wierdness.')
+            pytest.skip('Workaround for Jenkins Git plugin wierdness.')
         
         client = GitClient(W3AF_LOCAL_PATH)
         # I don't really want to wait for the local repo to update itself

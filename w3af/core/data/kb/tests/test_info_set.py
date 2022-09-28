@@ -24,7 +24,7 @@ import copy
 import json
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 from pickle import loads
 
 from w3af.core.data.parsers.doc.url import URL
@@ -35,7 +35,7 @@ from w3af.core.data.kb.tests.test_info import (MockInfo, BLIND_SQLI_REFS,
                                                BLIND_SQLI_TOP10_REFS)
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestInfoSet(unittest.TestCase):
     def test_not_empty(self):
         self.assertRaises(ValueError, InfoSet, [])

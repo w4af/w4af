@@ -20,10 +20,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import pytest
 import unittest
-
-from nose.plugins.attrib import attr
-from nose.plugins.skip import SkipTest
 
 from w3af.core.controllers.misc.common_attack_methods import CommonAttackMethods
 
@@ -131,7 +129,8 @@ class TestCommonAttackMethods(unittest.TestCase):
         another_body = '%s%s%s' % (header, another_content, footer)
         self.assertEqual(self.cam._cut(another_body), another_content)
 
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
+    @pytest.skip
     def test_guess_cut_no_header(self):
         """
         This one fails but I don't really have time to fix it now and it is not
@@ -142,7 +141,6 @@ class TestCommonAttackMethods(unittest.TestCase):
         
         Specifically the "lambda x: len(x) < 3".
         """
-        raise SkipTest
     
         expected = 'w3af\n'
         error = 'error found while trying to read not existing file'

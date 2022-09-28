@@ -20,8 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import unittest
-
-from nose.plugins.skip import SkipTest
+import pytest
 
 from w3af.core.controllers.sca.sca import PhpSCA, Scope, CodeSyntaxError
 
@@ -232,7 +231,7 @@ class TestPHPSCA(unittest.TestCase):
         #
         # FIXME: Not sure why this is failing... not important at the moment
         #
-        raise SkipTest('FIXME')
+        pytest.skip('FIXME')
         self.assertTrue('FILE_DISCLOSURE' in echocall.vulntypes)
 
     def test_vuln_functions_3(self):

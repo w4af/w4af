@@ -24,7 +24,7 @@ import unittest
 import pickle
 import copy
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.parsers.doc.url import URL
@@ -41,7 +41,7 @@ from w3af.core.data.dc.multipart_container import MultipartContainer
 from w3af.core.data.misc.encoding import smart_str_ignore
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestFuzzableRequest(unittest.TestCase):
 
     def setUp(self):

@@ -30,7 +30,6 @@ from xml.etree import ElementTree
 
 from .xunit import parse_xunit
 from .xunit import normalize_test_names
-from nose.tools import nottest
 
 from w3af.core.controllers.ci.nosetests_wrapper.constants import (ARTIFACT_DIR,
                                                                   ID_FILE,
@@ -43,7 +42,6 @@ from w3af.core.controllers.ci.nosetests_wrapper.constants import (ARTIFACT_DIR,
                                                                   NOSE_COLLECT_IGNORE_PARAMS)
 
 
-@nottest
 def _get_tests(fname, selector=None, nose_params=NOSE_COLLECT_PARAMS):
     """
     Collect tests and return them.
@@ -92,7 +90,6 @@ def _get_tests(fname, selector=None, nose_params=NOSE_COLLECT_PARAMS):
     
     return test_suite
 
-@nottest
 def get_all_tests():
     """
     Collect all tests and return them
@@ -103,7 +100,6 @@ def get_all_tests():
     return _get_tests('all.xml')
 
 
-@nottest
 def get_ignored_tests():
     """
     Collect all ignored tests and return them
@@ -115,7 +111,6 @@ def get_ignored_tests():
                       NOSE_COLLECT_IGNORE_PARAMS)
 
 
-@nottest
 def get_test_ids(nose_selector):
     """
     Generate and parse .noseids and return the contents
@@ -140,7 +135,6 @@ def get_test_ids(nose_selector):
     return list(nose_ids['ids'].keys())
 
 
-@nottest
 def save_noseids_as_json():
     with open(ID_FILE) as id_fh:
         nose_ids = pickle.load(id_fh)
@@ -148,7 +142,6 @@ def save_noseids_as_json():
         json_id_fh.write(json.dumps(nose_ids['ids'], indent=4))
 
 
-@nottest
 def get_run_tests():
     """
     Merge all the information from the command outputs into one consolidated

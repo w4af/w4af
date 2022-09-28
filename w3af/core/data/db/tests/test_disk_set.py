@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import threading
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.misc.temp_dir import create_temp_dir
 from w3af.core.data.db.disk_set import DiskSet
@@ -38,7 +38,7 @@ class TestDiskSet(unittest.TestCase):
     def setUp(self):
         create_temp_dir()
 
-    @attr('smoke')
+    @pytest.mark.smoke
     def test_add(self):
         ds = DiskSet()
         ds.add(1)

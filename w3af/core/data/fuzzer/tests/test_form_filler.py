@@ -21,12 +21,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.fuzzer.form_filler import smart_fill
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestSmartFill(unittest.TestCase):
 
     def test_address(self):

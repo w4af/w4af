@@ -22,7 +22,7 @@ import gc
 import unittest
 import datetime
 
-from nose.plugins.attrib import attr
+import pytest
 from unittest.mock import MagicMock
 
 from w3af.core.data.db.startup_cfg import StartUpConfig
@@ -31,7 +31,7 @@ from w3af.core.controllers.auto_update.changelog import ChangeLog
 from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
 from w3af.core.controllers.auto_update.git_client import GitClient
 
-@attr('git')
+@pytest.mark.git
 class TestVersionMgr(unittest.TestCase):
 
     def setUp(self):
@@ -117,7 +117,7 @@ class TestVersionMgr(unittest.TestCase):
         self.assertEqual(on_already_latest_mock.call_count, 0)
         self.assertEqual(on_update_mock.call_count, 0)
 
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_update_required_not_forced(self):
         """
         Test that we check if we're on the latest version if the latest
@@ -156,7 +156,7 @@ class TestVersionMgr(unittest.TestCase):
         self.assertEqual(on_already_latest_mock.call_count, 1)
         self.assertEqual(on_update_mock.call_count, 0)
         
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_update_required_outdated_not_forced(self):
         """
         Test that we check if we're on the latest version if the latest

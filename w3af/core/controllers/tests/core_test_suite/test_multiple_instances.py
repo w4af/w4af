@@ -22,7 +22,7 @@ import unittest
 import threading
 
 from multiprocessing.dummy import DummyProcess
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.w3afCore import w3afCore
 
@@ -35,7 +35,7 @@ def start_w3af_core(exception_handler):
             exception_handler(e)
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestW3afCore(unittest.TestCase):
 
     def setUp(self):

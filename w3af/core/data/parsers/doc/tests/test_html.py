@@ -22,10 +22,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 import os
+import pytest
 
 import w3af.core.data.kb.config as cf
-
-from nose.plugins.attrib import attr
 
 from w3af import ROOT_PATH
 
@@ -48,7 +47,7 @@ class RaiseHTMLParser(HTMLParser):
         raise ex
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestHTMLParser(unittest.TestCase):
     
     url = URL('http://w3af.com')

@@ -21,13 +21,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import os
+import pytest
 import unittest
 from functools import partial
 from itertools import combinations
 from random import choice
 
-from nose.plugins.attrib import attr
-from nose.plugins.skip import SkipTest
 
 from w3af import ROOT_PATH
 from w3af.core.data.parsers.doc.sgml import SGMLParser, Tag
@@ -44,7 +43,7 @@ def build_http_response(url, body_content, headers=Headers()):
     return HTTPResponse(200, body_content, headers, url, url, charset='utf-8')
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestSGMLParser(unittest.TestCase):
 
     url = URL('http://w3af.com')
@@ -261,7 +260,7 @@ class TestSGMLParser(unittest.TestCase):
 
     def test_get_clear_text_body_encodings(self):
 
-        raise SkipTest('Not sure why this one is failing :S')
+        pytest.skip('Not sure why this one is failing :S')
 
         for lang_desc, (body, encoding) in TEST_RESPONSES.items():
             encoding_header = 'text/html; charset=%s' % encoding

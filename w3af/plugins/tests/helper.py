@@ -24,14 +24,13 @@ import os
 import re
 import time
 import pprint
+import pytest
 import urllib.request, urllib.error, urllib.parse
 import unittest
 import tempfile
 import httpretty
 
 from functools import wraps
-from nose.plugins.skip import SkipTest
-from nose.plugins.attrib import attr
 
 import w3af.core.data.kb.knowledge_base as kb
 import w3af.core.controllers.output_manager as om
@@ -54,7 +53,7 @@ os.chdir(W3AF_LOCAL_PATH)
 RE_COMPILE_TYPE = type(re.compile(''))
 
 
-@attr('moth')
+@pytest.mark.moth
 class PluginTest(unittest.TestCase):
     """
     These tests can be configured using two environment variables:
@@ -546,12 +545,12 @@ class ExecExploitTest(ReadExploitTest):
         self.assertIn('/etc/passwd', _help)
 
         
-@attr('root')
+@pytest.mark.root
 def onlyroot(meth):
     """
     Function to decorate tests that should be called as root.
 
-    Raises a nose SkipTest exception if the user doesn't have root permissions.
+    Skips the test if the user doesn't have permission
     """
     @wraps(meth)
     def test_inner_onlyroot(self, *args, **kwds):
@@ -560,7 +559,7 @@ def onlyroot(meth):
         if os.geteuid() == 0 or os.getuid() == 0:
             return meth(self, *args, **kwds)
         else:
-            raise SkipTest('This test requires root privileges.')
+            pytest.skip("unsupported configuration")
     test_inner_onlyroot.root = True
     return test_inner_onlyroot
 

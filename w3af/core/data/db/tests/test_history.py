@@ -23,7 +23,7 @@ import random
 import unittest
 import os.path
 
-from nose.plugins.attrib import attr
+import pytest
 
 import w3af.core.data.kb.knowledge_base as kb
 
@@ -39,7 +39,7 @@ from w3af.core.data.url.HTTPRequest import HTTPRequest
 from w3af.plugins.tests.helper import LOREM
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestHistoryItem(unittest.TestCase):
 
     def setUp(self):

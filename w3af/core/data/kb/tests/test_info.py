@@ -24,7 +24,7 @@ import copy
 import pickle
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 from vulndb.db_vuln import Reference, DBVuln
 
 from w3af.core.data.kb.info import Info
@@ -61,7 +61,7 @@ class MockInfo(Info):
                                        'plugin_name')
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestInfo(unittest.TestCase):
     """
     Simplest tests for info. Mainly started because of incompatibilities between

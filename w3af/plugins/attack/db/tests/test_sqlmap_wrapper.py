@@ -23,7 +23,7 @@ import io
 import shutil
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.ci.moth import get_moth_http, get_moth_https
 from w3af.plugins.attack.db.sqlmap_wrapper import SQLMapWrapper, Target
@@ -31,7 +31,7 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.url.extended_urllib import ExtendedUrllib
 
 
-@attr('moth')
+@pytest.mark.moth
 class TestSQLMapWrapper(unittest.TestCase):
     
     SQLI_GET = get_moth_http('/audit/sql_injection/'

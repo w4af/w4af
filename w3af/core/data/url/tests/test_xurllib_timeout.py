@@ -23,7 +23,7 @@ import time
 import unittest
 import socketserver
 
-from nose.plugins.attrib import attr
+import pytest
 from unittest.mock import Mock
 
 from w3af.core.data.url.extended_urllib import ExtendedUrllib
@@ -42,8 +42,8 @@ from w3af.core.controllers.exceptions import (HTTPRequestException,
                                               ScanMustStopException)
 
 
-@attr('moth')
-@attr('smoke')
+@pytest.mark.moth
+@pytest.mark.smoke
 class TestXUrllibTimeout(unittest.TestCase):
 
     def setUp(self):

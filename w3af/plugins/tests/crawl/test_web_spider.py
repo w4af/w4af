@@ -22,11 +22,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import urllib.request, urllib.error, urllib.parse
 import re
 import os
+import pytest
 
 import w3af.core.data.kb.config as cf
-
-from nose.plugins.skip import SkipTest
-from nose.plugins.attrib import attr
 
 from w3af import ROOT_PATH
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
@@ -78,7 +76,7 @@ class TestWebSpider(PluginTest):
 
         self.assertEqual(found_urls, expected_urls)
 
-    @attr('smoke')
+    @pytest.mark.smoke
     def test_spider_found_urls(self):
         config = self._run_configs['basic']
         expected_files = ['1.html', '2.html', '3.html', '4.html',
@@ -107,10 +105,10 @@ class TestWebSpider(PluginTest):
         self.generic_scan(config, start_url, start_url, expected_files)
 
     def test_spider_relative_urls_found_with_regex(self):
-        raise SkipTest('FIXME: Need to test this feature!')
+        pytest.skip('FIXME: Need to test this feature!')
 
     def test_spider_traverse_directories(self):
-        raise SkipTest('FIXME: Need to test this feature!')
+        pytest.skip('FIXME: Need to test this feature!')
 
     def test_wivet(self):
         clear_wivet()

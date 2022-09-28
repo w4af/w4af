@@ -25,7 +25,7 @@ from itertools import repeat
 
 import pyclamd
 from unittest.mock import patch, Mock
-from nose.plugins.attrib import attr
+import pytest
 
 import w3af.core.data.kb.knowledge_base as kb
 from w3af.plugins.grep.clamav import clamav
@@ -38,7 +38,7 @@ from w3af.core.controllers.threads.threadpool import Pool
 from w3af.core.controllers.ci.moth import get_moth_http
 
 
-@attr('integration')
+@pytest.mark.integration
 class TestClamAV(unittest.TestCase):
 
     def setUp(self):
@@ -150,7 +150,7 @@ class TestClamAV(unittest.TestCase):
         self.assertEqual(self.plugin._scan_http_response.call_count, 0)
 
 
-@attr('integration')
+@pytest.mark.integration
 class TestClamAVScan(PluginTest):
  
     target_url = get_moth_http('/grep/clamav/')

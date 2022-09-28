@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import tempfile
 import shutil
 
-from nose.plugins.attrib import attr
+import pytest
 from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
@@ -37,7 +37,7 @@ class test_get_source_code(ApachePayloadTestHelper):
 
     CONTENT = "echo file_get_contents( $_REQUEST['file'] );"
 
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_get_source_code(self):
         temp_dir = tempfile.mkdtemp()
         result = exec_payload(self.shell, 'get_source_code', args=(temp_dir,),

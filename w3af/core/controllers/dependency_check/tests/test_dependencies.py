@@ -4,11 +4,11 @@ import shlex
 import sys
 import os.path
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af import ROOT_PATH
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestDependenciesInstalled(unittest.TestCase):
 
     def test_dependencies_installed(self):

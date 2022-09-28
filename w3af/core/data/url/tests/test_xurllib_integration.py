@@ -21,10 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 import httpretty
-
-from nose.plugins.attrib import attr
-from nose.plugins.skip import SkipTest
-
+import pytest
 
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
@@ -33,7 +30,7 @@ from w3af.core.data.url.extended_urllib import ExtendedUrllib
 from w3af.core.data.parsers.doc.url import URL
 
 
-@attr('moth')
+@pytest.mark.moth
 class TestXUrllibIntegration(unittest.TestCase):
 
     MOTH_MESSAGE = '<title>moth: vulnerable web application</title>'
@@ -41,14 +38,14 @@ class TestXUrllibIntegration(unittest.TestCase):
     def setUp(self):
         self.uri_opener = ExtendedUrllib()
         
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_ntlm_auth_not_configured(self):
         self.uri_opener = ExtendedUrllib()
         url = URL(get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/"))
         http_response = self.uri_opener.GET(url, cache=False)
         self.assertIn('Must authenticate.', http_response.body)
 
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_ntlm_auth_valid_creds(self):
         
         self.uri_opener = ExtendedUrllib()
@@ -105,7 +102,7 @@ class TestXUrllibIntegration(unittest.TestCase):
 
 class TestUpperCaseHeaders(unittest.TestCase):
 
-    @SkipTest
+    @pytest.mark.skip
     @httpretty.activate
     def test_headers_upper_case(self):
         """

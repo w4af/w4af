@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 import re
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.data.kb.tests.test_vuln import MockVuln
@@ -29,7 +29,7 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestTextFile(PluginTest):
 
     OUTPUT_FILE = 'output-unittest.txt'

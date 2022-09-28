@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.parsers.doc.http_request_parser import http_request_parser
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
@@ -45,7 +45,7 @@ Content-Type: application/x-www-form-urlencoded
 """
 
 
-@attr('gui')
+@pytest.mark.gui
 class TestManualRequests(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'manual_requests', 'images')

@@ -60,6 +60,8 @@ pycld2 = "*"
 Morfessor = "*"
 coverage = "*"
 pytest = "*"
+pytest-cov = "*"
+pytest-split = "*"
 pillow = "*"
 bloom-filter2 = "*"
 
@@ -87,7 +89,3 @@ git = "https://github.com/w4af/mitmproxy"
 [packages.netlib]
 git = "https://github.com/w4af/netlib"
 ref = "dcb2e24293cf0495374400e74b06799d33c445a8"
-
-[packages.nose]
-git = "https://github.com/w4af/nose"
-ref = "376fc6792a0ddb519db6832bdd630ab11e2d6a08"

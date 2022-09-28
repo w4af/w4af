@@ -20,14 +20,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.core_helpers.fingerprint_404 import FourOhFourResponse
 from w3af.core.controllers.misc.temp_dir import create_temp_dir
 from w3af.core.data.db.disk_deque import DiskDeque
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestDiskDeque(unittest.TestCase):
 
     def setUp(self):

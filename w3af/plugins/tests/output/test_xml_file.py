@@ -28,7 +28,7 @@ import unittest
 import xml.etree.ElementTree as ElementTree
 
 from lxml import etree
-from nose.plugins.attrib import attr
+import pytest
 
 import w3af.core.data.constants.severity as severity
 import w3af.core.data.kb.knowledge_base as kb
@@ -55,7 +55,7 @@ from w3af.plugins.output.xml_file import (xml_file, CachedXMLNode, FindingsCache
                                           Finding, jinja2_attr_value_escape_filter)
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestXMLOutput(PluginTest):
 
     target_url = get_moth_http('/audit/sql_injection/where_integer_qs.py')

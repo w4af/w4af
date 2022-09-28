@@ -21,15 +21,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import urllib.request, urllib.error, urllib.parse
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.url.handlers.ntlm_auth import HTTPNtlmAuthHandler
 from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 
-@attr('moth')
+@pytest.mark.moth
 class TestNTLMHandler(unittest.TestCase):
     
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_auth_valid_creds(self):
         url = get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/")
         user = 'moth\\admin'

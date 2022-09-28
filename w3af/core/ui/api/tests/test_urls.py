@@ -20,13 +20,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import json
+import pytest
 
 from w3af.core.ui.api.tests.utils.test_api import APIUnitTest
 from w3af.core.ui.api.tests.utils.test_profile import get_test_profile
-from nose.plugins.attrib import attr
 
 
-@attr("moth")
+@pytest.mark.moth
 class URLTest(APIUnitTest):
 
     def test_url_list(self):

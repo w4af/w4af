@@ -24,7 +24,7 @@ import unittest
 
 from pylint import lint
 from pylint.reporters.text import TextReporter
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af import ROOT_PATH
 
@@ -42,7 +42,7 @@ class WritableObject(object):
         return self.content
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class PylintRunner(unittest.TestCase):
 
     maxDiff = None

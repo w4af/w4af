@@ -23,7 +23,7 @@ import urllib.request, urllib.error, urllib.parse
 import unittest
 from nocasedict import NocaseDict
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.ci.sqlmap_testenv import get_sqlmap_testenv_http
 from w3af.core.controllers.ci.moth import get_moth_http, get_moth_https
@@ -32,7 +32,7 @@ from w3af.core.controllers.misc.temp_dir import create_temp_dir
 from w3af.core.controllers.daemons.proxy import Proxy, ProxyHandler
 
 
-@attr('moth')
+@pytest.mark.moth
 class TestProxy(unittest.TestCase):
 
     IP = '127.0.0.1'

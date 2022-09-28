@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import copy
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 from unittest.mock import MagicMock, Mock
 from unittest.mock import patch, call
 
@@ -186,7 +186,7 @@ class TestHTTPvsHTTPS(PluginTest):
     }
 
     @onlyroot
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_trace(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])

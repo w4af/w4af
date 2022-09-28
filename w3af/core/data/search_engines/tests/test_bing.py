@@ -21,13 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.search_engines.bing import bing
 from w3af.core.data.url.extended_urllib import ExtendedUrllib
 
 
-@attr('internet')
+@pytest.mark.internet
 class test_bing(unittest.TestCase):
 
     def setUp(self):

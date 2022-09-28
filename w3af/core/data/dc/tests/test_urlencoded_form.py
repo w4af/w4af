@@ -23,7 +23,7 @@ import urllib.request, urllib.parse, urllib.error
 import copy
 import pickle
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.dc.urlencoded_form import URLEncodedForm
 from w3af.core.data.dc.headers import Headers
@@ -34,7 +34,7 @@ from w3af.core.data.parsers.utils.tests.test_form_params import (form_with_radio
                                                                  create_form_params_helper)
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestURLEncodedForm(unittest.TestCase):
 
     def test_from_postdata_no_encoding(self):

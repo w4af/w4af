@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import re
 import urllib.request, urllib.parse, urllib.error
 
-from nose.plugins.attrib import attr
+import pytest
 from email.header import decode_header
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
@@ -49,7 +49,7 @@ class ResponseSplittingMockResponse(MockResponse):
             return self.status, response_headers, self.body
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestResponseSplitting(PluginTest):
 
     target_url = 'http://w3af.org/?header='

@@ -18,8 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from nose.plugins.skip import SkipTest
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
@@ -85,7 +84,7 @@ class TestGeneric(PluginTest):
         }
     }
 
-    @attr('smoke')
+    @pytest.mark.smoke
     def test_post_auth_xss(self):
         self._scan(self._run_config['target'], self._run_config['plugins'])
 
@@ -99,8 +98,8 @@ class TestGeneric(PluginTest):
         self.assertEqual(vuln.get_url().get_path(),
                           '/auth/auth_1/post_auth_xss.py')
 
-    @attr('internet')
-    @attr('fails')
+    @pytest.mark.internet
+    @pytest.mark.fails
     def test_demo_testfire_net(self):
         # We don't control the demo.testfire.net domain, so we'll check if its
         # up before doing anything else
@@ -109,10 +108,10 @@ class TestGeneric(PluginTest):
         try:
             res = uri_opener.GET(login_url)
         except:
-            raise SkipTest('demo.testfire.net is unreachable!')
+            pytest.skip('demo.testfire.net is unreachable!')
         else:
             if not 'Online Banking Login' in res.body:
-                raise SkipTest('demo.testfire.net has changed!')
+                pytest.skip('demo.testfire.net has changed!')
 
         self._scan(self.demo_testfire_net['target'],
                    self.demo_testfire_net['plugins'])

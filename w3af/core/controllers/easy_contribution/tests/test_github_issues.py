@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 
 from github import Github
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.easy_contribution.github_issues import (GithubIssues,
                                                                    OAUTH_TOKEN,
@@ -30,7 +30,7 @@ from w3af.core.controllers.easy_contribution.github_issues import (GithubIssues,
                                                                    LoginFailed)
 
 
-@attr('internet')
+@pytest.mark.internet
 class TestGithubIssues(unittest.TestCase):
 
     def test_report(self):

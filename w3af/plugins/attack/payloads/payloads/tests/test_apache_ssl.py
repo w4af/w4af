@@ -18,8 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from nose.plugins.attrib import attr
-from nose.plugins.skip import SkipTest
+import pytest
 
 from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
@@ -27,7 +26,7 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 class test_apache_ssl(ApachePayloadTestHelper):
 
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_apache_ssl(self):
         result = exec_payload(self.shell, 'apache_ssl', use_api=True)
         self.assertEqual(1, len(result['apache_ssl_certificate']))

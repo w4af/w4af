@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.url.opener_settings import OpenerSettings
 from w3af.core.data.url.extended_urllib import ExtendedUrllib
@@ -30,8 +30,8 @@ from w3af.core.controllers.ci.moth import get_moth_http, get_moth_https
 from w3af.core.controllers.daemons.proxy import Proxy, ProxyHandler
 
 
-@attr('moth')
-@attr('smoke')
+@pytest.mark.moth
+@pytest.mark.smoke
 class TestExtendedUrllibProxy(unittest.TestCase):
 
     MOTH_MESSAGE = '<title>moth: vulnerable web application</title>'

@@ -28,7 +28,7 @@ import os
 import psutil
 
 from unittest.mock import MagicMock, Mock
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.data.url.HTTPRequest import HTTPRequest
@@ -40,7 +40,7 @@ from w3af.core.data.url.handlers.keepalive import (KeepAliveHandler,
                                                    HTTPHandler, HTTPSHandler)
 
 
-@attr('moth')
+@pytest.mark.moth
 class TestKeepalive(unittest.TestCase):
 
     def setUp(self):

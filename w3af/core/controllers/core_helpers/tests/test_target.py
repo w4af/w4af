@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 import os
 
-from nose.plugins.attrib import attr
+import pytest
 
 import w3af.core.data.kb.config as cf
 from w3af.core.controllers.exceptions import BaseFrameworkException
@@ -37,7 +37,7 @@ OPTION_TYPES = (BOOL, INT, FLOAT, STRING, URL, IPPORT, LIST, REGEX, COMBO,
                 INPUT_FILE, OUTPUT_FILE, PORT, URL_LIST)
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestTarget(unittest.TestCase):
     
     def test_basic(self):

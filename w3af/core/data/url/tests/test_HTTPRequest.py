@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 
 import msgpack
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.url.HTTPRequest import HTTPRequest
 from w3af.core.data.parsers.doc.url import URL
@@ -32,7 +32,7 @@ from w3af.core.data.dc.utils.token import DataToken
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.misc.encoding import smart_str_ignore
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestHTTPRequest(unittest.TestCase):
 
     def test_basic(self):

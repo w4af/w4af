@@ -25,7 +25,7 @@ import pickle
 import unittest
 import threading
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.w3afCore import w3afCore
 from w3af.core.controllers.core_helpers.exception_handler import ExceptionHandler, ExceptionData
@@ -49,7 +49,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.status.set_current_fuzzable_request('phase',
                                                  'http://www.w3af.org/')
 
-    @attr('smoke')
+    @pytest.mark.smoke
     def test_handle_one(self):
 
         caught_exception = None
@@ -86,7 +86,7 @@ class TestExceptionHandler(unittest.TestCase):
         # the only way to do it without much effort
         self.assertEqual(edata.lineno, 58)
 
-    @attr('smoke')
+    @pytest.mark.smoke
     def test_handle_multiple(self):
 
         for _ in range(10):

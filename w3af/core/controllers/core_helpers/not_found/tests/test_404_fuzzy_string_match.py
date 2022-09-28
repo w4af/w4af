@@ -20,8 +20,6 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-
-
 import unittest
 import random
 import os
@@ -30,11 +28,10 @@ import time
 import re
 import gzip
 import jellyfish
+import pytest
 
 from string import printable
 from io import StringIO
-
-from nose.plugins.skip import SkipTest
 
 from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal
 from w3af.core.data.parsers.doc.url import URL
@@ -67,7 +64,7 @@ class Test404FuzzyStringMatch(unittest.TestCase):
         shelve_file = os.path.join(test_dir, 'data.shelve')
 
         if not os.path.exists(shelve_file):
-            raise SkipTest('No shelve, get it from w3af-misc repository.')
+            pytest.skip('No shelve, get it from w3af-misc repository.')
 
         self.not_exists_data = shelve.open(shelve_file)
 
@@ -272,7 +269,7 @@ class Test404FuzzyStringMatch(unittest.TestCase):
         That's an ugly surprise! jellyfish.levenshtein_distance seems to have
         a memory leak somewhere.
         """
-        raise SkipTest('This one raises a MemoryError')
+        pytest.skip('This one raises a MemoryError')
 
         def jelly_fuzzy(str_a, str_b, ratio):
             str_a = str_a.replace('\0', '')

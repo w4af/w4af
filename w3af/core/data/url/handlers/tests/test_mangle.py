@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.controllers.w3afCore import w3afCore
@@ -29,7 +29,7 @@ from w3af.core.controllers.w3afCore import w3afCore
 
 class TestMangleHandler(unittest.TestCase):
 
-    @attr('moth')
+    @pytest.mark.moth
     def test_mangle_handler_raw_request_1326(self):
         """
         Reproduces [0] to make sure we don't make that mistake again.

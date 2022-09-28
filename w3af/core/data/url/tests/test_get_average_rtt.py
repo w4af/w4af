@@ -24,7 +24,7 @@ import random
 import unittest
 import httpretty
 
-from nose.plugins.attrib import attr
+import pytest
 from multiprocessing.dummy import Pool as ThreadPool
 from itertools import repeat
 
@@ -33,7 +33,7 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestGetAverageRTT(unittest.TestCase):
 
     MOCK_URL = 'http://www.w3af.org/'

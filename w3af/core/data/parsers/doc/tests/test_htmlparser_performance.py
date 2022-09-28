@@ -25,7 +25,7 @@ import resource
 import time
 import os
 
-from nose.plugins.attrib import attr
+import pytest
 from memory_profiler import profile
 
 from w3af import ROOT_PATH
@@ -43,7 +43,7 @@ class TestHTMLParserPerformance(unittest.TestCase):
     HTML_FILE = DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "context", "tests", "samples", "django-500.html")
 
     @unittest.skip("Performance test")
-    @attr('ci_ignore')
+    @pytest.mark.ci_ignore
     def test_parse_html_performance(self):
         headers = Headers()
         headers['content-type'] = 'text/html'

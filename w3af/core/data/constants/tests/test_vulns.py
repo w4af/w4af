@@ -23,7 +23,7 @@ import os
 import re
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 from vulndb import DBVuln
 
 from w3af import ROOT_PATH
@@ -155,7 +155,7 @@ class TestVulnsConstants(unittest.TestCase):
 
         self.assertEqual(invalid, [])
 
-    @attr('ci_ignore')
+    @pytest.mark.ci_ignore
     def test_vuln_updated(self):
         """
         Each time we call Info.set_name during a test (and only during tests,

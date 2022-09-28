@@ -23,10 +23,10 @@ import json
 
 from w3af.core.ui.api.tests.utils.test_api import APIUnitTest
 from w3af.core.ui.api.tests.utils.test_profile import get_test_profile
-from nose.plugins.attrib import attr
+import pytest
 
 
-@attr("moth")
+@pytest.mark.moth
 class KBApiTest(APIUnitTest):
 
     def test_kb_filters(self):

@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from nose.plugins.attrib import attr
+import pytest
 
 from bloom_filter2 import BloomFilter as CMmapFilter
 from w3af.core.data.bloomfilter.tests.generic_filter_test import GenericFilterTest
@@ -37,7 +37,7 @@ class TestCMmapBloomfilterLarge(GenericFilterTest):
         self.filter = CMmapFilter(max_elements=self.CAPACITY, error_rate=self.ERROR_RATE, filename=(temp_file,-1))
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestCMmapBloomfilterSmall(GenericFilterTest):
 
     CAPACITY = 500

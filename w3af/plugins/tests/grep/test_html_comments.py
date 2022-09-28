@@ -29,12 +29,12 @@ from w3af.core.data.dc.headers import Headers
 from w3af.core.controllers.misc.temp_dir import create_temp_dir
 from w3af.plugins.grep.html_comments import html_comments
 
-from nose.plugins.attrib import attr
+import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 
-@attr('smoke')
-@attr('ci_ready')
+@pytest.mark.smoke
+@pytest.mark.ci_ready
 class TestHTMLCommentsIntegration(PluginTest):
 
     target_url = 'http://httpretty'

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.misc_settings import MiscSettings
 from w3af.core.data.options.option_types import (
@@ -32,7 +32,7 @@ OPTION_TYPES = (BOOL, INT, FLOAT, STRING, URL, IPPORT, LIST, REGEX, COMBO,
                 INPUT_FILE, OUTPUT_FILE, PORT, URL_LIST, FORM_ID_LIST)
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestMiscSettings(unittest.TestCase):
     def test_basic(self):
         opt_lst = MiscSettings().get_options()

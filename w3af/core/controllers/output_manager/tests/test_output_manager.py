@@ -23,7 +23,7 @@ import unittest
 import multiprocessing
 
 from unittest.mock import MagicMock, Mock
-from nose.plugins.attrib import attr
+import pytest
 from tblib.decorators import Error
 
 import w3af.core.controllers.output_manager as om
@@ -37,7 +37,7 @@ def send_log_message(msg):
     om.out.information(msg)
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestOutputManager(unittest.TestCase):
 
     OUTPUT_PLUGIN_ACTIONS = ('debug', 'information', 'error',

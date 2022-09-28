@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af import ROOT_PATH
 from w3af.core.controllers.w3afCore import w3afCore
@@ -29,7 +29,7 @@ from w3af.core.controllers.w3afCore import w3afCore
 TEST_PATH = os.path.join(ROOT_PATH, 'plugins', 'tests')
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestUnittestCoverage(unittest.TestCase):
 
     def setUp(self):

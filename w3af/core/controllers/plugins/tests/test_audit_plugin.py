@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.url.tests.test_xurllib import TimeoutTCPHandler
 from w3af.core.data.url.tests.helpers.upper_daemon import UpperDaemon
@@ -32,7 +32,7 @@ from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.controllers.w3afCore import w3afCore
 
 
-@attr('moth')
+@pytest.mark.moth
 class TestAuditPlugin(unittest.TestCase):
 
     def setUp(self):

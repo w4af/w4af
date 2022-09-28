@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from nose.plugins.attrib import attr
+import pytest
 from unittest import TestCase
 
 from w3af.core.data.kb.config import cf
@@ -105,7 +105,7 @@ class TestXSS(PluginTest):
                          for e in expected]
         return expected_data
 
-    @attr('smoke')
+    @pytest.mark.smoke
     def test_find_one_xss(self):
         """
         Simplest possible test to verify that we identify XSSs.
@@ -256,7 +256,7 @@ class TestXSS(PluginTest):
                          {severity.MEDIUM, severity.LOW},
                          csp_vulns)
 
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_found_xss_with_redirect(self):
         cfg = self._run_configs['cfg']
         self._scan(self.XSS_302_URL, cfg['plugins'])

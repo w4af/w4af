@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from nose.plugins.attrib import attr
+import pytest
 from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 from w3af.plugins.attack.payloads.payloads.gcc_version import gcc_version
@@ -46,7 +46,7 @@ class test_gcc_version(ApachePayloadTestHelper):
             result = gcc.parse_gcc_version(example[0])
             self.assertEqual(result, example[1])
 
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_gcc_version(self):
         result = exec_payload(self.shell, 'gcc_version', use_api=True)
         self.assertEqual(self.EXPECTED_RESULT, result)

@@ -25,7 +25,7 @@ import os
 
 from functools import wraps
 
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.gnome import Gnome
@@ -83,7 +83,7 @@ def debug_notify(meth):
     return debug
 
 
-@attr('ci_fails')
+@pytest.mark.ci_fails
 class XpresserUnittest(unittest.TestCase):
     
     GENERIC_IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'main_window', 'images')

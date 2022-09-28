@@ -24,7 +24,7 @@ import unittest
 import os
 
 from configparser import ConfigParser
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af import ROOT_PATH
 from w3af.core.data.profile.profile import profile
@@ -45,7 +45,7 @@ class TestCoreProfiles(unittest.TestCase):
         super(TestCoreProfiles, self).tearDown()
         self.core.worker_pool.terminate_join()
 
-    @attr('smoke')
+    @pytest.mark.smoke
     def test_use_profile(self):
         self.core.profiles.use_profile('OWASP_TOP10', workdir='.')
 
@@ -102,7 +102,7 @@ class TestCoreProfiles(unittest.TestCase):
                           self.core.profiles.remove_profile,
                           'not-exists')
 
-    @attr('smoke')
+    @pytest.mark.smoke
     @unittest.skip("Only passes if bad profiles are present")
     def test_use_all_profiles(self):
         """

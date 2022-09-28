@@ -36,7 +36,7 @@ from w3af.core.controllers.core_helpers.fingerprint_404 import Fingerprint404
 from w3af.core.controllers.misc.fuzzy_string_cmp import MAX_FUZZY_LENGTH
 from w3af.core.data.misc.encoding import smart_str_ignore
 
-from nose.plugins.attrib import attr
+import pytest
 
 class Generic404Test(unittest.TestCase):
 

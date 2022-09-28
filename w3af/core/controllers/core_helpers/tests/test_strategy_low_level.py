@@ -25,7 +25,7 @@ import httpretty
 from time import sleep
 
 from unittest.mock import Mock
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.controllers.w3afCore import w3afCore
@@ -34,7 +34,7 @@ from w3af.core.controllers.exceptions import ScanMustStopException
 from w3af.core.data.kb.knowledge_base import kb
 
 
-@attr('moth')
+@pytest.mark.moth
 class TestStrategy(unittest.TestCase):
     
     TARGET_URL = get_moth_http('/audit/sql_injection/'

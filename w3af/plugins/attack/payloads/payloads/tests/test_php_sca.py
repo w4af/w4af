@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from nose.plugins.attrib import attr
+import pytest
 from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
@@ -27,7 +27,7 @@ class test_php_sca(ApachePayloadTestHelper):
 
     EXPECTED_RESULT = 'XSS'
 
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_php_sca(self):
         result = exec_payload(self.shell, 'php_sca', use_api=True)
         self.assertEqual(self.EXPECTED_RESULT, list(result.keys())[0])

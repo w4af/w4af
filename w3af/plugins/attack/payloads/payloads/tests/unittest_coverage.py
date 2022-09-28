@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 import unittest
 
-from nose.plugins.attrib import attr
+import pytest
 from nose.plugins.skip import SkipTest
 
 from w3af import ROOT_PATH
@@ -35,7 +35,7 @@ UNABLE_TO_TEST = ('metasploit', 'msf_linux_x86_meterpreter_reverse',
                   'msf_windows_vncinject_reverse')
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestUnittestCoverage(unittest.TestCase):
 
     def test_payloads(self):
@@ -45,7 +45,7 @@ class TestUnittestCoverage(unittest.TestCase):
         if len(UNABLE_TO_TEST) > 0:
             # TODO: In vdaemon.py we have subprocess.Popen( ['gnome-terminal', '-e', msfcli_command] )
             #       which makes the payloads in UNABLE_TO_TEST very very very difficult to test
-            raise SkipTest()
+            pytest.skip()
 
     def _analyze_unittests(self):
         payloads = get_payload_list()

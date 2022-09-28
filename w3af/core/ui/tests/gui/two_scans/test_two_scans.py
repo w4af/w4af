@@ -19,15 +19,13 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
-
-from nose.plugins.skip import SkipTest
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.ui.tests.gui import GUI_TEST_ROOT_PATH
 from w3af.core.ui.tests.wrappers.xpresser_unittest import XpresserUnittest
 
 
-@attr('gui')
+@pytest.mark.gui
 class TestTwoScans(XpresserUnittest):
     
     IMAGES = os.path.join(GUI_TEST_ROOT_PATH, 'two_scans', 'images')
@@ -45,7 +43,7 @@ class TestTwoScans(XpresserUnittest):
         self.xp.load_images(self.SCAN_IMAGES_2)
     
     def test_two_scans(self):
-        raise SkipTest('See comment below in run_scan_2')
+        pytest.skip('See comment below in run_scan_2')
     
         self.run_scan_1()
         self.glue()

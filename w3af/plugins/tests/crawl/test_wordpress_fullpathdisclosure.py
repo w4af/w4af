@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from nose.plugins.attrib import attr
+import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
@@ -36,7 +36,7 @@ class TestWordpressPathDisclosure(PluginTest):
         },
     }
 
-    @attr('ci_fails')
+    @pytest.mark.ci_fails
     def test_enumerate_users(self):
         cfg = self._run_configs['direct']
         self._scan(cfg['target'], cfg['plugins'])

@@ -19,7 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
 from w3af.core.data.bloomfilter.tests.generic_filter_test import GenericFilterTest
@@ -42,7 +42,7 @@ class WrappedFileSeekBloomFilter(GenericBloomFilter):
         self.bf.close()
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestScalableBloomFilterLargeCmmap(GenericFilterTest):
 
     CAPACITY = 20000
@@ -83,7 +83,7 @@ class TestScalableBloomFilterLargeSeekFile(GenericFilterTest):
         self.filter.close()
 
 
-@attr('smoke')
+@pytest.mark.smoke
 class TestScalableBloomfilterSmallSeekFile(GenericFilterTest):
 
     CAPACITY = 500

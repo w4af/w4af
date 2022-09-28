@@ -24,7 +24,7 @@ import unittest
 import socketserver
 
 from unittest.mock import Mock, patch, call
-from nose.plugins.attrib import attr
+import pytest
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.core.controllers.exceptions import ScanMustStopByKnownReasonExc
@@ -41,8 +41,8 @@ from w3af.core.data.url.tests.test_xurllib import (EmptyTCPHandler,
 TIMEOUT_SECS = 1
 
 
-@attr('moth')
-@attr('smoke')
+@pytest.mark.moth
+@pytest.mark.smoke
 class TestXUrllibDelayOnError(unittest.TestCase):
 
     def setUp(self):

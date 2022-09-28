@@ -23,7 +23,6 @@ import os
 import unittest
 import lxml.etree as etree
 
-from nose.plugins.skip import SkipTest
 from w3af import ROOT_PATH
 
 PHISHTANK_DB = os.path.join(ROOT_PATH, 'plugins', 'crawl', 'phishtank',
@@ -32,7 +31,7 @@ PHISHTANK_DB = os.path.join(ROOT_PATH, 'plugins', 'crawl', 'phishtank',
 
 class TestPhishTankParseMethods(unittest.TestCase):
     def test_target_parser(self):
-        raise SkipTest('This method is awful in terms of memory usage')
+        pytest.skip('This method is awful in terms of memory usage')
 
         with open(PHISHTANK_DB) as phishtank_db_fd:
             # pylint: disable=E0602
@@ -41,7 +40,7 @@ class TestPhishTankParseMethods(unittest.TestCase):
             etree.parse(phishtank_db_fd, parser)
 
     def test_iterparse(self):
-        raise SkipTest('This method is awful in terms of memory usage')
+        pytest.skip('This method is awful in terms of memory usage')
 
         with open(PHISHTANK_DB) as phishtank_db_fd:
             context = etree.iterparse(phishtank_db_fd, events=('end',), html=True)
@@ -52,7 +51,7 @@ class TestPhishTankParseMethods(unittest.TestCase):
         """
         https://stackoverflow.com/questions/12160418/why-is-lxml-etree-iterparse-eating-up-all-my-memory
         """
-        raise SkipTest('This method is awful in terms of memory usage, even'
+        pytest.skip('This method is awful in terms of memory usage, even'
                        ' with the calls to elem.clear() which I hoped would'
                        ' improve it. This solution also has the issue of'
                        ' being awfully slow.')

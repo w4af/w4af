@@ -26,7 +26,6 @@ import unittest
 import multiprocessing
 
 from unittest.mock import patch, PropertyMock
-from nose.plugins.skip import SkipTest
 from concurrent.futures import TimeoutError
 
 from w3af import ROOT_PATH
@@ -189,7 +188,7 @@ class TestMPDocumentParser(unittest.TestCase):
 
         Try to kill the process while it is sending data to the queue
         """
-        raise SkipTest('This test breaks the build because it uses A LOT'
+        pytest.skip('This test breaks the build because it uses A LOT'
                        ' of memory, for more information take a look at'
                        ' https://circleci.com/gh/andresriancho/w3af/2819 .'
                        ' Note that there is no memory leak here, just a'
