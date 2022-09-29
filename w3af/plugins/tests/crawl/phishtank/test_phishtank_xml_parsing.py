@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 import unittest
 import lxml.etree as etree
+import pytest
 
 from w3af import ROOT_PATH
 

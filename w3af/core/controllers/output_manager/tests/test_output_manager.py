@@ -135,6 +135,12 @@ class TestOutputManager(unittest.TestCase):
     def test_error_handling(self):
         
         class InvalidPlugin(object):
+            def end(self):
+                pass
+
+            def log_enabled_plugins(self):
+                pass
+            
             def flush(self):
                 pass
             

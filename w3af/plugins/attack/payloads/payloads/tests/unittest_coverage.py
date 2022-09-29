@@ -22,7 +22,6 @@ import os
 import unittest
 
 import pytest
-from nose.plugins.skip import SkipTest
 
 from w3af import ROOT_PATH
 from w3af.plugins.attack.payloads.payload_handler import get_payload_list
