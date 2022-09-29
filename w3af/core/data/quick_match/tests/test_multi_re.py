@@ -17,8 +17,8 @@ class MultiRETest(unittest.TestCase):
 
     def test_multi_re(self):
         for match, matching_regexp_str, compiled_regexp, regexp_name in self._multi_re.query("<html><head><address>123456</address></head></html>"):
-            self.assertEqual(match[1], b'123456', "expected string to match")
-            self.assertEqual(b'<address>(.*?)</address>', matching_regexp_str)
+            self.assertEqual(match[1], '123456', "expected string to match")
+            self.assertEqual('<address>(.*?)</address>', matching_regexp_str)
             self.assertEqual("Apache", regexp_name)
 
 if __name__ == '__main__':

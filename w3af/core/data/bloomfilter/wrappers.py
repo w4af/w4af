@@ -20,8 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import os
-import string
-from random import choice
+import tempfile
 
 from w3af.core.controllers.misc.temp_dir import get_temp_dir
 
@@ -67,7 +66,6 @@ class GenericBloomFilter(object):
 
         if not os.path.exists(tempdir):
             os.makedirs(tempdir)
-
-        filename = ''.join([choice(string.ascii_letters) for _ in range(12)])
-        temp_file = os.path.join(tempdir, filename + '-w3af.bloom')
-        return temp_file
+        (temp_file_handle, temp_file_name) = tempfile.mkstemp(suffix='-w3af.bloom', dir=tempdir)
+        os.close(temp_file_handle)
+        return temp_file_name

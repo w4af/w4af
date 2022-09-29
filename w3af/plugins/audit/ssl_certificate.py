@@ -189,12 +189,10 @@ class ssl_certificate(AuditPlugin):
         :return: The protocol constants that exist in this python version
         """
         return [OpenSSL.SSL.TLS_METHOD,
-                OpenSSL.SSL.SSLv3_METHOD,
                 OpenSSL.SSL.TLSv1_METHOD,
                 OpenSSL.SSL.SSLv23_METHOD,
                 OpenSSL.SSL.TLSv1_1_METHOD,
-                OpenSSL.SSL.TLSv1_2_METHOD,
-                OpenSSL.SSL.SSLv2_METHOD]
+                OpenSSL.SSL.TLSv1_2_METHOD]
 
     def _ssl_connect(self,
                      domain,
