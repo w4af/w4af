@@ -34,8 +34,8 @@ from w3af.core.ui.gui import helpers
 from w3af.core.ui.gui.tabs.exploit.exploit_all import effectively_exploit_all
 
 TYPES_OBJ = {
-    Vuln: "vuln",
-    Info: "info",
+    "Vuln": "vuln",
+    "Info": "info",
 }
 
 
@@ -505,7 +505,7 @@ class VulnerabilityObserver(KBObserver):
         obj_name = info_inst.get_name()
         obj_severity = info_inst.get_severity()
 
-        obj_type = TYPES_OBJ.get(type(info_inst))
+        obj_type = TYPES_OBJ.get(type(info_inst).__name__)
         color_tuple = (obj_type, obj_severity)
         color_level = helpers.KB_COLOR_LEVEL.get(color_tuple, 0)
 
