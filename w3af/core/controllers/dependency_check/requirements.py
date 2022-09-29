@@ -33,7 +33,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('chardet', 'chardet', '5.0.0'),
                      PIPDependency('tblib', 'tblib', '1.7.0'),
                      PIPDependency('pdfminer', 'pdfminer', '20191125'),
-                     PIPDependency('OpenSSL', 'pyOpenSSL', '21.0.0'),
+                     PIPDependency('OpenSSL', 'pyOpenSSL', '22.1.0'),
                      PIPDependency('ndg', 'ndg-httpsclient', '0.5.1'),
 
                      # We need 0.1.8 because of mitmproxy
