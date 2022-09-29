@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c3bd97941d60b76098e1db6d7e379e1a1856b8cca2c63822c31adaa5c0c1007e"
+            "sha256": "beccd4234d19e8cba1535a5a35e5c4bcc80d74d158bf9fff28e27667a50db048"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -808,7 +808,7 @@
         },
         "mitmproxy": {
             "git": "https://github.com/w4af/mitmproxy",
-            "ref": "4f9deae8fc2b5f8b0519f82b1f3cdda6c115b475"
+            "ref": "daeb6d94a98a8200cb9e9b6f107de1b54482d2ff"
         },
         "morfessor": {
             "hashes": [
@@ -887,7 +887,7 @@
         },
         "netlib": {
             "git": "https://github.com/w4af/netlib",
-            "ref": "dcb2e24293cf0495374400e74b06799d33c445a8"
+            "ref": "17ab850745c0c079cdbf1e4bdeef6a62798a29d6"
         },
         "nltk": {
             "hashes": [

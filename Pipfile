@@ -85,7 +85,8 @@ editable = true
 
 [packages.mitmproxy]
 git = "https://github.com/w4af/mitmproxy"
+ref = "daeb6d94a98a8200cb9e9b6f107de1b54482d2ff"
 
 [packages.netlib]
 git = "https://github.com/w4af/netlib"
-ref = "dcb2e24293cf0495374400e74b06799d33c445a8"
+ref = "17ab850745c0c079cdbf1e4bdeef6a62798a29d6"
