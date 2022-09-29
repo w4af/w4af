@@ -206,7 +206,7 @@ def extract_all_stats():
     index_page = response.read()
 
     result = []
-    SCAN_ID_RE = '<a href="statistics\.php\?id=(.*?)">'
+    SCAN_ID_RE = r'<a href="statistics\.php\?id=(.*?)">'
     SCAN_STATS = get_wivet_http('/offscanpages/statistics.php?id=')
 
     for scan_id in re.findall(SCAN_ID_RE, index_page):
@@ -223,7 +223,7 @@ def get_coverage_for_scan_id(scan_id):
     response = urllib.request.urlopen(specific_stats_url % scan_id)
     html = response.read()
 
-    match_obj = re.search('<span id="coverage">%(.*?)</span>', html)
+    match_obj = re.search(r'<span id="coverage">%(.*?)</span>', html)
     if match_obj is not None:
         return int(match_obj.group(1))
 
