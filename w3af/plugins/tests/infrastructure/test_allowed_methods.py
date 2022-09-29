@@ -74,7 +74,7 @@ class TestAllowedMethods(PluginTest):
         test_modsecurity in test_allowed_methods, test a different
         configuration:
             RewriteEngine on
-            RewriteCond %{THE_REQUEST} !^(POST|GET)\\ /.*\ HTTP/1\.1$
+            RewriteCond %{THE_REQUEST} !^(POST|GET)\\ /.*\\ HTTP/1\\.1$
             RewriteRule .* - [F]
         """
         cfg = self._run_configs['cfg']

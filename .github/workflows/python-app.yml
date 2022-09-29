@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 20
     strategy:
       matrix:
-        group: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        group: [1, 2, 3, 4, 5, 6, 7, 8]
     
     steps:
     - uses: actions/checkout@v3
@@ -39,7 +39,7 @@ jobs:
       uses: GabrielBB/xvfb-action@v1
       with:
         run: |
-          pipenv run pytest --cov=w3af --splits 10 --group ${{ matrix.group }} -m "not moth and not fails and not git and not gui and not integration and not ci_ignore"
+          pipenv run pytest --cov=w3af --splits 8 --group ${{ matrix.group }} -m "not moth and not fails and not git and not gui and not integration and not ci_ignore"
     - name: Upload coverage
       uses: actions/upload-artifact@v2
       with:
