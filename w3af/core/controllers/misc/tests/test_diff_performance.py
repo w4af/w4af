@@ -20,11 +20,10 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-
-
 import os
 import time
 import unittest
+import pytest
 
 from w3af import ROOT_PATH
 from w3af.core.controllers.misc.diff import chunked_diff, diff_difflib, diff_dmp
@@ -36,9 +35,11 @@ class TestDiffPerformance(unittest.TestCase):
     FUNCTIONS = [chunked_diff, diff_dmp]
     ROUNDS = 5
 
+    @pytest.mark.slow
     def test_xml(self):
         self._generic_runner(self._run_test_xml)
 
+    @pytest.mark.slow
     def test_diff_large_different_responses(self):
         self._generic_runner(self._run_diff_large_different_responses)
 

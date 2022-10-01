@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
+import pytest
 import time
 
 from pebble import ProcessPool
@@ -84,6 +85,7 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         self.assertEqual(future.result(), usage)
         self.assertEqual(workers_before_test, list(pool._pool_manager.worker_manager.workers.keys())[:])
 
+    @pylint.mark.slow
     def test_effective_kill_limit(self):
         #
         # This started as a tool to let me know when the process is killed.

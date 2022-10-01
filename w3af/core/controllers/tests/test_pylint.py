@@ -21,10 +21,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import unittest
+import pytest
 
 from pylint import lint
 from pylint.reporters.text import TextReporter
-import pytest
 
 from w3af import ROOT_PATH
 
@@ -55,21 +55,25 @@ class PylintRunner(unittest.TestCase):
         lint.Run(pylint_args, reporter=TextReporter(pylint_output), exit=False)
         return pylint_output
     
+    @pylint.mark.slow
     def test_pylint_plugins(self):
         pylint_output = self.run_pylint('%s/plugins/' % ROOT_PATH)
         output = pylint_output.read()
         self.assertEqual(output, [], '\n'.join(output))
 
+    @pylint.mark.slow
     def test_pylint_core_controllers(self):
         pylint_output = self.run_pylint('%s/core/controllers/' % ROOT_PATH)
         output = pylint_output.read()
         self.assertEqual(output, [], '\n'.join(output))
 
+    @pylint.mark.slow
     def test_pylint_core_data(self):
         pylint_output = self.run_pylint('%s/core/data/' % ROOT_PATH)
         output = pylint_output.read()
         self.assertEqual(output, [], '\n'.join(output))
 
+    @pylint.mark.slow
     def test_pylint_core_ui(self):
         pylint_output = self.run_pylint('%s/core/ui/' % ROOT_PATH)
         output = pylint_output.read()
