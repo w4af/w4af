@@ -66,9 +66,9 @@ jobs:
         uses: actions/download-artifact@v2
       - name: Run coverage
         run: |
-          coverage combine coverage*/.coverage*
-          coverage report --fail-under=60
-          coverage xml
+          pipenv run coverage combine coverage*/.coverage*
+          pipenv run coverage report --fail-under=60
+          pipenv run coverage xml
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v2
         with:
