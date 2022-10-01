@@ -113,6 +113,7 @@ class OutputManager(Process):
 
         # Internal variables
         self.in_queue = SilentJoinableQueue(ctx=self.ctx)
+        self.in_queue.cancel_join_thread()
         self._w3af_core = None
         self._last_output_flush = None
         self._is_shutting_down = False
