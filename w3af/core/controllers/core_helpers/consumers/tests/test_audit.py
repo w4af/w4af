@@ -78,6 +78,11 @@ class TestAuditConsumer(unittest.TestCase):
         with patch('w3af.core.controllers.core_helpers.consumers.audit.om.out') as om_mock:
             audit_consumer.terminate()
 
-            msg = ('Spent 0.00 seconds running xss.end() until a scan must'
+            msg1 = ('Spent 0.00 seconds running xss.end() until a scan must'
                    ' stop exception was raised')
-            self.assertIn(call.debug(msg), om_mock.mock_calls)
+            msg2 = ('Spent 0.01 seconds running xss.end() until a scan must'
+                   ' stop exception was raised')
+            if call.debug(msg1) in om_mock.mock_calls:
+                self.assertIn(call.debug(msg1), om_mock.mock_calls)
+            else:
+                self.assertIn(call.debug(msg2), om_mock.mock_calls)
