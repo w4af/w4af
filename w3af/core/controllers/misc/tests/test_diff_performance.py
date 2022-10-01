@@ -35,11 +35,11 @@ class TestDiffPerformance(unittest.TestCase):
     FUNCTIONS = [chunked_diff, diff_dmp]
     ROUNDS = 5
 
-    @pytest.mark.slow
+    @pytest.mark.slow_group2
     def test_xml(self):
         self._generic_runner(self._run_test_xml)
 
-    @pytest.mark.slow
+    @pytest.mark.slow_group3
     def test_diff_large_different_responses(self):
         self._generic_runner(self._run_diff_large_different_responses)
 

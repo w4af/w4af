@@ -45,7 +45,7 @@ class TestTimeLimit(PluginTest):
         },
     }
 
-    @pytest.mark.slow
+    @pytest.mark.slow_group4
     @pytest.mark.ci_fails
     def test_spider_with_time_limit(self):
         #

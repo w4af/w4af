@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         group: [1, 2, 3, 4, 5, 6, 7, 8]
-    
+
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -51,6 +51,9 @@ jobs:
 
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      matrix:
+        group: [1, 2, 3, 4]
 
     steps:
     - uses: actions/checkout@v3
@@ -72,11 +75,11 @@ jobs:
       uses: GabrielBB/xvfb-action@v1
       with:
         run: |
-          pipenv run pytest --cov=w3af -m "slow and not moth and not fails and not git and not gui and not integration and not ci_ignore"
+          pipenv run pytest --cov=w3af -m "slow_group${{matrix.group}} and not moth and not fails and not git and not gui and not integration and not ci_ignore"
     - name: Upload coverage
       uses: actions/upload-artifact@v2
       with:
-        name: coverage-slow
+        name: coverage-slow${{matrix.group}}
         path: .coverage
 
 
