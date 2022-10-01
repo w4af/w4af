@@ -82,7 +82,7 @@ jobs:
 
   coverage:
     name: Upload coverage to codecov
-    needs: [test, test_slow]
+    needs: [test, slow_test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
