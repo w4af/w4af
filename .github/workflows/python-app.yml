@@ -67,7 +67,7 @@ jobs:
       - name: Run coverage
         run: |
           pipenv run coverage combine coverage*/.coverage*
-          pipenv run coverage report --fail-under=60
+          pipenv run coverage report --fail-under=55
           pipenv run coverage xml
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v2
