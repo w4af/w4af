@@ -86,6 +86,7 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         self.assertEqual(workers_before_test, list(pool._pool_manager.worker_manager.workers.keys())[:])
 
     @pytest.mark.slow_group1
+    @pytest.mark.slow
     def test_effective_kill_limit(self):
         #
         # This started as a tool to let me know when the process is killed.

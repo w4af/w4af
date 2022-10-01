@@ -26,6 +26,7 @@ from w3af.plugins.tests.helper import PluginConfig
 @pytest.mark.functional
 @pytest.mark.internet
 @pytest.mark.slow_group2
+@pytest.mark.slow
 @pytest.mark.ci_fails
 class TestScanVulnerableSite(object):
 

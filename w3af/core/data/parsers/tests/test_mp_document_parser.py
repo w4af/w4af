@@ -115,6 +115,7 @@ class TestMPDocumentParser(unittest.TestCase):
             self.assertIsInstance(doc_parser._parser, HTMLParser)
 
     @pytest.mark.slow_group1
+    @pytest.mark.slow
     def test_many_parsers_timing_out(self):
         """
         Received more reports of parsers timing out, and after that

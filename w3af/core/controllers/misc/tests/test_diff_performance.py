@@ -36,10 +36,12 @@ class TestDiffPerformance(unittest.TestCase):
     ROUNDS = 5
 
     @pytest.mark.slow_group2
+    @pytest.mark.slow
     def test_xml(self):
         self._generic_runner(self._run_test_xml)
 
     @pytest.mark.slow_group3
+    @pytest.mark.slow
     def test_diff_large_different_responses(self):
         self._generic_runner(self._run_diff_large_different_responses)
 

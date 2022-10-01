@@ -56,24 +56,28 @@ class PylintRunner(unittest.TestCase):
         return pylint_output
     
     @pytest.mark.slow_group1
+    @pytest.mark.slow
     def test_pylint_plugins(self):
         pylint_output = self.run_pylint('%s/plugins/' % ROOT_PATH)
         output = pylint_output.read()
         self.assertEqual(output, [], '\n'.join(output))
 
     @pytest.mark.slow_group2
+    @pytest.mark.slow
     def test_pylint_core_controllers(self):
         pylint_output = self.run_pylint('%s/core/controllers/' % ROOT_PATH)
         output = pylint_output.read()
         self.assertEqual(output, [], '\n'.join(output))
 
     @pytest.mark.slow_group3
+    @pytest.mark.slow
     def test_pylint_core_data(self):
         pylint_output = self.run_pylint('%s/core/data/' % ROOT_PATH)
         output = pylint_output.read()
         self.assertEqual(output, [], '\n'.join(output))
 
     @pytest.mark.slow_group4
+    @pytest.mark.slow
     def test_pylint_core_ui(self):
         pylint_output = self.run_pylint('%s/core/ui/' % ROOT_PATH)
         output = pylint_output.read()
