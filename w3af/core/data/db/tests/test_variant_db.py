@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
+import pytest
 
 from w3af.core.controllers.misc_settings import MiscSettings
 from w3af.core.controllers.misc.temp_dir import create_temp_dir
@@ -38,6 +39,8 @@ from w3af.core.data.db.variant_db import (VariantDB,
                                           MAX_EQUAL_FORM_VARIANTS)
 from w3af.core.data.db.clean_dc import (clean_fuzzable_request,
                                         FILENAME_TOKEN, PATH_TOKEN)
+from w3af.core.data.db.dbms import reset_temp_db_instance
+import w3af.core.controllers.output_manager as om
 
 
 def fr(url):
@@ -51,6 +54,10 @@ class TestVariantDB(unittest.TestCase):
         MiscSettings().set_default_values()
         create_temp_dir()
         self.vdb = VariantDB()
+
+    def tearDown(self):
+        self.vdb.cleanup()
+        reset_temp_db_instance()
 
     def test_db_int(self):
         url_fmt = 'http://w3af.org/foo.htm?id=%s'

@@ -27,8 +27,7 @@ import sqlite3
 
 from functools import wraps
 
-from concurrent.futures import Future
-from multiprocessing.dummy import Queue, Process
+from concurrent.futures import ThreadPoolExecutor
 
 import w3af.core.controllers.output_manager as om
 
@@ -44,7 +43,7 @@ SETUP = 'SETUP'
 QUERY = 'QUERY'
 SELECT = 'SELECT'
 COMMIT = 'COMMIT'
-POISON = 'POISON'
+CLOSE = 'CLOSE'
 
 DB_MALFORMED_ERROR = ('SQLite raised a database disk image is malformed'
                       ' exception. While we do have good understanding on the'
@@ -69,7 +68,6 @@ def verify_started(meth):
         msg = 'No calls to SQLiteDBMS can be made after stop().'
 
         assert not self.sql_executor.get_received_poison_pill(), msg
-        assert self.sql_executor.is_alive(), msg
 
         return meth(self, *args, **kwds)
     
@@ -94,40 +92,18 @@ class SQLiteDBMS(object):
 
         super(SQLiteDBMS, self).__init__()
 
-        #
         #   All DB queries from w3af are sent to this queue, and this is a lot
         #   since the DiskList, DiskQueue, DiskDict classes which are used
         #   extensively through the framework use the same SQLite db as a
         #   backend (of course different tables, but the same SQLite file and
         #   on-memory instance).
-        #
-        #   Limiting the size of this Queue is serious business. I can't think
-        #   about a scenario where this limit would create a thread-lock, but
-        #   it doesn't feel right...
-        #
-        #   I've added debugging to the SQLiteExecutor.run() method to
-        #   analyze when the queue is full. After just a couple of minutes of
-        #   running the following message is shown:
-        #
-        #   The SQLiteExecutor.in_queue length is 0. Processed 14500 queries.
-        #
-        #   The queue size is 0, and other messages keep showing that same
-        #   number, or other <10, and the processed queries is really high but
-        #   acceptable: SQLite is C, fast, etc.
-        #
-        #   Any dead-lock you might be looking for doesn't seem to be here.
-        #
-        in_queue = Queue(250)
-        self.sql_executor = SQLiteExecutor(in_queue)
-        self.sql_executor.start()
         
-        #
         #    Performs sqlite database setup, this has the nice side-effect
         #    that .result() will block until the thread is started and
         #    processing tasks.
-        #
+        self.sql_executor = SQLiteExecutor()
         future = self.sql_executor.setup(filename, autocommit, journal_mode,
-                                         cache_size)
+                                          cache_size)
         # Raises an exception if an error was found during setup
         future.result()
         
@@ -177,15 +153,13 @@ class SQLiteDBMS(object):
         # Commit all pending changes
         self.commit()
 
+        future = self.sql_executor.close()
+        future.result()
+
         # Setting the received poison pill to True will make all calls to
         # SQLiteDBMS methods fail because of `@verify_started`. The goal is
         # to prevent other tasks being queued after the poison pill
-        self.sql_executor.set_received_poison_pill(True)
-
-        # And then send the poison pill and wait for it to be processed by
-        # the run() method
-        future = self.sql_executor.stop()
-        future.result()
+        self.sql_executor.shutdown()
 
     def get_file_name(self):
         """Return DB filename."""
@@ -259,81 +233,29 @@ class SQLiteDBMS(object):
         return self.execute(query, commit=True)
 
 
-class SQLiteExecutor(Process):
+class SQLiteExecutor():
     """
     A very simple thread that takes work via submit() and processes it in a
     different thread.
     """
-    DEBUG = False
-    REPORT_QSIZE_EVERY_N_CALLS = 250
     
-    def __init__(self, in_queue):
-        super(SQLiteExecutor, self).__init__(name='SQLiteExecutor')
-        
-        # Setting the thread to daemon mode so it dies with the rest of the
-        # process, and a name so we can identify it during debugging sessions
-        self.daemon = True
-        self.name = 'SQLiteExecutor'
-        
-        self._in_queue = in_queue
-        self._last_reported_qsize = None
-        self._current_query_num = 0
+    def __init__(self):
+        self.executor = ThreadPoolExecutor(max_workers=1,
+            thread_name_prefix="SQLiteExecutor")
         self._poison_pill_received = False
 
     def get_received_poison_pill(self):
         return self._poison_pill_received
 
-    def set_received_poison_pill(self, received):
-        self._poison_pill_received = received
-
-    def _report_qsize_limit_reached(self):
-        """
-        Report if the queue size has reached the limit.
-
-        When the limit is hit, all the different framework components, such as
-        DiskDict, DiskList, KB, etc. will start to lock waiting for the DB result,
-        which considerably degrades performance.
-
-        :return: None
-        """
-        if self._in_queue.qsize() >= self._in_queue.maxsize - 10:
-            msg = ('The SQLiteExecutor.in_queue length has reached its max'
-                   ' limit of %s after processing %s queries. Framework'
-                   ' performance will degrade.')
-            args = (self._in_queue.maxsize, self._current_query_num)
-            om.out.debug(msg % args)
-
-    def _report_qsize(self):
-        """
-        Reports the in queue size every N seconds according to REPORT_QSIZE_EVERY_N_CALLS
-        """
-        if self._last_reported_qsize is None:
-            self._last_reported_qsize = 0
-            return
-
-        diff = self._current_query_num - self._last_reported_qsize
-        if diff % self.REPORT_QSIZE_EVERY_N_CALLS == 0:
-            self._last_reported_qsize = self._current_query_num
-
-            msg = 'The SQLiteExecutor.in_queue length is %s. Processed %s queries.'
-            args = (self._in_queue.qsize(), self._current_query_num)
-            print(msg % args)
-
     def query(self, query, parameters):
-        future = Future()
-        request = (QUERY, (query, parameters), {}, future)
-        self._in_queue.put(request)
-        return future
+        return self._submit((QUERY, (query, parameters), {}))
     
     def _query_handler(self, query, parameters):
         cursor = self.conn.cursor()
         return cursor.execute(query, parameters)
 
     def select(self, query, parameters):
-        future = Future()
-        request = (SELECT, (query, parameters), {}, future)
-        self._in_queue.put(request)
-        return future
+        return self._submit((SELECT, (query, parameters), {}))
     
     def _select_handler(self, query, parameters):
         result = self.cursor.execute(query, parameters)
@@ -343,34 +265,25 @@ class SQLiteExecutor(Process):
         return result_lst
     
     def commit(self):
-        future = Future()
-        request = (COMMIT, None, None, future)
-        self._in_queue.put(request)
-        return future
+        return self._submit((COMMIT, None, None))
 
     def _commit_handler(self):
         return self.conn.commit()
         
-    def stop(self):
-        future = Future()
-        request = (POISON, None, None, future)
-        self._in_queue.put(request)
-        return future
-    
     def setup(self, filename, autocommit=False, journal_mode='OFF',
               cache_size=2000):
         """
         Request the process to perform a setup.
         """
-        future = Future()
         request = (SETUP,
                    (filename,),
                    {'autocommit': autocommit,
                     'journal_mode': journal_mode,
-                    'cache_size': autocommit},
-                   future)
-        self._in_queue.put(request)
-        return future
+                    'cache_size': autocommit})
+        return self._submit(request)
+
+    def close(self):
+        return self._submit((CLOSE, None, None))
     
     def _setup_handler(self, filename, autocommit=False, journal_mode='OFF',
                        cache_size=2000):
@@ -412,83 +325,65 @@ class SQLiteExecutor(Process):
         #
         #self.cursor.execute('PRAGMA synchronous=OFF')
 
-    def run(self):
-        """
-        This is the "main" method for this class, the one that
-        consumes the commands which are sent to the Queue. The idea is to have
-        the following architecture features:
-            * Other parts of the framework which want to insert into the DB
-              simply add an item to our input Queue and "forget about it" since
-              it will be processed in another thread.
+    def _submit(self, task):
+        return self.executor.submit(self._handle_task, task)
 
-            * Only one thread accesses the sqlite3 object, which avoids many
-            issues because of sqlite's non thread-safeness
+    def _close_handler(self):
+        self.conn.close()
+        self.conn = None
 
-        The Queue.get() will make sure we don't have 100% CPU usage in the loop
-        """
+    def shutdown(self):
+        self.executor.shutdown(wait=True, cancel_futures=True)
+        self.executor = None
+        self._poison_pill_received = True
+
+    def _handle_task(self, task):
+        op_code, args, kwds = task
+
         OP_CODES = {SETUP: self._setup_handler,
                     QUERY: self._query_handler,
                     SELECT: self._select_handler,
                     COMMIT: self._commit_handler,
-                    POISON: POISON}
-        
-        while True:
-            op_code, args, kwds, future = self._in_queue.get()
+                    CLOSE: self._close_handler}
 
-            self._current_query_num += 1
+        handler = OP_CODES.get(op_code, None)
 
-            args = args or ()
-            kwds = kwds or {}
+        if handler is None:
+            # Invalid OPCODE
+            return False
 
-            self._report_qsize_limit_reached()
-
-            if self.DEBUG:
-                self._report_qsize()
-                #print('%s %s %s' % (op_code, args, kwds))
-            
-            handler = OP_CODES.get(op_code, None)
-
-            if not future.set_running_or_notify_cancel():
-                return
-
-            if handler is None:
-                # Invalid OPCODE
-                future.set_result(False)
-                continue
-            
-            if handler == POISON:
-                self._poison_pill_received = True
-                future.set_result(True)
-                break
-
-            try:
+        try:
+            if kwds is not None:
                 result = handler(*args, **kwds)
-            except sqlite3.OperationalError as e:
-                # I don't like this string match, but it seems that the
-                # exception doesn't have any error code to match
-                if 'no such table' in str(e):
-                    dbe = NoSuchTableException(str(e))
+            elif args is not None:
+                result = handler(*args)
+            else:
+                result = handler()
+        except sqlite3.OperationalError as e:
+            # I don't like this string match, but it seems that the
+            # exception doesn't have any error code to match
+            if 'no such table' in str(e):
+                dbe = NoSuchTableException(str(e))
 
-                elif 'malformed' in str(e):
-                    print(DB_MALFORMED_ERROR)
-                    dbe = MalformedDBException(DB_MALFORMED_ERROR)
-
-                else:
-                    # More specific exceptions to be added here later...
-                    dbe = DBException(str(e))
-
-                future.set_exception(dbe)
-
-            except Exception as e:
-                dbe = DBException(str(e))
-                future.set_exception(dbe)
+            elif 'malformed' in str(e):
+                print(DB_MALFORMED_ERROR)
+                dbe = MalformedDBException(DB_MALFORMED_ERROR)
 
             else:
-                future.set_result(result)
+                # More specific exceptions to be added here later...
+                dbe = DBException(str(e))
+
+            raise dbe
+
+        except Exception as e:
+            dbe = DBException(str(e))
+            raise dbe
+
+        else:
+            return result
 
 
 temp_default_db = None
-
 
 def get_default_temp_db_instance():
     global temp_default_db
@@ -498,6 +393,13 @@ def get_default_temp_db_instance():
         temp_default_db = SQLiteDBMS('%s/main.db' % get_temp_dir())
         
     return temp_default_db
+
+def reset_temp_db_instance():
+    global temp_default_db
+
+    if temp_default_db is not None:
+        temp_default_db.close()
+        temp_default_db = None
 
 
 def get_default_persistent_db_instance():
