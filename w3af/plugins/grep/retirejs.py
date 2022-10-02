@@ -39,6 +39,7 @@ from w3af.core.data.kb.vuln import Vuln
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_types import URL as URL_OPTION
 from w3af.core.data.options.option_list import OptionList
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class retirejs(GrepPlugin):
@@ -294,7 +295,7 @@ class retirejs(GrepPlugin):
         #
         # Avoid running this plugin twice on the same URL
         #
-        url_hash = hashlib.md5(response.get_url().url_string).hexdigest()
+        url_hash = hashlib.md5(smart_str_ignore(response.get_url().url_string)).hexdigest()
         if url_hash in self._analyzed_hashes:
             return False
 
