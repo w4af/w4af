@@ -36,6 +36,7 @@ class Mutant(DiskItem):
 
         self._freq = freq
         self._original_response_body = None
+        self._body_set = False
 
     def copy(self):
         return copy.deepcopy(self)
@@ -127,13 +128,14 @@ class Mutant(DiskItem):
         response body is the body of the response that is generated when w3af
         requests the fuzzable request for the first time.
         """
-        if self._original_response_body is None:
+        if not self._body_set:
             raise ValueError('[mutant error] You should set the original '
                              'response body before getting its value!')
         return self._original_response_body
 
     def set_original_response_body(self, orig_body):
         self._original_response_body = orig_body
+        self._body_set = True
 
     #
     # All the other methods are forwarded to the fuzzable request except for
