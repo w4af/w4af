@@ -27,6 +27,7 @@ from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
 from w3af.core.data.fuzzer.fuzzer import create_mutants
 from w3af.core.data.fuzzer.utils import create_format_string
 from w3af.core.data.kb.vuln import Vuln
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class format_string(AuditPlugin):
@@ -71,10 +72,10 @@ class format_string(AuditPlugin):
 
         for error in self.ERROR_STRINGS:
             # Check if the error string is in the response
-            if error not in response.body:
+            if error not in smart_unicode(response.body):
                 continue
 
-            if error in mutant.get_original_response_body():
+            if error in smart_unicode(mutant.get_original_response_body()):
                 continue
 
             desc = ('A possible (detection is really hard...) format'

@@ -10,6 +10,7 @@ from .utils import debug
 from w3af.core.data.constants.response_codes import NO_CONTENT
 from w3af.core.data.kb.config import cf
 from w3af.core.data.misc.encoding import smart_str
+from w3af.core.data.url.HTTPResponse import DEFAULT_WAIT_TIME
 
 
 def close_on_error(read_meth):
@@ -61,7 +62,7 @@ class HTTPResponse(http.client.HTTPResponse):
         self._method = method
         self._multiread = None
         self._encoding = None
-        self._time = None
+        self._time = DEFAULT_WAIT_TIME
 
     def geturl(self):
         return self._url

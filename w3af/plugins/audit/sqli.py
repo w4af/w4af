@@ -224,7 +224,7 @@ class sqli(AuditPlugin):
             if len(dbms_types) > 0:
                 res.append((match, dbms_types[0]))
 
-        for match, _, regex_comp, dbms_type in self._multi_re.query(response.body):
+        for match, _, regex_comp, dbms_type in self._multi_re.query(smart_unicode(response.body)):
             om.out.information(self.SQLI_MESSAGE % (match.group(0), response.id))
             res.append((match.group(0), dbms_type))
 
