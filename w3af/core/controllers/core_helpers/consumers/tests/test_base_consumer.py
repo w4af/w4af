@@ -36,6 +36,7 @@ class TestBaseConsumer(unittest.TestCase):
     def test_handle_exception(self):
         url = URL('http://moth/')
         fr = FuzzableRequest(url)
+        exception = None
         try:
             raise Exception()
         except Exception as e:
