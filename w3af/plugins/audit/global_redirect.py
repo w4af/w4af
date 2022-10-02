@@ -29,6 +29,7 @@ from w3af.core.data.fuzzer.fuzzer import create_mutants
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w3af.core.data.misc.encoding import smart_unicode
 
 def compile_expressions(regexp_list, domain):
     return [re.compile(r % domain) for r in regexp_list]
@@ -280,7 +281,7 @@ class global_redirect(AuditPlugin):
 
         :return: Lines of javascript code
         """
-        mo = self.SCRIPT_RE.search(response.get_body())
+        mo = self.SCRIPT_RE.search(smart_unicode(response.get_body()))
 
         if mo is not None:
 
