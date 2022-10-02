@@ -28,6 +28,7 @@ from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.kb.vuln import Vuln
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class xst(AuditPlugin):
@@ -71,8 +72,8 @@ class xst(AuditPlugin):
         response = self._uri_opener.send_mutant(fr)
 
         # create a regex to test the response.
-        regex = re.compile("FakeHeader: *?XST", re.IGNORECASE)
-        if regex.search(response.get_body()):
+        regex = re.compile(r"FakeHeader: *?XST", re.IGNORECASE)
+        if regex.search(smart_unicode(response.get_body())):
             # If vulnerable record it. This will now become visible on
             # the KB Browser
             desc = 'The web server at "%s" is vulnerable to Cross Site'\

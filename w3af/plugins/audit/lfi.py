@@ -35,6 +35,7 @@ from w3af.core.data.constants.file_patterns import FILE_PATTERNS
 from w3af.core.data.misc.encoding import smart_str_ignore
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.data.kb.info import Info
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 FILE_OPEN_ERRORS = [# Java
@@ -232,7 +233,7 @@ class lfi(AuditPlugin):
         #   identified)
         #
         body = response.get_body()
-        for _, error_str, _ in self.file_read_error_multi_re.query(body):
+        for _, error_str, _ in self.file_read_error_multi_re.query(smart_unicode(body)):
             if error_str not in mutant.get_original_response_body():
                 desc = 'A file read error was found at: %s'
                 desc %= mutant.found_at()
@@ -254,7 +255,7 @@ class lfi(AuditPlugin):
         res = set()
         body = response.get_body()
 
-        for file_pattern_match in self.file_pattern_multi_in.query(body):
+        for file_pattern_match in self.file_pattern_multi_in.query(smart_unicode(body)):
             res.add(file_pattern_match)
 
         if len(res) == 1:
