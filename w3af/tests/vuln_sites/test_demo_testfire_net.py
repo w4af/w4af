@@ -24,7 +24,8 @@ from w3af.plugins.tests.helper import PluginTest
 from w3af.tests.vuln_sites.utils.scan_vulnerable_site import TestScanVulnerableSite
 
 
-@pytest.mark.skip(reason="Hangs forever")
+@pytest.mark.slow_group3
+@pytest.mark.slow
 class TestDemoTestFireNet(TestScanVulnerableSite, PluginTest):
     target_url = 'http://demo.testfire.net/'
     EXPECTED_VULNS = {('CSRF vulnerability', '/search.aspx', None),

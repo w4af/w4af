@@ -24,7 +24,8 @@ from w3af.tests.vuln_sites.utils.scan_vulnerable_site import TestScanVulnerableS
 from w3af.plugins.tests.helper import PluginTest
 
 
-@pytest.mark.skip(reason="Hangs forever")
+@pytest.mark.slow_group1
+@pytest.mark.slow
 class TestZeroWebAppSecurityCom(TestScanVulnerableSite, PluginTest):
 
     target_url = 'http://zero.webappsecurity.com'

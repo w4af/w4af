@@ -32,6 +32,7 @@ from w3af.core.data.misc.encoding import smart_str_ignore
 from w3af.core.data.fuzzer.fuzzer import create_mutants
 from w3af.core.data.quick_match.multi_in import MultiIn
 from w3af.core.data.kb.vuln import Vuln
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class xxe(AuditPlugin):
@@ -143,10 +144,10 @@ class xxe(AuditPlugin):
         if not param_value:
             return True
 
-        if 'xml' in param_name.lower():
+        if 'xml' in smart_unicode(param_name.lower()):
             return True
 
-        if '<' in param_value and '>' in param_value:
+        if '<' in smart_unicode(param_value) and '>' in smart_unicode(param_value):
             return True
 
         return False

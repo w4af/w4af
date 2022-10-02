@@ -23,7 +23,8 @@ import pytest
 from w3af.tests.vuln_sites.utils.scan_vulnerable_site import TestScanVulnerableSite
 from w3af.plugins.tests.helper import PluginTest
 
-@pytest.mark.skip(reason="Failing right now")
+@pytest.mark.slow_group4
+@pytest.mark.slow
 class TestScanCrackmeCenzicCom(TestScanVulnerableSite, PluginTest):
 
     target_url = 'http://crackme.cenzic.com'

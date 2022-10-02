@@ -246,6 +246,11 @@ class HTTPResponse(http.client.HTTPResponse):
         if self._handler:
             self._handler._request_closed(self._connection)
 
+    def _close_conn(self):
+        http.client.HTTPResponse._close_conn(self)
+        if self._handler:
+            self._handler._request_closed(self._connection)
+
     def close_connection(self):
         self._handler._remove_connection(self._connection)
         self.close()

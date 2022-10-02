@@ -24,7 +24,8 @@ from w3af.tests.vuln_sites.utils.scan_vulnerable_site import TestScanVulnerableS
 from w3af.plugins.tests.helper import PluginTest
 
 
-@pytest.mark.skip(reason="Hangs forever")
+@pytest.mark.slow_group3
+@pytest.mark.slow
 class TestScanASPNETVulnwebCom(TestScanVulnerableSite, PluginTest):
 
     target_url = 'http://testaspnet.vulnweb.com/'
