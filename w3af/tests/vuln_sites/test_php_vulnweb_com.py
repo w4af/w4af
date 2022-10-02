@@ -24,7 +24,7 @@ from w3af.tests.vuln_sites.utils.scan_vulnerable_site import TestScanVulnerableS
 from w3af.plugins.tests.helper import PluginTest
 
 
-@pytest.mark.slow_group2
+@pytest.mark.slow_group1
 @pytest.mark.slow
 class TestScanPHPVulnwebCom(TestScanVulnerableSite, PluginTest):
 

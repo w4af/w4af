@@ -45,7 +45,7 @@ class TestStrategy(unittest.TestCase):
         'OutputManagerWorkerThread',
         'PoolWorkerHandler',
         'MainThread',
-        'SQLiteExecutor',
+        'SQLiteExecutor_0',
         'OutputManager',
         'QueueFeederThread'
     }
