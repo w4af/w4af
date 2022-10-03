@@ -1,5 +1,5 @@
 djangomoth:
-  image: django-moth:latest
+  image: w4af/django-moth:latest
   ports:
     - "8000:8000"
     - "8001:8001"

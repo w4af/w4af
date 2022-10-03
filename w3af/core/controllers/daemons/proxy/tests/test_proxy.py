@@ -79,8 +79,8 @@ class TestProxy(unittest.TestCase):
         del direct_resp_headers['date']
         del proxy_resp_headers['date']
 
-        del direct_resp_headers['transfer-encoding']
-        del proxy_resp_headers['content-length']
+        if 'transfer-encoding' in direct_resp_headers:
+            del direct_resp_headers['transfer-encoding']
 
         del proxy_resp_headers['content-encoding']
 
@@ -108,8 +108,8 @@ class TestProxy(unittest.TestCase):
         del direct_resp_headers['date']
         del proxy_resp_headers['date']
 
-        del direct_resp_headers['transfer-encoding']
-        del proxy_resp_headers['content-length']
+        if 'transfer-encoding' in direct_resp_headers:
+            del direct_resp_headers['transfer-encoding']
 
         del proxy_resp_headers['content-encoding']
 
