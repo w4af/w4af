@@ -50,7 +50,7 @@ jobs:
     name: Test w3af (slow tests)
 
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 55
     strategy:
       matrix:
         group: [1, 2, 3, 4]
