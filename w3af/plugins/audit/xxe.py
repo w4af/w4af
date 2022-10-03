@@ -273,6 +273,7 @@ class xxe(AuditPlugin):
         :yield: Only the mutants that need to be tested
         """
         for mutant in mutants:
+            assert mutant._body_set
             original_value = mutant.get_token_original_value()
             param_name = mutant.get_token_name()
 
@@ -282,6 +283,7 @@ class xxe(AuditPlugin):
             for payload in self._create_payloads(param_name, original_value):
                 m = mutant.copy()
                 m.set_token_value(payload)
+                assert m._body_set
                 yield m
 
     def audit(self, freq, orig_response, debugging_id):

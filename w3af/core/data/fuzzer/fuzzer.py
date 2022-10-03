@@ -105,6 +105,9 @@ def create_mutants(freq,
                 orig_headers = m.get_headers()
                 orig_headers['If-None-Match'] = etag
                 m.set_headers(orig_headers)
+    else:
+        for m in result:
+            m.set_original_response_body(None)
 
     return result
 

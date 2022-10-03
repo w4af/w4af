@@ -161,7 +161,11 @@ class Mutant(DiskItem):
                 self.get_fuzzable_request() == other.get_fuzzable_request())
 
     def __deepcopy__(self, memo):
-        return self.__class__(copy.deepcopy(self._freq, memo))
+        res = self.__class__(copy.deepcopy(self._freq, memo))
+        res._body_set = self._body_set
+        if self._original_response_body is not None:
+            res._original_response_body = self._original_response_body[:]
+        return res
 
     def found_at(self):
         """
