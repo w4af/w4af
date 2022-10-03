@@ -32,6 +32,7 @@ from w3af.core.data.fuzzer.utils import rand_alpha
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_list import OptionList
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class eval(AuditPlugin):
@@ -180,7 +181,7 @@ class eval(AuditPlugin):
         eval_error_list = self._find_eval_result(response)
         for eval_error in eval_error_list:
             if not re.search(eval_error,
-                             mutant.get_original_response_body(), re.I):
+                             smart_unicode(mutant.get_original_response_body()), re.I):
 
                 desc = 'eval() input injection was found at: %s'
                 desc = desc % mutant.found_at()
@@ -200,7 +201,7 @@ class eval(AuditPlugin):
         """
         res = []
 
-        if self._expected_result in response.body.lower():
+        if self._expected_result in smart_unicode(response.body).lower():
             msg = ('Verified eval() input injection, found the concatenated'
                    ' random string: "%s" in the response body. The'
                    ' vulnerability was found on response with id %s.')
