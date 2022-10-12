@@ -52,13 +52,12 @@ class TestAuditPlugin(unittest.TestCase):
         
         vulns = plugin_inst.audit_return_vulns(freq)
         
-        self.assertEqual(len(vulns), 1, vulns)
-        
-        vuln = vulns[0]
-        self.assertEqual("syntax error", vuln['error'])
-        self.assertEqual("Unknown database", vuln['db'])
-        self.assertEqual(target_url, str(vuln.get_url()))        
-        
+        self.assertGreaterEqual(len(vulns), 1, "Expected to find at least one vulnerability")
+        for vuln in vulns:
+            self.assertEqual("syntax error", vuln['error'])
+            self.assertEqual("Unknown database", vuln['db'])
+            self.assertEqual(target_url, str(vuln.get_url()))
+
         self.assertEqual(plugin_inst._store_kb_vulns, False)
 
     def test_http_timeout_with_plugin(self):

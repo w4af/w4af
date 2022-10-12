@@ -15,7 +15,24 @@
 import urllib.request, urllib.error, urllib.parse
 from urllib.request import HTTPErrorProcessor
 from ntlm3 import ntlm
+import hashlib
 
+from w3af.core.data.misc.md4 import MD4
+
+original_hashlib_new = hashlib.new
+
+class Md4Wrapper:
+
+    def __init__(self, data: "bytes"):
+        self.md4digest = MD4(data)
+
+    def digest(self):
+        return self.md4digest.hexdigest().encode('utf-8')
+
+def hashlib_new_monkeypatch(algorithm, data_bytes):
+    if algorithm == 'md4':
+        return Md4Wrapper(data_bytes)
+    return original_hashlib_new(algorithm, data_bytes)
 
 class AbstractNtlmAuthHandler(urllib.request.BaseHandler):
     """
@@ -28,6 +45,7 @@ class AbstractNtlmAuthHandler(urllib.request.BaseHandler):
     auth_header = None
 
     def __init__(self, password_mgr=None):
+        hashlib.new = hashlib_new_monkeypatch
         if password_mgr is None:
             password_mgr = urllib.request.HTTPPasswordMgr()
         self.passwd = password_mgr
