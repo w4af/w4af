@@ -436,6 +436,7 @@ class TestXUrllib(unittest.TestCase):
         s = SSLServer('localhost', port, certfile,
                       http_response=raw_http_response)
         s.start()
+        s.wait_for_start()
 
         body = 'abc'
         mock_url = 'https://localhost:%s/' % port

@@ -166,7 +166,7 @@ class rootMenu(menu):
         # if run with detached terminal mode (like cron)
         # https://github.com/andresriancho/w3af/pull/17235
         #
-        if not os.isatty(sys.stdin.fileno()):
+        if not sys.stdin.isatty():
             while self._w3af.status.is_running() or self._w3af.status.is_paused():
                 time.sleep(0.1)
             return

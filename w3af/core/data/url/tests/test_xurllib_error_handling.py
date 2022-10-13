@@ -252,7 +252,7 @@ class TestXUrllibErrorHandling(PluginTest):
         vulns = self.kb.get('lfi', 'lfi')
 
         # Verify the specifics about the vulnerabilities
-        expected = [('5', b'g')]
+        expected = [('5', 'g')]
 
         self.assertAllVulnNamesEqual('Local file inclusion vulnerability', vulns)
         self.assertExpectedVulnsFound(expected, vulns)

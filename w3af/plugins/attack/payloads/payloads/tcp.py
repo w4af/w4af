@@ -1,6 +1,7 @@
 import re
 from w3af.plugins.attack.payloads.base_payload import Payload
 from w3af.core.ui.console.tables import table
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class tcp(Payload):
@@ -12,9 +13,9 @@ class tcp(Payload):
 
         def parse_tcp(net_tcp):
             new = []
-            list = net_tcp.split('\n')
-            list = [i for i in list if i != '']
-            for item in list:
+            line = net_tcp.split('\n')
+            items = [i for i in line if i != '']
+            for item in items:
                 tmp = item.split(' ')
                 tmp = [i for i in tmp if i != '']
                 new.append(tmp)
@@ -43,9 +44,9 @@ class tcp(Payload):
             q.reverse()
             return '.'.join(q)
 
-        etc = self.shell.read('/etc/passwd')
+        etc = smart_unicode(self.shell.read('/etc/passwd'))
         #TODO: Read UDP and TCP6?
-        parsed_info = parse_tcp(self.shell.read('/proc/net/tcp'))
+        parsed_info = parse_tcp(smart_unicode(self.shell.read('/proc/net/tcp')))
 
         for parsed_line in parsed_info:
             try:

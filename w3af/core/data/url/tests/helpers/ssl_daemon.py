@@ -108,6 +108,11 @@ class SSLServer(threading.Thread):
             self.errors.append(e)
             #print 'Failed to send HTTP response to client: "%s"' % e
         finally:
+            # without this sleep, the socket closes before the response is
+            # sent, which creates an RemoteDisconnected error in the tests
+            # (at least in test_bad_file_descriptor_8125_local). Maybe
+            # send here is non-blocking??
+            time.sleep(0.5)
             newsocket.close()
             #print 'Closed connection from %s port %s' % fromaddr
 
