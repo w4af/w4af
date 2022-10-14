@@ -20,17 +20,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
 @pytest.mark.slow
 @pytest.mark.ci_fails
-class test_list_processes(PayloadTestHelper):
+class test_list_processes(ApachePayloadTestHelper):
 
     EXPECTED_RESULT = set([
-        '/usr/bin/python2.7 manage.py trunserver 0.0.0.0:8000',
-        '/usr/bin/python /usr/bin/supervisord'
+        '/bin/sh /usr/bin/mysqld_safe',
+        '/usr/bin/python3 /usr/local/bin/supervisord -n'
     ])
 
     def test_list_processes(self):

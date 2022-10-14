@@ -18,16 +18,16 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import \
-    PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class TestUsers(PayloadTestHelper):
+class TestUsers(ApachePayloadTestHelper):
     EXPECTED_RESULT = {'root', 'bin', 'daemon', 'uucp', 'www-data',
-                       'libuuid', 'nobody', 'list', 'sync', 'sys',
-                       'syslog', 'games', 'proxy', 'lp', 'news',
-                       'mail', 'gnats', 'irc', 'backup', 'ubuntu', 'man'}
+                       'sshd', 'nobody', 'list', 'sync', 'sys',
+                       'moth', 'games', 'proxy', 'lp', 'news',
+                       'mail', 'gnats', 'irc', 'backup', 'mysql',
+                       'man', '_apt', 'postfix'}
 
     def test_users(self):
         result = exec_payload(self.shell, 'users', use_api=True)

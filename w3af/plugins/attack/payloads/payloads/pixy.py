@@ -3,6 +3,7 @@ import subprocess
 
 from w3af.plugins.attack.payloads.base_payload import Payload
 from w3af.core.ui.console.tables import table
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class pixy(Payload):
@@ -82,7 +83,7 @@ class pixy(Payload):
                                         )
                 stdout_value = proc.communicate()[0]
 
-                extract_info(stdout_value)
+                extract_info(smart_unicode(stdout_value))
 
         return self.result
 

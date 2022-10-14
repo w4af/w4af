@@ -27,7 +27,7 @@ from unittest.mock import MagicMock
 
 class test_gcc_version(ApachePayloadTestHelper):
 
-    EXPECTED_RESULT = {'gcc_version': 'gcc-10 (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian)'}
+    EXPECTED_RESULT = {'gcc_version': 'gcc-11 (Debian 11.3.0-6) 11.3.0, GNU ld (GNU Binutils for Debian)'}
 
     PARSE_TESTS = [
         [

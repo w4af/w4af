@@ -18,13 +18,13 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class TestIsRoot(PayloadTestHelper):
+class TestIsRoot(ApachePayloadTestHelper):
 
-    EXPECTED_RESULT = True
+    EXPECTED_RESULT = False
 
     def test_is_root(self):
         result = exec_payload(self.shell, 'is_root', use_api=True)

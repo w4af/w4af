@@ -22,11 +22,11 @@ import re
 import socket
 
 import pytest
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_hostname(PayloadTestHelper):
+class test_hostname(ApachePayloadTestHelper):
 
     @pytest.mark.ci_fails
     def test_hostname(self):

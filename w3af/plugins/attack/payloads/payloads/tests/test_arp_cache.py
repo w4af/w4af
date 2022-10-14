@@ -20,12 +20,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
 @pytest.mark.smoke
-class test_arp_cache(PayloadTestHelper):
+class test_arp_cache(ApachePayloadTestHelper):
 
     # Not used because I want to be less specific in this case
     EXPECTED_RESULT = {'192.168.56.1': ('0a:00:27:00:00:00', 'eth1'), }

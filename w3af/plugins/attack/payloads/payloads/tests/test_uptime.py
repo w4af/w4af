@@ -18,11 +18,11 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_uptime(PayloadTestHelper):
+class test_uptime(ApachePayloadTestHelper):
 
     # This is how it looks, but I want to have something generic so I don't use much
     # of this EXPECTED_RESULT dict, just the keys

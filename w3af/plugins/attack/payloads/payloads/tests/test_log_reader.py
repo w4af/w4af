@@ -19,15 +19,13 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class test_log_reader(PayloadTestHelper):
+class test_log_reader(ApachePayloadTestHelper):
 
-    EXPECTED_RESULT = set(['/var/log/dmesg',
-                           '/var/log/dpkg.log',
-                           '/var/log/apt/term.log',
+    EXPECTED_RESULT = set(['/var/log/dpkg.log',
                            '/var/log/faillog'])
 
     @pytest.mark.ci_fails

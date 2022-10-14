@@ -1,6 +1,7 @@
 import re
 from w3af.plugins.attack.payloads.base_payload import Payload
 from w3af.core.ui.console.tables import table
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class current_user(Payload):
@@ -25,7 +26,7 @@ class current_user(Payload):
             else:
                 return None
 
-        self_environ = self.shell.read('/proc/self/environ')
+        self_environ = smart_unicode(self.shell.run('/proc/self/environ'))
         if self_environ:
             result['current'] = ({'user': default_user(self_environ),
                                   'home': default_home(self_environ)})

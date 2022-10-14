@@ -21,12 +21,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import re
 import pytest
 
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
 @pytest.mark.smoke
-class test_cpu_info(PayloadTestHelper):
+class test_cpu_info(ApachePayloadTestHelper):
 
     def parse_cpu_info(self, cpu_info):
         processor = re.search('(?<=model name\t: )(.*)', cpu_info)

@@ -1,3 +1,4 @@
+import socket
 import http.client
 from http.client import parse_headers, IncompleteRead
 
@@ -51,6 +52,8 @@ class HTTPResponse(http.client.HTTPResponse):
 
     def __init__(self, sock, debuglevel=0, method=None):
         http.client.HTTPResponse.__init__(self, sock, debuglevel, method=method)
+        if sock is None:
+            raise socket.error("Socket was already none when trying to reuse connection")
         self.fileno = sock.fileno
         self.code = None
         self._rbuf = b""

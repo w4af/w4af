@@ -18,13 +18,13 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
-class TestTCP(PayloadTestHelper):
+class TestTCP(ApachePayloadTestHelper):
 
-    EXPECTED_RESULT = {'0.0.0.0:8001', '0.0.0.0:8000'}
+    EXPECTED_RESULT = {'0.0.0.0:3306', '0.0.0.0:80'}
 
     def test_tcp(self):
         result = exec_payload(self.shell, 'tcp', use_api=True)
