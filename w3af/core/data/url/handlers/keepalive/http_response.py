@@ -51,9 +51,9 @@ class HTTPResponse(http.client.HTTPResponse):
     # modification from socket.py
 
     def __init__(self, sock, debuglevel=0, method=None):
-        http.client.HTTPResponse.__init__(self, sock, debuglevel, method=method)
         if sock is None:
             raise socket.error("Socket was already none when trying to reuse connection")
+        http.client.HTTPResponse.__init__(self, sock, debuglevel, method=method)
         self.fileno = sock.fileno
         self.code = None
         self._rbuf = b""
