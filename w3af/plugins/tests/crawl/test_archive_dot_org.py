@@ -28,6 +28,7 @@ from w3af.plugins.crawl.archive_dot_org import archive_dot_org
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.skip("Archive.org has changed - better to use the API to make this plugin work")
 class TestArchiveDotOrg(PluginTest):
 
     archive_url = 'http://w3af.org/'
@@ -58,7 +59,7 @@ class TestArchiveDotOrg(PluginTest):
         url = URL('http://moth/')
         fr = FuzzableRequest(url, method='GET')
         ado = archive_dot_org()
-        self.assertRaises(RunOnce, ado.discover_wrapper, fr)
+        self.assertRaises(RunOnce, ado.discover_wrapper, fr, None)
 
     def test_raise_on_domain_not_in_archive(self):
         url = URL('http://www.w3af-scanner.org/')
@@ -68,4 +69,4 @@ class TestArchiveDotOrg(PluginTest):
         uri_opener = ExtendedUrllib()
         ado.set_url_opener(uri_opener)
 
-        self.assertRaises(RunOnce, ado.discover_wrapper, fr)
+        self.assertRaises(RunOnce, ado.discover_wrapper, fr, None)

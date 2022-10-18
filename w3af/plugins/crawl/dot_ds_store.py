@@ -18,10 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-try:
-    from io import StringIO
-except ImportError:
-    from io import StringIO
+from io import BytesIO
 
 from ds_store import DSStore
 
@@ -147,7 +144,7 @@ class DsStore(object):
         """
         Open a .DS_Store file
         """
-        _input = StringIO(data)
+        _input = BytesIO(data)
         self._store = DSStore.open(_input)
 
     def get_file_entries(self):
@@ -155,7 +152,7 @@ class DsStore(object):
 
         for data in self._store:
             data = str(data)
-            entry = data.translate(None, "<>")
+            entry = data.translate({ ord('<'): None, ord('>'): None })
             entry = entry.split(' ')
 
             filename = entry[0]

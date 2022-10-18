@@ -67,7 +67,7 @@ class TestSSLCertificate(PluginTest):
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEqual('Self-signed SSL certificate', vuln.get_name())
+        self.assertEqual('Invalid SSL certificate', vuln.get_name())
         self.assertEqual(self.local_target_url % port, str(vuln.get_url()))
 
     @pytest.mark.internet

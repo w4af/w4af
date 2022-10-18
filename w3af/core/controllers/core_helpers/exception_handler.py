@@ -73,9 +73,10 @@ class ExceptionHandler(object):
         self.handle(exception_data.status,
                     exception_data.exception,
                     (_, _, exception_data.traceback),
-                    exception_data.enabled_plugins)
+                    exception_data.enabled_plugins,
+                    exception_data=exception_data)
 
-    def handle(self, current_status, exception, exec_info, enabled_plugins):
+    def handle(self, current_status, exception, exec_info, enabled_plugins, exception_data=None):
         """
         This method stores the current status and the exception for later
         processing. If there are already too many stored exceptions for this
@@ -115,7 +116,7 @@ class ExceptionHandler(object):
         # the way we want to.
         #
         with self._lock:
-            edata = ExceptionData(current_status, exception, tb, enabled_plugins)
+            edata = ExceptionData(current_status, exception, tb, enabled_plugins, exception_data=exception_data)
 
             count = 0
             for stored_edata in self._exception_data:
@@ -263,7 +264,7 @@ class ExceptionHandler(object):
 
 
 class ExceptionData(object):
-    def __init__(self, current_status, e, tb, enabled_plugins, store_tb=True):
+    def __init__(self, current_status, e, tb, enabled_plugins, store_tb=True, exception_data=None):
         """
         :param current_status: The CoreStatus instance
         :param e: Exception instance
@@ -288,6 +289,8 @@ class ExceptionData(object):
         self.plugin = None
         self.status = None
         self.fuzzable_request = None
+        if exception_data is not None:
+            self._initialize_from_exception_data(exception_data)
 
         self._initialize(current_status, e, tb, enabled_plugins, store_tb)
 
@@ -296,6 +299,12 @@ class ExceptionData(object):
         self._initialize_from_traceback(tb, store_tb)
         self._initialize_from_status(current_status)
         self._initialize_from_plugins(enabled_plugins)
+
+    def _initialize_from_exception_data(self, exception_data):
+        self.lineno = exception_data.lineno
+        self.filename = exception_data.filename
+        self.plugin = exception_data.plugin
+        self.function_name = exception_data.function_name
 
     def _initialize_from_exception(self, e):
         self.exception = e
@@ -335,9 +344,10 @@ class ExceptionData(object):
             self.traceback = tb
 
         # Extract the filename and line number where the exception was raised
-        path, filename, self.function_name, self.lineno = get_exception_location(tb)
-        if path is not None:
-            self.filename = os.path.join(path, filename)
+        if tb is not None:
+            path, filename, self.function_name, self.lineno = get_exception_location(tb)
+            if path is not None:
+                self.filename = os.path.join(path, filename)
 
         # See add_traceback_string()
         if hasattr(self.exception, 'original_traceback_string'):

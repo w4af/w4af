@@ -26,7 +26,9 @@ from w3af.core.data.kb.config import cf
 from w3af.core.data.context.context.html import ALL_CONTEXTS as ALL_HTML_CONTEXTS
 from w3af.core.data.context.context.javascript import ALL_CONTEXTS as ALL_JS_CONTEXTS
 from w3af.core.data.context.context.css import ALL_CONTEXTS as ALL_CSS_CONTEXTS
+from w3af.core.data.misc.encoding import smart_str
 from w3af.core.controllers.ci.moth import get_moth_http
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 from w3af.core.controllers.ci.wavsep import get_wavsep_http
 from w3af.core.controllers.ci.php_moth import get_php_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
@@ -38,7 +40,7 @@ import w3af.core.data.constants.severity as severity
 class TestXSS(PluginTest):
 
     XSS_PATH = get_moth_http('/audit/xss/')
-    XSS_302_URL = 'http://moth/w3af/audit/xss/302/'
+    XSS_302_URL = get_w3af_moth_http('/w3af/audit/xss/302/')
     XSS_URL_SMOKE = get_moth_http('/audit/xss/')
 
     WAVSEP_BASE = '/wavsep/active/Reflected-XSS/RXSS-Detection-Evaluation-GET/'
@@ -86,8 +88,8 @@ class TestXSS(PluginTest):
             mutant = xss_vuln.get_mutant()
 
             data = (str(mutant.get_url()),
-                    mutant.get_token_name(),
-                    tuple(sorted(mutant.get_dc().keys())))
+                    smart_str(mutant.get_token_name()),
+                    tuple(sorted([ smart_str(s) for s in mutant.get_dc().keys() ])))
 
             kb_data.append(data)
 
@@ -101,7 +103,7 @@ class TestXSS(PluginTest):
             - Vulnerable parameter
             - All parameters that were sent
         """
-        expected_data = [(target_url + e[0], e[1], tuple(sorted(e[2])))
+        expected_data = [(target_url + e[0], smart_str(e[1]), tuple(sorted([ smart_str(s) for s in e[2] ])))
                          for e in expected]
         return expected_data
 

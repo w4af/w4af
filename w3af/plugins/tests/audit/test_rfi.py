@@ -123,7 +123,7 @@ class TestRFI(PluginTest):
         self.assertEqual(self.target_read, vuln.get_url().url_string)
 
     def test_custom_web_server(self):
-        RFIWebHandler.RESPONSE_BODY = '<? echo "hello world"; ?>'
+        RFIWebHandler.RESPONSE_BODY = b'<? echo "hello world"; ?>'
         ws = HTTPServer(('127.0.0.1', 0), '.', RFIWebHandler)
         ws.wait_for_start()
         port = ws.get_port()

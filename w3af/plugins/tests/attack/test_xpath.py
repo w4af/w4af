@@ -46,6 +46,9 @@ class TestXPathShell(PluginTest):
         }
     }
 
+    # The audit plugin here seems to work, but the attack plugin is
+    # very broken - looks like a lot of bit rot since the last working
+    # version
     @pytest.mark.fails
     def test_find_exploit_xpath(self):
         # Run the scan

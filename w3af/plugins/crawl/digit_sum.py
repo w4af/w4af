@@ -32,6 +32,7 @@ from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_list import OptionList
 from w3af.core.data.dc.headers import Headers
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 DIGIT_REGEX = re.compile(r'(\d+)')
@@ -115,7 +116,7 @@ class digit_sum(CrawlPlugin):
         #    - If we changed the query string parameters, we have to check
         #      the content
         elif fuzzy_not_equal(response.get_clear_text_body(),
-                             original_resp.get_clear_text_body(), 0.8):
+                             original_resp.get_clear_text_body(), 0.85):
             # In this case what might happen is that the number we changed
             # is "out of range" and when requesting that it will trigger an
             # error in the web application, or show us a non-interesting
@@ -160,6 +161,7 @@ class digit_sum(CrawlPlugin):
                 qs = fr_copy.get_querystring()
                 qs_token = qs.set_token(token.get_path())
                 qs_token.set_value(modified_value)
+                fr_copy.set_querystring(qs)
 
                 if fr_copy.get_uri() not in self._already_visited:
                     self._already_visited.add(fr_copy.get_uri())
@@ -206,7 +208,7 @@ class digit_sum(CrawlPlugin):
         :return: A list of strings.
         """
         # regexes are soooooooooooooo cool !
-        return [x for x in DIGIT_REGEX.split(a_string) if x != '']
+        return [x for x in DIGIT_REGEX.split(smart_unicode(a_string)) if x != '']
 
     def get_options(self):
         """

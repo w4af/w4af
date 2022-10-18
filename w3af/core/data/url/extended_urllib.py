@@ -778,6 +778,8 @@ class ExtendedUrllib(object):
         if data is not None:
             if isinstance(data, DataContainer):
                 data = data.all_items.encode('utf-8')
+            elif isinstance(data, str):
+                data = data.encode('utf-8')
             else:
                 data = bytes(data)
         host = uri.get_domain()

@@ -77,6 +77,7 @@ class SGMLParser(BaseParser):
              Andres Riancho (andres.riancho@gmail.com)
     """
     ANY_TAG_MATCH = re.compile('(<.*?>)', re.UNICODE)
+    ANY_BR_MATCH = re.compile('<br\/?>', re.UNICODE)
 
     EMAIL_RE = re.compile(r'([\w.%-]{1,45}@([A-Z0-9.-]{1,45}\.){1,10}[A-Z]{2,4})',
                           re.I | re.U)
@@ -507,6 +508,7 @@ class SGMLParser(BaseParser):
         :return: A clear text representation of the HTTP response body.
         """
         body = self.get_http_response().get_body()
+        body = self.ANY_BR_MATCH.sub('\n', body)
         clear_text = self.ANY_TAG_MATCH.sub('', body)
         return clear_text
 

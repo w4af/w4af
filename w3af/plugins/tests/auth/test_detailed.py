@@ -106,21 +106,22 @@ class TestDetailedFailAuth(PluginTest):
         infos = kb.kb.get('authentication', 'error')
 
         self.assertEqual(len(infos), 1)
+        self.maxDiff = None
         info = infos[0]
 
-        expected_desc = (
-            'The authentication plugin failed to get a valid application session using the user-provided configuration settings.\n'
-            '\n'
-            'The plugin generated the following log messages:\n'
-            '\n'
-            'Logging into the application with user: user@mail.com\n'
-            'Checking if session for user user@mail.com is active\n'
-            'User "user@mail.com" is NOT logged into the application, the `check_string` was not found in the HTTP response with ID 24.\n'
-            'The `detailed` authentication plugin failed 1 times to get a valid application session using the user-provided configuration settings\nThe `detailed` authentication plugin failed 1 times to get a valid application session using the user-provided configuration settings'
-        )
+        expected_desc = [
+            'The `detailed` authentication plugin was never able to authenticate and get a valid application session using the user-provided configuration settings',
+            '',
+            'The following are the last log messages from the authentication plugin:',
+            '',
+            ' - Logging into the application with user: user@mail.com',
+            ' - Checking if session for user user@mail.com is active',
+            ' - User "user@mail.com" is NOT logged into the application, the `check_string` was not found in the HTTP response with ID 24.'
+        ]
 
         self.assertEqual(info.get_name(), 'Authentication failure')
-        self.assertEqual(info.get_desc(with_id=False), expected_desc)
+        actual_desc = info.get_desc(with_id=False)
+        self.assertEqual(actual_desc.split('\n'), expected_desc)
         self.assertEqual(info.get_id(), [22, 24])
 
 
