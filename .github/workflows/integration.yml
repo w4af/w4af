@@ -43,7 +43,7 @@ jobs:
       uses: GabrielBB/xvfb-action@v1
       with:
         run: |
-          pipenv run pytest --cov=w3af -m "w3afmoth and not fails"
+          pipenv run pytest --cov=w3af -m "w3af_moth and not fails"
     - name: Upload coverage
       uses: actions/upload-artifact@v2
       with:
