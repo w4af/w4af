@@ -270,20 +270,20 @@ class find_dvcs(CrawlPlugin):
         :return: A list of filenames found.
         """
         filenames = set()
-        header = '#bazaar dirstate flat format '
+        header = b'#bazaar dirstate flat format '
 
         if body[0:29] != header:
             return set()
 
-        body = body.split('\x00')
+        body = body.split(b'\x00')
         found = True
         for offset in range(len(body)):
             filename = body[offset - 2]
-            if body[offset] == 'd':
+            if body[offset] == b'd':
                 if found:
                     filenames.add(filename)
                 found = not found
-            elif body[offset] == 'f':
+            elif body[offset] == b'f':
                 if found:
                     filenames.add(filename)
                 found = not found
@@ -355,7 +355,7 @@ class find_dvcs(CrawlPlugin):
                                               delete=False,
                                               dir=get_temp_dir())
 
-        with open(temp_db.name, 'w') as temp_db_fh:
+        with open(temp_db.name, 'wb') as temp_db_fh:
             temp_db_fh.write(body)
 
         query = ('SELECT local_relpath, '
@@ -391,21 +391,21 @@ class find_dvcs(CrawlPlugin):
         """
         filenames = set()
 
-        for line in body.split('\n'):
+        for line in body.split(b'\n'):
             # https://docstore.mik.ua/orelly/other/cvs/cvs-CHP-6-SECT-9.htm
             #
             # /name/revision/timestamp[+conflict]/options/tagdate
-            if not line.startswith('/'):
+            if not line.startswith(b'/'):
                 continue
 
             # /name/revision/timestamp[+conflict]/options/tagdate
-            tokens = line.split('/')
+            tokens = line.split(b'/')
             if len(tokens) != 6:
                 continue
 
             # Example value: Sun Apr 7 01:29:26 1996
             timestamp = tokens[2]
-            if timestamp.count(':') <= 1:
+            if timestamp.count(b':') <= 1:
                 continue
 
             filenames.add(tokens[1])
@@ -423,10 +423,10 @@ class find_dvcs(CrawlPlugin):
         :param line: A line from gitignore
         :return: The same line, without the special characters.
         """
-        special_characters = ['*', '?', '[', ']', ':', '!']
+        special_characters = [b'*', b'?', b'[', b']', b':', b'!']
 
         for char in special_characters:
-            line = line.replace(char, '')
+            line = line.replace(char, b'')
 
         return line
 
@@ -442,7 +442,7 @@ class find_dvcs(CrawlPlugin):
             return []
 
         filenames = set()
-        for line in body.split('\n'):
+        for line in body.split(b'\n'):
 
             line = line.strip()
 
@@ -452,14 +452,14 @@ class find_dvcs(CrawlPlugin):
             #
             # To prevent the is_404 false positive from propagating we detect
             # HTML tags, if those are found, return an empty list.
-            if line.startswith('<') and line.endswith('>'):
+            if line.startswith(b'<') and line.endswith(b'>'):
                 return []
 
-            if line.startswith('#'):
+            if line.startswith(b'#'):
                 continue
 
             # Lines with spaces are usually good indicators of false positives
-            if ' ' in line:
+            if b' ' in line:
                 continue
 
             line = self.filter_special_character(line)
@@ -467,10 +467,10 @@ class find_dvcs(CrawlPlugin):
             if not line:
                 continue
 
-            if line.startswith('/') or line.startswith('^'):
+            if line.startswith(b'/') or line.startswith(b'^'):
                 line = line[1:]
 
-            if line.endswith('/') or line.endswith('$'):
+            if line.endswith(b'/') or line.endswith(b'$'):
                 line = line[:-1]
 
             filenames.add(line)

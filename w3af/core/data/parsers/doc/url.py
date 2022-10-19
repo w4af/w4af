@@ -27,7 +27,7 @@ import urllib.request, urllib.parse, urllib.error
 
 import urllib.parse
 
-from functools import wraps
+from functools import wraps, total_ordering
 from collections import OrderedDict
 from tldextract import TLDExtract
 
@@ -118,6 +118,7 @@ def parse_qs(qstr, ignore_exc=True, encoding=DEFAULT_ENCODING):
     return qs
 
 
+@total_ordering
 class URL(DiskItem):
     """
     This class represents a URL and gives access to all its parts
@@ -813,6 +814,10 @@ class URL(DiskItem):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __lt__(self, other):
+        return isinstance(other, URL) and \
+            self.url_string < other.url_string
 
     def __hash__(self):
         return hash(self.url_string)

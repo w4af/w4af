@@ -80,20 +80,20 @@ class TestFindDVCS(PluginTest):
 
     def test_ignore_file_blank(self):
         fdvcs = find_dvcs()
-        files = fdvcs.ignore_file('')
+        files = fdvcs.ignore_file(b'')
 
         self.assertEqual(files, set())
 
     def test_ignore_file_two_files_comment(self):
         fdvcs = find_dvcs()
-        content = """# Ignore these files
+        content = b"""# Ignore these files
         foo.txt
         bar*
         spam.eggs
         """
         files = fdvcs.ignore_file(content)
 
-        self.assertEqual(files, {'foo.txt', 'spam.eggs'})
+        self.assertEqual(files, {b'foo.txt', b'bar', b'spam.eggs'})
 
 
 class TestSVN(PluginTest):
@@ -103,8 +103,8 @@ class TestSVN(PluginTest):
     SECRET = 'Secret contents here!'
 
     MOCK_RESPONSES = [MockResponse('http://mock/', 'root'),
-                      MockResponse('http://mock/.svn/wc.db', WC_DB),
                       MockResponse('http://mock/.svn/pristine/96/96acedb8cc77c893b90d1ce37c7119fd0c0fba00.svn-base', SECRET),
+                      MockResponse('http://mock/.svn/wc.db', WC_DB),
                       MockResponse('http://mock/seris/changelog.rst', SECRET)]
 
     target_url = 'http://mock'
@@ -122,7 +122,7 @@ class TestSVN(PluginTest):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
 
-        url_list = kb.kb.get_all_known_urls()
+        url_list = sorted([ u.url_string for u in kb.kb.get_all_known_urls() ])
 
-        self.assertEqual({u.url_string for u in url_list},
-                         {m.url for m in self.MOCK_RESPONSES})
+        self.assertEqual(url_list,
+                         [ m.url for m in self.MOCK_RESPONSES ])

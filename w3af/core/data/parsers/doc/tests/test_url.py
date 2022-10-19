@@ -1103,3 +1103,13 @@ class TestURLParser(unittest.TestCase):
         u = URL('http://www.w3af.com/?id=1&id=2')
         self.assertEqual(u, u.copy())
 
+    def test_sort(self):
+        z = URL('http://www.z.com/test?fish=cat')
+        a = URL('http://www.a.com/')
+        array = [z, a]
+        sorted_array = sorted(array)
+        self.assertEquals([
+            "http://www.a.com/",
+            "http://www.z.com/test?fish=cat"
+        ], [ u.url_string for u in sorted_array ])
+
