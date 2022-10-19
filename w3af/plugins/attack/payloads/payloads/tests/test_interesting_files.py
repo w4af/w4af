@@ -29,6 +29,7 @@ class test_interesting_files(ApachePayloadTestHelper):
 
     EXPECTED_RESULT = {'/home/moth/key.txt': None}
 
+    @pytest.mark.w3af_moth
     def test_interesting_files(self):
         result = exec_payload(self.shell, 'interesting_files', use_api=True)
         self.assertEqual(self.EXPECTED_RESULT, result)

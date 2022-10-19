@@ -29,6 +29,7 @@ class test_log_reader(ApachePayloadTestHelper):
                            '/var/log/faillog'])
 
     @pytest.mark.ci_fails
+    @pytest.mark.w3af_moth
     def test_log_reader(self):
         result = exec_payload(self.shell, 'log_reader', use_api=True)
         logs = set(result.keys())

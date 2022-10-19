@@ -27,6 +27,7 @@ from w3af.plugins.attack.payloads.payload_handler import exec_payload
 class test_apache_ssl(ApachePayloadTestHelper):
 
     @pytest.mark.ci_fails
+    @pytest.mark.w3af_moth
     def test_apache_ssl(self):
         result = exec_payload(self.shell, 'apache_ssl', use_api=True)
         self.assertEqual(1, len(result['apache_ssl_certificate']))

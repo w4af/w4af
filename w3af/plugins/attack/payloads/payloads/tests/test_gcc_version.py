@@ -25,6 +25,7 @@ from w3af.plugins.attack.payloads.payloads.gcc_version import gcc_version
 
 from unittest.mock import MagicMock
 
+@pytest.mark.w3af_moth
 class test_gcc_version(ApachePayloadTestHelper):
 
     EXPECTED_RESULT = {'gcc_version': 'gcc-11 (Debian 11.3.0-6) 11.3.0, GNU ld (GNU Binutils for Debian)'}

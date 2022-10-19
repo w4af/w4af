@@ -38,6 +38,7 @@ class test_get_source_code(ApachePayloadTestHelper):
     CONTENT = "echo file_get_contents( $_REQUEST['file'] );"
 
     @pytest.mark.ci_fails
+    @pytest.mark.w3af_moth
     def test_get_source_code(self):
         temp_dir = tempfile.mkdtemp()
         result = exec_payload(self.shell, 'get_source_code', args=(temp_dir,),

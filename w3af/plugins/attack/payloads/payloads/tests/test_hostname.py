@@ -20,12 +20,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import re
 import socket
-
 import pytest
+
 from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
+@pytest.mark.w3af_moth
 class test_hostname(ApachePayloadTestHelper):
 
     @pytest.mark.ci_fails

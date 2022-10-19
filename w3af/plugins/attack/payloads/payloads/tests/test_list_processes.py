@@ -24,6 +24,7 @@ from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper impo
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
+@pytest.mark.w3af_moth
 @pytest.mark.slow
 @pytest.mark.ci_fails
 class test_list_processes(ApachePayloadTestHelper):

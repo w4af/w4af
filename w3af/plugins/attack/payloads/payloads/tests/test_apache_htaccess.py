@@ -30,6 +30,7 @@ class test_apache_htaccess(ApachePayloadTestHelper):
                       }
 
     @pytest.mark.ci_fails
+    @pytest.mark.w3af_moth
     def test_apache_htaccess(self):
         result = exec_payload(self.shell, 'apache_htaccess', use_api=True)
         self.assertEqual(self.EXPECTED_RESULT, result)

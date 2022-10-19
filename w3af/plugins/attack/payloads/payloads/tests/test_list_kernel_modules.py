@@ -19,15 +19,17 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
+
 from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper import ApachePayloadTestHelper
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
 class test_list_kernel_modules(ApachePayloadTestHelper):
 
-    EXPECTED_RESULT = set(['fuse', 'ecc', 'ext4', 'parport_pc'])
+    EXPECTED_RESULT = set(['joydev', 'drm', 'hid_generic', 'serio_raw'])
 
     @pytest.mark.ci_fails
+    @pytest.mark.w3af_moth
     def test_list_kernel_modules(self):
         result = exec_payload(self.shell, 'list_kernel_modules', use_api=True)
         self.assertTrue(set(

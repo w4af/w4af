@@ -28,6 +28,7 @@ class test_mail_config_files(ApachePayloadTestHelper):
     EXPECTED_RESULT = set(['/etc/postfix/main.cf', '/etc/postfix/master.cf'])
 
     @pytest.mark.ci_fails
+    @pytest.mark.w3af_moth
     def test_mail_config_files(self):
         result = exec_payload(self.shell, 'mail_config_files', use_api=True)
         self.assertEqual(self.EXPECTED_RESULT, set(result.keys()))
