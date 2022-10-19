@@ -22,6 +22,9 @@ jobs:
       with:
         python-version: "3.10"
         cache: 'pipenv'
+    - name: GCC Version
+      run: |
+        docker run -it w4af/w3af-moth cat /proc/version
     - name: Add test routes
       run: |
         ./w3af/tests/add-test-routes.sh
