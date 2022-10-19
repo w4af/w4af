@@ -2,17 +2,21 @@ import re
 from w3af.plugins.attack.payloads.base_payload import Payload
 from w3af.core.ui.console.tables import table
 
+MATCH_EXPRESSIONS = [
+    r'(?<=gcc version ).*?\)|(gcc-(\d+ (\([^\)]+\) )*[^\)]+))\)',
+    r'(gcc (\([^\)]+\) )*[^\)]+)\)'
+]
 
 class gcc_version(Payload):
     """
     This payload shows the current GCC Version
     """
     def parse_gcc_version(self, proc_version):
-        gcc_version = re.search(r'(?<=gcc version ).*?\)|(gcc-(\d+ (\([^\)]+\) )*[^\)]+))\)', proc_version)
-        if gcc_version:
-            return gcc_version.group(0)
-        else:
-            return ''
+        for expr in MATCH_EXPRESSIONS:
+            gcc_version = re.search(expr, proc_version)
+            if gcc_version:
+                return gcc_version.group(0)
+        return ''
 
     def api_read(self):
         result = {}
