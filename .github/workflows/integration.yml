@@ -35,7 +35,10 @@ jobs:
     - name: Install dependencies
       run: |
         pipenv install
-    - name: Core unittests
+    - name: Start docker containers
+      run: |
+        docker-compose -f w3af/tests/docker-compose.yml up
+    - name: Integration tests
       uses: GabrielBB/xvfb-action@v1
       with:
         run: |
