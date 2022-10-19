@@ -27,6 +27,7 @@ from w3af.core.data.url.handlers.ntlm_auth import HTTPNtlmAuthHandler
 from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 
 @pytest.mark.moth
+@pytest.mark.w3af_moth
 class TestNTLMHandler(unittest.TestCase):
     
     @pytest.mark.ci_fails

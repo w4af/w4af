@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
+import pytest
 
 import w3af.core.data.constants.severity as severity
 import w3af.core.data.kb.knowledge_base as kb
@@ -29,6 +30,7 @@ from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 
+@pytest.mark.w3af_moth
 class TestFindDVCS(PluginTest):
 
     base_url = get_w3af_moth_http('/w3af/crawl/find_dvcs/')

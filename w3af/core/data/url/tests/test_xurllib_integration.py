@@ -39,6 +39,7 @@ class TestXUrllibIntegration(unittest.TestCase):
         self.uri_opener = ExtendedUrllib()
         
     @pytest.mark.ci_fails
+    @pytest.mark.w3af_moth
     def test_ntlm_auth_not_configured(self):
         self.uri_opener = ExtendedUrllib()
         url = URL(get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/"))
@@ -46,6 +47,7 @@ class TestXUrllibIntegration(unittest.TestCase):
         self.assertIn('Must authenticate.', http_response.body)
 
     @pytest.mark.ci_fails
+    @pytest.mark.w3af_moth
     def test_ntlm_auth_valid_creds(self):
         
         self.uri_opener = ExtendedUrllib()

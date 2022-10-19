@@ -259,6 +259,7 @@ class TestXSS(PluginTest):
                          csp_vulns)
 
     @pytest.mark.ci_fails
+    @pytest.mark.w3af_moth
     def test_found_xss_with_redirect(self):
         cfg = self._run_configs['cfg']
         self._scan(self.XSS_302_URL, cfg['plugins'])

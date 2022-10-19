@@ -26,6 +26,7 @@ from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 
 
 @pytest.mark.smoke
+@pytest.mark.w3af_moth
 class TestDAVShell(ExecExploitTest):
 
     target_url = get_w3af_moth_http('/w3af/audit/dav/write-all/')
