@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import nltk
 import difflib
 
 from w3af.core.controllers.misc.diff import split_by_sep
@@ -65,15 +66,8 @@ def fuzzy_equal(a_str, b_str, threshold=0.6):
                       0 <= threshold <= 1.0
     :return: A boolean value
     """
-    optimization_result = _get_optimized_fuzzy_equal(a_str, b_str, threshold=threshold)
-
-    if optimization_result is not None:
-        return optimization_result
-
-    # Bad, we can't optimize anything better, just calculate the relative distance
-    distance = relative_distance(a_str, b_str)
-    return distance >= threshold
-
+    is_equal, distance = fuzzy_equal_return_distance(a_str, b_str, threshold)
+    return is_equal
 
 def fuzzy_equal_return_distance(a_str, b_str, threshold=0.6):
     """
@@ -92,10 +86,22 @@ def fuzzy_equal_return_distance(a_str, b_str, threshold=0.6):
     if optimization_result is not None:
         return optimization_result, None
 
+    short_string_result = _get_short_string_similarity(a_str, b_str)
+    if short_string_result is not None:
+        return short_string_result > threshold, short_string_result
+
     # Bad, we can't optimize anything better, just calculate the relative distance
     distance = relative_distance(a_str, b_str)
     return distance > threshold, distance
 
+
+def _get_short_string_similarity(a_str, b_str):
+    max_len = max(len(a_str), len(b_str))
+    if max_len > 500:
+        return None
+
+    edit_distance = nltk.edit_distance(a_str, b_str)
+    return 1.0 - (edit_distance / max_len)
 
 def _get_optimized_fuzzy_equal(a_str, b_str, threshold=0.6):
     """
@@ -136,11 +142,7 @@ def _get_optimized_fuzzy_equal(a_str, b_str, threshold=0.6):
 
 
 def upper_bound_similarity(a_len, b_len):
-    # First we need b_len to be the larger of both
-    if b_len < a_len:
-        a_len, b_len = b_len, a_len
-
-    return (2.0 * a_len) / (a_len + b_len)
+    return (2.0 * max(a_len, b_len)) / (a_len + b_len)
 
 
 def fuzzy_not_equal(a_str, b_str, threshold=0.6):
@@ -162,6 +164,10 @@ def relative_distance(a_str, b_str):
     :param b_str: A string object
     :return: A float with the distance
     """
+    short_string_result = _get_short_string_similarity(a_str, b_str)
+    if short_string_result is not None:
+        return short_string_result
+
     a_split = split_by_sep(a_str)
     b_split = split_by_sep(b_str)
     if len(a_split) == 1:

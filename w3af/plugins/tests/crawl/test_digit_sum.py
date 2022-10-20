@@ -28,7 +28,7 @@ class TestDigitSum(PluginTest):
 
     _run_config = {
         'target': None,
-        'plugins': {'crawl': (PluginConfig('digit_sum',),), 'output': (PluginConfig('text_file',),)}
+        'plugins': {'crawl': (PluginConfig('digit_sum',),)}
     }
 
     def test_found_fname(self):

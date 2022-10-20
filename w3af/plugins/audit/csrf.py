@@ -28,7 +28,7 @@ import w3af.core.controllers.output_manager as om
 import w3af.core.data.constants.severity as severity
 
 from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal
+from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal, relative_distance
 from w3af.core.data.fuzzer.fuzzer import create_mutants
 from w3af.core.data.fuzzer.mutants.headers_mutant import HeadersMutant
 from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
@@ -65,7 +65,7 @@ class csrf(AuditPlugin):
         AuditPlugin.__init__(self)
 
         self._strict_mode = False
-        self._equal_limit = 0.90
+        self._equal_limit = 0.85
 
     def audit(self, freq, orig_response, debugging_id):
         """

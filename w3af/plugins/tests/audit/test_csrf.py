@@ -106,13 +106,13 @@ class TestCSRF(PluginTest):
         res = HTTPResponse(200, 'body', headers, url, url)
 
         # False because no cookie is set and no QS nor post-data
-        url = URL('http://moth/')
+        url = URL(get_w3af_moth_http())
         req = FuzzableRequest(url, method='GET')
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertFalse(suitable)
 
         # False because no cookie is set
-        url = URL('http://moth/?id=3')
+        url = URL(get_w3af_moth_http('/?id=3'))
         req = FuzzableRequest(url, method='GET')
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertFalse(suitable)
@@ -121,7 +121,7 @@ class TestCSRF(PluginTest):
         self.uri_opener.GET(url_sends_cookie)
         
         # Still false because it doesn't have any QS or POST data
-        url = URL('http://moth/')
+        url = URL(get_w3af_moth_http())
         req = FuzzableRequest(url, method='GET')
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertFalse(suitable)
@@ -129,19 +129,19 @@ class TestCSRF(PluginTest):
         self.csrf_plugin._strict_mode = True
 
         # Still false because of the strict mode
-        url = URL('http://moth/?id=3')
+        url = URL(get_w3af_moth_http('/?id=3'))
         req = FuzzableRequest(url, method='GET')
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertFalse(suitable)
 
         # False, no items in post-data
-        url = URL('http://moth/')
+        url = URL(get_w3af_moth_http())
         req = FuzzableRequest(url, method='POST', post_data=URLEncodedForm())
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertFalse(suitable)
 
         # True, items in DC, POST (passes strict mode) and cookies
-        url = URL('http://moth/')
+        url = URL(get_w3af_moth_http())
         form_params = FormParameters()
         form_params.add_field_by_attr_items([('name', 'test'), ('type', 'text')])
         form = URLEncodedForm(form_params)
@@ -152,14 +152,14 @@ class TestCSRF(PluginTest):
         self.csrf_plugin._strict_mode = False
 
         # True now that we have strict mode off, cookies and QS
-        url = URL('http://moth/?id=3')
+        url = URL(get_w3af_moth_http('/?id=3'))
         req = FuzzableRequest(url, method='GET')
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertTrue(suitable)
 
     def test_is_origin_checked_true_case01(self):
         url = URL(get_w3af_moth_http('/w3af/audit/csrf/referer/buy.php?shares=123'))
-        headers = Headers([('Referer', 'http://moth/w3af/audit/csrf/referer/')])
+        headers = Headers([('Referer', get_w3af_moth_http('/w3af/audit/csrf/referer/'))])
         freq = FuzzableRequest(url, method='GET', headers=headers)
         
         orig_response = self.uri_opener.send_mutant(freq)
@@ -169,7 +169,7 @@ class TestCSRF(PluginTest):
 
     def test_is_origin_checked_true_case02(self):
         url = URL(get_w3af_moth_http('/w3af/audit/csrf/referer-rnd/buy.php?shares=123'))
-        headers = Headers([('Referer', 'http://moth/w3af/audit/csrf/referer-rnd/')])
+        headers = Headers([('Referer', get_w3af_moth_http('/w3af/audit/csrf/referer-rnd/'))])
         freq = FuzzableRequest(url, method='GET', headers=headers)
         
         orig_response = self.uri_opener.send_mutant(freq)
@@ -179,7 +179,7 @@ class TestCSRF(PluginTest):
 
     def test_is_origin_checked_false(self):
         url = URL(get_w3af_moth_http('/w3af/audit/csrf/vulnerable/buy.php?shares=123'))
-        headers = Headers([('Referer', 'http://moth/w3af/audit/csrf/referer-rnd/')])
+        headers = Headers([('Referer', get_w3af_moth_http('/w3af/audit/csrf/referer-rnd/'))])
         freq = FuzzableRequest(url, method='GET', headers=headers)
         
         orig_response = self.uri_opener.send_mutant(freq)
@@ -187,6 +187,7 @@ class TestCSRF(PluginTest):
         origin_checked = self.csrf_plugin._is_origin_checked(freq, orig_response, None)
         self.assertFalse(origin_checked)
 
+    @pytest.mark.skip("This function has not yet been implemented and tested")
     def test_is_token_checked_true(self):
         generator = URL(get_w3af_moth_http('/w3af/audit/csrf/secure-replay-allowed/'))
         http_response = self.uri_opener.GET(generator)
@@ -206,6 +207,7 @@ class TestCSRF(PluginTest):
                                                      original_response)
         self.assertTrue(checked)
 
+    @pytest.mark.skip("This function has not yet been implemented and tested")
     def test_is_token_checked_false(self):
         """
         This covers the case where there is a token but for some reason it
