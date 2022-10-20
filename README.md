@@ -14,22 +14,38 @@ including [Cross-Site Scripting](w4af/plugins/audit/xss.py),
 
 ## Python3 Port Progress
 
-The original w4af code only supports python up to version 2.7. This repository is an
-attempt to add python3 support.
+The command-line version of the tool is substantially working with Python 3.10.
 
-At time of writing, most of the core unit tests are running and passing:
+At time of writing, the core unit tests are running and passing, and some integration tests are working too.
+
+### Unit tests
+
+These unit tests should run without any integration environment (though some do rely on a live internet connection):
 
 ```
-nosetests -A "not moth and not fails and not git and not gui and not suspect and not integration and not ci_ignore" -x -v .
+pytest -m "not moth and not fails and not git and not gui and not integration and not ci_ignore"
 ```
 
-You might have some limited success running scans with the current code, but very likely it will fail with mysterious errors. More updates as they become available.
+### Integration tests
+
+You can launch the integration environment with docker-compose:
+
+```
+./w3af/tests/add-test-routes.sh
+docker-compose -f ./w3af/tests/docker-compose.yml up
+```
+
+With that running, some integration tests are also passing:
+
+```
+pytest -m "w3af_moth and not fails"
+```
 
 ## Installation
 
 ### Python
 
-The project expects to use Python 3.9, but is compatible with later versions. The project's Python dependencies can be install with pipenv:
+The project expects to use Python 3.10 or later. The project's Python dependencies can be install with pipenv:
 
 ```
 python -m pip install --upgrade pipenv wheel
@@ -48,26 +64,28 @@ npm install
 
 ## Development
 
-Use `nosetests` to run the unit tests:
+Use `pytest` to run the unit tests:
 
 ```
-$ nosetests --help
+$ pytest --help
 ```
 
-By default, nosetests will run all tests, including tests that depend on internet connection, a clean git checkout, and a running integration environment. We will add more detailed information about how to run the tests as the porting work progresses.
+By default, pytest will run all tests, including tests that depend on internet connection, a clean git checkout, and a running integration environment. We will add more detailed information about how to run the tests as the porting work progresses.
 
 ### Building documentation
+
 First install sphinx within a virtual environment and then build documentation
 ```
 python -m pip install sphinx
 sphinx-build -b html doc/sphinx/ doc/sphinx/_build/
 ```
 
-
 ## Vision
+
 The purpose of this software is to help security researches to scan their sites to find vulnerabilities.
 
 ## Disclaimer
+
 You are only allowed to scan websites that you own and/or have permissions to scan. The developers can not be made responsible for any damage that occurs by using this software. Use at your own risk.
 
 ## Contributing
