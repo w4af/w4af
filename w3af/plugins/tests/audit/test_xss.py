@@ -271,10 +271,8 @@ class TestXSS(PluginTest):
             ('302.php', 'x', ('x',)),
             ('302.php', 'a', ('a',)),
             ('printer.php', 'a', ('a', 'added',)),
-            ('printer.php', 'added', ('a', 'added',)),
             ('printer.php', 'added', ('added',)),
             ('printer.php', 'x', ('x', 'added')),
-            ('printer.php', 'added', ('x', 'added'))
         ]
         expected_data = self.normalize_expected_data(self.XSS_302_URL,
                                                      expected)

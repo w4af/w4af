@@ -202,6 +202,7 @@ class xss(AuditPlugin):
         self._send_mutants_in_threads(self._uri_opener.send_mutant,
                                       mutant_list,
                                       self._analyze_echo_result,
+                                      follow_redirects=True,
                                       debugging_id=debugging_id,
                                       grep=False)
 
