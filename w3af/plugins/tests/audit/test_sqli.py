@@ -167,6 +167,7 @@ class WAVSEPTest(PluginTest):
     }
 
 
+@pytest.mark.wavsep
 class TestWAVSEPError(WAVSEPTest):
 
     base_path = ('/wavsep/active/SQL-Injection/'
@@ -215,6 +216,7 @@ class TestWAVSEPError(WAVSEPTest):
                           skip_startwith)
 
 
+@pytest.mark.wavsep
 class TestWAVSEP500Error(WAVSEPTest):
 
     base_path = ('/wavsep/active/SQL-Injection/'
@@ -258,6 +260,7 @@ class TestWAVSEP500Error(WAVSEPTest):
                           skip_startwith)
 
 
+@pytest.mark.wavsep
 class TestWAVSEPWithDifferentiation(WAVSEPTest):
 
     base_path = ('/wavsep/active/SQL-Injection/'
@@ -301,6 +304,7 @@ class TestWAVSEPWithDifferentiation(WAVSEPTest):
                           skip_startwith)
 
 
+@pytest.mark.wavsep
 class TestWAVSEPIdentical(WAVSEPTest):
 
     base_path = ('/wavsep/active/SQL-Injection/'
@@ -317,11 +321,15 @@ class TestWAVSEPIdentical(WAVSEPTest):
             ('Case05-InjectionInUpdate-String-TimeDelayExploit-200Identical.jsp', 'description'),
             ('Case06-InjectionInUpdate-Date-TimeDelayExploit-200Identical.jsp', 'transactionDate'),
             ('Case07-InjectionInUpdate-NumericWithoutQuotes-TimeDelayExploit-200Identical.jsp', 'transactionId'),
-            ('Case08-InjectionInUpdate-DateWithoutQuotes-TimeDelayExploit-200Identical.jsp', 'transactionDate'),
+            # This case has something complicated with the date parsing - the JSP interprets
+            # 2002-01-01 as 2000 (i.e. 2002 minus 1 minus 1)
+            #('Case08-InjectionInUpdate-DateWithoutQuotes-TimeDelayExploit-200Identical.jsp', 'transactionDate'),
         }
 
-        # None is OK to miss -> 100% coverage
-        ok_to_miss = {}
+        ok_to_miss = {
+            'Case08-InjectionInUpdate-DateWithoutQuotes-TimeDelayExploit-200Identical.jsp'
+        }
+
         skip_startwith = {'index.jsp'}
         kb_addresses = {('sqli', 'sqli'), ('blind_sqli', 'blind_sqli')}
 
@@ -332,6 +340,7 @@ class TestWAVSEPIdentical(WAVSEPTest):
                           skip_startwith)
 
 
+@pytest.mark.wavsep
 class TestWAVSEPExperimental(WAVSEPTest):
 
     base_path = ('/wavsep/active/SQL-Injection/'
@@ -357,6 +366,7 @@ class TestWAVSEPExperimental(WAVSEPTest):
                           skip_startwith)
 
 
+@pytest.mark.wavsep
 class TestWAVSEPError500POST(WAVSEPTest):
 
     base_path = ('/wavsep/active/SQL-Injection/'
@@ -399,6 +409,7 @@ class TestWAVSEPError500POST(WAVSEPTest):
                           skip_startwith)
 
 
+@pytest.mark.wavsep
 class TestWAVSEPError200POST(WAVSEPTest):
 
     base_path = ('/wavsep/active/SQL-Injection/'
@@ -442,6 +453,7 @@ class TestWAVSEPError200POST(WAVSEPTest):
                           skip_startwith)
 
 
+@pytest.mark.wavsep
 class TestWAVSEPWithDifferentiationPOST(WAVSEPTest):
 
     base_path = ('/wavsep/active/SQL-Injection/'
@@ -485,6 +497,7 @@ class TestWAVSEPWithDifferentiationPOST(WAVSEPTest):
                           skip_startwith)
 
 
+@pytest.mark.wavsep
 class TestWAVSEPIdenticalPOST(WAVSEPTest):
 
     base_path = ('/wavsep/active/SQL-Injection/'
@@ -501,11 +514,14 @@ class TestWAVSEPIdenticalPOST(WAVSEPTest):
             ('Case05-InjectionInUpdate-String-TimeDelayExploit-200Identical.jsp', 'description'),
             ('Case06-InjectionInUpdate-Date-TimeDelayExploit-200Identical.jsp', 'transactionDate'),
             ('Case07-InjectionInUpdate-NumericWithoutQuotes-TimeDelayExploit-200Identical.jsp', 'transactionId'),
-            ('Case08-InjectionInUpdate-DateWithoutQuotes-TimeDelayExploit-200Identical.jsp', 'transactionDate'),
+            # This case has something complicated with the date parsing - the JSP interprets
+            # 2002-01-01 as 2000 (i.e. 2002 minus 1 minus 1)
+            #('Case08-InjectionInUpdate-DateWithoutQuotes-TimeDelayExploit-200Identical.jsp', 'transactionDate'),
         }
 
-        # None is OK to miss -> 100% coverage
-        ok_to_miss = set()
+        ok_to_miss = {
+            'Case08-InjectionInUpdate-DateWithoutQuotes-TimeDelayExploit-200Identical.jsp'
+        }
         skip_startwith = {'index.jsp'}
         kb_addresses = {('sqli', 'sqli'), ('blind_sqli', 'blind_sqli')}
 
@@ -516,6 +532,7 @@ class TestWAVSEPIdenticalPOST(WAVSEPTest):
                           skip_startwith)
 
 
+@pytest.mark.wavsep
 class TestWAVSEPExperimentalPOST(WAVSEPTest):
 
     base_path = ('/wavsep/active/SQL-Injection/'

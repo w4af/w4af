@@ -65,6 +65,7 @@ exit
 """
 
 
+@pytest.mark.wavsep
 class TestStrategy(PluginTest):
     def setUp(self):
         super(TestStrategy, self).setUp()

@@ -27,7 +27,7 @@ import w3af.core.data.constants.severity as severity
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.data.fuzzer.utils import rand_number
 from w3af.core.data.misc.encoding import smart_str_ignore
-from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal
+from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal_return_distance
 from w3af.core.controllers.exceptions import HTTPRequestException
 from w3af.core.controllers.misc.diff import chunked_diff
 
@@ -395,11 +395,11 @@ class BlindSqliResponseDiff(object):
         if compare_diff:
             body1, body2 = chunked_diff(body1, body2)
 
-        cmp_res = fuzzy_equal(body1, body2, self._eq_limit)
+        cmp_res, distance = fuzzy_equal_return_distance(body1, body2, self._eq_limit)
 
         are = 'ARE' if cmp_res else 'ARE NOT'
-        args = (are, self._eq_limit)
-        self.debug('Strings %s similar enough (limit: %s)' % args)
+        args = (are, self._eq_limit, distance)
+        self.debug('Strings %s similar enough (limit: %s vs %s)' % args)
 
         spent = time.time() - start
         self.debug('Took %.2f seconds to run equal_with_limit' % spent)

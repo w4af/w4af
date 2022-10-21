@@ -81,10 +81,10 @@ def fuzzy_equal_return_distance(a_str, b_str, threshold=0.6):
                 - A boolean indicating the fuzzy_equal result
                 - The distance between the two strings, if it was calculated
     """
-    optimization_result = _get_optimized_fuzzy_equal(a_str, b_str, threshold=threshold)
+    optimization_result, distance = _get_optimized_fuzzy_equal(a_str, b_str, threshold=threshold)
 
     if optimization_result is not None:
-        return optimization_result, None
+        return optimization_result, distance
 
     short_string_result = _get_short_string_similarity(a_str, b_str)
     if short_string_result is not None:
@@ -121,24 +121,25 @@ def _get_optimized_fuzzy_equal(a_str, b_str, threshold=0.6):
              None means the algorithm is unable to know
     """
     if threshold == 0:
-        return True
+        return True, 0
 
     if threshold == 1.0:
-        return a_str == b_str
+        return a_str == b_str, 1
 
     a_len = len(a_str)
     b_len = len(b_str)
 
     if b_len == 0 or a_len == 0:
-        return a_len == b_len
+        return a_len == b_len, 1
 
     if b_len == a_len and a_str == b_str:
-        return True
+        return True, 1
 
-    if threshold > upper_bound_similarity(a_len, b_len):
-        return False
+    upper_bound = upper_bound_similarity(a_len, b_len)
+    if threshold > upper_bound:
+        return False, upper_bound
 
-    return None
+    return None, None
 
 
 def upper_bound_similarity(a_len, b_len):
