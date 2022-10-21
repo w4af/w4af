@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
+
 from w3af.core.controllers.ci.sqlmap_testenv import get_sqlmap_testenv_http
 from w3af.core.controllers.ci.moth import get_moth_http
 
@@ -49,6 +51,7 @@ class TestSQLMapShell(ReadExploitTest):
         
     }
 
+    @pytest.mark.sqlmap
     def test_found_exploit_sqlmap_sqli(self):
         # Run the scan
         cfg = self._run_configs['sqli']
@@ -73,6 +76,7 @@ class TestSQLMapShell(ReadExploitTest):
         
         self._exploit_vuln(vuln_to_exploit_id, 'sqlmap')
 
+    @pytest.mark.sqlmap
     def test_found_exploit_sqlmap_blind_sqli(self):
         # Run the scan
         cfg = self._run_configs['blind_sqli']
@@ -91,6 +95,7 @@ class TestSQLMapShell(ReadExploitTest):
         vuln_to_exploit_id = vuln.get_id()
         self._exploit_vuln(vuln_to_exploit_id, 'sqlmap')
 
+    @pytest.mark.sqlmap
     def test_from_template(self):
         sqlit = SQLiTemplate()
         

@@ -157,6 +157,7 @@ class TestProxy(unittest.TestCase):
             self.assertIn(b'Proxy error', body)
             self.assertIn(b'HTTP request', body)
 
+    @pytest.mark.sqlmap
     def test_proxy_gzip_encoding(self):
         """
         When we perform a request to a site which returns gzip encoded data, the

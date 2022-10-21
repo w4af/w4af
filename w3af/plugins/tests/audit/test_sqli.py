@@ -54,6 +54,7 @@ class TestSQLI(PluginTest):
         self.assertEqual(self.target_url, str(vuln.get_url()))
 
 
+@pytest.mark.sqlmap
 class TestSQLMapTestEnv(PluginTest):
 
     base_path = '/sqlmap/mysql/'
@@ -96,7 +97,10 @@ class TestSQLMapTestEnv(PluginTest):
                                ('get_int_filtered.php', 'id'),
                                ('get_brackets.php', 'id'),
                                ('get_int_limit.php', 'id'),
-                               ('get_int_limit_second.php', 'id')}
+                               ('get_int_limit_second.php', 'id'),
+                               ('basic/get_int.php', 'id'),
+                               ('digest/get_int.php', 'id'),
+                               }
 
         #
         #   Now we assert the unknowns
@@ -129,7 +133,11 @@ class TestSQLMapTestEnv(PluginTest):
             'iis',
             'iis/',
 
+            'basic/.htaccess',
+            'basic/',
             'basic',
+            'digest/.htaccess',
+            'digest/',
             'digest',
             '',
 

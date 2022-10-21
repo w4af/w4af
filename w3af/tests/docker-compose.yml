@@ -33,7 +33,7 @@ w3af_moth:
 #
 # testenv
 #
-testenv:
+sqlmap:
   image: w4af/sqlmap-testenv:latest
   security_opt:
     - seccomp:unconfined
