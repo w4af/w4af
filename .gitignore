@@ -41,6 +41,7 @@ nose.cfg
 .pydevproject
 .settings/
 .idea
+.vscode
 
 # w3af stuff
 parser.out

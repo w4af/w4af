@@ -10,3 +10,19 @@ License: GPL-2.0-only
 Files: doc/*
 Copyright: 2020 Andres Riancho <self@andresriancho.com>
 License: GPL-2.0-only
+
+Files: w3af/*
+Copyright: Andres Riancho <self@andresriancho.com>
+License: GPL-2.0-only
+
+Files: tools/*
+Copyright: Andres Riancho <self@andresriancho.com>
+License: GPL-2.0-only
+
+Files: profiles/*
+Copyright: Andres Riancho <self@andresriancho.com>
+License: GPL-2.0-only
+
+Files: extras/*
+Copyright: Andres Riancho <self@andresriancho.com>
+License: GPL-2.0-only
