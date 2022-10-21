@@ -54,7 +54,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        group: [w3af_moth,sqlmap,wavsep]
+        group: [w3af_moth,sqlmap,wavsep,wivet]
 
 
     steps:
