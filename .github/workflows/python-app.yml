@@ -51,10 +51,10 @@ jobs:
 
     runs-on: ubuntu-latest
     needs: [test]
-    timeout-minutes: 30
+    timeout-minutes: 40
     strategy:
       matrix:
-        group: [w3af_moth,sqlmap,wavsep,wivet]
+        group: [w3af_moth,sqlmap,mcir,wivet]
 
 
     steps:

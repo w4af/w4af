@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
+
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.controllers.ci.mcir import get_mcir_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
@@ -79,6 +81,7 @@ class TestEval(PluginTest):
         self.assertEqual(self.target_delay, str(vuln.get_url()))
 
 
+@pytest.mark.mcir
 class TestPHPEchoEval(PluginTest):
 
     target = get_mcir_http('/phpwn/eval.php?sanitization_level=none'
@@ -109,6 +112,7 @@ class TestPHPEchoEval(PluginTest):
         self.assertEqual('custom_inject', vuln.get_token_name())
 
 
+@pytest.mark.mcir
 class TestPHPSleepEval(PluginTest):
 
     target = get_mcir_http('/phpwn/eval.php?sanitization_level=none'
