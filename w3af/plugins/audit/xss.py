@@ -34,6 +34,7 @@ from w3af.core.data.fuzzer.utils import rand_alnum
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_list import OptionList
 from w3af.core.data.context.context import get_context_iter
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 RANDOMIZE = 'RANDOMIZE'
@@ -164,7 +165,8 @@ class xss(AuditPlugin):
         if self._is_json_response(response):
             return False
 
-        if payload in response.get_body().lower():
+        unicode_body = smart_unicode(response.get_body()).lower()
+        if payload in unicode_body:
             self._report_vuln(mutant, response, payload)
             return True
         
