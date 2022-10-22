@@ -23,6 +23,7 @@ import os
 
 import w3af.core.controllers.daemons.webserver as webserver
 import w3af.core.data.kb.config as cf
+import w3af.core.controllers.output_manager as om
 
 from w3af.core.controllers.misc.temp_dir import get_temp_dir
 from w3af.core.controllers.intrusion_tools.execMethodHelpers import get_remote_temp_file
