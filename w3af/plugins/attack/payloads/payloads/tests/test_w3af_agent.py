@@ -29,8 +29,8 @@ from w3af.plugins.tests.helper import onlyroot
 
 class test_w3af_agent(PayloadTestHelperExec):
 
-    @onlyroot
     @pytest.mark.ci_fails
+    @pytest.mark.phpmoth
     def test_w3af_agent(self):
         result = exec_payload(self.shell, 'w3af_agent', args=(get_local_ip(),),
                               use_api=True)

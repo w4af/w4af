@@ -43,8 +43,11 @@ class crontabHandler(delayedExecution):
         :return: True if the remote user can add entries to his crontab
         """
         actualCron = self._exec('crontab -l 2>&1')
-        if 'not allowed to use this program' in actualCron:
+        if b'not allowed to use this program' in actualCron:
             om.out.debug('[crontabHandler] The user has no permission to create a cron entry.')
+            return False
+        if b'not found' in actualCron:
+            om.out.debug('[crontabHandler] Crontab seems not to be installed on remote host.')
             return False
         else:
             om.out.debug('[crontabHandler] The user can create a cron entry.')
@@ -57,7 +60,7 @@ class crontabHandler(delayedExecution):
         actualCron = self._exec('crontab -l 2>&1')
         actualCron = actualCron.strip()
 
-        remoteDate = self._exec('date +%d-%m-%H:%M:%S-%u')
+        remoteDate = self._exec('date +%d-%m-%H:%M:%S-%u').decode('utf-8')
         remoteDate = remoteDate.strip()
 
         user = self._exec('whoami')
@@ -66,15 +69,16 @@ class crontabHandler(delayedExecution):
         newCronLine, wait_time = self._createCronLine(
             remoteDate, command_to_exec)
 
-        if 'no crontab for ' + user == actualCron:
+        if b'no crontab for ' + user == actualCron:
+            actualCron = b''
             newCron = newCronLine
         else:
-            newCron = actualCron + '\n' + newCronLine
+            newCron = actualCron + b'\n' + newCronLine
 
         # This is done this way so I don't need to use one echo that prints new lines
         # new lines are \n and with gpc magic quotes that fails
-        for line in newCron.split('\n'):
-            self._exec('/bin/echo ' + line + ' >> ' + self._cronFile)
+        for line in newCron.split(b'\n'):
+            self._exec(b'/bin/echo ' + line + b' >> ' + self._cronFile.encode('utf-8'))
         self._exec('crontab ' + self._cronFile)
         self._exec('/bin/rm ' + self._cronFile)
 
@@ -82,13 +86,13 @@ class crontabHandler(delayedExecution):
         self._exec('/bin/chmod +x ' + filename)
 
         om.out.debug('Added command: "' + command_to_exec +
-                     '" to the remote crontab of user : "' + user + '".')
+                     '" to the remote crontab of user : "' + str(user) + '".')
         self._oldCron = actualCron
 
         return wait_time
 
     def restore_old_schedule(self):
-        self._exec('/bin/echo -e ' + self._oldCron + ' > ' + self._cronFile)
+        self._exec(b'/bin/echo -e ' + self._oldCron + b' > ' + self._cronFile.encode('utf-8'))
         self._exec('crontab ' + self._cronFile)
         self._exec('/bin/rm ' + self._cronFile)
         om.out.debug('Successfully restored old crontab.')
@@ -124,4 +128,4 @@ class crontabHandler(delayedExecution):
             res_line = '%s %s %s %s %s %s' % (minute, hour, day_number, month,
                                              week_day, command_to_exec)
             
-        return res_line, wait_time
+        return res_line.encode('utf-8'), wait_time

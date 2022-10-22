@@ -56,7 +56,7 @@ class ClientlessReverseHTTP(BasePayloadTransfer):
         #    Here i test what remote command we can use to fetch the payload
         for fetcher in ['wget', 'curl', 'lynx']:
             res = self._exec_method('which ' + fetcher)
-            if res.startswith('/'):
+            if res.startswith(b'/'):
                 #    Almost there...
                 self._command = fetcher
 

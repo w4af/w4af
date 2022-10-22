@@ -36,7 +36,7 @@ class EchoLinux(BasePayloadTransfer):
         super(EchoLinux, self).__init__(exec_method, os)
         self._exec_method = exec_method
         self._os = os
-        self._step = 30
+        self._step = 300
 
     def can_transfer(self):
         """
@@ -46,8 +46,8 @@ class EchoLinux(BasePayloadTransfer):
         """
         # Check if echo exists and works as expected
         res = self._exec_method("/bin/echo -n 'w3af'")
-        if 'w3af' != res:
-            om.out.debug('Remote server returned: "' + res +
+        if b'w3af\n' != res:
+            om.out.debug('Remote server returned: "' + str(res) +
                          '" when expecting "w3af".')
             return False
         else:
@@ -80,17 +80,26 @@ class EchoLinux(BasePayloadTransfer):
         self._exec_method('> ' + self._filename)
 
         i = 0
-        while i < len(data_str):
+        error_count = 1
+        success_count = 1
+        while i < len(data_str) and (error_count < 20 or (success_count / error_count > 0.25)):
             # Prepare the command
             cmd = "/bin/echo -ne "
             for c in data_str[i:i + self._step]:
                 cmd += '\\\\' + oct(ord(c)).replace('0o', '0').zfill(4)
 
-            cmd += " >> " + self._filename
-            i += self._step
+            cmd += " >> " + self._filename + " && /bin/echo -n 1"
 
             # Send the command to the remote server
-            self._exec_method(cmd)
+            res = self._exec_method(cmd)
+
+            # None result means the request failed
+            if res != b'1':
+                success_count += 1
+                i += self._step
+            else:
+                om.out.debug("Error transferring bytes %d to %d... will retry" % (i, i + self._step))
+                error_count += 1
 
         return self.verify_upload(data_str, self._filename)
 

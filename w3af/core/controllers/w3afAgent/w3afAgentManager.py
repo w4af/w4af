@@ -34,6 +34,7 @@ from w3af.core.controllers.payload_transfer.payload_transfer_factory import payl
 from w3af.core.controllers.extrusion_scanning.extrusionScanner import extrusionScanner
 from w3af.core.controllers.intrusion_tools.delayedExecutionFactory import delayedExecutionFactory
 from w3af.core.controllers.intrusion_tools.execMethodHelpers import get_remote_temp_file
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class w3afAgentManager(Process):
@@ -62,7 +63,7 @@ class w3afAgentManager(Process):
         """
         om.out.debug('Executing: ' + command)
         response = self._exec_method(*(command,))
-        om.out.debug('"' + command + '" returned: ' + response)
+        om.out.debug('"' + command + '" returned: ' + response.decode('utf-8'))
         return response
 
     def run(self):
@@ -128,7 +129,7 @@ class w3afAgentManager(Process):
                     om.out.console('Finished w3afAgent client upload!')
 
                     #    And now start the w3afAgentClient on the remote server using cron / at
-                    self._delayedExecution(interpreter + ' ' + filename + ' ' + self._ip_address + ' ' + str(inbound_port))
+                    self._delayedExecution(smart_unicode(interpreter) + ' ' + filename + ' ' + self._ip_address + ' ' + str(inbound_port))
 
                     #
                     #    This checks if the remote server connected back to the agent_server
@@ -176,10 +177,10 @@ class w3afAgentManager(Process):
         This method selects the w3afAgent client to use based on the remote OS and some other factors
         like having a working python installation.
         """
-        python = self._exec('which python')
+        python = self._exec('which python3')
         python = python.strip()
 
-        if python.startswith('/'):
+        if python.startswith(b'/'):
             client = os.path.join(ROOT_PATH, 'core', 'controllers', 'w3afAgent',
                                   'client', 'w3afAgentClient.py')
             with open(client) as client_fh:
@@ -190,7 +191,7 @@ class w3afAgentManager(Process):
             # TODO: Implement this!
             file_content = ''
             extension = 'py'
-            interpreter = '/usr/bin/python'
+            interpreter = b'/usr/bin/python3'
 
         return interpreter, file_content, extension
 

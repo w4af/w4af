@@ -68,9 +68,9 @@ class BasePayloadTransfer(object):
         :param remote_filename: The remote file where the uploaded content should be in
         :return: True if the file was successfully uploaded.
         """
-        if '/etc/passwd' in self._exec_method('md5sum /etc/passwd'):
+        if b'/etc/passwd' in self._exec_method('md5sum /etc/passwd'):
             md5sum_res = self._exec_method('md5sum ' + remote_filename)
-            hash_ = md5sum_res.split(' ')[0]
+            hash_ = md5sum_res.split(b' ')[0].decode('utf-8')
 
             m = hashlib.md5()
             m.update(smart_str_ignore(file_content))

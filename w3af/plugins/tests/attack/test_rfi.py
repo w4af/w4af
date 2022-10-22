@@ -27,6 +27,7 @@ from w3af.core.data.kb.vuln_templates.rfi_template import RFITemplate
 
 
 @pytest.mark.smoke
+@pytest.mark.phpmoth
 class TestRFI(ExecExploitTest):
 
     target_url = get_php_moth_http('/audit/rfi/rfi-rce.php')

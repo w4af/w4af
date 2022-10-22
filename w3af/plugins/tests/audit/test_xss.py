@@ -167,6 +167,7 @@ class TestXSS(PluginTest):
         target_path = get_php_moth_http('/audit/file_upload/echo_content/')
         self._scan(target_path, cfg['plugins'])
 
+    @pytest.mark.phpmoth
     def test_user_configured_find_in_file_upload_content(self):
         """
         Do not send file content mutants unless the user configures it.
@@ -184,6 +185,7 @@ class TestXSS(PluginTest):
         xss_vulns = self.kb.get('xss', 'xss')
         self.assertEqual(len(xss_vulns), 0, xss_vulns)
 
+    @pytest.mark.phpmoth
     def test_find_in_file_upload_content(self):
         """
         Find XSS in the content of an uploaded file

@@ -30,6 +30,7 @@ from w3af.plugins.audit.rfi import RFIWebHandler
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.phpmoth
 class TestRFI(PluginTest):
 
     target_rce = get_php_moth_http('/audit/rfi/rfi-rce.php')

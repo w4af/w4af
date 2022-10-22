@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
+
 from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper_exec import PayloadTestHelperExec
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
@@ -29,6 +30,7 @@ class test_portscan(PayloadTestHelperExec):
     RESULT_23 = {'localhost': []}
 
     @pytest.mark.ci_fails
+    @pytest.mark.phpmoth
     def test_portscan(self):
         result = exec_payload(self.shell, 'portscan',
                               args=('localhost', '80'),

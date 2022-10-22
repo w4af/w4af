@@ -83,8 +83,8 @@ def get_remote_temp_file(exec_method):
         _filename = '/tmp/' + rand_alnum(6)
 
         # verify exists
-        ls_res = exec_method('ls ' + _filename).strip()
-        if 'No such file' in ls_res:
+        ls_res = exec_method('ls ' + _filename + ' 2>&1').strip()
+        if b'No such file' in ls_res:
             return _filename
         else:
             # Shit, the file exists, run again and see what we can do

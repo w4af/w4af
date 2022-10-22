@@ -24,6 +24,17 @@ import os
 import socket
 import threading
 
+if __name__ == '__main__':
+    sys.path.append(os.getcwd())
+    sys.path.append('../../../../')
+
+    if len(sys.argv) != 3:
+        print()
+        print('w3afAgent usage:')
+        print('python w3afAgentServer.py <bind-address> <bind-port>')
+        print()
+        sys.exit(-1)
+
 from multiprocessing.dummy import Process
 
 import w3af.core.controllers.output_manager as om
@@ -267,6 +278,8 @@ class w3afAgentServer(Process):
                 self._cm.stop()
             else:
                 self._is_running = True
+        self._cm.join()
+        self._TCPRelay.join()
 
     def stop(self):
         if self._is_running:
@@ -286,18 +299,9 @@ class w3afAgentServer(Process):
         return self._cm.is_working()
 
 if __name__ == '__main__':
-    sys.path.append(os.getcwd())
-    sys.path.append('../../../../')
-
-    if len(sys.argv) != 3:
-        print()
-        print('w3afAgent usage:')
-        print('python w3afAgentServer.py <bind-address> <bind-port>')
-        print()
-        sys.exit(-1)
-
     ip_address = sys.argv[1]
     agent = w3afAgentServer(ip_address, listen_port=int(sys.argv[2]))
+    agent.daemon = False
 
     try:
         agent.run()

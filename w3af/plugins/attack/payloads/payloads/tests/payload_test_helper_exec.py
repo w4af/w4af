@@ -33,6 +33,7 @@ class PayloadTestHelperExec(PluginTest):
             'target': target_rce + '?file=abc.txt',
             'plugins': {
                 'audit': (PluginConfig('rfi'),),
+                'output': (PluginConfig('text_file',),),
             }
         }
     }

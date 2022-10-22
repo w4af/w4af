@@ -60,7 +60,7 @@ class rfi(AuditPlugin):
                         ' w3af site as the target server for remote inclusions.'
                         ' The configuration error is: "%s"')
 
-    RFI_TEST_URL = 'http://w3af.org/rfi.html'
+    RFI_TEST_URL = 'https://github.com/w4af/w4af'
 
     RFI_TOKEN_1 = '8PcokTUkv'
     RFI_TOKEN_2 = 'oudVjYpIm'
