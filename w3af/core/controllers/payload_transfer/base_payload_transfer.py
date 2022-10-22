@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import hashlib
 
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w3af.core.data.misc.encoding import smart_str_ignore, smart_str
 
 class BasePayloadTransfer(object):
     """
@@ -68,8 +68,8 @@ class BasePayloadTransfer(object):
         :param remote_filename: The remote file where the uploaded content should be in
         :return: True if the file was successfully uploaded.
         """
-        if b'/etc/passwd' in self._exec_method('md5sum /etc/passwd'):
-            md5sum_res = self._exec_method('md5sum ' + remote_filename)
+        if b'/etc/passwd' in smart_str(self._exec_method('md5sum /etc/passwd')):
+            md5sum_res = smart_str(self._exec_method('md5sum ' + remote_filename))
             hash_ = md5sum_res.split(b' ')[0].decode('utf-8')
 
             m = hashlib.md5()

@@ -28,6 +28,7 @@ from w3af.core.controllers.misc.temp_dir import get_temp_dir
 from w3af.core.controllers.intrusion_tools.execMethodHelpers import get_remote_temp_file
 from w3af.core.controllers.payload_transfer.base_payload_transfer import BasePayloadTransfer
 from w3af.core.data.fuzzer.utils import rand_alpha
+from w3af.core.data.misc.encoding import smart_str
 
 
 class ClientlessReverseHTTP(BasePayloadTransfer):
@@ -55,7 +56,7 @@ class ClientlessReverseHTTP(BasePayloadTransfer):
         """
         #    Here i test what remote command we can use to fetch the payload
         for fetcher in ['wget', 'curl', 'lynx']:
-            res = self._exec_method('which ' + fetcher)
+            res = smart_str(self._exec_method('which ' + fetcher))
             if res.startswith(b'/'):
                 #    Almost there...
                 self._command = fetcher
@@ -64,7 +65,8 @@ class ClientlessReverseHTTP(BasePayloadTransfer):
                     # Lets test if the transfer method works.
                     return self.transfer('test_string\n',
                                          get_remote_temp_file(self._exec_method))
-                except:
+                except Exception as e:
+                    om.out.debug("Got exception attempting file transfer: %s" % e)
                     continue
 
         return False

@@ -24,6 +24,7 @@ import time
 import w3af.core.controllers.output_manager as om
 
 from w3af.core.controllers.payload_transfer.base_payload_transfer import BasePayloadTransfer
+from w3af.core.data.misc.encoding import smart_str
 
 
 class EchoLinux(BasePayloadTransfer):
@@ -45,8 +46,8 @@ class EchoLinux(BasePayloadTransfer):
         arrived as expected to the other end.
         """
         # Check if echo exists and works as expected
-        res = self._exec_method("/bin/echo -n 'w3af'")
-        if b'w3af\n' != res:
+        res = smart_str(self._exec_method("/bin/echo -n 'w3af'"))
+        if b'w3af' != res.strip():
             om.out.debug('Remote server returned: "' + str(res) +
                          '" when expecting "w3af".')
             return False
