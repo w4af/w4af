@@ -39,7 +39,7 @@ jobs:
       uses: GabrielBB/xvfb-action@v1
       with:
         run: |
-          pipenv run pytest --cov=w3af --splits 8 --group ${{ matrix.group }} -m "not moth and not fails and not git and not gui and not integration and not ci_ignore and not slow"
+          pipenv run pytest --cov=w3af --splits 8 --group ${{ matrix.group }} -m "not moth and not wavsep and not w3af_moth and not sqlmap and not mcir and not wivet and not phpmoth and not fails and not git and not gui and not integration and not ci_ignore and not slow"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
@@ -120,7 +120,7 @@ jobs:
       uses: GabrielBB/xvfb-action@v1
       with:
         run: |
-          pipenv run pytest --cov=w3af -m "slow_group${{matrix.group}} and not moth and not fails and not git and not gui and not integration and not ci_ignore"
+          pipenv run pytest --cov=w3af -m "slow_group${{matrix.group}}"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
