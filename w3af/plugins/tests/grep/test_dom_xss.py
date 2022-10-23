@@ -26,6 +26,7 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 import w3af.core.data.constants.severity as severity
 
 
+@pytest.mark.moth
 @pytest.mark.ci_ready
 class TestDOMXSS(PluginTest):
 

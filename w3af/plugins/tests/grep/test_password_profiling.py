@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
+
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.plugins.grep.password_profiling import password_profiling
@@ -26,6 +28,7 @@ from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.parsers.doc.url import URL
 
 
+@pytest.mark.moth
 class TestPasswordProfiling(PluginTest):
 
     password_profiling_url = get_moth_http('/grep/password_profiling/')

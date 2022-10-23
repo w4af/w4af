@@ -31,6 +31,7 @@ CONFIG = {'audit': (PluginConfig('blind_sqli'),),
                     ('only_forward', True, PluginConfig.BOOL)),)}
 
 
+@pytest.mark.moth
 class TestDjangoBlindSQLI(PluginTest):
 
     def test_integer(self):
@@ -104,6 +105,7 @@ class TestDjangoBlindSQLI(PluginTest):
                           vuln.get_url().get_file_name())
 
 
+@pytest.mark.wavsep
 class TestReflectedXSSFalsePositive(PluginTest):
 
     def test_xss_false_positive_1516(self):

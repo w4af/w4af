@@ -1,4 +1,4 @@
-djangomoth:
+moth:
   image: w4af/django-moth:latest
   ports:
     - "8000:8000"

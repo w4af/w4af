@@ -24,6 +24,7 @@ from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 @pytest.mark.ci_ready
+@pytest.mark.moth
 class TestError500(PluginTest):
 
     error_500_url = get_moth_http('/grep/error_500/500.py?id=1')

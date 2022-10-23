@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from httpretty import httpretty
 
 import w3af.core.data.kb.knowledge_base as kb
@@ -27,6 +28,7 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@pytest.mark.moth
 class TestDetailedBasic(PluginTest):
 
     target_url = get_moth_http('/auth/auth_1/')
@@ -70,6 +72,7 @@ class TestDetailedBasic(PluginTest):
         self.assertEqual(vuln.get_token_name(), 'text')
 
 
+@pytest.mark.moth
 class TestDetailedFailAuth(PluginTest):
     target_url = get_moth_http('/auth/auth_1/')
 
@@ -244,6 +247,7 @@ class TestDetailedRedirectLoop(PluginTest):
         self.assertIn('/auth/login_form.py', all_paths)
 
 
+@pytest.mark.moth
 class TestDetailedSquareBrackets(PluginTest):
     """
     :see: https://github.com/andresriancho/w3af/issues/5593

@@ -30,7 +30,6 @@ from w3af.core.data.url.extended_urllib import ExtendedUrllib
 from w3af.core.data.parsers.doc.url import URL
 
 
-@pytest.mark.moth
 class TestXUrllibIntegration(unittest.TestCase):
 
     MOTH_MESSAGE = '<title>moth: vulnerable web application</title>'
@@ -71,6 +70,7 @@ class TestXUrllibIntegration(unittest.TestCase):
         http_response = self.uri_opener.GET(url, cache=False)
         self.assertIn('You are admin from MOTH/', http_response.body)
 
+    @pytest.mark.moth
     def test_gzip(self):
         url = URL(get_moth_http('/core/gzip/gzip.html'))
         res = self.uri_opener.GET(url, cache=False)
@@ -82,6 +82,7 @@ class TestXUrllibIntegration(unittest.TestCase):
         self.assertTrue(test_res, content_encoding)
         self.assertIn('View HTTP response headers.', res.get_body())
 
+    @pytest.mark.moth
     def test_deflate(self):
         url = URL(get_moth_http('/core/deflate/deflate.html'))
         res = self.uri_opener.GET(url, cache=False)

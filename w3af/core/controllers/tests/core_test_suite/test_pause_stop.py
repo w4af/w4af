@@ -64,6 +64,7 @@ class CountTestMixin(unittest.TestCase):
         self.w3afcore.quit()
 
 
+@pytest.mark.moth
 class TestW3afCorePause(CountTestMixin):
 
     @pytest.mark.ci_fails

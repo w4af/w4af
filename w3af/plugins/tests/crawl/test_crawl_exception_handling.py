@@ -20,9 +20,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
-import shutil
-
 import pytest
+import shutil
 
 from w3af import ROOT_PATH
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
@@ -31,6 +30,7 @@ from w3af.core.controllers.misc.file_lock import FileLock
 
 
 @pytest.mark.smoke
+@pytest.mark.moth
 class TestCrawlExceptions(PluginTest):
 
     target_url = get_moth_http('/grep/csp/')

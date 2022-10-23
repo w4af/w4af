@@ -18,11 +18,14 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
+
 from w3af.plugins.tests.helper import PluginConfig, ReadExploitTest
 from w3af.core.data.kb.vuln_templates.local_file_read_template import LocalFileReadTemplate
 from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@pytest.mark.moth
 class TestFileReadShell(ReadExploitTest):
 
     target_url = get_moth_http('/audit/local_file_read/'\

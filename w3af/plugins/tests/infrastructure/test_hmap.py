@@ -25,6 +25,7 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
 @pytest.mark.ci_fails
+@pytest.mark.moth
 class TestHmap(PluginTest):
 
     base_url = get_moth_http()

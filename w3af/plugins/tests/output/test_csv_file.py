@@ -18,9 +18,10 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import os
 import csv
 import json
+import os
+import pytest
 
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.data.dc.urlencoded_form import URLEncodedForm
@@ -33,6 +34,7 @@ from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 
 
+@pytest.mark.moth
 class TestCSVFile(PluginTest):
 
     OUTPUT_FILE = 'output-unittest.csv'

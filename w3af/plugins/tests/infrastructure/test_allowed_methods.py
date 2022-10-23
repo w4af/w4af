@@ -25,6 +25,7 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
 @pytest.mark.smoke
+@pytest.mark.moth
 class TestAllowedMethods(PluginTest):
     """
     Note that this is a smoke test because the code in allowed_methods calls

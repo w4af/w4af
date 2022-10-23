@@ -34,6 +34,7 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 @pytest.mark.ci_ready
 @pytest.mark.smoke
+@pytest.mark.moth
 class TestErrorPages(PluginTest):
 
     target_url = get_moth_http('/grep/error_pages/index.html')

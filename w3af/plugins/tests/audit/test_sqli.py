@@ -27,6 +27,7 @@ from w3af.core.controllers.ci.sqlmap_testenv import get_sqlmap_testenv_http
 
 
 @pytest.mark.smoke
+@pytest.mark.moth
 class TestSQLI(PluginTest):
 
     target_url = get_moth_http('/audit/sql_injection/where_integer_qs.py')

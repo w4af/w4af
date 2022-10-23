@@ -19,16 +19,16 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import os
 import base64
-import os.path
 import io
+import os
+import os.path
+import pytest
 import re
 import unittest
 import xml.etree.ElementTree as ElementTree
 
 from lxml import etree
-import pytest
 
 import w3af.core.data.constants.severity as severity
 import w3af.core.data.kb.knowledge_base as kb
@@ -56,6 +56,7 @@ from w3af.plugins.output.xml_file import (xml_file, CachedXMLNode, FindingsCache
 
 
 @pytest.mark.smoke
+@pytest.mark.moth
 class TestXMLOutput(PluginTest):
 
     target_url = get_moth_http('/audit/sql_injection/where_integer_qs.py')

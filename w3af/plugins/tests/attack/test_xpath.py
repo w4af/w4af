@@ -26,8 +26,7 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.core.data.kb.vuln_templates.xpath_template import XPathTemplate
 
 
-@pytest.mark.slow_group4
-@pytest.mark.slow
+@pytest.mark.moth
 class TestXPathShell(PluginTest):
 
     target_url = get_moth_http('/audit/xpath/xpath-attr-single.py')

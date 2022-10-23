@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
+
 import w3af.core.data.kb.config as cf
 
 from w3af.core.controllers.ci.moth import get_moth_http
@@ -29,6 +31,7 @@ from w3af.plugins.attack.os_commanding import (FullPathExploitStrategy,
 from w3af.core.data.misc.encoding import smart_str_ignore
 
 
+@pytest.mark.moth
 class TestOSCommandingShell(ExecExploitTest):
 
     target_url = get_moth_http('/audit/os_commanding/trivial_osc.py?cmd=ls')

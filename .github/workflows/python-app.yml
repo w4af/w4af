@@ -41,7 +41,7 @@ jobs:
         run: |
           pipenv run pytest --cov=w3af --splits 8 --group ${{ matrix.group }} -m "not moth and not fails and not git and not gui and not integration and not ci_ignore and not slow"
     - name: Upload coverage
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: coverage${{ matrix.group }}
         path: .coverage
@@ -86,7 +86,7 @@ jobs:
         run: |
           pipenv run pytest --cov=w3af -m "${{ matrix.group }} and not fails"
     - name: Upload coverage
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: coverage-${{ matrix.group }}
         path: .coverage
@@ -122,7 +122,7 @@ jobs:
         run: |
           pipenv run pytest --cov=w3af -m "slow_group${{matrix.group}} and not moth and not fails and not git and not gui and not integration and not ci_ignore"
     - name: Upload coverage
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: coverage-slow${{matrix.group}}
         path: .coverage

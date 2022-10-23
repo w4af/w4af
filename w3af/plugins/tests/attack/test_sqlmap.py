@@ -112,6 +112,7 @@ class TestSQLMapShell(ReadExploitTest):
         
         self._exploit_vuln(vuln_to_exploit_id, 'sqlmap')
 
+    @pytest.mark.moth
     def test_found_exploit_blind_sqli_form_GET(self):
         """
         Reproduce bug https://github.com/andresriancho/w3af/issues/262

@@ -19,15 +19,16 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import w3af.core.data.kb.knowledge_base as kb
-
 import pytest
+
+import w3af.core.data.kb.knowledge_base as kb
 
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.plugins.crawl.wordnet import wordnet
 
 
+@pytest.mark.moth
 class TestWordnet(PluginTest):
 
     target_url = get_moth_http('/crawl/wordnet/')

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import unittest
 from itertools import repeat
 
@@ -35,6 +36,7 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.plugins.grep.meta_tags import meta_tags
 
 
+@pytest.mark.moth
 class TestMetaTags(PluginTest):
 
     meta_tags_url = get_moth_http('/grep/meta_tags/')

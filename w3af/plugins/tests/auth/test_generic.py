@@ -85,6 +85,7 @@ class TestGeneric(PluginTest):
     }
 
     @pytest.mark.smoke
+    @pytest.mark.moth
     def test_post_auth_xss(self):
         self._scan(self._run_config['target'], self._run_config['plugins'])
 

@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import csv
+import pytest
 
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest
@@ -29,6 +30,7 @@ from w3af.core.data.constants.severity import MEDIUM
 from w3af.core.data.misc.file_utils import days_since_file_update
 
 
+@pytest.mark.moth
 class TestPhishtank(PluginTest):
 
     safe_url = get_moth_http()

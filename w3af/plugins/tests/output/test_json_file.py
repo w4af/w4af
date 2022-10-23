@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import json
 import os
-
 import pytest
 
 from w3af.core.controllers.ci.moth import get_moth_http
@@ -30,6 +29,7 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
 @pytest.mark.smoke
+@pytest.mark.moth
 class TestJsonOutput(PluginTest):
 
     target_url = get_moth_http('/audit/sql_injection/where_integer_qs.py')

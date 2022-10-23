@@ -27,6 +27,7 @@ import w3af.core.data.constants.severity as severity
 
 
 @pytest.mark.ci_ready
+@pytest.mark.moth
 class TestDirectoryIndexing(PluginTest):
 
     dir_indexing_url = get_moth_http('/grep/directory_indexing/index.html')

@@ -35,6 +35,7 @@ CONFIG = {
 }
 
 
+@pytest.mark.moth
 class TestLFI(PluginTest):
 
     target_url = get_moth_http('/audit/local_file_read/')

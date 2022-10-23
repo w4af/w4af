@@ -25,6 +25,7 @@ from w3af.core.controllers.ci.mcir import get_mcir_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.moth
 class TestEval(PluginTest):
 
     target_echo = get_moth_http('/audit/eval_vuln/eval_double.py')

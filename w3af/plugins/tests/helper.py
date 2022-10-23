@@ -53,7 +53,6 @@ os.chdir(W3AF_LOCAL_PATH)
 RE_COMPILE_TYPE = type(re.compile(''))
 
 
-@pytest.mark.moth
 class PluginTest(unittest.TestCase):
     """
     These tests can be configured using two environment variables:

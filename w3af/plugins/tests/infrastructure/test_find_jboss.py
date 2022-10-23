@@ -24,6 +24,7 @@ from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.moth
 class TestFindJBoss(PluginTest):
 
     target_url = get_moth_http()

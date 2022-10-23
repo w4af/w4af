@@ -19,9 +19,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
-import re
-
 import pytest
+import re
 
 from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.core.data.kb.tests.test_vuln import MockVuln
@@ -30,6 +29,7 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
 @pytest.mark.smoke
+@pytest.mark.moth
 class TestTextFile(PluginTest):
 
     OUTPUT_FILE = 'output-unittest.txt'

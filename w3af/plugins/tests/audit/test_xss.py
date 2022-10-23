@@ -108,6 +108,7 @@ class TestXSS(PluginTest):
         return expected_data
 
     @pytest.mark.smoke
+    @pytest.mark.moth
     def test_find_one_xss(self):
         """
         Simplest possible test to verify that we identify XSSs.
@@ -127,6 +128,7 @@ class TestXSS(PluginTest):
             set(kb_data),
         )
 
+    @pytest.mark.moth
     def test_2919_javascript_src_frame(self):
         """
         https://github.com/andresriancho/w3af/issues/2919
@@ -148,6 +150,7 @@ class TestXSS(PluginTest):
             set(kb_data),
         )
 
+    @pytest.mark.moth
     def test_no_false_positive_499(self):
         """
         Avoiding false positives in the case where the payload is echoed back
@@ -205,6 +208,7 @@ class TestXSS(PluginTest):
             set(kb_data),
         )
 
+    @pytest.mark.moth
     def test_found_xss(self):
         cfg = self._run_configs['cfg']
         self._scan(self.XSS_PATH, cfg['plugins'])
@@ -296,6 +300,7 @@ class TestXSS(PluginTest):
             self.assertEqual(set(expected_data), set(kb_data))
         self.assertTrue(found, "All urls were found")
 
+    @pytest.mark.wavsep
     def test_found_wavsep_get_xss(self):
         cfg = self._run_configs['cfg']
         self._scan(self.WAVSEP_PATH, cfg['plugins'])

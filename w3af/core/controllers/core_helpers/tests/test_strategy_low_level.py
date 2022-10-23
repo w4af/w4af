@@ -34,7 +34,6 @@ from w3af.core.controllers.exceptions import ScanMustStopException
 from w3af.core.data.kb.knowledge_base import kb
 
 
-@pytest.mark.moth
 class TestStrategy(unittest.TestCase):
     
     TARGET_URL = get_moth_http('/audit/sql_injection/'
@@ -53,6 +52,7 @@ class TestStrategy(unittest.TestCase):
     def setUp(self):
         kb.cleanup()
 
+    @pytest.mark.moth
     def test_strategy_run(self):
         core = w3afCore()
         
@@ -120,6 +120,7 @@ class TestStrategy(unittest.TestCase):
 
         self.assertEqual(thread_names_set, self.EXPECTED_THREAD_NAMES)
 
+    @pytest.mark.moth
     def test_strategy_exception(self):
         self._await_correct_thread_names()
 

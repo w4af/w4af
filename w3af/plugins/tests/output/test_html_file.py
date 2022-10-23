@@ -19,6 +19,7 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
+import pytest
 import re
 from io import StringIO
 
@@ -34,6 +35,7 @@ from w3af.core.data.url.HTTPResponse import HTTPResponse
 from w3af.core.data.url.HTTPRequest import HTTPRequest
 
 
+@pytest.mark.moth
 class TestHTMLOutput(PluginTest):
 
     target_url = get_moth_http('/audit/xss/')

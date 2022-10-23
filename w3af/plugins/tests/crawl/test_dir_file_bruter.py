@@ -19,12 +19,14 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
+import pytest
 
 from w3af import ROOT_PATH
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@pytest.mark.moth
 class TestDirFileBruter(PluginTest):
 
     TEST_PATH = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl',

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import time
 import socket
 import urllib.request, urllib.error, urllib.parse
@@ -100,6 +101,7 @@ class BrowserThread(Process):
             self.responses.append(response.read())
 
 
+@pytest.mark.moth
 class TestSpiderman(PluginTest):
 
     def generic_spiderman_run(self,
@@ -145,6 +147,7 @@ class TestSpiderman(PluginTest):
             self.assertIn(url_resolver(e_url), kb_urls)
 
 
+@pytest.mark.moth
 class TestHTTPSpiderman(TestSpiderman):
 
     def test_spiderman_http(self):
@@ -161,6 +164,7 @@ class TestHTTPSpiderman(TestSpiderman):
         self.generic_spiderman_run(run_config, get_moth_http, port)
 
 
+@pytest.mark.moth
 class TestHTTPSSpiderman(TestSpiderman):
 
     def test_spiderman_https(self):

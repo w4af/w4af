@@ -35,6 +35,7 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.parsers.utils.form_id_matcher_list import FormIDMatcherList
 
 
+@pytest.mark.moth
 class TestWebSpider(PluginTest):
 
     follow_links_url = get_moth_http('/crawl/web_spider/test_case_01/')
