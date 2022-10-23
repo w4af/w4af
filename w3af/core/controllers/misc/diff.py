@@ -194,6 +194,8 @@ def split_by_sep(sequence):
     #
     # [0] https://github.com/andresriancho/w3af/blob/2ded693c959c91dc3e4daca276460d6c64ada479/w3af/core/controllers/misc/diff.py#L173
     #
+    if isinstance(sequence, bytes):
+        sequence = smart_unicode(sequence)
     try:
         translated_seq = str.translate(sequence, TRANSLATION_TABLE)
     except UnicodeDecodeError:

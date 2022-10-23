@@ -23,6 +23,7 @@ from html.parser import HTMLParser
 from html import unescape
 
 from w3af.core.data.context.constants import CONTEXT_DETECTOR
+from w3af.core.data.misc.encoding import smart_unicode
 from .html import (HtmlAttrSingleQuote, HtmlAttrDoubleQuote,
                    HtmlAttrBackticks, HtmlAttr, HtmlTag, HtmlText,
                    HtmlComment, HtmlTagClose, HtmlAttrNoQuote,
@@ -52,8 +53,8 @@ def get_context_iter(data, payload):
     #
     # Remember that some payloads we use do contain letters which might be
     # affected by those filters; we don't just send the special characters.
-    payload = payload.lower()
-    data = data.lower()
+    payload = smart_unicode(payload).lower()
+    data = smart_unicode(data).lower()
 
     if payload not in data:
         return
