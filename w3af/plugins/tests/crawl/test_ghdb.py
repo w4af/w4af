@@ -50,14 +50,14 @@ class TestGHDB(PluginTest):
             self._scan(self.private_url, cfg['plugins'])
 
             msg = 'There is no point in searching bing for "site:moth".' \
-                  ' Bing doesn\'t index private pages.'
+                  ' Bing does not index private pages.'
 
             self.assertIn(call.information(msg), om_mock.mock_calls)
 
         vulns = self.kb.get('ghdb', 'vuln')
         self.assertEqual(len(vulns), 0, vulns)
 
-    @pytest.mark.ci_fails
+    @pytest.mark.skip("GHDB database is out of date GHDB deprecated")
     def test_ghdb_match(self):
 
         call_count = 0
@@ -107,6 +107,7 @@ class TestGHDB(PluginTest):
         for ghdb_inst in ghdb_set:
             self.assertIsInstance(ghdb_inst, GoogleHack)
 
+    @pytest.mark.skip("GHDB database is out of date GHDB deprecated")
     def test_too_old_xml(self):
         ghdb_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'ghdb')
 

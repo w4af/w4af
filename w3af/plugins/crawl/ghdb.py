@@ -213,5 +213,8 @@ class GoogleHack(object):
         self.search = search
         self.desc = desc
 
+    def __hash__(self):
+        return hash(self.search)
+
     def __eq__(self, other):
         return self.search == other.search

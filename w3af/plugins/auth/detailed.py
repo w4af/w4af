@@ -27,6 +27,7 @@ from w3af.core.controllers.plugins.auth_session_plugin import AuthSessionPlugin
 from w3af.core.controllers.exceptions import BaseFrameworkException
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_list import OptionList
+from w3af.core.data.misc.encoding import smart_str
 
 
 class detailed(AuthSessionPlugin):
@@ -131,7 +132,7 @@ class detailed(AuthSessionPlugin):
         result = result.replace('%p', trans(self.password_field))
         result = result.replace('%P', trans(self.password))
 
-        return result
+        return smart_str(result)
 
     def _get_main_authentication_url(self):
         return self.auth_url

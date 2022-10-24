@@ -48,6 +48,7 @@ class find_backdoors(CrawlPlugin):
 
         # Internal variables
         self._analyzed_dirs = ScalableBloomFilter()
+        self._already_reported = set()
         self._signature_re = None
 
     def setup(self):
@@ -140,11 +141,13 @@ class find_backdoors(CrawlPlugin):
                  response.id, self.get_name())
         v.set_url(response.get_url())
 
-        kb.kb.append(self, 'backdoors', v)
-        om.out.vulnerability(v.get_desc(), severity=v.get_severity())
+        if not (signature, response.get_url()) in self._already_reported:
+            self._already_reported.add((signature, response.get_url()))
+            kb.kb.append(self, 'backdoors', v)
+            om.out.vulnerability(v.get_desc(), severity=v.get_severity())
 
-        fr = FuzzableRequest.from_http_response(response)
-        self.output_queue.put(fr)
+            fr = FuzzableRequest.from_http_response(response)
+            self.output_queue.put(fr)
 
     def _match_signature(self, response):
         """

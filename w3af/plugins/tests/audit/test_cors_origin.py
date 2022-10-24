@@ -27,15 +27,17 @@ from w3af.core.data.kb.info_set import InfoSet
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.url.HTTPResponse import HTTPResponse
 from w3af.core.data.dc.headers import Headers
+from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@pytest.mark.moth
 class TestCORSOriginScan(PluginTest):
 
     # Test scripts host/port and web context root
-    target_url = 'http://moth/w3af/audit/cors/'
+    target_url = get_moth_http('/audit/cors/')
 
     # Originator for tests cases
-    originator = 'http://moth/'
+    originator = get_moth_http()
 
     _run_configs = {
         'cfg': {
