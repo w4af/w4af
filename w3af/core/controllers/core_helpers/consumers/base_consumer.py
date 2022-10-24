@@ -455,23 +455,22 @@ class BaseConsumer(Process):
 
         start_time = time.time()
 
-        if not self.is_alive():
+        self.send_poison_pill()
+
+        if self.is_alive():
+            msg = 'Calling join() on %s.in_queue (qsize:%s)'
+            args = (self._thread_name, self.in_queue.qsize())
+            om.out.debug(msg % args)
+
+            self.in_queue.join()
+
+            msg = 'Successfully joined the %s consumer in_queue'
+            om.out.debug(msg % self._thread_name)
+        else:
             # This return has a long history, follow it here:
             # https://github.com/andresriancho/w3af/issues/1172
             msg = 'The %s consumer thread was not alive'
             om.out.debug(msg % self._thread_name)
-            return
-
-        self.send_poison_pill()
-
-        msg = 'Calling join() on %s.in_queue (qsize:%s)'
-        args = (self._thread_name, self.in_queue.qsize())
-        om.out.debug(msg % args)
-
-        self.in_queue.join()
-
-        msg = 'Successfully joined the %s consumer in_queue'
-        om.out.debug(msg % self._thread_name)
 
         self._shutdown_threadpool()
 

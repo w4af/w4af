@@ -57,3 +57,5 @@ class TestThreadStateObserver(unittest.TestCase):
                       ' The job is: .*?(.*?, kwargs=.*?)')
         self.assertRegex(messages[0], message_re)
         self.assertEqual(messages[1], '0% of WorkerThread workers are idle.')
+        tso.end()
+        worker_pool.terminate_join()

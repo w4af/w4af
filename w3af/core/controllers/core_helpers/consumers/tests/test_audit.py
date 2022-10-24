@@ -86,3 +86,5 @@ class TestAuditConsumer(unittest.TestCase):
                 self.assertIn(call.debug(msg1), om_mock.mock_calls)
             else:
                 self.assertIn(call.debug(msg2), om_mock.mock_calls)
+
+        w3af_core.quit()
