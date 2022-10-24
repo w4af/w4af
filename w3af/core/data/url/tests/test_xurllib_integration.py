@@ -92,6 +92,7 @@ class TestXUrllibIntegration(unittest.TestCase):
         self.assertIn('deflate', content_encoding)
         self.assertIn('View HTTP response headers.', res.get_body())
 
+    @pytest.mark.moth
     def test_get_cookies(self):
         self.assertEqual(len([c for c in self.uri_opener.get_cookies()]), 0)
 
