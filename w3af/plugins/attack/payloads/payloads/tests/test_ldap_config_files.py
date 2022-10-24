@@ -24,6 +24,7 @@ from w3af.plugins.attack.payloads.payloads.tests.apache_payload_test_helper impo
 from w3af.plugins.attack.payloads.payload_handler import exec_payload
 
 
+@pytest.mark.w3af_moth
 class TestLDAPConfigFiles(ApachePayloadTestHelper):
 
     EXPECTED_RESULT = {}
