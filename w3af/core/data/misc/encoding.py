@@ -121,6 +121,8 @@ def smart_unicode(s,
 
     return s
 
+def smart_unicode_escape(s):
+    return smart_unicode(s).encode('utf-8').decode('unicode-escape')
 
 def smart_str(s,
               encoding=DEFAULT_ENCODING,

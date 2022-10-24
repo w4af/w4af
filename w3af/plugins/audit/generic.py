@@ -35,6 +35,7 @@ from w3af.core.data.db.disk_list import DiskList
 from w3af.core.controllers.threads.threadpool import one_to_many
 from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
 from w3af.core.controllers.misc.fuzzy_string_cmp import relative_distance
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class generic(AuditPlugin):
@@ -251,7 +252,7 @@ class generic(AuditPlugin):
         """
         for url, variable, mutant, id_list in self._potential_vulns:
             for info in kb.kb.get_all_findings_iter():
-                if info.get_token_name() == variable and info.get_url() == url:
+                if smart_unicode(info.get_token_name()) == smart_unicode(variable) and info.get_url() == url:
                     break
             else:
                 desc = ('An unhandled error, which could potentially translate'

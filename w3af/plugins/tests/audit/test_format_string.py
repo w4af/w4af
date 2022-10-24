@@ -20,12 +20,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 import pytest
+
+from w3af.core.controllers.ci.php_moth import get_php_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.phpmoth
 class TestFormatString(PluginTest):
 
-    target_url = 'http://moth/w3af/audit/format_string/format_string.php'
+    target_url = get_php_moth_http('/audit/format_string/format_string.php')
 
     _run_configs = {
         'cfg': {

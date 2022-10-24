@@ -660,16 +660,18 @@ class MockResponse(object):
         if self.method != http_request.command:
             return False
 
-        if not self.url_matches(uri):
+        if not self.url_matches(http_request):
             return False
 
         return True
 
-    def url_matches(self, request_uri):
+    def url_matches(self, http_request):
         """
         :param request_uri: The http request URI sent by the plugin
         :return: True if the request_uri matches this mock_response
         """
+        request_uri = http_request.protocol + "://" + http_request.host + http_request.path
+
         if isinstance(self.url, str):
             request_uri = URL(request_uri)
             response_uri = URL(self.url)

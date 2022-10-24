@@ -20,14 +20,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 import pytest
+
+from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.moth
 class TestDav(PluginTest):
 
-    target_vuln_all = 'http://moth/w3af/audit/dav/write-all/'
-    target_no_privs = 'http://moth/w3af/audit/dav/no-privileges/'
-    target_safe_all = 'http://moth/w3af/audit/eval/'
+    target_vuln_all = get_moth_http('/audit/dav/write-all/')
+    target_no_privs = get_moth_http('/audit/dav/no-privileges/')
+    target_safe_all = get_moth_http('/audit/eval/')
 
     _run_configs = {
         'cfg': {

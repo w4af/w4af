@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import re
 import urllib.request, urllib.parse, urllib.error
 
@@ -54,8 +55,8 @@ class TestGenericOnly(PluginTest):
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
         self.assertEqual('Unhandled error in web application', vuln.get_name())
-        self.assertEqual('http://mock/?id=1/0', str(vuln.get_uri()))
-        self.assertEqual(vuln.get_mutant().get_token_name(), 'id')
+        self.assertEqual('http://mock/?id=1%2F0', str(vuln.get_uri()))
+        self.assertEqual(vuln.get_mutant().get_token_name(), b'id')
 
 
 class TestGenericExtensive(PluginTest):
@@ -89,7 +90,7 @@ class TestGenericExtensive(PluginTest):
         vuln = vulns[0]
         self.assertEqual('Unhandled error in web application', vuln.get_name())
         self.assertEqual('http://mock/?id=Infinity', str(vuln.get_uri()))
-        self.assertEqual(vuln.get_mutant().get_token_name(), 'id')
+        self.assertEqual(vuln.get_mutant().get_token_name(), b'id')
 
 
 class TestGenericSQLInjection(PluginTest):

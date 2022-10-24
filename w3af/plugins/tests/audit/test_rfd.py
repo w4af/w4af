@@ -40,6 +40,10 @@ class TestJSONAllFiltered(PluginTest):
     target_url = 'http://json-all-filtered/?q=rfd'
 
     MOCK_RESPONSES = [
+              MockResponse(url='http://json-all-filtered/?q=rfd',
+                           body=b'empty body',
+                           content_type='application/json',
+                           method='GET', status=200),
               MockResponse(url='http://json-all-filtered/%3B/w3af.cmd%3B/'
                                'w3af.cmd?q=rfd',
                            body='message "w3afExecToken"',
@@ -69,18 +73,22 @@ class TestJSON(PluginTest):
     target_url = 'http://json/?q=rfd'
 
     MOCK_RESPONSES = [
+              MockResponse(url='http://json/?q=rfd',
+                           body=b'empty body',
+                           content_type='application/json',
+                           method='GET', status=200),
               MockResponse(url='http://json/%3B/w3af.cmd%3B/w3af.cmd?q=rfd',
-                           body='message "w3afExecToken"',
+                           body=b'message "w3afExecToken"',
                            content_type='text/json',
                            method='GET', status=200),
               MockResponse(url='http://json/%3B/w3af.cmd%3B/w3af.cmd?'
                                'q=w3afExecToken',
-                           body='    {"a":"w3afExecToken","b":"b"}',
+                           body=b'    {"a":"w3afExecToken","b":"b"}',
                            content_type='text/json',
                            method='GET', status=200),
               MockResponse(url='http://json/%3B/w3af.cmd%3B/w3af.cmd?'
                                'q=w3afExecToken%22%26%7C%0A',
-                           body='    {"a":"w3afExecToken"&|\n","b":"b"}',
+                           body=b'    {"a":"w3afExecToken"&|\n","b":"b"}',
                            content_type='application/javascript',
                            method='GET', status=200),
               ]
@@ -97,6 +105,10 @@ class TestJSONDobleQuotesFiltered(PluginTest):
     target_url = 'http://json-filtered/?q=rfd'
 
     MOCK_RESPONSES = [
+              MockResponse(url='http://json-filtered/?q=rfd',
+                           body=b'empty body',
+                           content_type='application/json',
+                           method='GET', status=200),
               MockResponse(url='http://json-filtered/%3B/w3af.cmd%3B/w3af.cmd?q=rfd',
                            body='message "w3afExecToken"',
                            content_type='text/json',
@@ -125,6 +137,10 @@ class TestJSONP(PluginTest):
     target_url = 'http://jsonp/?callback=rfd'
 
     MOCK_RESPONSES = [
+          MockResponse(url='http://jsonp/?callback=rfd',
+                       body=b'empty body',
+                       content_type='application/json',
+                       method='GET', status=200),
           MockResponse(url='http://jsonp/%3B/w3af.cmd%3B/w3af.cmd?callback'
                            '=rfd',
                        body='    rfd({ "Result": '

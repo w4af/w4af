@@ -26,6 +26,7 @@ from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
 from w3af.core.data.fuzzer.fuzzer import create_mutants
 from w3af.core.data.kb.vuln import Vuln
 from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
+from w3af.core.data.misc.encoding import smart_unicode_escape
 
 
 PATH_PARAM = '%3B/w3af.cmd%3B/w3af.cmd'
@@ -106,7 +107,7 @@ class rfd(AuditPlugin):
 
         for mutant in mutants:
             response = self._uri_opener.send_mutant(mutant)
-            body = response.body.decode('unicode-escape')
+            body = smart_unicode_escape(response.body)
             if not response.get_code() == 200:
                 # no need to seek reflection if it is not OK
                 continue
