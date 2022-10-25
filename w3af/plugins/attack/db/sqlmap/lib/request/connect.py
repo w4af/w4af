@@ -154,7 +154,7 @@ class Connect(object):
             if (len(inspect.stack()) > sys.getrecursionlimit() // 2):   # Note: https://github.com/sqlmapproject/sqlmap/issues/4525
                 warnMsg = "unable to connect to the target URL"
                 raise SqlmapConnectionException(warnMsg)
-        except TypeError:
+        except (TypeError, UnicodeError):
             pass
 
         try:
@@ -169,7 +169,7 @@ class Connect(object):
 
         if conf.proxyList and threadData.retriesCount >= conf.retries and not kb.locks.handlers.locked():
             warnMsg = "changing proxy"
-            logger.warn(warnMsg)
+            logger.warning(warnMsg)
 
             conf.proxy = None
             threadData.retriesCount = 0
@@ -312,7 +312,7 @@ class Connect(object):
                     conf.proxy = None
 
                     warnMsg = "changing proxy"
-                    logger.warn(warnMsg)
+                    logger.warning(warnMsg)
 
                     setHTTPHandlers()
 
@@ -501,6 +501,9 @@ class Connect(object):
                 headers[HTTP_HEADER.HOST] = "localhost"
 
             for key, value in list(headers.items()):
+                if key.upper() == HTTP_HEADER.ACCEPT_ENCODING.upper():
+                    value = re.sub(r"(?i)(,)br(,)?", lambda match: ',' if match.group(1) and match.group(2) else "", value) or "identity"
+
                 del headers[key]
                 if isinstance(value, six.string_types):
                     for char in (r"\r", r"\n"):
@@ -584,7 +587,8 @@ class Connect(object):
 
                 if not getRequestHeader(req, HTTP_HEADER.COOKIE) and conf.cj:
                     conf.cj._policy._now = conf.cj._now = int(time.time())
-                    cookies = conf.cj._cookies_for_request(req)
+                    with conf.cj._cookies_lock:
+                        cookies = conf.cj._cookies_for_request(req)
                     requestHeaders += "\r\n%s" % ("Cookie: %s" % ";".join("%s=%s" % (getUnicode(cookie.name), getUnicode(cookie.value)) for cookie in cookies))
 
                 if post is not None:
@@ -703,7 +707,7 @@ class Connect(object):
                     conn.close()
                 except Exception as ex:
                     warnMsg = "problem occurred during connection closing ('%s')" % getSafeExString(ex)
-                    logger.warn(warnMsg)
+                    logger.warning(warnMsg)
 
         except SqlmapConnectionException as ex:
             if conf.proxyList and not kb.threadException:
@@ -730,7 +734,7 @@ class Connect(object):
             except socket.timeout:
                 warnMsg = "connection timed out while trying "
                 warnMsg += "to get error page information (%d)" % ex.code
-                logger.warn(warnMsg)
+                logger.warning(warnMsg)
                 return None, None, None
             except KeyboardInterrupt:
                 raise
@@ -805,7 +809,7 @@ class Connect(object):
                     debugMsg = "got HTTP error code: %d ('%s')" % (code, status)
                     logger.debug(debugMsg)
 
-        except (_urllib.error.URLError, socket.error, socket.timeout, _http_client.HTTPException, struct.error, binascii.Error, ProxyError, SqlmapCompressionException, WebSocketException, TypeError, ValueError, OverflowError, AttributeError):
+        except (_urllib.error.URLError, socket.error, socket.timeout, _http_client.HTTPException, struct.error, binascii.Error, ProxyError, SqlmapCompressionException, WebSocketException, TypeError, ValueError, OverflowError, AttributeError, OSError):
             tbMsg = traceback.format_exc()
 
             if conf.debug:
@@ -821,7 +825,7 @@ class Connect(object):
             elif "no host given" in tbMsg:
                 warnMsg = "invalid URL address used (%s)" % repr(url)
                 raise SqlmapSyntaxException(warnMsg)
-            elif "forcibly closed" in tbMsg or "Connection is already closed" in tbMsg:
+            elif any(_ in tbMsg for _ in ("forcibly closed", "Connection is already closed", "ConnectionAbortedError")):
                 warnMsg = "connection was forcibly closed by the target URL"
             elif "timed out" in tbMsg:
                 if kb.testMode and kb.testType not in (None, PAYLOAD.TECHNIQUE.TIME, PAYLOAD.TECHNIQUE.STACKED):
@@ -922,11 +926,13 @@ class Connect(object):
 
             socket.setdefaulttimeout(conf.timeout)
 
-        if conf.retryOn and re.search(conf.retryOn, page, re.I):
-            if threadData.retriesCount < conf.retries:
-                warnMsg = "forced retry of the request because of undesired page content"
-                logger.warn(warnMsg)
-                return Connect._retryProxy(**kwargs)
+        # Dirty patch for Python3.11.0a7 (e.g. https://github.com/sqlmapproject/sqlmap/issues/5091)
+        if not sys.version.startswith("3.11."):
+            if conf.retryOn and re.search(conf.retryOn, page, re.I):
+                if threadData.retriesCount < conf.retries:
+                    warnMsg = "forced retry of the request because of undesired page content"
+                    logger.warning(warnMsg)
+                    return Connect._retryProxy(**kwargs)
 
         processResponse(page, responseHeaders, code, status)
 
@@ -1006,9 +1012,10 @@ class Connect(object):
 
             if (kb.postHint or conf.skipUrlEncode) and postUrlEncode:
                 postUrlEncode = False
-                conf.httpHeaders = [_ for _ in conf.httpHeaders if _[1] != contentType]
-                contentType = POST_HINT_CONTENT_TYPES.get(kb.postHint, PLAIN_TEXT_CONTENT_TYPE)
-                conf.httpHeaders.append((HTTP_HEADER.CONTENT_TYPE, contentType))
+                if not (conf.skipUrlEncode and contentType):    # NOTE: https://github.com/sqlmapproject/sqlmap/issues/5092
+                    conf.httpHeaders = [_ for _ in conf.httpHeaders if _[1] != contentType]
+                    contentType = POST_HINT_CONTENT_TYPES.get(kb.postHint, PLAIN_TEXT_CONTENT_TYPE)
+                    conf.httpHeaders.append((HTTP_HEADER.CONTENT_TYPE, contentType))
 
         if payload:
             delimiter = conf.paramDel or (DEFAULT_GET_POST_DELIMITER if place != PLACE.COOKIE else DEFAULT_COOKIE_DELIMITER)
@@ -1172,9 +1179,9 @@ class Connect(object):
                 if attempt > 0:
                     warnMsg = "unable to find anti-CSRF token '%s' at '%s'" % (conf.csrfToken._original, conf.csrfUrl or conf.url)
                     warnMsg += ". sqlmap is going to retry the request"
-                    logger.warn(warnMsg)
+                    logger.warning(warnMsg)
 
-                page, headers, code = Connect.getPage(url=conf.csrfUrl or conf.url, data=conf.data if conf.csrfUrl == conf.url else None, method=conf.csrfMethod or (conf.method if conf.csrfUrl == conf.url else None), cookie=conf.parameters.get(PLACE.COOKIE), direct=True, silent=True, ua=conf.parameters.get(PLACE.USER_AGENT), referer=conf.parameters.get(PLACE.REFERER), host=conf.parameters.get(PLACE.HOST))
+                page, headers, code = Connect.getPage(url=conf.csrfUrl or conf.url, data=conf.csrfData or (conf.data if conf.csrfUrl == conf.url else None), method=conf.csrfMethod or (conf.method if conf.csrfUrl == conf.url else None), cookie=conf.parameters.get(PLACE.COOKIE), direct=True, silent=True, ua=conf.parameters.get(PLACE.USER_AGENT), referer=conf.parameters.get(PLACE.REFERER), host=conf.parameters.get(PLACE.HOST))
                 page = urldecode(page)  # for anti-CSRF tokens with special characters in their name (e.g. 'foo:bar=...')
 
                 match = re.search(r"(?i)<input[^>]+\bname=[\"']?(?P<name>%s)\b[^>]*\bvalue=[\"']?(?P<value>[^>'\"]*)" % conf.csrfToken, page or "", re.I)
@@ -1539,7 +1546,10 @@ class Connect(object):
                         if payload is None:
                             value = value.replace(kb.customInjectionMark, "")
                         else:
-                            value = re.sub(r"\w*%s" % re.escape(kb.customInjectionMark), payload, value)
+                            try:
+                                value = re.sub(r"\w*%s" % re.escape(kb.customInjectionMark), payload, value)
+                            except re.error:
+                                value = re.sub(r"\w*%s" % re.escape(kb.customInjectionMark), re.escape(payload), value)
                     return value
                 page, headers, code = Connect.getPage(url=_(kb.secondReq[0]), post=_(kb.secondReq[2]), method=kb.secondReq[1], cookie=kb.secondReq[3], silent=silent, auxHeaders=dict(auxHeaders, **dict(kb.secondReq[4])), response=response, raise404=False, ignoreTimeout=timeBasedCompare, refreshing=True)
 
