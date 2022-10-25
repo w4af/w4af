@@ -455,9 +455,9 @@ class BaseConsumer(Process):
 
         start_time = time.time()
 
-        self.send_poison_pill()
-
         if self.is_alive():
+            self.send_poison_pill()
+
             msg = 'Calling join() on %s.in_queue (qsize:%s)'
             args = (self._thread_name, self.in_queue.qsize())
             om.out.debug(msg % args)

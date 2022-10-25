@@ -99,7 +99,7 @@ class TestFileUpload(PluginTest):
 
 class TestParseOutputFromUpload(PluginTest):
 
-    target_url = 'http://w3af.org/'
+    target_url = 'http://example.org/'
 
     FORM = """\
           <form enctype="multipart/form-data" action="upload" method="POST">
@@ -153,7 +153,7 @@ class TestParseOutputFromUpload(PluginTest):
     def test_parse_response(self):
         cfg = self._run_configs['cfg']
 
-        with patch('w3af.core.data.fuzzer.utils.rand_alnum') as rand_alnum_mock:
+        with patch('w3af.plugins.audit.file_upload.rand_alnum') as rand_alnum_mock:
             rand_alnum_mock.return_value = 'B' * 239
 
             self._scan(cfg['target'], cfg['plugins'])
@@ -168,7 +168,7 @@ class TestParseOutputFromUpload(PluginTest):
 
 class TestRegexOutputFromUpload(TestParseOutputFromUpload):
 
-    target_url = 'http://w3af.org/'
+    target_url = 'http://example.org/'
 
     FORM = """\
           <form enctype="multipart/form-data" action="upload" method="POST">
@@ -206,7 +206,7 @@ class TestRegexOutputFromUpload(TestParseOutputFromUpload):
         with patch(self.FILENAME_RAND_ALPHA) as rand_alpha_mock:
             rand_alpha_mock.return_value = 'mockname'
 
-            with patch(self.FILE_CONTENT_RAND) as rand_alnum_mock:
+            with patch('w3af.plugins.audit.file_upload.rand_alnum') as rand_alnum_mock:
                 rand_alnum_mock.return_value = 'B' * 239
 
                 cfg = self._run_configs['cfg']
