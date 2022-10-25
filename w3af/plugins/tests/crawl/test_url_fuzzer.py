@@ -21,11 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
+from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@pytest.mark.moth
 class TestURLFuzzer(PluginTest):
 
-    base_url = 'http://moth/w3af/crawl/url_fuzzer'
+    base_url = get_moth_http('/crawl/url_fuzzer')
 
     _run_configs = {
         'standalone': {
