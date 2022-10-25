@@ -117,7 +117,7 @@ class Fingerprint(GenericFingerprint):
 
             if not result:
                 warnMsg = "the back-end DBMS is not %s" % DBMS.PGSQL
-                logger.warn(warnMsg)
+                logger.warning(warnMsg)
 
                 return False
 
@@ -131,7 +131,9 @@ class Fingerprint(GenericFingerprint):
             infoMsg = "actively fingerprinting %s" % DBMS.PGSQL
             logger.info(infoMsg)
 
-            if inject.checkBooleanExpression("GEN_RANDOM_UUID() IS NOT NULL"):
+            if inject.checkBooleanExpression("BIT_COUNT(NULL) IS NULL"):
+                Backend.setVersion(">= 14.0")
+            elif inject.checkBooleanExpression("GEN_RANDOM_UUID() IS NOT NULL"):
                 Backend.setVersion(">= 13.0")
             elif inject.checkBooleanExpression("SINH(0)=0"):
                 Backend.setVersion(">= 12.0")
@@ -187,7 +189,7 @@ class Fingerprint(GenericFingerprint):
             return True
         else:
             warnMsg = "the back-end DBMS is not %s" % DBMS.PGSQL
-            logger.warn(warnMsg)
+            logger.warning(warnMsg)
 
             return False
 

@@ -276,6 +276,9 @@ def cmdLineParser(argv=None):
         request.add_argument("--csrf-method", dest="csrfMethod",
             help="HTTP method to use during anti-CSRF token page visit")
 
+        request.add_argument("--csrf-data", dest="csrfData",
+            help="POST data to send during anti-CSRF token page visit")
+
         request.add_argument("--csrf-retries", dest="csrfRetries", type=int,
             help="Retries for anti-CSRF token retrieval (default %d)" % defaults.csrfRetries)
 
@@ -986,7 +989,7 @@ def cmdLineParser(argv=None):
                 argv[i] = argv[i].replace("--auth-creds", "--auth-cred", 1)
             elif argv[i].startswith("--drop-cookie"):
                 argv[i] = argv[i].replace("--drop-cookie", "--drop-set-cookie", 1)
-            elif any(argv[i].startswith(_) for _ in ("--tamper", "--ignore-code", "--skip")):
+            elif re.search(r"\A(--(tamper|ignore-code|skip))(?!-)", argv[i]):
                 key = re.search(r"\-?\-(\w+)\b", argv[i]).group(1)
                 index = auxIndexes.get(key, None)
                 if index is None:

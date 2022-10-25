@@ -134,7 +134,7 @@ class Agent(object):
                 origValue = extractRegexResult(r"%s\s*:\s*(?P<result>\d+)\Z" % quote, origValue) or extractRegexResult(r"(?P<result>[^%s]*)\Z" % quote, origValue)
             else:
                 _ = extractRegexResult(r"(?s)(?P<result>[^\s<>{}();'\"&]+\Z)", origValue) or ""
-                origValue = _.split('=', 1)[1] if '=' in _ else ""
+                origValue = _.split('=', 1)[1] if '=' in _ else _
         elif place == PLACE.CUSTOM_HEADER:
             paramString = origValue
             origValue = origValue[origValue.find(',') + 1:]
@@ -196,9 +196,9 @@ class Agent(object):
         if place in (PLACE.URI, PLACE.CUSTOM_POST, PLACE.CUSTOM_HEADER):
             _ = "%s%s" % (origValue, kb.customInjectionMark)
 
-            if kb.postHint == POST_HINT.JSON and not isNumber(newValue) and '"%s"' % _ not in paramString:
+            if kb.postHint == POST_HINT.JSON and isNumber(origValue) and not isNumber(newValue) and '"%s"' % _ not in paramString:
                 newValue = '"%s"' % self.addPayloadDelimiters(newValue)
-            elif kb.postHint == POST_HINT.JSON_LIKE and not isNumber(newValue) and re.search(r"['\"]%s['\"]" % re.escape(_), paramString) is None:
+            elif kb.postHint == POST_HINT.JSON_LIKE and isNumber(origValue) and not isNumber(newValue) and re.search(r"['\"]%s['\"]" % re.escape(_), paramString) is None:
                 newValue = "'%s'" % self.addPayloadDelimiters(newValue)
             else:
                 newValue = self.addPayloadDelimiters(newValue)
@@ -581,7 +581,7 @@ class Agent(object):
         """
 
         prefixRegex = r"(?:\s+(?:FIRST|SKIP|LIMIT(?: \d+)?)\s+\d+)*"
-        fieldsSelectTop = re.search(r"\ASELECT\s+TOP(\s+[\d]|\s*\([^)]+\))\s+(.+?)\s+FROM", query, re.I)
+        fieldsSelectTop = re.search(r"\ASELECT\s+TOP(\s+\d+|\s*\([^)]+\))\s+(.+?)\s+FROM", query, re.I)
         fieldsSelectRownum = re.search(r"\ASELECT\s+([^()]+?),\s*ROWNUM AS LIMIT FROM", query, re.I)
         fieldsSelectDistinct = re.search(r"\ASELECT%s\s+DISTINCT\((.+?)\)\s+FROM" % prefixRegex, query, re.I)
         fieldsSelectCase = re.search(r"\ASELECT%s\s+(\(CASE WHEN\s+.+\s+END\))" % prefixRegex, query, re.I)
@@ -729,7 +729,7 @@ class Agent(object):
                 concatenatedQuery = concatenatedQuery.replace("SELECT ", "'%s'+" % kb.chars.start, 1)
                 concatenatedQuery += "+'%s'" % kb.chars.stop
             elif fieldsSelectTop:
-                topNum = re.search(r"\ASELECT\s+TOP(\s+[\d]|\s*\([^)]+\))\s+", concatenatedQuery, re.I).group(1)
+                topNum = re.search(r"\ASELECT\s+TOP(\s+\d+|\s*\([^)]+\))\s+", concatenatedQuery, re.I).group(1)
                 concatenatedQuery = concatenatedQuery.replace("SELECT TOP%s " % topNum, "TOP%s '%s'+" % (topNum, kb.chars.start), 1)
                 concatenatedQuery = concatenatedQuery.replace(" FROM ", "+'%s' FROM " % kb.chars.stop, 1)
             elif fieldsSelectCase:
