@@ -73,6 +73,7 @@ class PluginTest(unittest.TestCase):
     kb = kb.kb
     target_url = None
     base_path = None
+    allow_net_connect = False
 
     def setUp(self):
         self.kb.cleanup()
@@ -84,7 +85,7 @@ class PluginTest(unittest.TestCase):
 
         if self.MOCK_RESPONSES:
             httpretty.reset()
-            httpretty.enable()
+            httpretty.enable(self.allow_net_connect)
             
             try:
                 url = URL(self.target_url)

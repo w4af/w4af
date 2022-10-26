@@ -32,11 +32,13 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.misc.file_utils import days_since_file_update
 from w3af.core.data.url.HTTPResponse import HTTPResponse
+from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@pytest.mark.moth
 class TestPykto(PluginTest):
 
-    base_url = 'http://moth/w3af/'
+    base_url = get_moth_http()
     DB_PATH = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl',
                            'pykto', 'scan_database.db')
     

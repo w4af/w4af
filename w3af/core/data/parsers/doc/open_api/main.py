@@ -111,7 +111,7 @@ class OpenAPI(BaseParser):
         :return: True if it seems that this page is an open api doc
         """
         for keyword in OpenAPI.KEYWORDS:
-            if keyword in http_resp.body:
+            if keyword.encode('utf-8') in http_resp.body:
                 return True
 
         return False
@@ -144,7 +144,7 @@ class OpenAPI(BaseParser):
         :param http_resp: The HTTP response we want to parse
         :return: True if it seems that this response body holds JSON or YAML
         """
-        return ':' in '\n'.join(http_resp.body.split('\n')[:20])
+        return b':' in b'\n'.join(http_resp.body.split(b'\n')[:20])
 
     @staticmethod
     def can_parse(http_resp):

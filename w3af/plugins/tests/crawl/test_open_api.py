@@ -37,6 +37,7 @@ API_KEY = '0x12345'
 class TestOpenAPIFindAllEndpointsWithAuth(PluginTest):
 
     target_url = 'http://w3af.org/'
+    allow_net_connect = True
 
     _run_configs = {
         'cfg': {
@@ -46,14 +47,21 @@ class TestOpenAPIFindAllEndpointsWithAuth(PluginTest):
                                                ('query_string_auth',
                                                 'api_key=%s' % API_KEY,
                                                 PluginConfig.QUERY_STRING),
-
-                                               ),)}
+                                               ),) }
         }
     }
 
-    MOCK_RESPONSES = [MockResponse('http://w3af.org/swagger.json?api_key=%s' % API_KEY,
+    MOCK_RESPONSES = [MockResponse('http://w3af.org/',
+                                   body='',
+                                   method='GET',
+                                   status=200),
+                      MockResponse('http://w3af.org/swagger.json?api_key=%s' % API_KEY,
                                    IntParamQueryString().get_specification(),
-                                   content_type='application/json')]
+                                   content_type='application/json'),
+                      MockResponse(re.compile(r'http:\/\/w3af.org\/.+'),
+                                   body='Not Found (Mock)',
+                                   method='GET',
+                                   status=404)]
 
     def test_find_all_endpoints_with_auth(self):
         cfg = self._run_configs['cfg']

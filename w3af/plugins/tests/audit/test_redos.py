@@ -34,9 +34,9 @@ class ReDosMockResponse(MockResponse):
         response_headers.update({'status': self.status})
         response_headers.update(self.headers)
 
-        uri = URL(uri)
+        uri = URL(http_request.url)
         qs = uri.get_querystring()
-        redos_param = qs.get('redos')[0]
+        redos_param = qs.get(b'redos')[0]
 
         delay = len(redos_param) / 13.0
         time.sleep(delay)

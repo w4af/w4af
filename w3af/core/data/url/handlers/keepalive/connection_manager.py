@@ -123,7 +123,7 @@ class ConnectionManager(object):
         om.out.debug(stats)
 
         in_use = list(self.get_all_used_for_host_port(host_port))
-        in_use.sort(key=lambda c: c.current_request_start)
+        in_use.sort(key=lambda c: c.current_request_start or 0)
         top_offenders = in_use[:5]
 
         connection_info = []

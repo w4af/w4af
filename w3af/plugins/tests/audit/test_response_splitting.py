@@ -25,6 +25,7 @@ import pytest
 from email.header import decode_header
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
+from w3af.core.data.misc.encoding import smart_str, smart_unicode
 
 
 class ResponseSplittingMockResponse(MockResponse):
@@ -142,24 +143,26 @@ class TestResponseSplittingParameterModifiesResponse(PluginTest):
 
 class ResponseSplittingHeaderMockResponse(MockResponse):
     def get_response(self, http_request, uri, response_headers):
-        referer = http_request.headers.get('Referer') or ''
-        headers_to_inject = decode_header(referer)[0][0]
+        referer = smart_unicode(http_request.headers.get('Referer')) or ''
+        headers_to_inject = smart_str(decode_header(referer)[0][0])
 
-        header_name_1 = 'somevalue'
+        header_name_1 = b'somevalue'
 
         try:
-            headers_to_inject = headers_to_inject.split('\n')
+            headers_to_inject = headers_to_inject.split(b'\n')
             header_value_1 = headers_to_inject[0].strip()
 
             headers_to_inject = headers_to_inject[1]
-            header_name_2, header_value_2 = headers_to_inject.split(':')
+            header_name_2, header_value_2 = headers_to_inject.split(b':')
             header_name_2 = header_name_2.strip()
             header_value_2 = header_value_2.strip()
-        except:
+        except IndexError:
+            return self.status, response_headers, self.body
+        except Exception as e:
             return self.status, response_headers, self.body
         else:
-            response_headers[header_name_1] = header_value_1
-            response_headers[header_name_2] = header_value_2
+            response_headers[smart_unicode(header_name_1)] = smart_unicode(header_value_1)
+            response_headers[smart_unicode(header_name_2)] = smart_unicode(header_value_2)
             return self.status, response_headers, self.body
 
 
@@ -176,8 +179,9 @@ class TestResponseSplittingHeader(PluginTest):
             'target': target_url,
             'plugins': {
                 'audit': (PluginConfig('response_splitting'),),
+                'output': (PluginConfig('text_file',),),
             },
-            'misc_settings': {'fuzzable_headers': ['referer']}
+            'misc_settings': {'fuzzable_headers': ['referer']},
         },
     }
 
