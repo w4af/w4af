@@ -34,6 +34,7 @@ from w3af.core.controllers.misc.traceback_utils import get_traceback, get_except
 from w3af.core.data.parsers.doc.baseparser import BaseParser
 from w3af.core.data.parsers.doc.open_api.specification import SpecificationHandler
 from w3af.core.data.parsers.doc.open_api.requests import RequestFactory
+from w3af.core.data.misc.encoding import smart_str
 
 #
 # Apply the monkey-patching by importing the module
@@ -144,7 +145,7 @@ class OpenAPI(BaseParser):
         :param http_resp: The HTTP response we want to parse
         :return: True if it seems that this response body holds JSON or YAML
         """
-        return b':' in b'\n'.join(http_resp.body.split(b'\n')[:20])
+        return b':' in b'\n'.join(smart_str(http_resp.body).split(b'\n')[:20])
 
     @staticmethod
     def can_parse(http_resp):
