@@ -112,7 +112,7 @@ class OpenAPI(BaseParser):
         :return: True if it seems that this page is an open api doc
         """
         for keyword in OpenAPI.KEYWORDS:
-            if keyword.encode('utf-8') in http_resp.body:
+            if smart_str(keyword) in smart_str(http_resp.body):
                 return True
 
         return False
