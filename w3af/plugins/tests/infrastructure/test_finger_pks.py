@@ -23,6 +23,7 @@ import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.skip("Searches are not working")
 class TestFingerPKS(PluginTest):
 
     base_url = 'http://www.bonsai-sec.com/'

@@ -23,6 +23,7 @@ import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.skip("Google searches are not working")
 class TestFingerGoogle(PluginTest):
 
     base_url = 'http://www.w3af.org/'
