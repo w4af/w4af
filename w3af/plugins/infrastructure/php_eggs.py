@@ -35,6 +35,7 @@ from w3af.core.controllers.exceptions import NoMoreCalls
 from w3af.core.controllers.threads.threadpool import one_to_many
 from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
 from w3af.core.data.kb.info import Info
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class php_eggs(InfrastructurePlugin):
@@ -202,7 +203,7 @@ class php_eggs(InfrastructurePlugin):
 
             for query_result in query_results:
                 body = query_result.http_response.get_body()
-                hash_str = md5_hash(body)
+                hash_str = md5_hash(smart_str_ignore(body))
                 desc_hashes[query_result.egg_desc] = hash_str
 
             hash_set = set(desc_hashes.values())

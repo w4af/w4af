@@ -83,30 +83,30 @@ class TestFindVhostsInHTML(PluginTest):
 
 
 class MultipleVHostsHandler(socketserver.BaseRequestHandler):
-    RESPONSE = ('HTTP/1.0 200 Ok\r\n'
-                'Connection: Close\r\n'
-                'Content-Length: %s\r\n'
-                'Content-Type: text/html\r\n'
-                '\r\n%s')
+    RESPONSE = (b'HTTP/1.0 200 Ok\r\n'
+                b'Connection: Close\r\n'
+                b'Content-Length: %s\r\n'
+                b'Content-Type: text/html\r\n'
+                b'\r\n%s')
 
-    RESPONSE_404 = ('HTTP/1.0 404 Not Found\r\n'
-                    'Connection: Close\r\n'
-                    'Content-Length: %s\r\n'
-                    'Content-Type: text/html\r\n'
-                    '\r\n%s')
+    RESPONSE_404 = (b'HTTP/1.0 404 Not Found\r\n'
+                    b'Connection: Close\r\n'
+                    b'Content-Length: %s\r\n'
+                    b'Content-Type: text/html\r\n'
+                    b'\r\n%s')
 
     def handle(self):
         data = self.request.recv(1024).strip()
 
         # Match hosts
-        if 'Host: w3af.org\r\n' in data:
-            body = 'Welcome to w3af.org'
-            self.request.sendall(self.RESPONSE % (len(body), body))
+        if b'Host: w3af.org\r\n' in data:
+            body = b'Welcome to w3af.org'
+            self.request.sendall(self.RESPONSE % (str(len(body)).encode('utf-8'), body))
 
-        if 'Host: intranet\r\n' in data:
-            body = 'Intranet secrets are here'
-            self.request.sendall(self.RESPONSE % (len(body), body))
+        if b'Host: intranet\r\n' in data:
+            body = b'Intranet secrets are here'
+            self.request.sendall(self.RESPONSE % (str(len(body)).encode('utf-8'), body))
 
         else:
-            body = 'Not found'
-            self.request.sendall(self.RESPONSE_404 % (len(body), body))
+            body = b'Not found'
+            self.request.sendall(self.RESPONSE_404 % (str(len(body)).encode('utf-8'), body))

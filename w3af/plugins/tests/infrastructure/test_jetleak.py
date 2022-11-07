@@ -40,9 +40,9 @@ class TestJetLeak(PluginTest):
 
     class JettyMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            referer = http_request.headers.getrawheader('Referer')
+            headers = dict(http_request.headers.raw_items())
 
-            if referer is not None and '\x00' in referer:
+            if 'Referer' in headers and '\x00' in headers['Referer']:
                 body = 'See HTTP reason text'
                 status = 400
             else:

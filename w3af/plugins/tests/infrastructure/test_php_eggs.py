@@ -49,10 +49,10 @@ class TestPHPEggs(PluginTest):
 
         with patch('w3af.plugins.infrastructure.php_eggs.md5_hash') as md5mock:
             def side_effect(body):
-                return {'1': 'a4c057b11fa0fba98c8e26cd7bb762a8',
-                        '2': 'c48b07899917dfb5d591032007041ae3',
-                        '3': 'fb3bbd9ccc4b3d9e0b3be89c5ff98a14',
-                        '4': '7675f1d01c927f9e6a4752cf182345a2'}.get(body)
+                return {b'1': 'a4c057b11fa0fba98c8e26cd7bb762a8',
+                        b'2': 'c48b07899917dfb5d591032007041ae3',
+                        b'3': 'fb3bbd9ccc4b3d9e0b3be89c5ff98a14',
+                        b'4': '7675f1d01c927f9e6a4752cf182345a2'}.get(body)
             md5mock.side_effect = side_effect
             self._scan(self.target_url, cfg['plugins'])
 
@@ -66,7 +66,7 @@ class TestPHPEggs(PluginTest):
         self.assertEqual(len(php_version), 1, php_version)
 
         php_version = php_version[0]
-        self.assertEqual(php_version['version'], ['5.3.2', '5.3.1'])
+        self.assertEqual(sorted(php_version['version']), sorted(['5.3.2', '5.3.1']))
 
 
 @pytest.mark.smoke

@@ -23,9 +23,10 @@ import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.skip("Not working - zone_h has some captcha protection")
 class TestZoneH(PluginTest):
 
-    vuln_url = 'http://www.sgwater.gov.cn/'
+    vuln_url = 'http://absazan.com/'
     safe_url = 'http://www.google.com/'
 
     _run_configs = {

@@ -20,12 +20,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 import pytest
+
+from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.moth
 class TestFaviconIdentification(PluginTest):
 
-    favicon_url = 'http://moth/'
+    favicon_url = get_moth_http()
     no_favicon_url = 'http://wordpress/'
 
     _run_configs = {

@@ -20,13 +20,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 import pytest
+
+from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.moth
 class TestFingerprintOS(PluginTest):
 
     modsecurity_url = 'http://modsecurity/w3af/index.html'
-    moth_url = 'http://moth/w3af/index.html'
+    moth_url = get_moth_http('/index.html')
 
     _run_configs = {
         'cfg': {

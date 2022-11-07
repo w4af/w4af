@@ -51,10 +51,10 @@ class zone_h(InfrastructurePlugin):
         target_domain = fuzzable_request.get_url().get_root_domain()
 
         # Example URL:
-        # http://www.zone-h.org/archive/domain=cyprus-stones.com
+        # https://www.zone-h.org/archive/domain=cyprus-stones.com
 
         # TODO: Keep this URL updated!
-        zone_h_url_str = 'http://www.zone-h.org/archive/domain=%s' % target_domain
+        zone_h_url_str = 'https://www.zone-h.org/archive/domain=%s' % target_domain
         zone_h_url = URL(zone_h_url_str)
 
         try:
