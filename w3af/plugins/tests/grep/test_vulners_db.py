@@ -18,12 +18,14 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 
 class TestVulnersDB(PluginTest):
 
     target_url = 'http://httpretty'
+    allow_net_connect = True
 
     MOCK_RESPONSES = [MockResponse('http://httpretty/',
                                    body='',
@@ -50,6 +52,26 @@ class TestVulnersDB(PluginTest):
         }
     }
 
+    # There are a couple of things that are broken about this test:
+    # 1. The vulners API requires an API key, which isn't supplied by the test
+    #    setup.
+    # 2. HTTPretty is not well maintained, and hits a bug when real requests are
+    #    made to HTTPS servers while HTTPretty is active:
+    #    https://github.com/gabrielfalcao/HTTPretty/issues/65
+    #    This can be mitigated if keep-alive is disabled for the real requests:
+    #    headers=Headers(init_val=[("Connection", "close")])
+    #    but our plugin only controls one of the real fetches - the live API calls
+    #    are made by the Vulners package, and we can't meddle with the fetching in there.
+    #    Per the comment in #65, the 'responses' python package doesn't have this issue,
+    #    but the responses package can only mock high-level requests made with the 'requests'
+    #    package.
+    #    Using @mock.patch to stub the _send_request method of VulnersApi would potentially
+    #    be an option, but it gets pretty prickly because vulners is using some code generation
+    #    to generate its low-level API fetch interface.
+    # Another approach would be also to mock the requests to the vulners API. This would
+    # make our test here more of a unit than an integration test, but that is for sure better
+    # than nothing
+    @pytest.mark.skip("Not working because of httpretty bug")
     def test_vulns_detected(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])

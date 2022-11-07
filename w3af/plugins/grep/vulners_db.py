@@ -37,9 +37,13 @@ from w3af.core.data.options.option_list import OptionList
 from w3af.core.data.kb.info_set import InfoSet
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.misc.cvss import cvss_to_severity
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class vulners_db(GrepPlugin):
+
+    VULNERS_RULES_URL = 'https://raw.githubusercontent.com/vulnersCom/detect-rules/master/rules.json'
+
     """
     Find software vulnerabilities using Vulners.com API
 
@@ -66,12 +70,9 @@ class vulners_db(GrepPlugin):
     def __init__(self):
         GrepPlugin.__init__(self)
 
-        # Vulners rules JSON url
-        self._vulners_rules_url = URL('https://raw.githubusercontent.com/vulnersCom/detect-rules/master/rules.json')
-
         # Vulners shared objects
         self._vulners_api = None
-        self._vulners_api_key = ''
+        self._vulners_api_key = None
         self.rules_table = None
         self.rules_updated = False
 
@@ -166,7 +167,7 @@ class vulners_db(GrepPlugin):
         # But in this case we're breaking that general rule to retrieve the
         # DB at the beginning of the scan
         try:
-            http_response = self._uri_opener.GET(self._vulners_rules_url,
+            http_response = self._uri_opener.GET(URL(self.VULNERS_RULES_URL),
                                                  binary_response=True,
                                                  respect_size_limit=False)
         except Exception as e:
@@ -196,7 +197,7 @@ class vulners_db(GrepPlugin):
 
     def setup_vulners_api(self):
         try:
-            self._vulners_api = vulners.Vulners(api_key=self._vulners_api_key or None)
+            self._vulners_api = vulners.VulnersApi(self._vulners_api_key or None)
         except Exception as e:
             # If API key is wrong or API key is not a string it will raise exception
             msg = 'Failed to initialize Vulners API: "%s"'
@@ -224,11 +225,11 @@ class vulners_db(GrepPlugin):
         # We will do it in try-except mode to work properly with potential network
         # connectivity problem or in case Vulners is down.
         try:
-            if check_type == 'software':
-                vulnerabilities = self._vulners_api.softwareVulnerabilities(software_name, software_version)
-            elif check_type == 'cpe':
-                cpe_string = "%s:%s" % (software_name, software_version)
-                vulnerabilities = self._vulners_api.cpeVulnerabilities(cpe_string.encode())
+            if check_type == b'software':
+                vulnerabilities = self._vulners_api.get_software_vulnerabilities(software_name, software_version)
+            elif check_type == b'cpe':
+                cpe_string = "%s:%s" % (smart_unicode(software_name), smart_unicode(software_version))
+                vulnerabilities = self._vulners_api.get_cpe_vulnerabilities(cpe_string)
         except Exception as e:
             msg = 'Failed to make Vulners API request: "%s"'
             om.out.error(msg % e)
