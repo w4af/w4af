@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import unittest
+import requests
+import httpretty
 
 from w3af import ROOT_PATH
 from w3af.core.controllers.misc.temp_dir import create_temp_dir
@@ -28,6 +30,8 @@ from w3af.plugins.grep.retirejs import retirejs
 
 import pytest
 
+RETIRE_DB_URL = 'https://raw.githubusercontent.com/RetireJS/retire.js/master/repository/jsrepository.json'
+RETIRE_DB = requests.get(RETIRE_DB_URL).content
 
 @pytest.mark.internet
 class TestRetireJSNotAnalyzeHTMLContentType(PluginTest):
@@ -65,6 +69,7 @@ class TestRetireJSNotAnalyzeHTMLContentType(PluginTest):
     }
 
     def test_is_vulnerable_not_detected(self):
+        httpretty.register_uri('GET', RETIRE_DB_URL, body=RETIRE_DB)
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
 
@@ -79,6 +84,8 @@ A JavaScript library with known vulnerabilities was identified at http://httpret
  - 3rd party CORS request may execute
  - parseHTML() executes scripts in event handlers
  - jQuery before 3.4.0, as used in Drupal, Backdrop CMS, and other products, mishandles jQuery.extend(true, {}, ...) because of Object.prototype pollution
+ - Regex in its jQuery.htmlPrefilter sometimes may introduce XSS
+ - Regex in its jQuery.htmlPrefilter sometimes may introduce XSS
 
 Consider updating to the latest stable release of the affected library.'''
 
@@ -119,6 +126,7 @@ class TestRetireJS(PluginTest):
     }
 
     def test_is_vulnerable_detected(self):
+        httpretty.register_uri('GET', RETIRE_DB_URL, body=RETIRE_DB)
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
 
