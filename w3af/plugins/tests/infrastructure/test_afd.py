@@ -19,11 +19,12 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import re
+import urllib.parse
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 
-BAD_SIG_URI = re.compile('.*(passwd|uname|passthru|xp_cmdshell|WINNT).*', re.I)
+BAD_SIG_URI = re.compile(r'.*(passwd|uname|passthru|xp_cmdshell|WINNT).*', re.I)
 
 
 class TestFoundAFD(PluginTest):
@@ -39,7 +40,7 @@ class TestFoundAFD(PluginTest):
 
     MOCK_RESPONSES = [MockResponse(target_url, 'Home page'),
                       MockResponse(BAD_SIG_URI, 'Blocked by WAF'),
-                      MockResponse(re.compile(target_url + '.*'), 'Another page')]
+                      MockResponse(re.compile(target_url + r'.*'), 'Another page')]
 
     def test_afd_found_http(self):
         cfg = self._run_configs['cfg']
@@ -53,7 +54,7 @@ class TestFoundAFD(PluginTest):
         self.assertEqual(info.get_name(), 'Active filter detected')
         values = [u.url_string.split('=')[1] for u in info['filtered']]
 
-        self.assertIn('../../../../etc/passwd', set(values), values)
+        self.assertIn(urllib.parse.quote_plus('../../../../etc/passwd'), set(values), values)
 
 
 MOD_SECURITY_ANSWER = '''\
@@ -94,7 +95,7 @@ class TestAFDShortResponses(PluginTest):
         info = infos[0]
 
         self.assertEqual(info.get_name(), 'Active filter detected')
-        values = [u.url_string.split('=')[1] for u in info['filtered']]
+        values = [urllib.parse.unquote(u.url_string.split('=')[1]) for u in info['filtered']]
 
         self.assertIn('../../../../etc/passwd', set(values), values)
 

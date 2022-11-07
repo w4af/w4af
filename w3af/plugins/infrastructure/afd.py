@@ -129,7 +129,7 @@ class afd(InfrastructurePlugin):
             resp_body = resp_body.replace(offending_string, '')
             resp_body = resp_body.replace(rnd_param, '')
 
-            if fuzzy_not_equal(resp_body, original_resp_body, 0.15):
+            if fuzzy_not_equal(resp_body, original_resp_body, 0.25):
                 self._filtered.append(offending_url)
             else:
                 self._not_filtered.append(offending_url)

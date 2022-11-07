@@ -153,6 +153,9 @@ def fuzzy_not_equal(a_str, b_str, threshold=0.6):
     """
     return not fuzzy_equal(a_str, b_str, threshold)
 
+def fuzzy_not_equal_return_distance(a_str, b_str, threshold):
+    res, distance = fuzzy_equal_return_distance(a_str, b_str, threshold=threshold)
+    return not res, distance
 
 def relative_distance(a_str, b_str):
     """
