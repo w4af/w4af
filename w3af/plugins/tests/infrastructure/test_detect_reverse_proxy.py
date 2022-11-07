@@ -20,13 +20,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 import pytest
+
+from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.moth
 class TestDetectReverseProxy(PluginTest):
 
-    proxied_url = 'http://moth/w3af/infrastructure/detect_reverse_proxy/'
-    simple_url = 'http://moth/'
+    proxied_url = get_moth_http('/infrastructure/detect_reverse_proxy/')
+    simple_url = get_moth_http()
 
     _run_configs = {
         'cfg': {

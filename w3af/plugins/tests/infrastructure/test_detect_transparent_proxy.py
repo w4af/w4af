@@ -19,12 +19,15 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
+
+from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.moth
 class TestDetectTransparentProxy(PluginTest):
 
-    target_url = 'http://moth/'
+    target_url = get_moth_http()
 
     _run_config = {
         'cfg': {

@@ -20,12 +20,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 import pytest
+
+from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.moth
 class TestDomainDot(PluginTest):
 
-    simple_url = 'http://moth/'
+    simple_url = get_moth_http()
 
     _run_configs = {
         'cfg': {
