@@ -51,7 +51,7 @@ class xxe(AuditPlugin):
     ]
 
     REMOTE_FILES = [
-        'http://w3af.org/xxe.txt'
+        'https://raw.githubusercontent.com/w4af/w4af/main/w3af/tests/fixtures/xxe.txt'
     ]
 
     # This is the only content stored in the https://w3af.org/xxe.txt file
@@ -216,7 +216,7 @@ class xxe(AuditPlugin):
             for file_name in itertools.chain(self.WINDOWS_FILES,
                                              self.LINUX_FILES):
                 dtd = self.ENTITY_DEF % file_name
-                xml_body = etree.tostring(xml_root).replace(self.TOKEN_XXE, self.ENTITY)
+                xml_body = smart_unicode(etree.tostring(xml_root)).replace(self.TOKEN_XXE, self.ENTITY)
                 yield dtd + xml_body
 
             # Restore the original value to inject in the next parameter
@@ -366,10 +366,10 @@ class xxe(AuditPlugin):
         :param body: The HTTP response body
         :yield: All the patterns we find
         """
-        if self.REMOTE_SUCCESS in body:
+        if self.REMOTE_SUCCESS in smart_unicode(body):
             yield self.REMOTE_SUCCESS
 
-        for file_pattern_match in self.file_pattern_multi_in.query(body):
+        for file_pattern_match in self.file_pattern_multi_in.query(smart_unicode(body)):
             yield file_pattern_match
 
     def get_long_desc(self):

@@ -18,11 +18,13 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
 import re
 import urllib.request, urllib.parse, urllib.error
 
 from lxml import etree
 from xml import sax
+from io import StringIO
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 from unittest.mock import patch
@@ -39,7 +41,7 @@ class TestXXESimple(PluginTest):
 
     class XXEMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.parse.unquote(uri)
+            uri = urllib.parse.unquote_plus(uri)
             xml = uri[uri.find('=') + 1:]
 
             # A very vulnerable parser
@@ -88,17 +90,23 @@ class NoOpContentHandler(sax.ContentHandler):
 class TestXXERemoteLoading(PluginTest):
 
     target_url = 'http://mock/xxe.simple?xml='
+    allow_net_connect = True
 
     class XXEMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.parse.unquote(uri)
+            uri = urllib.parse.unquote_plus(uri)
             xml = uri[uri.find('=') + 1:]
 
             # A very vulnerable parser that loads remote files over https
             handler = NoOpContentHandler()
+            parser = sax.make_parser()
+            parser.setFeature(sax.handler.feature_external_ges, True)
+            parser.setContentHandler(handler)
+            input_source = sax.InputSource()
+            input_source.setCharacterStream(StringIO(xml))
 
             try:
-                sax.parseString(xml, handler)
+                parser.parse(input_source)
             except Exception as e:
                 body = str(e)
             else:
@@ -134,7 +142,7 @@ class TestXXENegativeWithError(PluginTest):
 
     class XXEMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.parse.unquote(uri)
+            uri = urllib.parse.unquote_plus(uri)
             xml = uri[uri.find('=') + 1:]
 
             # Secure
@@ -174,7 +182,7 @@ class TestXXENegativeNoError(PluginTest):
 
     class XXEMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.parse.unquote(uri)
+            uri = urllib.parse.unquote_plus(uri)
             xml = uri[uri.find('=') + 1:]
 
             # Secure
@@ -215,7 +223,7 @@ class TestXXEInParameter(PluginTest):
 
     class XXEMockResponse(MockResponse):
         def get_response(self, http_request, uri, response_headers):
-            uri = urllib.parse.unquote(uri)
+            uri = urllib.parse.unquote_plus(uri)
             xml = uri[uri.find('=') + 1:]
 
             # A very vulnerable parser
