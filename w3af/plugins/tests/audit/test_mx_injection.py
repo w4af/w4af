@@ -21,13 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import pytest
 
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.core.controllers.ci.php_moth import get_php_moth_http
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 
 
-@pytest.mark.phpmoth
+@pytest.mark.w3af_moth
 class TestMXInjection(PluginTest):
 
-    target_url = get_php_moth_http('/audit/MX_injection/mxi.php?i=f00')
+    target_url = get_w3af_moth_http('/w3af/audit/MX_injection/mxi.php?i=f00')
 
     _run_configs = {
         'cfg': {
