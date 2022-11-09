@@ -19,8 +19,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import datetime
-
 import pytest
+
 from unittest.mock import patch, call
 
 import w3af.core.data.constants.severity as severity
@@ -29,11 +29,13 @@ from w3af.plugins.crawl.ghdb import GoogleHack, bing
 from w3af.core.data.search_engines.bing import BingResult
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.misc.file_utils import days_since_file_update
+from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@pytest.mark.moth
 class TestGHDB(PluginTest):
 
-    private_url = 'http://moth/'
+    private_url = get_moth_http()
 
     _run_configs = {
         'cfg': {

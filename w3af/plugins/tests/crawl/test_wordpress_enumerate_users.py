@@ -25,6 +25,7 @@ import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
+@pytest.mark.moth
 class TestWordpressEnumerateUsers(PluginTest):
 
     wordpress_url = 'http://wordpress/'
