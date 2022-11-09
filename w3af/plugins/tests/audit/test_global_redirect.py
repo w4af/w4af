@@ -39,9 +39,7 @@ SCAN_CONFIG = {
                 PluginConfig(
                     'web_spider',
                     ('only_forward', True, PluginConfig.BOOL)),
-            ),
-            'output': (PluginConfig('text_file',),),
-
+            )
         }
     },
 }
