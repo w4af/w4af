@@ -27,10 +27,10 @@ target_path = 'scan_database.db'
 response = urllib.request.urlopen(scan_db_url)
 db_content = response.read()
 
-if 'Source: https://cirt.net' not in db_content:
+if b'Source: https://cirt.net' not in db_content:
     print('db_tests download failed')
     sys.exit(-1)
 
-target_fd = file(target_path, 'w')
-target_fd.write(db_content)
-target_fd.close()
+with open(target_path, 'wb') as target_fd:
+    target_fd.write(db_content)
+    target_fd.close()

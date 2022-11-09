@@ -319,7 +319,7 @@ class TestNiktoTestParser(PluginTest):
         line = '"006251","0","1","/administraçao.php","GET","200","","",""'\
                ',"","Admin login page/section found.","",""'
         try:
-            [_ for _ in nikto_parser._parse_db_line(line)]
+            [_ for _ in nikto_parser._parse_db_line(line.encode('utf-8'))]
         except TypeError:
             self.assertTrue(True)
         else:

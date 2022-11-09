@@ -349,7 +349,7 @@ class NiktoTestParser(object):
         except Exception as e:
             msg = 'Failed to open the scan database. Exception: "%s".'
             om.out.error(msg % e)
-            raise StopIteration
+            return
         
         for line in db_file:
             
@@ -438,7 +438,7 @@ class NiktoTestParser(object):
 
         if len(splitted_line) != 13:
             self.ignored.append(line)
-            raise StopIteration
+            return
 
         # Remove those ugly double quotes which I get after splitting by '","'
         splitted_line[0] = splitted_line[0][1:]
@@ -464,7 +464,7 @@ class NiktoTestParser(object):
                     splitted_line[test_index] = re.compile(test_value, flags)
                 except:
                     # Protect myself against buggy regular expressions
-                    raise StopIteration
+                    return
             
             else:
                 splitted_line[test_index] = None
@@ -489,7 +489,7 @@ class NiktoTestParser(object):
 
         if uri.count(' '):
             self.ignored.append(line)
-            raise StopIteration
+            return
 
         # Now I should replace the @CGIDIRS variable with the user settings
         # The same goes for every @* variable.
