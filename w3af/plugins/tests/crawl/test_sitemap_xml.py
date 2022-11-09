@@ -20,12 +20,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 import pytest
+
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
+from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@pytest.mark.moth
 class TestSitemap(PluginTest):
 
-    target_url = 'http://moth/'
+    target_url = get_moth_http()
 
     _run_configs = {
         'cfg': {
@@ -43,7 +46,7 @@ class TestSitemap(PluginTest):
 
         self.assertEqual(len(urls), 3, urls)
 
-        hidden_url = 'http://moth/hidden/'
+        hidden_url = get_moth_http('/hidden/')
 
         for url in urls:
             if url.url_string == hidden_url:

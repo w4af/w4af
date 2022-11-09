@@ -20,15 +20,18 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
+
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.plugins.crawl.wordpress_fingerprint import FileFingerPrint
 from w3af.core.data.misc.file_utils import days_since_file_update
+from w3af.core.controllers.ci.moth import get_moth_http
 
 
+@pytest.mark.moth
 class Testwordpress_fingerprint(PluginTest):
 
     wordpress_url = 'http://wordpress/'
-    moth_url = 'http://moth/w3af/audit/'
+    moth_url = get_moth_http('/audit/')
 
     _run_configs = {
         'direct': {
