@@ -39,7 +39,6 @@ ipaddresses = "*"
 xdot = "*"
 nocasedict = "*"
 urllib3 = "*"
-httpretty = "*"
 xunitparser = "*"
 pylint = "*"
 apispec = "*"
@@ -74,6 +73,10 @@ python_version = "3.10"
 git = "https://github.com/w4af/vulndb-python-sdk"
 editable = true
 ref = "bee4f4f5222741a8119e7e214de83b340d44fb27"
+
+[packages.httpretty]
+git = "https://github.com/w4af/HTTPretty"
+ref = "bugfix/remove-pyopenssl-deprecation-warning"
 
 [packages.darts_util_lru]
 git = "https://github.com/w4af/DartsPyLRU"

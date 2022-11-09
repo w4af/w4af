@@ -6,4 +6,4 @@ GPL inside.
 got shell?
 spawned a remote shell today?
 May the brute force be with you.
-Donations are accepted via ethereum at 0xb1B56F04E6cc5F4ACcB19678959800824DA8DE82
+Donations are accepted via ethereum at 0xdccc77075c763db80e9df242a1698176777de4df

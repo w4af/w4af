@@ -60,7 +60,7 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         secs = 1
 
         for _ in range(4):
-            future = pool.schedule(just_sleep, args=(secs,))
+            future = pool.submit(just_sleep, None, secs)
             results.append(future)
 
         for future in results:
@@ -74,13 +74,13 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         pool = self.get_pool_with_memlimit()
 
         # Run this to init the pool
-        pool.schedule(just_sleep, args=(0.1,))
+        pool.submit(just_sleep, None, 0.1)
 
         # Get the worker pids
         workers_before_test = list(pool._pool_manager.worker_manager.workers.keys())[:]
 
         usage = self.MEMORY_LIMIT / 2.0
-        future = pool.schedule(use_memory_in_string, args=(usage,))
+        future = pool.submit(use_memory_in_string, None, usage)
 
         self.assertEqual(future.result(), usage)
         self.assertEqual(workers_before_test, list(pool._pool_manager.worker_manager.workers.keys())[:])
@@ -104,7 +104,7 @@ class TestPebbleMemoryUsage(unittest.TestCase):
 
         while True:
             current_len += block_size
-            future = pool.schedule(use_memory_in_string, args=(current_len,))
+            future = pool.submit(use_memory_in_string, None, current_len)
             try:
                 future.result()
             except MemoryError:
@@ -124,13 +124,13 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         pool = self.get_pool_with_memlimit()
 
         # Run this to init the pool
-        pool.schedule(just_sleep, args=(0.1,))
+        pool.submit(just_sleep, None, 0.1)
 
         # Get the worker pids
         workers_before_test = list(pool._pool_manager.worker_manager.workers.keys())[:]
 
         usage = self.MEMORY_LIMIT * 5.0
-        future = pool.schedule(use_memory_in_string, args=(usage,))
+        future = pool.submit(use_memory_in_string, None, usage)
 
         # When the memory limit is reached, the process raises MemoryError
         self.assertRaises(MemoryError, future.result)
@@ -140,7 +140,7 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         secs = 1
 
         for _ in range(4):
-            future = pool.schedule(just_sleep, args=(secs,))
+            future = pool.submit(just_sleep, None, secs)
             results.append(future)
 
         for future in results:
@@ -159,7 +159,7 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         secs = 5
 
         for _ in range(4):
-            future = pool.schedule(just_sleep, args=(secs,))
+            future = pool.submit(just_sleep, None, secs)
             results.append(future)
 
         # Use a lot of memory in the parent process
@@ -189,7 +189,7 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         secs = 5
 
         for _ in range(4):
-            future = pool.schedule(just_sleep, args=(secs,))
+            future = pool.submit(just_sleep, None, secs)
             results.append(future)
 
         # Get all the results, none should be a MemoryError
