@@ -466,7 +466,7 @@
         },
         "httpretty": {
             "git": "https://github.com/w4af/HTTPretty",
-            "ref": "f9f012711597634d40066d144a36888b3addcc46"
+            "ref": "3ce7bec470b0135bcdc54dd8fde2b81a77f9745d"
         },
         "idna": {
             "hashes": [
