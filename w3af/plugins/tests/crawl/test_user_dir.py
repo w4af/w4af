@@ -38,7 +38,7 @@ class TestUserDir(PluginTest):
                                    'www user home directory.'),
                       MockResponse('http://httpretty/~kmem/',
                                    'kmem user home directory.'),
-                      MockResponse('http://httpretty//xfs/',
+                      MockResponse('http://httpretty/xfs/',
                                    'home sweet home')]
 
     EXPECTED_RESULTS = {('Web user home directory', 'http://httpretty/~www/'),

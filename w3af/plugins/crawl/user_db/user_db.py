@@ -36,7 +36,7 @@ def get_users_from_csv(ident):
     assert ident in (APPLICATION, OS), 'Invalid identification'
 
     csv_db = os.path.join(DB_PATH, '%s.csv' % ident)
-    with open(csv_db, 'rb') as file_handler:
+    with open(csv_db, 'r') as file_handler:
         reader = csv.reader(file_handler)
 
         while True:
