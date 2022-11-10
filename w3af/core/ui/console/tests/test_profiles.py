@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import os
 import re
 import sys
 import tempfile
@@ -33,7 +34,6 @@ from w3af.core.data.profile.profile import profile
 from w3af.core.controllers.core_helpers.tests.test_profiles import assertProfilesEqual
 
 
-@pytest.mark.smoke
 class TestProfilesConsoleUI(ConsoleTestHelper):
     """
     Load profiles from the console UI.
@@ -45,6 +45,11 @@ class TestProfilesConsoleUI(ConsoleTestHelper):
     def tearDown(self):
         super(TestProfilesConsoleUI, self).tearDown()
         self._remove_if_exists(self.get_profile_name())
+
+    def get_profile_list(self):
+        profile_dir = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', '..', 'profiles')
+        for root, dirs, files in os.walk(profile_dir):
+            return [ x[:-6] for x in files if x.endswith('.pw3af') ]
 
     def get_profile_name(self):
         profile_name = self.id()
@@ -73,21 +78,24 @@ class TestProfilesConsoleUI(ConsoleTestHelper):
         assertProfilesEqual(p1.profile_file_name, p2.profile_file_name)
 
     def test_load_profile_exists(self):
-        commands_to_run = ['profiles',
-                           'help',
-                           'use OWASP_TOP10',
-                           'exit']
+        profiles = self.get_profile_list()
+        self.assertGreater(len(profiles), 1, profiles)
+        for profile in profiles:
+            commands_to_run = ['profiles',
+                            'help',
+                            'use %s' % profile,
+                            'exit']
 
-        expected = (
-            'The plugins configured by the scan profile have been enabled',
-            'Please set the target URL',
-            ' | Use a profile.')
+            expected = (
+                'The plugins configured by the scan profile have been enabled',
+                'Please set the target URL',
+                ' | Use a profile.')
 
-        self.console = ConsoleUI(commands=commands_to_run, do_upd=False)
-        self.console.sh()
+            self.console = ConsoleUI(commands=commands_to_run, do_upd=False)
+            self.console.sh()
 
-        assert_result, msg = self.all_expected_substring_in_output(expected)
-        self.assertTrue(assert_result, msg)
+            assert_result, msg = self.all_expected_substring_in_output(expected)
+            self.assertTrue(assert_result, msg)
 
     def test_load_profile_by_filepath(self):
         tmp_profile = tempfile.NamedTemporaryFile(suffix='.pw3af')

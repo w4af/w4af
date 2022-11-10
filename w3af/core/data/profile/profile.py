@@ -25,6 +25,7 @@ import shutil
 import string
 import configparser
 
+from w3af import ROOT_PATH
 from w3af.core.controllers.core_helpers.target import CoreTarget
 from w3af.core.controllers.misc.factory import factory
 from w3af.core.controllers.misc.home_dir import get_home_dir
@@ -42,7 +43,7 @@ class profile(object):
     PROFILE_SECTION = 'profile'
     EXTENSION = '.pw3af'
 
-    def __init__(self, profname='', workdir=None):
+    def __init__(self, profname='', workdir="."):
         """
         Creating a profile instance like p = profile() is done in order to be
         able to create a new profile from scratch and then call
@@ -299,7 +300,7 @@ class profile(object):
                 if _type == plugin_type and name == plugin_name:
                     for option in self._config.options(section):
                         try:
-                            value = self._config.get(section, option)
+                            value = self._config.get(section, option, vars={"ROOT_PATH": ROOT_PATH})
                         except KeyError:
                             # We should never get here...
                             msg = ('The option "%s" is unknown for the'
@@ -376,7 +377,7 @@ class profile(object):
 
         for option in profile_options:
             try:
-                value = self._config.get(section, option)
+                value = self._config.get(section, option, vars={"ROOT_PATH": ROOT_PATH})
             except KeyError:
                 # We should never get here...
                 msg = 'The option "%s" is unknown for the "%s" section.'
@@ -407,7 +408,7 @@ class profile(object):
             if section == self.PROFILE_SECTION:
                 for option in self._config.options(section):
                     if option == 'name':
-                        return self._config.get(section, option)
+                        return self._config.get(section, option, vars={"ROOT_PATH": ROOT_PATH})
 
         # Something went wrong
         return None
@@ -438,7 +439,7 @@ class profile(object):
             if section == 'target':
                 for option in self._config.options(section):
                     options[option].set_value(
-                        self._config.get(section, option))
+                        self._config.get(section, option, vars={"ROOT_PATH": ROOT_PATH}))
 
         return options
 
@@ -463,7 +464,7 @@ class profile(object):
             if section == self.PROFILE_SECTION:
                 for option in self._config.options(section):
                     if option == 'description':
-                        return self._config.get(section, option)
+                        return self._config.get(section, option, vars={"ROOT_PATH": ROOT_PATH})
 
         # Something went wrong
         return None

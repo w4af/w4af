@@ -56,7 +56,7 @@ class ProfilesMenu(menu):
             try:
                 workdir = params[1]
             except IndexError:
-                workdir = None
+                workdir = "."
 
             try:
                 self._w3af.profiles.use_profile(profile, workdir=workdir)
