@@ -289,6 +289,13 @@ class TestXSS(PluginTest):
                 ('printer.php', 'added', ('added', 'x',)),
                 ('printer.php', 'x', ('x', 'added')),
             ],
+            [
+                ('302.php', 'x', ('x',)),
+                ('302.php', 'a', ('a',)),
+                ('printer.php', 'a', ('a', 'added',)),
+                ('printer.php', 'added', ('a', 'added',)),
+                ('printer.php', 'x', ('x', 'added')),
+            ],
         ]
         found = False
         for expected in expected_sets:
