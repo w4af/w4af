@@ -25,6 +25,7 @@ from .ubuntu1410 import Ubuntu1410
 from .ubuntu1604 import Ubuntu1604
 from .ubuntu1804 import Ubuntu1804
 from .ubuntu2004 import Ubuntu2004
+from .ubuntu2204 import Ubuntu2204
 from .debian76 import Debian76
 from .debian78 import Debian78
 from .debian80 import Debian80
@@ -61,7 +62,8 @@ KNOWN_PLATFORMS = [
                    Ubuntu1410,
                    Ubuntu1604,
                    Ubuntu1804,
-                   Ubuntu2004
+                   Ubuntu2004,
+                   Ubuntu2204,
 ]
 
 
