@@ -56,11 +56,23 @@ class websocket_hijacking(AuditPlugin):
               a very trivial regular expression match to find WS links, which
               will most likely fail in "complex" web applications
 
+        AT @ 20221122:
+        Well, I mean, you say it works really well, but actually it's a bit of a hack, no?
+        This audit plugin relies on an interaction (read a race) with the websocket_links.grep plugin.
+        Every time the audit plugin receives a URL from the crawler, it throws that URL away and looks
+        to see if the grep plugin has dropped any new URLS in the knowledge base. This sorta kinda
+        works for many practical scans, since it's unlikely that the last URL crawled will be the URL
+        with the websocket link. But in the case that the websocket link comes toward the end of the
+        scan, there is a race here - if the grep plugin processes the link after the audit plugin
+        processes its last link, the websocket link will be found by the grep and never audited (causing
+        the flakiness in test_websocket_hijacking::test_open_websockets_with_crawl).
+
         :param freq: A FuzzableRequest
         :param orig_response: The HTTP response associated with the fuzzable request
         :param debugging_id: A unique identifier for this call to audit()
         """
         # We can only work if there are known web sockets
+        # And look! We just throw away all our parameters and never lok at them! *facepalm*
         ws_links = kb.kb.get('websockets_links', 'websockets_links')
 
         for web_socket_info_set in ws_links:

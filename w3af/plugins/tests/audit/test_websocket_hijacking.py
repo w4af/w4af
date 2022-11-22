@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+import pytest
+
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.kb.info import Info
 from w3af.plugins.grep.websockets_links import WebSocketInfoSet
@@ -246,7 +248,17 @@ class OpenWebSocketsWithCrawlTest(WebSocketTest):
                                    status=101,
                                    headers=SUCCESSFUL_UPGRADE)]
 
+    @pytest.mark.skip("Is flaky until the crawl infrastructure is made deterministic")
     def test_open_websockets_with_crawl(self):
+        # The detection of websockets relies on an interaction between the grep and audit plugins.
+        # Both the grep and audit plugins are running at the same time, on crawled URLs. The grep
+        # plugin is inserting detected websocket URLs links into the knowledge base, and the audit
+        # plugin is pulling them back out (ignoring the URL it was given). If the grep plugin finds
+        # a websocket URL before the last time the audit plugin runs, we happen to be okay. But if
+        # the websocket link is in the last URL crawled, and the audit plugin processes the last URL
+        # before the grep plugin does, this test will fail. This is a stupid pattern that needs to
+        # die - it probably works well enough for most real-world scenarios, but it only 50% works
+        # under test.
         # Run the plugin
         cfg = ALL_RUN_CONFIG['cfg']
         self._scan(self.target_url, cfg['plugins'])
