@@ -32,7 +32,6 @@ from w3af.core.controllers.misc.temp_dir import create_temp_dir
 from w3af.core.controllers.daemons.proxy import Proxy, ProxyHandler
 
 
-@pytest.mark.moth
 class TestProxy(unittest.TestCase):
 
     IP = '127.0.0.1'
@@ -54,6 +53,7 @@ class TestProxy(unittest.TestCase):
         self.proxy_opener = urllib.request.build_opener(proxy_handler,
                                                  urllib.request.HTTPHandler)
 
+    @pytest.mark.moth
     def test_do_req_through_proxy(self):
         resp_body = self.proxy_opener.open(get_moth_http()).read()
 
@@ -86,6 +86,7 @@ class TestProxy(unittest.TestCase):
 
         self.assertEqual(direct_resp_headers, proxy_resp_headers)
 
+    @pytest.mark.moth
     def test_do_ssl_req_through_proxy(self):
         resp_body = self.proxy_opener.open(get_moth_https()).read()
 
@@ -115,6 +116,7 @@ class TestProxy(unittest.TestCase):
 
         self.assertEqual(direct_resp_headers, proxy_resp_headers)
 
+    @pytest.mark.moth
     def test_proxy_req_ok(self):
         """Test if self._proxy.stop() works as expected. Note that the check
         content is the same as the previous check, but it might be that this
@@ -128,12 +130,14 @@ class TestProxy(unittest.TestCase):
 
         self.assertEqual(resp, proxy_resp)
     
+    @pytest.mark.moth
     def test_stop_no_requests(self):
         """Test what happens if I stop the proxy without sending any requests
         through it"""
         # Note that the test is completed by self._proxy.stop() in tearDown
         pass
 
+    @pytest.mark.moth
     def test_stop_stop(self):
         """Test what happens if I stop the proxy twice."""
         # Note that the test is completed by self._proxy.stop() in tearDown
@@ -143,6 +147,7 @@ class TestProxy(unittest.TestCase):
         # Shutdown the proxy server
         self._proxy.stop()
 
+    @pytest.mark.moth
     def test_error_handling(self):
         del self._proxy._master.uri_opener
 

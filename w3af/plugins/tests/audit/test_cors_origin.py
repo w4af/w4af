@@ -27,17 +27,17 @@ from w3af.core.data.kb.info_set import InfoSet
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.url.HTTPResponse import HTTPResponse
 from w3af.core.data.dc.headers import Headers
-from w3af.core.controllers.ci.moth import get_moth_http
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 
 
-@pytest.mark.moth
+@pytest.mark.w3af_moth
 class TestCORSOriginScan(PluginTest):
 
     # Test scripts host/port and web context root
-    target_url = get_moth_http('/audit/cors/')
+    target_url = get_w3af_moth_http('/w3af/audit/cors/')
 
     # Originator for tests cases
-    originator = get_moth_http()
+    originator = get_w3af_moth_http()
 
     _run_configs = {
         'cfg': {
@@ -66,16 +66,14 @@ class TestCORSOriginScan(PluginTest):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
         vulns = self.kb.get('cors_origin', 'cors_origin')
-        self.assertEqual(2, len(vulns), vulns)
+        self.assertEqual(1, len(vulns), vulns)
+        infoset = vulns[0]
+        self.assertEqual('Insecure Access-Control-Allow-Origin', infoset.get_name())
+        urls = infoset.get_urls()
+        self.assertEqual(2, len(urls), urls)
 
-        EXPECTED_NAMES = ['Insecure Access-Control-Allow-Origin',
-                          'Insecure Access-Control-Allow-Origin']
-
-        self.assertEqual([v.get_name() for v in vulns],
-                         EXPECTED_NAMES)
-
-        self.assertTrue(all([v.get_url().url_string.startswith(self.target_url)
-                             for v in vulns]))
+        self.assertTrue(all([url.url_string.startswith(self.target_url)
+                             for url in urls]))
 
 
 class TestCORSOrigin(PluginTest):

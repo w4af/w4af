@@ -105,6 +105,7 @@ class CoreStrategy(object):
         self._seed_producer = seed(self._w3af_core)
 
         # Also use this method to clear observers
+        self._stop_observers()
         self._observers = []
 
     def start(self):
@@ -254,6 +255,11 @@ class CoreStrategy(object):
 
     def add_observer(self, observer):
         self._observers.append(observer)
+
+    def _stop_observers(self):
+        for observer in self._observers:
+            if hasattr(observer, 'end'):
+                observer.end()
 
     def _setup_observers(self):
         """
