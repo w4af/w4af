@@ -21,16 +21,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import pytest
 
-from w3af.core.controllers.ci.moth import get_moth_http
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
-@pytest.mark.moth
+@pytest.mark.w3af_moth
 class TestDav(PluginTest):
 
-    target_vuln_all = get_moth_http('/audit/dav/write-all/')
-    target_no_privs = get_moth_http('/audit/dav/no-privileges/')
-    target_safe_all = get_moth_http('/audit/eval/')
+    target_vuln_all = get_w3af_moth_http('/w3af/audit/dav/write-all/')
+    target_no_privs = get_w3af_moth_http('/w3af/audit/dav/no-privileges/')
+    target_safe_all = get_w3af_moth_http('/w3af/audit/eval/')
 
     _run_configs = {
         'cfg': {
@@ -48,7 +48,7 @@ class TestDav(PluginTest):
 
         vulns = self.kb.get('dav', 'dav')
 
-        EXPECTED_NAMES = set(['Insecure DAV configuration'] * 2)
+        EXPECTED_NAMES = set(['Insecure DAV configuration', 'Publicly writable directory'])
 
         self.assertEqual(EXPECTED_NAMES,
                           set([v.get_name() for v in vulns])
