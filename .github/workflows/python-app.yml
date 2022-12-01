@@ -56,7 +56,7 @@ jobs:
     timeout-minutes: 40
     strategy:
       matrix:
-        group: [w3af_moth,sqlmap,mcir,wivet,phpmoth]
+        group: [moth,w3af_moth,sqlmap,mcir,wivet,phpmoth]
 
 
     steps:
