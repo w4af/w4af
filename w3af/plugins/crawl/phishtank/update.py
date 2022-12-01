@@ -25,7 +25,7 @@ import os
 import csv
 import sys
 
-import subprocess32 as subprocess
+import subprocess
 import lxml.etree as etree
 
 
@@ -132,30 +132,23 @@ def convert_xml_to_csv():
         # encoding, so it will simply decode using the header:
         #
         # <?xml version="1.0" encoding="utf-8"?>
-        phishtank_db_fd = file(XML_DB_FILE, 'r')
+        with open(XML_DB_FILE, 'r') as phishtank_db_fd:
+            with open(CSV_DB_FILE, 'w') as output_csv_file:
+                pt_handler = PhishTankHandler(output_csv_file)
+                parser = etree.HTMLParser(recover=True, target=pt_handler)
+
+                print('Starting the phishtank XML conversion.')
+
+                try:
+                    etree.parse(phishtank_db_fd, parser)
+                except Exception as e:
+                    msg = 'XML parsing error in phishtank DB, exception: "%s".'
+                    sys.exit(msg % e)
+
+                print('Finished XML conversion.')
     except Exception as e:
-        msg = 'Failed to open XML phishtank database: "%s", exception: "%s".'
+        msg = 'Failed to update phishtank database: "%s", exception: "%s".'
         sys.exit(msg % (XML_DB_FILE, e))
-
-    try:
-        output_csv_file = file(CSV_DB_FILE, 'w')
-    except Exception as e:
-        msg = 'Failed to open CSV phishtank database: "%s", exception: "%s".'
-        sys.exit(msg % (CSV_DB_FILE, e))
-
-    pt_handler = PhishTankHandler(output_csv_file)
-    parser = etree.HTMLParser(recover=True, target=pt_handler)
-
-    print('Starting the phishtank XML conversion.')
-
-    try:
-        etree.parse(phishtank_db_fd, parser)
-    except Exception as e:
-        msg = 'XML parsing error in phishtank DB, exception: "%s".'
-        sys.exit(msg % e)
-
-    print('Finished XML conversion.')
-
 
 if __name__ == '__main__':
     download()
