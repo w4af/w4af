@@ -32,13 +32,13 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.dc.headers import Headers
 from w3af.core.data.misc.file_utils import days_since_file_update
 from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.controllers.ci.moth import get_moth_http
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 
 
-@pytest.mark.moth
+@pytest.mark.w3af_moth
 class TestPykto(PluginTest):
 
-    base_url = get_moth_http()
+    base_url = get_w3af_moth_http()
     DB_PATH = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl',
                            'pykto', 'scan_database.db')
     
@@ -63,7 +63,7 @@ class TestPykto(PluginTest):
         urls = self.kb.get_all_known_urls()
         self.assertEqual(len(urls), 3)
 
-        expected = ['http://moth/phpinfo.php', 'http://moth/hidden/']
+        expected = [get_w3af_moth_http('/phpinfo.php'), get_w3af_moth_http('/hidden/')]
         vuln_urls = [v.get_url().url_string for v in vulns]
         self.assertEqual(set(expected),
                          set(vuln_urls))
