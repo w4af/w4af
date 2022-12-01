@@ -35,7 +35,6 @@ from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.parsers.utils.form_id_matcher_list import FormIDMatcherList
 
 
-@pytest.mark.moth
 class TestWebSpider(PluginTest):
 
     follow_links_url = get_moth_http('/crawl/web_spider/test_case_01/')
@@ -73,11 +72,12 @@ class TestWebSpider(PluginTest):
         # pylint: disable=E1101
         # Pylint fails to detect the object types that come out of the KB
         urls = self.kb.get_all_known_urls()
-        found_urls = set(str(u).decode('utf-8') for u in urls)
+        found_urls = set(str(u) for u in urls)
 
         self.assertEqual(found_urls, expected_urls)
 
     @pytest.mark.smoke
+    @pytest.mark.moth
     def test_spider_found_urls(self):
         config = self._run_configs['basic']
         expected_files = ['1.html', '2.html', '3.html', '4.html',
@@ -87,6 +87,7 @@ class TestWebSpider(PluginTest):
         self.generic_scan(config, self.follow_links_url,
                           start_url, expected_files)
 
+    @pytest.mark.moth
     def test_utf8_urls(self):
         config = self._run_configs['basic']
         expected_files = ['vúlnerable.py',
@@ -97,6 +98,7 @@ class TestWebSpider(PluginTest):
 
         self.generic_scan(config, start_url, start_url, expected_files)
 
+    @pytest.mark.moth
     def test_euc_jp_urls(self):
         config = self._run_configs['basic']
         expected_files = ['raw-qs-jp.py',

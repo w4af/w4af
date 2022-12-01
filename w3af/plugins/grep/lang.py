@@ -72,7 +72,7 @@ class lang(GrepPlugin):
 
         try:
             text = Text(body)
-            guessed_lang = text.language.name
+            guessed_lang = text.language.code
         except IndexError:
             # I don't care about exception handling of the external lib
             guessed_lang = UNKNOWN

@@ -25,7 +25,6 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
 @pytest.mark.smoke
-@pytest.mark.moth
 class TestAllowedMethods(PluginTest):
     """
     Note that this is a smoke test because the code in allowed_methods calls
@@ -42,6 +41,7 @@ class TestAllowedMethods(PluginTest):
         }
     }
 
+    @pytest.mark.moth
     def test_moth(self):
         """
         test_moth in test_allowed_methods, test the "default" configuration for
@@ -70,6 +70,7 @@ class TestAllowedMethods(PluginTest):
         self.assertEqual(len(infos), 0, infos)
 
     @pytest.mark.ci_fails
+    @pytest.mark.modsecurity
     def test_modsecurity(self):
         """
         test_modsecurity in test_allowed_methods, test a different

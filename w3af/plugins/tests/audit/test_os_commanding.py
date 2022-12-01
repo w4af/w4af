@@ -31,6 +31,7 @@ class TestOSCommanding(PluginTest):
     _run_configs = {
         'cfg': {
             'target': target_url,
+            'target_os': 'unix',
             'plugins': {
                 'audit': (PluginConfig('os_commanding'),),
                 'crawl': (

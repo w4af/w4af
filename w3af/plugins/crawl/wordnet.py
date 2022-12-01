@@ -32,6 +32,7 @@ from w3af.core.data.nltk_wrapper.nltk_wrapper import wn
 from w3af.core.data.options.opt_factory import opt_factory
 from w3af.core.data.options.option_list import OptionList
 from w3af.core.data.request.fuzzable_request import FuzzableRequest
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class wordnet(CrawlPlugin):
@@ -124,6 +125,7 @@ class wordnet(CrawlPlugin):
         if not word or word.isdigit():
             return result
 
+        word = smart_unicode(word)
         with self._plugin_lock:
             # Now the magic that gets me a lot of results:
             try:

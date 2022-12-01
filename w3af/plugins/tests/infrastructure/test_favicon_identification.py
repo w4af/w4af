@@ -25,7 +25,6 @@ from w3af.core.controllers.ci.moth import get_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
-@pytest.mark.moth
 class TestFaviconIdentification(PluginTest):
 
     favicon_url = get_moth_http()
@@ -39,6 +38,7 @@ class TestFaviconIdentification(PluginTest):
     }
 
     @pytest.mark.ci_fails
+    @pytest.mark.wordpress
     def test_no_favicon_identification_http(self):
         cfg = self._run_configs['cfg']
         self._scan(self.no_favicon_url, cfg['plugins'])
@@ -47,6 +47,7 @@ class TestFaviconIdentification(PluginTest):
         self.assertEqual(len(infos), 0, infos)
 
     @pytest.mark.ci_fails
+    @pytest.mark.moth
     def test_favicon_identification_http(self):
         cfg = self._run_configs['cfg']
         self._scan(self.favicon_url, cfg['plugins'])

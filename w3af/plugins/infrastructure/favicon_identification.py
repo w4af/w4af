@@ -36,6 +36,7 @@ from w3af.core.controllers.misc.decorators import runonce
 from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
 from w3af.core.controllers.exceptions import RunOnce
 from w3af.core.data.kb.info import Info
+from w3af.core.data.misc.encoding import smart_str_ignore
 
 
 class favicon_identification(InfrastructurePlugin):
@@ -68,7 +69,7 @@ class favicon_identification(InfrastructurePlugin):
         # TODO: Maybe I should also parse the html to extract the favicon location?
         favicon_url = domain_path.url_join('favicon.ico')
         response = self._uri_opener.GET(favicon_url, cache=True)
-        remote_fav_md5 = hashlib.md5(response.get_body()).hexdigest()
+        remote_fav_md5 = hashlib.md5(smart_str_ignore(response.get_body())).hexdigest()
 
         if not is_404(response):
 

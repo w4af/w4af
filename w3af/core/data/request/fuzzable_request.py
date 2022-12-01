@@ -377,6 +377,13 @@ class FuzzableRequest(RequestMixIn, DiskItem):
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __lt__(self, other):
+        if (self.get_url() != other.get_url()):
+            return self.get_url() < other.get_url()
+        if (self.get_method() != other.get_method()):
+            return self.get_method() < other.get_method()
+        return 0
+
     def is_variant_of(self, other):
         """
         Two requests are loosely equal (or variants) if:

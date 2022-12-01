@@ -60,7 +60,8 @@ class TestWordnet(PluginTest):
         
         self.assertEqual(
             set(fr.get_uri().url_string for fr in frs),
-            set((self.target_url + end) for end in expected_urls)
+            set((self.target_url + end) for end in expected_urls),
+            set(fr.get_uri().url_string for fr in frs)
         )
 
     def test_search_wordnet(self):

@@ -27,7 +27,7 @@ from w3af.core.data.misc.file_utils import days_since_file_update
 from w3af.core.controllers.ci.moth import get_moth_http
 
 
-@pytest.mark.moth
+@pytest.mark.wordpress
 class Testwordpress_fingerprint(PluginTest):
 
     wordpress_url = 'http://wordpress/'

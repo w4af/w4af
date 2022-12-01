@@ -24,7 +24,7 @@ import pytest
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
-@pytest.mark.moth
+@pytest.mark.wordpress
 class TestWordpressPathDisclosure(PluginTest):
 
     wordpress_url = 'http://wordpress/'
