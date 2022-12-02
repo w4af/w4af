@@ -188,6 +188,7 @@ class TestFormAuthFailedLoginMatchTrivial(GenericFormAuthTest):
         self.assertEqual(vuln['pass'], 'admin')
 
 
+@pytest.mark.skip("Depends on external site that no longer exists")
 class TestFormAuthFailedLoginMatchWithStaticLargeResponse(GenericFormAuthTest):
 
     target_url = 'http://w3af.org/'
@@ -249,6 +250,7 @@ class TestFormAuthFailedLoginMatchWithStaticLargeResponse(GenericFormAuthTest):
         self.assertEqual(vuln['pass'], 'admin')
 
 
+@pytest.mark.skip("Depends on external site that no longer exists")
 class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponse(GenericFormAuthTest):
 
     target_url = 'http://w3af.org/'

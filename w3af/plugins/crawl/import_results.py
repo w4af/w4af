@@ -83,7 +83,7 @@ class import_results(CrawlPlugin):
                         continue
 
                     # Support comments
-                    if line.startswith('#'):
+                    if line.startswith(b'#'):
                         continue
 
                     try:
@@ -225,7 +225,7 @@ class BurpParser(object):
             else:
                 request_text_b64 = data
                 request_text = base64.b64decode(request_text_b64)
-                head, postdata = request_text.split('\r\n\r\n', 1)
+                head, postdata = request_text.split(b'\r\n\r\n', 1)
 
             fuzzable_request = http_request_parser(head, postdata)
             self.requests.append(fuzzable_request)

@@ -155,7 +155,7 @@ class TestImportResults(PluginTest):
         self.assertEqual(expected_post_urls, post_urls)
 
         expected_post_url = 'http://127.0.0.1:8000/core/file_upload/upload.py'
-        file_contents = 'hello\nworld\n'
+        file_contents = b'hello\nworld\n'
 
         post_fr = None
 
@@ -225,7 +225,7 @@ class TestImportResults(PluginTest):
                 break
 
         expected_post_url = 'http://127.0.0.1:8000/core/file_upload/upload.py'
-        file_contents = 'hello\nworld\n'
+        file_contents = b'hello\nworld\n'
 
         self.assertEqual(post_fr.get_url().url_string, expected_post_url)
         self.assertEqual(post_fr.get_raw_data()['_file'][0], file_contents)

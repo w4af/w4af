@@ -38,6 +38,7 @@ from w3af.core.controllers.core_helpers.consumers.constants import POISON_PILL
 from w3af.core.controllers.exceptions import BaseFrameworkException, RunOnce, ScanMustStopException
 from w3af.core.controllers.core_helpers.consumers.base_consumer import (BaseConsumer,
                                                                         task_decorator)
+from w3af.core.data.misc.encoding import smart_unicode
 
 
 class CrawlInfrastructure(BaseConsumer):
@@ -474,7 +475,7 @@ class CrawlInfrastructure(BaseConsumer):
                 msg = ('Ignoring form "%s" with parameters [%s] since it is'
                        ' simply a variant of another form seen before.')
                 args = (fuzzable_request.get_uri(),
-                        ', '.join(fuzzable_request.get_raw_data().get_param_names()))
+                        ', '.join([smart_unicode(s) for s in fuzzable_request.get_raw_data().get_param_names()]))
                 om.out.debug(msg % args)
 
             return False

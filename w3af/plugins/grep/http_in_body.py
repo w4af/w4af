@@ -19,6 +19,8 @@ along with w3af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import re
+
 import w3af.core.controllers.output_manager as om
 import w3af.core.data.kb.knowledge_base as kb
 
@@ -35,12 +37,12 @@ class http_in_body(GrepPlugin):
 
     HTTP = (
         # GET / HTTP/1.0
-        ('[a-zA-Z]{3,6} .*? HTTP/1.[01]', 'REQUEST'),
+        (r'[a-zA-Z]{3,6} .*? HTTP/1.[01]', 'REQUEST'),
 
         # HTTP/1.1 200 OK
-        ('HTTP/1.[01] [0-9][0-9][0-9] [a-zA-Z]*', 'RESPONSE')
+        (r'HTTP/1.[01] [0-9][0-9][0-9] [a-zA-Z]*', 'RESPONSE')
     )
-    _multi_re = MultiRE(HTTP)
+    _multi_re = MultiRE(HTTP, re.IGNORECASE)
 
     def grep(self, request, response):
         """
