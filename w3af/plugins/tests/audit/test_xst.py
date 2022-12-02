@@ -24,7 +24,7 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.core.controllers.ci.moth import get_moth_http
 
 
-@pytest.mark.moth
+@pytest.mark.skip("Doesn't currently work against target server")
 class TestXST(PluginTest):
 
     target_url = get_moth_http()

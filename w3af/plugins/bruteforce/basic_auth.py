@@ -99,7 +99,7 @@ class basic_auth(BruteforcePlugin):
         user, passwd = combination
 
         raw_values = '%s:%s' % (user, passwd)
-        auth = 'Basic %s' % base64.b64encode(raw_values.encode('utf-8')).strip()
+        auth = b'Basic %s' % base64.b64encode(raw_values.encode('utf-8')).strip()
         headers = Headers([('Authorization', auth)])
 
         fr = FuzzableRequest(url, headers=headers, method='GET')

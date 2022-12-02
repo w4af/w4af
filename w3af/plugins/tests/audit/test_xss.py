@@ -128,7 +128,7 @@ class TestXSS(PluginTest):
             set(kb_data),
         )
 
-    @pytest.mark.moth
+    @pytest.mark.wavsep
     def test_2919_javascript_src_frame(self):
         """
         https://github.com/andresriancho/w3af/issues/2919

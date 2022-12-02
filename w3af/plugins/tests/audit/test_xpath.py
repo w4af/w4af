@@ -49,7 +49,7 @@ class TestXPATH(PluginTest):
         self._scan(cfg['target'], cfg['plugins'])
 
         # Assert the general results
-        expected_vuln_number = 4
+        expected_vuln_number = 5
         vulns = self.kb.get('xpath', 'xpath')
         self.assertEqual(expected_vuln_number, len(vulns), vulns)
         
@@ -60,6 +60,7 @@ class TestXPATH(PluginTest):
         # Verify the specifics about the vulnerabilities
         expected = [('xpath-attr-double.py', 'text'),
                     ('xpath-attr-tag.py', 'text'),
+                    ('xpath-attr-tag.py', 'Submit'),
                     ('xpath-attr-or.py', 'text'),
                     ('xpath-attr-single.py', 'text')]
 

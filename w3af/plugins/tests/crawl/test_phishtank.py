@@ -28,6 +28,7 @@ from w3af.core.data.request.fuzzable_request import FuzzableRequest
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.constants.severity import MEDIUM
 from w3af.core.data.misc.file_utils import days_since_file_update
+from w3af.core.data.fuzzer.utils import rand_alnum
 
 
 @pytest.mark.moth
@@ -40,7 +41,8 @@ class TestPhishtank(PluginTest):
         phishtank_inst = self.w3afcore.plugins.get_plugin_inst('crawl',
                                                                'phishtank')
         
-        phishtank_inst.crawl(FuzzableRequest(URL(self.safe_url)))
+        debug_id = rand_alnum()
+        phishtank_inst.crawl(FuzzableRequest(URL(self.safe_url)), debug_id)
         vulns = self.kb.get('phishtank', 'phishtank')
 
         self.assertEqual(len(vulns), 0, vulns)
@@ -50,16 +52,16 @@ class TestPhishtank(PluginTest):
             pt_csv_reader = csv.reader(phish_fh, delimiter=' ',
                                     quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
-        for phishing_url, phishtank_detail_url in pt_csv_reader:
-            return phishing_url
+            for phishing_url, phishtank_detail_url in pt_csv_reader:
+                return phishing_url
 
     def get_last_vulnerable_url(self):
         with open(phishtank.PHISHTANK_DB) as phish_fh:
             pt_csv_reader = csv.reader(phish_fh, delimiter=' ',
                                    quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
-        for phishing_url, phishtank_detail_url in pt_csv_reader:
-            pass
+            for phishing_url, phishtank_detail_url in pt_csv_reader:
+                pass
 
         return phishing_url
 
@@ -72,8 +74,9 @@ class TestPhishtank(PluginTest):
         phishtank_inst = self.w3afcore.plugins.get_plugin_inst('crawl',
                                                                'phishtank')
         
+        debug_id = rand_alnum()
         vuln_url = URL(self.get_vulnerable_url())
-        phishtank_inst.crawl(FuzzableRequest(vuln_url))
+        phishtank_inst.crawl(FuzzableRequest(vuln_url), debug_id)
 
         vulns = self.kb.get('phishtank', 'phishtank')
 
@@ -88,8 +91,9 @@ class TestPhishtank(PluginTest):
         phishtank_inst = self.w3afcore.plugins.get_plugin_inst('crawl',
                                                                'phishtank')
 
+        debug_id = rand_alnum()
         vuln_url = URL(self.get_last_vulnerable_url())
-        phishtank_inst.crawl(FuzzableRequest(vuln_url))
+        phishtank_inst.crawl(FuzzableRequest(vuln_url), debug_id)
 
         vulns = self.kb.get('phishtank', 'phishtank')
 
