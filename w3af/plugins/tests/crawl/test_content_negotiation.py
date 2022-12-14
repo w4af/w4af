@@ -27,7 +27,7 @@ from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 @pytest.mark.w3af_moth
 class TestContentNegotiation(PluginTest):
 
-    base_url = get_w3af_moth_http('/crawl/content_negotiation/')
+    base_url = get_w3af_moth_http('/w3af/crawl/content_negotiation/')
 
     _run_configs = {
         'cfg': {
