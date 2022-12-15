@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import os
+import re
 import csv
 import sys
 
@@ -33,6 +34,7 @@ URL = 'https://data.phishtank.com/data/online-valid/'
 XML_DB_FILE = 'w3af/plugins/crawl/phishtank/index.xml'
 CSV_DB_FILE = 'w3af/plugins/crawl/phishtank/index.csv'
 DOWNLOAD_CMD = 'wget -q %s -O %s'
+CDATA_RE = re.compile(r"^<!\[CDATA\[(.*)\]]>$")
 
 
 class PhishTankHandler(object):
@@ -108,6 +110,9 @@ class PhishTankHandler(object):
             #
             #    Now I dump the data to the CSV file
             #
+            m = CDATA_RE.match(self.url)
+            if m is not None:
+                self.url = m[1]
             self.entry_writer.writerow([self.url, self.phish_detail_url])
 
     def close(self):

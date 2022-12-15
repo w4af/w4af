@@ -51,7 +51,7 @@ class TestGHDB(PluginTest):
         with patch('w3af.plugins.crawl.web_diff.om.out') as om_mock:
             self._scan(self.private_url, cfg['plugins'])
 
-            msg = 'There is no point in searching bing for "site:moth".' \
+            msg = 'There is no point in searching bing for "site:127.0.0.1".' \
                   ' Bing does not index private pages.'
 
             self.assertIn(call.information(msg), om_mock.mock_calls)

@@ -48,10 +48,6 @@ class phishtank(CrawlPlugin):
     PHISHTANK_DB = os.path.join(ROOT_PATH, 'plugins', 'crawl', 'phishtank',
                                 'index.csv')
 
-    def __init__(self):
-        CrawlPlugin.__init__(self)
-        self._multi_in = None
-
     @runonce(exc_class=RunOnce)
     def crawl(self, fuzzable_request, debugging_id):
         """
@@ -61,13 +57,15 @@ class phishtank(CrawlPlugin):
         :param fuzzable_request: A fuzzable_request instance that contains
                                     (among other things) the URL to test.
         """
-        to_check = self._get_to_check(fuzzable_request.get_url())
-
         # I found some URLs, create fuzzable requests
-        pt_matches = self._is_in_phishtank(to_check)
+        to_check = self._get_to_check(fuzzable_request.get_url(), subdomains = False)
+        pt_matches = self._is_in_phishtank(to_check, exact_match=True)
 
         if not pt_matches:
-            return
+            to_check = self._get_to_check(fuzzable_request.get_url(), subdomains = True)
+            pt_matches = self._is_in_phishtank(to_check, exact_match=False)
+            if not pt_matches:
+                return
 
         for ptm in pt_matches:
             fr = FuzzableRequest(ptm.url)
@@ -83,7 +81,7 @@ class phishtank(CrawlPlugin):
         kb.kb.append(self, 'phishtank', v)
         om.out.vulnerability(v.get_desc(), severity=v.get_severity())
 
-    def _get_to_check(self, target_url):
+    def _get_to_check(self, target_url, subdomains = False):
         """
         :param target_url: The url object we can use to extract some information
         :return: From the domain, get a list of FQDN, rootDomain and IP address.
@@ -96,7 +94,10 @@ class phishtank(CrawlPlugin):
 
         def root_domain(url):
             if not is_ip_address(url.get_domain()):
-                return [url.get_root_domain(), ]
+                if subdomains:
+                    return [url.get_root_domain(), ]
+                else:
+                    return [url.get_domain(), ]
             
             return []
 
@@ -112,7 +113,7 @@ class phishtank(CrawlPlugin):
 
         return res
 
-    def _is_in_phishtank(self, to_check):
+    def _is_in_phishtank(self, to_check, exact_match = False):
         """
         Reads the phishtank db and tries to match the entries on that db with
         the to_check
@@ -122,7 +123,7 @@ class phishtank(CrawlPlugin):
         try:
             with open(self.PHISHTANK_DB, 'r') as phishtank_db_fd:
                 pt_matches = []
-                self._multi_in = MultiIn(to_check)
+                multi_in = MultiIn(to_check)
 
                 om.out.debug('Starting the phishtank CSV parsing.')
 
@@ -130,7 +131,7 @@ class phishtank(CrawlPlugin):
                                         quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
                 for phishing_url, phishtank_detail_url in pt_csv_reader:
-                    pt_match = self._url_matches(phishing_url, phishtank_detail_url)
+                    pt_match = self._url_matches(phishing_url, phishtank_detail_url, multi_in, exact_match)
                     if pt_match:
                         pt_matches.append(pt_match)
 
@@ -141,19 +142,20 @@ class phishtank(CrawlPlugin):
             msg = 'Failed to open phishtank database: "%s", exception: "%s".'
             raise BaseFrameworkException(msg % (self.PHISHTANK_DB, e))
 
-    def _url_matches(self, phishing_url, phishtank_detail_url):
+    def _url_matches(self, phishing_url, phishtank_detail_url, multi_in, exact_match):
         """
         :param url: The url (as string) from the phishtank database
         :return: A PhishTankMatch if url matches what we're looking for, None
                  if there is no match
         """
-        for query_result in self._multi_in.query(phishing_url):
+        for query_result in multi_in.query(phishing_url):
             phish_url = URL(phishing_url)
-            target_host_url = URL(query_result[0])
+            target_host_url = URL(query_result)
 
-            if target_host_url.get_domain() == phish_url.get_domain() or \
-            phish_url.get_domain().endswith('.' + target_host_url.get_domain()):
-
+            if (target_host_url.get_domain() == phish_url.get_domain() or
+                (exact_match is False and
+                    (phish_url.get_domain().endswith('.' + target_host_url.get_domain()))
+                )):
                 phish_detail_url = URL(phishtank_detail_url)
                 ptm = PhishTankMatch(phish_url, phish_detail_url)
                 return ptm
