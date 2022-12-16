@@ -152,7 +152,11 @@ class server_header(InfrastructurePlugin):
                     kb.kb.append(self, 'powered_by', i)
 
                     # Save the list to the KB
-                    kb.kb.raw_write(self, 'powered_by_string', list(powered_by))
+                    if isinstance(powered_by, str):
+                        kb.kb.raw_write(self, 'powered_by_string', powered_by)
+                    else:
+                        kb.kb.raw_write(self, 'powered_by_string', list(powered_by))
+
 
     def get_long_desc(self):
         """

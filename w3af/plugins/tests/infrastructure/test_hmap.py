@@ -37,6 +37,7 @@ class TestHmap(PluginTest):
         }
     }
 
+    @pytest.mark.skip("hmap tool is very old - need to replace this with something more modern")
     def test_hmap_http(self):
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
@@ -47,6 +48,7 @@ class TestHmap(PluginTest):
         info = infos[0]
         self.assertIn('WSGIServer/0.1', info.get_desc(), info.get_desc())
 
+    @pytest.mark.skip("hmap tool is very old - need to replace this with something more modern")
     def test_hmap_https(self):
         cfg = self._run_configs['cfg']
         self._scan(get_moth_https(), cfg['plugins'])
