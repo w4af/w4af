@@ -201,8 +201,6 @@ httpsPort = 443
 
 [infrastructure.find_jboss]
 
-[infrastructure.halberd]
-
 [infrastructure.domain_dot]
 
 [infrastructure.fingerprint_WAF]
@@ -210,9 +208,6 @@ httpsPort = 443
 [infrastructure.allowed_methods]
 run_once = True
 dav_only = True
-
-[infrastructure.hmap]
-gen_fingerprint = False
 
 [misc-settings]
 fuzz_form_files = True

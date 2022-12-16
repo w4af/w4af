@@ -19,8 +19,6 @@ run_once = False
 
 [grep.feeds]
 
-[infrastructure.halberd]
-
 [audit.phishing_vector]
 
 [grep.path_disclosure]
@@ -135,10 +133,6 @@ extensive = False
 [infrastructure.server_status]
 
 [grep.objects]
-
-[infrastructure.hmap]
-gen_fingerprint = False
-threads = 4
 
 [crawl.user_dir]
 

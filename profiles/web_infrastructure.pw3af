@@ -22,11 +22,6 @@ msf_location = /opt/metasploit3/bin/
 
 [infrastructure.fingerprint_os]
 
-[infrastructure.halberd]
-
-[infrastructure.hmap]
-gen_fingerprint = False
-
 [infrastructure.afd]
 
 [http-settings]
@@ -92,8 +87,6 @@ use_colors = True
 
 [infrastructure.finger_bing]
 
-[infrastructure.halberd]
-
 [infrastructure.domain_dot]
 
 [infrastructure.finger_pks]
@@ -103,8 +96,6 @@ use_colors = True
 [infrastructure.allowed_methods]
 run_once = True
 dav_only = True
-
-[infrastructure.hmap]
 
 [infrastructure.xssed_dot_com]
 
