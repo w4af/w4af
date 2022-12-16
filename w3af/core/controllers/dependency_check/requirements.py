@@ -29,8 +29,8 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('git.util', 'GitPython', '3.1.29'),
                      PIPDependency('bloom-filter2', 'bloom-filter2', '2.0.0'),
                      PIPDependency('phply', 'phply', '1.2.5'),
-                     PIPDependency('nltk', 'nltk', '3.7'),
-                     PIPDependency('chardet', 'chardet', '5.0.0'),
+                     PIPDependency('nltk', 'nltk', '3.8'),
+                     PIPDependency('chardet', 'chardet', '5.1.0'),
                      PIPDependency('tblib', 'tblib', '1.7.0'),
                      PIPDependency('pdfminer', 'pdfminer', '20191125'),
                      PIPDependency('OpenSSL', 'pyOpenSSL', '22.1.0'),
@@ -39,12 +39,11 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      # We need 0.1.8 because of mitmproxy
                      PIPDependency('pyasn1', 'pyasn1', '0.4.8'),
 
-                     PIPDependency('lxml', 'lxml', '4.9.1'),
+                     PIPDependency('lxml', 'lxml', '4.9.2'),
                      PIPDependency('scapy.config', 'scapy', '2.5.0rc1'),
                      PIPDependency('cluster', 'cluster', '1.4.1.post3'),
                      PIPDependency('msgpack', 'msgpack', '1.0.4'),
                      PIPDependency('ntlm', 'python-ntlm3', '1.0.2'),
-                     PIPDependency('Halberd', 'halberd', '0.2.5'),
                      PIPDependency('darts.lib.utils', 'darts-util-lru', '0.5'),
                      PIPDependency('jinja2', 'Jinja2', '3.1.2'),
                      PIPDependency('vulndb', 'vulndb', '0.1.3'),
@@ -55,10 +54,10 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('psutil', 'psutil', '5.9.4'),
 
                      # Added for the crawl.ds_store plugin
-                     PIPDependency('ds_store', 'ds-store', '1.3.0'),
+                     PIPDependency('ds_store', 'ds-store', '1.3.1'),
 
                      # Console colors
-                     PIPDependency('termcolor', 'termcolor', '2.1.0'),
+                     PIPDependency('termcolor', 'termcolor', '2.1.1'),
 
                      # We "outsource" the HTTP proxy feature to mitmproxy
                      PIPDependency('mitmproxy', 'mitmproxy', '0.13'),
@@ -70,7 +69,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
 
                      # For language detection
                      PIPDependency('morfessor', 'morfessor', '2.0.6'),
-                     PIPDependency('numpy', 'numpy', '1.23.4'),
+                     PIPDependency('numpy', 'numpy', '1.23.5'),
                      PIPDependency('polyglot', 'polyglot', '16.7.4'),
                      PIPDependency('pycld2', 'pycld2', '0.41'),
                      PIPDependency('pyicu', 'pyicu', '2.10.2'),
@@ -79,7 +78,7 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('tldextract', 'tldextract', '3.4.0'),
 
                      # pebble multiprocessing
-                     PIPDependency('pebble', 'pebble', '5.0.2'),
+                     PIPDependency('pebble', 'pebble', '5.0.3'),
 
                      # acora speeds up string search, for regular expressions
                      # we use esmre to extract the string literals from the re

@@ -82,10 +82,6 @@ ref = "bugfix/remove-pyopenssl-deprecation-warning"
 git = "https://github.com/w4af/DartsPyLRU"
 editable = true
 
-[packages.halberd]
-git = "https://github.com/w4af/halberd"
-editable = true
-
 [packages.mitmproxy]
 git = "https://github.com/w4af/mitmproxy"
 ref = "daeb6d94a98a8200cb9e9b6f107de1b54482d2ff"

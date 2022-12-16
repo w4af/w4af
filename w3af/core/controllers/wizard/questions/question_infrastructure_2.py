@@ -53,14 +53,10 @@ class question_infrastructure_2(question):
         self._d3 = 'Fingerprint Web Application Firewalls'
         o3 = opt_factory(self._d3, True, self._d3, 'boolean')
 
-        self._d4 = 'Identify HTTP load balancers'
-        o4 = opt_factory(self._d4, True, self._d4, 'boolean')
-
         ol = OptionList()
         ol.add(o1)
         ol.add(o2)
         ol.add(o3)
-        ol.add(o4)
 
         return ol
 
@@ -76,9 +72,6 @@ class question_infrastructure_2(question):
 
         if options_list[self._d3].get_value():
             plugin_list.append('fingerprint_WAF')
-
-        if options_list[self._d4].get_value():
-            plugin_list.append('halberd')
 
         # Set the plugins to be run
         old_discovery = self.w3af_core.plugins.get_enabled_plugins('infrastructure')

@@ -70,7 +70,6 @@ class question_infrastructure_3(question):
             plugin_list.append('fingerprint_os')
 
         if options_list[self._d2].get_value():
-            plugin_list.append('hmap')
             plugin_list.append('server_header')
 
         if options_list[self._d3].get_value():

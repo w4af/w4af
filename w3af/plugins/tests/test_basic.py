@@ -233,7 +233,7 @@ class TestFailOnInvalidURL(PluginTest):
     _run_configs = {
         'cfg': {
         'target': None,
-        'plugins': {'infrastructure': (PluginConfig('hmap'),)}
+        'plugins': {'infrastructure': (PluginConfig('allowed_methods'),)}
         }
     }
 
