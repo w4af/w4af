@@ -89,7 +89,7 @@ class TestCSVFile(PluginTest):
 
     def _from_csv_get_vulns(self):
         file_vulns = []
-        vuln_reader = csv.reader(open(self.OUTPUT_FILE, 'rb'), delimiter=',',
+        vuln_reader = csv.reader(open(self.OUTPUT_FILE, 'r'), delimiter=',',
                                  quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
         for severity, name, method, uri, var, post_data, _id, desc in vuln_reader:
@@ -120,5 +120,6 @@ def create_mutant_from_params(method, uri, var, post_data):
     freq = FuzzableRequest.from_parts(uri, method=method,
                                       post_data=post_data, headers=headers)
     mutant = MutantKlass(freq)
-    mutant.get_dc().set_token((var, 0))
+    if mutant.get_dc() is not None:
+        mutant.get_dc().set_token((var, 0))
     return mutant

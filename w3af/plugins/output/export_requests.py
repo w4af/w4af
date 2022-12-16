@@ -67,7 +67,7 @@ class export_requests(OutputPlugin):
 
         try:
             for fr in fuzzable_request_set:
-                out_file.write(fr.to_base64() + '\n')
+                out_file.write(fr.to_base64().decode('utf-8') + '\n')
 
         except Exception as e:
             msg = ('An exception was raised while trying to export fuzzable'

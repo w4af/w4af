@@ -102,7 +102,7 @@ class TestXMLOutput(PluginTest):
             set(sorted([v.get_plugin_name() for v in file_vulns]))
         )
 
-        with open(self.FILENAME) as file_h:
+        with open(self.FILENAME, "rb") as file_h:
             self.assertEqual(validate_xml(file_h.read(), self.XSD), '')
 
     def tearDown(self):
@@ -270,7 +270,7 @@ def validate_xml(content, schema_content):
     """
     xml_schema_doc = etree.parse(schema_content)
     xml_schema = etree.XMLSchema(xml_schema_doc)
-    xml = etree.parse(io.StringIO(content))
+    xml = etree.parse(io.BytesIO(content))
 
     # Validate the content against the schema.
     try:

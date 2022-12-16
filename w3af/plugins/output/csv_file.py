@@ -60,8 +60,13 @@ class csv_file(OutputPlugin):
         self.output_file = os.path.expanduser(self.output_file)
 
         try:
-            with open(self.output_file, 'wb') as output_handler:
+            with open(self.output_file, 'w') as output_handler:
                 try:
+                    def encode_post_data(info):
+                        data = info.get_mutant().get_data()
+                        if data is None:
+                            return None
+                        return base64.b64encode(data).decode("utf-8")
                     csv_writer = csv.writer(output_handler,
                                             delimiter=',',
                                             quotechar='|',
@@ -74,7 +79,7 @@ class csv_file(OutputPlugin):
                                 info.get_method(),
                                 info.get_uri(),
                                 info.get_token_name(),
-                                base64.b64encode(info.get_mutant().get_data()),
+                                encode_post_data(info),
                                 info.get_id(),
                                 info.get_desc()]
                             csv_writer.writerow(row)

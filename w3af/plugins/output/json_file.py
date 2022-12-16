@@ -86,7 +86,7 @@ class json_file(OutputPlugin):
         self.output_file = os.path.expanduser(self.output_file)
 
         try:
-            with open(self.output_file, 'wb') as output_handler:
+            with open(self.output_file, 'w') as output_handler:
 
                 target_urls = [t.url_string for t in cf.cf.get('targets')]
 
@@ -102,6 +102,12 @@ class json_file(OutputPlugin):
                     except AttributeError:
                         return None
 
+                def _encode_post_data(info):
+                    data = info.get_mutant().get_data()
+                    if data is None:
+                        return None
+                    return base64.b64encode(data).decode('utf-8')
+
                 findings = [_f for _f in [_get_desc(x) for x in kb.kb.get_all_findings_iter()] if _f]
                 known_urls = [str(x) for x in kb.kb.get_all_known_urls()]
 
@@ -113,7 +119,7 @@ class json_file(OutputPlugin):
                                 "HTTP method": info.get_method(),
                                 "URL": str(info.get_url()),
                                 "Vulnerable parameter": info.get_token_name(),
-                                "POST data": base64.b64encode(info.get_mutant().get_data()),
+                                "POST data": _encode_post_data(info),
                                 "Vulnerability IDs": info.get_id(),
                                 "CWE IDs": getattr(info, "cwe_ids", []),
                                 "WASC IDs": getattr(info, "wasc_ids", []),
