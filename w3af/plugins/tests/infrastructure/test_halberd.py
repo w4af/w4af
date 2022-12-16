@@ -25,6 +25,7 @@ from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
 @pytest.mark.moth
+@pytest.mark.skip("Halberd is very out-of-date - need a new script to detect load balancing")
 class TestHalberd(PluginTest):
 
     target_url = get_moth_http('/infrastructure/halberd/halberd.py')
