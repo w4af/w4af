@@ -194,13 +194,21 @@ class APIScanTest(IntegrationTest):
         # Wait for it...
         self.wait_until_finish()
 
-        # Assert that we identify the logs associated with stopping the core
-        response = requests.get('%s/scans/0/log' % self.api_url,
-                                auth=self.api_auth,
-                                verify=False)
-        self.assertEqual(response.status_code, 200, response.text)
+        next_page = '/scans/0/log'
+        log_data = []
+        while next_page is not None:
+            next_url = '%s%s' % (self.api_url, next_page)
+            # Assert that we identify the logs associated with stopping the core
+            response = requests.get(next_url,
+                                    auth=self.api_auth,
+                                    verify=False)
 
-        log_data = response.json()['entries']
+            self.assertEqual(response.status_code, 200, response.text)
+
+            response_json = response.json()
+            log_data.extend(response_json['entries'])
+            next_page = response_json['next_url']
+
         for entry in log_data:
             if 'The user stopped the scan' in entry['message']:
                 break
