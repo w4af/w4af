@@ -21,13 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import pytest
 
-from w3af.core.controllers.ci.moth import get_moth_http
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
 class TestFaviconIdentification(PluginTest):
 
-    favicon_url = get_moth_http()
+    favicon_url = get_w3af_moth_http()
     no_favicon_url = 'http://wordpress/'
 
     _run_configs = {
@@ -47,7 +47,7 @@ class TestFaviconIdentification(PluginTest):
         self.assertEqual(len(infos), 0, infos)
 
     @pytest.mark.ci_fails
-    @pytest.mark.moth
+    @pytest.mark.w3af_moth
     def test_favicon_identification_http(self):
         cfg = self._run_configs['cfg']
         self._scan(self.favicon_url, cfg['plugins'])
