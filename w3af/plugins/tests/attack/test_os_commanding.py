@@ -46,6 +46,7 @@ class TestOSCommandingShell(ExecExploitTest):
         }
     }
 
+    @pytest.mark.flaky(reruns=3)
     def test_found_exploit_osc(self):
         # Run the scan
         cfg = self._run_configs['cfg']

@@ -61,6 +61,7 @@ coverage = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-split = "*"
+pytest-rerunfailures = "*"
 pillow = "*"
 bloom-filter2 = "*"
 

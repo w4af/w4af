@@ -205,7 +205,8 @@ class APIScanTest(IntegrationTest):
             if 'The user stopped the scan' in entry['message']:
                 break
         else:
-            self.assertTrue(False, 'Stop not found in log')
+            # Stop not found in log...
+            self.assertTrue(False, [ entry['message'] for entry in log_data ])
 
     def test_two_scans(self):
         scan_id_0 = self.test_start_simple_scan()
