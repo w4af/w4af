@@ -210,7 +210,8 @@ class APIScanTest(IntegrationTest):
             next_page = response_json['next_url']
 
         for entry in log_data:
-            if 'The user stopped the scan' in entry['message']:
+            if ('The user stopped the scan' in entry['message']) or \
+                ('The user stopped the core' in entry['message']):
                 break
         else:
             # Stop not found in log...
