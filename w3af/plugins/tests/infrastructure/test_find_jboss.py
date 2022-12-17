@@ -20,14 +20,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 
-from w3af.core.controllers.ci.moth import get_moth_http
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 
 
-@pytest.mark.moth
+@pytest.mark.w3af_moth
 class TestFindJBoss(PluginTest):
 
-    target_url = get_moth_http()
+    target_url = get_w3af_moth_http()
 
     _run_configs = {
         'cfg': {
