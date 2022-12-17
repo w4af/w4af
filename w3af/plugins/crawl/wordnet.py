@@ -75,7 +75,7 @@ class wordnet(CrawlPlugin):
         if is_404(response):
             return
 
-        if fuzzy_not_equal(original_response.body, response.body, 0.85):
+        if fuzzy_not_equal(original_response.body, response.body, 0.96):
             
             # Verify against something random
             rand = rand_alpha()
@@ -83,7 +83,7 @@ class wordnet(CrawlPlugin):
             rand_mutant.set_token_value(rand)
             rand_response = self._uri_opener.send_mutant(rand_mutant)
             
-            if fuzzy_not_equal(response.body, rand_response.body, 0.85):
+            if fuzzy_not_equal(response.body, rand_response.body, 0.96):
                 
                 fr = FuzzableRequest(response.get_uri())
                 self.output_queue.put(fr)

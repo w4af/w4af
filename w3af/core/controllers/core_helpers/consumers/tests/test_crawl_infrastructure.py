@@ -62,7 +62,7 @@ class TestTimeLimit(PluginTest):
         first_scan_time = end_time - start_time
 
         len_first_urls = len(self.kb.get_all_known_urls())
-        self.assertGreater(len_first_urls, 90)
+        self.assertGreater(len_first_urls, 44)
         self.assertLess(first_scan_time, 30)
         
         # Cleanup
@@ -84,7 +84,7 @@ class TestTimeLimit(PluginTest):
         second_scan_time = end_time - start_time
 
         len_second_urls = len(self.kb.get_all_known_urls())
-        self.assertGreater(len_second_urls, 200)
+        self.assertGreater(len_second_urls, 100)
         self.assertGreater(len_second_urls, len_first_urls)
         self.assertLess(second_scan_time, 60)
         

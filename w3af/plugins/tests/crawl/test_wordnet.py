@@ -52,7 +52,7 @@ class TestWordnet(PluginTest):
 
         expected_urls = (
                          '', 'azure.html', 'blue.html', 'green.html', 'hide.py',
-                         'red.html', 'show.py', 'show.py?os=linux',
+                         'red.html', 'show.py',
                          'show.py?os=unix', 'show.py?os=windows',
         )
 

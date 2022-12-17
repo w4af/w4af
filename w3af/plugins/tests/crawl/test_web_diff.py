@@ -26,13 +26,13 @@ from unittest.mock import patch, call
 from w3af import ROOT_PATH
 from w3af.core.data.parsers.doc.url import URL
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.core.controllers.ci.moth import get_moth_http
+from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
 
 
-@pytest.mark.moth
+@pytest.mark.w3af_moth
 class TestWebDiff(PluginTest):
 
-    target_url = get_moth_http('/crawl/web_diff/')
+    target_url = get_w3af_moth_http('/w3af/crawl/web_diff/')
     local_dir = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl', 'web_diff')
 
     _run_configs = {
@@ -63,25 +63,25 @@ class TestWebDiff(PluginTest):
                 call.information('The following files exist in the local'
                                  ' directory and in the remote server:'),
                 call.information(
-                    '- %s/456.html' % get_moth_http('/crawl/web_diff/')),
+                    '- %s/456.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
                 call.information(
-                    '- %s/exclude.php' % get_moth_http('/crawl/web_diff/')),
+                    '- %s/exclude.php' % get_w3af_moth_http('/w3af/crawl/web_diff')),
                 call.information(
-                    '- %s/123.html' % get_moth_http('/crawl/web_diff/')),
+                    '- %s/123.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
                 call.information(
-                    '- %s/index.html' % get_moth_http('/crawl/web_diff/')),
+                    '- %s/index.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
                 call.information('The following files exist in the local'
                                  ' directory and in the remote server and'
                                  ' their contents match:'),
                 call.information(
-                    '- %s/123.html' % get_moth_http('/crawl/web_diff/')),
+                    '- %s/123.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
                 call.information(
-                    '- %s/index.html' % get_moth_http('/crawl/web_diff/')),
+                    '- %s/index.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
                 call.information("The following files exist in the local"
                                  " directory and in the remote server but"
                                  " their contents don't match:"),
                 call.information(
-                    '- %s/456.html' % get_moth_http('/crawl/web_diff/')),
+                    '- %s/456.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
                 call.information('Match files: 4 of 4'),
                 call.information('Match contents: 2 of 3')
             ]

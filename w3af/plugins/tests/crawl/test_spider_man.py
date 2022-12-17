@@ -29,11 +29,12 @@ from w3af.core.controllers.misc.get_unused_port import get_unused_port
 from w3af.core.controllers.ci.moth import get_moth_http, get_moth_https
 from w3af.plugins.tests.helper import PluginTest, PluginConfig
 from w3af.plugins.crawl.spider_man import TERMINATE_URL
+from w3af.core.data.misc.encoding import smart_unicode
 
 BROWSE_URLS = (
     ('GET', '/audit/', None),
-    ('GET', '/audit/sql_injection/where_integer_qs.py', 'id=1'),
-    ('POST', '/audit/sql_injection/where_integer_form.py', 'text=abc'),
+    ('GET', '/audit/sql_injection/where_integer_qs.py', b'id=1'),
+    ('POST', '/audit/sql_injection/where_integer_form.py', b'text=abc'),
 )
 
 
@@ -84,7 +85,7 @@ class BrowserThread(Process):
                 if payload is None:
                     full_url = url
                 else:
-                    full_url = url + '?' + payload
+                    full_url = url + '?' + smart_unicode(payload)
 
                 try:
                     response = opener.open(full_url)
@@ -139,7 +140,7 @@ class TestSpiderman(PluginTest):
 
         # The browser that used spiderman needs to get these responses
         for index, e_response in enumerate(expected_response_contents):
-            self.assertIn(e_response, responses[index])
+            self.assertIn(e_response, smart_unicode(responses[index]))
 
         # w3af needs to know about the browsed URLs
         kb_urls = [u.uri2url().url_string for u in kb_urls]
@@ -158,7 +159,8 @@ class TestHTTPSpiderman(TestSpiderman):
                 'plugins': {'crawl': (PluginConfig('spider_man',
                                                    ('listen_port', port,
                                                     PluginConfig.INT),
-                                                   ),)}
+                                                   ),),
+                            'output': (PluginConfig('text_file',),),}
         }
 
         self.generic_spiderman_run(run_config, get_moth_http, port)

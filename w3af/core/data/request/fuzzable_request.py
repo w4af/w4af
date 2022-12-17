@@ -40,7 +40,7 @@ from w3af.core.data.db.disk_item import DiskItem
 from w3af.core.data.parsers.doc.url import URL
 from w3af.core.data.request.request_mixin import RequestMixIn
 from w3af.core.data.constants.encodings import DEFAULT_ENCODING
-from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
+from w3af.core.data.misc.encoding import smart_str, smart_str_ignore, smart_unicode
 
 
 DELETE_CHARS = [ord('\\'),
@@ -182,7 +182,7 @@ class FuzzableRequest(RequestMixIn, DiskItem):
         headers.update(request.unredirected_hdrs)
         headers = Headers(list(headers.items()))
 
-        post_data = request.get_data() or ''
+        post_data = smart_str(request.data) or b''
 
         return cls.from_parts(request.url_object, method=request.get_method(),
                               headers=headers, post_data=post_data)
