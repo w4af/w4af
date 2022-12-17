@@ -72,15 +72,16 @@ class TestEventValidation(PluginTest):
         self.assertEqual(expected_vulns, vulns_set)
 
 
-@pytest.mark.moth
-class TestEventValidationGrouping(PluginTest):
-
-    target_url = 'http://mock/'
-
-    html = ('<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"'
+def gen_viewstate_html(key):
+    return f"<input type=\"submit\" name=\"page {key}\" />" +\
+           ('<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"'
             ' value="/wEPDwUKLTMyNjg0MDc1MWQYAQUeX19Db250cm9sc1JlcXVpcmVQb3'
             'N0QmFja0tleV9fFgEFIGJwJF8kY3RsMDAkXyRicyRfJHdzJF8kU2VhcmNoQm94'
             'bxUzDQVBRPB2cN8nnSmNhVZ6WX0=" />')
+
+class TestEventValidationGrouping(PluginTest):
+
+    target_url = 'http://mock/'
 
     MOCK_RESPONSES = [MockResponse(url='http://mock/',
                                    body='<a href="/1">1</a>'
@@ -88,11 +89,11 @@ class TestEventValidationGrouping(PluginTest):
                                    method='GET', status=200),
 
                       MockResponse(url='http://mock/1',
-                                   body=html,
+                                   body=gen_viewstate_html("1"),
                                    method='GET', status=200),
 
                       MockResponse(url='http://mock/2',
-                                   body=html,
+                                   body=gen_viewstate_html("2"),
                                    method='GET', status=200)]
 
     def test_grouped_vulnerabilities(self):
@@ -107,15 +108,15 @@ class TestEventValidationGrouping(PluginTest):
                            ' .NET Event Validation disabled. This programming'
                            ' / configuration error should be manually'
                            ' verified. The first two vulnerable URLs are:\n'
-                           ' - http://mock/2\n - http://mock/1\n'),
+                           ' - http://mock/1\n - http://mock/2\n'),
 
                           ('.NET ViewState encryption is disabled',
                            'The application contains 2 unique URLs with .NET'
                            ' ViewState encryption disabled. This programming'
                            ' / configuration error can be exploited to decode'
                            ' and inspect the ViewState contents. The first two'
-                           ' vulnerable URLs are:\n - http://mock/2\n'
-                           ' - http://mock/1\n')}
+                           ' vulnerable URLs are:\n - http://mock/1\n'
+                           ' - http://mock/2\n')}
 
         vulns_set = set()
 

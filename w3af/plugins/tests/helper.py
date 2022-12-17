@@ -165,7 +165,7 @@ class PluginTest(unittest.TestCase):
 
         return info_tokens
 
-    def assertMostExpectedVulnsFound(self, expected, percentage=0.25):
+    def assertMostExpectedVulnsFound(self, expected, percentage=0.20):
         """
         Assert that at least :percentage: of the expected vulnerabilities were
         found during the current scan.
