@@ -150,7 +150,7 @@ class TestClamAV(unittest.TestCase):
         self.assertEqual(self.plugin._scan_http_response.call_count, 0)
 
 
-@pytest.mark.moth
+@pytest.mark.fails
 class TestClamAVScan(PluginTest):
  
     target_url = get_moth_http('/grep/clamav/')
