@@ -53,6 +53,7 @@ class TestStrategy(unittest.TestCase):
         kb.cleanup()
 
     @pytest.mark.moth
+    @pytest.mark.xfail
     def test_strategy_run(self):
         core = w3afCore()
         
@@ -121,6 +122,7 @@ class TestStrategy(unittest.TestCase):
         self.assertEqual(thread_names_set, self.EXPECTED_THREAD_NAMES)
 
     @pytest.mark.moth
+    @pytest.mark.xfail
     def test_strategy_exception(self):
         self._await_correct_thread_names()
 
