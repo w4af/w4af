@@ -25,6 +25,7 @@ from w3af.plugins.tests.helper import PluginTest
 
 
 @pytest.mark.external_group3
+@pytest.mark.xfail
 @pytest.mark.slow
 class TestScanASPNETVulnwebCom(TestScanVulnerableSite, PluginTest):
 
