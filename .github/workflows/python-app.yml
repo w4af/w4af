@@ -145,7 +145,7 @@ jobs:
         python-version: "3.10"
         cache: 'pipenv'
     - name: Install Gtk
-      run: sudo apt-get update && sudo apt-get install -y libgirepository1.0-dev gir1.2-gtk-3.0 libgtk-3-dev gir1.2-pango-1.0 libpango1.0-dev gir1.2-gtksource-4 libgtksourceview-4-dev libicu-dev gir1.2-webkit2-4.0 libwebkit2gtk-4.0-dev graphviz libssl-dev libffi-dev libsqlite3-dev libxml2-dev git
+      run: sudo apt-get update && sudo apt-get install -y libgirepository1.0-dev gir1.2-gtk-3.0 libgtk-3-dev gir1.2-pango-1.0 libpango1.0-dev gir1.2-gtksource-4 libgtksourceview-4-dev libicu-dev gir1.2-webkit2-4.0 libwebkit2gtk-4.0-dev graphviz libssl-dev libffi-dev libsqlite3-dev libxml2-dev git xvfb
     - name: Install node packages
       run: npm install
     - name: Install pipenv
@@ -160,7 +160,7 @@ jobs:
         timeout_minutes: 45
         max_attempts: 1
         command: |
-          pipenv run pytest --cov=w3af -m "external_group${{matrix.group}}"
+          xvfb-run --auto-servernum pipenv run pytest --cov=w3af -m "external_group${{matrix.group}}"
     - name: Upload coverage
       if: always()
       uses: actions/upload-artifact@v3
