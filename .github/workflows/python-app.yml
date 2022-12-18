@@ -158,11 +158,11 @@ jobs:
       uses: nick-fields/retry@v2
       with:
         timeout_minutes: 45
+        continue_on_error: true
         max_attempts: 1
         command: |
           xvfb-run --auto-servernum pipenv run pytest --cov=w3af -m "external_group${{matrix.group}}"
     - name: Upload coverage
-      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: coverage-external${{matrix.group}}
