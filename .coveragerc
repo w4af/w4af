@@ -1,0 +1,2 @@
+[run]
+omit = */failing_spider.py
