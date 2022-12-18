@@ -118,7 +118,14 @@ class TestSVN(PluginTest):
         }
     }
 
+    @pytest.mark.flaky(reruns=5)
     def test_wc_db(self):
+        # There is a bug somewhere deep in HTTPretty. For some reason on some runs
+        # of this test, the wc.db response comes back to the app as zero length (despite
+        # having a content-length header reporting the correct length). This doesn't
+        # seem to be an issue with the DVCS plugin or with w3af code - I imagine it's about
+        # threading and races with python and httpretty. But if you run this test 5 times,
+        # it will fail at least once.
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
 
