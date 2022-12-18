@@ -154,12 +154,15 @@ jobs:
     - name: Install dependencies
       run: |
         pipenv install
-    - name: Core unittests
-      uses: GabrielBB/xvfb-action@v1
+    - name: External tests
+      uses: nick-fields/retry@v2
       with:
-        run: |
+        timeout_minutes: 45
+        max_attempts: 1
+        command: |
           pipenv run pytest --cov=w3af -m "external_group${{matrix.group}}"
     - name: Upload coverage
+      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: coverage-external${{matrix.group}}
