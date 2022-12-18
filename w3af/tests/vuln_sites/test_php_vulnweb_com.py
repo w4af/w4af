@@ -25,8 +25,8 @@ from w3af.plugins.tests.helper import PluginTest
 
 
 @pytest.mark.external_group2
-@pytest.mark.timeout(2400)
 @pytest.mark.xfail
+@pytest.mark.timeout(2400)
 @pytest.mark.slow
 class TestScanPHPVulnwebCom(TestScanVulnerableSite, PluginTest):
 
