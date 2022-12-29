@@ -10,13 +10,16 @@ import base64
 # Perform the GTK UI dependency check, this will verify that the current system
 # has all the modules required to run w3af (including the core dependencies)
 from w3af.core.ui.gui.dependency_check.dependency_check import dependency_check
-dependency_check()
 
 import w3af.core.controllers.output_manager as om
 
       
 USAGE_DOC = '''
 w3af - Web Application Attack and Audit Framework
+
+WARNING: The w3af GUI is NOT CURRENTLY MAINTAINED, and is NOT WORKING.
+         If you wish nevertheless to run the GUI, pass the option
+        --i-am-a-developer.
 
 Usage:
 
@@ -38,7 +41,11 @@ Options:
     -p <profile> or --profile=<profile>
         Run with the selected <profile>
 
-For more info visit http://w3af.org/
+    --i-am-a-developer
+        Run the gui even though it is unmaintained and not currently
+        working
+
+For more info visit https://w4af.readthedocs.io/
 '''    
 
 
@@ -61,7 +68,8 @@ def usage():
 
 def main():
     try:
-        long_options = ['help', 'no-update', 'force-update', 'profile=']
+        long_options = ['help', 'no-update', 'force-update',
+            'profile=', 'i-am-a-developer']
         opts, _ = getopt.getopt(sys.argv[1:], "ehnfp:", long_options)
     except getopt.GetoptError:
         # print help information and exit:
@@ -70,6 +78,7 @@ def main():
     
     profile = None
     doupdate = None
+    quit_with_warning = True
     
     for o, a in opts:
         if o in ("-e"):
@@ -80,6 +89,8 @@ def main():
         if o in ('-p', '--profile'):
             # selected profile
             profile = a
+        if o in ('--i-am-a-developer'):
+            quit_with_warning = False
         if o in ('-h', '--help'):
             usage()
             return 0
@@ -87,6 +98,12 @@ def main():
             doupdate = True
         elif o in ('-n', '--no-update'):
             doupdate = False
+
+    if quit_with_warning:
+        usage()
+        return 1
+
+    dependency_check()
     
 
     # go with GTK, but first check about DISPLAY environment variable

@@ -1,2 +1,7 @@
 [run]
-omit = */failing_spider.py
+omit =
+  # skip file that is created and deleted by unit tests
+  */failing_spider.py
+  # skip gui
+  w3af_gui
+  w3af/core/ui/gui/*
