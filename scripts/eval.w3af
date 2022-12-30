@@ -3,7 +3,7 @@
 plugins
 output console,text_file
 output config text_file
-set output_file output-w3af.txt
+set output_file output-w4af.txt
 set verbose True
 back
 output config console
@@ -16,7 +16,7 @@ audit eval
 back
 
 target
-set target http://moth/w3af/audit/eval/eval.php?c=
+set target http://moth/w4af/audit/eval/eval.php?c=
 back
 
 start

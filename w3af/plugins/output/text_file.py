@@ -3,38 +3,38 @@ text_file.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import time
 import os
 
-import w3af.core.data.kb.config as cf
-import w3af.core.data.constants.severity as severity
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.plugins.output_plugin import OutputPlugin
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.misc.encoding import smart_unicode
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import OUTPUT_FILE
-from w3af.core.data.options.output_file_option import DEV_NULL
-from w3af.core.data.options.option_list import OptionList
+from w4af.core.controllers.plugins.output_plugin import OutputPlugin
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import OUTPUT_FILE
+from w4af.core.data.options.output_file_option import DEV_NULL
+from w4af.core.data.options.option_list import OptionList
 
-from w3af.core.data.constants.encodings import DEFAULT_ENCODING
+from w4af.core.data.constants.encodings import DEFAULT_ENCODING
 
 REQUEST_HEADER_FMT = '=' * 40 + 'Request %s - %s ' + '=' * 40 + '\n'
 RESPONSE_HEADER_FMT = '\n' + '=' * 40 + 'Response %s - %s ' + '=' * 39 + '\n'
@@ -160,7 +160,7 @@ class text_file(OutputPlugin):
         :param string_to_clean: A string that should be cleaned before using
                                 it in a message object.
         """
-        # https://github.com/andresriancho/w3af/issues/3586
+        # https://github.com/andresriancho/w4af/issues/3586
         if string_to_clean is None:
             return ''
 
@@ -231,7 +231,7 @@ class text_file(OutputPlugin):
 
     def console(self, message, new_line=True):
         """
-        This method is used by the w3af console to print messages to the outside
+        This method is used by the w4af console to print messages to the outside
         """
         self.write(message, 'console', new_line)
 
@@ -320,7 +320,7 @@ class text_file(OutputPlugin):
             # We could open() /dev/null, write to that file, and leave the code
             # as-is (without this if statement).
             #
-            # But that would require w3af to dump() request and response,
+            # But that would require w4af to dump() request and response,
             # serialize all that into strings, and write them to /dev/null
             #
             # After all the CPU effort, that data will be discarded... a complete

@@ -4,19 +4,19 @@ test_webspider.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import urllib.request, urllib.error, urllib.parse
@@ -24,23 +24,23 @@ import re
 import os
 import pytest
 
-import w3af.core.data.kb.config as cf
+import w4af.core.data.kb.config as cf
 
-from w3af import ROOT_PATH
-from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.controllers.ci.wivet import get_wivet_http
-from w3af.core.controllers.misc_settings import EXCLUDE
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.parsers.utils.form_id_matcher_list import FormIDMatcherList
+from w4af import ROOT_PATH
+from w4af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.controllers.ci.wivet import get_wivet_http
+from w4af.core.controllers.misc_settings import EXCLUDE
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.parsers.utils.form_id_matcher_list import FormIDMatcherList
 
 
 class TestWebSpider(PluginTest):
 
     follow_links_url = get_moth_http('/crawl/web_spider/test_case_01/')
-    dir_get_url = 'http://moth/w3af/crawl/web_spider/a/b/c/d/'
+    dir_get_url = 'http://moth/w4af/crawl/web_spider/a/b/c/d/'
     encoding_url = get_moth_http('/core/encoding')
-    relative_url = 'http://moth/w3af/crawl/web_spider/relativeRegex.html'
+    relative_url = 'http://moth/w4af/crawl/web_spider/relativeRegex.html'
 
     wivet = get_wivet_http()
 
@@ -121,7 +121,7 @@ class TestWebSpider(PluginTest):
         self._scan(self.wivet, cfg['plugins'])
 
         #
-        #    First, check that w3af identified all the URLs we want:
+        #    First, check that w4af identified all the URLs we want:
         #
         ALL_WIVET_URLS = {'10_17d77.php', '11_1f2e4.php', '1_12c3b.php',
                           '11_2d3ff.php', '12_2a2cf.php', '12_3a2cf.php',
@@ -148,7 +148,7 @@ class TestWebSpider(PluginTest):
         #
         #    FIXME: At some point this should be reduced to an empty set()
         #
-        W3AF_FAILS = {'9_16ee31.php', '9_9ee31.php', '9_18ee31.php',
+        w4af_FAILS = {'9_16ee31.php', '9_9ee31.php', '9_18ee31.php',
                       '9_11ee31.php', '9_20ee31.php', '9_25ee31.php',
                       '9_15ee31.php', '9_8ee31.php', '9_17ee31.php',
                       '9_13ee31.php', '9_19ee31.php', '9_14ee31.php',
@@ -166,7 +166,7 @@ class TestWebSpider(PluginTest):
                       '19_1f52a.php'
                     }
 
-        EXPECTED_URLS = ALL_WIVET_URLS - W3AF_FAILS
+        EXPECTED_URLS = ALL_WIVET_URLS - w4af_FAILS
 
         inner_pages = 'innerpages/'
 
@@ -178,7 +178,7 @@ class TestWebSpider(PluginTest):
         self.assertEqual(found, expected, found)
 
         #
-        #    And now, verify that w3af used only one session to identify these
+        #    And now, verify that w4af used only one session to identify these
         #    wivet links.
         #
         stats = extract_all_stats()
@@ -186,7 +186,7 @@ class TestWebSpider(PluginTest):
 
         coverage = get_coverage_for_scan_id(stats[0][0])
         # TODO: Sometimes coverage is 44 and sometimes it is 41!
-        # https://github.com/andresriancho/w3af/issues/2309
+        # https://github.com/andresriancho/w4af/issues/2309
         self.assertEqual(coverage, 41)
 
 
@@ -243,7 +243,7 @@ class TestRelativePathsIn404(PluginTest):
     """
     This test reproduces the issue #5834 which generates an endless crawl loop
 
-    :see: https://github.com/andresriancho/w3af/issues/5834
+    :see: https://github.com/andresriancho/w4af/issues/5834
     """
     target_url = 'http://mock/'
 
@@ -321,7 +321,7 @@ class TestFormExclusions(PluginTest):
     """
     This is an integration test for form exclusions
 
-    :see: https://github.com/andresriancho/w3af/issues/15161
+    :see: https://github.com/andresriancho/w4af/issues/15161
     """
     target_url = 'http://mock/'
 

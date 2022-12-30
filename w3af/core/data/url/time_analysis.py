@@ -3,25 +3,25 @@ time_analysis.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 
 import time
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
 # Define two internal variables
 # AVERAGE_CALCULATION is used to define how many request/response values
@@ -61,7 +61,7 @@ class time_analysis:
         """
         if self._numberOfRequests < AVERAGE_CALCULATION:
             # The first 3 requests are used to calculate the average time that the
-            # response takes to return to w3af
+            # response takes to return to w4af
             self._calculateAvg(uri, method, dc)
         else:
             self._registerRequest(uri, method, dc)
@@ -78,7 +78,7 @@ class time_analysis:
         """
         if self._numberOfRequests < AVERAGE_CALCULATION:
             # The first 3 requests are used to calculate the average time that the
-            # response takes to return to w3af
+            # response takes to return to w4af
             self._calculateAvg(uri, method, dc)
         else:
             # I'll compare the average with the current value

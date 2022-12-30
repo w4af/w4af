@@ -4,19 +4,19 @@ test_fuzzablerequest.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,29 +26,29 @@ import copy
 
 import pytest
 
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.parsers.utils.form_params import FormParameters
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.dc.factory import dc_from_form_params
-from w3af.core.data.dc.query_string import QueryString
-from w3af.core.data.dc.generic.kv_container import KeyValueContainer
-from w3af.core.data.misc.encoding import smart_unicode
-from w3af.core.data.dc.urlencoded_form import URLEncodedForm
-from w3af.core.data.dc.utils.multipart import multipart_encode
-from w3af.core.data.db.disk_set import DiskSet
-from w3af.core.data.dc.multipart_container import MultipartContainer
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.parsers.utils.form_params import FormParameters
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.dc.factory import dc_from_form_params
+from w4af.core.data.dc.query_string import QueryString
+from w4af.core.data.dc.generic.kv_container import KeyValueContainer
+from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.dc.urlencoded_form import URLEncodedForm
+from w4af.core.data.dc.utils.multipart import multipart_encode
+from w4af.core.data.db.disk_set import DiskSet
+from w4af.core.data.dc.multipart_container import MultipartContainer
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 @pytest.mark.smoke
 class TestFuzzableRequest(unittest.TestCase):
 
     def setUp(self):
-        self.url = URL('http://w3af.com/a/b/c.php')
+        self.url = URL('http://w4af.com/a/b/c.php')
 
     def test_dump_case01(self):
-        expected = '\r\n'.join(['GET http://w3af.com/a/b/c.php HTTP/1.1',
+        expected = '\r\n'.join(['GET http://w4af.com/a/b/c.php HTTP/1.1',
                                  'Hello: World',
                                  '',
                                  'a=b'])
@@ -61,7 +61,7 @@ class TestFuzzableRequest(unittest.TestCase):
         self.assertEqual(fr.dump(), expected)
 
     def test_dump_case02(self):
-        expected = '\r\n'.join(['GET http://w3af.com/a/b/c.php HTTP/1.1',
+        expected = '\r\n'.join(['GET http://w4af.com/a/b/c.php HTTP/1.1',
                                  'Hola: Múndo',
                                  '',
                                  'a=b'])
@@ -76,7 +76,7 @@ class TestFuzzableRequest(unittest.TestCase):
     def test_dump_case03(self):
         header_value = ''.join(chr(i) for i in range(256))
         
-        expected = '\r\n'.join(['GET http://w3af.com/a/b/c.php HTTP/1.1',
+        expected = '\r\n'.join(['GET http://w4af.com/a/b/c.php HTTP/1.1',
                                  'Hola: %s' % smart_unicode(header_value),
                                  '',
                                  'a=b'])
@@ -89,11 +89,11 @@ class TestFuzzableRequest(unittest.TestCase):
         self.assertEqual(fr.dump(), expected)
 
     def test_dump_mangle(self):
-        fr = FuzzableRequest(URL('http://www.w3af.com/'),
-                             headers=Headers([('Host', 'www.w3af.com')]))
+        fr = FuzzableRequest(URL('http://www.w4af.com/'),
+                             headers=Headers([('Host', 'www.w4af.com')]))
 
-        expected = '\r\n'.join(['GET http://www.w3af.com/ HTTP/1.1',
-                                 'Host: www.w3af.com',
+        expected = '\r\n'.join(['GET http://www.w4af.com/ HTTP/1.1',
+                                 'Host: www.w4af.com',
                                  '',
                                  ''])
         
@@ -102,34 +102,34 @@ class TestFuzzableRequest(unittest.TestCase):
         fr.set_method('POST')
         fr.set_data(KeyValueContainer(init_val=[('data', ['23'])]))
         
-        expected = '\r\n'.join(['POST http://www.w3af.com/ HTTP/1.1',
-                                 'Host: www.w3af.com',
+        expected = '\r\n'.join(['POST http://www.w4af.com/ HTTP/1.1',
+                                 'Host: www.w4af.com',
                                  '',
                                  'data=23'])
         
         self.assertEqual(fr.dump(), expected)
 
     def test_export_import_without_post_data(self):
-        fr = FuzzableRequest(URL('http://www.w3af.com/'))
+        fr = FuzzableRequest(URL('http://www.w4af.com/'))
 
         imported_fr = FuzzableRequest.from_base64(fr.to_base64())
         self.assertEqual(imported_fr, fr)
     
     def test_export_import_with_post_data(self):
         dc = KeyValueContainer(init_val=[('a', ['1'])])
-        fr = FuzzableRequest(URL('http://www.w3af.com/'), post_data=dc)
+        fr = FuzzableRequest(URL('http://www.w4af.com/'), post_data=dc)
 
         imported_fr = FuzzableRequest.from_base64(fr.to_base64())
         self.assertEqual(imported_fr, fr)
 
     def test_equal(self):
-        u = URL('http://www.w3af.com/')
+        u = URL('http://www.w4af.com/')
         fr1 = FuzzableRequest(u)
         fr2 = FuzzableRequest(u)
         self.assertEqual(fr1, fr2)
 
-        fr1 = FuzzableRequest(URL("http://www.w3af.com/a"))
-        fr2 = FuzzableRequest(URL("http://www.w3af.com/b"))
+        fr1 = FuzzableRequest(URL("http://www.w4af.com/a"))
+        fr2 = FuzzableRequest(URL("http://www.w4af.com/b"))
         self.assertNotEqual(fr1, fr2)
         
         fr1 = FuzzableRequest(u)
@@ -144,35 +144,35 @@ class TestFuzzableRequest(unittest.TestCase):
         self.assertEqual(r.get_url(), url)
 
     def test_str_no_qs(self):
-        fr = FuzzableRequest(URL('http://www.w3af.com/'))
-        expected = 'Method: GET | http://www.w3af.com/'
+        fr = FuzzableRequest(URL('http://www.w4af.com/'))
+        expected = 'Method: GET | http://www.w4af.com/'
         self.assertEqual(str(fr), expected)
 
     def test_str_qs(self):
-        fr = FuzzableRequest(URL("http://www.w3af.com/?id=3"))
-        expected = 'Method: GET | http://www.w3af.com/ |' \
+        fr = FuzzableRequest(URL("http://www.w4af.com/?id=3"))
+        expected = 'Method: GET | http://www.w4af.com/ |' \
                    ' Query string: (id)'
         self.assertEqual(str(fr), expected)
 
     def test_str_with_postdata(self):
         headers = Headers([('content-type', URLEncodedForm.ENCODING)])
-        fr = FuzzableRequest.from_parts('http://www.w3af.com/', post_data='a=1',
+        fr = FuzzableRequest.from_parts('http://www.w4af.com/', post_data='a=1',
                                         headers=headers)
-        expected = 'Method: GET | http://www.w3af.com/ | URL encoded ' \
+        expected = 'Method: GET | http://www.w4af.com/ | URL encoded ' \
                    'form: (a)'
         self.assertEqual(str(fr), expected)
 
     def test_str_with_qs_and_postdata(self):
         headers = Headers([('content-type', URLEncodedForm.ENCODING)])
-        fr = FuzzableRequest.from_parts("http://www.w3af.com/?id=3",
+        fr = FuzzableRequest.from_parts("http://www.w4af.com/?id=3",
                                         post_data='a=1&b=3&a=2',
                                         headers=headers)
-        expected = 'Method: GET | http://www.w3af.com/ | URL encoded ' \
+        expected = 'Method: GET | http://www.w4af.com/ | URL encoded ' \
                    'form: (a, a, b)'
         self.assertEqual(str(fr), expected)
 
     def test_repr(self):
-        url = 'http://www.w3af.com/'
+        url = 'http://www.w4af.com/'
         fr = FuzzableRequest(URL(url))
 
         self.assertEqual(repr(fr), '<fuzzable request | GET | %s>' % url)
@@ -323,7 +323,7 @@ class TestFuzzableRequest(unittest.TestCase):
         dc = MultipartContainer.from_postdata(headers, post_data)
         post_data = str(dc)
 
-        fr = FuzzableRequest.from_parts(URL('http://www.w3af.com/'),
+        fr = FuzzableRequest.from_parts(URL('http://www.w4af.com/'),
                                         method='POST', post_data=post_data,
                                         headers=headers)
         
@@ -337,8 +337,8 @@ class TestFuzzableRequest(unittest.TestCase):
         self.assertIn('a', fr_read.get_raw_data())
 
     def test_force_fuzzing_headers(self):
-        fr = FuzzableRequest(URL('http://www.w3af.com/'),
-                             headers=Headers([('Host', 'www.w3af.com')]))
+        fr = FuzzableRequest(URL('http://www.w4af.com/'),
+                             headers=Headers([('Host', 'www.w4af.com')]))
 
         self.assertEqual(fr.get_force_fuzzing_headers(), [])
 

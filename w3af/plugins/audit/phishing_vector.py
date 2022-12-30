@@ -3,31 +3,31 @@ phishing_vector.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.severity as severity
-import w3af.core.data.parsers.parser_cache as parser_cache
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
+import w4af.core.data.parsers.parser_cache as parser_cache
 
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.data.kb.vuln import Vuln
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.data.kb.vuln import Vuln
 
 
 class phishing_vector(AuditPlugin):
@@ -44,10 +44,10 @@ class phishing_vector(AuditPlugin):
     #
     # I also use hTtp instead of http because I want to evade some (stupid)
     # case sensitive filters
-    TEST_URLS = ('hTtp://w3af.org/',
-                 'htTps://w3af.org/',
-                 'fTp://w3af.org/',
-                 '//w3af.org')
+    TEST_URLS = ('hTtp://w4af.org/',
+                 'htTps://w4af.org/',
+                 'fTp://w4af.org/',
+                 '//w4af.org')
 
     def audit(self, freq, orig_response, debugging_id):
         """

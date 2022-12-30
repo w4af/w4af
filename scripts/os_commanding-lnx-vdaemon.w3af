@@ -9,7 +9,7 @@ plugins
 output console,text_file
 output
 output config text_file
-set output_file output-w3af.txt
+set output_file output-w4af.txt
 set verbose True
 back
 output config console
@@ -23,7 +23,7 @@ audit
 back
 
 target
-set target http://moth/w3af/os_commanding/vulnerable.php?command=list
+set target http://moth/w4af/os_commanding/vulnerable.php?command=list
 back
 start
 exploit

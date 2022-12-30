@@ -1,21 +1,21 @@
 """
-w3afAgentServer.py
+w4afAgentServer.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -30,24 +30,24 @@ if __name__ == '__main__':
 
     if len(sys.argv) != 3:
         print()
-        print('w3afAgent usage:')
-        print('python w3afAgentServer.py <bind-address> <bind-port>')
+        print('w4afAgent usage:')
+        print('python w4afAgentServer.py <bind-address> <bind-port>')
         print()
         sys.exit(-1)
 
 from multiprocessing.dummy import Process
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 class ConnectionManager(Process):
     """
-    This is a service that listens on some port and waits for the w3afAgentClient
+    This is a service that listens on some port and waits for the w4afAgentClient
     to connect. It keeps the connections alive so they can be used by a TCPRelay
-    object in order to relay the data between the w3afAgentServer and the
-    w3afAgentClient.
+    object in order to relay the data between the w4afAgentServer and the
+    w4afAgentClient.
     """
     def __init__(self, ip_address, port):
         Process.__init__(self)
@@ -91,7 +91,7 @@ class ConnectionManager(Process):
             self.sock.bind((self._ip_address, self._port))
             self.sock.listen(5)
         except Exception as e:
-            msg = '[w3afAgentServer] Failed to bind to %s:%s' % (
+            msg = '[w4afAgentServer] Failed to bind to %s:%s' % (
                 self._ip_address, self._port)
             msg += '. Error: "%s".' % e
             raise BaseFrameworkException(msg)
@@ -111,7 +111,7 @@ class ConnectionManager(Process):
                 self._connections.append(newsock)
                 if not self._reportedConnection:
                     self._reportedConnection = True
-                    om.out.console('w3afAgent service is up and running.')
+                    om.out.console('w4afAgent service is up and running.')
 
     def is_working(self):
         """
@@ -230,22 +230,22 @@ class TCPRelay(Process):
 
                 # Get an active connection from the connection manager and start forwarding data
                 try:
-                    connToW3afClient = self._cm.get_connection()
+                    connTow4afClient = self._cm.get_connection()
                 except KeyboardInterrupt:
                     om.out.information('Exiting.')
                     break
                 except:
                     om.out.debug('[TCPRelay] Connection manager has no active connections.')
                 else:
-                    pt1 = PipeThread(sock_cli, connToW3afClient)
+                    pt1 = PipeThread(sock_cli, connTow4afClient)
                     self._pipes.append(pt1)
                     pt1.start()
-                    pt2 = PipeThread(connToW3afClient, sock_cli)
+                    pt2 = PipeThread(connTow4afClient, sock_cli)
                     self._pipes.append(pt2)
                     pt2.start()
 
 
-class w3afAgentServer(Process):
+class w4afAgentServer(Process):
     def __init__(self, ip_address, socks_port=1080, listen_port=9092):
         Process.__init__(self)
         self.daemon = True
@@ -267,14 +267,14 @@ class w3afAgentServer(Process):
             self._cm = ConnectionManager(self._ip_address, self._listen_port)
             self._cm.start()
         except BaseFrameworkException as w3:
-            self._error = 'Failed to start connection manager inside w3afAgentServer, exception: ' + str(w3)
+            self._error = 'Failed to start connection manager inside w4afAgentServer, exception: ' + str(w3)
         else:
             try:
                 self._TCPRelay = TCPRelay(
                     self._ip_address, self._socks_port, self._cm)
                 self._TCPRelay.start()
             except BaseFrameworkException as w3:
-                self._error = 'Failed to start TCPRelay inside w3afAgentServer, exception: "%s"' % w3
+                self._error = 'Failed to start TCPRelay inside w4afAgentServer, exception: "%s"' % w3
                 self._cm.stop()
             else:
                 self._is_running = True
@@ -283,11 +283,11 @@ class w3afAgentServer(Process):
 
     def stop(self):
         if self._is_running:
-            om.out.debug('Stopping w3afAgentServer.')
+            om.out.debug('Stopping w4afAgentServer.')
             self._cm.stop()
             self._TCPRelay.stop()
         else:
-            om.out.debug('w3afAgentServer is not running, no need to stop it.')
+            om.out.debug('w4afAgentServer is not running, no need to stop it.')
 
     def get_error(self):
         return self._error
@@ -300,7 +300,7 @@ class w3afAgentServer(Process):
 
 if __name__ == '__main__':
     ip_address = sys.argv[1]
-    agent = w3afAgentServer(ip_address, listen_port=int(sys.argv[2]))
+    agent = w4afAgentServer(ip_address, listen_port=int(sys.argv[2]))
     agent.daemon = False
 
     try:

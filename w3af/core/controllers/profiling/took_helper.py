@@ -3,26 +3,26 @@ took_helper.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import time
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.profiling.thread_time import thread_active_time, CPU_TIME_IS_ACTIVE
+from w4af.core.controllers.profiling.thread_time import thread_active_time, CPU_TIME_IS_ACTIVE
 
 
 class TimeStamp(object):
@@ -36,11 +36,11 @@ class TimeStamp(object):
 
 
 class TookLine(object):
-    def __init__(self, w3af_core, plugin_name, method_name, debugging_id=None, method_params=None):
+    def __init__(self, w4af_core, plugin_name, method_name, debugging_id=None, method_params=None):
         """
         Write the "took X seconds" line to the debug log
 
-        :param w3af_core: The w3af core instance
+        :param w4af_core: The w4af core instance
         :param plugin_name: The plugin name
         :param method_name: The method name of plugin which was invoked
         :param debugging_id: The unique ID used for tracking requests
@@ -48,7 +48,7 @@ class TookLine(object):
                               This should be a dict with parameter names as keys
                               and strings as values.
         """
-        self._w3af_core = w3af_core
+        self._w4af_core = w4af_core
         self._plugin_name = plugin_name
         self._method_name = method_name
         self._method_params = method_params
@@ -94,7 +94,7 @@ class TookLine(object):
         #
         #   Query the extended urllib to check if it has RTT data regarding this debugging_id
         #
-        rtt = self._w3af_core.uri_opener.get_rtt_for_debugging_id(self._debugging_id)
+        rtt = self._w4af_core.uri_opener.get_rtt_for_debugging_id(self._debugging_id)
 
         if rtt is not None and rtt >= 0.01:
             #

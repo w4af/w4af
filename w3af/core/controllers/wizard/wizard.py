@@ -3,35 +3,35 @@ wizard.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.misc.factory import factory
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.misc.factory import factory
 
 
 class wizard:
 
-    def __init__(self, w3af_core):
+    def __init__(self, w4af_core):
         """
         This method should be overwritten by the actual wizards, so they can
         define what questions they are going to ask.
         """
         # Save the core
-        self.w3af_core = w3af_core
+        self.w4af_core = w4af_core
 
         # A list of question objects
         self._question_lst = []
@@ -43,17 +43,17 @@ class wizard:
         self._already_asked = []
         self._user_options = None
 
-    def _get_instances(self, question_list, w3af_core):
+    def _get_instances(self, question_list, w4af_core):
         """
         :param question_list: A list of question ids
-        :param w3af_core: The w3af core object to pass to the question id
+        :param w4af_core: The w4af core object to pass to the question id
         :return: A list of question objects
         """
         res = []
-        mod = 'w3af.core.controllers.wizard.questions.question_%s'
+        mod = 'w4af.core.controllers.wizard.questions.question_%s'
         for question_id in question_list:
             klass = mod % question_id
-            question_inst = factory(klass, w3af_core)
+            question_inst = factory(klass, w4af_core)
             res.append(question_inst)
         return res
 

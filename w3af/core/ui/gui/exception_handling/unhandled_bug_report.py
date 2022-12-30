@@ -3,26 +3,26 @@ unhandled_bug_report.py
 
 Copyright 2009 Andres Riancho
 
-This file is part of w3af, w3af.org .
+This file is part of w4af, w4af.org .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from gi.repository import Gtk as gtk
 
-from w3af.core.controllers.exception_handling.cleanup_bug_report import cleanup_bug_report
-from w3af.core.ui.gui.exception_handling.common_windows import (SimpleBaseWindow,
+from w4af.core.controllers.exception_handling.cleanup_bug_report import cleanup_bug_report
+from w4af.core.ui.gui.exception_handling.common_windows import (SimpleBaseWindow,
                                                                 GithubBugReport)
 
 
@@ -36,9 +36,9 @@ class BugReportWindow(SimpleBaseWindow, GithubBugReport):
     handled.py .
     """
 
-    MANUAL_BUG_REPORT = 'https://github.com/andresriancho/w3af/issues/new'
+    MANUAL_BUG_REPORT = 'https://github.com/andresriancho/w4af/issues/new'
 
-    def __init__(self, w3af_core, title, tback, fname, plugins):
+    def __init__(self, w4af_core, title, tback, fname, plugins):
         # Before doing anything else, cleanup the report to remove any
         # user information that might be present.
         tback = cleanup_bug_report(tback)
@@ -85,10 +85,10 @@ class BugReportWindow(SimpleBaseWindow, GithubBugReport):
         self.label.set_line_wrap(True)
         label_text = _("<i>All this info is in a file called '%s' for later"
                        ' review.</i>\n\nIf you wish, <b>you can contribute'
-                       '</b> to the w3af project and submit this bug to our'
+                       '</b> to the w4af project and submit this bug to our'
                        ' bug tracking system from within this window. It is'
                        ' a simple <i>two step process</i>.\n\n'
-                       'w3af will only send the exception traceback and the'
+                       'w4af will only send the exception traceback and the'
                        ' version information to Github, no personal or '
                        ' confidential information is collected.')
         self.label.set_markup(label_text % fname)

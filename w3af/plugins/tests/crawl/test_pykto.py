@@ -4,19 +4,19 @@ test_pykto.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
@@ -25,20 +25,20 @@ import os
 
 import pytest
 
-from w3af import ROOT_PATH
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.plugins.crawl.pykto import NiktoTestParser, IsVulnerableHelper, Config
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.misc.file_utils import days_since_file_update
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
+from w4af import ROOT_PATH
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.plugins.crawl.pykto import NiktoTestParser, IsVulnerableHelper, Config
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.misc.file_utils import days_since_file_update
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.controllers.ci.w4af_moth import get_w4af_moth_http
 
 
-@pytest.mark.w3af_moth
+@pytest.mark.w4af_moth
 class TestPykto(PluginTest):
 
-    base_url = get_w3af_moth_http()
+    base_url = get_w4af_moth_http()
     DB_PATH = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl',
                            'pykto', 'scan_database.db')
     
@@ -63,7 +63,7 @@ class TestPykto(PluginTest):
         urls = self.kb.get_all_known_urls()
         self.assertEqual(len(urls), 3)
 
-        expected = [get_w3af_moth_http('/phpinfo.php'), get_w3af_moth_http('/hidden/')]
+        expected = [get_w4af_moth_http('/phpinfo.php'), get_w4af_moth_http('/hidden/')]
         vuln_urls = [v.get_url().url_string for v in vulns]
         self.assertEqual(set(expected),
                          set(vuln_urls))
@@ -160,14 +160,14 @@ class TestIsVulnerableHelper(unittest.TestCase):
 
 class TestNiktoTestParser(PluginTest):
     def test_updated_scan_db(self):
-        pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
+        pykto_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'pykto')
 
         scan_db_file = pykto_inst._db_file
         is_older = days_since_file_update(scan_db_file, 30)
 
         msg = 'The scan database file is too old. The following commands need'\
               ' to be run in order to update it:\n'\
-              'cd w3af/plugins/crawl/pykto/\n'\
+              'cd w4af/plugins/crawl/pykto/\n'\
               'python update_scan_db.py\n'\
               'git commit -m "Updating scan_database.db file." scan_database.db\n'\
               'git push\n'\
@@ -177,7 +177,7 @@ class TestNiktoTestParser(PluginTest):
     def test_not_too_many_ignores(self):
         config = Config(['/cgi-bin/'], [], [], [], [])
         url = URL('http://moth/')
-        pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
+        pykto_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
         # Go through all the lines        
@@ -194,7 +194,7 @@ class TestNiktoTestParser(PluginTest):
         """
         config = Config(['/cgi-bin/'], [], [], [], [])
         url = URL('http://moth/')
-        pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
+        pykto_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
         line = '"000003","0","1234576890ab","@CGIDIRScart32.exe","GET","200"'\
@@ -229,7 +229,7 @@ class TestNiktoTestParser(PluginTest):
     def test_parse_db_line_junk(self):
         config = Config(['/cgi-bin/'], [], [], [], [])
         url = URL('http://moth/')
-        pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
+        pykto_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
         line = '"0","0","","/docs/JUNK(5)","GET","200"'\
@@ -246,7 +246,7 @@ class TestNiktoTestParser(PluginTest):
     def test_parse_db_line_no_vars(self):
         config = Config([], [], [], [], [])
         url = URL('http://moth/')
-        pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
+        pykto_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
         line = '"0","0","","/docs/","GET","200"'\
@@ -262,7 +262,7 @@ class TestNiktoTestParser(PluginTest):
     def test_parse_db_line_cgidirs(self):
         config = Config(['/cgi-bin/'], [], [], [], [])
         url = URL('http://moth/')
-        pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
+        pykto_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
         line = '"0","0","","@CGIDIRS","GET","200"'\
@@ -280,7 +280,7 @@ class TestNiktoTestParser(PluginTest):
         
         config = Config(['/cgi-bin/'],admin_dirs,[],[],[])
         url = URL('http://moth/')
-        pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
+        pykto_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
         line = '"0","0","","@ADMIN","GET","200"'\
@@ -298,7 +298,7 @@ class TestNiktoTestParser(PluginTest):
         
         config = Config([],admin_dirs,[],[],users)
         url = URL('http://moth/')
-        pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
+        pykto_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
         line = '"0","0","","@ADMIN@USERS","GET","200"'\
@@ -313,7 +313,7 @@ class TestNiktoTestParser(PluginTest):
     def test_parse_db_line_raw_bytes(self):
         config = Config(['/cgi-bin/'], [], [], [], [])
         url = URL('http://moth/')
-        pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
+        pykto_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._db_file, config, url)
         
         line = '"006251","0","1","/administraçao.php","GET","200","","",""'\
@@ -325,18 +325,18 @@ class TestNiktoTestParser(PluginTest):
         else:
             self.assertTrue(False)
 
-    def test_parse_db_line_basic_w3af_scan_database(self):
+    def test_parse_db_line_basic_w4af_scan_database(self):
         """
-        This test reads a line from the w3af scan database and parses it, it's
+        This test reads a line from the w4af scan database and parses it, it's
         objective is to make sure that we can read both formats (or better yet,
         that both files: the one from nikto and the one we have are in the same
         format).
         
-        https://github.com/andresriancho/w3af/issues/317
+        https://github.com/andresriancho/w4af/issues/317
         """
         config = Config([], [], [], [], [])
         url = URL('http://moth/')
-        pykto_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'pykto')
+        pykto_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'pykto')
         nikto_parser = NiktoTestParser(pykto_inst._extra_db_file, config, url)
         
         # Go through all the lines        

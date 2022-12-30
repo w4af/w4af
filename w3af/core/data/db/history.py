@@ -3,19 +3,19 @@ history.py
 
 Copyright 2009 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -30,14 +30,14 @@ import msgpack
 from functools import wraps
 from shutil import rmtree
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.misc.temp_dir import get_temp_dir
-from w3af.core.controllers.exceptions import DBException
-from w3af.core.data.db.where_helper import WhereHelper
-from w3af.core.data.db.dbms import get_default_temp_db_instance
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.url.HTTPRequest import HTTPRequest
+from w4af.core.controllers.misc.temp_dir import get_temp_dir
+from w4af.core.controllers.exceptions import DBException
+from w4af.core.data.db.where_helper import WhereHelper
+from w4af.core.data.db.dbms import get_default_temp_db_instance
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.url.HTTPRequest import HTTPRequest
 
 
 def verify_has_db(meth):
@@ -253,7 +253,7 @@ class HistoryItem(object):
         try:
             request_dict, response_dict, canary = data
         except TypeError:
-            # https://github.com/andresriancho/w3af/issues/1101
+            # https://github.com/andresriancho/w4af/issues/1101
             # 'NoneType' object is not iterable
             raise TraceReadException('Not all components found in %s' % serialized_req_res)
 
@@ -424,7 +424,7 @@ class HistoryItem(object):
         # might fix errors like [0] but it can degrade performance due
         # to disk IO
         #
-        # [0] https://sourceforge.net/apps/trac/w3af/ticket/164352 ,
+        # [0] https://sourceforge.net/apps/trac/w4af/ticket/164352 ,
         #
         self._db.commit()
         return self.load(_id=_id, retry=False)
@@ -490,12 +490,12 @@ class HistoryItem(object):
             # the future.
             #
             # Now the path_fname looks like:
-            #   /root/.w3af/tmp/19524/main.db_traces/1.trace
+            #   /root/.w4af/tmp/19524/main.db_traces/1.trace
             #
             # I want to investigate which path doesn't exist, so I'm starting
             # from the first and add directories until reaching the last one
             #
-            # https://github.com/andresriancho/w3af/issues/9022
+            # https://github.com/andresriancho/w4af/issues/9022
             path, fname = os.path.split(path_fname)
             split_path = path.split('/')
 

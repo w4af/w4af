@@ -1,10 +1,10 @@
 import time
 import OpenSSL
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.url.handlers.keepalive.utils import debug
-from w3af.core.controllers.exceptions import ConnectionPoolException
+from w4af.core.data.url.handlers.keepalive.utils import debug
+from w4af.core.controllers.exceptions import ConnectionPoolException
 
 class ConnectionManager(object):
     """
@@ -236,7 +236,7 @@ class ConnectionManager(object):
 
         while waited_time_for_conn < self.GET_AVAILABLE_CONNECTION_RETRY_MAX_TIME:
             #
-            # One potential situation is that w3af is not freeing the
+            # One potential situation is that w4af is not freeing the
             # connections properly because of a bug. Connections that never
             # leave self._used_conns or self._free_conns are going to slowly kill
             # the HTTP connection pool, and then the whole framework, since at
@@ -322,7 +322,7 @@ class ConnectionManager(object):
             # Well, the connection pool for this host is full AND there are
             # no free connections to re-use, this means that many threads are
             # sending requests to the host and using the connections. This is
-            # not bad, just shows that w3af is keeping the connections busy
+            # not bad, just shows that w4af is keeping the connections busy
             #
             # Another reason for this situation is that the connections
             # are *really* slow => taking many seconds to retrieve the
@@ -344,9 +344,9 @@ class ConnectionManager(object):
 
         msg = ('HTTP connection pool (keepalive) waited too long (%s sec)'
                ' for a free connection, giving up. This usually occurs'
-               ' when w3af is scanning using a slow connection, the remote'
+               ' when w4af is scanning using a slow connection, the remote'
                ' server is slow (or applying QoS to IP addresses flagged'
-               ' as attackers) or the configured number of threads in w3af'
+               ' as attackers) or the configured number of threads in w4af'
                ' is too high compared with the connection manager'
                ' MAX_CONNECTIONS.')
         raise ConnectionPoolException(msg % self.GET_AVAILABLE_CONNECTION_RETRY_MAX_TIME)

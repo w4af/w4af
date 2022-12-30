@@ -3,29 +3,29 @@ websocket_hijacking.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.constants.severity as severity
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.controllers.websocket.utils import (build_ws_upgrade_request,
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.controllers.websocket.utils import (build_ws_upgrade_request,
                                                    negotiate_websocket_version,
                                                    is_successful_upgrade)
 
@@ -35,8 +35,8 @@ class websocket_hijacking(AuditPlugin):
     Detect Cross-Site WebSocket hijacking vulnerabilities.
     :author: Dmitry Roshchin (nixwizard@gmail.com)
     """
-    W3AF_DOMAIN = 'w3af.org'
-    W3AF_ORIGIN = 'http://www.w3af.org/'
+    w4af_DOMAIN = 'w4af.org'
+    w4af_ORIGIN = 'http://www.w4af.org/'
 
     def __init__(self):
         super(websocket_hijacking, self).__init__()
@@ -123,7 +123,7 @@ class websocket_hijacking(AuditPlugin):
         """
         upgrade_request = build_ws_upgrade_request(web_socket_url,
                                                    web_socket_version=web_socket_version,
-                                                   origin=self.W3AF_ORIGIN)
+                                                   origin=self.w4af_ORIGIN)
         upgrade_response = self._uri_opener.send_mutant(upgrade_request,
                                                         cookies=False,
                                                         use_basic_auth=False)
@@ -163,7 +163,7 @@ class websocket_hijacking(AuditPlugin):
         #
         # This is the trick:
         origin_domain = web_socket_url.get_domain()
-        origin_domain += '.%s' % self.W3AF_DOMAIN
+        origin_domain += '.%s' % self.w4af_DOMAIN
 
         for scheme in {'http', 'https'}:
             origin = '%s://%s' % (scheme, origin_domain)
@@ -262,7 +262,7 @@ class websocket_hijacking(AuditPlugin):
         #
         upgrade_request = build_ws_upgrade_request(web_socket_url,
                                                    web_socket_version=web_socket_version,
-                                                   origin=self.W3AF_ORIGIN)
+                                                   origin=self.w4af_ORIGIN)
         upgrade_response = self._uri_opener.send_mutant(upgrade_request,
                                                         cookies=False,
                                                         # Note the True here!
@@ -305,7 +305,7 @@ class websocket_hijacking(AuditPlugin):
         #
         upgrade_request = build_ws_upgrade_request(web_socket_url,
                                                    web_socket_version=web_socket_version,
-                                                   origin=self.W3AF_ORIGIN)
+                                                   origin=self.w4af_ORIGIN)
         upgrade_response = self._uri_opener.send_mutant(upgrade_request,
                                                         # Note the True here!
                                                         cookies=True,

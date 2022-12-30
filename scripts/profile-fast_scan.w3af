@@ -14,7 +14,7 @@ output
 back
 
 target
-set target http://moth/w3af/
+set target http://moth/w4af/
 back
 
 start

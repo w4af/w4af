@@ -1,4 +1,4 @@
-# This is the os_commanding demo for linux! ( with w3afAgent )
+# This is the os_commanding demo for linux! ( with w4afAgent )
 
 misc-settings
 set interface lo
@@ -9,7 +9,7 @@ plugins
 output console,text_file
 output
 output config text_file
-set output_file output-w3af.txt
+set output_file output-w4af.txt
 set verbose True
 back
 output config console
@@ -23,7 +23,7 @@ audit
 back
 
 target
-set target http://moth/w3af/os_commanding/vulnerable.php?command=list
+set target http://moth/w4af/os_commanding/vulnerable.php?command=list
 back
 start
 exploit
@@ -31,7 +31,7 @@ exploit os_commanding
 
 interact 0
 
-start w3afAgent
+start w4afAgent
 
 exit
 

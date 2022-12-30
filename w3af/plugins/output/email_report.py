@@ -1,19 +1,19 @@
 """
 email_report.py
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -21,13 +21,13 @@ import smtplib
 
 from email.mime.text import MIMEText
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.config as cf
 
-from w3af.core.controllers.plugins.output_plugin import OutputPlugin
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
+from w4af.core.controllers.plugins.output_plugin import OutputPlugin
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
 
 
 class email_report(OutputPlugin):
@@ -101,7 +101,7 @@ class email_report(OutputPlugin):
         msg = MIMEText(data)
         msg['From'] = self.fromAddr
         msg['To'] = ', '.join(self.toAddrs)
-        msg['Subject'] = 'w3af report on %s' % self.targets[0]
+        msg['Subject'] = 'w4af report on %s' % self.targets[0]
 
         try:
             server = smtplib.SMTP(self.smtpServer, self.smtpPort)

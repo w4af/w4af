@@ -3,19 +3,19 @@ test_credit_cards.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,14 +23,14 @@ import os
 import unittest
 import math
 
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af import ROOT_PATH
-from w3af.plugins.grep.credit_cards import credit_cards
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.doc.url import URL
+from w4af import ROOT_PATH
+from w4af.plugins.grep.credit_cards import credit_cards
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.doc.url import URL
 
 
 class TestCreditCards(unittest.TestCase):
@@ -44,7 +44,7 @@ class TestCreditCards(unittest.TestCase):
 
     def test_find_credit_card(self):
         body = '378282246310005'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
@@ -53,7 +53,7 @@ class TestCreditCards(unittest.TestCase):
 
     def test_find_credit_card_spaces(self):
         body = '3566 0020 2036 0505'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
@@ -62,7 +62,7 @@ class TestCreditCards(unittest.TestCase):
 
     def test_find_credit_card_html(self):
         body = '<a> 378282246310005</a>'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
@@ -81,7 +81,7 @@ class TestCreditCards(unittest.TestCase):
                          )
         for card in invalid_cards:
             body = '<A href="#123">%s</A>' % card
-            url = URL('http://www.w3af.com/')
+            url = URL('http://www.w4af.com/')
             headers = Headers([('content-type', 'text/html')])
             response = HTTPResponse(200, body, headers, url, url, _id=1)
             request = FuzzableRequest(url, method='GET')
@@ -92,7 +92,7 @@ class TestCreditCards(unittest.TestCase):
 
     def test_invalid_check_not_find_credit_card_spaces(self):
         body = '3566 0020 2036 0705'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
@@ -107,7 +107,7 @@ class TestCreditCards(unittest.TestCase):
             html = fh.read()
         html = html[:math.floor(len(html) / 2)] + ' ' + credit_card + ' ' + html[math.floor(len(html) / 2):]
 
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         response = HTTPResponse(200, html, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')

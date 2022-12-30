@@ -1,9 +1,9 @@
 import os
 import subprocess
 
-from w3af.plugins.attack.payloads.base_payload import Payload
-from w3af.core.ui.console.tables import table
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.plugins.attack.payloads.base_payload import Payload
+from w4af.core.ui.console.tables import table
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 class pixy(Payload):

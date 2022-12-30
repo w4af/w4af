@@ -3,19 +3,19 @@ grep.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -27,18 +27,18 @@ import threading
 from darts.lib.utils.lru import SynchronizedLRUDict
 # pylint: enable=E0401
 
-import w3af.core.data.kb.config as cf
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.profiling.took_helper import TookLine
-from w3af.core.controllers.core_helpers.consumers.base_consumer import BaseConsumer
-from w3af.core.controllers.core_helpers.status import CoreStatus
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.db.history import HistoryItem
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.misc.response_cache_key import ResponseCacheKeyCache
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.controllers.profiling.took_helper import TookLine
+from w4af.core.controllers.core_helpers.consumers.base_consumer import BaseConsumer
+from w4af.core.controllers.core_helpers.status import CoreStatus
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.db.history import HistoryItem
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.misc.response_cache_key import ResponseCacheKeyCache
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class grep(BaseConsumer):
@@ -62,10 +62,10 @@ class grep(BaseConsumer):
                                       'cf-ray',
                                       'set-cookie'])
 
-    def __init__(self, grep_plugins, w3af_core):
+    def __init__(self, grep_plugins, w4af_core):
         """
         :param grep_plugins: Instances of grep plugins in a list
-        :param w3af_core: The w3af core that we'll use for status reporting
+        :param w4af_core: The w4af core that we'll use for status reporting
         """
         # max_in_queue_size, is the number of items that will be stored in-memory
         # in the consumer queue
@@ -83,7 +83,7 @@ class grep(BaseConsumer):
         max_pool_queued_tasks = thread_pool_size * 3
 
         super(grep, self).__init__(grep_plugins,
-                                   w3af_core,
+                                   w4af_core,
                                    create_pool=True,
                                    max_pool_queued_tasks=max_pool_queued_tasks,
                                    thread_pool_size=thread_pool_size,
@@ -131,7 +131,7 @@ class grep(BaseConsumer):
                 args = (plugin.get_name(), exception)
                 om.out.debug(msg % args)
 
-                status = FakeStatus(self._w3af_core)
+                status = FakeStatus(self._w4af_core)
                 status.set_current_fuzzable_request('grep', 'n/a')
                 status.set_running_plugin('grep',
                                           plugin.get_name(),
@@ -139,7 +139,7 @@ class grep(BaseConsumer):
 
                 exec_info = sys.exc_info()
                 enabled_plugins = 'n/a'
-                self._w3af_core.exception_handler.handle(status,
+                self._w4af_core.exception_handler.handle(status,
                                                          exception,
                                                          exec_info,
                                                          enabled_plugins)
@@ -314,7 +314,7 @@ class grep(BaseConsumer):
 
         self._run_observers(plugin_name, request, response)
 
-        took_line = TookLine(self._w3af_core,
+        took_line = TookLine(self._w4af_core,
                              plugin_name,
                              'grep',
                              debugging_id=None,

@@ -3,29 +3,29 @@ intercept_handler.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import traceback
 
-from w3af.core.controllers.daemons.proxy import ProxyHandler
-from w3af.core.data.parsers.doc.http_request_parser import http_request_parser
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.controllers.daemons.proxy.templates.utils import render
+from w4af.core.controllers.daemons.proxy import ProxyHandler
+from w4af.core.data.parsers.doc.http_request_parser import http_request_parser
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.controllers.daemons.proxy.templates.utils import render
 
 
 class InterceptProxyHandler(ProxyHandler):
@@ -40,7 +40,7 @@ class InterceptProxyHandler(ProxyHandler):
         :param flow: A libmproxy flow containing the request
         :return: None, we reply to flow
         """
-        http_request = self._to_w3af_request(flow.request)
+        http_request = self._to_w4af_request(flow.request)
 
         try:
             # Now we check if we need to add this to the queue, or just let
@@ -108,7 +108,7 @@ class InterceptProxyHandler(ProxyHandler):
         Wait for the user to modify the request. After editing the request the
         code should call on_edited_request.
 
-        :param http_request: A w3af HTTP request instance
+        :param http_request: A w4af HTTP request instance
         :return: An HTTP response
         """
         self.parent_process.requests_pending_modification.put(http_request)

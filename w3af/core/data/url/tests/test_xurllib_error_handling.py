@@ -4,19 +4,19 @@ test_xurllib_error_handling.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import time
@@ -26,15 +26,15 @@ import socketserver
 from unittest.mock import Mock, patch, call
 import pytest
 
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.core.controllers.exceptions import ScanMustStopByKnownReasonExc
-from w3af.core.controllers.exceptions import HTTPRequestException
-from w3af.core.data.url.tests.helpers.upper_daemon import ThreadingUpperDaemon
-from w3af.core.data.constants.file_patterns import FILE_PATTERNS
-from w3af.core.data.url.extended_urllib import ExtendedUrllib
-from w3af.core.data.url.tests.helpers.upper_daemon import UpperDaemon
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.tests.test_xurllib import (EmptyTCPHandler,
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.core.controllers.exceptions import ScanMustStopByKnownReasonExc
+from w4af.core.controllers.exceptions import HTTPRequestException
+from w4af.core.data.url.tests.helpers.upper_daemon import ThreadingUpperDaemon
+from w4af.core.data.constants.file_patterns import FILE_PATTERNS
+from w4af.core.data.url.extended_urllib import ExtendedUrllib
+from w4af.core.data.url.tests.helpers.upper_daemon import UpperDaemon
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.tests.test_xurllib import (EmptyTCPHandler,
                                                    TimeoutTCPHandler)
 
 
@@ -75,7 +75,7 @@ class TestXUrllibDelayOnError(unittest.TestCase):
         loops = 100
 
         # Now check the delays
-        with patch('w3af.core.data.url.extended_urllib.backoff') as sleepm:
+        with patch('w4af.core.data.url.extended_urllib.backoff') as sleepm:
             for i in range(loops):
                 try:
                     self.uri_opener.GET(url, cache=False)
@@ -191,8 +191,8 @@ class TestXUrllibErrorHandling(PluginTest):
     threads were sending requests to a URL which was timing out, thus reaching
     the MAX_ERROR_COUNT and stopping the whole scan.
 
-    :see: https://github.com/andresriancho/w3af/issues/8698#issuecomment-77625343
-    :see: https://github.com/andresriancho/w3af/issues/8698
+    :see: https://github.com/andresriancho/w4af/issues/8698#issuecomment-77625343
+    :see: https://github.com/andresriancho/w4af/issues/8698
     """
     _run_configs = {
         'cfg': {
@@ -211,8 +211,8 @@ class TestXUrllibErrorHandling(PluginTest):
 
     def test_do_not_reach_must_stop_exception(self):
         # Configure low timeout to have faster test
-        self.w3afcore.uri_opener.settings.set_configured_timeout(TIMEOUT_SECS)
-        self.w3afcore.uri_opener.clear_timeout()
+        self.w4afcore.uri_opener.settings.set_configured_timeout(TIMEOUT_SECS)
+        self.w4afcore.uri_opener.clear_timeout()
 
         # Setup the server
         upper_daemon = ThreadingUpperDaemon(MultipleTimeoutsTCPHandler)
@@ -223,12 +223,12 @@ class TestXUrllibErrorHandling(PluginTest):
         target_url = 'http://127.0.0.1:%s/' % port
 
         # Make sure we don't clear the attribute we want to assert
-        self.w3afcore.uri_opener.clear = Mock()
+        self.w4afcore.uri_opener.clear = Mock()
 
         # Run the scan
         cfg = self._run_configs['cfg']
 
-        with patch('w3af.core.data.url.extended_urllib.om.out') as om_mock:
+        with patch('w4af.core.data.url.extended_urllib.om.out') as om_mock:
             self._scan(target_url, cfg['plugins'])
 
             # This assertion does fail often due to threads sending stuff in
@@ -243,10 +243,10 @@ class TestXUrllibErrorHandling(PluginTest):
             self.assertEqual(om_mock.report_finding.call_count, 1)
 
         # Restore the defaults
-        self.w3afcore.uri_opener.settings.set_default_values()
+        self.w4afcore.uri_opener.settings.set_default_values()
 
         # No exceptions please
-        self.assertIsNone(self.w3afcore.uri_opener._stop_exception)
+        self.assertIsNone(self.w4afcore.uri_opener._stop_exception)
 
         # Assert the vulnerability findings
         vulns = self.kb.get('lfi', 'lfi')
@@ -256,7 +256,7 @@ class TestXUrllibErrorHandling(PluginTest):
 
         self.assertAllVulnNamesEqual('Local file inclusion vulnerability', vulns)
         self.assertExpectedVulnsFound(expected, vulns)
-        self.assertTrue(self.w3afcore.uri_opener.clear.called)
+        self.assertTrue(self.w4afcore.uri_opener.clear.called)
 
 
 class MultipleTimeoutsTCPHandler(socketserver.BaseRequestHandler):

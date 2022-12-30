@@ -3,27 +3,27 @@ exec_methodHelpers.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.misc.encoding import smart_str_ignore, smart_str
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.misc.encoding import smart_str_ignore, smart_str
 
 
 def os_detection_exec(exec_method):
@@ -33,12 +33,12 @@ def os_detection_exec(exec_method):
     a BaseFrameworkException if unknown.
     """
     try:
-        linux1 = exec_method('echo -n w3af')
+        linux1 = exec_method('echo -n w4af')
         linux2 = exec_method('head -n 1 /etc/passwd')
     except BaseFrameworkException:
         pass
     else:
-        if b'w3af' in smart_str_ignore(linux1) and smart_str_ignore(linux2).count(b':') > 3:
+        if b'w4af' in smart_str_ignore(linux1) and smart_str_ignore(linux2).count(b':') > 3:
             om.out.debug('Identified remote OS as Linux, returning "linux".')
             return 'linux'
 

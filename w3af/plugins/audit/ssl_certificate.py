@@ -3,19 +3,19 @@ ssl_certificate.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -28,19 +28,19 @@ import OpenSSL
 from pprint import pformat
 from datetime import date, datetime
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import INPUT_FILE
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.openssl_wrapper.ssl_wrapper import wrap_socket
-from w3af.core.data.kb.info import Info
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af import ROOT_PATH
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import INPUT_FILE
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.openssl_wrapper.ssl_wrapper import wrap_socket
+from w4af.core.data.kb.info import Info
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 class ssl_certificate(AuditPlugin):
@@ -61,8 +61,8 @@ class ssl_certificate(AuditPlugin):
         It is possible to update this file by downloading the latest
         cacert.pem from curl:
         
-            wget https://curl.haxx.se/ca/cacert.pem -O w3af/plugins/audit/ssl_certificate/ca.pem
-            git commit w3af/plugins/audit/ssl_certificate/ca.pem -m "Update ca.pem"
+            wget https://curl.haxx.se/ca/cacert.pem -O w4af/plugins/audit/ssl_certificate/ca.pem
+            git commit w4af/plugins/audit/ssl_certificate/ca.pem -m "Update ca.pem"
         
         """
         self._ca_file = os.path.join(ROOT_PATH, 'plugins', 'audit',
@@ -430,7 +430,7 @@ class ssl_certificate(AuditPlugin):
 
         d = ('Set minimal amount of days before expiration of the certificate'
              ' for alerting')
-        h = ('If the certificate will expire in period of minExpireDays w3af'
+        h = ('If the certificate will expire in period of minExpireDays w4af'
              ' will show an alert about it, which is useful for admins to'
              ' remember to renew the certificate.')
         o = opt_factory('min_expire_days', self._min_expire_days, d, 'integer', help=h)

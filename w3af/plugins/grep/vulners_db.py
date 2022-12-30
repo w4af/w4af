@@ -3,19 +3,19 @@ vulners.py
 
 Copyright 2018 Vulners.com Team: Kir Ermakov (isox@vulners.com)
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,19 +25,19 @@ import collections
 
 import vulners
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.plugins.grep_plugin import GrepPlugin
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.quick_match.multi_re import MultiRE
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import STRING
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.kb.info_set import InfoSet
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.misc.cvss import cvss_to_severity
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.quick_match.multi_re import MultiRE
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import STRING
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.kb.info_set import InfoSet
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.misc.cvss import cvss_to_severity
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 class vulners_db(GrepPlugin):
@@ -159,11 +159,11 @@ class vulners_db(GrepPlugin):
         which are used to extract information from the HTTP response.
 
         Rules can be found at vulners github repository. They were not included
-        into the w3af repository because of licensing incompatibilities.
+        into the w4af repository because of licensing incompatibilities.
 
         Paranoid? Check gitlog and regexes.
         """
-        # w3af grep plugins shouldn't (by definition) perform HTTP requests
+        # w4af grep plugins shouldn't (by definition) perform HTTP requests
         # But in this case we're breaking that general rule to retrieve the
         # DB at the beginning of the scan
         try:
@@ -190,7 +190,7 @@ class vulners_db(GrepPlugin):
             regex_aliases[self.rules_table[software_name].get('regex')] += [software_name]
 
         # Now create fast RE filter
-        # Using re.IGNORECASE because w3af is modifying headers when making RAW dump.
+        # Using re.IGNORECASE because w4af is modifying headers when making RAW dump.
         # Why so? Raw must be raw!
         self._multi_re = MultiRE(((regex, regex_aliases.get(regex)) for regex in regex_aliases),
                                  re.IGNORECASE)

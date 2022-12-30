@@ -3,19 +3,19 @@ vdaemon.py
 
 Copyright 2010 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,12 +26,12 @@ import time
 
 import subprocess
 
-import w3af.core.data.kb.config as cf
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.payload_transfer.payload_transfer_factory import payload_transfer_factory
-from w3af.core.controllers.intrusion_tools.execMethodHelpers import get_remote_temp_file
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.payload_transfer.payload_transfer_factory import payload_transfer_factory
+from w4af.core.controllers.intrusion_tools.execMethodHelpers import get_remote_temp_file
 
 
 class vdaemon(object):
@@ -60,7 +60,7 @@ class vdaemon(object):
     def run(self, user_defined_parameters):
         """
         This is the entry point. We get here when the user runs the
-        "payload vdaemon linux/x86/meterpreter/reverse_tcp" command in his w3af
+        "payload vdaemon linux/x86/meterpreter/reverse_tcp" command in his w4af
         shell after exploiting a vulnerability.
 
         :param user_defined_parameters: The parameters defined by the user, for
@@ -203,7 +203,7 @@ class vdaemon(object):
         """
         om.out.debug('Called _send_exe_to_server()')
         om.out.console(
-            'Wait while w3af uploads the payload to the remote server...')
+            'Wait while w4af uploads the payload to the remote server...')
 
         ptf = payload_transfer_factory(self._exec_method)
 

@@ -3,27 +3,27 @@ test_blind_sqli.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
-from w3af.core.controllers.ci.wavsep import get_wavsep_http
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.controllers.ci.w4af_moth import get_w4af_moth_http
+from w4af.core.controllers.ci.wavsep import get_wavsep_http
 
 
 CONFIG = {'audit': (PluginConfig('blind_sqli'),),
@@ -118,11 +118,11 @@ class TestReflectedXSSFalsePositive(PluginTest):
         self.assertEqual(0, len(vulns))
 
 
-@pytest.mark.w3af_moth
+@pytest.mark.w4af_moth
 class TestOldMothBlindSQLI(PluginTest):
 
-    base_path = '/w3af/audit/blind_sql_injection/'
-    target_url = get_w3af_moth_http(base_path)
+    base_path = '/w4af/audit/blind_sql_injection/'
+    target_url = get_w4af_moth_http(base_path)
 
     config = {
         'audit': (PluginConfig('blind_sqli'),),

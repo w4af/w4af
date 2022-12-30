@@ -3,19 +3,19 @@ memory_usage.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,13 +24,13 @@ import os
 from .utils import get_filename_fmt, dump_data_every_thread, cancel_thread
 
 
-PROFILING_OUTPUT_FMT = '/tmp/w3af-%s-%s.memory'
+PROFILING_OUTPUT_FMT = '/tmp/w4af-%s-%s.memory'
 DELAY_MINUTES = 2
 SAVE_THREAD_PTR = []
 
 
 def user_wants_memory_profiling():
-    _should_profile = os.environ.get('W3AF_MEMORY_PROFILING', '0')
+    _should_profile = os.environ.get('w4af_MEMORY_PROFILING', '0')
 
     if _should_profile.isdigit() and int(_should_profile) == 1:
         return True
@@ -49,7 +49,7 @@ def should_profile_memory(wrapped):
 @should_profile_memory
 def start_memory_profiling():
     """
-    If the environment variable W3AF_PROFILING is set to 1, then we start
+    If the environment variable w4af_PROFILING is set to 1, then we start
     the CPU and memory profiling.
 
     :return: None

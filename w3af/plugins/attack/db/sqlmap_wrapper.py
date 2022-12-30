@@ -3,19 +3,19 @@ sqlmap_wrapper.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
@@ -26,12 +26,12 @@ import shlex
 import tempfile
 import subprocess
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af import ROOT_PATH
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.controllers.daemons.proxy import Proxy
-from w3af.core.controllers.misc.which import which
+from w4af import ROOT_PATH
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.controllers.daemons.proxy import Proxy
+from w4af.core.controllers.misc.which import which
 
 
 class SQLMapWrapper(object):
@@ -41,9 +41,9 @@ class SQLMapWrapper(object):
 
     # This was added for Debian (and most likely useful for other distributions)
     # because we don't want to have a sqlmap.deb and duplicate the same files
-    # in w3af.deb
+    # in w4af.deb
     #
-    # https://github.com/andresriancho/w3af/issues/10538
+    # https://github.com/andresriancho/w4af/issues/10538
     #
     INSTALLED_DEFAULT_ARGS = ['sqlmap',
                               '--ignore-stdin',
@@ -107,10 +107,10 @@ class SQLMapWrapper(object):
         """
         Need to define this method in order to remove the uri_opener from the
         pickled string. This will make sure that when the object is un-pickled
-        we get the real uri_opener from w3af's core.
+        we get the real uri_opener from w4af's core.
 
         The object being un-pickled is the SQLMapShell, which when un-pickled
-        from the kb we call "shell.set_url_opener(w3af_core.uri_opener)",
+        from the kb we call "shell.set_url_opener(w4af_core.uri_opener)",
         which then calls start_proxy(uri_opener) in order to restore the opener
         """
         return self.__class__, (self.target, None, self.coloring, self.debug)
@@ -154,13 +154,13 @@ class SQLMapWrapper(object):
             * sqlmap is in PATH
             * The embedded sqlmap is not available
 
-        :see: https://github.com/andresriancho/w3af/issues/10538
+        :see: https://github.com/andresriancho/w4af/issues/10538
 
         :return: The base args to execute sqlmap in this environment, or raise
                  an exception if something is wrong.
         """
         if os.path.exists(self.SQLMAP_LOCATION):
-            # This is the most common scenario where the user installs w3af
+            # This is the most common scenario where the user installs w4af
             # from source and wants to use the embedded sqlmap
             return self.SQLMAP_LOCATION, self.EMBEDDED_DEFAULT_ARGS
 
@@ -200,7 +200,7 @@ class SQLMapWrapper(object):
                                        universal_newlines=True,
                                        cwd=cwd)
         except OSError as os_err:
-            # https://github.com/andresriancho/w3af/issues/10186
+            # https://github.com/andresriancho/w4af/issues/10186
             # OSError: [Errno 12] Cannot allocate memory
             if os_err.errno == errno.ENOMEM:
                 msg = ('The operating system is running low on memory and'
@@ -257,7 +257,7 @@ class SQLMapWrapper(object):
                     (last command run,
                      Popen object so that everyone can read .stdout)
                  
-                 This is very useful for using with w3af's output manager.
+                 This is very useful for using with w4af's output manager.
         """
         process = self._run(custom_params)
 

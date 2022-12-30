@@ -3,19 +3,19 @@ helpers.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
@@ -30,9 +30,9 @@ from gi.repository import Gtk as gtk
 from gi.repository import Gdk
 import os
 
-from w3af.core.ui.gui import GUI_DATA_PATH
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.ui.gui.constants import W3AF_ICON
+from w4af.core.ui.gui import GUI_DATA_PATH
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.ui.gui.constants import w4af_ICON
 
 
 class PropagateBuffer(object):
@@ -167,7 +167,7 @@ def FriendlyExceptionDlg(message):
 
     :param message: text received in the friendly exception.
     """
-    class w3af_message_dialog(gtk.MessageDialog):
+    class w4af_message_dialog(gtk.MessageDialog):
 
         def dialog_response_cb(self, widget, response_id):
             """
@@ -179,9 +179,9 @@ def FriendlyExceptionDlg(message):
             self.connect('response', self.dialog_response_cb)
             self.show()
 
-    dlg = w3af_message_dialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,
+    dlg = w4af_message_dialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,
                               gtk.BUTTONS_OK, message)
-    dlg.set_icon_from_file(W3AF_ICON)
+    dlg.set_icon_from_file(w4af_ICON)
     dlg.set_title('Error')
     dlg.dialog_run()
     return
@@ -409,7 +409,7 @@ class SensitiveAnd(object):
         self.target.set_sensitive(sensit)
 
 
-import w3af.core.data.constants.severity as severity
+import w4af.core.data.constants.severity as severity
 KB_ICONS = {
     ("excp", None): loadImage('warning-black-animated.gif'),
     ("info", None): loadImage('information.png'),

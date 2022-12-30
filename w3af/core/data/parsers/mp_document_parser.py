@@ -3,19 +3,19 @@ mp_document_parser.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -34,20 +34,20 @@ from tblib.decorators import Error
 from pebble import ProcessPool
 from pebble.common import ProcessExpired
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.profiling import start_profiling_no_core
-from w3af.core.controllers.threads.is_main_process import is_main_process
-from w3af.core.controllers.output_manager import log_sink_factory
-from w3af.core.controllers.exceptions import ScanMustStopException
-from w3af.core.controllers.ci.detect import is_running_on_ci
-from w3af.core.controllers.threads.decorators import apply_with_return_error
-from w3af.core.controllers.profiling.core_stats import core_profiling_is_enabled
-from w3af.core.controllers.profiling.memory_usage import user_wants_memory_profiling
-from w3af.core.controllers.profiling.pytracemalloc import user_wants_pytracemalloc
-from w3af.core.controllers.profiling.cpu_usage import user_wants_cpu_profiling
-from w3af.core.data.parsers.document_parser import DocumentParser
-from w3af.core.data.parsers.ipc.serialization import (write_object_to_temp_file,
+from w4af.core.controllers.profiling import start_profiling_no_core
+from w4af.core.controllers.threads.is_main_process import is_main_process
+from w4af.core.controllers.output_manager import log_sink_factory
+from w4af.core.controllers.exceptions import ScanMustStopException
+from w4af.core.controllers.ci.detect import is_running_on_ci
+from w4af.core.controllers.threads.decorators import apply_with_return_error
+from w4af.core.controllers.profiling.core_stats import core_profiling_is_enabled
+from w4af.core.controllers.profiling.memory_usage import user_wants_memory_profiling
+from w4af.core.controllers.profiling.pytracemalloc import user_wants_pytracemalloc
+from w4af.core.controllers.profiling.cpu_usage import user_wants_cpu_profiling
+from w4af.core.data.parsers.document_parser import DocumentParser
+from w4af.core.data.parsers.ipc.serialization import (write_object_to_temp_file,
                                                       write_http_response_to_temp_file,
                                                       write_tags_to_temp_file,
                                                       load_object_from_temp_file,
@@ -85,7 +85,7 @@ class MultiProcessingDocumentParser(object):
 
     # Increasing the timeout when profiling is enabled seems to fix issue #9713
     #
-    # https://github.com/andresriancho/w3af/issues/9713
+    # https://github.com/andresriancho/w4af/issues/9713
     PROFILING_ENABLED = (user_wants_memory_profiling() or
                          user_wants_pytracemalloc() or
                          user_wants_cpu_profiling())
@@ -428,14 +428,14 @@ def limit_memory_usage(mem_limit):
     """
     # This works on Linux only (for now)
     if not hasattr(resource, 'RLIMIT_AS'):
-        print('w3af was unable to limit the memory usage of parser processes.'
+        print('w4af was unable to limit the memory usage of parser processes.'
               ' This feature is only supported in Linux OS, create an issue'
               ' in our repository and we might implement it for your OS.')
         return
 
     # Note that this is run on every process start, which is what we need
     #
-    # Since the real memory limit will be w3af's main process memory usage
+    # Since the real memory limit will be w4af's main process memory usage
     # plus the imposed memory limit (mem_limit) we want to calculate this
     # as often as possible.
     #

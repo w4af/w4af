@@ -1,6 +1,6 @@
 import hashlib
 
-from w3af.core.data.constants.encodings import DEFAULT_ENCODING
+from w4af.core.data.constants.encodings import DEFAULT_ENCODING
 
 def gen_hash(request):
     """
@@ -8,7 +8,7 @@ def gen_hash(request):
 
     Note that we use safe_str function in order to avoid errors like:
         * Encoding error #1917
-        * https://github.com/andresriancho/w3af/issues/1917
+        * https://github.com/andresriancho/w4af/issues/1917
     """
     req = request
     headers_1 = ''.join('%s%s' % (safe_str(h), safe_str(v)) for h, v in req.headers.items())

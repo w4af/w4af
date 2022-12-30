@@ -3,19 +3,19 @@ dbms.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -29,11 +29,11 @@ from functools import wraps
 
 from concurrent.futures import ThreadPoolExecutor
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.misc.file_utils import replace_file_special_chars
-from w3af.core.controllers.misc.temp_dir import get_temp_dir, create_temp_dir
-from w3af.core.controllers.exceptions import (DBException,
+from w4af.core.data.misc.file_utils import replace_file_special_chars
+from w4af.core.controllers.misc.temp_dir import get_temp_dir, create_temp_dir
+from w4af.core.controllers.exceptions import (DBException,
                                               NoSuchTableException,
                                               MalformedDBException)
 
@@ -50,7 +50,7 @@ DB_MALFORMED_ERROR = ('SQLite raised a database disk image is malformed'
                       ' many reasons that'
                       ' might lead to this issue [0] and multiple bug reports'
                       ' by users [1] there is no clear indication on exactly'
-                      ' what causes the issue in w3af.\n\n'
+                      ' what causes the issue in w4af.\n\n'
                       ''
                       'If you are able to reproduce this issue in your'
                       ' environment we would love to hear the OS and hardware'
@@ -58,7 +58,7 @@ DB_MALFORMED_ERROR = ('SQLite raised a database disk image is malformed'
                       ' information. Just send us a comment at #4905 [1].\n\n'
                       ''
                       '[0] https://www.sqlite.org/howtocorrupt.html\n'
-                      '[1] https://github.com/andresriancho/w3af/issues/4905')
+                      '[1] https://github.com/andresriancho/w4af/issues/4905')
 
 
 def verify_started(meth):
@@ -92,7 +92,7 @@ class SQLiteDBMS(object):
 
         super(SQLiteDBMS, self).__init__()
 
-        #   All DB queries from w3af are sent to this queue, and this is a lot
+        #   All DB queries from w4af are sent to this queue, and this is a lot
         #   since the DiskList, DiskQueue, DiskDict classes which are used
         #   extensively through the framework use the same SQLite db as a
         #   backend (of course different tables, but the same SQLite file and
@@ -317,7 +317,7 @@ class SQLiteExecutor():
         # Commented line to be: Slower but (hopefully) without malformed
         # databases
         #
-        # https://github.com/andresriancho/w3af/issues/4937
+        # https://github.com/andresriancho/w4af/issues/4937
         #
         # It doesn't seem to help because I'm still getting malformed database
         # files, but I'll keep it anyways because I'm assuming that it's going
@@ -405,7 +405,7 @@ def reset_temp_db_instance():
 def get_default_persistent_db_instance():
     """
     At some point I'll want to have persistent DB for storing the KB and other
-    information across different w3af processes, or simply to save the findings
+    information across different w4af processes, or simply to save the findings
     in a KB and don't remove them. I'm adding this method as a reminder of
     where it should be done.
     """

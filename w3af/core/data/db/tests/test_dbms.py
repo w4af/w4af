@@ -2,19 +2,19 @@
 """
 Copyright 2013 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -27,9 +27,9 @@ import pytest
 from itertools import repeat, starmap
 from random import choice
 
-from w3af.core.data.db.dbms import SQLiteDBMS, get_default_temp_db_instance
-from w3af.core.controllers.exceptions import DBException, NoSuchTableException
-from w3af.core.controllers.misc.temp_dir import (get_temp_dir,
+from w4af.core.data.db.dbms import SQLiteDBMS, get_default_temp_db_instance
+from w4af.core.controllers.exceptions import DBException, NoSuchTableException
+from w4af.core.controllers.misc.temp_dir import (get_temp_dir,
                                                  create_temp_dir,
                                                  remove_temp_dir)
 
@@ -37,7 +37,7 @@ from w3af.core.controllers.misc.temp_dir import (get_temp_dir,
 def get_temp_filename():
     temp_dir = get_temp_dir()
     fname = ''.join(starmap(choice, repeat((string.ascii_letters,), 18)))
-    filename = os.path.join(temp_dir, fname + '.w3af.temp_db')
+    filename = os.path.join(temp_dir, fname + '.w4af.temp_db')
     return filename
 
 
@@ -76,7 +76,7 @@ class TestDBMS(unittest.TestCase):
         #
         # This lead to race conditions like:
         #
-        #   https://github.com/andresriancho/w3af/issues/16171
+        #   https://github.com/andresriancho/w4af/issues/16171
         #
         result1 = db.execute('UPDATE TEST SET data = ? WHERE id = ?', ('c', 1)).result()
         result2 = db.execute('UPDATE TEST SET data = ? WHERE id = ?', ('nope', 3)).result()

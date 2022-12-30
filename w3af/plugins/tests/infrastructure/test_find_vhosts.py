@@ -3,31 +3,31 @@ test_find_vhosts.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import socketserver
 
-from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
-from w3af.core.data.url.tests.helpers.upper_daemon import ThreadingUpperDaemon
+from w4af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
+from w4af.core.data.url.tests.helpers.upper_daemon import ThreadingUpperDaemon
 
 
 class TestFindVhosts(PluginTest):
     #
     # Note: I tried implementing this test using httpretty and found
-    #       that it doesn't support the connection to w3af.org with
+    #       that it doesn't support the connection to w4af.org with
     #       a Host header that specifies a different host.
     #
     #       That is why we need a real server for testing.
@@ -60,7 +60,7 @@ class TestFindVhosts(PluginTest):
 
 
 class TestFindVhostsInHTML(PluginTest):
-    target_url = 'http://w3af.org'
+    target_url = 'http://w4af.org'
 
     MOCK_RESPONSES = [MockResponse(target_url, '<a href="http://intranet/">x</a>')]
 
@@ -99,8 +99,8 @@ class MultipleVHostsHandler(socketserver.BaseRequestHandler):
         data = self.request.recv(1024).strip()
 
         # Match hosts
-        if b'Host: w3af.org\r\n' in data:
-            body = b'Welcome to w3af.org'
+        if b'Host: w4af.org\r\n' in data:
+            body = b'Welcome to w4af.org'
             self.request.sendall(self.RESPONSE % (str(len(body)).encode('utf-8'), body))
 
         if b'Host: intranet\r\n' in data:

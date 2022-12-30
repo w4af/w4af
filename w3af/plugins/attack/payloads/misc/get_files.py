@@ -1,4 +1,4 @@
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.knowledge_base as kb
 import re
 
 files = []

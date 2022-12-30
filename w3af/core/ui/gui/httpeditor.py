@@ -3,19 +3,19 @@ httpeditor.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -29,10 +29,10 @@ gi.require_version('Pango', '1.0')
 from gi.repository import Pango as pango
 from gi.repository import GtkSource as gtksourceview
 
-from w3af import ROOT_PATH
-from w3af.core.data.constants import severity
-from w3af.core.ui.gui.common.searchable import Searchable
-from w3af.core.ui.gui.tools.encdec import EncodeDecode
+from w4af import ROOT_PATH
+from w4af.core.data.constants import severity
+from w4af.core.ui.gui.common.searchable import Searchable
+from w4af.core.ui.gui.tools.encdec import EncodeDecode
 
 
 SEVERITY_TO_COLOR = {
@@ -50,10 +50,10 @@ class HttpEditor(gtk.VBox, Searchable):
 
     HTTP_HEAD_BODY_SPLIT_RE = re.compile('(\r\n\r\n|\n\n)')
 
-    def __init__(self, w3af):
+    def __init__(self, w4af):
         gtk.VBox.__init__(self)
         self.is_request = True
-        self.w3af = w3af
+        self.w4af = w4af
         # Create the textview where the text is going to be shown
         self.textView = gtksourceview.View(gtksourceview.Buffer())
         # User controlled options
@@ -156,7 +156,7 @@ class HttpEditor(gtk.VBox, Searchable):
         Searchable._populate_popup(self, textview, menu)
 
     def _send2enc(self, w=None):
-        enc = EncodeDecode(self.w3af)
+        enc = EncodeDecode(self.w4af)
         enc.paneup.set_text(self.get_selected_text())
         enc.panedn.set_text(self.get_selected_text())
 

@@ -3,19 +3,19 @@ test_web_diff.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
@@ -23,16 +23,16 @@ import os
 import pytest
 from unittest.mock import patch, call
 
-from w3af import ROOT_PATH
-from w3af.core.data.parsers.doc.url import URL
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
+from w4af import ROOT_PATH
+from w4af.core.data.parsers.doc.url import URL
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.core.controllers.ci.w4af_moth import get_w4af_moth_http
 
 
-@pytest.mark.w3af_moth
+@pytest.mark.w4af_moth
 class TestWebDiff(PluginTest):
 
-    target_url = get_w3af_moth_http('/w3af/crawl/web_diff/')
+    target_url = get_w4af_moth_http('/w4af/crawl/web_diff/')
     local_dir = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl', 'web_diff')
 
     _run_configs = {
@@ -56,32 +56,32 @@ class TestWebDiff(PluginTest):
     def test_compare(self):
         cfg = self._run_configs['basic']
 
-        with patch('w3af.plugins.crawl.web_diff.om.out') as om_mock:
+        with patch('w4af.plugins.crawl.web_diff.om.out') as om_mock:
             self._scan(cfg['target'], cfg['plugins'])
 
             EXPECTED_CALLS = [
                 call.information('The following files exist in the local'
                                  ' directory and in the remote server:'),
                 call.information(
-                    '- %s/456.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
+                    '- %s/456.html' % get_w4af_moth_http('/w4af/crawl/web_diff')),
                 call.information(
-                    '- %s/exclude.php' % get_w3af_moth_http('/w3af/crawl/web_diff')),
+                    '- %s/exclude.php' % get_w4af_moth_http('/w4af/crawl/web_diff')),
                 call.information(
-                    '- %s/123.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
+                    '- %s/123.html' % get_w4af_moth_http('/w4af/crawl/web_diff')),
                 call.information(
-                    '- %s/index.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
+                    '- %s/index.html' % get_w4af_moth_http('/w4af/crawl/web_diff')),
                 call.information('The following files exist in the local'
                                  ' directory and in the remote server and'
                                  ' their contents match:'),
                 call.information(
-                    '- %s/123.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
+                    '- %s/123.html' % get_w4af_moth_http('/w4af/crawl/web_diff')),
                 call.information(
-                    '- %s/index.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
+                    '- %s/index.html' % get_w4af_moth_http('/w4af/crawl/web_diff')),
                 call.information("The following files exist in the local"
                                  " directory and in the remote server but"
                                  " their contents don't match:"),
                 call.information(
-                    '- %s/456.html' % get_w3af_moth_http('/w3af/crawl/web_diff')),
+                    '- %s/456.html' % get_w4af_moth_http('/w4af/crawl/web_diff')),
                 call.information('Match files: 4 of 4'),
                 call.information('Match contents: 2 of 3')
             ]

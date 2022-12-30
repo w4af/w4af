@@ -4,27 +4,27 @@ test_wordpress_fingerprint.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.plugins.crawl.wordpress_fingerprint import FileFingerPrint
-from w3af.core.data.misc.file_utils import days_since_file_update
-from w3af.core.controllers.ci.moth import get_moth_http
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.plugins.crawl.wordpress_fingerprint import FileFingerPrint
+from w4af.core.data.misc.file_utils import days_since_file_update
+from w4af.core.controllers.ci.moth import get_moth_http
 
 
 @pytest.mark.wordpress
@@ -82,7 +82,7 @@ class Testwordpress_fingerprint(PluginTest):
         self.assertEqual(descriptions, expected_descriptions)
 
     def test_xml_parsing_case01(self):
-        wordpress_fingerprint_inst = self.w3afcore.plugins.get_plugin_inst('crawl',
+        wordpress_fingerprint_inst = self.w4afcore.plugins.get_plugin_inst('crawl',
                                                                            'wordpress_fingerprint')
 
         wp_fingerprints = wordpress_fingerprint_inst._get_wp_fingerprints()
@@ -94,7 +94,7 @@ class Testwordpress_fingerprint(PluginTest):
         self.assertIn(wp_file_fp, wp_fingerprints)
 
     def test_updated_wp_versions_xml(self):
-        wp_fp_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'wordpress_fingerprint')
+        wp_fp_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'wordpress_fingerprint')
         url = 'https://github.com/wpscanteam/wpscan/blob/master/data.zip?raw=true'
 
         wp_versions_file = wp_fp_inst.WP_VERSIONS_XML
@@ -103,16 +103,16 @@ class Testwordpress_fingerprint(PluginTest):
         msg = 'The wp_versions.xml file is too old. The following commands need'\
               ' to be run in order to update it:\n'\
               'wget %s -O data.zip\n'\
-              'unzip -p data.zip data/wp_versions.xml > w3af/plugins/crawl/wordpress_fingerprint/wp_versions.xml\n'\
+              'unzip -p data.zip data/wp_versions.xml > w4af/plugins/crawl/wordpress_fingerprint/wp_versions.xml\n'\
               'rm -rf data.zip\n'\
-              'git commit -m "Updating wp_versions.xml file." w3af/plugins/crawl/wordpress_fingerprint/wp_versions.xml\n'\
+              'git commit -m "Updating wp_versions.xml file." w4af/plugins/crawl/wordpress_fingerprint/wp_versions.xml\n'\
               'git push\n'\
               'cd -'
         self.assertFalse(is_older, msg % url)
         
     def test_updated_release_db(self):
 
-        wpfp_inst = self.w3afcore.plugins.get_plugin_inst('crawl',
+        wpfp_inst = self.w4afcore.plugins.get_plugin_inst('crawl',
                                                           'wordpress_fingerprint')
 
         wp_releases_file = wpfp_inst._release_db
@@ -120,7 +120,7 @@ class Testwordpress_fingerprint(PluginTest):
 
         msg = 'The releases.db database is too old. The following commands need'\
               ' to be run in order to update it:\n'\
-              'cd w3af/plugins/crawl/wordpress_fingerprint/\n'\
+              'cd w4af/plugins/crawl/wordpress_fingerprint/\n'\
               'python generate_release_db.py\n'\
               'git commit -m "Updating wordpress release.db file." release.db\n'\
               'git push\n'\

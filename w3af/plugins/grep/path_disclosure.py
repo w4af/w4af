@@ -3,31 +3,31 @@ path_disclosure.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.constants.severity as severity
-import w3af.core.data.parsers.parser_cache as parser_cache
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.constants.severity as severity
+import w4af.core.data.parsers.parser_cache as parser_cache
 
-from w3af.core.controllers.plugins.grep_plugin import GrepPlugin
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.db.disk_list import DiskList
-from w3af.core.data.quick_match.multi_re import MultiRE
-from w3af.core.data.constants.common_directories import get_common_directories
+from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.db.disk_list import DiskList
+from w4af.core.data.quick_match.multi_re import MultiRE
+from w4af.core.data.constants.common_directories import get_common_directories
 
 
 class path_disclosure(GrepPlugin):
@@ -123,7 +123,7 @@ class path_disclosure(GrepPlugin):
         if request.sent(match):
             return True
 
-        # https://github.com/andresriancho/w3af/issues/6640
+        # https://github.com/andresriancho/w4af/issues/6640
         url_list = kb.kb.get_all_known_urls()
 
         for url in url_list:
@@ -192,7 +192,7 @@ class path_disclosure(GrepPlugin):
                 - Apply the regular expression over those strings only, avoiding
                   the cost of applying the regex to the whole HTML response
 
-        [0] https://github.com/andresriancho/w3af/commit/f1029328fcaf7e790cc317701b63954c55a3f4c8
+        [0] https://github.com/andresriancho/w4af/commit/f1029328fcaf7e790cc317701b63954c55a3f4c8
         [1] https://haacked.com/archive/2004/10/25/usingregularexpressionstomatchhtml.aspx/
 
         :return: True if path_disclosure_string is the value of an attribute
@@ -222,7 +222,7 @@ class path_disclosure(GrepPlugin):
         path_disc_vulns = kb.kb.get('path_disclosure', 'path_disclosure')
         url_list = kb.kb.get_all_known_urls()
         
-        # Now I find the longest match between one of the URLs that w3af has
+        # Now I find the longest match between one of the URLs that w4af has
         # discovered, and one of the path disclosure strings that this plugin
         # has found. I use the longest match because with small match_list I
         # have more probability of making a mistake.

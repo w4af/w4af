@@ -3,19 +3,19 @@ rfi.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,23 +26,23 @@ import errno
 import http.server
 from functools import partial
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.severity as severity
-import w3af.core.controllers.daemons.webserver as webserver
-import w3af.core.data.constants.ports as ports
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
+import w4af.core.controllers.daemons.webserver as webserver
+import w4af.core.data.constants.ports as ports
 
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.controllers.misc.get_local_ip import get_local_ip
-from w3af.core.controllers.misc.is_private_site import is_private_site
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import STRING, PORT, BOOL
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.misc.encoding import smart_str
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.controllers.misc.get_local_ip import get_local_ip
+from w4af.core.controllers.misc.is_private_site import is_private_site
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import STRING, PORT, BOOL
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.misc.encoding import smart_str
 
 
 CONFIG_OK = 'Ok'
@@ -57,7 +57,7 @@ class rfi(AuditPlugin):
     CONFIG_ERROR_MSG = ('audit.rfi plugin needs to be correctly configured to' 
                         ' use. Please set valid values for local address (eg.' 
                         ' 10.5.2.5) and port (eg. 44449), or use the official' 
-                        ' w3af site as the target server for remote inclusions.'
+                        ' w4af site as the target server for remote inclusions.'
                         ' The configuration error is: "%s"')
 
     RFI_TEST_URL = 'https://github.com/w4af/w4af'
@@ -81,7 +81,7 @@ class rfi(AuditPlugin):
         # User configured parameters
         self._listen_port = ports.REMOTEFILEINCLUDE
         self._listen_address = get_local_ip() or ''
-        self._use_w3af_site = True
+        self._use_w4af_site = True
 
     def audit(self, freq, orig_response, debugging_id):
         """
@@ -92,9 +92,9 @@ class rfi(AuditPlugin):
         :param debugging_id: A unique identifier for this call to audit()
         """
         # The plugin is going to use two different techniques:
-        # 1- create a request that will include a file from the w3af site
-        if self._use_w3af_site:
-            self._w3af_site_test_inclusion(freq, orig_response, debugging_id)
+        # 1- create a request that will include a file from the w4af site
+        if self._use_w4af_site:
+            self._w4af_site_test_inclusion(freq, orig_response, debugging_id)
 
         # Sanity check required for #2 technique
         config_ok, config_message = self._correctly_configured()
@@ -262,16 +262,16 @@ class rfi(AuditPlugin):
                       ' the remote file inclusion (rfi) plugin: "%s"'
                 om.out.error(msg % e)
 
-    def _w3af_site_test_inclusion(self, freq, orig_response, debugging_id):
+    def _w4af_site_test_inclusion(self, freq, orig_response, debugging_id):
         """
-        Check for RFI using the official w3af site.
+        Check for RFI using the official w4af site.
 
         :param freq: A FuzzableRequest object
         :return: None, everything is saved to the kb
         """
         rfi_url = URL(self.RFI_TEST_URL)
-        rfi_result = 'w3af by Andres Riancho'
-        rfi_result_part_1 = 'w3af'
+        rfi_result = 'w4af by Andres Riancho'
+        rfi_result_part_1 = 'w4af'
         rfi_result_part_2 = ' by Andres Riancho'
 
         rfi_data = RFIData(rfi_url, rfi_result_part_1,
@@ -420,7 +420,7 @@ class rfi(AuditPlugin):
         ol = OptionList()
 
         d = 'IP address that the webserver will use to receive requests'
-        h = 'w3af runs a webserver to serve the files to the target web'\
+        h = 'w4af runs a webserver to serve the files to the target web'\
             ' application when doing remote file inclusions. This setting'\
             ' configures where the webserver is going to listen for requests.'
         o = opt_factory('listen_address', self._listen_address, d, STRING, help=h)
@@ -430,11 +430,11 @@ class rfi(AuditPlugin):
         o = opt_factory('listen_port', self._listen_port, d, PORT)
         ol.add(o)
 
-        d = 'Use w3af site to test for remote file inclusion'
-        h = 'The plugin can use the w3af site to test for remote file'\
+        d = 'Use w4af site to test for remote file inclusion'
+        h = 'The plugin can use the w4af site to test for remote file'\
             ' inclusions, which is convenient when you are performing a test'\
             ' behind a NAT firewall.'
-        o = opt_factory('use_w3af_site', self._use_w3af_site, d, BOOL, help=h)
+        o = opt_factory('use_w4af_site', self._use_w4af_site, d, BOOL, help=h)
         ol.add(o)
 
         return ol
@@ -449,11 +449,11 @@ class rfi(AuditPlugin):
         """
         self._listen_address = options_list['listen_address'].get_value()
         self._listen_port = options_list['listen_port'].get_value()
-        self._use_w3af_site = options_list['use_w3af_site'].get_value()
+        self._use_w4af_site = options_list['use_w4af_site'].get_value()
 
         config_ok, config_message = self._correctly_configured()
 
-        if not config_ok and not self._use_w3af_site:
+        if not config_ok and not self._use_w4af_site:
             raise BaseFrameworkException(self.CONFIG_ERROR_MSG % config_message)
 
     def get_long_desc(self):
@@ -466,15 +466,15 @@ class rfi(AuditPlugin):
         Three configurable parameters exist:
             - listen_address
             - listen_port
-            - use_w3af_site
+            - use_w4af_site
 
         There are two ways of running this plugin, the most common one is to use
-        w3af's site (w3af.org) as the URL to include. This is convenient and
+        w4af's site (w4af.org) as the URL to include. This is convenient and
         requires zero configuration but leaks information about vulnerable sites
-        to w3af's staff.
+        to w4af's staff.
 
         The second way to configure this plugin runs a webserver on the box
-        running w3af on the IP address and port specified by "listen_address"
+        running w4af on the IP address and port specified by "listen_address"
         and "listen_port". This method requires the target web application to be
         able to contact the newly created server and will not work unless
         you also configure your NAT router and firewalls (if any exist).

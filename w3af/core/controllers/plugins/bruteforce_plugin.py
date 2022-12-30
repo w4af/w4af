@@ -3,19 +3,19 @@ BruteforcePlugin.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,17 +23,17 @@ import os.path
 
 from itertools import repeat
 
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af import ROOT_PATH
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import BOOL, STRING, INPUT_FILE, INT
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.misc.mask_password import mask_password_string
-from w3af.core.controllers.misc.safe_deepcopy import safe_deepcopy
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.controllers.bruteforce.bruteforcer import (UserPasswordBruteforcer,
+from w4af import ROOT_PATH
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import BOOL, STRING, INPUT_FILE, INT
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.misc.mask_password import mask_password_string
+from w4af.core.controllers.misc.safe_deepcopy import safe_deepcopy
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.controllers.bruteforce.bruteforcer import (UserPasswordBruteforcer,
                                                           PasswordBruteforcer)
 
 
@@ -175,7 +175,7 @@ class BruteforcePlugin(AuditPlugin):
         o = opt_factory('passwd_file', self._passwd_file, d, INPUT_FILE)
         ol.add(o)
 
-        d = 'This indicates if we will use usernames from SVN headers collected by w3af plugins in bruteforce.'
+        d = 'This indicates if we will use usernames from SVN headers collected by w4af plugins in bruteforce.'
         o = opt_factory('use_svn_users', self._use_SVN_users, d, BOOL)
         ol.add(o)
 
@@ -191,7 +191,7 @@ class BruteforcePlugin(AuditPlugin):
         o = opt_factory('use_leet_password', self._l337_p4sswd, d, BOOL)
         ol.add(o)
 
-        d = 'This indicates if the bruteforcer should use emails collected by w3af plugins as users.'
+        d = 'This indicates if the bruteforcer should use emails collected by w4af plugins as users.'
         o = opt_factory('use_emails', self._use_emails, d, BOOL)
         ol.add(o)
 

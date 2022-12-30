@@ -3,38 +3,38 @@ http_vs_https_dist.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 import socket
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af.core.controllers.plugins.infrastructure_plugin import InfrastructurePlugin
-from w3af.core.controllers.misc.decorators import runonce
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import INT
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.controllers.exceptions import RunOnce
-from w3af.core.data.kb.info import Info
+from w4af.core.controllers.plugins.infrastructure_plugin import InfrastructurePlugin
+from w4af.core.controllers.misc.decorators import runonce
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import INT
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.controllers.exceptions import RunOnce
+from w4af.core.data.kb.info import Info
 
 
-PERM_ERROR_MSG = ("w3af won't be able to run plugin infrastructure.http_vs_"
-                  "https_dist. It seems that the user running the w3af process"
+PERM_ERROR_MSG = ("w4af won't be able to run plugin infrastructure.http_vs_"
+                  "https_dist. It seems that the user running the w4af process"
                   " has not enough privileges.")
 
 
@@ -158,7 +158,7 @@ class http_vs_https_dist(InfrastructurePlugin):
     # test_http_vs_https_dist line 53 hide this method
     def _has_permission(self):
         """
-        Return boolean value that indicates if the user running w3af has
+        Return boolean value that indicates if the user running w4af has
         enough privileges to exec 'traceroute'
         """
         # Import things from scapy when I need them in order to reduce memory
@@ -168,7 +168,7 @@ class http_vs_https_dist(InfrastructurePlugin):
             from scapy.error import Scapy_Exception
         except socket.error:
             # [Errno 1] Operation not permitted #12131
-            # https://github.com/andresriancho/w3af/issues/12131
+            # https://github.com/andresriancho/w4af/issues/12131
             return False
 
         try:

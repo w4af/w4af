@@ -3,29 +3,29 @@ test_data.py
 
 Copyright 2017 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 
 HTTP_RESPONSE = """
 <br />
-<b>Fatal error</b>:  Uncaught exception 'Exception' with message 'Error performing query: SELECT * FROM users where name='d'z&quot;0': &lt;br /&gt;1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'z&quot;0'' at line 1' in /var/www/w3af/audit/sql_injection/select/sql_injection_string.php:15
+<b>Fatal error</b>:  Uncaught exception 'Exception' with message 'Error performing query: SELECT * FROM users where name='d'z&quot;0': &lt;br /&gt;1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'z&quot;0'' at line 1' in /var/www/w4af/audit/sql_injection/select/sql_injection_string.php:15
 Stack trace:
 #0 {main}
-thrown in <b>/var/www/w3af/audit/sql_injection/select/sql_injection_string.php</b> on line <b>15</b><br />
+thrown in <b>/var/www/w4af/audit/sql_injection/select/sql_injection_string.php</b> on line <b>15</b><br />
   """
 
 SQL_ERRORS = (

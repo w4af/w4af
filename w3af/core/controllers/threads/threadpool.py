@@ -3,19 +3,19 @@ threadpool.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -33,8 +33,8 @@ from multiprocessing import cpu_count
 
 from .pool276 import ThreadPool, RUN, create_detailed_pickling_error, mapstar
 
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.controllers.threads.decorators import apply_with_return_error
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.controllers.threads.decorators import apply_with_return_error
 
 __all__ = ['Pool', 'return_args', 'one_to_many']
 
@@ -121,22 +121,22 @@ def add_traceback_string(_exception):
     root cause for exceptions that happen in functions which are run inside
     the Pool (most).
 
-    For example, this is an exception stored in a /tmp/w3af-crash file before
+    For example, this is an exception stored in a /tmp/w4af-crash file before
     this patch:
 
         A "TypeError" exception was found while running crawl.phpinfo on "Method: GET | http://domain/".
         The exception was: "unsupported operand type(s) for -: 'float' and 'NoneType'" at pool276.py:get():643.
         The full traceback is:
 
-          File "/home/user/tools/w3af/w3af/core/controllers/core_helpers/consumers/crawl_infrastructure.py", line 533, in _discover_worker
+          File "/home/user/tools/w4af/w4af/core/controllers/core_helpers/consumers/crawl_infrastructure.py", line 533, in _discover_worker
             result = plugin.discover_wrapper(fuzzable_request)
-          File "/home/user/tools/w3af/w3af/core/controllers/plugins/crawl_plugin.py", line 53, in crawl_wrapper
+          File "/home/user/tools/w4af/w4af/core/controllers/plugins/crawl_plugin.py", line 53, in crawl_wrapper
             return self.crawl(fuzzable_request_copy)
-          File "/home/user/tools/w3af/w3af/plugins/crawl/phpinfo.py", line 148, in crawl
+          File "/home/user/tools/w4af/w4af/plugins/crawl/phpinfo.py", line 148, in crawl
             self.worker_pool.map_multi_args(self._check_and_analyze, args)
-          File "/home/user/tools/w3af/w3af/core/controllers/threads/threadpool.py", line 430, in map_multi_args
+          File "/home/user/tools/w4af/w4af/core/controllers/threads/threadpool.py", line 430, in map_multi_args
             return self.map_async(one_to_many(func), iterable, chunksize).get()
-          File "/home/user/tools/w3af/w3af/core/controllers/threads/pool276.py", line 643, in get
+          File "/home/user/tools/w4af/w4af/core/controllers/threads/pool276.py", line 643, in get
             raise self._value
 
     And after adding the original traceback and using it in exception_handler.py:
@@ -146,13 +146,13 @@ def add_traceback_string(_exception):
         The full traceback is:
 
         Traceback (most recent call last):
-          File "/home/user/tools/w3af/w3af/core/controllers/threads/threadpool.py", line 238, in __call__
+          File "/home/user/tools/w4af/w4af/core/controllers/threads/threadpool.py", line 238, in __call__
             result = (True, func(*args, **kwds))
-          File "/home/user/tools/w3af/w3af/core/controllers/threads/pool276.py", line 67, in mapstar
+          File "/home/user/tools/w4af/w4af/core/controllers/threads/pool276.py", line 67, in mapstar
             return map(*args)
-          File "/home/user/tools/w3af/w3af/core/controllers/threads/threadpool.py", line 55, in __call__
+          File "/home/user/tools/w4af/w4af/core/controllers/threads/threadpool.py", line 55, in __call__
             return self.func_orig(*args)
-          File "/home/user/tools/w3af/w3af/plugins/crawl/phpinfo.py", line 180, in _check_and_analyze
+          File "/home/user/tools/w4af/w4af/plugins/crawl/phpinfo.py", line 180, in _check_and_analyze
             1.0 - None
         TypeError: unsupported operand type(s) for -: 'float' and 'NoneType'
 

@@ -3,25 +3,25 @@ test_basic.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 
-from w3af.core.ui.console.console_ui import ConsoleUI
-from w3af.core.ui.console.tests.helper import ConsoleTestHelper
+from w4af.core.ui.console.console_ui import ConsoleUI
+from w4af.core.ui.console.tests.helper import ConsoleTestHelper
 
 
 @pytest.mark.smoke
@@ -35,7 +35,7 @@ class TestBasicConsoleUI(ConsoleTestHelper):
         self.console = ConsoleUI(commands=commands_to_run, do_upd=False)
         self.console.sh()
 
-        expected = ('w3af>>> ', 'w3af/config:misc-settings>>> ')
+        expected = ('w4af>>> ', 'w4af/config:misc-settings>>> ')
         assert_result, msg = self.all_expected_in_output(expected)
         self.assertTrue(assert_result, msg)
 
@@ -45,7 +45,7 @@ class TestBasicConsoleUI(ConsoleTestHelper):
         self.console = ConsoleUI(commands=commands_to_run, do_upd=False)
         self.console.sh()
 
-        expected = ('w3af>>> ', 'w3af/config:http-settings>>> ')
+        expected = ('w4af>>> ', 'w4af/config:http-settings>>> ')
         assert_result, msg = self.all_expected_in_output(expected)
         self.assertTrue(assert_result, msg)
 
@@ -55,7 +55,7 @@ class TestBasicConsoleUI(ConsoleTestHelper):
         self.console = ConsoleUI(commands=commands_to_run, do_upd=False)
         self.console.sh()
 
-        expected = ('w3af>>> ', 'w3af/config:target>>> ')
+        expected = ('w4af>>> ', 'w4af/config:target>>> ')
         assert_result, msg = self.all_expected_in_output(expected)
         self.assertTrue(assert_result, msg)
 
@@ -82,7 +82,7 @@ class TestBasicConsoleUI(ConsoleTestHelper):
         self.console = ConsoleUI(commands=commands_to_run, do_upd=False)
         self.console.sh()
 
-        expected = ('w3af>>> ', 'w3af/config:target>>> ',
+        expected = ('w4af>>> ', 'w4af/config:target>>> ',
                     'The configuration has been saved.\r\n')
         assert_result, msg = self.all_expected_in_output(expected)
         self.assertTrue(assert_result, msg)

@@ -3,19 +3,19 @@ clusterGraph.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 # For window creation
@@ -26,12 +26,12 @@ from gi.repository import GObject as gobject
 
 import xdot
 
-from w3af.core.controllers.misc.fuzzy_string_cmp import relative_distance
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.misc.fuzzy_string_cmp import relative_distance
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
-from w3af.core.ui.gui.constants import W3AF_ICON
-from w3af.core.ui.gui.reqResViewer import reqResWindow
-from w3af.core.ui.gui import entries
+from w4af.core.ui.gui.constants import w4af_ICON
+from w4af.core.ui.gui.reqResViewer import reqResWindow
+from w4af.core.ui.gui import entries
 
 # Constants that define the distance available distance functions
 LEVENSHTEIN = 0
@@ -73,19 +73,19 @@ EXAMPLE_FUNCTION = """def customized_distance(a, b):
 
 
 class distance_function_selector(entries.RememberingWindow):
-    """A small window to select which distance_function the w3afDotWindow
+    """A small window to select which distance_function the w4afDotWindow
     will use to generate the graph.
 
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
-    def __init__(self, w3af, response_list):
+    def __init__(self, w4af, response_list):
         super(distance_function_selector, self).__init__(
-            w3af, "distance_function_selector", "w3af - Select distance function",
+            w4af, "distance_function_selector", "w4af - Select distance function",
             "cluster")
         self.resize(300, 200)
 
         # Save for later usage
-        self.w3af = w3af
+        self.w4af = w4af
         self.data = response_list
 
         # Create a label that explains what this window is all about
@@ -183,7 +183,7 @@ class distance_function_selector(entries.RememberingWindow):
         # Create the new window, with the graph
         try:
             window = clusterGraphWidget(
-                self.w3af, self.data, distance_function=selected_function,
+                self.w4af, self.data, distance_function=selected_function,
                 custom_code=custom_code)
         except BaseFrameworkException as w3:
             msg = str(w3)
@@ -203,7 +203,7 @@ class distance_function_selector(entries.RememberingWindow):
             self.quit(None, None)
 
 
-class w3afDotWindow(xdot.DotWindow):
+class w4afDotWindow(xdot.DotWindow):
 
     ui = """
     <ui>
@@ -218,7 +218,7 @@ class w3afDotWindow(xdot.DotWindow):
 
     def __init__(self):
         gtk.Window.__init__(self)
-        self.set_icon_from_file(W3AF_ICON)
+        self.set_icon_from_file(w4af_ICON)
 
         self.graph = xdot.ui.elements.Graph()
 
@@ -278,14 +278,14 @@ class w3afDotWindow(xdot.DotWindow):
             self.widget.zoom_to_fit()
 
 
-class clusterGraphWidget(w3afDotWindow):
-    def __init__(self, w3af, response_list, distance_function=LEVENSHTEIN,
+class clusterGraphWidget(w4afDotWindow):
+    def __init__(self, w4af, response_list, distance_function=LEVENSHTEIN,
                  custom_code=None):
         """
         :param response_list: A list with the responses to graph.
         """
-        self.w3af = w3af
-        w3afDotWindow.__init__(self)
+        self.w4af = w4af
+        w4afDotWindow.__init__(self)
         self.widget.connect('clicked', self.on_url_clicked)
 
         # Now I generate the dotcode based on the data
@@ -468,5 +468,5 @@ class clusterGraphWidget(w3afDotWindow):
         When the user clicks on the node, we get here.
         :param id: The id of the request that the user clicked on.
         """
-        reqResWindow(self.w3af, int(id))
+        reqResWindow(self.w4af, int(id))
         return True

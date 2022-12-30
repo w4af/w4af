@@ -3,34 +3,34 @@ fuzzer.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import w3af.core.data.kb.config as cf
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
-from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
-from w3af.core.data.fuzzer.mutants.filename_mutant import FileNameMutant
-from w3af.core.data.fuzzer.mutants.urlparts_mutant import URLPartsMutant
-from w3af.core.data.fuzzer.mutants.headers_mutant import HeadersMutant
-from w3af.core.data.fuzzer.mutants.json_mutant import JSONMutant
-from w3af.core.data.fuzzer.mutants.cookie_mutant import CookieMutant
-from w3af.core.data.fuzzer.mutants.filecontent_mutant import FileContentMutant
-from w3af.core.data.fuzzer.mutants.xmlrpc_mutant import XmlRpcMutant
+from w4af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
+from w4af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
+from w4af.core.data.fuzzer.mutants.filename_mutant import FileNameMutant
+from w4af.core.data.fuzzer.mutants.urlparts_mutant import URLPartsMutant
+from w4af.core.data.fuzzer.mutants.headers_mutant import HeadersMutant
+from w4af.core.data.fuzzer.mutants.json_mutant import JSONMutant
+from w4af.core.data.fuzzer.mutants.cookie_mutant import CookieMutant
+from w4af.core.data.fuzzer.mutants.filecontent_mutant import FileContentMutant
+from w4af.core.data.fuzzer.mutants.xmlrpc_mutant import XmlRpcMutant
 
 ALL_MUTANTS = (QSMutant, PostDataMutant, FileNameMutant, URLPartsMutant,
                HeadersMutant, JSONMutant, CookieMutant, FileContentMutant,

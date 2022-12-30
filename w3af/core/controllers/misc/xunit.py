@@ -3,36 +3,36 @@ xunit.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from xml.dom.minidom import parseString
 from xml.sax import saxutils
 import os
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
 
 class XunitGen(object):
     """
-    Generate an Xunit XML output file for w3af test scripts.
+    Generate an Xunit XML output file for w4af test scripts.
     Tools like Hudson will be able to parse the gen xunit files and display
     useful data to the user.
     """
 
-    outputfile = 'w3aftestscripts.xml'
+    outputfile = 'w4aftestscripts.xml'
 
     def __init__(self, outputfile=None):
         if outputfile:
@@ -52,7 +52,7 @@ class XunitGen(object):
 
         xml_chunks = [
             '<?xml version="1.0" encoding="UTF-8"?>'
-            '<testsuite name="w3aftestscripts" tests="%(total)d" '
+            '<testsuite name="w4aftestscripts" tests="%(total)d" '
             'errors="%(error)d" failures="%(fail)d" skip="%(skip)d">'
             % self._stats
         ]

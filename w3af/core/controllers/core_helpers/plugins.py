@@ -3,19 +3,19 @@ plugins.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,19 +24,19 @@ import sys
 
 from functools import partial
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.misc.get_file_list import get_file_list
-from w3af.core.controllers.misc.factory import factory
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af import ROOT_PATH
+from w4af.core.controllers.misc.get_file_list import get_file_list
+from w4af.core.controllers.misc.factory import factory
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af import ROOT_PATH
 import importlib
 
 
 class CorePlugins(object):
 
-    def __init__(self, w3af_core):
-        self._w3af_core = w3af_core
+    def __init__(self, w4af_core):
+        self._w4af_core = w4af_core
 
         self.initialized = False
         self._plugins_names_dict = None
@@ -107,7 +107,7 @@ class CorePlugins(object):
         # Some extra init steps for mangle plugins
         #
         mangle = self.plugins['mangle']
-        self._w3af_core.uri_opener.settings.set_mangle_plugins(mangle)
+        self._w4af_core.uri_opener.settings.set_mangle_plugins(mangle)
 
         # The plugin factory might raise an exception due to invalid plugin
         # configurations. Only set the initialized attribute if we get to the
@@ -135,7 +135,7 @@ class CorePlugins(object):
         #
         #   * If the user ignores the error raised by set_options() and tries
         #     to start the scan init_plugins will fail, this is:
-        #     https://github.com/andresriancho/w3af/issues/7477
+        #     https://github.com/andresriancho/w4af/issues/7477
         #
         self._plugins_options[plugin_type][plugin_name] = plugin_options
 
@@ -168,8 +168,8 @@ class CorePlugins(object):
 
     def set_plugins(self, plugin_names, plugin_type, raise_on_error=True):
         """
-        This method sets the plugins that w3afCore is going to use. Before this
-        plugin existed w3afCore used setcrawl_plugins() / setAuditPlugins() /
+        This method sets the plugins that w4afCore is going to use. Before this
+        plugin existed w4afCore used setcrawl_plugins() / setAuditPlugins() /
         etc , this wasn't really extensible and was replaced with a combination
         of set_plugins and get_plugin_types. This way the user interface isn't
         bound to changes in the plugin types that are added or removed.
@@ -229,7 +229,7 @@ class CorePlugins(object):
                             'sqli', etc
         """
         try:
-            amodule = sys.modules['w3af.plugins.%s.%s' % (plugin_type, plugin_name)]
+            amodule = sys.modules['w4af.plugins.%s.%s' % (plugin_type, plugin_name)]
         except KeyError:
             msg = 'Tried to reload a plugin that was never imported! (%s.%s)'
             om.out.debug(msg % (plugin_type, plugin_name))
@@ -242,8 +242,8 @@ class CorePlugins(object):
         :return: A description of the plugin type passed as parameter
         """
         try:
-            __import__('w3af.plugins.%s' % plugin_type)
-            a_module = sys.modules['w3af.plugins.%s' % plugin_type]
+            __import__('w4af.plugins.%s' % plugin_type)
+            a_module = sys.modules['w4af.plugins.%s' % plugin_type]
         except Exception:
             msg = 'Unknown plugin type: "%s".'
             raise BaseFrameworkException(msg % plugin_type)
@@ -281,10 +281,10 @@ class CorePlugins(object):
         """
         :return: An instance of a plugin.
         """
-        plugin_inst = factory('w3af.plugins.%s.%s' % (plugin_type, plugin_name))
-        plugin_inst.set_url_opener(self._w3af_core.uri_opener)
-        plugin_inst.set_worker_pool(self._w3af_core.worker_pool)
-        plugin_inst.set_w3af_core(self._w3af_core)
+        plugin_inst = factory('w4af.plugins.%s.%s' % (plugin_type, plugin_name))
+        plugin_inst.set_url_opener(self._w4af_core.uri_opener)
+        plugin_inst.set_worker_pool(self._w4af_core.worker_pool)
+        plugin_inst.set_w4af_core(self._w4af_core)
         
         if plugin_name in list(self._plugins_options[plugin_type].keys()):
             custom_options = self._plugins_options[plugin_type][plugin_name]
@@ -297,7 +297,7 @@ class CorePlugins(object):
         return plugin_inst
 
     def get_quick_instance(self, plugin_type, plugin_name):
-        plugin_module = '.'.join(['w3af', 'plugins', plugin_type, plugin_name])
+        plugin_module = '.'.join(['w4af', 'plugins', plugin_type, plugin_name])
         return factory(plugin_module)
 
     def expand_all(self):
@@ -374,7 +374,7 @@ class CorePlugins(object):
                         # during our iteration
                         #
                         # ValueError: 'detect_reverse_proxy' is not in list
-                        # https://github.com/andresriancho/w3af/issues/11062
+                        # https://github.com/andresriancho/w4af/issues/11062
                         continue
 
                     if dependency_index < plugin_index:
@@ -436,4 +436,4 @@ class CorePlugins(object):
         self._plugins_names_dict['evasion'] = evasion_plugins
         self.plugin_factory()
 
-        self._w3af_core.uri_opener.set_evasion_plugins(self.plugins['evasion'])
+        self._w4af_core.uri_opener.set_evasion_plugins(self.plugins['evasion'])

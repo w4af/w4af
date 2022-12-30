@@ -6,13 +6,13 @@ import os.path
 
 import pytest
 
-from w3af import ROOT_PATH
+from w4af import ROOT_PATH
 
 @pytest.mark.smoke
 class TestDependenciesInstalled(unittest.TestCase):
 
     def test_dependencies_installed(self):
-        DEPS_CMD = "%s -c 'from w3af.core.controllers.dependency_check."\
+        DEPS_CMD = "%s -c 'from w4af.core.controllers.dependency_check."\
                    "dependency_check import dependency_check; dependency_check(skip_external_commands=True)'"
         try:
             subprocess.check_output(shlex.split(DEPS_CMD % sys.executable),

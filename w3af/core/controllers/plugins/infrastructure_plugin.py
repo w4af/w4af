@@ -3,28 +3,28 @@ infrastructure_plugin.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from w3af.core.controllers.plugins.plugin import Plugin
-from w3af.core.controllers.misc.safe_deepcopy import safe_deepcopy
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.exceptions import FourOhFourDetectionException
+from w4af.core.controllers.plugins.plugin import Plugin
+from w4af.core.controllers.misc.safe_deepcopy import safe_deepcopy
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.exceptions import FourOhFourDetectionException
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
 
 class InfrastructurePlugin(Plugin):
@@ -55,7 +55,7 @@ class InfrastructurePlugin(Plugin):
             # process. FYI: This doesn't break the xurllib error handling which
             # happens at lower layers.
             #
-            # https://github.com/andresriancho/w3af/issues/8949
+            # https://github.com/andresriancho/w4af/issues/8949
             om.out.debug('%s' % ffde)
 
     def discover(self, fuzzable_request, debugging_id):

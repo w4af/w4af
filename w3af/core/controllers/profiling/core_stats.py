@@ -3,19 +3,19 @@ core_stats.py
 
 Copyright 2014 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,18 +26,18 @@ import os
 
 from functools import partial
 
-import w3af.core.controllers.output_manager as om
-from w3af.core.controllers.misc.number_generator import consecutive_number_generator
+import w4af.core.controllers.output_manager as om
+from w4af.core.controllers.misc.number_generator import consecutive_number_generator
 from .utils import get_filename_fmt, dump_data_every_thread, cancel_thread
 
 
-PROFILING_OUTPUT_FMT = '/tmp/w3af-%s-%s.core'
+PROFILING_OUTPUT_FMT = '/tmp/w4af-%s-%s.core'
 DELAY_MINUTES = 2
 SAVE_THREAD_PTR = []
 
 
 def core_profiling_is_enabled():
-    env_value = os.environ.get('W3AF_CORE_PROFILING', '0')
+    env_value = os.environ.get('w4af_CORE_PROFILING', '0')
 
     if env_value.isdigit() and int(env_value) == 1:
         return True
@@ -46,27 +46,27 @@ def core_profiling_is_enabled():
 
 
 def should_profile_core(wrapped):
-    def inner(w3af_core):
+    def inner(w4af_core):
         if core_profiling_is_enabled():
-            return wrapped(w3af_core)
+            return wrapped(w4af_core)
 
     return inner
 
 
 @should_profile_core
-def start_core_profiling(w3af_core):
+def start_core_profiling(w4af_core):
     """
-    If the environment variable W3AF_PROFILING is set to 1, then we start
+    If the environment variable w4af_PROFILING is set to 1, then we start
     the CPU and memory profiling.
 
     :return: None
     """
-    dd_partial = partial(dump_data, w3af_core)
+    dd_partial = partial(dump_data, w4af_core)
     dump_data_every_thread(dd_partial, DELAY_MINUTES, SAVE_THREAD_PTR)
 
 
-def dump_data(w3af_core):
-    s = w3af_core.status
+def dump_data(w4af_core):
+    s = w4af_core.status
     try:
         data = {'Requests sent': consecutive_number_generator.get(),
                 'Requests per minute': s.get_rpm(),
@@ -101,17 +101,17 @@ def dump_data(w3af_core):
 
 
 @should_profile_core
-def stop_core_profiling(w3af_core):
+def stop_core_profiling(w4af_core):
     """
     Save profiling information (if available)
     """
     cancel_thread(SAVE_THREAD_PTR)
-    dump_data(w3af_core)
+    dump_data(w4af_core)
 
 
 def get_parser_cache_stats():
-    import w3af.core.data.parsers.parser_cache as parser_cache
-    from w3af.core.data.parsers.mp_document_parser import mp_doc_parser
+    import w4af.core.data.parsers.parser_cache as parser_cache
+    from w4af.core.data.parsers.mp_document_parser import mp_doc_parser
     
     r = {'hit_rate': parser_cache.dpc.get_hit_rate(),
          'max_lru_items': parser_cache.dpc.get_max_lru_items(),

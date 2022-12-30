@@ -5,7 +5,7 @@ from utils.output import KeyValueOutput
 
 ERRORS_RE = [re.compile('Unhandled exception "(.*?)"'),
              re.compile('traceback', re.IGNORECASE),
-             re.compile('w3af-crash'),
+             re.compile('w4af-crash'),
              re.compile('scan was able to continue by ignoring those'),
              re.compile('The scan will stop')]
 

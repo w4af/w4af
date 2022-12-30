@@ -4,29 +4,29 @@ test_crawl_exception_handling.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import pytest
 import shutil
 
-from w3af import ROOT_PATH
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.controllers.misc.file_lock import FileLock
+from w4af import ROOT_PATH
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.controllers.misc.file_lock import FileLock
 
 
 @pytest.mark.smoke
@@ -87,7 +87,7 @@ class TestCrawlExceptions(PluginTest):
         # the _scan() to trigger on me!
         self._scan(cfg['target'], cfg['plugins'], assert_exceptions=False)
 
-        caught_exceptions = self.w3afcore.exception_handler.get_all_exceptions()
+        caught_exceptions = self.w4afcore.exception_handler.get_all_exceptions()
         self.assertEqual(len(caught_exceptions), 1)
         
         edata = caught_exceptions[0]

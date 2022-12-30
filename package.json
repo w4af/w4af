@@ -1,7 +1,7 @@
 {
-  "name": "w3af",
+  "name": "w4af",
   "version": "1.0.0",
-  "description": "w3af node dependencies",
+  "description": "w4af node dependencies",
   "main": "index.js",
   "directories": {
     "doc": "doc"
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andresriancho/w3af.git"
+    "url": "git+https://github.com/andresriancho/w4af.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/andresriancho/w3af/issues"
+    "url": "https://github.com/andresriancho/w4af/issues"
   },
-  "homepage": "https://github.com/andresriancho/w3af#readme",
+  "homepage": "https://github.com/andresriancho/w4af#readme",
   "dependencies": {
     "retire": "^3.0.6"
   }

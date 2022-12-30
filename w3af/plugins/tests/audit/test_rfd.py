@@ -3,22 +3,22 @@ test_rfd.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
+from w4af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 RUN_CONFIG = {
     'cfg': {
@@ -44,19 +44,19 @@ class TestJSONAllFiltered(PluginTest):
                            body=b'empty body',
                            content_type='application/json',
                            method='GET', status=200),
-              MockResponse(url='http://json-all-filtered/%3B/w3af.cmd%3B/'
-                               'w3af.cmd?q=rfd',
-                           body='message "w3afExecToken"',
+              MockResponse(url='http://json-all-filtered/%3B/w4af.cmd%3B/'
+                               'w4af.cmd?q=rfd',
+                           body='message "w4afExecToken"',
                            content_type='text/json',
                            method='GET', status=200),
-              MockResponse(url='http://json-all-filtered/%3B/w3af.cmd%3B/'
-                               'w3af.cmd?q=w3afExecToken',
-                           body='    {"a":"w3afExecToken","b":"b"}',
+              MockResponse(url='http://json-all-filtered/%3B/w4af.cmd%3B/'
+                               'w4af.cmd?q=w4afExecToken',
+                           body='    {"a":"w4afExecToken","b":"b"}',
                            content_type='text/json',
                            method='GET', status=200),
-              MockResponse(url='http://json-all-filtered/%3B/w3af.cmd%3B/'
-                               'w3af.cmd?q=w3afExecToken%22%26%7C%0A',
-                           body='    {"a":"w3afExecToken","b":"b"}',
+              MockResponse(url='http://json-all-filtered/%3B/w4af.cmd%3B/'
+                               'w4af.cmd?q=w4afExecToken%22%26%7C%0A',
+                           body='    {"a":"w4afExecToken","b":"b"}',
                            content_type='application/javascript',
                            method='GET', status=200),
               ]
@@ -77,18 +77,18 @@ class TestJSON(PluginTest):
                            body=b'empty body',
                            content_type='application/json',
                            method='GET', status=200),
-              MockResponse(url='http://json/%3B/w3af.cmd%3B/w3af.cmd?q=rfd',
-                           body=b'message "w3afExecToken"',
+              MockResponse(url='http://json/%3B/w4af.cmd%3B/w4af.cmd?q=rfd',
+                           body=b'message "w4afExecToken"',
                            content_type='text/json',
                            method='GET', status=200),
-              MockResponse(url='http://json/%3B/w3af.cmd%3B/w3af.cmd?'
-                               'q=w3afExecToken',
-                           body=b'    {"a":"w3afExecToken","b":"b"}',
+              MockResponse(url='http://json/%3B/w4af.cmd%3B/w4af.cmd?'
+                               'q=w4afExecToken',
+                           body=b'    {"a":"w4afExecToken","b":"b"}',
                            content_type='text/json',
                            method='GET', status=200),
-              MockResponse(url='http://json/%3B/w3af.cmd%3B/w3af.cmd?'
-                               'q=w3afExecToken%22%26%7C%0A',
-                           body=b'    {"a":"w3afExecToken"&|\n","b":"b"}',
+              MockResponse(url='http://json/%3B/w4af.cmd%3B/w4af.cmd?'
+                               'q=w4afExecToken%22%26%7C%0A',
+                           body=b'    {"a":"w4afExecToken"&|\n","b":"b"}',
                            content_type='application/javascript',
                            method='GET', status=200),
               ]
@@ -109,18 +109,18 @@ class TestJSONDobleQuotesFiltered(PluginTest):
                            body=b'empty body',
                            content_type='application/json',
                            method='GET', status=200),
-              MockResponse(url='http://json-filtered/%3B/w3af.cmd%3B/w3af.cmd?q=rfd',
-                           body='message "w3afExecToken"',
+              MockResponse(url='http://json-filtered/%3B/w4af.cmd%3B/w4af.cmd?q=rfd',
+                           body='message "w4afExecToken"',
                            content_type='text/json',
                            method='GET', status=200),
-              MockResponse(url='http://json-filtered/%3B/w3af.cmd%3B/w3af.cmd?'
-                               'q=w3afExecToken',
-                           body='    {"a":"w3afExecToken","b":"b"}',
+              MockResponse(url='http://json-filtered/%3B/w4af.cmd%3B/w4af.cmd?'
+                               'q=w4afExecToken',
+                           body='    {"a":"w4afExecToken","b":"b"}',
                            content_type='text/json',
                            method='GET', status=200),
-              MockResponse(url='http://json-filtered/%3B/w3af.cmd%3B/w3af.cmd?'
-                               'q=w3afExecToken%22%26%7C%0A',
-                           body='    {"a":"w3afExecToken&|\n","b":"b"}',
+              MockResponse(url='http://json-filtered/%3B/w4af.cmd%3B/w4af.cmd?'
+                               'q=w4afExecToken%22%26%7C%0A',
+                           body='    {"a":"w4afExecToken&|\n","b":"b"}',
                            content_type='application/javascript',
                            method='GET', status=200),
               ]
@@ -141,15 +141,15 @@ class TestJSONP(PluginTest):
                        body=b'empty body',
                        content_type='application/json',
                        method='GET', status=200),
-          MockResponse(url='http://jsonp/%3B/w3af.cmd%3B/w3af.cmd?callback'
+          MockResponse(url='http://jsonp/%3B/w4af.cmd%3B/w4af.cmd?callback'
                            '=rfd',
                        body='    rfd({ "Result": '
                             '{ "Timestamp": 1417601045 } }) ',
                        content_type='application/javascript',
                        method='GET', status=200),
-          MockResponse(url='http://jsonp/%3B/w3af.cmd%3B/w3af.cmd?callback'
-                           '=w3afExecToken',
-                       body='    w3afExecToken({ "Result": '
+          MockResponse(url='http://jsonp/%3B/w4af.cmd%3B/w4af.cmd?callback'
+                           '=w4afExecToken',
+                       body='    w4afExecToken({ "Result": '
                             '{ "Timestamp": 1417601045 } }) ',
                        content_type='application/javascript',
                        method='GET', status=200),

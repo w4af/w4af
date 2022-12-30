@@ -1,19 +1,19 @@
 <!--
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, w3af.sourceforge.net .
+This file is part of w4af, w4af.sourceforge.net .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 This is the central help file for the consoleUi
@@ -22,7 +22,7 @@ This is the central help file for the consoleUi
     <topic name="common">
         <category name="common">
             <item name="back">Go to the previous menu.  </item>
-            <item name="exit">Exit w3af.  </item>
+            <item name="exit">Exit w4af.  </item>
         </category>
    </topic>
    <topic name="root">
@@ -38,7 +38,7 @@ This is the central help file for the consoleUi
         </category>
         <category name="config">
             <item name="http-settings">Configure the HTTP settings of the framework.</item>
-            <item name="misc-settings">Configure w3af misc settings.</item>
+            <item name="misc-settings">Configure w4af misc settings.</item>
             <item name="target">Configure the target URL.</item>
         </category>
         <category name="results">
@@ -46,7 +46,7 @@ This is the central help file for the consoleUi
          </category>
         <category name="information">
             <item name="help">Display help. Issuing: help [command] , prints more specific help about "command"</item>
-            <item name="version">Show w3af version information.  </item>
+            <item name="version">Show w4af version information.  </item>
             <item name="keys">Display key shortcuts. </item>
          </category>
     </topic>
@@ -56,7 +56,7 @@ This is the central help file for the consoleUi
             <item name="Ctrl-H">Erase the character before the cursor.</item>
             <item name="Ctrl-W">Erase the word before the cursor.</item>
             <item name="Ctrl-L">Clear screen.</item>
-            <item name="Ctrl-D, Ctrl-C">Return to the previous menu or exit w3af.</item>
+            <item name="Ctrl-D, Ctrl-C">Return to the previous menu or exit w4af.</item>
         </category>
     </topic>
     <topic name="profiles">
@@ -132,7 +132,7 @@ Result: ${PLUGIN1} is disabled in the second command, only ${PLUGIN2} will run.]
             <item name="exploit">
                 <head>Exploit a vulnerability found by audit plugins.</head>
                 <body><![CDATA[Syntax: exploit (PLUGIN_NAME [vulnerability-id] | * [stopOnFirst])
-When using "exploit *" you will be running all exploit plugins, ordered by the probability of getting a root shell. When you add the "stopOnFirst" option to the "exploit *" command, you are making w3af stop on the first successbody exploit.
+When using "exploit *" you will be running all exploit plugins, ordered by the probability of getting a root shell. When you add the "stopOnFirst" option to the "exploit *" command, you are making w4af stop on the first successbody exploit.
 Examples:
 - exploit *
 - exploit os_commanding
@@ -184,7 +184,7 @@ To get a list of the potential TYPEs to add, just press <TAB> twice after typing
             <item name="list">
                 <head>List exceptions found during the previous scan.</head>
 				<body><![CDATA[Syntax: list [TYPE]
-where TYPE is one of w3af's plugin types. If no type is specified all exceptions are listed.
+where TYPE is one of w4af's plugin types. If no type is specified all exceptions are listed.
 ]]></body>
             </item>
             <item name="details">

@@ -3,19 +3,19 @@ dependency_check.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,7 +23,7 @@ import sys
 import warnings
 import logging
 
-from w3af.core.data.db.startup_cfg import StartUpConfig
+from w4af.core.data.db.startup_cfg import StartUpConfig
 from .utils import verify_python_version
 verify_python_version()
 
@@ -60,20 +60,20 @@ def get_missing_pip_packages(platform, dependency_set):
     """
     failed_deps = []
 
-    for w3af_req in platform.PIP_PACKAGES[dependency_set]:
+    for w4af_req in platform.PIP_PACKAGES[dependency_set]:
 
         # pylint: disable=E1133
         for dist in pkg_resources.working_set:
-            if w3af_req.package_name.lower() == dist.project_name.lower():
+            if w4af_req.package_name.lower() == dist.project_name.lower():
 
-                w3af_req_version = str(Version(w3af_req.package_version))
+                w4af_req_version = str(Version(w4af_req.package_version))
                 dist_version = str(Version(dist.version))
 
-                if w3af_req_version == dist_version:
+                if w4af_req_version == dist_version:
                     # It's installed and the version matches!
                     break
         else:
-            failed_deps.append(w3af_req)
+            failed_deps.append(w4af_req)
         # pylint: enable=E1133
 
     return failed_deps
@@ -108,7 +108,7 @@ def write_instructions_to_console(platform, failed_deps, os_packages, script_pat
     #
     #    Report the missing system packages
     #
-    msg = ('w3af\'s requirements are not met, one or more third-party'
+    msg = ('w4af\'s requirements are not met, one or more third-party'
            ' libraries need to be installed.\n\n')
 
     if os_packages:
@@ -126,7 +126,7 @@ def write_instructions_to_console(platform, failed_deps, os_packages, script_pat
     if failed_deps:
         # pylint: disable=E1101
         msg = ('Your python installation needs the following modules'
-               ' to run w3af:\n')
+               ' to run w4af:\n')
         msg += '    ' + ' '.join([fdep.module_name for fdep in failed_deps])
         print(msg)
         print('\n')
@@ -153,7 +153,7 @@ def write_instructions_to_console(platform, failed_deps, os_packages, script_pat
         print(msg)
 
     if external_commands:
-        print('External programs used by w3af are not installed or were not found.'
+        print('External programs used by w4af are not installed or were not found.'
               'Run these commands to install them on your system:\n')
         for cmd in external_commands:
             print(('    %s' % cmd))

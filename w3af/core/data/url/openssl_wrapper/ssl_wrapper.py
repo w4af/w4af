@@ -23,7 +23,7 @@ from OpenSSL.SSL import SysCallError
 from ndg.httpsclient.subj_alt_name import SubjectAltName
 from pyasn1.codec.der.decoder import decode as der_decoder
 
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 CERT_NONE = ssl.CERT_NONE
 CERT_OPTIONAL = ssl.CERT_OPTIONAL
@@ -118,9 +118,9 @@ class SSLSocket(object):
     Another reason for this wrapper is to implement timeouts for recv() and sendall()
     which require some ugly calls to select.select() because of pyopenssl limitations [2]
 
-    [0] https://github.com/andresriancho/w3af/issues/8125
+    [0] https://github.com/andresriancho/w4af/issues/8125
     [1] https://github.com/mpdehaan/certmaster/blob/master/certmaster/SSLConnection.py
-    [2] https://github.com/andresriancho/w3af/issues/7989
+    [2] https://github.com/andresriancho/w4af/issues/7989
     """
     def __init__(self, ssl_connection, sock):
         """
@@ -331,7 +331,7 @@ def wrap_socket(sock, keyfile=None, certfile=None, server_side=False,
     # select.select() in recv() and sendall().
     #
     # More information at:
-    #    https://github.com/andresriancho/w3af/issues/7989
+    #    https://github.com/andresriancho/w4af/issues/7989
     sock.setblocking(0)
     sock.settimeout(timeout)
     time_begin = time.time()

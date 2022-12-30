@@ -18,16 +18,16 @@ You should have received a copy of the GNU General Public License
 along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-import w3af.core.data.kb.config as cf
+import w4af.core.data.kb.config as cf
 
-from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
-from w3af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.core.controllers.ci.w4af_moth import get_w4af_moth_http
+from w4af.plugins.attack.payloads.payloads.tests.payload_test_helper import PayloadTestHelper
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
 
 
 class ApachePayloadTestHelper(PayloadTestHelper):
 
-    target_url = get_w3af_moth_http('/w3af/audit/local_file_read/local_file_read.php?file=section.txt')
+    target_url = get_w4af_moth_http('/w4af/audit/local_file_read/local_file_read.php?file=section.txt')
 
     _run_configs = {
         'cfg': {

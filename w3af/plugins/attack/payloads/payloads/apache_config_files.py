@@ -1,6 +1,6 @@
-import w3af.core.data.kb.knowledge_base as kb
-from w3af.plugins.attack.payloads.base_payload import Payload
-from w3af.core.ui.console.tables import table
+import w4af.core.data.kb.knowledge_base as kb
+from w4af.plugins.attack.payloads.base_payload import Payload
+from w4af.core.ui.console.tables import table
 
 
 class apache_config_files(Payload):

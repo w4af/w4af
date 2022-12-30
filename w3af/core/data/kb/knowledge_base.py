@@ -3,19 +3,19 @@ knowledge_base.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -30,20 +30,20 @@ import copy
 from darts.lib.utils.lru import SynchronizedLRUDict
 # pylint: enable=E0401
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.fuzzer.utils import rand_alpha
-from w3af.core.data.db.dbms import get_default_persistent_db_instance
-from w3af.core.controllers.exceptions import DBException
-from w3af.core.data.db.disk_set import DiskSet
-from w3af.core.data.misc.cpickle_dumps import cpickle_dumps
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.kb.info import Info
-from w3af.core.data.kb.shell import Shell
-from w3af.core.data.kb.info_set import InfoSet
-from w3af.core.data.constants.severity import INFORMATION, LOW, MEDIUM, HIGH
+from w4af.core.data.fuzzer.utils import rand_alpha
+from w4af.core.data.db.dbms import get_default_persistent_db_instance
+from w4af.core.controllers.exceptions import DBException
+from w4af.core.data.db.disk_set import DiskSet
+from w4af.core.data.misc.cpickle_dumps import cpickle_dumps
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.kb.info import Info
+from w4af.core.data.kb.shell import Shell
+from w4af.core.data.kb.info_set import InfoSet
+from w4af.core.data.constants.severity import INFORMATION, LOW, MEDIUM, HIGH
 
 
 class BasicKnowledgeBase(object):
@@ -215,7 +215,7 @@ class BasicKnowledgeBase(object):
         If filter_func doesn't match any existing InfoSet instances, then a new
         one is created using `group_klass` and `info_inst` is appended to it.
 
-        :see: https://github.com/andresriancho/w3af/issues/3955
+        :see: https://github.com/andresriancho/w4af/issues/3955
 
         :param location_a: The "a" address
         :param location_b: The "b" address
@@ -331,18 +331,18 @@ class BasicKnowledgeBase(object):
         """
         raise NotImplementedError
 
-    def get_all_shells(self, w3af_core=None):
+    def get_all_shells(self, w4af_core=None):
         """
-        :param w3af_core: The w3af_core used in the current scan
-        @see: Shell.__reduce__ to understand why we need the w3af_core
+        :param w4af_core: The w4af_core used in the current scan
+        @see: Shell.__reduce__ to understand why we need the w4af_core
         :return: A list of all vulns reported by all plugins.
         """
         all_shells = []
 
         for shell in self.get_all_entries_of_class(Shell):
-            if w3af_core is not None:
-                shell.set_url_opener(w3af_core.uri_opener)
-                shell.set_worker_pool(w3af_core.worker_pool)
+            if w4af_core is not None:
+                shell.set_url_opener(w4af_core.uri_opener)
+                shell.set_worker_pool(w4af_core.worker_pool)
 
             all_shells.append(shell)
 
@@ -538,7 +538,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
 
         Similar to raw_read, but checking types.
 
-        :see: https://github.com/andresriancho/w3af/issues/3955
+        :see: https://github.com/andresriancho/w4af/issues/3955
         """
         location_a = self._get_real_name(location_a)
         result = self.get(location_a, location_b, check_types=True)

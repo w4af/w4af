@@ -3,19 +3,19 @@ test_mp_document_parser.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -29,20 +29,20 @@ import pytest
 from unittest.mock import patch, PropertyMock
 from concurrent.futures import TimeoutError
 
-from w3af import ROOT_PATH
-from w3af.core.data.parsers.doc.sgml import Tag
-from w3af.core.data.parsers.mp_document_parser import MultiProcessingDocumentParser
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.parsers.doc.html import HTMLParser
-from w3af.core.data.parsers.tests.test_document_parser import _build_http_response
+from w4af import ROOT_PATH
+from w4af.core.data.parsers.doc.sgml import Tag
+from w4af.core.data.parsers.mp_document_parser import MultiProcessingDocumentParser
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.parsers.doc.html import HTMLParser
+from w4af.core.data.parsers.tests.test_document_parser import _build_http_response
 
 
 class TestMPDocumentParser(unittest.TestCase):
 
     def setUp(self):
-        self.url = URL('http://w3af.com')
+        self.url = URL('http://w4af.com')
         self.headers = Headers([('content-type', 'text/html')])
         self.mpdoc = MultiProcessingDocumentParser()
 
@@ -56,11 +56,11 @@ class TestMPDocumentParser(unittest.TestCase):
         parser = self.mpdoc.get_document_parser_for(resp)
 
         parsed_refs, _ = parser.get_references()
-        self.assertEqual([URL('http://w3af.com/abc')], parsed_refs)
+        self.assertEqual([URL('http://w4af.com/abc')], parsed_refs)
 
     def test_no_parser_for_images(self):
         body = ''
-        url = URL('http://w3af.com/foo.jpg')
+        url = URL('http://w4af.com/foo.jpg')
         headers = Headers([('content-type', 'image/jpeg')])
         resp = HTTPResponse(200, body, headers, url, url)
 
@@ -73,12 +73,12 @@ class TestMPDocumentParser(unittest.TestCase):
 
     def test_parser_timeout(self):
         """
-        Test to verify fix for https://github.com/andresriancho/w3af/issues/6723
-        "w3af running long time more than 24h"
+        Test to verify fix for https://github.com/andresriancho/w4af/issues/6723
+        "w4af running long time more than 24h"
         """
-        mmpdp = 'w3af.core.data.parsers.mp_document_parser.%s'
+        mmpdp = 'w4af.core.data.parsers.mp_document_parser.%s'
         kmpdp = mmpdp % 'MultiProcessingDocumentParser.%s'
-        modp = 'w3af.core.data.parsers.document_parser.%s'
+        modp = 'w4af.core.data.parsers.document_parser.%s'
 
         with patch(mmpdp % 'om.out') as om_mock,\
              patch(kmpdp % 'PARSER_TIMEOUT', new_callable=PropertyMock) as timeout_mock,\
@@ -106,7 +106,7 @@ class TestMPDocumentParser(unittest.TestCase):
             #   We now want to make sure that after we kill the process the Pool
             #   creates a new process for handling our tasks
             #
-            #   https://github.com/andresriancho/w3af/issues/9713
+            #   https://github.com/andresriancho/w4af/issues/9713
             #
             html = '<html>foo-</html>'
             http_resp = _build_http_response(html, 'text/html')
@@ -119,14 +119,14 @@ class TestMPDocumentParser(unittest.TestCase):
     def test_many_parsers_timing_out(self):
         """
         Received more reports of parsers timing out, and after that
-        w3af showing always "The parser took more than X seconds to complete
+        w4af showing always "The parser took more than X seconds to complete
         parsing of" for all calls to the parser.
 
         Want to test how well the the parser recovers from many timeouts.
         """
-        mmpdp = 'w3af.core.data.parsers.mp_document_parser.%s'
+        mmpdp = 'w4af.core.data.parsers.mp_document_parser.%s'
         kmpdp = mmpdp % 'MultiProcessingDocumentParser.%s'
-        modp = 'w3af.core.data.parsers.document_parser.%s'
+        modp = 'w4af.core.data.parsers.document_parser.%s'
 
         with patch(mmpdp % 'om.out') as om_mock,\
              patch(kmpdp % 'PARSER_TIMEOUT', new_callable=PropertyMock) as timeout_mock,\
@@ -193,14 +193,14 @@ class TestMPDocumentParser(unittest.TestCase):
         """
         pytest.skip('This test breaks the build because it uses A LOT'
                        ' of memory, for more information take a look at'
-                       ' https://circleci.com/gh/andresriancho/w3af/2819 .'
+                       ' https://circleci.com/gh/andresriancho/w4af/2819 .'
                        ' Note that there is no memory leak here, just a'
                        ' test which is designed to use a lot of memory'
                        ' to force a specific state.')
 
-        mmpdp = 'w3af.core.data.parsers.mp_document_parser.%s'
+        mmpdp = 'w4af.core.data.parsers.mp_document_parser.%s'
         kmpdp = mmpdp % 'MultiProcessingDocumentParser.%s'
-        modp = 'w3af.core.data.parsers.document_parser.%s'
+        modp = 'w4af.core.data.parsers.document_parser.%s'
 
         with patch(mmpdp % 'om.out') as om_mock,\
              patch(kmpdp % 'PARSER_TIMEOUT', new_callable=PropertyMock) as timeout_mock,\
@@ -258,9 +258,9 @@ class TestMPDocumentParser(unittest.TestCase):
         This makes sure that we stop parsing a document that exceeds our memory
         usage limits.
         """
-        mmpdp = 'w3af.core.data.parsers.mp_document_parser.%s'
+        mmpdp = 'w4af.core.data.parsers.mp_document_parser.%s'
         kmpdp = mmpdp % 'MultiProcessingDocumentParser.%s'
-        modp = 'w3af.core.data.parsers.document_parser.%s'
+        modp = 'w4af.core.data.parsers.document_parser.%s'
 
         with patch(mmpdp % 'om.out') as om_mock,\
              patch(kmpdp % 'MEMORY_LIMIT', new_callable=PropertyMock) as memory_mock,\
@@ -345,7 +345,7 @@ class TestMPDocumentParser(unittest.TestCase):
     def test_dictproxy_pickle_8748(self):
         """
         MaybeEncodingError - PicklingError: Can't pickle dictproxy #8748
-        https://github.com/andresriancho/w3af/issues/8748
+        https://github.com/andresriancho/w4af/issues/8748
         """
         html_body = os.path.join(ROOT_PATH, '/core/data/parsers/tests/data/',
                                  'pickle-8748.htm')
@@ -358,7 +358,7 @@ class TestMPDocumentParser(unittest.TestCase):
 
     def test_get_tags_by_filter(self):
         body = '<html><a href="/abc">foo</a><b>bar</b></html>'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers()
         headers['content-type'] = 'text/html'
         resp = HTTPResponse(200, body, headers, url, url, charset='utf-8')
@@ -370,7 +370,7 @@ class TestMPDocumentParser(unittest.TestCase):
 
     def test_get_tags_by_filter_empty_tag(self):
         body = '<html><script src="foo.js"></script></html>'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers()
         headers['content-type'] = 'text/html'
         resp = HTTPResponse(200, body, headers, url, url, charset='utf-8')

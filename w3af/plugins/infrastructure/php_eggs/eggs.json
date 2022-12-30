@@ -1,7 +1,7 @@
 {"meta":
              {"description": "PHP Eggs database",
               "plugin": "php_eggs.py",
-              "maintainers": ["@pvdl", "@w3af"],
+              "maintainers": ["@pvdl", "@w4af"],
               "license": "GPL v2.0"},
  "db": [
     {"version":"4.0.0",

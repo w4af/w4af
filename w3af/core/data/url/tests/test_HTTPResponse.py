@@ -4,19 +4,19 @@ test_HTTPResponse.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
@@ -27,11 +27,11 @@ from random import choice
 
 import msgpack
 
-from w3af.core.data.url.HTTPResponse import HTTPResponse, DEFAULT_CHARSET
-from w3af.core.data.misc.encoding import smart_unicode, ESCAPED_CHAR
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.headers import Headers
-from w3af import ROOT_PATH
+from w4af.core.data.url.HTTPResponse import HTTPResponse, DEFAULT_CHARSET
+from w4af.core.data.misc.encoding import smart_unicode, ESCAPED_CHAR
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.headers import Headers
+from w4af import ROOT_PATH
 
 
 TEST_RESPONSES = {
@@ -50,7 +50,7 @@ class TestHTTPResponse(unittest.TestCase):
         self.resp = self.create_resp(Headers([('Content-Type', 'text/html')]))
 
     def create_resp(self, headers, body='body'):
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         return HTTPResponse(200, body, headers, url, url)
 
     @unittest.skip("This assertion seems no longer to be true")
@@ -213,16 +213,16 @@ class TestHTTPResponse(unittest.TestCase):
             )
 
     def test_not_None(self):
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         headers = Headers([('Content-Type', 'application/pdf')])
         body = None
         self.assertRaises(TypeError, HTTPResponse, 200, body, headers, url, url)
 
     def test_dump_response_head_3661(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/3661
+        :see: https://github.com/andresriancho/w4af/issues/3661
         """
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         # '\xf3' is o-tilde in windows-1251
         #
         # We get from that arbitrary character to o-tilde in windows-1251 when
@@ -237,9 +237,9 @@ class TestHTTPResponse(unittest.TestCase):
 
     def test_dump_response_head_5416(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/5416
+        :see: https://github.com/andresriancho/w4af/issues/5416
         """
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         headers = Headers()
         msg = 'D\xe9plac\xe9 Temporairement'
         resp = HTTPResponse(200, '', headers, url, url, msg=msg)
@@ -250,10 +250,10 @@ class TestHTTPResponse(unittest.TestCase):
 
     def test_http_response_with_binary_no_escape(self):
 
-        pytest.skip('See: https://github.com/andresriancho/w3af/issues/15741')
+        pytest.skip('See: https://github.com/andresriancho/w4af/issues/15741')
 
         # This test reproduces issue
-        # https://github.com/andresriancho/w3af/issues/15741
+        # https://github.com/andresriancho/w4af/issues/15741
         CONTENT_TYPES = ['application/binary', 'image/jpeg', 'binary', 'text/html']
         TEST_FILE = os.path.join(ROOT_PATH, 'core', 'controllers', 'misc', 'tests',
                                  'data', 'code-detect-false-positive.jpg')

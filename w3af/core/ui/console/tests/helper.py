@@ -3,19 +3,19 @@ helper.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
@@ -25,7 +25,7 @@ import unittest
 
 from unittest.mock import MagicMock
 
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.knowledge_base as kb
 
 
 class mock_stdout(object):
@@ -49,8 +49,8 @@ class ConsoleTestHelper(unittest.TestCase):
     Helper class to build console UI tests.
     """
     console = None
-    OUTPUT_FILE = 'output-w3af-unittest.txt'
-    OUTPUT_HTTP_FILE = 'output-w3af-unittest-http.txt'
+    OUTPUT_FILE = 'output-w4af-unittest.txt'
+    OUTPUT_HTTP_FILE = 'output-w4af-unittest-http.txt'
 
     def setUp(self):
         kb.kb.cleanup()
@@ -66,7 +66,7 @@ class ConsoleTestHelper(unittest.TestCase):
         # in our tests.
         #
         if self.console is not None:
-            caught_exceptions = self.console._w3af.exception_handler.get_all_exceptions()
+            caught_exceptions = self.console._w4af.exception_handler.get_all_exceptions()
             msg = [e.get_summary() for e in caught_exceptions]
             self.assertEqual(len(caught_exceptions), 0, msg)
 

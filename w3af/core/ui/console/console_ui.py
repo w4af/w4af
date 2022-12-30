@@ -3,19 +3,19 @@ console_ui.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -28,21 +28,21 @@ import traceback
 from termcolor import colored
 
 try:
-    import w3af.core.ui.console.io.console as term
-    import w3af.core.ui.console.tables as tables
-    import w3af.core.controllers.output_manager as om
+    import w4af.core.ui.console.io.console as term
+    import w4af.core.ui.console.tables as tables
+    import w4af.core.controllers.output_manager as om
 
-    from w3af.core.ui.console.rootMenu import rootMenu
-    from w3af.core.ui.console.callbackMenu import callbackMenu
-    from w3af.core.ui.console.util import commonPrefix
-    from w3af.core.ui.console.history import historyTable
-    from w3af.core.ui.console.auto_update.auto_update import ConsoleUIUpdater
+    from w4af.core.ui.console.rootMenu import rootMenu
+    from w4af.core.ui.console.callbackMenu import callbackMenu
+    from w4af.core.ui.console.util import commonPrefix
+    from w4af.core.ui.console.history import historyTable
+    from w4af.core.ui.console.auto_update.auto_update import ConsoleUIUpdater
     
-    from w3af.core.data.constants.disclaimer import DISCLAIMER
-    from w3af.core.data.db.startup_cfg import StartUpConfig
+    from w4af.core.data.constants.disclaimer import DISCLAIMER
+    from w4af.core.data.db.startup_cfg import StartUpConfig
 
-    from w3af.core.controllers.w3afCore import w3afCore
-    from w3af.core.controllers.exceptions import (BaseFrameworkException,
+    from w4af.core.controllers.w4afCore import w4afCore
+    from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                                   ScanMustStopException)
 except KeyboardInterrupt:
     sys.exit(0)
@@ -96,12 +96,12 @@ class ConsoleUI(object):
         cons_upd = ConsoleUIUpdater(force=do_upd)
         cons_upd.update()
         # Core initialization
-        self._w3af = w3afCore()
-        self._w3af.plugins.set_plugins(['console'], 'output')
+        self._w4af = w4afCore()
+        self._w4af.plugins.set_plugins(['console'], 'output')
         
     def __initFromParent(self, parent):
         self._context = parent._context
-        self._w3af = parent._w3af
+        self._w4af = parent._w4af
 
     def skip_dependencies_check(self):
         startup_cfg = StartUpConfig()
@@ -110,7 +110,7 @@ class ConsoleUI(object):
     def accept_disclaimer(self):
         """
         :return: True/False depending on the user's answer to our disclaimer.
-                 Please note that in w3af_console we'll stop if the user does
+                 Please note that in w4af_console we'll stop if the user does
                  not accept the disclaimer.
         """
         startup_cfg = StartUpConfig()
@@ -135,7 +135,7 @@ class ConsoleUI(object):
 
         return False
 
-    def sh(self, name='w3af', callback=None):
+    def sh(self, name='w4af', callback=None):
         """
         Main cycle
         """
@@ -145,10 +145,10 @@ class ConsoleUI(object):
                     ctx = self._context
                 else:
                     ctx = None
-                self._context = callbackMenu(name, self, self._w3af,
+                self._context = callbackMenu(name, self, self._w4af,
                                              ctx, callback)
             else:
-                self._context = rootMenu(name, self, self._w3af)
+                self._context = rootMenu(name, self, self._w4af)
 
             self._lastWasArrow = False
             self._showPrompt()
@@ -170,14 +170,14 @@ class ConsoleUI(object):
 
         if not hasattr(self, '_parent'):
             try:
-                self._w3af.quit()
+                self._w4af.quit()
                 self._context.join()
                 om.out.console(self._random_message())
                 om.manager.process_all_messages()
             except KeyboardInterrupt:
-                # The user might be in a hurry, and after "w3af>>> exit" he
+                # The user might be in a hurry, and after "w4af>>> exit" he
                 # might also press Ctrl+C like seen here:
-                #     https://github.com/andresriancho/w3af/issues/148
+                #     https://github.com/andresriancho/w4af/issues/148
                 #
                 # Since we don't want to show any tracebacks on this situation
                 # just "pass". 

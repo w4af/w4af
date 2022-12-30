@@ -3,19 +3,19 @@ test_profiles.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
@@ -27,11 +27,11 @@ import unittest
 
 import pytest
 
-from w3af.core.data.db.startup_cfg import StartUpConfig
-from w3af.core.ui.console.console_ui import ConsoleUI
-from w3af.core.ui.console.tests.helper import ConsoleTestHelper
-from w3af.core.data.profile.profile import profile
-from w3af.core.controllers.core_helpers.tests.test_profiles import assertProfilesEqual
+from w4af.core.data.db.startup_cfg import StartUpConfig
+from w4af.core.ui.console.console_ui import ConsoleUI
+from w4af.core.ui.console.tests.helper import ConsoleTestHelper
+from w4af.core.data.profile.profile import profile
+from w4af.core.controllers.core_helpers.tests.test_profiles import assertProfilesEqual
 
 
 class TestProfilesConsoleUI(ConsoleTestHelper):
@@ -49,7 +49,7 @@ class TestProfilesConsoleUI(ConsoleTestHelper):
     def get_profile_list(self):
         profile_dir = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', '..', 'profiles')
         for root, dirs, files in os.walk(profile_dir):
-            return [ x[:-6] for x in files if x.endswith('.pw3af') ]
+            return [ x[:-6] for x in files if x.endswith('.pw4af') ]
 
     def get_profile_name(self):
         profile_name = self.id()
@@ -98,7 +98,7 @@ class TestProfilesConsoleUI(ConsoleTestHelper):
             self.assertTrue(assert_result, msg)
 
     def test_load_profile_by_filepath(self):
-        tmp_profile = tempfile.NamedTemporaryFile(suffix='.pw3af')
+        tmp_profile = tempfile.NamedTemporaryFile(suffix='.pw4af')
         commands_to_run = ['profiles',
                            'help',
                            'use ' + tmp_profile.name,
@@ -121,7 +121,7 @@ class TestProfilesConsoleUI(ConsoleTestHelper):
                            'use do_not_exist',
                            'exit']
 
-        expected = ('The profile "do_not_exist.pw3af" wasn\'t found.',)
+        expected = ('The profile "do_not_exist.pw4af" wasn\'t found.',)
 
         self.console = ConsoleUI(commands=commands_to_run, do_upd=False)
         self.console.sh()
@@ -197,7 +197,7 @@ class TestProfilesConsoleUI(ConsoleTestHelper):
         # Extract the temp file from the plugin configuration and read it
         #
         for line in self._mock_stdout.messages:
-            match = re.search(r'(w3af-.*-sc\.dat)', line)
+            match = re.search(r'(w4af-.*-sc\.dat)', line)
             if not match:
                 continue
 
@@ -214,7 +214,7 @@ class TestProfilesConsoleUI(ConsoleTestHelper):
         This is a unittest for the bug reported by a user where his settings
         are not saved to the profile.
 
-        https://github.com/andresriancho/w3af/issues/291
+        https://github.com/andresriancho/w4af/issues/291
 
         Actually, the settings are saved but not properly displayed, but that's
         not so important. The important thing is that the user was seeing the
@@ -250,7 +250,7 @@ class TestProfilesConsoleUI(ConsoleTestHelper):
         # then pass that one to Popen
         python_executable = sys.executable
 
-        p = subprocess.Popen([python_executable, 'w3af_console', '-n'],
+        p = subprocess.Popen([python_executable, 'w4af_console', '-n'],
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
                              stdin=subprocess.PIPE,

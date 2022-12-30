@@ -3,19 +3,19 @@ common_windows_report.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,10 +24,10 @@ from gi.repository import GObject as gobject
 import queue
 import threading
 
-from w3af.core.ui.gui.helpers import end_threads, Throbber
-from w3af.core.ui.gui.entries import EmailEntry
-from w3af.core.ui.gui.constants import W3AF_ICON
-from w3af.core.controllers.easy_contribution.github_issues import (GithubIssues,
+from w4af.core.ui.gui.helpers import end_threads, Throbber
+from w4af.core.ui.gui.entries import EmailEntry
+from w4af.core.ui.gui.constants import w4af_ICON
+from w4af.core.controllers.easy_contribution.github_issues import (GithubIssues,
                                                                    OAUTH_TOKEN,
                                                                    LoginFailed,
                                                                    OAUTH_AUTH_FAILED,
@@ -46,7 +46,7 @@ class SimpleBaseWindow(gtk.Window):
         self.connect("delete-event", self._handle_cancel)
         self.connect("destroy", self._handle_cancel)
 
-        self.set_icon_from_file(W3AF_ICON)
+        self.set_icon_from_file(w4af_ICON)
 
     def _handle_cancel(self, *args):
         end_threads()
@@ -111,7 +111,7 @@ class report_bug_show_result(gtk.MessageDialog):
         self.reported_ids = []
 
         self.set_title('Bug report results')
-        self.set_icon_from_file(W3AF_ICON)
+        self.set_icon_from_file(w4af_ICON)
 
         # Disable OK button until the worker finishes the bug reporting process
         self.ok_button = self.get_widget_for_response(gtk.RESPONSE_OK)
@@ -125,7 +125,7 @@ class report_bug_show_result(gtk.MessageDialog):
                 ' scanning engine. If you want to get involved with the project'
                 ' please send an email to our <a href="mailto:%s">mailing list'
                 ' </a>.')
-        text %= 'w3af-develop@lists.sourceforge.net'
+        text %= 'w4af-develop@lists.sourceforge.net'
         # All these lines are here to add a label instead of the easy "set_
         # markup" in order to avoid a bug where the label text appears selected
         msg_area = self.get_message_area()
@@ -263,7 +263,7 @@ class dlg_ask_credentials(gtk.MessageDialog):
 
         self._invalid_login = invalid_login
 
-        self.set_icon_from_file(W3AF_ICON)
+        self.set_icon_from_file(w4af_ICON)
         self.set_title('Bug report method - Step 1/2')
 
     def run(self):
@@ -440,7 +440,7 @@ def dlg_invalid_token(parent):
                            gtk.BUTTONS_OK,
                            OAUTH_AUTH_FAILED)
 
-    md.set_icon_from_file(W3AF_ICON)
+    md.set_icon_from_file(w4af_ICON)
     md.set_title('GitHub authentication failed')
     return md
 
@@ -460,7 +460,7 @@ class dlg_ask_bug_info(gtk.MessageDialog):
                                    gtk.BUTTONS_OK,
                                    None)
 
-        self.set_icon_from_file(W3AF_ICON)
+        self.set_icon_from_file(w4af_ICON)
         self.set_title('Bug information - Step 2/2')
 
     def run(self):

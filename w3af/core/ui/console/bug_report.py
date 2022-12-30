@@ -3,28 +3,28 @@ bug_report.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.ui.console.menu import menu
-from w3af.core.ui.console.util import suggest
-from w3af.core.controllers.easy_contribution.github_issues import (GithubIssues,
+from w4af.core.ui.console.menu import menu
+from w4af.core.ui.console.util import suggest
+from w4af.core.controllers.easy_contribution.github_issues import (GithubIssues,
                                                                    OAUTH_TOKEN,
                                                                    OAUTH_AUTH_FAILED,
                                                                    LoginFailed,
@@ -38,20 +38,20 @@ class bug_report_menu(menu):
 
     :author: Andres Riancho (andres.riancho |at| gmail.com)
     """
-    def __init__(self, name, console, w3af_core, parent=None, **other):
-        menu.__init__(self, name, console, w3af_core, parent)
+    def __init__(self, name, console, w4af_core, parent=None, **other):
+        menu.__init__(self, name, console, w4af_core, parent)
         self._load_help('bug-report')
 
     def _cmd_summary(self, params):
-        summary = self._w3af.exception_handler.generate_summary_str()
+        summary = self._w4af.exception_handler.generate_summary_str()
         om.out.console(summary)
 
     def _cmd_list(self, params):
-        all_edata = self._w3af.exception_handler.get_unique_exceptions()
+        all_edata = self._w4af.exception_handler.get_unique_exceptions()
 
         if len(params) == 0:
             ptype = 'all'
-        elif len(params) == 1 and params[0] in self._w3af.plugins.get_plugin_types():
+        elif len(params) == 1 and params[0] in self._w4af.plugins.get_plugin_types():
             ptype = params[0]
         else:
             om.out.console('Invalid parameter type, please read help:')
@@ -74,7 +74,7 @@ class bug_report_menu(menu):
         """
         Show details for a bug referenced by id.
         """
-        all_edata = self._w3af.exception_handler.get_unique_exceptions()
+        all_edata = self._w4af.exception_handler.get_unique_exceptions()
 
         if len(params) != 1:
             om.out.console(
@@ -97,9 +97,9 @@ class bug_report_menu(menu):
 
     def _cmd_report(self, params):
         """
-        Report one or more bugs to w3af's Github, menu command.
+        Report one or more bugs to w4af's Github, menu command.
         """
-        all_edata = self._w3af.exception_handler.get_unique_exceptions()
+        all_edata = self._w4af.exception_handler.get_unique_exceptions()
 
         if not all_edata:
             om.out.console('There are no exceptions to report for this scan.')
@@ -129,7 +129,7 @@ class bug_report_menu(menu):
 
     def _report_exception(self, edata, eid, num, total):
         """
-        Report one or more bugs to w3af's Github, submit data to server.
+        Report one or more bugs to w4af's Github, submit data to server.
         """
         try:
             gh = GithubIssues(OAUTH_TOKEN)
@@ -162,7 +162,7 @@ class bug_report_menu(menu):
         if len(params):
             return []
 
-        all_edata = self._w3af.exception_handler.get_unique_exceptions()
+        all_edata = self._w4af.exception_handler.get_unique_exceptions()
         suggestions = [str(i) for i in range(len(all_edata))]
 
         return suggest(suggestions, part)
@@ -173,4 +173,4 @@ class bug_report_menu(menu):
         if len(params):
             return []
 
-        return suggest(self._w3af.plugins.get_plugin_types(), part)
+        return suggest(self._w4af.plugins.get_plugin_types(), part)

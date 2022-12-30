@@ -3,19 +3,19 @@ spider_man.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,24 +25,24 @@ import traceback
 
 from multiprocessing.dummy import Process
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.ports as ports
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.ports as ports
 
-from w3af import ROOT_PATH
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.controllers.daemons.proxy.templates.utils import render
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.daemons.proxy import Proxy, ProxyHandler
-from w3af.core.controllers.exceptions import RunOnce, ProxyException
-from w3af.core.controllers.misc.decorators import runonce
+from w4af import ROOT_PATH
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.controllers.daemons.proxy.templates.utils import render
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.daemons.proxy import Proxy, ProxyHandler
+from w4af.core.controllers.exceptions import RunOnce, ProxyException
+from w4af.core.controllers.misc.decorators import runonce
 
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.headers import Headers
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.headers import Headers
 
-# Cohny changed the original http://w3af/spider_man?terminate
+# Cohny changed the original http://w4af/spider_man?terminate
 # to http://127.7.7.7/spider_man?terminate because in Opera we got
 # an error if we used the original one! Thanks Cohny!
 TERMINATE_URL = URL('http://127.7.7.7/spider_man?terminate')
@@ -138,7 +138,7 @@ class spider_man(CrawlPlugin):
         return """
         This plugin is a local proxy that can be used to give the framework
         knowledge about the web application when it has a lot of client side
-        code like Flash or Java applets. Whenever a w3af needs to test an
+        code like Flash or Java applets. Whenever a w4af needs to test an
         application with flash or javascript, the user should enable this plugin
         and use a web browser to navigate the site using spider_man proxy.
 
@@ -171,7 +171,7 @@ class LoggingHandler(ProxyHandler):
 
         :param flow: A libmproxy flow containing the request
         """
-        http_request = self._to_w3af_request(flow.request)
+        http_request = self._to_w4af_request(flow.request)
 
         uri = http_request.get_uri()
         msg = '[spider_man] Handling request: %s %s'
@@ -205,7 +205,7 @@ class LoggingHandler(ProxyHandler):
         cookie_value, cookie_header = headers.iget('cookie', None)
         if cookie_value is not None:
             msg = ('The remote web application sent the following'
-                   ' cookie: "%s" through the spider-man proxy.\nw3af will use'
+                   ' cookie: "%s" through the spider-man proxy.\nw4af will use'
                    ' it during the rest of the scan process in order to'
                    ' maintain the session.')
             om.out.information(msg % cookie_value)
@@ -216,7 +216,7 @@ class LoggingHandler(ProxyHandler):
 
     def _is_terminate_favicon(self, http_request):
         """
-        :see: https://github.com/andresriancho/w3af/issues/9135
+        :see: https://github.com/andresriancho/w4af/issues/9135
         """
         if http_request.get_uri() == TERMINATE_FAVICON_URL:
             return True

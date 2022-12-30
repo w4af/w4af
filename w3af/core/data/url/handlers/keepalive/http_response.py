@@ -8,10 +8,10 @@ except ImportError:
     from io import StringIO
 
 from .utils import debug
-from w3af.core.data.constants.response_codes import NO_CONTENT
-from w3af.core.data.kb.config import cf
-from w3af.core.data.misc.encoding import smart_str
-from w3af.core.data.url.HTTPResponse import DEFAULT_WAIT_TIME
+from w4af.core.data.constants.response_codes import NO_CONTENT
+from w4af.core.data.kb.config import cf
+from w4af.core.data.misc.encoding import smart_str
+from w4af.core.data.url.HTTPResponse import DEFAULT_WAIT_TIME
 
 
 def close_on_error(read_meth):
@@ -266,7 +266,7 @@ class HTTPResponse(http.client.HTTPResponse):
 
     @close_on_error
     def read(self, amt=None):
-        # w3af does always read all the content of the response, and I also need
+        # w4af does always read all the content of the response, and I also need
         # to do multiple reads to this response...
         #
         # TODO: Is this OK? What if a HEAD method actually returns something?!

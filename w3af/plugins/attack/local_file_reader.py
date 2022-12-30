@@ -3,19 +3,19 @@ local_file_reader.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,15 +23,15 @@ import base64
 import copy
 import threading
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.kb.read_shell import ReadShell
-from w3af.core.controllers.plugins.attack_plugin import AttackPlugin
-from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+from w4af.core.data.kb.read_shell import ReadShell
+from w4af.core.controllers.plugins.attack_plugin import AttackPlugin
+from w4af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               BodyCutException)
 
-from w3af.plugins.attack.payloads.decorators.read_decorator import read_debug
+from w4af.plugins.attack.payloads.decorators.read_decorator import read_debug
 
 
 class local_file_reader(AttackPlugin):
@@ -299,7 +299,7 @@ class FileReaderShell(ReadShell):
         try:
             cut_response = self._cut(response.get_body())
         except BodyCutException as bce:
-            issue = 'https://github.com/andresriancho/w3af/issues/5139'
+            issue = 'https://github.com/andresriancho/w4af/issues/5139'
 
             msg = ('Unexpected exception "%s" while trying to extract the file'
                    ' content from the HTTP response body. Please try again.\n\n'

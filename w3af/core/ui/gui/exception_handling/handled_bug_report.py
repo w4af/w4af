@@ -3,26 +3,26 @@ handled_bug_report.py
 
 Copyright 2009 Andres Riancho
 
-This file is part of w3af, w3af.org .
+This file is part of w4af, w4af.org .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from gi.repository import Gtk as gtk
 
-from w3af.core.controllers.exception_handling.helpers import gettempdir
-from w3af.core.ui.gui.exception_handling.common_windows import (SimpleBaseWindow,
+from w4af.core.controllers.exception_handling.helpers import gettempdir
+from w4af.core.ui.gui.exception_handling.common_windows import (SimpleBaseWindow,
                                                                 GithubMultiBugReport)
 
 
@@ -36,11 +36,11 @@ class BugReportWindow(SimpleBaseWindow, GithubMultiBugReport):
     see in unhandled.py .
     """
 
-    def __init__(self, w3af_core, title):
+    def __init__(self, w4af_core, title):
         SimpleBaseWindow.__init__(self)
 
-        exception_list = w3af_core.exception_handler.get_unique_exceptions()
-        scan_id = w3af_core.exception_handler.get_scan_id()
+        exception_list = w4af_core.exception_handler.get_unique_exceptions()
+        scan_id = w4af_core.exception_handler.get_scan_id()
 
         GithubMultiBugReport.__init__(self, exception_list, scan_id)
 
@@ -111,11 +111,11 @@ class BugReportWindow(SimpleBaseWindow, GithubMultiBugReport):
         self.label.set_line_wrap(True)
         label_text = _("<i>All these exceptions were stored in '%s' for your later"
                        ' review.</i>\n\nReporting these is recommended and will'
-                       ' help us improve w3af. <b>You can contribute</b> to the'
-                       ' w3af project and submit these exceptions to our'
+                       ' help us improve w4af. <b>You can contribute</b> to the'
+                       ' w4af project and submit these exceptions to our'
                        ' bug tracking system from within this window only using'
                        ' <i>two clicks</i>.\n\n'
-                       'w3af will only send the exception traceback and the'
+                       'w4af will only send the exception traceback and the'
                        ' version information to Github, no personal or '
                        ' confidential information is collected.')
         self.label.set_markup(label_text % gettempdir())

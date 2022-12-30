@@ -11,7 +11,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--tag', help='Docker image tag to run. Default'
                                             ' is latest, try develop to get'
-                                            ' the latest w3af features.',
+                                            ' the latest w4af features.',
                         required=False)
     args = parser.parse_args()
     return args
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     create_volumes()
     container_id = start_container(args.tag)
 
-    cmd = '/home/w3af/w3af/w3af_gui --no-update'
+    cmd = '/home/w4af/w4af/w4af_gui --no-update'
     extra_ssh_flags = ('-X',)
     try:
         connect_to_container(container_id, cmd)

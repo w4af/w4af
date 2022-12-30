@@ -4,30 +4,30 @@ form_filler.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import os
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
 
-from w3af.core.controllers.misc.io import NamedBytesIO
-from w3af.core.controllers.misc.decorators import memoized
-from w3af.core.data.constants.file_templates.file_templates import get_file_from_template
+from w4af.core.controllers.misc.io import NamedBytesIO
+from w4af.core.controllers.misc.decorators import memoized
+from w4af.core.data.constants.file_templates.file_templates import get_file_from_template
 
 
 PARAM_NAME_KNOWLEDGE = {
@@ -40,9 +40,9 @@ PARAM_NAME_KNOWLEDGE = {
     'FrAmE30.': ['pass', 'word', 'pswd', 'pwd', 'auth', 'password', 'passwort',
                  'contraseña', 'senha', 'key', 'hash', 'pword', 'passe'],
 
-    'w3af@email.com': ['mail', 'email', 'e-mail', 'correo', 'correio', 'to',
+    'w4af@email.com': ['mail', 'email', 'e-mail', 'correo', 'correio', 'to',
                        'cc', 'bcc'],
-    'http://www.w3af.org/': ['link', 'enlace', 'target', 'destino', 'website',
+    'http://www.w4af.org/': ['link', 'enlace', 'target', 'destino', 'website',
                              'web', 'url', 'page', 'homepage'],
 
     'AK': ['state', 'estado'],
@@ -81,7 +81,7 @@ PARAM_NAME_KNOWLEDGE = {
 
     'Spam or Eggs?': ['q', 'question', 'pregunta'],
 
-    '<html>w3af</html>': ['html', 'wysiwyg'],
+    '<html>w4af</html>': ['html', 'wysiwyg'],
 
     'Blue': ['color'],
 
@@ -89,7 +89,7 @@ PARAM_NAME_KNOWLEDGE = {
 
     '127.0.0.1': ['ip', 'ipaddress', 'host', 'server', 'servidor'],
     '255.255.255.0': ['netmask', 'mask', 'mascara'],
-    'www.w3af.org': ['domain', 'dominio'],
+    'www.w4af.org': ['domain', 'dominio'],
 
     '4271a25e-7211-4306-b527-46196eb2af28': ['token', 'uuid', 'unique-id', 'random']
 }

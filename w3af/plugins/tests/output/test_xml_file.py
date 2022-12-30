@@ -4,19 +4,19 @@ test_xml_file.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import base64
@@ -30,27 +30,27 @@ import xml.etree.ElementTree as ElementTree
 
 from lxml import etree
 
-import w3af.core.data.constants.severity as severity
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.constants.severity as severity
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af import ROOT_PATH
+from w4af import ROOT_PATH
 
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.misc.temp_dir import create_temp_dir, remove_temp_dir
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.data.kb.tests.test_vuln import MockVuln
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.db.history import HistoryItem
-from w3af.core.data.db.url_tree import URLTree
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.url.HTTPRequest import HTTPRequest
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import OUTPUT_FILE
-from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
-from w3af.plugins.output.xml_file import (xml_file, CachedXMLNode, FindingsCache,
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.misc.temp_dir import create_temp_dir, remove_temp_dir
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.data.kb.tests.test_vuln import MockVuln
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.db.history import HistoryItem
+from w4af.core.data.db.url_tree import URLTree
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.url.HTTPRequest import HTTPRequest
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import OUTPUT_FILE
+from w4af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
+from w4af.plugins.output.xml_file import (xml_file, CachedXMLNode, FindingsCache,
                                           HTTPTransaction, ScanInfo, ScanStatus,
                                           Finding, jinja2_attr_value_escape_filter)
 
@@ -115,13 +115,13 @@ class TestXMLOutput(PluginTest):
             self.kb.cleanup()
 
     def test_error_null_byte(self):
-        w3af_core = w3afCore()
-        w3af_core.status.start()
+        w4af_core = w4afCore()
+        w4af_core.status.start()
 
         plugin_instance = xml_file()
-        plugin_instance.set_w3af_core(w3af_core)
+        plugin_instance.set_w4af_core(w4af_core)
 
-        # https://github.com/andresriancho/w3af/issues/12924
+        # https://github.com/andresriancho/w4af/issues/12924
         plugin_instance.error('\0')
         plugin_instance.flush()
 
@@ -136,8 +136,8 @@ class TestNoDuplicate(unittest.TestCase):
         CachedXMLNode.create_cache_path()
         FindingsCache.create_cache_path()
         HistoryItem().init()
-        self.w3af_core = w3afCore()
-        self.w3af_core.status.start()
+        self.w4af_core = w4afCore()
+        self.w4af_core.status.start()
 
     def tearDown(self):
         remove_temp_dir()
@@ -149,8 +149,8 @@ class TestNoDuplicate(unittest.TestCase):
         # disk multiple times, this test makes sure I fixed that vulnerability
 
         # Write the HTTP request / response to the DB
-        url = URL('http://w3af.com/a/b/c.php')
-        hdr = Headers([('User-Agent', 'w3af')])
+        url = URL('http://w4af.com/a/b/c.php')
+        hdr = Headers([('User-Agent', 'w4af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
 
@@ -175,7 +175,7 @@ class TestNoDuplicate(unittest.TestCase):
 
         # Setup the plugin
         plugin_instance = xml_file()
-        plugin_instance.set_w3af_core(self.w3af_core)
+        plugin_instance.set_w4af_core(self.w4af_core)
 
         # Set the output file for the unittest
         ol = OptionList()
@@ -208,7 +208,7 @@ class XMLParser(object):
         <vulnerability id="[87]" method="GET"
                        name="Cross site scripting vulnerability"
                        plugin="xss" severity="Medium"
-                       url="http://moth/w3af/audit/xss/simple_xss_no_script_2.php"
+                       url="http://moth/w4af/audit/xss/simple_xss_no_script_2.php"
                        var="text">
         """
         if tag == 'vulnerability':
@@ -454,8 +454,8 @@ class TestHTTPTransaction(XMLNodeGeneratorTest):
         kb.kb.cleanup()
 
     def test_render_simple(self):
-        url = URL('http://w3af.com/a/b/c.php')
-        hdr = Headers([('User-Agent', 'w3af')])
+        url = URL('http://w4af.com/a/b/c.php')
+        hdr = Headers([('User-Agent', 'w4af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
 
@@ -476,9 +476,9 @@ class TestHTTPTransaction(XMLNodeGeneratorTest):
 
         expected = ('<http-transaction id="1">\n\n'
                     '    <http-request>\n'
-                    '        <status>POST http://w3af.com/a/b/c.php HTTP/1.1</status>\n'
+                    '        <status>POST http://w4af.com/a/b/c.php HTTP/1.1</status>\n'
                     '        <headers>\n'
-                    '            <header field="User-agent" content="w3af" />\n'
+                    '            <header field="User-agent" content="w4af" />\n'
                     '        </headers>\n'
                     '        <body content-encoding="base64">YT0x</body>\n'
                     '    </http-request>\n\n'
@@ -494,8 +494,8 @@ class TestHTTPTransaction(XMLNodeGeneratorTest):
         self.assertValidXML(xml)
 
     def test_cache(self):
-        url = URL('http://w3af.com/a/b/c.php')
-        hdr = Headers([('User-Agent', 'w3af')])
+        url = URL('http://w4af.com/a/b/c.php')
+        hdr = Headers([('User-Agent', 'w4af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
 
@@ -520,9 +520,9 @@ class TestHTTPTransaction(XMLNodeGeneratorTest):
 
         expected = ('<http-transaction id="2">\n\n'
                     '    <http-request>\n'
-                    '        <status>POST http://w3af.com/a/b/c.php HTTP/1.1</status>\n'
+                    '        <status>POST http://w4af.com/a/b/c.php HTTP/1.1</status>\n'
                     '        <headers>\n'
-                    '            <header field="User-agent" content="w3af" />\n'
+                    '            <header field="User-agent" content="w4af" />\n'
                     '        </headers>\n'
                     '        <body content-encoding="base64">YT0x</body>\n'
                     '    </http-request>\n\n'
@@ -560,26 +560,26 @@ class TestScanInfo(XMLNodeGeneratorTest):
         kb.kb.cleanup()
 
     def test_render_simple(self):
-        w3af_core = w3afCore()
+        w4af_core = w4afCore()
 
-        w3af_core.plugins.set_plugins(['sqli'], 'audit')
-        w3af_core.plugins.set_plugins(['web_spider'], 'crawl')
+        w4af_core.plugins.set_plugins(['sqli'], 'audit')
+        w4af_core.plugins.set_plugins(['web_spider'], 'crawl')
 
-        plugin_inst = w3af_core.plugins.get_plugin_inst('crawl', 'web_spider')
+        plugin_inst = w4af_core.plugins.get_plugin_inst('crawl', 'web_spider')
         web_spider_options = plugin_inst.get_options()
 
-        w3af_core.plugins.set_plugin_options('crawl', 'web_spider', web_spider_options)
+        w4af_core.plugins.set_plugin_options('crawl', 'web_spider', web_spider_options)
 
-        plugins_dict = w3af_core.plugins.get_all_enabled_plugins()
-        options_dict = w3af_core.plugins.get_all_plugin_options()
-        scan_target = 'https://w3af.org'
+        plugins_dict = w4af_core.plugins.get_all_enabled_plugins()
+        options_dict = w4af_core.plugins.get_all_plugin_options()
+        scan_target = 'https://w4af.org'
 
         x = xml_file()
 
         scan_info = ScanInfo(x._get_jinja2_env(), scan_target, plugins_dict, options_dict)
         xml = scan_info.to_string()
 
-        expected = ('<scan-info target="https://w3af.org">\n'
+        expected = ('<scan-info target="https://w4af.org">\n'
                     '    <audit>\n'
                     '            <plugin name="sqli">\n'
                     '            </plugin>\n'
@@ -628,18 +628,18 @@ class TestScanStatus(XMLNodeGeneratorTest):
         kb.kb.cleanup()
 
     def test_render_simple(self):
-        w3af_core = w3afCore()
+        w4af_core = w4afCore()
 
-        w3af_core.status.start()
-        w3af_core.status.set_running_plugin('crawl', 'web_spider')
-        status = w3af_core.status.get_status_as_dict()
+        w4af_core.status.start()
+        w4af_core.status.set_running_plugin('crawl', 'web_spider')
+        status = w4af_core.status.get_status_as_dict()
 
         known_urls = URLTree()
-        known_urls.add_url(URL('http://w3af.org/'))
-        known_urls.add_url(URL('http://w3af.org/foo/'))
-        known_urls.add_url(URL('http://w3af.org/foo/abc.html'))
-        known_urls.add_url(URL('http://w3af.org/foo/bar/'))
-        known_urls.add_url(URL('http://w3af.org/123.txt'))
+        known_urls.add_url(URL('http://w4af.org/'))
+        known_urls.add_url(URL('http://w4af.org/foo/'))
+        known_urls.add_url(URL('http://w4af.org/foo/abc.html'))
+        known_urls.add_url(URL('http://w4af.org/foo/bar/'))
+        known_urls.add_url(URL('http://w4af.org/123.txt'))
 
         total_urls = 150
 
@@ -699,7 +699,7 @@ class TestScanStatus(XMLNodeGeneratorTest):
                     '\n'
                     '    <total-urls>150</total-urls>\n'
                     '    <known-urls>    \n'   
-                    '    <node url="http://w3af.org" exists="1">\n'
+                    '    <node url="http://w4af.org" exists="1">\n'
                     '                                        \n'
                     '        <node url="123.txt" exists="1" />        \n'
                     '        <node url="foo" exists="1">\n'
@@ -735,8 +735,8 @@ class TestFinding(XMLNodeGeneratorTest):
 
         vuln = MockVuln(_id=_id)
 
-        url = URL('http://w3af.com/a/b/c.php')
-        hdr = Headers([('User-Agent', 'w3af')])
+        url = URL('http://w4af.com/a/b/c.php')
+        hdr = Headers([('User-Agent', 'w4af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
 
@@ -759,9 +759,9 @@ class TestFinding(XMLNodeGeneratorTest):
                     '    <http-transactions>\n'
                     '            <http-transaction id="2">\n\n'
                     '    <http-request>\n'
-                    '        <status>POST http://w3af.com/a/b/c.php HTTP/1.1</status>\n'
+                    '        <status>POST http://w4af.com/a/b/c.php HTTP/1.1</status>\n'
                     '        <headers>\n'
-                    '            <header field="User-agent" content="w3af" />\n'
+                    '            <header field="User-agent" content="w4af" />\n'
                     '        </headers>\n'
                     '        <body content-encoding="base64">YT0x</body>\n'
                     '    </http-request>\n\n'
@@ -789,8 +789,8 @@ class TestFinding(XMLNodeGeneratorTest):
         vuln = MockVuln(_id=_id)
         vuln.set_desc(desc)
 
-        url = URL('http://w3af.com/a/b/c.php')
-        hdr = Headers([('User-Agent', 'w3af')])
+        url = URL('http://w4af.com/a/b/c.php')
+        hdr = Headers([('User-Agent', 'w4af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
 
@@ -821,8 +821,8 @@ class TestFinding(XMLNodeGeneratorTest):
         vuln = MockVuln(_id=_id)
         vuln.set_desc(desc)
 
-        url = URL('http://w3af.com/a/b/c.php')
-        hdr = Headers([('User-Agent', 'w3af')])
+        url = URL('http://w4af.com/a/b/c.php')
+        hdr = Headers([('User-Agent', 'w4af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
 
@@ -852,8 +852,8 @@ class TestFinding(XMLNodeGeneratorTest):
         vuln = MockVuln(_id=_id)
         vuln.set_name(name)
 
-        url = URL('http://w3af.com/a/b/c.php')
-        hdr = Headers([('User-Agent', 'w3af')])
+        url = URL('http://w4af.com/a/b/c.php')
+        hdr = Headers([('User-Agent', 'w4af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
 
@@ -893,9 +893,9 @@ class TestFinding(XMLNodeGeneratorTest):
         _id = 2
         vuln = MockVuln(_id=_id)
 
-        url = URL('https://w3af.com/._basebind/node_modules/lodash._basecreate/'
+        url = URL('https://w4af.com/._basebind/node_modules/lodash._basecreate/'
                   'LICENSE.txt\x00=ڞ')
-        hdr = Headers([('User-Agent', 'w3af')])
+        hdr = Headers([('User-Agent', 'w4af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
 
@@ -915,14 +915,14 @@ class TestFinding(XMLNodeGeneratorTest):
         finding = Finding(x._get_jinja2_env(), vuln)
         xml = finding.to_string()
 
-        expected = ('<vulnerability id="[2]" method="GET" name="TestCase" plugin="plugin_name" severity="High" url="https://w3af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt&lt;character code=&quot;0000&quot;/&gt;=\u069e" var="None">\n'
+        expected = ('<vulnerability id="[2]" method="GET" name="TestCase" plugin="plugin_name" severity="High" url="https://w4af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt&lt;character code=&quot;0000&quot;/&gt;=\u069e" var="None">\n'
                     '    <description>Foo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggsFoo bar spam eggs</description>\n\n\n'
                     '    <http-transactions>\n'
                     '            <http-transaction id="2">\n\n'
                     '    <http-request>\n'
-                    '        <status>POST https://w3af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt%00=%DA%9E HTTP/1.1</status>\n'
+                    '        <status>POST https://w4af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt%00=%DA%9E HTTP/1.1</status>\n'
                     '        <headers>\n'
-                    '            <header field="User-agent" content="w3af" />\n'
+                    '            <header field="User-agent" content="w4af" />\n'
                     '        </headers>\n'
                     '        <body content-encoding="base64">YT0x</body>\n'
                     '    </http-request>\n\n'
@@ -942,9 +942,9 @@ class TestFinding(XMLNodeGeneratorTest):
 
     def test_is_generated_xml_valid(self):
         xml = ('''<vulnerability id="[14787]" method="GET" name="Strange HTTP response code" plugin="strange_http_codes" 
-                   severity="Information" url="https://w3af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txtZȨZȨ+k%s=ڞ"
+                   severity="Information" url="https://w4af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txtZȨZȨ+k%s=ڞ"
                    var="None" vulndb_id="29">
-                    - https://w3af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt<character code="0000"/>
+                    - https://w4af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt<character code="0000"/>
                     <character code="0000"/><character code="0000"/><character code="0000"/>ZȨ<character code="0003"/>
                     <character code="000e"/>ZȨ<character code="0003"/><character code="000e"/><character code="0000"/>
                     <character code="0000"/><character code="0001"/><character code="0000"/>+k<character code="0000"/>
@@ -952,7 +952,7 @@ class TestFinding(XMLNodeGeneratorTest):
                     <character code="0000"/><character code="0000"/><character code="0000"/><character code="0000"/>
                     <character code="0000"/><character code="0000"/><character code="0000"/><character code="0004"/>%s=ڞ
                     
-                    <status>GET https://w3af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt%00%00%00%00Z%C8
+                    <status>GET https://w4af.com/._basebind/node_modules/lodash._basecreate/LICENSE.txt%00%00%00%00Z%C8
                     %A8%03%0EZ%C8%A8%03%0E%00%00%01%00+k%00%00%00%00%00%00%00%00%00%00%00%00%04%s=%DA%9E HTTP/1.1</status>
                     
                     </vulnerability>
@@ -990,8 +990,8 @@ class TestFindingsCache(XMLNodeGeneratorTest):
         vuln1 = MockVuln(_id=_id)
         vuln1.set_name(name)
 
-        url = URL('http://w3af.com/a/b/c.php')
-        hdr = Headers([('User-Agent', 'w3af')])
+        url = URL('http://w4af.com/a/b/c.php')
+        hdr = Headers([('User-Agent', 'w4af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
 
@@ -1011,8 +1011,8 @@ class TestFindingsCache(XMLNodeGeneratorTest):
         vuln2 = MockVuln(_id=_id)
         vuln2.set_name(name)
 
-        url = URL('http://w3af.com/a/b/c.php')
-        hdr = Headers([('User-Agent', 'w3af')])
+        url = URL('http://w4af.com/a/b/c.php')
+        hdr = Headers([('User-Agent', 'w4af')])
         request = HTTPRequest(url, data='a=1')
         request.set_headers(hdr)
 

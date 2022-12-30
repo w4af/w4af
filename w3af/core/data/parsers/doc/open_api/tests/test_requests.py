@@ -4,31 +4,31 @@ test_requests.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import json
 import unittest
 
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.parsers.doc.open_api.requests import RequestFactory
-from w3af.core.data.parsers.doc.open_api.specification import SpecificationHandler
-from w3af.core.data.parsers.doc.open_api.tests.example_specifications import (NoParams,
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.parsers.doc.open_api.requests import RequestFactory
+from w4af.core.data.parsers.doc.open_api.specification import SpecificationHandler
+from w4af.core.data.parsers.doc.open_api.tests.example_specifications import (NoParams,
                                                                               IntParamQueryString,
                                                                               IntParamPath,
                                                                               StringParamQueryString,
@@ -48,7 +48,7 @@ def json_sort(data):
 
 class TestRequests(unittest.TestCase):
     def generate_response(self, specification_as_string):
-        url = URL('http://www.w3af.com/swagger.json')
+        url = URL('http://www.w4af.com/swagger.json')
         headers = Headers([('content-type', 'application/json')])
         return HTTPResponse(200, specification_as_string, headers,
                             url, url, _id=1)
@@ -66,7 +66,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://www.w3af.com/random'
+        e_url = 'http://www.w4af.com/random'
         e_headers = Headers()
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
@@ -121,7 +121,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://w3af.org/api/pets'
+        e_url = 'http://w4af.org/api/pets'
         e_headers = Headers([('Content-Type', 'application/json')])
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
@@ -137,7 +137,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://w3af.org/api/pets?limit=42'
+        e_url = 'http://w4af.org/api/pets?limit=42'
         e_headers = Headers([('Content-Type', 'application/json')])
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
@@ -158,7 +158,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://www.w3af.com/pets/42'
+        e_url = 'http://www.w4af.com/pets/42'
         e_headers = Headers([('Content-Type', 'application/json')])
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
@@ -278,7 +278,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://www.w3af.com/pets'
+        e_url = 'http://www.w4af.com/pets'
         e_headers = Headers([('Content-Type', 'application/json')])
         e_data = json_sort('{"pet": {"owner": {"name": {"last": "Smith", "first": "56"},'
                   ' "address": {"postalCode": "90210", "street1": "Bonsai Street 123",'
@@ -336,7 +336,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://w3af.org/api/pets'
+        e_url = 'http://w4af.org/api/pets'
         e_headers = Headers([('Content-Type', 'application/json')])
         e_data = '{"pet": {"tag": "7", "name": "John", "id": 42}}'
 
@@ -364,7 +364,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://www.w3af.com/pets/John'
+        e_url = 'http://www.w4af.com/pets/John'
         e_headers = Headers([('Content-Type', 'application/json')])
         e_data = None
 
@@ -381,7 +381,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://www.w3af.com/pets'
+        e_url = 'http://www.w4af.com/pets'
         e_headers = Headers([('Content-Type', 'application/json')])
         e_data = None
 
@@ -398,7 +398,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://www.w3af.com/pets'
+        e_url = 'http://www.w4af.com/pets'
         e_headers = Headers([('Content-Type', 'application/json')])
         e_data = ('{"pet": {"owner": {"name": {"last": "Smith", "first": "56"},'
                   ' "address": {"postalCode": "90210", "street1": "Bonsai Street 123",'

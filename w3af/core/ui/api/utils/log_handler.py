@@ -3,19 +3,19 @@ log_handler.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,8 +24,8 @@ import time
 import shelve
 import tempfile
 
-from w3af.core.data.constants.severity import MEDIUM
-from w3af.core.controllers.plugins.output_plugin import OutputPlugin
+from w4af.core.data.constants.severity import MEDIUM
+from w4af.core.controllers.plugins.output_plugin import OutputPlugin
 
 DEBUG = 'debug'
 INFORMATION = 'information'
@@ -48,15 +48,15 @@ class RESTAPIOutput(OutputPlugin):
         self._log_id = -1
 
         # Using a shelve instead of a DiskList to make sure we don't depend
-        # on anything related with w3af, DiskList uses DBMS which is cleared
+        # on anything related with w4af, DiskList uses DBMS which is cleared
         # and (ab)used by the framework
         #
-        # https://github.com/andresriancho/w3af/issues/11214
+        # https://github.com/andresriancho/w4af/issues/11214
         self.log = shelve.open(self.get_db_backend(), protocol=2)
 
     def get_db_backend(self):
         if self._db_backend is None:
-            fd, self._db_backend = tempfile.mkstemp(prefix='w3af-api-log',
+            fd, self._db_backend = tempfile.mkstemp(prefix='w4af-api-log',
                                                     suffix='shelve',
                                                     dir=tempfile.tempdir)
             os.close(fd)
@@ -130,7 +130,7 @@ class RESTAPIOutput(OutputPlugin):
 
     def console(self, msg_string, new_line=True):
         """
-        This method is used by the w3af console to print messages to the outside
+        This method is used by the w4af console to print messages to the outside
         """
         _id = self.get_log_id()
         m = Message(CONSOLE, self._clean_string(msg_string), _id)

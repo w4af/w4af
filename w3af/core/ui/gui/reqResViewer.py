@@ -3,19 +3,19 @@ ReqResViewer.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,28 +25,28 @@ import signal
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
 
-import w3af.core.controllers.output_manager as om
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+import w4af.core.controllers.output_manager as om
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               HTTPRequestException,
                                               ScanMustStopException)
-from w3af.core.data.db.history import HistoryItem
-from w3af.core.data.constants import severity
-from w3af.core.data.parsers.doc.http_request_parser import http_request_parser
-from w3af.core.data.visualization.string_representation import StringRepresentation
-from w3af.core.ui.gui.entries import RememberingVPaned
-from w3af.core.ui.gui.entries import RememberingWindow
-from w3af.core.ui.gui.entries import SemiStockButton
-from w3af.core.ui.gui.httpeditor import HttpEditor
-from w3af.core.ui.gui.rrviews.raw import HttpRawView
-from w3af.core.ui.gui.rrviews.headers import HttpHeadersView
-from w3af.core.ui.gui.rrviews.rendering import getRenderingView
-from w3af.core.ui.gui.export_request import export_request
-from w3af.core.ui.gui import helpers
+from w4af.core.data.db.history import HistoryItem
+from w4af.core.data.constants import severity
+from w4af.core.data.parsers.doc.http_request_parser import http_request_parser
+from w4af.core.data.visualization.string_representation import StringRepresentation
+from w4af.core.ui.gui.entries import RememberingVPaned
+from w4af.core.ui.gui.entries import RememberingWindow
+from w4af.core.ui.gui.entries import SemiStockButton
+from w4af.core.ui.gui.httpeditor import HttpEditor
+from w4af.core.ui.gui.rrviews.raw import HttpRawView
+from w4af.core.ui.gui.rrviews.headers import HttpHeadersView
+from w4af.core.ui.gui.rrviews.rendering import getRenderingView
+from w4af.core.ui.gui.export_request import export_request
+from w4af.core.ui.gui import helpers
 
 
 SIGSEV_ERROR = ('We caught a segmentation fault! Please report this bug'
                 ' following the instructions at'
-                ' http://docs.w3af.org/en/latest/report-a-bug.html')
+                ' http://docs.w4af.org/en/latest/report-a-bug.html')
 
 
 def sigsegv_handler(signum, frame):
@@ -56,9 +56,9 @@ def sigsegv_handler(signum, frame):
     #
     # For now I'm making this handler as small as possible to avoid issues like:
     #
-    # https://github.com/andresriancho/w3af/issues/1850
-    # https://github.com/andresriancho/w3af/issues/1899
-    # https://github.com/andresriancho/w3af/issues/10931
+    # https://github.com/andresriancho/w4af/issues/1850
+    # https://github.com/andresriancho/w4af/issues/1899
+    # https://github.com/andresriancho/w4af/issues/10931
     #
     # Since python is "broken" inside this signal handler, the error string is
     # pre-allocated in memory
@@ -76,19 +76,19 @@ class ReqResViewer(gtk.VBox):
     :author: Facundo Batista ( facundo@taniquetil.com.ar )
 
     """
-    def __init__(self, w3af, enableWidget=None, withManual=True,
+    def __init__(self, w4af, enableWidget=None, withManual=True,
                  withFuzzy=True, withCompare=True, withAudit=True,
                  editableRequest=False, editableResponse=False,
                  widgname='default', layout='Tabbed'):
         
         super(ReqResViewer, self).__init__()
-        self.w3af = w3af
+        self.w4af = w4af
         # Request
-        self.request = RequestPart(self, w3af, enableWidget, editableRequest,
+        self.request = RequestPart(self, w4af, enableWidget, editableRequest,
                                    widgname=widgname)
         self.request.show()
         # Response
-        self.response = ResponsePart(self, w3af, editableResponse,
+        self.response = ResponsePart(self, w4af, editableResponse,
                                      widgname=widgname)
         self.response.show()
         self.layout = layout
@@ -109,7 +109,7 @@ class ReqResViewer(gtk.VBox):
         nb.append_page(self.request, gtk.Label(_('Request')))
         nb.append_page(self.response, gtk.Label(_('Response')))
         # Info
-        self.info = HttpEditor(self.w3af)
+        self.info = HttpEditor(self.w4af)
         self.info.set_editable(False)
         #self.info.show()
         nb.append_page(self.info, gtk.Label(_("Info")))
@@ -118,7 +118,7 @@ class ReqResViewer(gtk.VBox):
         """
         Init Split layout. It's more convenient for intercept
         """
-        self._vpaned = RememberingVPaned(self.w3af, 'trap_view')
+        self._vpaned = RememberingVPaned(self.w4af, 'trap_view')
         self._vpaned.show()
         self.pack_start(self._vpaned, True, True)
         self._vpaned.add(self.request)
@@ -136,8 +136,8 @@ class ReqResViewer(gtk.VBox):
         # Buttons
 
         # This import needs to be here in order to avoid an import loop
-        from w3af.core.ui.gui.tools.fuzzy_requests import FuzzyRequests
-        from w3af.core.ui.gui.tools.manual_requests import ManualRequests
+        from w4af.core.ui.gui.tools.fuzzy_requests import FuzzyRequests
+        from w4af.core.ui.gui.tools.manual_requests import ManualRequests
 
         hbox = gtk.HBox()
         if withManual or withFuzzy or withCompare:
@@ -200,7 +200,7 @@ class ReqResViewer(gtk.VBox):
         # Create the popup menu
         gm = gtk.Menu()
         plugin_type = "audit"
-        for plugin_name in sorted(self.w3af.plugins.get_plugin_list(plugin_type)):
+        for plugin_name in sorted(self.w4af.plugins.get_plugin_list(plugin_type)):
             e = gtk.MenuItem(plugin_name)
             e.connect('activate', self._auditRequest, plugin_name, plugin_type)
             gm.append(e)
@@ -232,7 +232,7 @@ class ReqResViewer(gtk.VBox):
         # Now I start the analysis of this request in a new thread,
         # threading game (copied from craftedRequests)
         event = threading.Event()
-        impact = ThreadedURLImpact(self.w3af, request, plugin_name,
+        impact = ThreadedURLImpact(self.w4af, request, plugin_name,
                                    plugin_type, event)
         impact.start()
         gobject.timeout_add(200, self._impact_done, event, impact)
@@ -289,12 +289,12 @@ class ReqResViewer(gtk.VBox):
         :param func: where to send the request.
         """
         headers, data = self.request.get_both_texts()
-        func(self.w3af, (headers, data))
+        func(self.w4af, (headers, data))
 
     def _sendReqResp(self, widg):
         """Sends the texts to the compare tool."""
         headers, data = self.request.get_both_texts()
-        self.w3af.mainwin.commCompareTool((headers, data,
+        self.w4af.mainwin.commCompareTool((headers, data,
                                            self.response.get_object()))
 
     def set_sensitive(self, how):
@@ -306,12 +306,12 @@ class ReqResViewer(gtk.VBox):
 class RequestResponsePart(gtk.Notebook):
     """Request/response common class."""
 
-    def __init__(self, parent, w3af, enableWidget=[], editable=False,
+    def __init__(self, parent, w4af, enableWidget=[], editable=False,
                  widgname='default'):
         super(RequestResponsePart, self).__init__()
         self._parent = parent
         self._obj = None
-        self.w3af = w3af
+        self.w4af = w4af
         self.childButtons = []
         self._views = []
         self.enableWidget = enableWidget
@@ -403,15 +403,15 @@ class RequestResponsePart(gtk.Notebook):
 
 class RequestPart(RequestResponsePart):
 
-    def __init__(self, parent, w3af, enableWidget=[], editable=False,
+    def __init__(self, parent, w4af, enableWidget=[], editable=False,
                  widgname='default'):
-        RequestResponsePart.__init__(self, parent, w3af, enableWidget, editable,
+        RequestResponsePart.__init__(self, parent, w4af, enableWidget, editable,
                                      widgname=widgname + 'request')
 
-        self.raw_view = HttpRawView(w3af, self, editable)
+        self.raw_view = HttpRawView(w4af, self, editable)
         self.add_view(self.raw_view)
 
-        self.add_view(HttpHeadersView(w3af, self, editable))
+        self.add_view(HttpHeadersView(w4af, self, editable))
 
     def get_both_texts_raw(self):
         return self.raw_view.get_split_text()
@@ -427,17 +427,17 @@ class RequestPart(RequestResponsePart):
 
 
 class ResponsePart(RequestResponsePart):
-    def __init__(self, parent, w3af, editable, widgname='default'):
-        RequestResponsePart.__init__(self, parent, w3af, editable=editable,
+    def __init__(self, parent, w4af, editable, widgname='default'):
+        RequestResponsePart.__init__(self, parent, w4af, editable=editable,
                                      widgname=widgname + "response")
-        http = HttpRawView(w3af, self, editable)
+        http = HttpRawView(w4af, self, editable)
         http.is_request = False
         self.add_view(http)
-        headers = HttpHeadersView(w3af, self, editable)
+        headers = HttpHeadersView(w4af, self, editable)
         headers.is_request = False
         self.add_view(headers)
         try:
-            rend = getRenderingView(w3af, self)
+            rend = getRenderingView(w4af, self)
             self.add_view(rend)
         except Exception as ex:
             print(ex)
@@ -450,18 +450,18 @@ class reqResWindow(RememberingWindow):
     """
     A window to show a request/response pair.
     """
-    def __init__(self, w3af, request_id, enableWidget=None, withManual=True,
+    def __init__(self, w4af, request_id, enableWidget=None, withManual=True,
                  withFuzzy=True, withCompare=True, withAudit=True,
                  editableRequest=False, editableResponse=False,
                  widgname='default'):
 
         # Create the window
-        RememberingWindow.__init__(self, w3af, "reqResWin",
-                                   _("w3af - HTTP Request/Response"),
+        RememberingWindow.__init__(self, w4af, "reqResWin",
+                                   _("w4af - HTTP Request/Response"),
                                    "Browsing_the_Knowledge_Base")
 
         # Create the request response viewer
-        rr_viewer = ReqResViewer(w3af, enableWidget, withManual, withFuzzy,
+        rr_viewer = ReqResViewer(w4af, enableWidget, withManual, withFuzzy,
                                  withCompare, withAudit, editableRequest,
                                  editableResponse, widgname)
 
@@ -481,13 +481,13 @@ class reqResWindow(RememberingWindow):
 
 class ThreadedURLImpact(threading.Thread):
     """Impacts an URL in a different thread."""
-    def __init__(self, w3af, request, plugin_name, plugin_type, event):
+    def __init__(self, w4af, request, plugin_name, plugin_type, event):
         """Init ThreadedURLImpact."""
         threading.Thread.__init__(self)
         self.name = 'ThreadedURLImpact'
         self.daemon = True
         
-        self.w3af = w3af
+        self.w4af = w4af
         self.request = request
         self.plugin_name = plugin_name
         self.plugin_type = plugin_type
@@ -504,8 +504,8 @@ class ThreadedURLImpact(threading.Thread):
                 #
                 #   Get all the plugins and work with that list
                 #
-                for plugin_name in self.w3af.plugins.get_plugin_list('audit'):
-                    plugin = self.w3af.plugins.get_plugin_inst('audit',
+                for plugin_name in self.w4af.plugins.get_plugin_list('audit'):
+                    plugin = self.w4af.plugins.get_plugin_inst('audit',
                                                                plugin_name)
                     tmp_result = []
                     try:
@@ -526,7 +526,7 @@ class ThreadedURLImpact(threading.Thread):
                 #
                 # Only one plugin was enabled
                 #
-                plugin = self.w3af.plugins.get_plugin_inst(
+                plugin = self.w4af.plugins.get_plugin_inst(
                     self.plugin_type, self.plugin_name)
                 try:
                     self.result = plugin.audit_return_vulns(self.request)

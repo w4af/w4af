@@ -3,19 +3,19 @@ xxe.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,16 +23,16 @@ import itertools
 
 from lxml import etree
 
-import w3af.core.data.constants.severity as severity
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.data.constants.file_patterns import FILE_PATTERNS
-from w3af.core.data.misc.encoding import smart_str_ignore
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.quick_match.multi_in import MultiIn
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.data.constants.file_patterns import FILE_PATTERNS
+from w4af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.quick_match.multi_in import MultiIn
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 class xxe(AuditPlugin):
@@ -51,10 +51,10 @@ class xxe(AuditPlugin):
     ]
 
     REMOTE_FILES = [
-        'https://raw.githubusercontent.com/w4af/w4af/main/w3af/tests/fixtures/xxe.txt'
+        'https://raw.githubusercontent.com/w4af/w4af/main/w4af/tests/fixtures/xxe.txt'
     ]
 
-    # This is the only content stored in the https://w3af.org/xxe.txt file
+    # This is the only content stored in the https://w4af.org/xxe.txt file
     REMOTE_SUCCESS = '667067323'
 
     ENTITY_DEF = '<!DOCTYPE xxe_test [ <!ENTITY xxe_test SYSTEM "%s"> ]>'
@@ -192,7 +192,7 @@ class xxe(AuditPlugin):
 
     def _create_xml_payloads(self, xml_root):
         """
-        This method receives the XML as captured by w3af during crawling and
+        This method receives the XML as captured by w4af during crawling and
         modifies it to add entities which will inject file contents
 
         Note that we can't use a generic "create xml mutants" since this method

@@ -108,13 +108,13 @@ Content-Length: 3323
 	scanners, teaching web application security, etc.</p>
 	
 	<p>
-	    This is a rewrite of the <a href="https://github.com/andresriancho/w3af-moth">PHP-based moth web application</a>.
+	    This is a rewrite of the <a href="https://github.com/andresriancho/w4af-moth">PHP-based moth web application</a>.
 	</p>
 	
 	<h2>Vulnerabilities</h2>
 	<p>
 	This software has numerous vulnerabilities, which are grouped according to the
-	<a href="http://w3af.org">w3af</a> plugin which identifies them:
+	<a href="http://w4af.org">w4af</a> plugin which identifies them:
 	</p>
 	
 	<ul>	
@@ -146,7 +146,7 @@ Content-Length: 3323
     </p>
     <div class="row-fluid">
         <div class="span12 pagination-centered">
-            <img src="/static/moth/images/w3af.png">
+            <img src="/static/moth/images/w4af.png">
         </div>
     </div>
 
@@ -159,7 +159,7 @@ Content-Length: 3323
     
     <div id="footer">
       <div class="container">
-        <p class="text-muted credit">Moth, from the creators of <a href="http://w3af.org">w3af</a> <i class="fa fa-external-link"></i>.</p>
+        <p class="text-muted credit">Moth, from the creators of <a href="http://w4af.org">w4af</a> <i class="fa fa-external-link"></i>.</p>
       </div>
     </div>
     
@@ -469,32 +469,32 @@ Content-Length: 17238
 		</a>
 		
 		    <li>
-		    	<a href="global_redirect/redirect-302.py?url=http://w3af.org/">302 HTTP response code redirect</a>
+		    	<a href="global_redirect/redirect-302.py?url=http://w4af.org/">302 HTTP response code redirect</a>
 	           
 		    </li>
 		
 		    <li>
-		    	<a href="global_redirect/redirect-302-filtered.py?url=http://w3af.org/">302 HTTP response code redirect (filtered)</a>
+		    	<a href="global_redirect/redirect-302-filtered.py?url=http://w4af.org/">302 HTTP response code redirect (filtered)</a>
 	           
 		    </li>
 		
 		    <li>
-		    	<a href="global_redirect/redirect-header-302.py?url=http://w3af.org/">302 HTTP response code redirect with redirect header</a>
+		    	<a href="global_redirect/redirect-header-302.py?url=http://w4af.org/">302 HTTP response code redirect with redirect header</a>
 	           
 		    </li>
 		
 		    <li>
-		    	<a href="global_redirect/global-redirect-fp.py?url=http://w3af.org/">False positive check for global redirect</a>
+		    	<a href="global_redirect/global-redirect-fp.py?url=http://w4af.org/">False positive check for global redirect</a>
 	           
 		    </li>
 		
 		    <li>
-		    	<a href="global_redirect/redirect-javascript.py?url=http://w3af.org/">JavaScript redirect</a>
+		    	<a href="global_redirect/redirect-javascript.py?url=http://w4af.org/">JavaScript redirect</a>
 	           
 		    </li>
 		
 		    <li>
-		    	<a href="global_redirect/redirect-meta.py?url=http://w3af.org/">meta tag redirect</a>
+		    	<a href="global_redirect/redirect-meta.py?url=http://w4af.org/">meta tag redirect</a>
 	           
 		    </li>
 		
@@ -604,17 +604,17 @@ Content-Length: 17238
 		</a>
 		
 		    <li>
-		    	<a href="phishing_vector/frame_phishing.py?url=http://w3af.org/">Frame tag phishing vector (trivial)</a>
+		    	<a href="phishing_vector/frame_phishing.py?url=http://w4af.org/">Frame tag phishing vector (trivial)</a>
 	           
 		    </li>
 		
 		    <li>
-		    	<a href="phishing_vector/iframe_phishing.py?url=http://w3af.org/">Iframe tag phishing vector (trivial)</a>
+		    	<a href="phishing_vector/iframe_phishing.py?url=http://w4af.org/">Iframe tag phishing vector (trivial)</a>
 	           
 		    </li>
 		
 		    <li>
-		    	<a href="phishing_vector/http_blacklist_phishing.py?url=http://w3af.org/">Iframe tag phishing vector with filter</a>
+		    	<a href="phishing_vector/http_blacklist_phishing.py?url=http://w4af.org/">Iframe tag phishing vector with filter</a>
 	           
 		    </li>
 		
@@ -893,7 +893,7 @@ Content-Length: 17238
     
     <div id="footer">
       <div class="container">
-        <p class="text-muted credit">Moth, from the creators of <a href="http://w3af.org">w3af</a> <i class="fa fa-external-link"></i>.</p>
+        <p class="text-muted credit">Moth, from the creators of <a href="http://w4af.org">w4af</a> <i class="fa fa-external-link"></i>.</p>
       </div>
     </div>
     
@@ -1082,7 +1082,7 @@ Content-Length: 3939
     
     <div id="footer">
       <div class="container">
-        <p class="text-muted credit">Moth, from the creators of <a href="http://w3af.org">w3af</a> <i class="fa fa-external-link"></i>.</p>
+        <p class="text-muted credit">Moth, from the creators of <a href="http://w4af.org">w4af</a> <i class="fa fa-external-link"></i>.</p>
       </div>
     </div>
     
@@ -1263,7 +1263,7 @@ Content-Length: 3500
     
     <div id="footer">
       <div class="container">
-        <p class="text-muted credit">Moth, from the creators of <a href="http://w3af.org">w3af</a> <i class="fa fa-external-link"></i>.</p>
+        <p class="text-muted credit">Moth, from the creators of <a href="http://w4af.org">w4af</a> <i class="fa fa-external-link"></i>.</p>
       </div>
     </div>
     
@@ -1530,7 +1530,7 @@ Content-Length: 6044
     
     <div id="footer">
       <div class="container">
-        <p class="text-muted credit">Moth, from the creators of <a href="http://w3af.org">w3af</a> <i class="fa fa-external-link"></i>.</p>
+        <p class="text-muted credit">Moth, from the creators of <a href="http://w4af.org">w4af</a> <i class="fa fa-external-link"></i>.</p>
       </div>
     </div>
     
@@ -1708,7 +1708,7 @@ Content-Length: 3714
     
     <div id="footer">
       <div class="container">
-        <p class="text-muted credit">Moth, from the creators of <a href="http://w3af.org">w3af</a> <i class="fa fa-external-link"></i>.</p>
+        <p class="text-muted credit">Moth, from the creators of <a href="http://w4af.org">w4af</a> <i class="fa fa-external-link"></i>.</p>
       </div>
     </div>
     
@@ -1890,7 +1890,7 @@ Content-Length: 3243
     
     <div id="footer">
       <div class="container">
-        <p class="text-muted credit">Moth, from the creators of <a href="http://w3af.org">w3af</a> <i class="fa fa-external-link"></i>.</p>
+        <p class="text-muted credit">Moth, from the creators of <a href="http://w4af.org">w4af</a> <i class="fa fa-external-link"></i>.</p>
       </div>
     </div>
     

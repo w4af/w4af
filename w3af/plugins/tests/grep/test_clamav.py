@@ -3,19 +3,19 @@ test_clamav.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -27,15 +27,15 @@ import pyclamd
 from unittest.mock import patch, Mock
 import pytest
 
-import w3af.core.data.kb.knowledge_base as kb
-from w3af.plugins.grep.clamav import clamav
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.controllers.threads.threadpool import Pool
-from w3af.core.controllers.ci.moth import get_moth_http
+import w4af.core.data.kb.knowledge_base as kb
+from w4af.plugins.grep.clamav import clamav
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.controllers.threads.threadpool import Pool
+from w4af.core.controllers.ci.moth import get_moth_http
 
 
 @pytest.mark.integration
@@ -52,10 +52,10 @@ class TestClamAV(unittest.TestCase):
     def tearDown(self):
         self.plugin.end()
 
-    @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @patch('w4af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
     def test_clamav_eicar(self, *args):
         body = pyclamd.ClamdAgnostic().EICAR()
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
@@ -76,10 +76,10 @@ class TestClamAV(unittest.TestCase):
         self.assertIn('ClamAV identified malware', finding.get_desc())
         self.assertEqual(finding.get_url().url_string, url.url_string)
 
-    @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @patch('w4af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
     def test_clamav_empty(self, *args):
         body = ''
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')
@@ -95,7 +95,7 @@ class TestClamAV(unittest.TestCase):
         
         self.assertEqual(len(findings), 0, findings)
 
-    @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @patch('w4af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
     def test_clamav_workers(self, *args):
         
         WAIT_TIME = 3
@@ -112,7 +112,7 @@ class TestClamAV(unittest.TestCase):
         
         for i in range(3):
             body = ''
-            url = URL('http://www.w3af.com/%s' % i)
+            url = URL('http://www.w4af.com/%s' % i)
             headers = Headers([('content-type', 'text/html')])
             response = HTTPResponse(200, body, headers, url, url, _id=1)
             request = FuzzableRequest(url, method='GET')
@@ -132,10 +132,10 @@ class TestClamAV(unittest.TestCase):
         self.assertEqual(len(findings), 0, findings)
         self.assertLessEqual(time_spent, WAIT_TIME + DELTA)
 
-    @patch('w3af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
+    @patch('w4af.plugins.grep.code_disclosure.is_404', side_effect=repeat(False))
     def test_no_clamav_eicar(self, *args):
         body = pyclamd.ClamdAgnostic().EICAR()
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url, _id=1)
         request = FuzzableRequest(url, method='GET')

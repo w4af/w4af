@@ -1,21 +1,21 @@
 """
-test_wrapped_w3af.py
+test_wrapped_w4af.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,14 +24,14 @@ import subprocess
 import sys
 import datetime
 
-from w3af.core.data.db.startup_cfg import StartUpConfig
+from w4af.core.data.db.startup_cfg import StartUpConfig
 
 
-class TestWrappedW3afConsole(unittest.TestCase):
-    def test_wrapped_w3af(self):
+class TestWrappedw4afConsole(unittest.TestCase):
+    def test_wrapped_w4af(self):
         """
-        Strange behaviour when wrapping w3af_console
-        https://github.com/andresriancho/w3af/issues/1299
+        Strange behaviour when wrapping w4af_console
+        https://github.com/andresriancho/w4af/issues/1299
         """
         # Just in case... we don't want to break other tests
         startup_cfg = StartUpConfig()
@@ -45,7 +45,7 @@ class TestWrappedW3afConsole(unittest.TestCase):
         # then pass that one to Popen
         python_executable = sys.executable
         
-        p = subprocess.Popen([python_executable, 'w3af_console', '-n'],
+        p = subprocess.Popen([python_executable, 'w4af_console', '-n'],
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
                              stdin=subprocess.PIPE,

@@ -3,31 +3,31 @@ target.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import urllib.request, urllib.error, urllib.parse
 
-import w3af.core.data.kb.config as cf
-from w3af.core.controllers.configurable import Configurable
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.misc.encoding import smart_unicode
+import w4af.core.data.kb.config as cf
+from w4af.core.controllers.configurable import Configurable
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.misc.encoding import smart_unicode
 
 cf.cf.save('targets', [])
 cf.cf.save('target_domains', set())
@@ -68,7 +68,7 @@ class CoreTarget(Configurable):
         ol.add(o)
 
         d = 'Target operating system (%s)' % '/'.join(self._operating_systems)
-        h = 'This setting is here to enhance w3af performance.'
+        h = 'This setting is here to enhance w4af performance.'
 
         # This list "hack" has to be done because the default value is the one
         # in the first position on the list
@@ -80,7 +80,7 @@ class CoreTarget(Configurable):
 
         frameworks = '/'.join(self._programming_frameworks)
         d = 'Target programming framework (%s)' % frameworks
-        h = 'This setting is here to enhance w3af performance.'
+        h = 'This setting is here to enhance w4af performance.'
         # This list "hack" has to be done because the default value is the one
         # in the first position on the list
         tmp_list = self._programming_frameworks[:]
@@ -93,7 +93,7 @@ class CoreTarget(Configurable):
 
     def _verify_url(self, target_url, file_target=True):
         """
-        Verify if the URL is valid and raise an exception if w3af doesn't
+        Verify if the URL is valid and raise an exception if w4af doesn't
         support it.
 
         :param target_url: The target URL object to check if its valid or not.
@@ -126,7 +126,7 @@ class CoreTarget(Configurable):
             self._verify_url(target_url)
 
             if not target_url.url_string.startswith('file:///'):
-                # It's a common URL just like http://w3af.com/
+                # It's a common URL just like http://w4af.com/
                 target_urls.append(target_url)
                 
             else:
@@ -154,7 +154,7 @@ class CoreTarget(Configurable):
                             # invalid, and the pieces of code which consume
                             # this method only handle BaseFrameworkException
                             #
-                            # https://github.com/andresriancho/w3af/issues/12006
+                            # https://github.com/andresriancho/w4af/issues/12006
                             #
                             msg = ('The target URL "%s" specified inside the'
                                    ' target file "%s" is invalid: "%s"')
@@ -187,7 +187,7 @@ class CoreTarget(Configurable):
         
         if len(domain_list) > 1:
             msg = ('You specified more than one target domain: %s.'
-                   ' And w3af can only scan one target domain at a time.')
+                   ' And w4af can only scan one target domain at a time.')
             raise BaseFrameworkException(msg % ', '.join(domain_list))
 
         # This doesn't seem to be possible with the current framework design,
@@ -195,7 +195,7 @@ class CoreTarget(Configurable):
         #
         #if len(domain_list) == 0:
         #    msg = ('There is something wrong with the configured target URLs,'
-        #           ' w3af was unable to extract at least one domain name from'
+        #           ' w4af was unable to extract at least one domain name from'
         #           ' the user configured setting: "%s"')
         #    configured_target_urls = options_list['target'].get_value()
         #    raise BaseFrameworkException(msg % configured_target_urls)

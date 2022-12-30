@@ -4,19 +4,19 @@ test_xurllib.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
@@ -32,19 +32,19 @@ import httpretty
 import pytest
 from unittest.mock import patch
 
-from w3af import ROOT_PATH
-from w3af.core.data.url.extended_urllib import ExtendedUrllib
-from w3af.core.data.url.constants import MAX_ERROR_COUNT
-from w3af.core.data.url.tests.helpers.upper_daemon import UpperDaemon
-from w3af.core.data.url.tests.helpers.ssl_daemon import RawSSLDaemon, SSLServer
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.urlencoded_form import URLEncodedForm
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.url.HTTPResponse import DEFAULT_WAIT_TIME
-from w3af.core.controllers.misc.get_unused_port import get_unused_port
-from w3af.core.controllers.ci.moth import get_moth_http, get_moth_https
-from w3af.core.controllers.misc.temp_dir import get_temp_dir
-from w3af.core.controllers.exceptions import (ScanMustStopByUserRequest,
+from w4af import ROOT_PATH
+from w4af.core.data.url.extended_urllib import ExtendedUrllib
+from w4af.core.data.url.constants import MAX_ERROR_COUNT
+from w4af.core.data.url.tests.helpers.upper_daemon import UpperDaemon
+from w4af.core.data.url.tests.helpers.ssl_daemon import RawSSLDaemon, SSLServer
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.urlencoded_form import URLEncodedForm
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.url.HTTPResponse import DEFAULT_WAIT_TIME
+from w4af.core.controllers.misc.get_unused_port import get_unused_port
+from w4af.core.controllers.ci.moth import get_moth_http, get_moth_https
+from w4af.core.controllers.misc.temp_dir import get_temp_dir
+from w4af.core.controllers.exceptions import (ScanMustStopByUserRequest,
                                               HTTPRequestException,
                                               ScanMustStopException)
 
@@ -54,7 +54,7 @@ from w3af.core.controllers.exceptions import (ScanMustStopByUserRequest,
 class TestXUrllib(unittest.TestCase):
 
     MOTH_MESSAGE = '<title>moth: vulnerable web application</title>'
-    MOCK_URL = 'http://www.w3af.org/'
+    MOCK_URL = 'http://www.w4af.org/'
 
     def setUp(self):
         self.uri_opener = ExtendedUrllib()
@@ -318,7 +318,7 @@ class TestXUrllib(unittest.TestCase):
 
     def test_ssl_fail_when_requesting_moth_http(self):
         """
-        https://github.com/andresriancho/w3af/issues/7989
+        https://github.com/andresriancho/w4af/issues/7989
 
         This test takes considerable time to run since it needs to timeout the
         SSL connection for each SSL protocol
@@ -423,7 +423,7 @@ class TestXUrllib(unittest.TestCase):
         8125 is basically an issue with the way HTTP SSL connections handle the
         Connection: Close header.
 
-        :see: https://github.com/andresriancho/w3af/issues/8125
+        :see: https://github.com/andresriancho/w4af/issues/8125
         """
         raw_http_response = (b'HTTP/1.1 200 Ok\r\n'
                              b'Connection: close\r\n'

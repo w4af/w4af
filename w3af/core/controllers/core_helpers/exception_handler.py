@@ -3,19 +3,19 @@ exception_handler.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,14 +26,14 @@ import tempfile
 import threading
 import traceback
 
-import w3af.core.data.kb.config as cf
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.controllers.misc.traceback_utils import get_exception_location
-from w3af.core.controllers.core_helpers.status import CoreStatus
-from w3af.core.controllers.exception_handling.cleanup_bug_report import cleanup_bug_report
-from w3af.core.controllers.exceptions import (ScanMustStopException,
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.controllers.misc.traceback_utils import get_exception_location
+from w4af.core.controllers.core_helpers.status import CoreStatus
+from w4af.core.controllers.exception_handling.cleanup_bug_report import cleanup_bug_report
+from w4af.core.controllers.exceptions import (ScanMustStopException,
                                               ScanMustStopByUserRequest,
                                               HTTPRequestException,
                                               ScanMustStopByUnknownReasonExc)
@@ -101,7 +101,7 @@ class ExceptionHandler(object):
 
         #
         # There are some exceptions, that because of their nature, can't be
-        # handled here. Raise them so that w3afCore.py, most likely to the
+        # handled here. Raise them so that w4afCore.py, most likely to the
         # except lines around self.strategy.start(), can decide what to do
         #
         if isinstance(exception, self.NO_HANDLING):
@@ -148,7 +148,7 @@ class ExceptionHandler(object):
 
         :return: None
         """
-        filename = 'w3af-crash-%s.txt' % rand_alnum(5)
+        filename = 'w4af-crash-%s.txt' % rand_alnum(5)
         filename = os.path.join(tempfile.gettempdir(), filename)
         with open(filename, "w") as crash_dump:
             crash_dump.write(edata.get_details())
@@ -196,7 +196,7 @@ class ExceptionHandler(object):
             without_exceptions = fmt_without_exceptions % self.get_scan_id()
             return without_exceptions
 
-        fmt_with_exceptions = ('During the current scan (with id: %s) w3af'
+        fmt_with_exceptions = ('During the current scan (with id: %s) w4af'
                                ' caught %s exceptions in it\'s plugins. The'
                                ' scan was able to continue by ignoring those'
                                ' failures but the result is most likely'
@@ -269,7 +269,7 @@ class ExceptionData(object):
         :param current_status: The CoreStatus instance
         :param e: Exception instance
         :param tb: Traceback or None
-        :param enabled_plugins: w3af enabled plugins
+        :param enabled_plugins: w4af enabled plugins
         :param store_tb: When the exception is raised in a consumer and needs to
                          be serialized to be sent to the main thread, it is
                          impossible to keep the traceback
@@ -317,11 +317,11 @@ class ExceptionData(object):
         #
         # Do not save the CoreStatus instance here without cleaning it first,
         # it will break serialization since the CoreStatus instances have
-        # references to a w3afCore instance, which points to a Pool instance
+        # references to a w4afCore instance, which points to a Pool instance
         # that is NOT serializable.
         #
         self.status = current_status
-        self.status.set_w3af_core(None)
+        self.status.set_w4af_core(None)
 
         self.fuzzable_request = current_status.get_current_fuzzable_request(self.phase)
         self.fuzzable_request = cleanup_bug_report(str(self.fuzzable_request))

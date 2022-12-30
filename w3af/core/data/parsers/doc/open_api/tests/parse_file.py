@@ -4,10 +4,10 @@ import pprint
 
 sys.path.append(os.getcwd())
 
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.parsers.doc.open_api import OpenAPI
-from w3af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.parsers.doc.open_api import OpenAPI
+from w4af.core.data.url.HTTPResponse import HTTPResponse
 
 spec_filename = sys.argv[1]
 

@@ -3,19 +3,19 @@ test_version_manager.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import gc
@@ -25,18 +25,18 @@ import datetime
 import pytest
 from unittest.mock import MagicMock
 
-from w3af.core.data.db.startup_cfg import StartUpConfig
-from w3af.core.controllers.auto_update.version_manager import VersionMgr
-from w3af.core.controllers.auto_update.changelog import ChangeLog
-from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
-from w3af.core.controllers.auto_update.git_client import GitClient
+from w4af.core.data.db.startup_cfg import StartUpConfig
+from w4af.core.controllers.auto_update.version_manager import VersionMgr
+from w4af.core.controllers.auto_update.changelog import ChangeLog
+from w4af.core.controllers.misc.home_dir import w4af_LOCAL_PATH
+from w4af.core.controllers.auto_update.git_client import GitClient
 
 @pytest.mark.git
 class TestVersionMgr(unittest.TestCase):
 
     def setUp(self):
         """
-        Given that nosetests test isolation is "incompatible" with w3af's
+        Given that nosetests test isolation is "incompatible" with w4af's
         kb, cf, etc. objects, and the tests written here are overwriting
         some classes that are loaded into sys.modules and then used in other
         code sections -and tests-, I need to clean the mess after I finish.
@@ -46,7 +46,7 @@ class TestVersionMgr(unittest.TestCase):
         I haven't been able to fix this issue... so I'm skipping these two
         tests!
         """
-        self.vmgr = VersionMgr(W3AF_LOCAL_PATH, MagicMock(return_value=None))
+        self.vmgr = VersionMgr(w4af_LOCAL_PATH, MagicMock(return_value=None))
 
     def test_no_need_update(self):
         vmgr = self.vmgr
@@ -207,5 +207,5 @@ class TestVersionMgr(unittest.TestCase):
             git_client.pull()
 
     def test_no_cycle_refs(self):
-        vmgr = VersionMgr(W3AF_LOCAL_PATH, MagicMock(return_value=None))
+        vmgr = VersionMgr(w4af_LOCAL_PATH, MagicMock(return_value=None))
         self.assertEqual(len(gc.get_referrers(vmgr)), 1)

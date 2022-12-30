@@ -3,19 +3,19 @@ manual_requests.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,18 +23,18 @@ from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
 import threading
 
-from w3af.core.ui.gui import helpers, entries
-from w3af.core.ui.gui.reqResViewer import ReqResViewer
-from w3af.core.ui.gui.tools.helpers.threaded_impact import ThreadedURLImpact
+from w4af.core.ui.gui import helpers, entries
+from w4af.core.ui.gui.reqResViewer import ReqResViewer
+from w4af.core.ui.gui.tools.helpers.threaded_impact import ThreadedURLImpact
 
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               ScanMustStopException,
                                               HTTPRequestException,
                                               ProxyException)
 
 MANUAL_REQUEST_EXAMPLE = """\
-GET http://w3af.org/ HTTP/1.1
-Host: w3af.org
+GET http://w4af.org/ HTTP/1.1
+Host: w4af.org
 User-Agent: Firefox
 """
 
@@ -44,11 +44,11 @@ class ManualRequests(entries.RememberingWindow):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, initial_request=None):
-        super(ManualRequests, self).__init__(w3af, "manualreq",
-                                             "w3af - Manual Requests",
+    def __init__(self, w4af, initial_request=None):
+        super(ManualRequests, self).__init__(w4af, "manualreq",
+                                             "w4af - Manual Requests",
                                              "Manual_Requests")
-        self.w3af = w3af
+        self.w4af = w4af
         
         #
         # Toolbar
@@ -64,7 +64,7 @@ class ManualRequests(entries.RememberingWindow):
         self._fix_content_len_cb.show()
         
         # request-response viewer
-        self.reqresp = ReqResViewer(w3af, [self.send_but.set_sensitive],
+        self.reqresp = ReqResViewer(w4af, [self.send_but.set_sensitive],
                                     withManual=False, editableRequest=True)
         self.reqresp.response.set_sensitive(False)
         
@@ -104,7 +104,7 @@ class ManualRequests(entries.RememberingWindow):
         # threading game
         event = threading.Event()
 
-        impact = ThreadedURLImpact(self.w3af, tsup, tlow, event,
+        impact = ThreadedURLImpact(self.w4af, tsup, tlow, event,
                                    fix_content_len)
 
         def impact_done():

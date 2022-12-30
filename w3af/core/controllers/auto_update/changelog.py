@@ -3,24 +3,24 @@ changelog.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import git
 
-from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
+from w4af.core.controllers.misc.home_dir import w4af_LOCAL_PATH
 
 ACTIONS = {'Added': 'A',
            'Deleted': 'D',
@@ -71,7 +71,7 @@ class Commit(object):
     def changes(self):
         """
         self._changes holds (one of ACTIONS.values(), filename), for example:
-            ('M', 'w3af_console')
+            ('M', 'w4af_console')
             ('D', 'extlib/')
         """
         return self._changes
@@ -100,7 +100,7 @@ class ChangeLog(object):
         
         crange = '%s..%s' % (self.start, self.end)
         
-        for git_commit in git.Repo(W3AF_LOCAL_PATH).iter_commits(crange):
+        for git_commit in git.Repo(w4af_LOCAL_PATH).iter_commits(crange):
             commit = Commit(git_commit)
             
             diff = git_commit.parents[0].diff(git_commit)

@@ -3,19 +3,19 @@ test_git_client.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
@@ -24,26 +24,26 @@ import pytest
 
 from unittest.mock import MagicMock
 
-from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
-from w3af.core.controllers.auto_update.git_client import GitClient
-from w3af.core.controllers.auto_update.utils import get_current_branch
+from w4af.core.controllers.misc.home_dir import w4af_LOCAL_PATH
+from w4af.core.controllers.auto_update.git_client import GitClient
+from w4af.core.controllers.auto_update.utils import get_current_branch
 
 @pytest.mark.git
 class TestGitClient(unittest.TestCase):
     
     def test_get_URL(self):
-        client = GitClient(W3AF_LOCAL_PATH)
+        client = GitClient(w4af_LOCAL_PATH)
         
-        # https://github.com/andresriancho/w3af/ provides a list of all the
+        # https://github.com/andresriancho/w4af/ provides a list of all the
         # URLs which can be used to clone the repo
-        REPO_URLS = ('git@github.com:codders/w3af-python3.git',
-                     'https://github.com/codders/w3af-python3.git',
-                     'git://github.com/codders/w3af-python3.git')
+        REPO_URLS = ('git@github.com:codders/w4af-python3.git',
+                     'https://github.com/codders/w4af-python3.git',
+                     'git://github.com/codders/w4af-python3.git')
         
         self.assertIn(client.URL, REPO_URLS)
     
     def test_get_local_head_id(self):
-        client = GitClient(W3AF_LOCAL_PATH)
+        client = GitClient(w4af_LOCAL_PATH)
         local_head = client.get_local_head_id()
         
         self.assertEqual(len(local_head), 40)
@@ -64,7 +64,7 @@ class TestGitClient(unittest.TestCase):
         if get_current_branch().startswith('jenkins-'):
             pytest.skip('Workaround for Jenkins Git plugin wierdness.')
         
-        client = GitClient(W3AF_LOCAL_PATH)
+        client = GitClient(w4af_LOCAL_PATH)
         # I don't really want to wait for the local repo to update itself
         # using "git fetch", so I simply put this as a mock
         client.fetch = MagicMock()

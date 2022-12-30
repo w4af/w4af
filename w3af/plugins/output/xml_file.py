@@ -3,19 +3,19 @@ xml_file.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -35,24 +35,24 @@ from unicodedata import category
 from tempfile import NamedTemporaryFile
 from functools import wraps
 
-import w3af.core.data.kb.config as cf
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.plugins.output_plugin import OutputPlugin
-from w3af.core.controllers.misc import get_w3af_version
-from w3af.core.controllers.exceptions import DBException
-from w3af.core.controllers.misc.temp_dir import get_temp_dir
-from w3af.core.data.db.url_tree import URLTree
-from w3af.core.data.db.history import HistoryItem, TraceReadException
-from w3af.core.data.db.disk_list import DiskList
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import OUTPUT_FILE
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
-from w3af.core.data.misc.dotdict import dotdict
-from w3af.core.data.constants.encodings import DEFAULT_ENCODING
+from w4af import ROOT_PATH
+from w4af.core.controllers.plugins.output_plugin import OutputPlugin
+from w4af.core.controllers.misc import get_w4af_version
+from w4af.core.controllers.exceptions import DBException
+from w4af.core.controllers.misc.temp_dir import get_temp_dir
+from w4af.core.data.db.url_tree import URLTree
+from w4af.core.data.db.history import HistoryItem, TraceReadException
+from w4af.core.data.db.disk_list import DiskList
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import OUTPUT_FILE
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.misc.encoding import smart_str_ignore, smart_unicode
+from w4af.core.data.misc.dotdict import dotdict
+from w4af.core.data.constants.encodings import DEFAULT_ENCODING
 
 TIME_FORMAT = '%a %b %d %H:%M:%S %Y'
 
@@ -223,7 +223,7 @@ class xml_file(OutputPlugin):
         context.start_timestamp = self._timestamp
         context.start_time_long = self._long_timestamp
         context.xml_version = self.XML_OUTPUT_VERSION
-        context.w3af_version = get_w3af_version.get_w3af_version()
+        context.w4af_version = get_w4af_version.get_w4af_version()
 
     @took
     def _add_scan_info_to_context(self, context):
@@ -240,7 +240,7 @@ class xml_file(OutputPlugin):
     def _add_scan_status_to_context(self, context):
         om.out.debug('[xml_file.flush()] _add_scan_status_to_context() start')
 
-        status = self.get_w3af_core().status.get_status_as_dict()
+        status = self.get_w4af_core().status.get_status_as_dict()
         om.out.debug('[xml_file.flush()] _add_scan_status_to_context() read status')
 
         all_known_urls = kb.kb.get_all_known_urls()
@@ -323,7 +323,7 @@ class xml_file(OutputPlugin):
         start = time.time()
 
         #
-        # This for loop is getting all the new findings that w3af has found
+        # This for loop is getting all the new findings that w4af has found
         # In this context "new" means that the findings are not in the cache
         #
         new_findings = 0
@@ -412,11 +412,11 @@ class xml_file(OutputPlugin):
         #   * An external tool will always see a valid XML in the output,
         #     and not just a partially written XML document.
         #
-        #   * If w3af is killed in the middle of writing the XML report,
+        #   * If w4af is killed in the middle of writing the XML report,
         #     the report file will still be valid -- if xml_file.flush() was
         #     run successfully at least once
         tempfh = NamedTemporaryFile(delete=False,
-                                    prefix='w3af-xml-output',
+                                    prefix='w4af-xml-output',
                                     suffix='.xml')
 
         om.out.debug('[xml_file.flush()] write_context_to_file() created'
@@ -459,7 +459,7 @@ class xml_file(OutputPlugin):
         :return: A DETAILED description of the plugin functions and features.
         """
         return """
-        This plugin creates an XML file containing all of w3af's findings.
+        This plugin creates an XML file containing all of w4af's findings.
 
         One configurable parameter exists:
             - output_file
@@ -589,7 +589,7 @@ class HTTPTransaction(CachedXMLNode):
 
     def __init__(self, jinja2_env, _id):
         """
-        :param _id: The HTTP request / response ID from w3af. This is is used to query
+        :param _id: The HTTP request / response ID from w4af. This is is used to query
                     the history and get the information. In most cases we'll get the
                     information from the cache and return the XML node.
 
@@ -674,7 +674,7 @@ class ScanInfo(CachedXMLNode):
 
     def __init__(self, jinja2_env, scan_target, plugins_dict, options_dict):
         """
-        Represents the w3af scan information
+        Represents the w4af scan information
 
         :param plugins_dict: The plugins which were enabled
         :param options_dict: The options for each plugin
@@ -709,9 +709,9 @@ class ScanStatus(XMLNode):
 
     def __init__(self, jinja2_env, status, total_urls, known_urls):
         """
-        Represents the current w3af scan status
+        Represents the current w4af scan status
 
-        :param status: The w3af status as reported by the w3af core
+        :param status: The w4af status as reported by the w4af core
         :param total_urls: The number of identified URLs
         """
         super(ScanStatus, self).__init__(jinja2_env)
@@ -763,7 +763,7 @@ class Finding(XMLNode):
 
     def __init__(self, jinja2_env, info):
         """
-        Represents a finding in the w3af framework, which will be serialized
+        Represents a finding in the w4af framework, which will be serialized
         as an XML node
         """
         super(Finding, self).__init__(jinja2_env)

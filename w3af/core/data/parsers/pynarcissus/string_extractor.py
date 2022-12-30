@@ -3,19 +3,19 @@ string_extractor.py
 
 Copyright 2014 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,7 +24,7 @@ from .jsparser import parse
 
 class StringExtractor(object):
     """
-    This class was an experiment related with performance enhancements of w3af's
+    This class was an experiment related with performance enhancements of w4af's
     parsers.
 
     There were many issues, one of them was that I was applying greedy
@@ -42,7 +42,7 @@ class StringExtractor(object):
     in case I actually want to do something advanced with a javascript source
     code.
 
-    :see: https://github.com/andresriancho/w3af/issues/2104
+    :see: https://github.com/andresriancho/w4af/issues/2104
     """
     CHILD_ATTRS = ['thenPart', 'elsePart', 'expression', 'body', 'initializer']
  

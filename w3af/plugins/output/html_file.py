@@ -4,19 +4,19 @@ html_file.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -29,18 +29,18 @@ import base64
 
 from jinja2 import StrictUndefined, Environment, FileSystemLoader
 
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.kb.config as cf
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.config as cf
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.exceptions import DBException
-from w3af.core.controllers.plugins.output_plugin import OutputPlugin
-from w3af.core.data.misc.encoding import smart_unicode
-from w3af.core.data.db.history import HistoryItem
-from w3af.core.data.db.disk_list import DiskList
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import OUTPUT_FILE, INPUT_FILE
-from w3af.core.data.options.option_list import OptionList
+from w4af import ROOT_PATH
+from w4af.core.controllers.exceptions import DBException
+from w4af.core.controllers.plugins.output_plugin import OutputPlugin
+from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.db.history import HistoryItem
+from w4af.core.data.db.disk_list import DiskList
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import OUTPUT_FILE, INPUT_FILE
+from w4af.core.data.options.option_list import OptionList
 
 
 class html_file(OutputPlugin):
@@ -90,7 +90,7 @@ class html_file(OutputPlugin):
 
     def console(self, message, new_line=True):
         """
-        This method is used by the w3af console to print messages to the
+        This method is used by the w4af console to print messages to the
         outside.
         """
         to_print = self._clean_string(message)
@@ -223,7 +223,7 @@ class html_file(OutputPlugin):
             # to have available, and then if it doesn't work apply this
             # workaround for Kali
             #
-            # https://github.com/andresriancho/w3af/issues/9552
+            # https://github.com/andresriancho/w4af/issues/9552
             env_config.pop('lstrip_blocks')
             jinja2_env = Environment(**env_config)
 

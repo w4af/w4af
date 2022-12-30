@@ -3,19 +3,19 @@ test_keepalive.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -30,10 +30,10 @@ import psutil
 from unittest.mock import MagicMock, Mock
 import pytest
 
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.data.url.HTTPRequest import HTTPRequest
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.handlers.keepalive import (KeepAliveHandler,
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.data.url.HTTPRequest import HTTPRequest
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.handlers.keepalive import (KeepAliveHandler,
                                                    ConnectionManager,
                                                    HTTPResponse,
                                                    URLTimeoutError,
@@ -200,8 +200,8 @@ class TestConnectionMgr(unittest.TestCase):
     def test_get_available_conn_reuse(self):
         # We don't need a new HTTPConnection for each request
         self.request.new_connection = False
-        self.request.get_host = lambda: 'w3af.org'
-        self.request.get_netloc = lambda: 'w3af.org'
+        self.request.get_host = lambda: 'w4af.org'
+        self.request.get_netloc = lambda: 'w4af.org'
 
         self.cm.MAX_CONNECTIONS = 1  # Only a single connection
         self.assertEqual(0, len(self.cm._used_conns))

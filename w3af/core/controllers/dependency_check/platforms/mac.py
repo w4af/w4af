@@ -3,19 +3,19 @@ mac.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,9 +23,9 @@ import sys
 import platform
 import subprocess
 
-from w3af.core.controllers.dependency_check.pip_dependency import PIPDependency
-from w3af.core.controllers.dependency_check.platforms.base_platform import Platform
-from w3af.core.controllers.dependency_check.requirements import CORE_PIP_PACKAGES, GUI_PIP_EXTRAS, CORE, GUI
+from w4af.core.controllers.dependency_check.pip_dependency import PIPDependency
+from w4af.core.controllers.dependency_check.platforms.base_platform import Platform
+from w4af.core.controllers.dependency_check.requirements import CORE_PIP_PACKAGES, GUI_PIP_EXTRAS, CORE, GUI
 
 
 TWO_PYTHON_MSG = """\
@@ -35,7 +35,7 @@ by the operating system, at %s, and another which you installed using Mac ports.
 The default python executable for your system is the one provided by Apple,
 and pip-2.7 will install all new libraries in the Mac ports Python.
 
-In order to have a working w3af installation you will have to switch to the Mac
+In order to have a working w4af installation you will have to switch to the Mac
 ports Python by using the following command:
     sudo port select python python27
 """
@@ -68,7 +68,7 @@ class MacOSX(Platform):
                        GUI: GUI_SYSTEM_PACKAGES}
 
     # pybloomfilter is broken in Mac OS X, so we don't require it
-    # https://github.com/andresriancho/w3af/issues/485
+    # https://github.com/andresriancho/w4af/issues/485
     MAC_CORE_PIP_PACKAGES = CORE_PIP_PACKAGES[:]
 
     MAC_GUI_PIP_PACKAGES = MAC_CORE_PIP_PACKAGES[:]

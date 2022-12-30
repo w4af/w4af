@@ -3,19 +3,19 @@ file_upload.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,26 +25,26 @@ from itertools import repeat
 from collections import deque
 from threading import RLock
 
-from w3af import ROOT_PATH
+from w4af import ROOT_PATH
 
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.severity as severity
-import w3af.core.data.parsers.parser_cache as parser_cache
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
+import w4af.core.data.parsers.parser_cache as parser_cache
 
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.controllers.misc.io import NamedBytesIO
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.controllers.misc.io import NamedBytesIO
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
-from w3af.core.data.parsers.utils.re_extract import ReExtract
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.constants.file_templates.file_templates import get_template_with_payload
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.data.parsers.utils.re_extract import ReExtract
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.constants.file_templates.file_templates import get_template_with_payload
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class file_upload(AuditPlugin):
@@ -369,7 +369,7 @@ class file_upload(AuditPlugin):
         """
         ol = OptionList()
 
-        d = 'Extensions that w3af will try to upload through the form.'
+        d = 'Extensions that w4af will try to upload through the form.'
         h = ('When finding a form with a file upload, this plugin will try to'
              ' upload a set of files with the extensions specified here.')
         o = opt_factory('extensions', self._extensions, d, 'list', help=h)

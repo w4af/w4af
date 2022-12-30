@@ -3,28 +3,28 @@ confpanel.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from gi.repository import Gtk as gtk
 
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.plugins.plugin import Plugin
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.ui.gui.constants import W3AF_ICON
-from w3af.core.ui.gui import entries, helpers
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.plugins.plugin import Plugin
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.ui.gui.constants import w4af_ICON
+from w4af.core.ui.gui import entries, helpers
 
 
 class OnlyOptions(gtk.VBox):
@@ -38,12 +38,12 @@ class OnlyOptions(gtk.VBox):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, parentwidg, w3af, plugin, save_btn, rvrt_btn, overwriter=None):
+    def __init__(self, parentwidg, w4af, plugin, save_btn, rvrt_btn, overwriter=None):
         super(OnlyOptions, self).__init__()
         if overwriter is None:
             overwriter = {}
         self.set_spacing(5)
-        self.w3af = w3af
+        self.w4af = w4af
         self.parentwidg = parentwidg
         self.widgets_status = {}
         self.tab_widget = {}
@@ -56,7 +56,7 @@ class OnlyOptions(gtk.VBox):
         self.options = OptionList()
         options = plugin.get_options()
         # let's use the info from the core
-        coreopts = self.w3af.plugins.get_plugin_options(
+        coreopts = self.w4af.plugins.get_plugin_options(
             plugin.ptype, plugin.pname)
         if coreopts is None:
             coreopts = {}
@@ -238,7 +238,7 @@ class OnlyOptions(gtk.VBox):
                 SetOptionsWrapper(opt.set_value, opt.widg.get_value())
 
             if isinstance(plugin, Plugin):
-                SetOptionsWrapper(self.w3af.plugins.set_plugin_options,
+                SetOptionsWrapper(self.w4af.plugins.set_plugin_options,
                                   plugin.ptype, plugin.pname, self.options)
             else:
                 SetOptionsWrapper(plugin.set_options, self.options)
@@ -249,10 +249,10 @@ class OnlyOptions(gtk.VBox):
             opt.widg.save()
 
         # Tell the profile tree that something changed
-        self.w3af.mainwin.profiles.profile_changed(changed=True)
+        self.w4af.mainwin.profiles.profile_changed(changed=True)
 
         # Status bar
-        self.w3af.mainwin.sb("Configuration saved successfully")
+        self.w4af.mainwin.sb("Configuration saved successfully")
         self.saved_successfully = True
 
     def _revertPanel(self, *vals):
@@ -261,7 +261,7 @@ class OnlyOptions(gtk.VBox):
             widg.revert_value()
 
         msg = "The plugin configuration was reverted to its last saved state"
-        self.w3af.mainwin.sb(msg)
+        self.w4af.mainwin.sb(msg)
 
 SetOptionsWrapper = helpers._Wrapper((BaseFrameworkException, ValueError))
 
@@ -270,16 +270,16 @@ class ConfigDialog(gtk.Dialog):
     """Puts a Config panel inside a Dialog.
 
     :param title: the title of the window.
-    :param w3af: the Core instance
+    :param w4af: the Core instance
     :param plugin: the plugin to configure
     :param overwriter: a dict of pair (config, value) to overwrite the plugin
                        actual value
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, title, w3af, plugin, overwriter=None, showDesc=False):
+    def __init__(self, title, w4af, plugin, overwriter=None, showDesc=False):
         super(ConfigDialog, self).__init__(title, None, gtk.DIALOG_MODAL, ())
-        self.set_icon_from_file(W3AF_ICON)
+        self.set_icon_from_file(w4af_ICON)
         if overwriter is None:
             overwriter = {}
 
@@ -302,7 +302,7 @@ class ConfigDialog(gtk.Dialog):
 
         # Save it , I need it when I inherit from this class
         self._plugin = plugin
-        self._panel = OnlyOptions(self, w3af, plugin, save_btn,
+        self._panel = OnlyOptions(self, w4af, plugin, save_btn,
                                   rvrt_btn, overwriter)
         self.vbox.pack_start(self._panel)
 
@@ -356,17 +356,17 @@ class AdvancedTargetConfigDialog(ConfigDialog):
     """Inherits from the config dialog and overwrites the close method
 
     :param title: the title of the window.
-    :param w3af: the Core instance
+    :param w4af: the Core instance
     :param plugin: the plugin to configure
     :param overwriter: a dict of pair (config, value) to overwrite the plugin
                        actual value
 
     :author: Andres Riancho
     """
-    def __init__(self, title, w3af, plugin, overwriter=None):
+    def __init__(self, title, w4af, plugin, overwriter=None):
         if overwriter is None:
             overwriter = {}
-        ConfigDialog.__init__(self, title, w3af, plugin, overwriter)
+        ConfigDialog.__init__(self, title, w4af, plugin, overwriter)
 
     def _close(self):
         """Advanced target close that makes more sense."""

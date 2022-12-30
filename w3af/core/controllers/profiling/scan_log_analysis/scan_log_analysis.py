@@ -36,7 +36,7 @@ you want to watch.
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='w3af scan log analyzer', usage=HELP)
+    parser = argparse.ArgumentParser(description='w4af scan log analyzer', usage=HELP)
 
     parser.add_argument('scan_log', action='store')
 

@@ -1,8 +1,8 @@
 import os
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.tests.running_tests import is_running_tests
+from w4af.core.controllers.tests.running_tests import is_running_tests
 
 
 KA_DEBUG = os.environ.get('KA_DEBUG', '0') == '1'

@@ -18,7 +18,7 @@ except ImportError:
 ROOT_PATH = os.path.realpath(os.path.join(__file__, '../../../../../'))
 sys.path.append(ROOT_PATH)
 
-from w3af.core.controllers.core_helpers.status import CoreStatus, Adjustment
+from w4af.core.controllers.core_helpers.status import CoreStatus, Adjustment
 from .scan_log_analysis import (get_first_timestamp,
                                get_line_epoch,
                                CRAWL_INFRA_FINISHED,
@@ -99,7 +99,7 @@ class CalculatedETA(object):
 
     def get_delta(self):
         """
-        The difference between the ETA calculated during the w3af scan and the
+        The difference between the ETA calculated during the w4af scan and the
         real one we get from the scan log.
 
         :return: float
@@ -275,7 +275,7 @@ def create_eta_table(scan):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='w3af ETA adjustment calculator', usage=HELP)
+    parser = argparse.ArgumentParser(description='w4af ETA adjustment calculator', usage=HELP)
 
     parser.add_argument('scan_log', action='store')
     parsed_args = parser.parse_args()

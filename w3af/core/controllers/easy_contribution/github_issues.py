@@ -3,19 +3,19 @@ github_issues.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -27,7 +27,7 @@ import socket
 from github import Github
 from github import GithubException, BadCredentialsException
 
-from w3af.core.controllers.exception_handling.helpers import get_versions
+from w4af.core.controllers.exception_handling.helpers import get_versions
 
 
 DEFAULT_BUG_QUERY_TEXT = """What steps will reproduce the problem?
@@ -48,7 +48,7 @@ Please provide any additional information below:
 
 OAUTH_AUTH_FAILED = """Failed to authenticate with github.com , please try\
  again later. If the authentication still fails it might be because the\
- current w3af version is outdated and is not allowed to report any new\
+ current w4af version is outdated and is not allowed to report any new\
  issues."""
 
 TICKET_URL_FMT = 'https://github.com/w4af/w4af/issues/%s'
@@ -56,7 +56,7 @@ TICKET_URL_FMT = 'https://github.com/w4af/w4af/issues/%s'
 #
 # There is no way to report issues to github in an anonymous way, so the second
 # best thing I could find was to create a user and get an oauth token for it.
-# This user will act as a "proxy" for w3af users that don't want to enter their
+# This user will act as a "proxy" for w4af users that don't want to enter their
 # github credentials in the bug report window.
 #
 # Token generation after logging in with 1d3df9903ad, scopes: "repo".
@@ -120,14 +120,14 @@ class GithubIssues(object):
                                                      tback, fname, plugins,
                                                      autogen, email)
         
-        w3af_repo = self.gh.get_user('w4af').get_repo('w4af')
+        w4af_repo = self.gh.get_user('w4af').get_repo('w4af')
         labels = []
         # Github doesn't allow users that do NOT own the repository to assign
         # labels to new issues
-        #labels = [w3af_repo.get_label('automatic-bug-report'),
-        #          w3af_repo.get_label('bug')]
+        #labels = [w4af_repo.get_label('automatic-bug-report'),
+        #          w4af_repo.get_label('bug')]
         
-        issue = w3af_repo.create_issue(title=summary, body=desc, labels=labels)
+        issue = w4af_repo.create_issue(title=summary, body=desc, labels=labels)
         return issue.number, TICKET_URL_FMT % issue.number
 
     def _build_summary_and_desc(self, summary, desc, tback,

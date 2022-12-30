@@ -3,27 +3,27 @@ document_parser.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from w3af.core.data.parsers.doc.html import HTMLParser
-from w3af.core.data.parsers.doc.pdf import PDFParser
-from w3af.core.data.parsers.doc.wml_parser import WMLParser
-from w3af.core.data.parsers.doc.javascript import JavaScriptParser
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.parsers.doc.html import HTMLParser
+from w4af.core.data.parsers.doc.pdf import PDFParser
+from w4af.core.data.parsers.doc.wml_parser import WMLParser
+from w4af.core.data.parsers.doc.javascript import JavaScriptParser
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 class DocumentParser(object):
@@ -90,8 +90,8 @@ class DocumentParser(object):
             * URL objects extracted through RE matching
 
         The URL lists are ordered alphabetically, this small improvement tries
-        to improve issues with different w3af scans finding different number of
-        URLs. The root cause for the issue is w3af's threaded architecture
+        to improve issues with different w4af scans finding different number of
+        URLs. The root cause for the issue is w4af's threaded architecture
         which makes everything run in an unpredictable order. Ordering the
         output alphabetically tries to impose an order in which things should
         be processed.

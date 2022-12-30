@@ -3,38 +3,38 @@ export_request.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from gi.repository import Gtk as gtk
 
-from w3af.core.ui.gui import entries
-from w3af.core.ui.gui.tools.encdec import SimpleTextView
+from w4af.core.ui.gui import entries
+from w4af.core.ui.gui.tools.encdec import SimpleTextView
 
-from w3af.core.data.export.ajax_export import ajax_export
-from w3af.core.data.export.html_export import html_export
-from w3af.core.data.export.python_export import python_export
-from w3af.core.data.export.ruby_export import ruby_export
+from w4af.core.data.export.ajax_export import ajax_export
+from w4af.core.data.export.html_export import html_export
+from w4af.core.data.export.python_export import python_export
+from w4af.core.data.export.ruby_export import ruby_export
 
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 export_request_example = """\
 GET http://localhost/script.php HTTP/1.0
 Host: www.some_host.com
-User-Agent: w3af.org
+User-Agent: w4af.org
 Pragma: no-cache
 Content-Type: application/x-www-form-urlencoded
 """
@@ -45,10 +45,10 @@ class export_request(entries.RememberingWindow):
 
     :author: Andres Riancho < andres.riancho | gmail.com >
     """
-    def __init__(self, w3af, initial_request=None):
+    def __init__(self, w4af, initial_request=None):
         super(export_request, self).__init__(
-            w3af, "exportreq", "w3af - Export Requests", "Export_Requests")
-        self.w3af = w3af
+            w4af, "exportreq", "w4af - Export Requests", "Export_Requests")
+        self.w4af = w4af
 
         # different ways of exporting data
         self._exporters = [
@@ -59,7 +59,7 @@ class export_request(entries.RememberingWindow):
         ]
 
         # splitted panes
-        vpan = entries.RememberingVPaned(w3af, "pane-exportrequests")
+        vpan = entries.RememberingVPaned(w4af, "pane-exportrequests")
 
         # upper pane that shows HTTP request
         vbox = gtk.VBox()

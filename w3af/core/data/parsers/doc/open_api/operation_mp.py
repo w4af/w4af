@@ -9,7 +9,7 @@ from bravado_core import operation
 
 def build_params_monkey_patch(op):
     """
-    This is the monkey-patched version of build_params [0] for w3af.
+    This is the monkey-patched version of build_params [0] for w4af.
 
     While parsing some open API specifications we found this error:
 

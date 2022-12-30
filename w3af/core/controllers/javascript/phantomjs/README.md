@@ -1,11 +1,11 @@
 ## JS Crawler
 
-w3af's JS crawler is based on [gryffin](https://github.com/yahoo/gryffin). The architecture is simple:
+w4af's JS crawler is based on [gryffin](https://github.com/yahoo/gryffin). The architecture is simple:
 
- * w3af runs javascript code inside phantomjs which loads a URL and extracts links and forms
- * The phantomjs binary is configured to use a w3af initiated proxy, which is used to capture HTTP requests
+ * w4af runs javascript code inside phantomjs which loads a URL and extracts links and forms
+ * The phantomjs binary is configured to use a w4af initiated proxy, which is used to capture HTTP requests
  * The javascript code outputs JSON encoded messages to stdout with the links and forms
- * w3af parses stdout to get the JSON objects
+ * w4af parses stdout to get the JSON objects
  
 ## Requirements
 
@@ -14,7 +14,7 @@ is solved with `apt install phantomjs` in Debian based distributions.
 
 ## Running the crawler
  
-The JS crawler can be run without w3af (mostly for dev and QA):
+The JS crawler can be run without w4af (mostly for dev and QA):
 
 ```
 phantomjs --ssl-protocol=any --ignore-ssl-errors=true --proxy=127.0.0.1:8080 \

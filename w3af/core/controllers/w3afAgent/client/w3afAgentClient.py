@@ -174,7 +174,7 @@ def port2string(port):
 # Server class
 
 
-class w3afAgentClient(threading.Thread):
+class w4afAgentClient(threading.Thread):
     """
     Threading SOCKS4 proxy class.
 
@@ -184,15 +184,15 @@ class w3afAgentClient(threading.Thread):
     module :)
     """
 
-    def __init__(self, w3afAgentServer_address='127.0.0.1', w3afAgentServer_port=9092):
+    def __init__(self, w4afAgentServer_address='127.0.0.1', w4afAgentServer_port=9092):
         """
         Constructor of the server.
         """
         threading.Thread.__init__(self)
 
         # Save the parameters
-        self._w3afAgentServer_address = w3afAgentServer_address
-        self._w3afAgentServer_port = w3afAgentServer_port
+        self._w4afAgentServer_address = w4afAgentServer_address
+        self._w4afAgentServer_port = w4afAgentServer_port
 
         # Remember that we won't use the output manager because this is going to be running
         # on the remote server, and I don't control the om there.
@@ -223,22 +223,22 @@ class w3afAgentClient(threading.Thread):
     def run(self):
         # Start the connection manager
         cm = ConnectionManager(
-            self._w3afAgentServer_address, self._w3afAgentServer_port)
+            self._w4afAgentServer_address, self._w4afAgentServer_port)
         cm.set_bind_address(self.socks_bind_address)
         cm.start()
 
 
 class ConnectionManager(threading.Thread):
     """
-    This is a service that creates some connections to the remote w3afAgentServer and waits
+    This is a service that creates some connections to the remote w4afAgentServer and waits
     for SOCKS requests to arrive on those connections. When a request arrives, I parse the request
     and create a handler instance manage the SOCKS connection.
     """
-    def __init__(self, w3afAgentServer_address, w3afAgentServer_port, connectionPoolLen=20):
+    def __init__(self, w4afAgentServer_address, w4afAgentServer_port, connectionPoolLen=20):
         threading.Thread.__init__(self)
         self._connections = []
-        self._w3afAgentServer_address = w3afAgentServer_address
-        self._w3afAgentServer_port = w3afAgentServer_port
+        self._w4afAgentServer_address = w4afAgentServer_address
+        self._w4afAgentServer_port = w4afAgentServer_port
         self._connectionPoolLen = connectionPoolLen
         self.gen_connections(connectionPoolLen)
 
@@ -246,16 +246,16 @@ class ConnectionManager(threading.Thread):
         self._bindAddy = bindAddy
 
     def gen_connections(self, number):
-        # Connect to the w3afAgentServer and store the connections in the
+        # Connect to the w4afAgentServer and store the connections in the
         # connection pool
         for i in range(number - len(self._connections)):
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             try:
-                s.connect((self._w3afAgentServer_address,
-                          self._w3afAgentServer_port))
+                s.connect((self._w4afAgentServer_address,
+                          self._w4afAgentServer_port))
             except Exception as e:
-                log.debug('Failed to connect to the w3afAgentServer, exception: ' + str(e))
+                log.debug('Failed to connect to the w4afAgentServer, exception: ' + str(e))
                 sys.exit(1)
             else:
                 self._connections.append(s)
@@ -352,7 +352,7 @@ class SocksHandler(threading.Thread):
 
         log.debug(_thread.get_ident(), '-' * 40)
         log.debug(_thread.get_ident(
-        ), 'New socks connection request from w3afAgentServer.')
+        ), 'New socks connection request from w4afAgentServer.')
 
         try:
             log.debug(_thread.get_ident(), 'Decoded request:', req)
@@ -667,6 +667,6 @@ simultaneously and to implement an inactivity timeout."""
 if __name__ == "__main__":
     addr = sys.argv[1]
     port = int(sys.argv[2])
-    w3 = w3afAgentClient(
-        w3afAgentServer_address=addr, w3afAgentServer_port=port)
+    w3 = w4afAgentClient(
+        w4afAgentServer_address=addr, w4afAgentServer_port=port)
     w3.start()

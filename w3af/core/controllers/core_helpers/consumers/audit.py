@@ -3,31 +3,31 @@ audit.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import time
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
 
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.controllers.exceptions import ScanMustStopException
-from w3af.core.controllers.profiling.took_helper import TookLine
-from w3af.core.controllers.core_helpers.consumers.base_consumer import (BaseConsumer,
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.controllers.exceptions import ScanMustStopException
+from w4af.core.controllers.profiling.took_helper import TookLine
+from w4af.core.controllers.core_helpers.consumers.base_consumer import (BaseConsumer,
                                                                         task_decorator)
 
 
@@ -38,15 +38,15 @@ class audit(BaseConsumer):
     requests.
     """
 
-    def __init__(self, audit_plugins, w3af_core):
+    def __init__(self, audit_plugins, w4af_core):
         """
         :param audit_plugins: Instances of audit plugins in a list
-        :param w3af_core: The w3af core that we'll use for status reporting
+        :param w4af_core: The w4af core that we'll use for status reporting
         """
         max_qsize = self.THREAD_POOL_SIZE * 2
 
         super(audit, self).__init__(audit_plugins,
-                                    w3af_core,
+                                    w4af_core,
                                     thread_name=self.get_name(),
                                     max_pool_queued_tasks=max_qsize,
                                     max_in_queue_size=max_qsize)
@@ -133,9 +133,9 @@ class audit(BaseConsumer):
             # plugin result was JUST taken from the Queue. The good thing is
             # that the "client" reads the status once every 500ms so the user
             # will see things "moving" and will be happy
-            self._w3af_core.status.set_running_plugin('audit',
+            self._w4af_core.status.set_running_plugin('audit',
                                                       plugin.get_name())
-            self._w3af_core.status.set_current_fuzzable_request('audit',
+            self._w4af_core.status.set_current_fuzzable_request('audit',
                                                                 fuzzable_request)
 
             # Note that if we don't limit the input queue size for the thread
@@ -204,7 +204,7 @@ class audit(BaseConsumer):
         args = (plugin.get_name(), debugging_id, fuzzable_request.get_uri())
         om.out.debug('%s.audit(did="%s", uri="%s")' % args)
 
-        took_line = TookLine(self._w3af_core,
+        took_line = TookLine(self._w4af_core,
                              plugin.get_name(),
                              'audit',
                              debugging_id=debugging_id,

@@ -3,38 +3,38 @@ xss.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.controllers.csp.utils import site_protected_against_xss_by_csp
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.controllers.csp.utils import site_protected_against_xss_by_csp
 
-from w3af.core.data.constants.file_extensions import JAVASCRIPT, CSS, FLASH, IMAGES
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.db.disk_list import DiskList
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.context.context import get_context_iter
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.constants.file_extensions import JAVASCRIPT, CSS, FLASH, IMAGES
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.db.disk_list import DiskList
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.context.context import get_context_iter
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 RANDOMIZE = 'RANDOMIZE'
@@ -105,7 +105,7 @@ class xss(AuditPlugin):
         # Before we run each fake mutant check in a different thread using the
         # worker_pool, but this lead to a strange dead-lock
         #
-        #   https://github.com/andresriancho/w3af/issues/4068
+        #   https://github.com/andresriancho/w4af/issues/4068
         #
         # So I simply migrated this to a slower for loop.
         for fake_mutant in fake_mutants:
@@ -225,7 +225,7 @@ class xss(AuditPlugin):
             
             sent_payload = mutant.get_token_payload()
 
-            # TODO: https://github.com/andresriancho/w3af/issues/12305
+            # TODO: https://github.com/andresriancho/w4af/issues/12305
             body_lower = response.get_body().lower()
             sent_payload_lower = sent_payload.lower()
 
@@ -357,7 +357,7 @@ class xss(AuditPlugin):
         ol = OptionList()
         
         d1 = 'Identify persistent cross site scripting vulnerabilities'
-        h1 = ('If set to True, w3af will navigate all pages of the target one'
+        h1 = ('If set to True, w4af will navigate all pages of the target one'
               ' more time, searching for persistent cross site scripting'
               ' vulnerabilities.')
         o1 = opt_factory('persistent_xss', self._check_persistent_xss, d1,

@@ -3,49 +3,49 @@ scans.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from multiprocessing.dummy import Process
 from flask import jsonify, request
 
-from w3af.core.ui.api import app
-from w3af.core.ui.api.utils.error import abort
-from w3af.core.ui.api.utils.auth import requires_auth
-from w3af.core.ui.api.db.master import SCANS, ScanInfo
-from w3af.core.ui.api.utils.log_handler import RESTAPIOutput
-from w3af.core.ui.api.utils.scans import (get_scan_info_from_id,
+from w4af.core.ui.api import app
+from w4af.core.ui.api.utils.error import abort
+from w4af.core.ui.api.utils.auth import requires_auth
+from w4af.core.ui.api.db.master import SCANS, ScanInfo
+from w4af.core.ui.api.utils.log_handler import RESTAPIOutput
+from w4af.core.ui.api.utils.scans import (get_scan_info_from_id,
                                           start_scan_helper,
                                           get_new_scan_id,
                                           create_temp_profile,
                                           remove_temp_profile)
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 @app.route('/scans/', methods=['POST'])
 @requires_auth
 def start_scan():
     """
-    Starts a new w3af scan
+    Starts a new w4af scan
 
     Receive a JSON containing:
         - A list with the target URLs
-        - The profile (eg. the content of fast_scan.pw3af)
+        - The profile (eg. the content of fast_scan.pw4af)
 
     :return: A JSON containing:
         - The URL to the newly created scan (eg. /scans/1)
@@ -75,10 +75,10 @@ def start_scan():
     # valid and return an informative error if it's not
     #
     scan_profile_file_name, profile_path = create_temp_profile(scan_profile)
-    w3af_core = w3afCore()
+    w4af_core = w4afCore()
 
     try:
-        w3af_core.profiles.use_profile(scan_profile_file_name,
+        w4af_core.profiles.use_profile(scan_profile_file_name,
                                        workdir=profile_path)
     except BaseFrameworkException as bfe:
         abort(400, str(bfe))
@@ -97,17 +97,17 @@ def start_scan():
         except ValueError:
             abort(400, 'Invalid URL: "%s"' % target_url)
 
-    target_options = w3af_core.target.get_options()
+    target_options = w4af_core.target.get_options()
     target_option = target_options['target']
     try:
         target_option.set_value([URL(u) for u in target_urls])
-        w3af_core.target.set_options(target_options)
+        w4af_core.target.set_options(target_options)
     except BaseFrameworkException as bfe:
         abort(400, str(bfe))
 
     scan_id = get_new_scan_id()
     scan_info = ScanInfo()
-    scan_info.w3af_core = w3af_core
+    scan_info.w4af_core = w4af_core
     scan_info.target_urls = target_urls
     scan_info.profile_path = scan_profile_file_name
     scan_info.output = RESTAPIOutput()
@@ -144,7 +144,7 @@ def list_scans():
             continue
 
         target_urls = scan_info.target_urls
-        status = scan_info.w3af_core.status.get_simplified_status()
+        status = scan_info.w4af_core.status.get_simplified_status()
         errors = True if scan_info.exception is not None else False
 
         data.append({'id': scan_id,
@@ -170,10 +170,10 @@ def scan_delete(scan_id):
     if scan_info is None:
         abort(404, 'Scan not found')
 
-    if scan_info.w3af_core is None:
+    if scan_info.w4af_core is None:
         abort(400, 'Scan state is invalid and can not be cleared')
 
-    if not scan_info.w3af_core.can_cleanup():
+    if not scan_info.w4af_core.can_cleanup():
         abort(403, 'Scan is not ready to be cleared')
 
     scan_info.cleanup()
@@ -194,7 +194,7 @@ def scan_status(scan_id):
         abort(404, 'Scan not found')
 
     exc = scan_info.exception
-    status = scan_info.w3af_core.status.get_status_as_dict()
+    status = scan_info.w4af_core.status.get_status_as_dict()
     status['exception'] = exc if exc is None else str(exc)
 
     return jsonify(status)
@@ -214,10 +214,10 @@ def scan_pause(scan_id):
     if scan_info is None:
         abort(404, 'Scan not found')
 
-    if not scan_info.w3af_core.can_pause():
+    if not scan_info.w4af_core.can_pause():
         abort(403, 'Scan can not be paused')
 
-    scan_info.w3af_core.pause()
+    scan_info.w4af_core.pause()
 
     return jsonify({'message': 'Success'})
 
@@ -236,10 +236,10 @@ def scan_stop(scan_id):
     if scan_info is None:
         abort(404, 'Scan not found')
 
-    if not scan_info.w3af_core.can_stop():
+    if not scan_info.w4af_core.can_stop():
         abort(403, 'Scan can not be stop')
 
-    t = Process(target=scan_info.w3af_core.stop, name='ScanStopThread', args=())
+    t = Process(target=scan_info.w4af_core.stop, name='ScanStopThread', args=())
     t.daemon = True
     t.start()
 

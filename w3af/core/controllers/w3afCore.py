@@ -1,21 +1,21 @@
 """
-w3afCore.py
+w4afCore.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -29,55 +29,55 @@ import pprint
 import threading
 import traceback
 
-import w3af.core.data.parsers.parser_cache as parser_cache
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.parsers.parser_cache as parser_cache
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.threads.threadpool import Pool
-from w3af.core.controllers.threads.is_main_thread import is_main_thread
-from w3af.core.controllers.threads.monkey_patch_debug import monkey_patch_debug, remove_monkey_patch_debug
-from w3af.core.controllers.misc.get_w3af_version import get_w3af_version_minimal
-from w3af.core.controllers.core_helpers.profiles import CoreProfiles
-from w3af.core.controllers.core_helpers.plugins import CorePlugins
-from w3af.core.controllers.core_helpers.target import CoreTarget
-from w3af.core.controllers.core_helpers.strategy import CoreStrategy
-from w3af.core.controllers.core_helpers.fingerprint_404 import fingerprint_404_singleton
-from w3af.core.controllers.core_helpers.exception_handler import ExceptionHandler
-from w3af.core.controllers.core_helpers.strategy_observers.disk_space_observer import DiskSpaceObserver
-from w3af.core.controllers.core_helpers.strategy_observers.thread_count_observer import ThreadCountObserver
-from w3af.core.controllers.core_helpers.strategy_observers.thread_state_observer import ThreadStateObserver
-from w3af.core.controllers.core_helpers.status import (CoreStatus,
+from w4af.core.controllers.threads.threadpool import Pool
+from w4af.core.controllers.threads.is_main_thread import is_main_thread
+from w4af.core.controllers.threads.monkey_patch_debug import monkey_patch_debug, remove_monkey_patch_debug
+from w4af.core.controllers.misc.get_w4af_version import get_w4af_version_minimal
+from w4af.core.controllers.core_helpers.profiles import CoreProfiles
+from w4af.core.controllers.core_helpers.plugins import CorePlugins
+from w4af.core.controllers.core_helpers.target import CoreTarget
+from w4af.core.controllers.core_helpers.strategy import CoreStrategy
+from w4af.core.controllers.core_helpers.fingerprint_404 import fingerprint_404_singleton
+from w4af.core.controllers.core_helpers.exception_handler import ExceptionHandler
+from w4af.core.controllers.core_helpers.strategy_observers.disk_space_observer import DiskSpaceObserver
+from w4af.core.controllers.core_helpers.strategy_observers.thread_count_observer import ThreadCountObserver
+from w4af.core.controllers.core_helpers.strategy_observers.thread_state_observer import ThreadStateObserver
+from w4af.core.controllers.core_helpers.status import (CoreStatus,
                                                        STOPPED, RUNNING, PAUSED)
-from w3af.core.controllers.output_manager import (fresh_output_manager_inst,
+from w4af.core.controllers.output_manager import (fresh_output_manager_inst,
                                                   log_sink_factory)
-from w3af.core.controllers.profiling import start_profiling, stop_profiling
-from w3af.core.controllers.misc.epoch_to_string import epoch_to_string
-from w3af.core.controllers.misc.dns_cache import enable_dns_cache
-from w3af.core.controllers.misc.number_generator import consecutive_number_generator
-from w3af.core.controllers.misc.home_dir import (create_home_dir,
+from w4af.core.controllers.profiling import start_profiling, stop_profiling
+from w4af.core.controllers.misc.epoch_to_string import epoch_to_string
+from w4af.core.controllers.misc.dns_cache import enable_dns_cache
+from w4af.core.controllers.misc.number_generator import consecutive_number_generator
+from w4af.core.controllers.misc.home_dir import (create_home_dir,
                                                  verify_dir_has_perm,
                                                  get_home_dir)
-from w3af.core.controllers.misc.temp_dir import (create_temp_dir,
+from w4af.core.controllers.misc.temp_dir import (create_temp_dir,
                                                  remove_temp_dir,
                                                  TEMP_DIR)
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               HTTPRequestException,
                                               ScanMustStopException,
                                               ScanMustStopByUnknownReasonExc,
                                               ScanMustStopByUserRequest)
 
-from w3af.core.data.url.extended_urllib import ExtendedUrllib
-from w3af.core.data.kb.knowledge_base import kb
+from w4af.core.data.url.extended_urllib import ExtendedUrllib
+from w4af.core.data.kb.knowledge_base import kb
 
 
 NO_MEMORY_MSG = ('The operating system was unable to allocate memory for'
                  ' the Python interpreter (MemoryError). This usually happens'
                  ' when the OS does not have a mounted swap disk, the'
-                 ' hardware where w3af is running has less than 1GB RAM,'
+                 ' hardware where w4af is running has less than 1GB RAM,'
                  ' there are many processes running and consuming memory,'
-                 ' or w3af is using more memory than expected.')
+                 ' or w4af is using more memory than expected.')
 
 
-class w3afCore(object):
+class w4afCore(object):
     """
     This is the core of the framework, it calls all plugins, handles exceptions,
     coordinates all the work, creates threads, etc.
@@ -92,7 +92,7 @@ class w3afCore(object):
     #
     # This only makes sense as long as the worker threads are
     # mostly used for sending HTTP requests (which is the case
-    # for the current w3af version).
+    # for the current w4af version).
     WORKER_THREADS = 30
     MIN_WORKER_THREADS = 20
     MAX_WORKER_THREADS = 100
@@ -111,14 +111,14 @@ class w3afCore(object):
 
         # FIXME: In the future, when the output_manager is not an awful
         # singleton anymore, this line should be removed and the output_manager
-        # object should take a w3afCore object as a parameter in its __init__
-        om.manager.set_w3af_core(self)
+        # object should take a w4afCore object as a parameter in its __init__
+        om.manager.set_w4af_core(self)
 
         # This is more than just a debug message, it's a way to force the
         # output manager thread to start it's work. I would start that thread
         # on output manager instantiation but there are issues with starting
         # threads at module import time.
-        om.out.debug('Created new w3afCore instance: %s' % id(self))
+        om.out.debug('Created new w4afCore instance: %s' % id(self))
 
         # Create some directories, do this every time before starting a new
         # scan and before doing any other core init because these are widely
@@ -127,13 +127,13 @@ class w3afCore(object):
         self._tmp_directory()
         
         # We want to have only one exception handler instance during the whole
-        # w3af process. The data captured by it will be cleared before starting
+        # w4af process. The data captured by it will be cleared before starting
         # each scan, but we want to keep the same instance after a scan because
         # we'll extract info from it.
         self.exception_handler = ExceptionHandler()
         
-        # These are some of the most important moving parts in the w3afCore
-        # they basically handle every aspect of the w3af framework. I create
+        # These are some of the most important moving parts in the w4afCore
+        # they basically handle every aspect of the w4af framework. I create
         # these here because they are used by the UIs even before starting a
         # scan.
         self.profiles = CoreProfiles(self)
@@ -144,7 +144,7 @@ class w3afCore(object):
 
         # Create the URI opener object
         self.uri_opener = ExtendedUrllib()
-        self.uri_opener.set_w3af_core(self)
+        self.uri_opener.set_w4af_core(self)
 
         # Keep track of first scan to call cleanup or not
         self._first_scan = True
@@ -154,7 +154,7 @@ class w3afCore(object):
 
     def scan_start_hook(self):
         """
-        Create directories, threads and consumers required to perform a w3af
+        Create directories, threads and consumers required to perform a w4af
         scan. Used both when we init the core and when we want to clear all
         the previous results and state from an old scan and start again.
         
@@ -202,7 +202,7 @@ class w3afCore(object):
         @raise: This method raises almost every possible exception, so please
                 do your error handling!
         """
-        om.out.debug('Called w3afCore.start()')
+        om.out.debug('Called w4afCore.start()')
 
         self.scan_start_hook()
 
@@ -223,7 +223,7 @@ class w3afCore(object):
 
         self._first_scan = False
 
-        om.out.debug('Starting the scan using w3af version %s' % get_w3af_version_minimal())
+        om.out.debug('Starting the scan using w4af version %s' % get_w4af_version_minimal())
 
         try:
             self.strategy.start()
@@ -232,7 +232,7 @@ class w3afCore(object):
             om.out.error(NO_MEMORY_MSG)
 
         except OSError as os_err:
-            # https://github.com/andresriancho/w3af/issues/10186
+            # https://github.com/andresriancho/w4af/issues/10186
             # OSError: [Errno 12] Cannot allocate memory
             if os_err.errno == errno.ENOMEM:
                 print(NO_MEMORY_MSG)
@@ -243,10 +243,10 @@ class w3afCore(object):
         except IOError as io_err:
             (error_id, error_msg) = io_err.args
 
-            # https://github.com/andresriancho/w3af/issues/9653
+            # https://github.com/andresriancho/w4af/issues/9653
             # IOError: [Errno 28] No space left on device
             if error_id == errno.ENOSPC:
-                msg = ('The w3af scan will stop because the file system'
+                msg = ('The w4af scan will stop because the file system'
                        ' is running low on free space. Check the "%s" directory'
                        ' size, overall disk usage and start the scan again.')
                 msg %= get_home_dir()
@@ -309,7 +309,7 @@ class w3afCore(object):
             self.scan_end_hook()
 
             # Make sure this line is the last one. This avoids race conditions
-            # https://github.com/andresriancho/w3af/issues/1487
+            # https://github.com/andresriancho/w4af/issues/1487
             self.status.scan_finished()
 
     @property
@@ -469,7 +469,7 @@ class w3afCore(object):
     
     def quit(self):
         """
-        The user wants to exit w3af ASAP, so we stop the scan and exit.
+        The user wants to exit w4af ASAP, so we stop the scan and exit.
         """
         self.stop()
         self.uri_opener.end()
@@ -496,7 +496,7 @@ class w3afCore(object):
     def verify_environment(self):
         """
         Checks if all parameters where configured correctly by the user,
-        which in this case is a mix of w3af_console, w3af_gui and the real
+        which in this case is a mix of w4af_console, w4af_gui and the real
         (human) user.
         """
         if not self.plugins.initialized:
@@ -584,8 +584,8 @@ class w3afCore(object):
         # affect other parts of the tool such as the exploitation or manual HTTP
         # request sending from the GUI
         #
-        # https://github.com/andresriancho/w3af/issues/2704
-        # https://github.com/andresriancho/w3af/issues/2711
+        # https://github.com/andresriancho/w4af/issues/2704
+        # https://github.com/andresriancho/w4af/issues/2711
         self.uri_opener.clear()
 
         # Disable some internal checks so the exploits can "bend" the matrix
@@ -598,29 +598,29 @@ class w3afCore(object):
         """
         home_dir = get_home_dir()
 
-        # Start by trying to create the home directory (linux: /home/user/.w3af/)
+        # Start by trying to create the home directory (linux: /home/user/.w4af/)
         if not create_home_dir():
-            print('Failed to create the w3af home directory "%s".' % home_dir)
+            print('Failed to create the w4af home directory "%s".' % home_dir)
             sys.exit(-3)            
 
         # If this fails, maybe it is because the home directory doesn't exist
         # or simply because it ain't writable|readable by this user
         if not verify_dir_has_perm(home_dir, perm=os.W_OK | os.R_OK, levels=1):
-            print('Either the w3af home directory "%s" or its contents are not'
+            print('Either the w4af home directory "%s" or its contents are not'
                   ' writable or readable. Please set the correct permissions'
-                  ' and ownership. This usually happens when running w3af as'
+                  ' and ownership. This usually happens when running w4af as'
                   ' root using "sudo".' % home_dir)
             sys.exit(-3)
 
     def _tmp_directory(self):
         """
         Handle the creation of the tmp directory, where a lot of stuff is stored
-        Usually it's something like /tmp/w3af/<pid>/
+        Usually it's something like /tmp/w4af/<pid>/
         """
         try:
             create_temp_dir()
         except Exception:
-            msg = ('The w3af tmp directory "%s" is not writable. Please set '
+            msg = ('The w4af tmp directory "%s" is not writable. Please set '
                    'the correct permissions and ownership.' % TEMP_DIR)
             print(msg)
             sys.exit(-3)

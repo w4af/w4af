@@ -4,19 +4,19 @@ requests.py
 
 Copyright 2017 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,7 +25,7 @@ import datetime
 
 from bravado_core.operation import Operation
 
-from w3af.core.data.fuzzer.form_filler import (smart_fill,
+from w4af.core.data.fuzzer.form_filler import (smart_fill,
                                                smart_fill_file)
 
 
@@ -574,7 +574,7 @@ class ParameterHandler(object):
          u'type': u'object',
          u'properties': {u'tag': {u'type': u'string'},
                          u'name': {u'type': u'string'}},
-         u'x-model': u'http:....www.w3af.com..swagger.json|..definitions..Pet'}
+         u'x-model': u'http:....www.w4af.com..swagger.json|..definitions..Pet'}
 
         :return: A dict containing all the fields specified in properties.
         """

@@ -3,19 +3,19 @@ test_bruteforcer.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,9 +24,9 @@ import unittest
 
 import pytest
 
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.controllers.misc.temp_dir import create_temp_dir
-from w3af.core.controllers.bruteforce.bruteforcer import (PasswordBruteforcer,
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.controllers.misc.temp_dir import create_temp_dir
+from w4af.core.controllers.bruteforce.bruteforcer import (PasswordBruteforcer,
                                                           UserPasswordBruteforcer)
 
 
@@ -34,7 +34,7 @@ class TestPasswordBruteforcer(unittest.TestCase):
 
     @pytest.mark.smoke
     def test_contains(self):
-        url = URL('http://www.w3af.org/')
+        url = URL('http://www.w4af.org/')
 
         pwd_bf = PasswordBruteforcer(url)
 
@@ -50,7 +50,7 @@ class TestUserPasswordBruteforcer(unittest.TestCase):
 
     @pytest.mark.smoke
     def test_bruteforcer_default(self):
-        url = URL('http://www.w3af.org/')
+        url = URL('http://www.w4af.org/')
 
         bf = UserPasswordBruteforcer(url)
 
@@ -58,7 +58,7 @@ class TestUserPasswordBruteforcer(unittest.TestCase):
             ('prueba1', '123abc'),
             ('test', 'freedom'),
             ('user', 'letmein'),
-            ('www.w3af.org', 'master'),    # URL feature
+            ('www.w4af.org', 'master'),    # URL feature
             ('admin', '7emp7emp'),         # l337 feature
             ('user1', ''),                 # No password
             ('user1',
@@ -90,7 +90,7 @@ class TestUserPasswordBruteforcer(unittest.TestCase):
 
         combo_fd.close()
 
-        url = URL('http://www.w3af.org/')
+        url = URL('http://www.w4af.org/')
 
         bf = UserPasswordBruteforcer(url)
         bf.combo_file = combo_filename

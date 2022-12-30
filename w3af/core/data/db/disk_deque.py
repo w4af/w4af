@@ -1,6 +1,6 @@
 from functools import total_ordering
 
-from w3af.core.data.db.disk_dict import DiskDict
+from w4af.core.data.db.disk_dict import DiskDict
 
 @total_ordering
 class DiskDeque(object):

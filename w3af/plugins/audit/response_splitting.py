@@ -3,34 +3,34 @@ response_splitting.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.kb.info import Info
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.kb.info import Info
 
 HEADER_NAME = 'vulnerable073b'
-HEADER_VALUE = 'ae5cw3af'
+HEADER_VALUE = 'ae5cw4af'
 
 
 class response_splitting(AuditPlugin):
@@ -39,9 +39,9 @@ class response_splitting(AuditPlugin):
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
 
-    HEADER_INJECTION_TESTS = ("w3af\r\n" + HEADER_NAME + ": " + HEADER_VALUE,
-                              "w3af\r" + HEADER_NAME + ": " + HEADER_VALUE,
-                              "w3af\n" + HEADER_NAME + ": " + HEADER_VALUE)
+    HEADER_INJECTION_TESTS = ("w4af\r\n" + HEADER_NAME + ": " + HEADER_VALUE,
+                              "w4af\r" + HEADER_NAME + ": " + HEADER_VALUE,
+                              "w4af\n" + HEADER_NAME + ": " + HEADER_VALUE)
 
     # A list of error strings produced by the programming framework
     # when we try to modify a header, and the HTML output is already being
@@ -125,7 +125,7 @@ class response_splitting(AuditPlugin):
             # This is a case where we have a partial header injection
             #
             msg = ('The vulnerable header was added to the HTTP response,'
-                   ' but the value is not what w3af expected (%s: %s).'
+                   ' but the value is not what w4af expected (%s: %s).'
                    ' Please verify manually.')
             msg %= (HEADER_NAME, HEADER_VALUE)
             om.out.information(msg)
@@ -145,7 +145,7 @@ class response_splitting(AuditPlugin):
         return """
         This plugin identifies response splitting vulnerabilities.
 
-        Detection is performed by sending "w3af\\r\\nvulnerable073b: ae5cw3af" to
+        Detection is performed by sending "w4af\\r\\nvulnerable073b: ae5cw4af" to
         every injection point, and reading the response headers searching for a
-        header with name "vulnerable073b" and value "ae5cw3af".
+        header with name "vulnerable073b" and value "ae5cw4af".
         """

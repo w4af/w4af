@@ -3,19 +3,19 @@ factory.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,8 +26,8 @@ import sys
 import warnings
 import traceback
 
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af import ROOT_PATH
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af import ROOT_PATH
 
 
 def factory(module_name, *args):
@@ -36,7 +36,7 @@ def factory(module_name, *args):
     with the same name.
 
     Example :
-    >>> spider = factory( 'w3af.plugins.crawl.google_spider' )
+    >>> spider = factory( 'w4af.plugins.crawl.google_spider' )
     >>> spider.get_name()
     'google_spider'
 
@@ -45,7 +45,7 @@ def factory(module_name, *args):
     :return: An instance.
     """
     module_path = module_name.replace('.', '/')
-    module_path = module_path.replace('w3af/', '')
+    module_path = module_path.replace('w4af/', '')
     module_path = '%s.py' % module_path
     module_path = os.path.join(ROOT_PATH, module_path)
 
@@ -54,10 +54,10 @@ def factory(module_name, *args):
         raise BaseFrameworkException(msg % module_name)
 
     try:
-        # https://github.com/andresriancho/w3af/issues/10705
+        # https://github.com/andresriancho/w4af/issues/10705
         warnings.filterwarnings('ignore',
                                 message='Not importing directory .*',
-                                module='w3af.*')
+                                module='w4af.*')
 
         __import__(module_name)
     except SyntaxError:
@@ -67,11 +67,11 @@ def factory(module_name, *args):
         # Useful for development and users which failed to install all
         # dependencies
         #
-        # https://github.com/andresriancho/w3af/issues/9688
+        # https://github.com/andresriancho/w4af/issues/9688
         msg = ('It seems that your Python installation does not have all the'
-               ' modules required by the w3af framework. For more information'
+               ' modules required by the w4af framework. For more information'
                ' about how to install and debug dependency issues please browse'
-               ' to http://docs.w3af.org/en/latest/install.html')
+               ' to http://docs.w4af.org/en/latest/install.html')
         print(msg)
 
         # Raise so the user sees the whole traceback

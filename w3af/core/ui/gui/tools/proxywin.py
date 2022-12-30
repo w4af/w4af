@@ -3,36 +3,36 @@ proxywin.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
 
-from w3af.core.ui.gui import helpers, entries, httpLogTab
-from w3af.core.ui.gui.reqResViewer import ReqResViewer
-from w3af.core.ui.gui.entries import ConfigOptions, StatusBar
+from w4af.core.ui.gui import helpers, entries, httpLogTab
+from w4af.core.ui.gui.reqResViewer import ReqResViewer
+from w4af.core.ui.gui.entries import ConfigOptions, StatusBar
 
-from w3af.core.controllers.daemons.proxy import InterceptProxy
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+from w4af.core.controllers.daemons.proxy import InterceptProxy
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               ProxyException)
 
-from w3af.core.data.options import option_types 
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
+from w4af.core.data.options import option_types 
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
 
 ui_proxy_menu = """
 <ui>
@@ -54,13 +54,13 @@ class ProxiedRequests(entries.RememberingWindow):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af):
+    def __init__(self, w4af):
         """Constructor."""
-        super(ProxiedRequests, self).__init__(w3af, 'proxytool',
-                                              _('w3af - Proxy'),
+        super(ProxiedRequests, self).__init__(w4af, 'proxytool',
+                                              _('w4af - Proxy'),
                                               'Using_the_Proxy',
                                               onDestroy=self._close)
-        self.w3af = w3af
+        self.w4af = w4af
         
         self.def_padding = 5
         
@@ -107,7 +107,7 @@ class ProxiedRequests(entries.RememberingWindow):
         self._prev_ip_port = None
         # We need to make widget (split or tabbed) firstly
         self._layout = self.pref.get_value('proxy', 'trap_view')
-        self.reqresp = ReqResViewer(w3af, [self.bt_drop.set_sensitive,
+        self.reqresp = ReqResViewer(w4af, [self.bt_drop.set_sensitive,
                                            self.bt_send.set_sensitive],
                                     editableRequest=True, layout=self._layout)
         self.reqresp.set_sensitive(False)
@@ -126,7 +126,7 @@ class ProxiedRequests(entries.RememberingWindow):
         tabs.append('Intercept')
         
         # History
-        self.httplog = httpLogTab.httpLogTab(w3af, time_refresh=True)
+        self.httplog = httpLogTab.httpLogTab(w4af, time_refresh=True)
         tmp = gtk.Label(_("_History"))
         tmp.set_use_underline(True)
         self.nb.append_page(self.httplog, tmp)
@@ -163,7 +163,7 @@ class ProxiedRequests(entries.RememberingWindow):
     def _init_options(self):
         """Init options."""
         self.like_initial = True
-        self.pref = ConfigOptions(self.w3af, self, 'proxy_options')
+        self.pref = ConfigOptions(self.w4af, self, 'proxy_options')
         
         # Proxy options
         proxy_options = OptionList()
@@ -246,7 +246,7 @@ class ProxiedRequests(entries.RememberingWindow):
         """
         new_port = self.pref.get_value('proxy', 'ipport')
         if new_port != self._prev_ip_port:
-            self.w3af.mainwin.sb(_("Stopping local proxy"))
+            self.w4af.mainwin.sb(_("Stopping local proxy"))
             if self.proxy:
                 self.proxy.stop()
             
@@ -255,7 +255,7 @@ class ProxiedRequests(entries.RememberingWindow):
             except ProxyException:
                 # Ups, port looks already used..:(
                 # Let's show alert and focus Options tab
-                self.w3af.mainwin.sb(_("Failed to start local proxy"))
+                self.w4af.mainwin.sb(_("Failed to start local proxy"))
                 self.fuzzable = None
                 self.waiting_requests = False
                 self.keep_checking = False
@@ -302,10 +302,10 @@ class ProxiedRequests(entries.RememberingWindow):
             ipport = self.pref.get_value('proxy', 'ipport')
             ip, port = ipport.split(":")
             
-        self.w3af.mainwin.sb(_("Starting local proxy"))
+        self.w4af.mainwin.sb(_("Starting local proxy"))
         
         try:
-            self.proxy = InterceptProxy(ip, int(port), self.w3af.uri_opener)
+            self.proxy = InterceptProxy(ip, int(port), self.w4af.uri_opener)
         except ProxyException as w3:
             if not silent:
                 self.show_alert(_(str(w3)))

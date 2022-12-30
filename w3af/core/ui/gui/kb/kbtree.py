@@ -3,19 +3,19 @@ kbtree.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from gi.repository import Gtk as gtk
@@ -24,14 +24,14 @@ import queue
 
 from collections import namedtuple
 
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.kb.info import Info
-from w3af.core.data.kb.kb_observer import KBObserver
-from w3af.core.data.misc.encoding import smart_str
-from w3af.core.ui.gui import helpers
-from w3af.core.ui.gui.tabs.exploit.exploit_all import effectively_exploit_all
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.kb.info import Info
+from w4af.core.data.kb.kb_observer import KBObserver
+from w4af.core.data.misc.encoding import smart_str
+from w4af.core.ui.gui import helpers
+from w4af.core.ui.gui.tabs.exploit.exploit_all import effectively_exploit_all
 
 TYPES_OBJ = {
     "Vuln": "vuln",
@@ -53,9 +53,9 @@ class KBTree(gtk.TreeView):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, ifilter, title, strict):
+    def __init__(self, w4af, ifilter, title, strict):
         self.strict = strict
-        self.w3af = w3af
+        self.w4af = w4af
         
         # simple Tree Store
         # columns: 
@@ -106,8 +106,8 @@ class KBTree(gtk.TreeView):
         self._exploit_instances = []
         
         # Do this only once in order to avoid a performance hit
-        for exploit_name in self.w3af.plugins.get_plugin_list("attack"):
-            exploit = self.w3af.plugins.get_plugin_inst("attack", exploit_name)
+        for exploit_name in self.w4af.plugins.get_plugin_list("attack"):
+            exploit = self.w4af.plugins.get_plugin_inst("attack", exploit_name)
             self._exploit_instances.append(exploit)
 
         # initial filters
@@ -361,8 +361,8 @@ class KBTree(gtk.TreeView):
         #        vulnid = vuln.get_id()
         #
         #        def go_log(w):
-        #            self.w3af.mainwin.httplog.show_req_res_by_id(vulnid)
-        #            self.w3af.mainwin.nb.set_current_page(4)
+        #            self.w4af.mainwin.httplog.show_req_res_by_id(vulnid)
+        #            self.w4af.mainwin.nb.set_current_page(4)
         #        opc.connect('activate', go_log)
         #    else:
         #        opc.set_sensitive(False)
@@ -387,7 +387,7 @@ class KBTree(gtk.TreeView):
             # Get the potential vuln object
             vuln = self.get_instance(path)
             
-            # https://github.com/andresriancho/w3af/issues/181
+            # https://github.com/andresriancho/w4af/issues/181
             # FIXME: for some reason, in some edge case, the get_instance
             #        returns a dict instead of a vuln object which then
             #        triggers a bug, so we have a workaround for it:
@@ -425,7 +425,7 @@ class KBTree(gtk.TreeView):
                 # Get the potential vuln object
                 vuln = self.get_instance(path)
                 
-                # https://github.com/andresriancho/w3af/issues/181
+                # https://github.com/andresriancho/w4af/issues/181
                 # FIXME: for some reason, in some edge case, the get_instance
                 #        returns a dict instead of a vuln object which then
                 #        triggers a bug, so we have a workaround for it:
@@ -435,9 +435,9 @@ class KBTree(gtk.TreeView):
                 if vuln is not None and self._is_exploitable(vuln.get_id()):
                     exploits = self._get_exploits(vuln.get_id())
                     # Move to Exploit Tab
-                    self.w3af.mainwin.nb.set_current_page(3)
+                    self.w4af.mainwin.nb.set_current_page(3)
                     # Exec the exploits for this vuln
-                    effectively_exploit_all(self.w3af, exploits, False)
+                    effectively_exploit_all(self.w4af, exploits, False)
                     return True
             
             return False

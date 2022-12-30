@@ -4,19 +4,19 @@ test_profile.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,10 +26,10 @@ import os
 from configparser import ConfigParser
 import pytest
 
-from w3af import ROOT_PATH
-from w3af.core.data.profile.profile import profile
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af import ROOT_PATH
+from w4af.core.data.profile.profile import profile
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 class TestCoreProfiles(unittest.TestCase):
@@ -39,7 +39,7 @@ class TestCoreProfiles(unittest.TestCase):
 
     def setUp(self):
         super(TestCoreProfiles, self).setUp()
-        self.core = w3afCore()
+        self.core = w4afCore()
 
     def tearDown(self):
         super(TestCoreProfiles, self).tearDown()
@@ -72,7 +72,7 @@ class TestCoreProfiles(unittest.TestCase):
         self.core.profiles.save_current_to_new_profile(new_profile_name)
 
         # Get a new, clean instance of the core.
-        clean_core = w3afCore()
+        clean_core = w4afCore()
         audit = clean_core.plugins.get_enabled_plugins('audit')
         self.assertEqual(audit, [])
 
@@ -141,7 +141,7 @@ class TestCoreProfiles(unittest.TestCase):
 
     def test_cant_start_new_thread_bug(self):
         """
-        This tests that https://github.com/andresriancho/w3af/issues/56 was
+        This tests that https://github.com/andresriancho/w4af/issues/56 was
         properly fixed after the change in how sqlite threads were managed.
         """
         valid, _ = self.core.profiles.get_profile_list('.')

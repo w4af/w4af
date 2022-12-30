@@ -3,19 +3,19 @@ graph.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
@@ -26,11 +26,11 @@ from gi.repository import GObject as gobject
 import time
 import itertools
 
-import w3af.core.data.constants.severity as severity
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.ui.gui.output.message_consumer import MessageConsumer
-from w3af.core.data.db.disk_list import DiskList
-from w3af.core.controllers.exceptions import (NoSuchTableException,
+from w4af.core.ui.gui.output.message_consumer import MessageConsumer
+from w4af.core.data.db.disk_list import DiskList
+from w4af.core.controllers.exceptions import (NoSuchTableException,
                                               MalformedDBException)
 
 
@@ -55,11 +55,11 @@ class LogGraph(gtk.DrawingArea, MessageConsumer):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af):
+    def __init__(self, w4af):
         gtk.DrawingArea.__init__(self)
         MessageConsumer.__init__(self)
         
-        self.w3af = w3af
+        self.w4af = w4af
         
         self.pangolayout = self.create_pango_layout("")
 
@@ -130,7 +130,7 @@ class LogGraph(gtk.DrawingArea, MessageConsumer):
             yield True
 
         # Handle the case where the DBMS has been stopped and the tables cleared
-        # https://github.com/andresriancho/w3af/issues/5107
+        # https://github.com/andresriancho/w4af/issues/5107
         try:
             len_all_messages = len(self.all_messages)
         except NoSuchTableException:
@@ -152,7 +152,7 @@ class LogGraph(gtk.DrawingArea, MessageConsumer):
             # getting the -1 and 0 indexes. According to len(self.all_messages)
             # those indexes exist... so... we get here on rare race conditions
             #
-            # https://github.com/andresriancho/w3af/issues/4211
+            # https://github.com/andresriancho/w4af/issues/4211
             yield True
 
         self.window.clear()
@@ -166,7 +166,7 @@ class LogGraph(gtk.DrawingArea, MessageConsumer):
             # Note that this line was changed from the previous (buggy line):
             #       self.timeGrouping *= int(tspan / usableWidth) + 1
             #
-            # Which triggers https://github.com/andresriancho/w3af/issues/488
+            # Which triggers https://github.com/andresriancho/w4af/issues/488
             # The new line makes it impossible for self.timeGrouping to be zero
             #
             self.timeGrouping = self.timeGrouping * int(tspan / usableWidth) + 1

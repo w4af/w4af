@@ -3,19 +3,19 @@ home_dir.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,31 +23,31 @@ import os
 import sys
 import shutil
 
-from w3af import ROOT_PATH
+from w4af import ROOT_PATH
 
-HOME_DIR = os.path.join(os.path.expanduser('~'), '.w3af')
+HOME_DIR = os.path.join(os.path.expanduser('~'), '.w4af')
 
-# Point to the directory where w3af_console , w3af_gui and profiles/ live
+# Point to the directory where w4af_console , w4af_gui and profiles/ live
 # Also, the root of the git repository
-W3AF_LOCAL_PATH = os.sep.join(__file__.split(os.sep)[:-5]) + os.path.sep
+w4af_LOCAL_PATH = os.sep.join(__file__.split(os.sep)[:-5]) + os.path.sep
 
 
 def create_home_dir():
     """
-    Creates the w3af home directory, on linux: /home/user/.w3af/
+    Creates the w4af home directory, on linux: /home/user/.w4af/
     :return: True if success.
     """
-    # Create .w3af inside home directory
+    # Create .w4af inside home directory
     home_path = get_home_dir()
     if not os.path.exists(home_path):
         try:
             os.makedirs(home_path)
         except OSError:
             # Handle some really strange cases where there is a race-condition
-            # where multiple w3af processes are starting and creating the same
+            # where multiple w4af processes are starting and creating the same
             # directory
             #
-            # https://circleci.com/gh/andresriancho/w3af/1347
+            # https://circleci.com/gh/andresriancho/w4af/1347
             if not os.path.exists(home_path):
                 return False
 
@@ -58,24 +58,24 @@ def create_home_dir():
             os.makedirs(webroot)
         except OSError:
             # Handle some really strange cases where there is a race-condition
-            # where multiple w3af processes are starting and creating the same
+            # where multiple w4af processes are starting and creating the same
             # directory
             #
-            # https://circleci.com/gh/andresriancho/w3af/1347
+            # https://circleci.com/gh/andresriancho/w4af/1347
             if not os.path.exists(webroot):
                 return False
 
     # and the profile directory
     home_profiles = os.path.join(home_path, 'profiles')
 
-    # I need to check in two different paths to support installing w3af as
-    # a module. Note the gen_data_files.py code in the w3af-module.
-    default_profiles_paths = [os.path.join(W3AF_LOCAL_PATH, 'profiles'),
+    # I need to check in two different paths to support installing w4af as
+    # a module. Note the gen_data_files.py code in the w4af-module.
+    default_profiles_paths = [os.path.join(w4af_LOCAL_PATH, 'profiles'),
                               os.path.join(ROOT_PATH, 'profiles'),
                               os.path.join(ROOT_PATH, '../profiles'),
                               os.path.join(sys.prefix, 'profiles'),
                               os.path.join(sys.exec_prefix, 'profiles'),
-                              # https://github.com/andresriancho/w3af-module/issues/4
+                              # https://github.com/andresriancho/w4af-module/issues/4
                               os.path.join(sys.prefix, 'local', 'profiles'),
                               os.path.join(sys.exec_prefix, 'local', 'profiles')]
 
@@ -98,10 +98,10 @@ def create_home_dir():
 
 def get_home_dir():
     """
-    :return: The location of the w3af directory inside the home directory of
+    :return: The location of the w4af directory inside the home directory of
         the current user.
     """
-    return os.environ.get('W3AF_HOME_DIR', HOME_DIR)
+    return os.environ.get('w4af_HOME_DIR', HOME_DIR)
 
 
 def verify_dir_has_perm(path, perm, levels=0):

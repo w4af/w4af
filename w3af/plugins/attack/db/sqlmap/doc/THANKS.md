@@ -441,7 +441,7 @@ David Rhoades, <david.rhoades(at)mavensecurity.com>
 Andres Riancho, <andres.riancho(at)gmail.com>
 * for beta-testing sqlmap
 * for reporting a bug and suggesting some features
-* for including sqlmap in his great web application audit and attack framework, w3af, http://w3af.sourceforge.net
+* for including sqlmap in his great web application audit and attack framework, w4af, http://w4af.sourceforge.net
 * for suggesting a way for handling DNS caching
 
 Jamie Riden, <jamie.riden(at)ngssecure.com>

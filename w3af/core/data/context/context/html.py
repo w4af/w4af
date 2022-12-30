@@ -3,28 +3,28 @@ html.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
 
-from w3af.core.data.context.context.javascript import get_js_context_iter
-from w3af.core.data.context.context.css import get_css_context_iter
-from w3af.core.data.context.context.base import BaseContext
-from w3af.core.data.context.constants import JS_EVENTS, EXECUTABLE_ATTRS
+from w4af.core.data.context.context.javascript import get_js_context_iter
+from w4af.core.data.context.context.css import get_css_context_iter
+from w4af.core.data.context.context.base import BaseContext
+from w4af.core.data.context.constants import JS_EVENTS, EXECUTABLE_ATTRS
 
 
 class HtmlTag(BaseContext):
@@ -183,7 +183,7 @@ class HTMLAttrQuoteGeneric(BaseContext):
         we check that the tag attribute name is one that allows/knows how to
         handle the "javascript:" protocol.
 
-        [0] https://github.com/andresriancho/w3af/issues/13359
+        [0] https://github.com/andresriancho/w4af/issues/13359
         """
         if self.name not in JS_EVENTS and self.name not in EXECUTABLE_ATTRS:
             return False

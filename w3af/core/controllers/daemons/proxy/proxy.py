@@ -3,19 +3,19 @@ proxy.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -27,12 +27,12 @@ from multiprocessing.dummy import Process
 from libmproxy.proxy.server import ProxyServer, ProxyServerError
 from libmproxy.proxy.config import ProxyConfig
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.daemons.proxy import ProxyHandler
-from w3af.core.controllers.exceptions import ProxyException
-from w3af.core.data.constants.encodings import DEFAULT_ENCODING
+from w4af import ROOT_PATH
+from w4af.core.controllers.daemons.proxy import ProxyHandler
+from w4af.core.controllers.exceptions import ProxyException
+from w4af.core.data.constants.encodings import DEFAULT_ENCODING
 
 class Proxy(Process):
     """
@@ -123,11 +123,11 @@ class Proxy(Process):
         except AttributeError as ae:
             if str(ae) == "'module' object has no attribute '_lib'":
                 # This is a rare issue with the OpenSSL setup that some users
-                # (mostly in mac os) find. Not related with w3af/mitmproxy but
+                # (mostly in mac os) find. Not related with w4af/mitmproxy but
                 # with some broken stuff they have
                 #
                 # https://github.com/mitmproxy/mitmproxy/issues/281
-                # https://github.com/andresriancho/w3af/issues/10716
+                # https://github.com/andresriancho/w4af/issues/10716
                 #
                 # AttributeError: 'module' object has no attribute '_lib'
                 raise ProxyException(self.INCORRECT_SETUP % ae)

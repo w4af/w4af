@@ -4,7 +4,7 @@ plugins
 output console,text_file
 output
 output config text_file
-set output_file output-w3af.txt
+set output_file output-w4af.txt
 set verbose True
 back
 output config console
@@ -15,7 +15,7 @@ audit sqli
 audit
 back
 target
-set target http://127.0.0.1:8000/w3af/file_upload/
+set target http://127.0.0.1:8000/w4af/file_upload/
 back
 start
 

@@ -3,19 +3,19 @@ strategy.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,24 +25,24 @@ import queue
 
 from multiprocessing import TimeoutError
 
-import w3af.core.data.kb.config as cf
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.url.extended_urllib import MAX_ERROR_COUNT
-from w3af.core.data.kb.info import Info
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.url.extended_urllib import MAX_ERROR_COUNT
+from w4af.core.data.kb.info import Info
 
-from w3af.core.controllers.core_helpers.consumers.grep import grep
-from w3af.core.controllers.core_helpers.consumers.auth import auth
-from w3af.core.controllers.core_helpers.consumers.audit import audit
-from w3af.core.controllers.core_helpers.consumers.bruteforce import bruteforce
-from w3af.core.controllers.core_helpers.consumers.seed import seed
-from w3af.core.controllers.core_helpers.consumers.crawl_infrastructure import CrawlInfrastructure
-from w3af.core.controllers.core_helpers.consumers.constants import POISON_PILL
-from w3af.core.controllers.core_helpers.exception_handler import ExceptionData
+from w4af.core.controllers.core_helpers.consumers.grep import grep
+from w4af.core.controllers.core_helpers.consumers.auth import auth
+from w4af.core.controllers.core_helpers.consumers.audit import audit
+from w4af.core.controllers.core_helpers.consumers.bruteforce import bruteforce
+from w4af.core.controllers.core_helpers.consumers.seed import seed
+from w4af.core.controllers.core_helpers.consumers.crawl_infrastructure import CrawlInfrastructure
+from w4af.core.controllers.core_helpers.consumers.constants import POISON_PILL
+from w4af.core.controllers.core_helpers.exception_handler import ExceptionData
 
-from w3af.core.controllers.exceptions import (ScanMustStopException,
+from w4af.core.controllers.exceptions import (ScanMustStopException,
                                               ScanMustStopByUserRequest)
 
 
@@ -55,14 +55,14 @@ class CoreStrategy(object):
             bruteforce()
         audit(things)
 
-    It has been w3af's main algorithm for a while, and what we want to do now
+    It has been w4af's main algorithm for a while, and what we want to do now
     is to decouple it from the core in order to make experiments and implement
     new / faster algorithms.
 
     Use this strategy as a base for your experiments!
     """
-    def __init__(self, w3af_core):
-        self._w3af_core = w3af_core
+    def __init__(self, w4af_core):
+        self._w4af_core = w4af_core
         
         # Consumer threads
         self._grep_consumer = None
@@ -74,7 +74,7 @@ class CoreStrategy(object):
         self._bruteforce_consumer = None
 
         # Producer threads
-        self._seed_producer = seed(self._w3af_core)
+        self._seed_producer = seed(self._w4af_core)
 
         # Also use this method to clear observers
         self._observers = []
@@ -102,7 +102,7 @@ class CoreStrategy(object):
         self._bruteforce_consumer = None
 
         # Producer threads
-        self._seed_producer = seed(self._w3af_core)
+        self._seed_producer = seed(self._w4af_core)
 
         # Also use this method to clear observers
         self._stop_observers()
@@ -149,7 +149,7 @@ class CoreStrategy(object):
                 # While the consumers might have finished, they certainly queue
                 # tasks in the core's worker_pool, which need to be processed
                 # too
-                self._w3af_core.worker_pool.finish()
+                self._w4af_core.worker_pool.finish()
 
             raise exc_info[0](exc_info[1]).with_traceback(exc_info[2])
 
@@ -159,7 +159,7 @@ class CoreStrategy(object):
 
             # While the consumers might have finished, they certainly queue
             # tasks in the core's worker_pool, which need to be processed too
-            self._w3af_core.worker_pool.finish()
+            self._w4af_core.worker_pool.finish()
 
             # And also teardown all the observers
             self._teardown_observers()
@@ -295,7 +295,7 @@ class CoreStrategy(object):
 
         # Only check if these have exceptions and bring them to the main
         # thread in order to be handled by the ExceptionHandler and the
-        # w3afCore
+        # w4afCore
         _other = [self._audit_consumer,
                   self._auth_consumer,
                   self._grep_consumer]
@@ -332,7 +332,7 @@ class CoreStrategy(object):
                 args = (cf.cf.get('max_scan_time'), )
                 om.out.information(msg % args)
 
-                self._w3af_core.stop()
+                self._w4af_core.stop()
                 break
 
     def _scan_reached_max_time(self):
@@ -354,7 +354,7 @@ class CoreStrategy(object):
             return False
 
         # Get the scan time and compare with the max
-        scan_time = self._w3af_core.status.get_run_time()
+        scan_time = self._w4af_core.status.get_run_time()
         if scan_time > max_scan_time:
             return True
 
@@ -454,9 +454,9 @@ class CoreStrategy(object):
 
         Please note that ExtendedUrllib can raise a ScanMustStopByUserRequest
         which should get through this piece of code and be re-raised in order to
-        reach the try/except clause in w3afCore's start.
+        reach the try/except clause in w4afCore's start.
         """
-        self._w3af_core.exception_handler.handle_exception_data(exception_data)
+        self._w4af_core.exception_handler.handle_exception_data(exception_data)
 
     def verify_target_server_up(self):
         """
@@ -493,7 +493,7 @@ class CoreStrategy(object):
         while sent_requests < MAX_ERROR_COUNT * 1.5:
             for url in targets:
                 try:
-                    self._w3af_core.uri_opener.GET(url, cache=False)
+                    self._w4af_core.uri_opener.GET(url, cache=False)
                 except ScanMustStopByUserRequest:
                     # Not a real error, the user stopped the scan
                     raise
@@ -525,7 +525,7 @@ class CoreStrategy(object):
 
         for url in targets:
             try:
-                http_response = self._w3af_core.uri_opener.GET(url,
+                http_response = self._w4af_core.uri_opener.GET(url,
                                                                cache=False,
                                                                follow_redirects=True)
             except ScanMustStopByUserRequest:
@@ -558,7 +558,7 @@ class CoreStrategy(object):
         Alert the user when the configured target is set to a site which will
         301 redirect all requests to https://
 
-        :see: https://github.com/andresriancho/w3af/issues/14976
+        :see: https://github.com/andresriancho/w4af/issues/14976
         :return: True if the site returns 301 for all resources. Also an Info
                  instance is saved to the KB in order to alert the user.
         """
@@ -584,7 +584,7 @@ class CoreStrategy(object):
             # We test if the target URLs are redirecting to a different protocol
             # or domain.
             try:
-                http_response = self._w3af_core.uri_opener.GET(url, cache=False)
+                http_response = self._w4af_core.uri_opener.GET(url, cache=False)
             except ScanMustStopByUserRequest:
                 # Not a real error, the user stopped the scan
                 raise
@@ -615,12 +615,12 @@ class CoreStrategy(object):
         #    because I want to initialize the is_404 database in a controlled
         #    try/except block.
         #
-        from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
+        from w4af.core.controllers.core_helpers.fingerprint_404 import is_404
         targets_with_404 = []
 
         for url in cf.cf.get('targets'):
             try:
-                response = self._w3af_core.uri_opener.GET(url, cache=True)
+                response = self._w4af_core.uri_opener.GET(url, cache=True)
             except ScanMustStopByUserRequest:
                 raise
             except Exception as e:
@@ -646,7 +646,7 @@ class CoreStrategy(object):
         if targets_with_404:
             urls = [' - %s\n' % u.url_string for u in targets_with_404]
             urls = ''.join(urls)
-            om.out.information('w3af identified the user-configured URLs listed'
+            om.out.information('w4af identified the user-configured URLs listed'
                                ' below as non-existing pages (404). This could'
                                ' result in a scan with low test coverage: some'
                                ' application areas might not be scanned.\n'
@@ -669,15 +669,15 @@ class CoreStrategy(object):
             * Retrieve all plugins from the core,
             * Create the consumer instance and more,
         """
-        crawl_plugins = self._w3af_core.plugins.plugins['crawl']
-        infrastructure_plugins = self._w3af_core.plugins.plugins['infrastructure']
+        crawl_plugins = self._w4af_core.plugins.plugins['crawl']
+        infrastructure_plugins = self._w4af_core.plugins.plugins['infrastructure']
 
         if crawl_plugins or infrastructure_plugins:
             discovery_plugins = infrastructure_plugins
             discovery_plugins.extend(crawl_plugins)
 
             self._discovery_consumer = CrawlInfrastructure(discovery_plugins,
-                                                           self._w3af_core,
+                                                           self._w4af_core,
                                                            cf.cf.get('max_discovery_time'))
             self._discovery_consumer.start()
 
@@ -688,11 +688,11 @@ class CoreStrategy(object):
             * Set the Queue in xurllib
             * Start the consumer
         """
-        grep_plugins = self._w3af_core.plugins.plugins['grep']
+        grep_plugins = self._w4af_core.plugins.plugins['grep']
 
         if grep_plugins:
-            self._grep_consumer = grep(grep_plugins, self._w3af_core)
-            self._w3af_core.uri_opener.set_grep_queue_put(self._grep_consumer.grep)
+            self._grep_consumer = grep(grep_plugins, self._w4af_core)
+            self._w4af_core.uri_opener.set_grep_queue_put(self._grep_consumer.grep)
             self._grep_consumer.start()
 
     def _teardown_grep(self):
@@ -760,11 +760,11 @@ class CoreStrategy(object):
         The input queue for this consumer is populated by the fuzzable request
         router.
         """
-        bruteforce_plugins = self._w3af_core.plugins.plugins['bruteforce']
+        bruteforce_plugins = self._w4af_core.plugins.plugins['bruteforce']
 
         if bruteforce_plugins:
             self._bruteforce_consumer = bruteforce(bruteforce_plugins,
-                                                   self._w3af_core)
+                                                   self._w4af_core)
             self._bruteforce_consumer.start()
 
     def force_auth_login(self):
@@ -784,10 +784,10 @@ class CoreStrategy(object):
         performing any step, the developer needs to run the force_auth_login()
         method.
         """
-        auth_plugins = self._w3af_core.plugins.plugins['auth']
+        auth_plugins = self._w4af_core.plugins.plugins['auth']
 
         if auth_plugins:
-            self._auth_consumer = auth(auth_plugins, self._w3af_core, timeout)
+            self._auth_consumer = auth(auth_plugins, self._w4af_core, timeout)
             self._auth_consumer.start()
             self._auth_consumer.force_login()
 
@@ -797,8 +797,8 @@ class CoreStrategy(object):
         """
         om.out.debug('Called _setup_audit()')
 
-        audit_plugins = self._w3af_core.plugins.plugins['audit']
+        audit_plugins = self._w4af_core.plugins.plugins['audit']
 
         if audit_plugins:
-            self._audit_consumer = audit(audit_plugins, self._w3af_core)
+            self._audit_consumer = audit(audit_plugins, self._w4af_core)
             self._audit_consumer.start()

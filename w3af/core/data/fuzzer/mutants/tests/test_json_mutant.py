@@ -3,19 +3,19 @@ test_json_mutant.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,11 +23,11 @@ import unittest
 import json
 import copy
 
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.fuzzer.mutants.json_mutant import JSONMutant
-from w3af.core.data.dc.json_container import JSONContainer
-from w3af.core.data.dc.tests.test_json_container import COMPLEX_OBJECT, ARRAY
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.fuzzer.mutants.json_mutant import JSONMutant
+from w4af.core.data.dc.json_container import JSONContainer
+from w4af.core.data.dc.tests.test_json_container import COMPLEX_OBJECT, ARRAY
 
 
 class TestJSONMutant(unittest.TestCase):
@@ -35,7 +35,7 @@ class TestJSONMutant(unittest.TestCase):
     def setUp(self):
         self.fuzzer_config = {}
         self.payloads = ['xyz', 'www']
-        self.url = URL('http://www.w3af.com/?id=3')
+        self.url = URL('http://www.w4af.com/?id=3')
 
     def test_found_at(self):
         dc = JSONContainer(COMPLEX_OBJECT)
@@ -44,7 +44,7 @@ class TestJSONMutant(unittest.TestCase):
         m = JSONMutant(freq)
         m.get_dc().set_token(('object-second_key-list-0-string',))
 
-        expected = '"http://www.w3af.com/", using HTTP method PUT.'\
+        expected = '"http://www.w4af.com/", using HTTP method PUT.'\
                    ' The sent JSON-data was: "...object-second_key-list-'\
                    '0-string=abc..."'
         self.assertEqual(m.found_at(), expected)

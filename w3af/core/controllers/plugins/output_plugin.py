@@ -3,27 +3,27 @@ output_plugin.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import inspect
 
-import w3af.core.data.constants.severity as severity
-from w3af.core.controllers.plugins.plugin import Plugin
-from w3af.core.data.misc.encoding import smart_unicode
+import w4af.core.data.constants.severity as severity
+from w4af.core.controllers.plugins.plugin import Plugin
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 class OutputPlugin(Plugin):
@@ -118,7 +118,7 @@ class OutputPlugin(Plugin):
         """
         The ExceptionHandler receives all unhandled exceptions generated during
         a scan, and calls log_crash() with the crash report (also saved to
-        /tmp/w3af-crash files) so that output plugins can write them in the
+        /tmp/w4af-crash files) so that output plugins can write them in the
         appropriate format.
 
         :return: No value is returned.
@@ -131,13 +131,13 @@ class OutputPlugin(Plugin):
         configuration.
 
         :param enabled_plugins_dict: As returned by
-                                     w3afCore.get_all_enabled_plugins() looks
+                                     w4afCore.get_all_enabled_plugins() looks
                                      similar to:
 
                                     {'audit':[],'grep':[],'bruteforce':[],
                                      'crawl':[],...}
 
-        :param plugin_options_dict: As defined in the w3afCore, looks similar to
+        :param plugin_options_dict: As defined in the w4afCore, looks similar to
 
                                     {'audit':{},'grep':{},'bruteforce':{},
                                      'crawl':{},...}
@@ -160,7 +160,7 @@ class OutputPlugin(Plugin):
         OutputManager and is useful to give feedback to the user before the
         scan ends.
 
-        :see: https://github.com/andresriancho/w3af/issues/6726
+        :see: https://github.com/andresriancho/w4af/issues/6726
         :return: None
         """
         pass
@@ -170,7 +170,7 @@ class OutputPlugin(Plugin):
         :param string_to_clean: A string that should be cleaned before using
                                 it in a message object.
         """
-        # https://github.com/andresriancho/w3af/issues/3586
+        # https://github.com/andresriancho/w4af/issues/3586
         if string_to_clean is None:
             return ''
 

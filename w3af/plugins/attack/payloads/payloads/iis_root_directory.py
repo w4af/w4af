@@ -1,5 +1,5 @@
 import re
-from w3af.plugins.attack.payloads.base_payload import Payload
+from w4af.plugins.attack.payloads.base_payload import Payload
 
 #TODO: TEST
 

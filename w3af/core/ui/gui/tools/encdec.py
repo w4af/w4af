@@ -4,19 +4,19 @@ encdec.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -28,9 +28,9 @@ import random
 
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
-import w3af.core.data.parsers.utils.encode_decode as encode_decode
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.ui.gui import entries
+import w4af.core.data.parsers.utils.encode_decode as encode_decode
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.ui.gui import entries
 
 
 class SimpleTextView(gtk.TextView):
@@ -101,13 +101,13 @@ class EncodeDecode(entries.RememberingWindow):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af):
+    def __init__(self, w4af):
         super(EncodeDecode, self).__init__(
-            w3af, "encodedecode", _("w3af - Encode / Decode"),
+            w4af, "encodedecode", _("w4af - Encode / Decode"),
             "Encode_and_Decode")
-        self.w3af = w3af
+        self.w4af = w4af
         # Split panes
-        vpan = entries.RememberingVPaned(w3af, "pane-encodedecode")
+        vpan = entries.RememberingVPaned(w4af, "pane-encodedecode")
         # Upper pane
         vbox = gtk.VBox()
         sw = gtk.ScrolledWindow()
@@ -188,7 +188,7 @@ class EncodeDecode(entries.RememberingWindow):
                         " can\'t be encoded/decoded using this algorithm."
                         " A detailed error follows:\n\t\t- ")
                 out.set_text(msg + str(proc.exception), use_repr=False)
-                self.w3af.mainwin.sb(_("Problem processing that string!"))
+                self.w4af.mainwin.sb(_("Problem processing that string!"))
             return False
 
         proc.start()

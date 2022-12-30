@@ -4,19 +4,19 @@ test_sgml.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -28,13 +28,13 @@ from itertools import combinations
 from random import choice
 
 
-from w3af import ROOT_PATH
-from w3af.core.data.parsers.doc.sgml import SGMLParser, Tag
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.url.tests.test_HTTPResponse import TEST_RESPONSES
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.parsers.doc.tests.data.constants import *
+from w4af import ROOT_PATH
+from w4af.core.data.parsers.doc.sgml import SGMLParser, Tag
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.url.tests.test_HTTPResponse import TEST_RESPONSES
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.parsers.doc.tests.data.constants import *
 
 
 def build_http_response(url, body_content, headers=Headers()):
@@ -46,16 +46,16 @@ def build_http_response(url, body_content, headers=Headers()):
 @pytest.mark.smoke
 class TestSGMLParser(unittest.TestCase):
 
-    url = URL('http://w3af.com')
+    url = URL('http://w4af.com')
 
     def test_get_emails_filter(self):
         resp = build_http_response(self.url, '')
         p = SGMLParser(resp)
-        p._emails = {'a@w3af.com', 'foo@not.com'}
+        p._emails = {'a@w4af.com', 'foo@not.com'}
 
-        self.assertEqual(p.get_emails(), {'a@w3af.com', 'foo@not.com'})
+        self.assertEqual(p.get_emails(), {'a@w4af.com', 'foo@not.com'})
 
-        self.assertEqual(p.get_emails(domain='w3af.com'), ['a@w3af.com'])
+        self.assertEqual(p.get_emails(domain='w4af.com'), ['a@w4af.com'])
         self.assertEqual(p.get_emails(domain='not.com'), ['foo@not.com'])
 
     def test_extract_emails_blank(self):
@@ -65,36 +65,36 @@ class TestSGMLParser(unittest.TestCase):
         self.assertEqual(p.get_emails(), set())
 
     def test_extract_emails_mailto(self):
-        body = '<a href="mailto:abc@w3af.com">test</a>'
+        body = '<a href="mailto:abc@w4af.com">test</a>'
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
 
-        expected_res = {'abc@w3af.com'}
+        expected_res = {'abc@w4af.com'}
         self.assertEqual(p.get_emails(), expected_res)
 
     def test_extract_emails_mailto_dup(self):
-        body = '<a href="mailto:abc@w3af.com">a</a>'\
-               '<a href="mailto:abc@w3af.com">b</a>'
+        body = '<a href="mailto:abc@w4af.com">a</a>'\
+               '<a href="mailto:abc@w4af.com">b</a>'
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
 
-        expected_res = {'abc@w3af.com'}
+        expected_res = {'abc@w4af.com'}
         self.assertEqual(p.get_emails(), expected_res)
 
     def test_extract_emails_mailto_not_dup(self):
-        body = '<a href="mailto:abc@w3af.com">a</a>'\
-               '<a href="mailto:abc_def@w3af.com">b</a>'
+        body = '<a href="mailto:abc@w4af.com">a</a>'\
+               '<a href="mailto:abc_def@w4af.com">b</a>'
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
 
-        expected_res = {'abc@w3af.com', 'abc_def@w3af.com'}
+        expected_res = {'abc@w4af.com', 'abc_def@w4af.com'}
         self.assertEqual(p.get_emails(), expected_res)
 
     def test_mailto_ignored_in_links(self):
-        body = '<a href="mailto:abc@w3af.com">a</a>'
+        body = '<a href="mailto:abc@w4af.com">a</a>'
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
@@ -103,13 +103,13 @@ class TestSGMLParser(unittest.TestCase):
         self.assertEqual(parsed, [])
 
     def test_mailto_subject_body(self):
-        body = '<a href="mailto:abc@w3af.com?subject=testing out mailto'\
+        body = '<a href="mailto:abc@w4af.com?subject=testing out mailto'\
                '&body=Just testing">test</a>'
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
 
-        expected_res = {'abc@w3af.com'}
+        expected_res = {'abc@w4af.com'}
         self.assertEqual(p.get_emails(), expected_res)
 
     def test_parser_attrs(self):
@@ -133,7 +133,7 @@ class TestSGMLParser(unittest.TestCase):
         resp = build_http_response(self.url, body)
         p = SGMLParser(resp)
         p.parse()
-        self.assertEqual(URL('http://www.w3afbase.com/'), p._base_url)
+        self.assertEqual(URL('http://www.w4afbase.com/'), p._base_url)
 
     def test_meta_tags(self):
         body = HTML_DOC % {'head': META_REFRESH + META_REFRESH_WITH_URL,
@@ -144,9 +144,9 @@ class TestSGMLParser(unittest.TestCase):
         p.parse()
 
         self.assertEqual(2, len(p.meta_redirs))
-        self.assertIn("2;url=http://crawler.w3af.com/", p.meta_redirs)
+        self.assertIn("2;url=http://crawler.w4af.com/", p.meta_redirs)
         self.assertIn("600", p.meta_redirs)
-        self.assertEqual([URL('http://crawler.w3af.com/')], p.references[0])
+        self.assertEqual([URL('http://crawler.w4af.com/')], p.references[0])
 
     def test_meta_tags_with_single_quotes(self):
         body = HTML_DOC % {'head': META_REFRESH + META_REFRESH_WITH_URL_AND_QUOTES,
@@ -157,9 +157,9 @@ class TestSGMLParser(unittest.TestCase):
         p.parse()
 
         self.assertEqual(2, len(p.meta_redirs))
-        self.assertIn("2;url='http://crawler.w3af.com/'", p.meta_redirs)
+        self.assertIn("2;url='http://crawler.w4af.com/'", p.meta_redirs)
         self.assertIn("600", p.meta_redirs)
-        self.assertEqual([URL('http://crawler.w3af.com/')], p.references[0])
+        self.assertEqual([URL('http://crawler.w4af.com/')], p.references[0])
 
     def test_case_sensitivity(self):
         """
@@ -218,7 +218,7 @@ class TestSGMLParser(unittest.TestCase):
         parsed_refs = p.references[0]
         self.assertEqual(1, len(parsed_refs))
         self.assertEqual(
-            'http://w3af.com/x.py?a=1', parsed_refs[0].url_string)
+            'http://w4af.com/x.py?a=1', parsed_refs[0].url_string)
 
     def test_reference_with_colon(self):
         body = """
@@ -279,7 +279,7 @@ class TestSGMLParser(unittest.TestCase):
 
     def test_get_clear_text_issue_4402(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/4402
+        :see: https://github.com/andresriancho/w4af/issues/4402
         """
         test_file_path = 'core/data/url/tests/data/encoding_4402.php'
         test_file = os.path.join(ROOT_PATH, test_file_path)
@@ -304,7 +304,7 @@ class TestSGMLParser(unittest.TestCase):
 class TestTagsByFilter(unittest.TestCase):
     def test_basic(self):
         body = '<html><a href="/abc">foo</a></html>'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers()
         headers['content-type'] = 'text/html'
         resp = HTTPResponse(200, body, headers, url, url, charset='utf-8')
@@ -317,7 +317,7 @@ class TestTagsByFilter(unittest.TestCase):
 
     def test_two(self):
         body = '<html><a href="/abc">foo</a><b>bar</b></html>'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers()
         headers['content-type'] = 'text/html'
         resp = HTTPResponse(200, body, headers, url, url, charset='utf-8')
@@ -331,7 +331,7 @@ class TestTagsByFilter(unittest.TestCase):
 
     def test_nested_with_text(self):
         body = '<html><a href="/abc">foo<div>bar</div></a></html>'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers()
         headers['content-type'] = 'text/html'
         resp = HTTPResponse(200, body, headers, url, url, charset='utf-8')
@@ -344,7 +344,7 @@ class TestTagsByFilter(unittest.TestCase):
 
     def test_none(self):
         body = '<html><a href="/abc">foo<div>bar</div></a></html>'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers()
         headers['content-type'] = 'text/html'
         resp = HTTPResponse(200, body, headers, url, url, charset='utf-8')

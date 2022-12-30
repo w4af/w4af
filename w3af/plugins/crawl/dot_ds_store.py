@@ -3,34 +3,34 @@ ds_store.py
 
 Copyright 2013 Tomas Velazquez
 
-This file is part of w3af, w3af.sourceforge.net .
+This file is part of w4af, w4af.sourceforge.net .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from io import BytesIO
 
 from ds_store import DSStore
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
-from w3af.core.data.db.disk_set import DiskSet
-from w3af.core.data.kb.vuln import Vuln
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.core_helpers.fingerprint_404 import is_404
+from w4af.core.data.db.disk_set import DiskSet
+from w4af.core.data.kb.vuln import Vuln
 
 
 class dot_ds_store(CrawlPlugin):
@@ -126,10 +126,10 @@ class dot_ds_store(CrawlPlugin):
         directory that it accesses.
         
         For example, if the plugin input is:
-            - http://host.tld/w3af/index.php
+            - http://host.tld/w4af/index.php
 
         The plugin will perform these requests:
-            - http://host.tld/w3af/.DS_Store
+            - http://host.tld/w4af/.DS_Store
             - http://host.tld/.DS_Store
         '''
 

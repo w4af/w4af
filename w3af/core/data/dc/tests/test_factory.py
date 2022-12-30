@@ -4,40 +4,40 @@ test_factory.py
 
 Copyright 2014 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
 import json
 
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.dc.urlencoded_form import URLEncodedForm
-from w3af.core.data.dc.json_container import JSONContainer
-from w3af.core.data.dc.xmlrpc import XmlRpcContainer
-from w3af.core.data.dc.multipart_container import MultipartContainer
-from w3af.core.data.dc.generic.plain import PlainContainer
-from w3af.core.data.dc.utils.multipart import multipart_encode
-from w3af.core.data.dc.tests.test_xmlrpc import XML_WITH_FUZZABLE
-from w3af.core.data.dc.tests.test_json_container import COMPLEX_OBJECT
-from w3af.core.data.parsers.utils.form_params import FormParameters
-from w3af.core.data.fuzzer.form_filler import smart_fill_file
-from w3af.core.data.dc.factory import (dc_from_hdrs_post,
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.dc.urlencoded_form import URLEncodedForm
+from w4af.core.data.dc.json_container import JSONContainer
+from w4af.core.data.dc.xmlrpc import XmlRpcContainer
+from w4af.core.data.dc.multipart_container import MultipartContainer
+from w4af.core.data.dc.generic.plain import PlainContainer
+from w4af.core.data.dc.utils.multipart import multipart_encode
+from w4af.core.data.dc.tests.test_xmlrpc import XML_WITH_FUZZABLE
+from w4af.core.data.dc.tests.test_json_container import COMPLEX_OBJECT
+from w4af.core.data.parsers.utils.form_params import FormParameters
+from w4af.core.data.fuzzer.form_filler import smart_fill_file
+from w4af.core.data.dc.factory import (dc_from_hdrs_post,
                                        dc_from_form_params,
                                        dc_from_content_type_and_raw_params)
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 class TestDCFactory(unittest.TestCase):

@@ -3,19 +3,19 @@ temp_dir.py
 
 Copyright 2009 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,7 +24,7 @@ import stat
 import errno
 import shutil
 
-from w3af.core.controllers.misc.home_dir import get_home_dir
+from w4af.core.controllers.misc.home_dir import get_home_dir
 
 TEMP_DIR = os.path.join(get_home_dir(), 'tmp', str(os.getpid()))
 
@@ -38,10 +38,10 @@ def get_temp_dir():
 
 def create_temp_dir():
     """
-    Create the temp directory for w3af to work inside.
+    Create the temp directory for w4af to work inside.
 
     :return: A string that contains the temp directory to use,
-             in Linux: "~/.w3af/tmp/<pid>"
+             in Linux: "~/.w4af/tmp/<pid>"
     """
     complete_dir = get_temp_dir()
     if not os.path.exists(complete_dir):

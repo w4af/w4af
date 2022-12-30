@@ -3,36 +3,36 @@ guardian.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
 from gi.repository import Gdk as gdk
 
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.kb
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb
 
-from w3af.core.ui.gui import helpers
-from w3af.core.ui.gui.exception_handling import handled
+from w4af.core.ui.gui import helpers
+from w4af.core.ui.gui.exception_handling import handled
 
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.kb.info import Info
-from w3af.core.data.kb.shell import Shell
-from w3af.core.data.kb.kb_observer import KBObserver
-from w3af.core.data.constants.severity import INFORMATION, MEDIUM, HIGH, LOW
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.kb.info import Info
+from w4af.core.data.kb.shell import Shell
+from w4af.core.data.kb.kb_observer import KBObserver
+from w4af.core.data.constants.severity import INFORMATION, MEDIUM, HIGH, LOW
 
 
 class _Guarded(object):
@@ -53,15 +53,15 @@ class _Guarded(object):
 
 class FoundObjectsGuardian(gtk.HBox):
 
-    def __init__(self, _w3af):
+    def __init__(self, _w4af):
         """Shows the objects found by the core.
 
-        :param w3af: the core
+        :param w4af: the core
 
         :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
         """
         super(FoundObjectsGuardian, self).__init__()
-        self.w3af = _w3af
+        self.w4af = _w4af
 
         # tooltip
         self.set_tooltip_text(
@@ -72,8 +72,8 @@ class FoundObjectsGuardian(gtk.HBox):
         self.vuln = _Guarded("vuln")
         self.shll = _Guarded("shell")
         self.objcont = {
-            w3af.core.data.kb.vuln: self.vuln,
-            w3af.core.data.kb.info: self.info,
+            w4af.core.data.kb.vuln: self.vuln,
+            w4af.core.data.kb.info: self.info,
         }
 
         # builds the presentation
@@ -116,9 +116,9 @@ class FoundExceptionsStatusBar(gtk.EventBox):
 
     :author: Andres Riancho <andres.riancho =at= gmail.com>
     """
-    def __init__(self, w3af):
+    def __init__(self, w4af):
         super(FoundExceptionsStatusBar, self).__init__()
-        self.w3af = w3af
+        self.w4af = w4af
 
         self.hbox = gtk.HBox()
 
@@ -140,6 +140,6 @@ class FoundExceptionsStatusBar(gtk.EventBox):
 
     def _report_bug(self, widg, evt):
         """User clicked on me, he wants to report a bug"""
-        handled.handle_exceptions(self.w3af)
+        handled.handle_exceptions(self.w4af)
         # TODO: Hide this status bar if and only if the user DID report
         # the exceptions to Github

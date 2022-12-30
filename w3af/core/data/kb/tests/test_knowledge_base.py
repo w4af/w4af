@@ -3,19 +3,19 @@ test_knowledge_base.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,30 +25,30 @@ import unittest
 
 from unittest.mock import Mock
 
-from w3af.core.controllers.threads.threadpool import Pool
-from w3af.core.controllers.exceptions import DBException
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.kb.knowledge_base import kb, DBKnowledgeBase
-from w3af.core.data.kb.tests.test_info import MockInfo
-from w3af.core.data.kb.tests.test_vuln import MockVuln
-from w3af.core.data.kb.shell import Shell
-from w3af.core.data.kb.info_set import InfoSet
-from w3af.core.data.dc.query_string import QueryString
-from w3af.core.data.db.dbms import get_default_persistent_db_instance
-from w3af.core.data.url.extended_urllib import ExtendedUrllib
-from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.plugins.attack.payloads.shell_handler import get_shell_code
-from w3af.plugins.attack.sqlmap import SQLMapShell
-from w3af.plugins.attack.db.sqlmap_wrapper import Target, SQLMapWrapper
-from w3af.plugins.attack.dav import DAVShell
-from w3af.plugins.attack.eval import EvalShell
-from w3af.plugins.attack.file_upload import FileUploadShell
-from w3af.plugins.attack.local_file_reader import FileReaderShell
-from w3af.plugins.attack.rfi import RFIShell, PortScanShell
-from w3af.plugins.attack.xpath import XPathReader, IsErrorResponse
-from w3af.plugins.attack.os_commanding import (OSCommandingShell,
+from w4af.core.controllers.threads.threadpool import Pool
+from w4af.core.controllers.exceptions import DBException
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.kb.knowledge_base import kb, DBKnowledgeBase
+from w4af.core.data.kb.tests.test_info import MockInfo
+from w4af.core.data.kb.tests.test_vuln import MockVuln
+from w4af.core.data.kb.shell import Shell
+from w4af.core.data.kb.info_set import InfoSet
+from w4af.core.data.dc.query_string import QueryString
+from w4af.core.data.db.dbms import get_default_persistent_db_instance
+from w4af.core.data.url.extended_urllib import ExtendedUrllib
+from w4af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.plugins.attack.payloads.shell_handler import get_shell_code
+from w4af.plugins.attack.sqlmap import SQLMapShell
+from w4af.plugins.attack.db.sqlmap_wrapper import Target, SQLMapWrapper
+from w4af.plugins.attack.dav import DAVShell
+from w4af.plugins.attack.eval import EvalShell
+from w4af.plugins.attack.file_upload import FileUploadShell
+from w4af.plugins.attack.local_file_reader import FileReaderShell
+from w4af.plugins.attack.rfi import RFIShell, PortScanShell
+from w4af.plugins.attack.xpath import XPathReader, IsErrorResponse
+from w4af.plugins.attack.os_commanding import (OSCommandingShell,
                                                BasicExploitStrategy)
 
 
@@ -407,7 +407,7 @@ class TestKnowledgeBase(unittest.TestCase):
 
     def test_observer_add_url(self):
         observer1 = Mock()
-        url = URL('http://www.w3af.org/')
+        url = URL('http://www.w4af.org/')
 
         kb.add_observer(observer1)
         kb.add_url(url)
@@ -491,7 +491,7 @@ class TestKnowledgeBase(unittest.TestCase):
         """
         TODO: Analyze this case, i1 and i2 have both the same ID because they
               have all the same information (this is very very uncommon in a
-              real w3af run).
+              real w4af run).
               
               Note that in the get_by_uniq_id call i2 is not returned.
         """
@@ -516,231 +516,231 @@ class TestKnowledgeBase(unittest.TestCase):
     def test_kb_list_shells_sqlmap_2181(self):
         """
         Also very related with test_pickleable_shells
-        :see: https://github.com/andresriancho/w3af/issues/2181
+        :see: https://github.com/andresriancho/w4af/issues/2181
         """
-        w3af_core = w3afCore()
-        target = Target(URL('http://w3af.org/'))
-        sqlmap_wrapper = SQLMapWrapper(target, w3af_core.uri_opener)
+        w4af_core = w4afCore()
+        target = Target(URL('http://w4af.org/'))
+        sqlmap_wrapper = SQLMapWrapper(target, w4af_core.uri_opener)
 
-        sqlmap_shell = SQLMapShell(MockVuln(), w3af_core.uri_opener,
-                                   w3af_core.worker_pool, sqlmap_wrapper)
+        sqlmap_shell = SQLMapShell(MockVuln(), w4af_core.uri_opener,
+                                   w4af_core.worker_pool, sqlmap_wrapper)
         kb.append('a', 'b', sqlmap_shell)
 
-        shells = kb.get_all_shells(w3af_core=w3af_core)
+        shells = kb.get_all_shells(w4af_core=w4af_core)
         self.assertEqual(len(shells), 1)
         unpickled_shell = shells[0]
 
         self.assertEqual(sqlmap_shell, unpickled_shell)
-        self.assertIs(unpickled_shell._uri_opener, w3af_core.uri_opener)
-        self.assertIs(unpickled_shell.worker_pool, w3af_core.worker_pool)
+        self.assertIs(unpickled_shell._uri_opener, w4af_core.uri_opener)
+        self.assertIs(unpickled_shell.worker_pool, w4af_core.worker_pool)
         self.assertIs(unpickled_shell.sqlmap.proxy._uri_opener,
-                      w3af_core.uri_opener)
+                      w4af_core.uri_opener)
 
-        w3af_core.quit()
+        w4af_core.quit()
 
     def test_kb_list_shells_dav_2181(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/2181
+        :see: https://github.com/andresriancho/w4af/issues/2181
         """
-        w3af_core = w3afCore()
-        exploit_url = URL('http://w3af.org/')
+        w4af_core = w4afCore()
+        exploit_url = URL('http://w4af.org/')
 
-        shell = DAVShell(MockVuln(), w3af_core.uri_opener,
-                         w3af_core.worker_pool, exploit_url)
+        shell = DAVShell(MockVuln(), w4af_core.uri_opener,
+                         w4af_core.worker_pool, exploit_url)
         kb.append('a', 'b', shell)
 
-        shells = kb.get_all_shells(w3af_core=w3af_core)
+        shells = kb.get_all_shells(w4af_core=w4af_core)
         self.assertEqual(len(shells), 1)
         unpickled_shell = shells[0]
 
         self.assertEqual(shell, unpickled_shell)
-        self.assertIs(unpickled_shell._uri_opener, w3af_core.uri_opener)
-        self.assertIs(unpickled_shell.worker_pool, w3af_core.worker_pool)
+        self.assertIs(unpickled_shell._uri_opener, w4af_core.uri_opener)
+        self.assertIs(unpickled_shell.worker_pool, w4af_core.worker_pool)
         self.assertEqual(unpickled_shell.exploit_url, shell.exploit_url)
 
-        w3af_core.quit()
+        w4af_core.quit()
 
     def test_kb_list_shells_eval_2181(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/2181
+        :see: https://github.com/andresriancho/w4af/issues/2181
         """
-        w3af_core = w3afCore()
+        w4af_core = w4afCore()
 
         shellcodes = get_shell_code('php', 'ls')
         shellcode_generator = shellcodes[0][2]
 
-        shell = EvalShell(MockVuln(), w3af_core.uri_opener,
-                          w3af_core.worker_pool, shellcode_generator)
+        shell = EvalShell(MockVuln(), w4af_core.uri_opener,
+                          w4af_core.worker_pool, shellcode_generator)
         kb.append('a', 'b', shell)
 
-        shells = kb.get_all_shells(w3af_core=w3af_core)
+        shells = kb.get_all_shells(w4af_core=w4af_core)
         self.assertEqual(len(shells), 1)
         unpickled_shell = shells[0]
 
         self.assertEqual(shell, unpickled_shell)
-        self.assertIs(unpickled_shell._uri_opener, w3af_core.uri_opener)
-        self.assertIs(unpickled_shell.worker_pool, w3af_core.worker_pool)
+        self.assertIs(unpickled_shell._uri_opener, w4af_core.uri_opener)
+        self.assertIs(unpickled_shell.worker_pool, w4af_core.worker_pool)
         self.assertEqual(unpickled_shell.shellcode_generator.args,
                          shell.shellcode_generator.args)
 
-        w3af_core.quit()
+        w4af_core.quit()
 
     def test_kb_list_shells_file_upload_2181(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/2181
+        :see: https://github.com/andresriancho/w4af/issues/2181
         """
-        w3af_core = w3afCore()
-        exploit_url = URL('http://w3af.org/')
+        w4af_core = w4afCore()
+        exploit_url = URL('http://w4af.org/')
 
-        shell = FileUploadShell(MockVuln(), w3af_core.uri_opener,
-                                w3af_core.worker_pool, exploit_url)
+        shell = FileUploadShell(MockVuln(), w4af_core.uri_opener,
+                                w4af_core.worker_pool, exploit_url)
         kb.append('a', 'b', shell)
 
-        shells = kb.get_all_shells(w3af_core=w3af_core)
+        shells = kb.get_all_shells(w4af_core=w4af_core)
         self.assertEqual(len(shells), 1)
         unpickled_shell = shells[0]
 
         self.assertEqual(shell, unpickled_shell)
-        self.assertIs(unpickled_shell._uri_opener, w3af_core.uri_opener)
-        self.assertIs(unpickled_shell.worker_pool, w3af_core.worker_pool)
+        self.assertIs(unpickled_shell._uri_opener, w4af_core.uri_opener)
+        self.assertIs(unpickled_shell.worker_pool, w4af_core.worker_pool)
         self.assertEqual(unpickled_shell._exploit_url, shell._exploit_url)
 
-        w3af_core.quit()
+        w4af_core.quit()
 
     def test_kb_list_shells_file_read_2181(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/2181
+        :see: https://github.com/andresriancho/w4af/issues/2181
         """
-        w3af_core = w3afCore()
+        w4af_core = w4afCore()
         header_len, footer_len = 1, 1
 
         vuln = MockVuln()
 
-        shell = FileReaderShell(vuln, w3af_core.uri_opener,
-                                w3af_core.worker_pool, header_len, footer_len)
+        shell = FileReaderShell(vuln, w4af_core.uri_opener,
+                                w4af_core.worker_pool, header_len, footer_len)
         kb.append('a', 'b', shell)
 
-        shells = kb.get_all_shells(w3af_core=w3af_core)
+        shells = kb.get_all_shells(w4af_core=w4af_core)
         self.assertEqual(len(shells), 1)
         unpickled_shell = shells[0]
 
         self.assertEqual(shell, unpickled_shell)
-        self.assertIs(unpickled_shell._uri_opener, w3af_core.uri_opener)
-        self.assertIs(unpickled_shell.worker_pool, w3af_core.worker_pool)
+        self.assertIs(unpickled_shell._uri_opener, w4af_core.uri_opener)
+        self.assertIs(unpickled_shell.worker_pool, w4af_core.worker_pool)
         self.assertEqual(unpickled_shell._header_length, shell._header_length)
         self.assertEqual(unpickled_shell._footer_length, shell._footer_length)
 
-        w3af_core.quit()
+        w4af_core.quit()
 
     def test_kb_list_shells_os_commanding_2181(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/2181
+        :see: https://github.com/andresriancho/w4af/issues/2181
         """
-        w3af_core = w3afCore()
+        w4af_core = w4afCore()
 
         vuln = MockVuln()
         vuln['separator'] = '&'
         vuln['os'] = 'linux'
         strategy = BasicExploitStrategy(vuln)
-        shell = OSCommandingShell(strategy, w3af_core.uri_opener,
-                                  w3af_core.worker_pool)
+        shell = OSCommandingShell(strategy, w4af_core.uri_opener,
+                                  w4af_core.worker_pool)
         kb.append('a', 'b', shell)
 
-        shells = kb.get_all_shells(w3af_core=w3af_core)
+        shells = kb.get_all_shells(w4af_core=w4af_core)
         self.assertEqual(len(shells), 1)
         unpickled_shell = shells[0]
 
         self.assertEqual(shell, unpickled_shell)
-        self.assertIs(unpickled_shell._uri_opener, w3af_core.uri_opener)
-        self.assertIs(unpickled_shell.worker_pool, w3af_core.worker_pool)
+        self.assertIs(unpickled_shell._uri_opener, w4af_core.uri_opener)
+        self.assertIs(unpickled_shell.worker_pool, w4af_core.worker_pool)
         self.assertEqual(unpickled_shell.strategy.vuln, vuln)
 
-        w3af_core.quit()
+        w4af_core.quit()
 
     def test_kb_list_shells_rfi_2181(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/2181
+        :see: https://github.com/andresriancho/w4af/issues/2181
         """
-        w3af_core = w3afCore()
+        w4af_core = w4afCore()
 
         vuln = MockVuln()
         url = URL('http://moth/?a=1')
         freq = FuzzableRequest(url)
         exploit_mutant = QSMutant.create_mutants(freq, [''], [], False, {})[0]
 
-        shell = RFIShell(vuln, w3af_core.uri_opener, w3af_core.worker_pool,
+        shell = RFIShell(vuln, w4af_core.uri_opener, w4af_core.worker_pool,
                          exploit_mutant)
         kb.append('a', 'b', shell)
 
-        shells = kb.get_all_shells(w3af_core=w3af_core)
+        shells = kb.get_all_shells(w4af_core=w4af_core)
         self.assertEqual(len(shells), 1)
         unpickled_shell = shells[0]
 
         self.assertEqual(shell, unpickled_shell)
-        self.assertIs(unpickled_shell._uri_opener, w3af_core.uri_opener)
-        self.assertIs(unpickled_shell.worker_pool, w3af_core.worker_pool)
+        self.assertIs(unpickled_shell._uri_opener, w4af_core.uri_opener)
+        self.assertIs(unpickled_shell.worker_pool, w4af_core.worker_pool)
         self.assertEqual(unpickled_shell._exploit_mutant, exploit_mutant)
 
-        w3af_core.quit()
+        w4af_core.quit()
 
     def test_kb_list_shells_rfi_port_scan_2181(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/2181
+        :see: https://github.com/andresriancho/w4af/issues/2181
         """
-        w3af_core = w3afCore()
+        w4af_core = w4afCore()
 
         vuln = MockVuln()
         url = URL('http://moth/?a=1')
         freq = FuzzableRequest(url)
         exploit_mutant = QSMutant.create_mutants(freq, [''], [], False, {})[0]
 
-        shell = PortScanShell(vuln, w3af_core.uri_opener, w3af_core.worker_pool,
+        shell = PortScanShell(vuln, w4af_core.uri_opener, w4af_core.worker_pool,
                               exploit_mutant)
         kb.append('a', 'b', shell)
 
-        shells = kb.get_all_shells(w3af_core=w3af_core)
+        shells = kb.get_all_shells(w4af_core=w4af_core)
         self.assertEqual(len(shells), 1)
         unpickled_shell = shells[0]
 
         self.assertEqual(shell, unpickled_shell)
-        self.assertIs(unpickled_shell._uri_opener, w3af_core.uri_opener)
-        self.assertIs(unpickled_shell.worker_pool, w3af_core.worker_pool)
+        self.assertIs(unpickled_shell._uri_opener, w4af_core.uri_opener)
+        self.assertIs(unpickled_shell.worker_pool, w4af_core.worker_pool)
         self.assertEqual(unpickled_shell._exploit_mutant, exploit_mutant)
 
-        w3af_core.quit()
+        w4af_core.quit()
 
     def test_kb_list_shells_xpath_2181(self):
         """
-        :see: https://github.com/andresriancho/w3af/issues/2181
+        :see: https://github.com/andresriancho/w4af/issues/2181
         """
-        w3af_core = w3afCore()
+        w4af_core = w4afCore()
         vuln = MockVuln()
 
         str_delim = '&'
         true_cond = ''
         use_difflib = False
-        is_error_response = IsErrorResponse(vuln, w3af_core.uri_opener,
+        is_error_response = IsErrorResponse(vuln, w4af_core.uri_opener,
                                             use_difflib)
 
-        shell = XPathReader(vuln, w3af_core.uri_opener,
-                            w3af_core.worker_pool, str_delim, true_cond,
+        shell = XPathReader(vuln, w4af_core.uri_opener,
+                            w4af_core.worker_pool, str_delim, true_cond,
                             is_error_response)
         kb.append('a', 'b', shell)
 
-        shells = kb.get_all_shells(w3af_core=w3af_core)
+        shells = kb.get_all_shells(w4af_core=w4af_core)
         self.assertEqual(len(shells), 1)
         unpickled_shell = shells[0]
 
         self.assertEqual(shell, unpickled_shell)
-        self.assertIs(unpickled_shell._uri_opener, w3af_core.uri_opener)
-        self.assertIs(unpickled_shell.worker_pool, w3af_core.worker_pool)
+        self.assertIs(unpickled_shell._uri_opener, w4af_core.uri_opener)
+        self.assertIs(unpickled_shell.worker_pool, w4af_core.worker_pool)
         self.assertEqual(unpickled_shell.STR_DELIM, shell.STR_DELIM)
         self.assertEqual(unpickled_shell.TRUE_COND, shell.TRUE_COND)
         self.assertEqual(unpickled_shell.is_error_resp.use_difflib, use_difflib)
         self.assertEqual(unpickled_shell.is_error_resp.url_opener,
-                         w3af_core.uri_opener)
+                         w4af_core.uri_opener)
 
-        w3af_core.quit()
+        w4af_core.quit()
 
     def test_update_info(self):
         info = MockInfo()

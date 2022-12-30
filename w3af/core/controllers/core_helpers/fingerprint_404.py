@@ -3,37 +3,37 @@ fingerprint_404.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 
 
-import w3af.core.data.kb.config as cf
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.url.helpers import is_no_content_response
-from w3af.core.data.db.cached_disk_dict import CachedDiskDict
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.url.helpers import is_no_content_response
+from w4af.core.data.db.cached_disk_dict import CachedDiskDict
 
-from w3af.core.controllers.misc.diff import chunked_diff
-from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal, MAX_FUZZY_LENGTH
-from w3af.core.controllers.core_helpers.not_found.response import FourOhFourResponse
-from w3af.core.controllers.core_helpers.not_found.generate_404 import send_request_generate_404
-from w3af.core.controllers.core_helpers.not_found.decorators import LRUCache404, PreventMultipleThreads
-from w3af.core.controllers.core_helpers.not_found.fuzzy_equal_for_diff import fuzzy_equal_for_diff
+from w4af.core.controllers.misc.diff import chunked_diff
+from w4af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal, MAX_FUZZY_LENGTH
+from w4af.core.controllers.core_helpers.not_found.response import FourOhFourResponse
+from w4af.core.controllers.core_helpers.not_found.generate_404 import send_request_generate_404
+from w4af.core.controllers.core_helpers.not_found.decorators import LRUCache404, PreventMultipleThreads
+from w4af.core.controllers.core_helpers.not_found.fuzzy_equal_for_diff import fuzzy_equal_for_diff
 
 
 IS_EQUAL_RATIO = 0.90
@@ -71,7 +71,7 @@ class Fingerprint404(object):
         """
         All of my previous versions of is_404 were very complex and tried to
         struggle with all possible cases. The truth is that in most "strange"
-        cases w3af was failing miserably, so now I changed w3af's 404 detection
+        cases w4af was failing miserably, so now I changed w4af's 404 detection
         once again, but keeping it as simple as possible.
 
         Also, and because I was trying to cover ALL CASES, I was performing a
@@ -163,9 +163,9 @@ class Fingerprint404(object):
         #
         # In most cases that works perfectly, because it will allow the plugin
         # to keep working without caring much about the exceptions. In some
-        # edge cases someone will call is_404(204_response_generated_by_w3af)
+        # edge cases someone will call is_404(204_response_generated_by_w4af)
         # and that will most likely return False, because the 204 response we
-        # generate doesn't look like anything w3af has in the 404 DB.
+        # generate doesn't look like anything w4af has in the 404 DB.
         #
         # The following iff fixes the race condition
         #

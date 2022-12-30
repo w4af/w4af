@@ -1,7 +1,7 @@
 Introduction
 ============
 
-Before running ``w3af`` users need to know the basics about how the application
+Before running ``w4af`` users need to know the basics about how the application
 works behind the scenes. This will enable users to be more efficient in the
 process of identifying and exploiting vulnerabilities.
 
@@ -18,7 +18,7 @@ points. A classic example of a discovery plugin is the web spider. This plugin
 takes a URL as input and returns one or more injection points.
 
 When a user enables more than one plugin of this type, they are run in a loop:
-If ``plugin A`` finds a new URL in the first run, the ``w3af`` core will send
+If ``plugin A`` finds a new URL in the first run, the ``w4af`` core will send
 that URL to ``plugin B``. If ``plugin B`` then finds a new URL, it will be sent
 to ``plugin A``. This process will go on until all plugins have run and no more
 information about the application can be found.
@@ -69,7 +69,7 @@ vulnerabilities found by an audit plugin.
 
    Ideas:
     * Send vulnerabilities to an internal issue tracker using its REST API
-    * Parse ``w3af``'s XML output and use it as input for other tools
+    * Parse ``w4af``'s XML output and use it as input for other tools
 
 
 Mangle
@@ -112,7 +112,7 @@ At this point it should be obvious but:
    Scan time will strongly depend on the number of ``crawl`` and ``audit``
    plugins you enable.
 
-In most cases we recommend running ``w3af`` with the following configuration:
+In most cases we recommend running ``w4af`` with the following configuration:
  
  * ``crawl``: ``web_spider``
  * ``audit``: ``Enable all``

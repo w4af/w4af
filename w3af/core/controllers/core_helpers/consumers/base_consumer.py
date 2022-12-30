@@ -3,19 +3,19 @@ base_consumer.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -28,14 +28,14 @@ from queue import Empty
 from functools import wraps
 from multiprocessing.dummy import Process
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.exception_handling.helpers import pprint_plugins
-from w3af.core.controllers.core_helpers.exception_handler import ExceptionData
-from w3af.core.controllers.core_helpers.status import CoreStatus
-from w3af.core.controllers.core_helpers.consumers.constants import POISON_PILL
-from w3af.core.controllers.threads.threadpool import Pool
-from w3af.core.data.misc.cached_queue import CachedQueue
+from w4af.core.controllers.exception_handling.helpers import pprint_plugins
+from w4af.core.controllers.core_helpers.exception_handler import ExceptionData
+from w4af.core.controllers.core_helpers.status import CoreStatus
+from w4af.core.controllers.core_helpers.consumers.constants import POISON_PILL
+from w4af.core.controllers.threads.threadpool import Pool
+from w4af.core.data.misc.cached_queue import CachedQueue
 
 
 def task_decorator(method):
@@ -73,12 +73,12 @@ class BaseConsumer(Process):
 
     THREAD_POOL_SIZE = 10
 
-    def __init__(self, consumer_plugins, w3af_core, thread_name,
+    def __init__(self, consumer_plugins, w4af_core, thread_name,
                  create_pool=True, max_pool_queued_tasks=0,
                  max_in_queue_size=0, thread_pool_size=None):
         """
         :param consumer_plugins: Instances of base_consumer plugins in a list
-        :param w3af_core: The w3af core that we'll use for status reporting
+        :param w4af_core: The w4af core that we'll use for status reporting
         :param thread_name: How to name the current thread, eg. Auditor
         :param create_pool: True to create a worker pool for this consumer
         """
@@ -132,7 +132,7 @@ class BaseConsumer(Process):
 
         self._thread_name = thread_name
         self._consumer_plugins = consumer_plugins
-        self._w3af_core = w3af_core
+        self._w4af_core = w4af_core
         self._observers = []
 
         self._tasks_in_progress = {}
@@ -154,7 +154,7 @@ class BaseConsumer(Process):
 
     def set_has_finished(self):
         self._has_finished = True
-        self._w3af_core.strategy.clear_queue_speed_data()
+        self._w4af_core.strategy.clear_queue_speed_data()
 
     def run(self):
         """
@@ -166,7 +166,7 @@ class BaseConsumer(Process):
             try:
                 work_unit = self.in_queue.get()
             except KeyboardInterrupt:
-                # https://github.com/andresriancho/w3af/issues/9587
+                # https://github.com/andresriancho/w4af/issues/9587
                 #
                 # If we don't do this, the thread will die and will never
                 # process the POISON_PILL, which will end up in an endless
@@ -380,7 +380,7 @@ class BaseConsumer(Process):
         # If anything is put to the queue after POISON_PILL, a race condition
         # might happen and the consumer might never stop
         #
-        # https://github.com/andresriancho/w3af/pull/16063
+        # https://github.com/andresriancho/w4af/pull/16063
         if self._poison_pill_sent and not force:
             return
         
@@ -435,7 +435,7 @@ class BaseConsumer(Process):
         if self._poison_pill_sent:
             return
 
-        # https://github.com/andresriancho/w3af/issues/9587
+        # https://github.com/andresriancho/w4af/issues/9587
         # let put() know that all new tasks should be ignored
         self._poison_pill_sent = True
 
@@ -468,7 +468,7 @@ class BaseConsumer(Process):
             om.out.debug(msg % self._thread_name)
         else:
             # This return has a long history, follow it here:
-            # https://github.com/andresriancho/w3af/issues/1172
+            # https://github.com/andresriancho/w4af/issues/1172
             msg = 'The %s consumer thread was not alive'
             om.out.debug(msg % self._thread_name)
 
@@ -540,9 +540,9 @@ class BaseConsumer(Process):
         :param _exception: The exception object
         """
         except_type, except_class, tb = sys.exc_info()
-        enabled_plugins = pprint_plugins(self._w3af_core)
+        enabled_plugins = pprint_plugins(self._w4af_core)
 
-        status = CoreStatus(self._w3af_core)
+        status = CoreStatus(self._w4af_core)
         status.set_running_plugin(phase, plugin_name, log=False)
         status.set_current_fuzzable_request(phase, fuzzable_request)
 

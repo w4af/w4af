@@ -3,19 +3,19 @@ plugin.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,16 +26,16 @@ import threading
 from itertools import repeat
 from tblib.decorators import Error
 
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.configurable import Configurable
-from w3af.core.controllers.threads.threadpool import return_args
-from w3af.core.controllers.exceptions import HTTPRequestException
-from w3af.core.controllers.threads.decorators import apply_with_return_error
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.url.helpers import new_no_content_resp
-from w3af.core.data.kb.info_set import InfoSet
+from w4af.core.controllers.configurable import Configurable
+from w4af.core.controllers.threads.threadpool import return_args
+from w4af.core.controllers.exceptions import HTTPRequestException
+from w4af.core.controllers.threads.decorators import apply_with_return_error
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.url.helpers import new_no_content_resp
+from w4af.core.data.kb.info_set import InfoSet
 
 
 class Plugin(Configurable):
@@ -56,7 +56,7 @@ class Plugin(Configurable):
         Create some generic attributes that are going to be used by most plugins
         """
         self._uri_opener = None
-        self._w3af_core = None
+        self._w4af_core = None
         self.worker_pool = None
 
         self.output_queue = queue.Queue()
@@ -86,18 +86,18 @@ class Plugin(Configurable):
         """
         self._uri_opener = UrlOpenerProxy(url_opener, self)
 
-    def set_w3af_core(self, w3af_core):
+    def set_w4af_core(self, w4af_core):
         """
-        Set the w3af core instance to the plugin. This shouldn't be used much
+        Set the w4af core instance to the plugin. This shouldn't be used much
         but it is helpful when the plugin needs to query something about the
         core status.
 
         :return: None
         """
-        self._w3af_core = w3af_core
+        self._w4af_core = w4af_core
 
-    def get_w3af_core(self):
-        return self._w3af_core
+    def get_w4af_core(self):
+        return self._w4af_core
 
     def set_options(self, options_list):
         """
@@ -193,7 +193,7 @@ class Plugin(Configurable):
 
     def end(self):
         """
-        This method is called by w3afCore to let the plugin know that it wont
+        This method is called by w4afCore to let the plugin know that it wont
         be used anymore. This is helpful to do some final tests, free some
         structures, etc.
         """
@@ -243,7 +243,7 @@ class Plugin(Configurable):
         for result in imap_unordered(awre, args):
             # re-raise the thread exception in the main thread with this method
             # so we get a nice traceback instead of things like the ones we see
-            # in https://github.com/andresriancho/w3af/issues/7286
+            # in https://github.com/andresriancho/w4af/issues/7286
             if isinstance(result, Error):
                 result.reraise()
             else:
@@ -296,7 +296,7 @@ class UrlOpenerProxy(object):
     #   * Don't raise HTTPRequestException
     #
     # I noticed this issue when #8705 was reported
-    # https://github.com/andresriancho/w3af/issues/8705
+    # https://github.com/andresriancho/w4af/issues/8705
     NO_WRAPPER_FOR = {'send_clean',
                       'clear',
                       'end',
@@ -331,7 +331,7 @@ class UrlOpenerProxy(object):
                 # We get here when **one** HTTP request fails. When more than
                 # one exception fails the URL opener will raise a different
                 # type of exception (not a subclass of HTTPRequestException)
-                # and that one will bubble up to w3afCore/strategy/etc.
+                # and that one will bubble up to w4afCore/strategy/etc.
                 #
                 arg1 = args[0]
                 if hasattr(arg1, 'get_uri'):

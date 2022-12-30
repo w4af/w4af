@@ -3,19 +3,19 @@ rendering.py
 
 Copyright 2010 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -47,8 +47,8 @@ try:
 except ImportError:
     pass
 
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.constants.encodings import UTF8
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.constants.encodings import UTF8
 
 
 NO_RENDER_MSG = 'If you want to render HTML responses, install at least one' \
@@ -56,21 +56,21 @@ NO_RENDER_MSG = 'If you want to render HTML responses, install at least one' \
                 ' python-gtkmozembed, python-gtkhtml2'
 
 
-def getRenderingView(w3af, parentView):
+def getRenderingView(w4af, parentView):
     """Return RenderingView with best web engine or raise exception."""
     if RENDERING_ENGINES['webkit']:
-        return WebKitRenderingView(w3af, parentView)
+        return WebKitRenderingView(w4af, parentView)
     elif RENDERING_ENGINES['moz']:
-        return MozRenderingView(w3af, parentView)
+        return MozRenderingView(w4af, parentView)
     elif RENDERING_ENGINES['gtkhtml2']:
-        return GtkHtmlRenderingView(w3af, parentView)
+        return GtkHtmlRenderingView(w4af, parentView)
 
     raise BaseFrameworkException(NO_RENDER_MSG)
 
 
 class RenderingView(gtk.VBox):
     """Rendering view."""
-    def __init__(self, w3af, parentView):
+    def __init__(self, w4af, parentView):
         """Make object."""
         gtk.VBox.__init__(self)
         self.id = 'RenderingView'
@@ -96,9 +96,9 @@ class RenderingView(gtk.VBox):
 class GtkHtmlRenderingView(RenderingView):
     """GtkHTML2 web engine view."""
 
-    def __init__(self, w3af, parentView):
+    def __init__(self, w4af, parentView):
         """Make GtkHtmlRenderingView object."""
-        super(GtkHtmlRenderingView, self).__init__(w3af, parentView)
+        super(GtkHtmlRenderingView, self).__init__(w4af, parentView)
         self._renderingWidget = gtkhtml2.View()
         sw_rendered_html = gtk.ScrolledWindow()
         sw_rendered_html.add(self._renderingWidget)
@@ -127,7 +127,7 @@ class GtkHtmlRenderingView(RenderingView):
         except Exception as e:
             print(_('gtkhtml2 exception:'), type(e), str(e))
             print(_('Please report this issue here:'))
-            print('https://github.com/andresriancho/w3af/issues/new')
+            print('https://github.com/andresriancho/w4af/issues/new')
 
     def clear(self):
         """Clear view."""
@@ -137,9 +137,9 @@ class GtkHtmlRenderingView(RenderingView):
 class MozRenderingView(RenderingView):
     """Gecko web engine view."""
 
-    def __init__(self, w3af, parentView):
+    def __init__(self, w4af, parentView):
         """Make MozRenderingView object."""
-        super(MozRenderingView, self).__init__(w3af, parentView)
+        super(MozRenderingView, self).__init__(w4af, parentView)
         self._renderingWidget = gtkmozembed.MozEmbed()
 
         sw_rendered_html = gtk.ScrolledWindow()
@@ -163,9 +163,9 @@ class MozRenderingView(RenderingView):
 class WebKitRenderingView(RenderingView):
     """WebKit web engine view."""
 
-    def __init__(self, w3af, parentView):
+    def __init__(self, w4af, parentView):
         """Make WebKitRenderingView object."""
-        super(WebKitRenderingView, self).__init__(w3af, parentView)
+        super(WebKitRenderingView, self).__init__(w4af, parentView)
         self._renderingWidget = webkit.WebView()
         # Settings
         settings = self._renderingWidget.get_settings()

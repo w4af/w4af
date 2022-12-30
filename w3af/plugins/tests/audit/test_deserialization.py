@@ -3,19 +3,19 @@ test_deserialization.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
@@ -27,17 +27,17 @@ import pickle
 import base64
 import unittest
 
-from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
-from w3af.plugins.audit.deserialization import deserialization, B64DeserializationExactDelay
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.cookie import Cookie
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
-from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
-from w3af.core.data.fuzzer.mutants.cookie_mutant import CookieMutant
-from w3af.core.data.dc.urlencoded_form import URLEncodedForm
-from w3af.core.data.parsers.utils.form_params import FormParameters
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
+from w4af.plugins.audit.deserialization import deserialization, B64DeserializationExactDelay
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.cookie import Cookie
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
+from w4af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
+from w4af.core.data.fuzzer.mutants.cookie_mutant import CookieMutant
+from w4af.core.data.dc.urlencoded_form import URLEncodedForm
+from w4af.core.data.parsers.utils.form_params import FormParameters
+from w4af.core.data.misc.encoding import smart_unicode
 
 test_config = {
     'audit': (PluginConfig('deserialization'),),
@@ -224,7 +224,7 @@ class TestShouldInject(unittest.TestCase):
         form_params.add_field_by_attr_items([("name", "csrf_token"), ("type", "hidden")])
 
         form = URLEncodedForm(form_params)
-        freq = FuzzableRequest(URL('http://www.w3af.com/'),
+        freq = FuzzableRequest(URL('http://www.w4af.com/'),
                                post_data=form,
                                method='PUT')
         m = PostDataMutant(freq)

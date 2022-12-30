@@ -3,27 +3,27 @@ test_cleanup_bug_report.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
 
-import w3af.core.data.kb.config as cf
-from w3af.core.controllers.exception_handling.cleanup_bug_report import cleanup_bug_report
-from w3af.core.data.parsers.doc.url import URL
+import w4af.core.data.kb.config as cf
+from w4af.core.controllers.exception_handling.cleanup_bug_report import cleanup_bug_report
+from w4af.core.data.parsers.doc.url import URL
 
 
 class TestCleanupBugReport(unittest.TestCase):
@@ -31,7 +31,7 @@ class TestCleanupBugReport(unittest.TestCase):
     def test_cleanup_bug_report_simple(self):
         TESTS = [
                  ('foo', 'foo'),
-                 ('start /home/nsa/w3af/ end', 'start /home/user/w3af/ end'),
+                 ('start /home/nsa/w4af/ end', 'start /home/user/w4af/ end'),
                  ('start C:\\Documents and Settings\\CIA\\ end',
                   'start C:/user/ end'),
                  ]

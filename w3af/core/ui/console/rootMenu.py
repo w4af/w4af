@@ -3,19 +3,19 @@ rootMenu.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,22 +26,22 @@ import select
 
 from multiprocessing.dummy import Process
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.ui.console.io.console as term
+import w4af.core.controllers.output_manager as om
+import w4af.core.ui.console.io.console as term
 
-from w3af.core.ui.console.menu import menu
-from w3af.core.ui.console.plugins import pluginsMenu
-from w3af.core.ui.console.profiles import ProfilesMenu
-from w3af.core.ui.console.exploit import exploit
-from w3af.core.ui.console.config import ConfigMenu
-from w3af.core.ui.console.kbMenu import kbMenu
-from w3af.core.ui.console.bug_report import bug_report_menu
-from w3af.core.ui.console.util import mapDict
-from w3af.core.ui.console.tables import table
+from w4af.core.ui.console.menu import menu
+from w4af.core.ui.console.plugins import pluginsMenu
+from w4af.core.ui.console.profiles import ProfilesMenu
+from w4af.core.ui.console.exploit import exploit
+from w4af.core.ui.console.config import ConfigMenu
+from w4af.core.ui.console.kbMenu import kbMenu
+from w4af.core.ui.console.bug_report import bug_report_menu
+from w4af.core.ui.console.util import mapDict
+from w4af.core.ui.console.tables import table
 
-from w3af.core.controllers.misc.get_w3af_version import get_w3af_version
-from w3af.core.controllers.misc_settings import MiscSettings
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+from w4af.core.controllers.misc.get_w4af_version import get_w4af_version
+from w4af.core.controllers.misc_settings import MiscSettings
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               ScanMustStopException)
 
 
@@ -62,9 +62,9 @@ class rootMenu(menu):
 
         mapDict(self.addChild, {
             'plugins': pluginsMenu,
-            'target': (ConfigMenu, self._w3af.target),
+            'target': (ConfigMenu, self._w4af.target),
             'misc-settings': (ConfigMenu, MiscSettings()),
-            'http-settings': (ConfigMenu, self._w3af.uri_opener.settings),
+            'http-settings': (ConfigMenu, self._w4af.uri_opener.settings),
             'profiles': ProfilesMenu,
             'bug-report': bug_report_menu,
             'exploit': exploit,
@@ -79,7 +79,7 @@ class rootMenu(menu):
         :return: None
         """
         # Check if the console output plugin is enabled or not, and warn.
-        output_plugins = self._w3af.plugins.get_enabled_plugins('output')
+        output_plugins = self._w4af.plugins.get_enabled_plugins('output')
         if 'console' not in output_plugins and len(output_plugins) == 0:
             msg = ("\nWarning: You disabled the console output plugin. If you"
                    " start a new scan, the discovered vulnerabilities won\'t be"
@@ -101,7 +101,7 @@ class rootMenu(menu):
         scan_started = self.wait_for_start()
         if not scan_started:
             om.out.console('The scan failed to start.')
-            self._w3af.stop()
+            self._w4af.stop()
             return
 
         try:
@@ -113,7 +113,7 @@ class rootMenu(menu):
         delay = 0.1
 
         for _ in range(int(self.MAX_WAIT_FOR_START / delay)):
-            if self._w3af.status.is_running():
+            if self._w4af.status.is_running():
                 return True
 
             time.sleep(delay)
@@ -122,7 +122,7 @@ class rootMenu(menu):
 
     def handle_scan_stop(self, *args):
         om.out.console('User pressed Ctrl+C, stopping scan.')
-        self._w3af.stop()
+        self._w4af.stop()
 
     def _cmd_cleanup(self, params):
         """
@@ -131,7 +131,7 @@ class rootMenu(menu):
 
         :return: None
         """
-        self._w3af.cleanup()
+        self._w4af.cleanup()
 
     def _real_start(self):
         """
@@ -139,15 +139,15 @@ class rootMenu(menu):
         :return: None
         """
         try:
-            self._w3af.plugins.init_plugins()
-            self._w3af.verify_environment()
-            self._w3af.start()
+            self._w4af.plugins.init_plugins()
+            self._w4af.verify_environment()
+            self._w4af.start()
         except BaseFrameworkException as w3:
             om.out.error(str(w3))
         except ScanMustStopException as w3:
             om.out.error(str(w3))
         except Exception:
-            self._w3af.stop()
+            self._w4af.stop()
             raise
         finally:
             # All plugins are removed from the configuration/memory after a scan
@@ -155,8 +155,8 @@ class rootMenu(menu):
             # usability bug where the user gets a strange message saying he
             # disabled the console output, so we re-enable it
             #
-            # https://github.com/andresriancho/w3af/issues/8114
-            self._w3af.plugins.set_plugins(['console'], 'output')
+            # https://github.com/andresriancho/w4af/issues/8114
+            self._w4af.plugins.set_plugins(['console'], 'output')
 
     def handle_keypress_during_scan(self):
         """
@@ -164,10 +164,10 @@ class rootMenu(menu):
         """
         #
         # if run with detached terminal mode (like cron)
-        # https://github.com/andresriancho/w3af/pull/17235
+        # https://github.com/andresriancho/w4af/pull/17235
         #
         if not sys.stdin.isatty():
-            while self._w3af.status.is_running() or self._w3af.status.is_paused():
+            while self._w4af.status.is_running() or self._w4af.status.is_paused():
                 time.sleep(0.1)
             return
 
@@ -183,7 +183,7 @@ class rootMenu(menu):
                     '\x03': self._stop_scan}
 
         try:
-            while self._w3af.status.is_running() or self._w3af.status.is_paused():
+            while self._w4af.status.is_running() or self._w4af.status.is_paused():
 
                 try:
                     read_ready, _, _ = select.select([sys.stdin], [], [], 0.5)
@@ -211,33 +211,33 @@ class rootMenu(menu):
         raise KeyboardInterrupt
 
     def _pause_scan(self):
-        if self._w3af.status.is_paused():
+        if self._w4af.status.is_paused():
             om.out.console('The scan is already paused.')
             return
 
-        self._w3af.pause(True)
+        self._w4af.pause(True)
         om.out.console('The scan was paused.')
 
     def _resume_scan(self):
-        if not self._w3af.status.is_paused():
+        if not self._w4af.status.is_paused():
             om.out.console('The scan is running. Can not resume.')
             return
 
-        self._w3af.pause(False)
+        self._w4af.pause(False)
         om.out.console('The scan was resumed.')
 
     def _show_status(self):
         # Get the information and print it to the console
-        status_information_str = self._w3af.status.get_long_status()
+        status_information_str = self._w4af.status.get_long_status()
         t = table([(status_information_str,)])
         t.draw()
         om.out.console('')
 
     def _cmd_version(self, params):
         """
-        Show the w3af version and exit
+        Show the w4af version and exit
         """
-        om.out.console(get_w3af_version())
+        om.out.console(get_w4af_version())
 
     def join(self):
         """

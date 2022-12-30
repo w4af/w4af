@@ -3,19 +3,19 @@ stats.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
@@ -69,9 +69,9 @@ class StatsViewer(gtk.VBox):
                  
                  ]
     
-    def __init__(self, w3af):
+    def __init__(self, w4af):
         super(StatsViewer, self).__init__()
-        self.w3af = w3af
+        self.w4af = w4af
         
         self.build_default()
         
@@ -104,7 +104,7 @@ class StatsViewer(gtk.VBox):
 
             set_defaults = False
             
-            if not self.w3af.status.is_running() or self.w3af.status.is_paused():
+            if not self.w4af.status.is_running() or self.w4af.status.is_paused():
                 set_defaults = True
            
             for frame in self.VIEW_DATA:
@@ -116,13 +116,13 @@ class StatsViewer(gtk.VBox):
     
     def generate_text(self, item, default=False):
         try:
-            value = getattr(self.w3af.status, 'get_%s' % item.getter)()
+            value = getattr(self.w4af.status, 'get_%s' % item.getter)()
         except RuntimeError:
             value = item.default_value
         else:
             value = item.default_value if value is None or default else value
 
-        # https://github.com/andresriancho/w3af/issues/2679
+        # https://github.com/andresriancho/w4af/issues/2679
         if isinstance(value, str):
             value = value.replace('\0', '')
             

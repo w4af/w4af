@@ -3,19 +3,19 @@ form_auth.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,20 +26,20 @@ import time
 from copy import deepcopy
 from itertools import repeat
 
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.severity as severity
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
-from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
-from w3af.core.data.dc.generic.form import Form
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.controllers.misc.diff import chunked_diff
-from w3af.core.controllers.misc.epoch_to_string import epoch_to_string
-from w3af.core.controllers.plugins.bruteforce_plugin import BruteforcePlugin
-from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
+from w4af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
+from w4af.core.data.dc.generic.form import Form
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.controllers.misc.diff import chunked_diff
+from w4af.core.controllers.misc.epoch_to_string import epoch_to_string
+from w4af.core.controllers.plugins.bruteforce_plugin import BruteforcePlugin
+from w4af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 class form_auth(BruteforcePlugin):
@@ -326,7 +326,7 @@ class form_auth(BruteforcePlugin):
         """
         Some login forms have "extra" parameters. In some cases I've seen
         login forms that have an "I agree with the terms and conditions"
-        checkbox. If w3af does not set that extra field to "true", even if
+        checkbox. If w4af does not set that extra field to "true", even if
         I have the correct username and password combination, it won't
         perform a successful login.
 

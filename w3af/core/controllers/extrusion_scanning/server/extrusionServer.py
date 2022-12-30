@@ -3,29 +3,29 @@ extrusionServer.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import socket
 import time
 
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
 
 
 class extrusionServer(object):
@@ -65,7 +65,7 @@ class extrusionServer(object):
 
     def can_sniff(self):
         """
-        Determine if the user running w3af can sniff packets on the configured
+        Determine if the user running w4af can sniff packets on the configured
         interface.
         """
         # Import things from scapy when I need them in order to reduce memory

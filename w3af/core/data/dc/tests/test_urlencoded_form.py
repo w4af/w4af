@@ -2,19 +2,19 @@
 """
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,10 +25,10 @@ import pickle
 
 import pytest
 
-from w3af.core.data.dc.urlencoded_form import URLEncodedForm
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.parsers.utils.form_constants import INPUT_TYPE_TEXT
-from w3af.core.data.parsers.utils.tests.test_form_params import (form_with_radio,
+from w4af.core.data.dc.urlencoded_form import URLEncodedForm
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.parsers.utils.form_constants import INPUT_TYPE_TEXT
+from w4af.core.data.parsers.utils.tests.test_form_params import (form_with_radio,
                                                                  form_with_checkbox,
                                                                  form_select_cars,
                                                                  create_form_params_helper)
@@ -84,7 +84,7 @@ class TestURLEncodedForm(unittest.TestCase):
         impossible to find any bugs in the "eggs" parameter.
 
         Please note that this is just a partial test, since there is much more
-        going on in w3af than just creating a form and encoding it. A functional
+        going on in w4af than just creating a form and encoding it. A functional
         test for this issue can be found at test_special_chars.py
         """
         form_with_plus = [{'tagname': 'input', 'name': 'foo', 'type':

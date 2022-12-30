@@ -4,19 +4,19 @@ test_cache.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,11 +25,11 @@ import unittest
 
 from unittest.mock import patch, Mock, _Call
 
-from w3af.core.data.url.HTTPRequest import HTTPRequest
-from w3af.core.data.url.handlers.cache import CacheHandler
-from w3af.core.data.url import opener_settings
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.headers import Headers
+from w4af.core.data.url.HTTPRequest import HTTPRequest
+from w4af.core.data.url.handlers.cache import CacheHandler
+from w4af.core.data.url import opener_settings
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.headers import Headers
 
 
 class TestCacheHandler(unittest.TestCase):
@@ -38,7 +38,7 @@ class TestCacheHandler(unittest.TestCase):
         CacheHandler().clear()
     
     def test_basic(self):
-        url = URL('http://www.w3af.org')
+        url = URL('http://www.w4af.org')
         request = HTTPRequest(url, cache=True)
         
         cache = CacheHandler()
@@ -47,7 +47,7 @@ class TestCacheHandler(unittest.TestCase):
         response = FakeHttplibHTTPResponse(200, 'OK', 'spameggs', Headers(),
                                            url.url_string)
 
-        with patch('w3af.core.data.url.handlers.cache.CacheClass') as cc_mock:
+        with patch('w4af.core.data.url.handlers.cache.CacheClass') as cc_mock:
             store_in_cache = Mock()
             cc_mock.attach_mock(store_in_cache, 'store_in_cache')
 
@@ -80,7 +80,7 @@ class TestCacheHandler(unittest.TestCase):
         self.assertEqual(cached_response.geturl(), response.geturl())
 
     def test_no_cache(self):
-        url = URL('http://www.w3af.org')
+        url = URL('http://www.w4af.org')
         request = HTTPRequest(url, cache=False)
         
         cache = CacheHandler()
@@ -98,10 +98,10 @@ class CacheIntegrationTest(unittest.TestCase):
         settings.build_openers()
         opener = settings.get_custom_opener()
 
-        url = URL('http://w3af.org/foo-bar-not-exists.htm')
+        url = URL('http://w4af.org/foo-bar-not-exists.htm')
         request = HTTPRequest(url, cache=False)
 
-        with patch('w3af.core.data.url.handlers.cache.CacheClass') as cc_mock:
+        with patch('w4af.core.data.url.handlers.cache.CacheClass') as cc_mock:
             store_in_cache = Mock()
             cc_mock.attach_mock(store_in_cache, 'store_in_cache')
 

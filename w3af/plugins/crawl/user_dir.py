@@ -3,33 +3,33 @@ user_dir.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.kb.info import Info
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.exceptions import RunOnce
-from w3af.core.controllers.misc.decorators import runonce
-from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_not_equal
-from w3af.plugins.crawl.user_db.user_db import (OS, APPLICATION,
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.kb.info import Info
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.exceptions import RunOnce
+from w4af.core.controllers.misc.decorators import runonce
+from w4af.core.controllers.misc.fuzzy_string_cmp import fuzzy_not_equal
+from w4af.plugins.crawl.user_db.user_db import (OS, APPLICATION,
                                                 get_users_from_csv)
 
 
@@ -143,7 +143,7 @@ class user_dir(CrawlPlugin):
             name = 'Fingerprinted operating system'
 
         elif tag == APPLICATION:
-            desc = ('The remote server has "%s" installed, w3af'
+            desc = ('The remote server has "%s" installed, w4af'
                     ' found this information based on the remote'
                     ' user "%s".')
             desc %= (user_desc, user)

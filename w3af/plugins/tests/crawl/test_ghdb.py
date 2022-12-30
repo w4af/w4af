@@ -3,19 +3,19 @@ test_ghdb.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import datetime
@@ -23,13 +23,13 @@ import pytest
 
 from unittest.mock import patch, call
 
-import w3af.core.data.constants.severity as severity
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.plugins.crawl.ghdb import GoogleHack, bing
-from w3af.core.data.search_engines.bing import BingResult
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.misc.file_utils import days_since_file_update
-from w3af.core.controllers.ci.moth import get_moth_http
+import w4af.core.data.constants.severity as severity
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.plugins.crawl.ghdb import GoogleHack, bing
+from w4af.core.data.search_engines.bing import BingResult
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.misc.file_utils import days_since_file_update
+from w4af.core.controllers.ci.moth import get_moth_http
 
 
 @pytest.mark.moth
@@ -48,7 +48,7 @@ class TestGHDB(PluginTest):
     def test_ghdb_private(self):
         cfg = self._run_configs['cfg']
 
-        with patch('w3af.plugins.crawl.web_diff.om.out') as om_mock:
+        with patch('w4af.plugins.crawl.web_diff.om.out') as om_mock:
             self._scan(self.private_url, cfg['plugins'])
 
             msg = 'There is no point in searching bing for "site:127.0.0.1".' \
@@ -73,7 +73,7 @@ class TestGHDB(PluginTest):
             else:
                 return []
 
-        pmodule = 'w3af.plugins.crawl.ghdb.%s'
+        pmodule = 'w4af.plugins.crawl.ghdb.%s'
         with patch(pmodule % 'is_private_site') as private_site_mock:
             with patch.object(bing, 'get_n_results') as google_mock_method:
 
@@ -81,7 +81,7 @@ class TestGHDB(PluginTest):
                 private_site_mock.return_value = False
 
                 google_result = BingResult(
-                    URL('http://moth/w3af/crawl/ghdb/'))
+                    URL('http://moth/w4af/crawl/ghdb/'))
                 google_mock_method.side_effect = [[], ] * 50 + [[google_result, ]] +\
                                                  [[], ] * 50000
 
@@ -95,12 +95,12 @@ class TestGHDB(PluginTest):
 
         vuln = vulns[0]
         self.assertEqual(
-            vuln.get_url().url_string, 'http://moth/w3af/crawl/ghdb/')
+            vuln.get_url().url_string, 'http://moth/w4af/crawl/ghdb/')
         self.assertEqual(vuln.get_severity(), severity.MEDIUM)
         self.assertEqual(vuln.get_name(), 'Google hack database match')
 
     def test_xml_parsing(self):
-        ghdb_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'ghdb')
+        ghdb_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'ghdb')
 
         ghdb_set = ghdb_inst._read_ghdb()
 
@@ -111,7 +111,7 @@ class TestGHDB(PluginTest):
 
     @pytest.mark.skip("GHDB database is out of date GHDB deprecated")
     def test_too_old_xml(self):
-        ghdb_inst = self.w3afcore.plugins.get_plugin_inst('crawl', 'ghdb')
+        ghdb_inst = self.w4afcore.plugins.get_plugin_inst('crawl', 'ghdb')
 
         ghdb_file = ghdb_inst._ghdb_file
         is_older = days_since_file_update(ghdb_file, 30)
@@ -120,7 +120,7 @@ class TestGHDB(PluginTest):
                ' following command:'
                '\n'
                '<secret wget-command>\n'
-               'git commit -m "Update GHDB" w3af/plugins/crawl/ghdb/GHDB.xml\n'
+               'git commit -m "Update GHDB" w4af/plugins/crawl/ghdb/GHDB.xml\n'
                'git push\n'
                '\n'
                'Also remember to run this unittest again to verify that the'

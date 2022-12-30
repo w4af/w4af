@@ -3,27 +3,27 @@ clean_dc.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import copy
 
-from w3af.core.data.constants.encodings import DEFAULT_ENCODING
-from w3af.core.data.misc.encoding import smart_unicode
-from w3af.core.controllers.misc.io import NamedBytesIO
+from w4af.core.data.constants.encodings import DEFAULT_ENCODING
+from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.controllers.misc.io import NamedBytesIO
 
 FILENAME_TOKEN = 'file-5692fef3f5dcd97'
 PATH_TOKEN = 'path-0fb923a04c358a37c'
@@ -90,7 +90,7 @@ def clean_fuzzable_request_form(fuzzable_request, dc_handler=clean_data_containe
     The main goal of this function is to return a "unique representation"
     of how the HTTP request looks like WITHOUT including the URL.
 
-    Related with https://github.com/andresriancho/w3af/issues/15970
+    Related with https://github.com/andresriancho/w4af/issues/15970
 
     :param fuzzable_request: The fuzzable request instance to clean
     """

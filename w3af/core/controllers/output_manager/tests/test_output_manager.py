@@ -4,19 +4,19 @@ test_output_manager.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
@@ -26,11 +26,11 @@ from unittest.mock import MagicMock, Mock
 import pytest
 from tblib.decorators import Error
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.output_manager import log_sink_factory
-from w3af.core.controllers.threads.decorators import apply_with_return_error
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.output_manager import log_sink_factory
+from w4af.core.controllers.threads.decorators import apply_with_return_error
 
 
 def send_log_message(msg):
@@ -161,14 +161,14 @@ class TestOutputManager(unittest.TestCase):
 
         invalid_plugin = InvalidPlugin()
 
-        w3af_core = w3afCore()
+        w4af_core = w4afCore()
 
         om.manager._output_plugin_instances = [invalid_plugin, ]
         om.manager.start()
         om.out.information('abc')
         om.manager.process_all_messages()
 
-        exc_list = w3af_core.exception_handler.get_all_exceptions()
+        exc_list = w4af_core.exception_handler.get_all_exceptions()
         self.assertEqual(len(exc_list), 1, exc_list)
 
         edata = exc_list[0]

@@ -3,19 +3,19 @@ splash.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
@@ -23,9 +23,9 @@ import os
 from gi.repository import Gtk as gtk
 from gi.repository import Gdk as gdk
 
-from w3af.core.ui.gui.constants import W3AF_ICON
-from w3af.core.controllers.dependency_check.platforms.mac import MacOSX
-from w3af import ROOT_PATH
+from w4af.core.ui.gui.constants import w4af_ICON
+from w4af.core.controllers.dependency_check.platforms.mac import MacOSX
+from w4af import ROOT_PATH
 
 
 class Splash(gtk.Window):
@@ -38,8 +38,8 @@ class Splash(gtk.Window):
 
         # These two lines are required here to make sure that unity shows the
         # correct information in the menu
-        self.set_icon_from_file(W3AF_ICON)
-        self.set_title('w3af - 0wn the Web')
+        self.set_icon_from_file(w4af_ICON)
+        self.set_title('w4af - 0wn the Web')
 
         vbox = gtk.VBox()
         self.add(vbox)
@@ -52,7 +52,7 @@ class Splash(gtk.Window):
         vbox.pack_start(self.label, False, False, 0)
 
         # Splash screen doesn't have decoration (at least where supported)
-        # https://github.com/andresriancho/w3af/issues/9084
+        # https://github.com/andresriancho/w4af/issues/9084
         if not MacOSX.is_current_platform():
             self.set_decorated(False)
 

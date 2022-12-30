@@ -4,30 +4,30 @@ test_xurllib_integration.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 import httpretty
 import pytest
 
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
-from w3af.core.data.url.opener_settings import OpenerSettings
-from w3af.core.data.url.extended_urllib import ExtendedUrllib
-from w3af.core.data.parsers.doc.url import URL
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.controllers.ci.w4af_moth import get_w4af_moth_http
+from w4af.core.data.url.opener_settings import OpenerSettings
+from w4af.core.data.url.extended_urllib import ExtendedUrllib
+from w4af.core.data.parsers.doc.url import URL
 
 
 class TestXUrllibIntegration(unittest.TestCase):
@@ -38,15 +38,15 @@ class TestXUrllibIntegration(unittest.TestCase):
         self.uri_opener = ExtendedUrllib()
         
     @pytest.mark.ci_fails
-    @pytest.mark.w3af_moth
+    @pytest.mark.w4af_moth
     def test_ntlm_auth_not_configured(self):
         self.uri_opener = ExtendedUrllib()
-        url = URL(get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/"))
+        url = URL(get_w4af_moth_http("/w4af/core/ntlm_auth/ntlm_v1/"))
         http_response = self.uri_opener.GET(url, cache=False)
         self.assertIn('Must authenticate.', http_response.body)
 
     @pytest.mark.ci_fails
-    @pytest.mark.w3af_moth
+    @pytest.mark.w4af_moth
     def test_ntlm_auth_valid_creds(self):
         
         self.uri_opener = ExtendedUrllib()
@@ -61,12 +61,12 @@ class TestXUrllibIntegration(unittest.TestCase):
         ntlm_domain.set_value('moth') 
         ntlm_user.set_value('admin')
         ntlm_pass.set_value('admin')
-        ntlm_url.set_value(get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/"))
+        ntlm_url.set_value(get_w4af_moth_http("/w4af/core/ntlm_auth/ntlm_v1/"))
         
         settings.set_options(options)
         self.uri_opener.settings = settings
         
-        url = URL(get_w3af_moth_http("/w3af/core/ntlm_auth/ntlm_v1/"))
+        url = URL(get_w4af_moth_http("/w4af/core/ntlm_auth/ntlm_v1/"))
         http_response = self.uri_opener.GET(url, cache=False)
         self.assertIn('You are admin from MOTH/', http_response.body)
 
@@ -111,13 +111,13 @@ class TestUpperCaseHeaders(unittest.TestCase):
     def test_headers_upper_case(self):
         """
         This unittest is skipped here, but shouldn't be removed, it is a reminder
-        that w3af (and urllib/httplib) does always perform a call to lower() for
+        that w4af (and urllib/httplib) does always perform a call to lower() for
         all the data received over the wire.
 
-        This gives w3af a modified view of the reality, we never see what was
+        This gives w4af a modified view of the reality, we never see what was
         really sent to us.
         """
-        url = "http://w3af.org/"
+        url = "http://w4af.org/"
 
         httpretty.register_uri(httpretty.GET, url,
                                body='hello world',

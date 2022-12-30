@@ -3,19 +3,19 @@ rfi.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,22 +23,22 @@ import os
 import socket
 import textwrap
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.daemons.webserver as webserver
-import w3af.plugins.attack.payloads.shell_handler as shell_handler
-import w3af.core.data.constants.ports as ports
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.daemons.webserver as webserver
+import w4af.plugins.attack.payloads.shell_handler as shell_handler
+import w4af.core.data.constants.ports as ports
 
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.controllers.plugins.attack_plugin import AttackPlugin
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.misc.home_dir import get_home_dir
-from w3af.core.controllers.misc.get_local_ip import get_local_ip
-from w3af.core.data.kb.exec_shell import ExecShell
-from w3af.core.data.kb.shell import Shell
-from w3af.plugins.attack.payloads.decorators.exec_decorator import exec_debug
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.controllers.plugins.attack_plugin import AttackPlugin
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.misc.home_dir import get_home_dir
+from w4af.core.controllers.misc.get_local_ip import get_local_ip
+from w4af.core.data.kb.exec_shell import ExecShell
+from w4af.core.data.kb.shell import Shell
+from w4af.plugins.attack.payloads.decorators.exec_decorator import exec_debug
 
 
 NO_SUCCESS = 0
@@ -74,7 +74,7 @@ class rfi(AttackPlugin):
         :return: True if plugin knows how to exploit a found vuln.
         """
         if not self._listen_address and not self._use_XSS_vuln:
-            msg = 'You need to specify a local IP address where w3af can bind'\
+            msg = 'You need to specify a local IP address where w4af can bind'\
                   ' an HTTP server that can be reached by the vulnerable Web'\
                   ' application.'
             om.out.error(msg)
@@ -97,7 +97,7 @@ class rfi(AttackPlugin):
 
         # Using the good old webserver (if properly configured)
         if not self._listen_address and not usable_xss:
-            msg = 'You need to specify a local IP address where w3af can'\
+            msg = 'You need to specify a local IP address where w4af can'\
                   ' bind an HTTP server that can be reached by the'\
                   ' vulnerable Web application.'
             om.out.error(msg)
@@ -318,14 +318,14 @@ class rfi(AttackPlugin):
         ol = OptionList()
         
         d = 'IP address that the webserver will use to receive requests'
-        h = 'w3af runs a webserver to serve the files to the target web app'\
+        h = 'w4af runs a webserver to serve the files to the target web app'\
             ' when doing remote file inclusions. This setting configures on'\
             ' what IP address the webserver is going to listen.'
         o = opt_factory('listen_address', self._listen_address, d, 'ip', help=h)
         ol.add(o)
         
         d = 'Port that the webserver will use to receive requests'
-        h = 'w3af runs a webserver to serve the files to the target web app'\
+        h = 'w4af runs a webserver to serve the files to the target web app'\
             ' when doing remote file inclusions. This setting configures on'\
             ' what IP address the webserver is going to listen.'
         o = opt_factory('listen_port', self._listen_port, d, 'port', help=h)

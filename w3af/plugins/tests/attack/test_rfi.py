@@ -3,27 +3,27 @@ test_rfi.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 
-from w3af.plugins.tests.helper import PluginConfig, ExecExploitTest
-from w3af.core.controllers.ci.php_moth import get_php_moth_http
-from w3af.core.controllers.misc.get_unused_port import get_unused_port
-from w3af.core.data.kb.vuln_templates.rfi_template import RFITemplate
+from w4af.plugins.tests.helper import PluginConfig, ExecExploitTest
+from w4af.core.controllers.ci.php_moth import get_php_moth_http
+from w4af.core.controllers.misc.get_unused_port import get_unused_port
+from w4af.core.data.kb.vuln_templates.rfi_template import RFITemplate
 
 
 @pytest.mark.smoke
@@ -38,7 +38,7 @@ class TestRFI(ExecExploitTest):
             'target': target_url,
             'plugins': {
                 'audit': (PluginConfig('rfi',
-                                       ('use_w3af_site', False, PluginConfig.BOOL),
+                                       ('use_w4af_site', False, PluginConfig.BOOL),
                                        ('listen_port', unused_port, PluginConfig.INT)),),
             }
         }

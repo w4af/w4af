@@ -3,19 +3,19 @@ pykto.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,23 +26,23 @@ import itertools
 
 from collections import namedtuple
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.constants.severity as severity
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.exceptions import RunOnce
-from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import INPUT_FILE, BOOL, LIST
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af import ROOT_PATH
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.exceptions import RunOnce
+from w4af.core.controllers.core_helpers.fingerprint_404 import is_404
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import INPUT_FILE, BOOL, LIST
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
 
 
 class pykto(CrawlPlugin):
@@ -61,7 +61,7 @@ class pykto(CrawlPlugin):
         self._db_file = os.path.join(ROOT_PATH, 'plugins', 'crawl', 'pykto',
                                      'scan_database.db')
         self._extra_db_file = os.path.join(ROOT_PATH, 'plugins', 'crawl',
-                                           'pykto', 'w3af_scan_database.db')
+                                           'pykto', 'w4af_scan_database.db')
 
         self._cgi_dirs = ['/cgi-bin/']
         self._admin_dirs = ['/admin/', '/adm/']
@@ -212,7 +212,7 @@ class pykto(CrawlPlugin):
         o = opt_factory('db_file', self._db_file, d, INPUT_FILE, help=h)
         ol.add(o)
 
-        d = 'The path to the w3af_scan_database.db file.'
+        d = 'The path to the w4af_scan_database.db file.'
         h = ('This is a file which has some extra checks for files that are not'
              ' present in the nikto database.')
         o = opt_factory('extra_db_file', self._extra_db_file, d,

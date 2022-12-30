@@ -9,7 +9,7 @@ back
 back
 
 target
-set target http://moth/w3af/audit/local_file_read/local_file_read.php?file=section.txt
+set target http://moth/w4af/audit/local_file_read/local_file_read.php?file=section.txt
 back
 
 start

@@ -3,33 +3,33 @@ dav.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import copy
 
-import w3af.core.data.constants.severity as severity
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.fuzzer.utils import rand_alpha, rand_alnum
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.kb.info import Info
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.fuzzer.utils import rand_alpha, rand_alnum
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.kb.info import Info
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class dav(AuditPlugin):
@@ -184,7 +184,7 @@ class dav(AuditPlugin):
         # Report some common errors
         elif put_response.get_code() == 403:
             # handle false positive when PUT method is not supported
-            # https://github.com/andresriancho/w3af/pull/2724/files
+            # https://github.com/andresriancho/w4af/pull/2724/files
             if 'supported' in put_response.get_body().lower():
                 return
             

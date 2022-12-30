@@ -3,26 +3,26 @@ user_dir.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import csv
 import os
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
 OS = 'os'
 APPLICATION = 'applications'
@@ -46,7 +46,7 @@ def get_users_from_csv(ident):
                 break
             except csv.Error:
                 # line contains NULL byte, and other similar things.
-                # https://github.com/andresriancho/w3af/issues/1490
+                # https://github.com/andresriancho/w4af/issues/1490
                 msg = 'user_dir: Ignoring data with CSV error at line "%s"'
                 om.out.debug(msg % reader.line_num)
                 continue

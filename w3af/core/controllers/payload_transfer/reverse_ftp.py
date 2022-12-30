@@ -3,25 +3,25 @@ reverseFTP.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import socket
 
-from w3af.core.controllers.payload_transfer.base_payload_transfer import BasePayloadTransfer
+from w4af.core.controllers.payload_transfer.base_payload_transfer import BasePayloadTransfer
 
 
 class ReverseFTP(BasePayloadTransfer):
@@ -71,13 +71,13 @@ class ReverseFTP(BasePayloadTransfer):
 
     def transfer(self, data_str, destination):
         """
-        This method is used to transfer the data_str from w3af to the
+        This method is used to transfer the data_str from w4af to the
         compromised server. Steps:
             - using EchoLinux / EchoWindows transfer the reverseFTPClient.py
               file (or the cx_freezed version)
             - start the _serve method
             - call the reverseFTPClient.py file on the remote server using:
-                - reverseFTPClient.py <w3af-ip-address> <port> <destination>
+                - reverseFTPClient.py <w4af-ip-address> <port> <destination>
             - verify that the file exists
         """
         return False

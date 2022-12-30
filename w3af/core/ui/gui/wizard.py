@@ -3,19 +3,19 @@ wizard.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,10 +23,10 @@ from gi.repository import Gtk as gtk
 import os
 import html
 
-from w3af import ROOT_PATH
-from w3af.core.ui.gui import GUI_DATA_PATH
-from w3af.core.ui.gui import entries, confpanel, helpers
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af import ROOT_PATH
+from w4af.core.ui.gui import GUI_DATA_PATH
+from w4af.core.ui.gui import entries, confpanel, helpers
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 class Quest(object):
@@ -40,8 +40,8 @@ class Quest(object):
 
 
 class QuestOptions(gtk.VBox):
-    def __init__(self, w3af, wizard):
-        self.w3af = w3af
+    def __init__(self, w4af, wizard):
+        self.w4af = w4af
         self.wizard = wizard
         super(QuestOptions, self).__init__()
 
@@ -97,7 +97,7 @@ class QuestOptions(gtk.VBox):
         self.activeQuestion = quest
         self.remove(self.widg)
         self.widg = confpanel.OnlyOptions(
-            self, self.w3af, Quest(quest), gtk.Button(), gtk.Button())
+            self, self.w4af, Quest(quest), gtk.Button(), gtk.Button())
         self.pack_start(self.widg)
 
     def ask_final(self):
@@ -121,11 +121,11 @@ class Wizard(entries.RememberingWindow):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, wizard):
+    def __init__(self, w4af, wizard):
         super(Wizard, self).__init__(
-            w3af, "wizard", "w3af Wizard: " + wizard.get_name(), "Wizards",
+            w4af, "wizard", "w4af Wizard: " + wizard.get_name(), "Wizards",
             guessResize=False)
-        self.w3af = w3af
+        self.w4af = w4af
         self.wizard = wizard
 
         # the image at the left
@@ -143,7 +143,7 @@ class Wizard(entries.RememberingWindow):
         self.quest = gtk.Label()
         self.quest.set_line_wrap(True)
         mainvbox.pack_start(self.quest, True, False, padding=10)
-        self.panel = QuestOptions(w3af, wizard)
+        self.panel = QuestOptions(w4af, wizard)
         mainvbox.pack_start(self.panel, True, False, padding=10)
 
         # fill it
@@ -182,13 +182,13 @@ class Wizard(entries.RememberingWindow):
 
         filename = html.escape(filename)
         try:
-            helpers.coreWrap(self.w3af.profiles.save_current_to_new_profile,
+            helpers.coreWrap(self.w4af.profiles.save_current_to_new_profile,
                              filename, description)
         except BaseFrameworkException:
-            self.w3af.mainwin.sb(_("There was a problem saving the profile!"))
+            self.w4af.mainwin.sb(_("There was a problem saving the profile!"))
             return
-        self.w3af.mainwin.profiles.load_profiles(filename)
-        self.w3af.mainwin.sb(_("New profile created"))
+        self.w4af.mainwin.profiles.load_profiles(filename)
+        self.w4af.mainwin.sb(_("New profile created"))
         self.destroy()
 
     def _goNext(self, widg):
@@ -231,7 +231,7 @@ class Wizard(entries.RememberingWindow):
         """End titles window."""
         self.qtitle.set_markup("<b>The wizard has finished</b>")
         self.quest.set_text("There are no more questions, you correctly created a new "
-                            "configuration for w3af.\n\nPlease provide a name and a "
+                            "configuration for w4af.\n\nPlease provide a name and a "
                             "description for the new profile:")
         self.panel.ask_final()
         self.nextbtn.set_label("  Save  ")
@@ -265,11 +265,11 @@ class WizardChooser(entries.RememberingWindow):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af):
+    def __init__(self, w4af):
         super(WizardChooser, self).__init__(
-            w3af, "wizardchooser", "w3af - Wizard Chooser", "Wizards",
+            w4af, "wizardchooser", "w4af - Wizard Chooser", "Wizards",
             guessResize=False)
-        self.w3af = w3af
+        self.w4af = w4af
 
         # the image at the left
         mainhbox = gtk.HBox()
@@ -321,14 +321,14 @@ class WizardChooser(entries.RememberingWindow):
     def _goWizard(self, widget):
         """Runs the selected wizard."""
         # First, clean all the enabled plugins that the user may have selected:
-        for ptype in self.w3af.plugins.get_plugin_types():
-            self.w3af.plugins.set_plugins([], ptype)
+        for ptype in self.w4af.plugins.get_plugin_types():
+            self.w4af.plugins.set_plugins([], ptype)
 
         # Destroy myself
         self.destroy()
 
         # Run the selected wizard
-        Wizard(self.w3af, self.rbuts.active)
+        Wizard(self.w4af, self.rbuts.active)
 
     def _getWizards(self):
         """Returns the existing wizards."""
@@ -338,9 +338,9 @@ class WizardChooser(entries.RememberingWindow):
         for arch in os.listdir(wizard_path):
             if arch.endswith(".py") and not arch.startswith("__"):
                 base = arch[:-3]
-                modbase = __import__("w3af.core.controllers.wizard.wizards." +
+                modbase = __import__("w4af.core.controllers.wizard.wizards." +
                                      base, fromlist=[None])
                 cls = getattr(modbase, base)
-                wizard_instance = cls(self.w3af)
+                wizard_instance = cls(self.w4af)
                 wizs.append(wizard_instance)
         return wizs

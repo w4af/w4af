@@ -3,19 +3,19 @@ handler.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,12 +26,12 @@ from nocasedict import NocaseDict
 from libmproxy.controller import Master
 from libmproxy.protocol.http import HTTPResponse as LibMITMProxyHTTPResponse
 
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.HTTPRequest import HTTPRequest
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.misc.encoding import smart_str
-from w3af.core.controllers.daemons.proxy.templates.utils import render
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.HTTPRequest import HTTPRequest
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.misc.encoding import smart_str
+from w4af.core.controllers.daemons.proxy.templates.utils import render
 
 class ProxyHandler(Master):
     """
@@ -57,10 +57,10 @@ class ProxyHandler(Master):
         self.uri_opener = uri_opener
         self.parent_process = parent_process
 
-    def _to_w3af_request(self, request):
+    def _to_w4af_request(self, request):
         """
         Convert libmproxy.http.HTTPRequest to
-        w3af.core.data.url.HTTPRequest.HTTPRequest
+        w4af.core.data.url.HTTPRequest.HTTPRequest
         """
         url = '%s://%s:%s%s' % (request.scheme, request.host,
                                 request.port, request.path)
@@ -72,7 +72,7 @@ class ProxyHandler(Master):
 
     def _to_libmproxy_response(self, request, response):
         """
-        Convert w3af.core.data.url.HTTPResponse.HTTPResponse  to
+        Convert w4af.core.data.url.HTTPResponse.HTTPResponse  to
         libmproxy.http.HTTPResponse
         """
         charset = response.charset
@@ -101,7 +101,7 @@ class ProxyHandler(Master):
 
     def _send_http_request(self, http_request, grep=True):
         """
-        Send a w3af HTTP request to the web server using w3af's HTTP lib
+        Send a w4af HTTP request to the web server using w4af's HTTP lib
 
         No error handling is performed, someone else should do that.
 
@@ -173,13 +173,13 @@ class ProxyHandler(Master):
         this is just a base/example implementation we just:
 
             * Load the request form the flow
-            * Translate the request into a w3af HTTPRequest
+            * Translate the request into a w4af HTTPRequest
             * Send it to the wire using our uri_opener
             * Set the response
 
         :param flow: A libmproxy flow containing the request
         """
-        http_request = self._to_w3af_request(flow.request)
+        http_request = self._to_w4af_request(flow.request)
 
         try:
             # Send the request to the remote webserver

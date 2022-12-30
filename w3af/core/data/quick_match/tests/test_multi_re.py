@@ -1,6 +1,6 @@
 import unittest
 
-from w3af.core.data.quick_match.multi_re import MultiRE
+from w4af.core.data.quick_match.multi_re import MultiRE
 
 class MultiRETest(unittest.TestCase):
 

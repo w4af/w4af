@@ -3,19 +3,19 @@ scans.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,8 +24,8 @@ import os
 from uuid import uuid4
 from tempfile import tempdir
 
-from w3af.core.ui.api.db.master import SCANS
-import w3af.core.controllers.output_manager as om
+from w4af.core.ui.api.db.master import SCANS
+import w4af.core.controllers.output_manager as om
 
 
 def get_scan_info_from_id(scan_id):
@@ -43,7 +43,7 @@ def create_temp_profile(scan_profile):
     :param scan_profile: The contents of a profile configuration
     :return: The scan profile file name and the directory where it was created
     """
-    scan_profile_file = os.path.join(tempdir, '%s.pw3af' % uuid4())
+    scan_profile_file = os.path.join(tempdir, '%s.pw4af' % uuid4())
     with open(scan_profile_file, 'w') as profile_fh:
         profile_fh.write(scan_profile)
 
@@ -66,12 +66,12 @@ def start_scan_helper(scan_info):
     """
     Start scan from scan_info
 
-    :param scan_info: ScanInfo object contains initialized w3afCore
+    :param scan_info: ScanInfo object contains initialized w4afCore
     """
-    w3af_core = scan_info.w3af_core
+    w4af_core = scan_info.w4af_core
     try:
         # Init plugins!
-        w3af_core.plugins.init_plugins()
+        w4af_core.plugins.init_plugins()
 
         # Clear all current output plugins
         # Add the REST API output plugin
@@ -79,12 +79,12 @@ def start_scan_helper(scan_info):
         om.manager.set_output_plugin_inst(scan_info.output)
 
         # Start the scan!
-        w3af_core.verify_environment()
-        w3af_core.start()
+        w4af_core.verify_environment()
+        w4af_core.start()
     except Exception as e:
         scan_info.exception = e
         try:
-            w3af_core.stop()
+            w4af_core.stop()
         except AttributeError:
             # Reduce some exceptions found during interpreter shutdown
             pass

@@ -3,37 +3,37 @@ test_find_dvcs.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import pytest
 
-import w3af.core.data.constants.severity as severity
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.constants.severity as severity
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af import ROOT_PATH
-from w3af.plugins.crawl.find_dvcs import find_dvcs
-from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
-from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
+from w4af import ROOT_PATH
+from w4af.plugins.crawl.find_dvcs import find_dvcs
+from w4af.core.controllers.ci.w4af_moth import get_w4af_moth_http
+from w4af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 
-@pytest.mark.w3af_moth
+@pytest.mark.w4af_moth
 class TestFindDVCS(PluginTest):
 
-    base_url = get_w3af_moth_http('/w3af/crawl/find_dvcs/')
+    base_url = get_w4af_moth_http('/w4af/crawl/find_dvcs/')
 
     _run_configs = {
         'cfg': {
@@ -123,7 +123,7 @@ class TestSVN(PluginTest):
         # There is a bug somewhere deep in HTTPretty. For some reason on some runs
         # of this test, the wc.db response comes back to the app as zero length (despite
         # having a content-length header reporting the correct length). This doesn't
-        # seem to be an issue with the DVCS plugin or with w3af code - I imagine it's about
+        # seem to be an issue with the DVCS plugin or with w4af code - I imagine it's about
         # threading and races with python and httpretty. But if you run this test 5 times,
         # it will fail at least once.
         cfg = self._run_configs['cfg']

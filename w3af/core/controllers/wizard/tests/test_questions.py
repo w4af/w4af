@@ -3,19 +3,19 @@ test_questions.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,10 +23,10 @@ import os
 
 import pytest
 
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.misc.factory import factory
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.misc.factory import factory
 
-from w3af.core.data.options.option_list import OptionList
+from w4af.core.data.options.option_list import OptionList
 
 
 class test_questions(object):
@@ -42,17 +42,17 @@ class test_questions(object):
             * Exercise all setters
             * Make sure "back" works
         """
-        mod = 'w3af.core.controllers.wizard.questions.%s'
-        w3af_core = w3afCore()
+        mod = 'w4af.core.controllers.wizard.questions.%s'
+        w4af_core = w4afCore()
 
-        for filename in os.listdir('w3af/core/controllers/wizard/questions/'):
+        for filename in os.listdir('w4af/core/controllers/wizard/questions/'):
             question_id, ext = os.path.splitext(filename)
 
             if question_id in ('__init__', '.git', '__pycache__') or ext == '.pyc':
                 continue
 
             klass = mod % question_id
-            question_inst = factory(klass, w3af_core)
+            question_inst = factory(klass, w4af_core)
 
             yield self._test_qid, question_inst
 

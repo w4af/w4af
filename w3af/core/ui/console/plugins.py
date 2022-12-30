@@ -3,19 +3,19 @@ plugins.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,12 +23,12 @@ import copy
 import sys
 import textwrap
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.ui.console.menu import menu
-from w3af.core.ui.console.config import ConfigMenu
-from w3af.core.ui.console.util import suggest
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.ui.console.menu import menu
+from w4af.core.ui.console.config import ConfigMenu
+from w4af.core.ui.console.util import suggest
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 class pluginsMenu(menu):
@@ -38,9 +38,9 @@ class pluginsMenu(menu):
 
     """
 
-    def __init__(self, name, console, w3af, parent):
-        menu.__init__(self, name, console, w3af, parent)
-        types = w3af.plugins.get_plugin_types()
+    def __init__(self, name, console, w4af, parent):
+        menu.__init__(self, name, console, w4af, parent)
+        types = w4af.plugins.get_plugin_types()
         self._children = {}
 
         self._load_help('plugins')
@@ -56,7 +56,7 @@ class pluginsMenu(menu):
     def __loadPluginTypesHelp(self, types):
         vars = {}
         for t in types:
-            pList = self._w3af.plugins.get_plugin_list(t)
+            pList = self._w4af.plugins.get_plugin_list(t)
             (p1, p2) = len(pList) > 1 and (pList[0], pList[1]) \
                 or ('plugin1', 'plugin2')
             vars['PLUGIN1'], vars['PLUGIN2'] = p1, p2
@@ -113,13 +113,13 @@ class pluginsTypeMenu(menu):
         Common menu for all types of plugins.
         The type of plugins is defined by the menu's own name.
     """
-    def __init__(self, name, console, w3af, parent):
-        menu.__init__(self, name, console, w3af, parent)
-        plugins = w3af.plugins.get_plugin_list(name)
+    def __init__(self, name, console, w4af, parent):
+        menu.__init__(self, name, console, w4af, parent)
+        plugins = w4af.plugins.get_plugin_list(name)
         self._plugins = {}  # name to number of options
         for p in plugins:
             try:
-                options = self._w3af.plugins.get_plugin_inst(
+                options = self._w4af.plugins.get_plugin_inst(
                     self._name, p).get_options()
             except Exception as e:
                 om.out.error('Error while reading plugin options: "%s"' % e)
@@ -156,7 +156,7 @@ class pluginsTypeMenu(menu):
             return self
 
     def _enablePlugins(self, list):
-        enabled = copy.copy(self._w3af.plugins.get_enabled_plugins(self._name))
+        enabled = copy.copy(self._w4af.plugins.get_enabled_plugins(self._name))
 
         for plugin in list:
             if plugin == '':
@@ -200,7 +200,7 @@ class pluginsTypeMenu(menu):
                   " the scan output."
             om.out.console(msg)
 
-        self._w3af.plugins.set_plugins(enabled, self._name)
+        self._w4af.plugins.set_plugins(enabled, self._name)
 
     def _cmd_desc(self, params):
 
@@ -211,7 +211,7 @@ class pluginsTypeMenu(menu):
         if plugin_name not in self._plugins:
             raise BaseFrameworkException("Unknown plugin: '%s'" % plugin_name)
 
-        plugin = self._w3af.plugins.get_plugin_inst(self._name, plugin_name)
+        plugin = self._w4af.plugins.get_plugin_inst(self._name, plugin_name)
         long_desc = plugin.get_long_desc()
         long_desc = textwrap.dedent(long_desc)
         om.out.console(long_desc)
@@ -227,7 +227,7 @@ class pluginsTypeMenu(menu):
         filter = len(params) > 0 and params[0] or 'all'
 
         all = [*self._plugins.keys()]
-        enabled = self._w3af.plugins.get_enabled_plugins(self._name)
+        enabled = self._w4af.plugins.get_enabled_plugins(self._name)
 
         if filter == 'all':
             list = all
@@ -247,7 +247,7 @@ class pluginsTypeMenu(menu):
 
         for plugin_name in list:
             row = []
-            plugin = self._w3af.plugins.get_plugin_inst(
+            plugin = self._w4af.plugins.get_plugin_inst(
                 self._name, plugin_name)
 
             optCount = self._plugins[plugin_name]
@@ -274,8 +274,8 @@ class pluginsTypeMenu(menu):
         if name in self._configs:
             config = self._configs[name]
         else:
-            config = ConfigMenu(name, self._console, self._w3af, self,
-                                self._w3af.plugins.get_plugin_inst(self._name, params[0]))
+            config = ConfigMenu(name, self._console, self._w4af, self,
+                                self._w4af.plugins.get_plugin_inst(self._name, params[0]))
             self._configs[name] = config
 
         return config

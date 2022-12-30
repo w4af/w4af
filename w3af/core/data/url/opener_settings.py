@@ -3,19 +3,19 @@ opener_settings.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,32 +23,32 @@ import urllib.request, urllib.error, urllib.parse
 import urllib.parse
 import http.cookiejar
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.configurable import Configurable
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.kb.config import cf as cfg
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.constants import MAX_HTTP_RETRIES, USER_AGENT
-from w3af.core.data.url.director import CustomOpenerDirector, build_opener
-from w3af.core.data.url.handlers.ntlm_auth import HTTPNtlmAuthHandler, HTTP401Handler
-from w3af.core.data.url.handlers.fast_basic_auth import FastHTTPBasicAuthHandler
-from w3af.core.data.url.handlers.cookie_handler import CookieHandler
-from w3af.core.data.url.handlers.gzip_handler import HTTPGzipProcessor
-from w3af.core.data.url.handlers.keepalive import HTTPHandler
-from w3af.core.data.url.handlers.keepalive import HTTPSHandler
-from w3af.core.data.url.handlers.output_manager import OutputManagerHandler
-from w3af.core.data.url.handlers.redirect import HTTP30XHandler
-from w3af.core.data.url.handlers.url_parameter import URLParameterHandler
-from w3af.core.data.url.handlers.cache import CacheHandler
-from w3af.core.data.url.handlers.blacklist import BlacklistHandler
-from w3af.core.data.url.handlers.mangle import MangleHandler
-from w3af.core.data.url.handlers.normalize import NormalizeHandler
-from w3af.core.data.url.handlers.errors import ErrorHandler, NoOpErrorHandler
-from w3af.core.data.options.option_types import POSITIVE_INT, INT, STRING, URL_LIST, BOOL
-from w3af.core.data.misc.cookie_jar import ImprovedMozillaCookieJar
+from w4af.core.controllers.configurable import Configurable
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.kb.config import cf as cfg
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.constants import MAX_HTTP_RETRIES, USER_AGENT
+from w4af.core.data.url.director import CustomOpenerDirector, build_opener
+from w4af.core.data.url.handlers.ntlm_auth import HTTPNtlmAuthHandler, HTTP401Handler
+from w4af.core.data.url.handlers.fast_basic_auth import FastHTTPBasicAuthHandler
+from w4af.core.data.url.handlers.cookie_handler import CookieHandler
+from w4af.core.data.url.handlers.gzip_handler import HTTPGzipProcessor
+from w4af.core.data.url.handlers.keepalive import HTTPHandler
+from w4af.core.data.url.handlers.keepalive import HTTPSHandler
+from w4af.core.data.url.handlers.output_manager import OutputManagerHandler
+from w4af.core.data.url.handlers.redirect import HTTP30XHandler
+from w4af.core.data.url.handlers.url_parameter import URLParameterHandler
+from w4af.core.data.url.handlers.cache import CacheHandler
+from w4af.core.data.url.handlers.blacklist import BlacklistHandler
+from w4af.core.data.url.handlers.mangle import MangleHandler
+from w4af.core.data.url.handlers.normalize import NormalizeHandler
+from w4af.core.data.url.handlers.errors import ErrorHandler, NoOpErrorHandler
+from w4af.core.data.options.option_types import POSITIVE_INT, INT, STRING, URL_LIST, BOOL
+from w4af.core.data.misc.cookie_jar import ImprovedMozillaCookieJar
 
 
 USER_AGENT_HEADER = 'User-Agent'
@@ -101,7 +101,7 @@ class OpenerSettings(Configurable):
         cfg.save('configured_timeout', 0)
         cfg.save('headers_file', '')
         cfg.save('cookie_jar_file', '')
-        cfg.save('user_agent', 'w3af.org')
+        cfg.save('user_agent', 'w4af.org')
         cfg.save('rand_user_agent', False)
 
         cfg.save('proxy_address', '')
@@ -190,7 +190,7 @@ class OpenerSettings(Configurable):
         except http.cookiejar.LoadError as cle:
             # pylint: disable=E1101
             if cle.message.startswith('invalid Netscape format cookies file'):
-                docs_url = ('http://docs.w3af.org/en/latest/'
+                docs_url = ('http://docs.w4af.org/en/latest/'
                             'authentication.html#setting-http-cookie')
 
                 msg = ('The supplied cookiejar file is not in Netscape format'
@@ -541,7 +541,7 @@ class OpenerSettings(Configurable):
         ol.add(o)
         
         d = 'Ignore session cookies'
-        h = ('If set to True, w3af will not extract cookies from HTTP responses'
+        h = ('If set to True, w4af will not extract cookies from HTTP responses'
              ' nor send HTTP cookies in requests.')
         o = opt_factory('ignore_session_cookies',
                         cfg.get('ignore_session_cookies'), d, 'boolean',
@@ -550,14 +550,14 @@ class OpenerSettings(Configurable):
         
         d = 'Proxy TCP port'
         h = 'TCP port for the HTTP proxy. On Microsoft Windows systems,'\
-            ' w3af will use Internet Explorer\'s proxy settings'
+            ' w4af will use Internet Explorer\'s proxy settings'
         o = opt_factory('proxy_port', cfg.get('proxy_port'), d, INT,
                         help=h, tabid='Outgoing proxy')
         ol.add(o)
         
         d = 'Proxy IP address'
         h = 'IP address for the HTTP proxy. On Microsoft Windows systems,'\
-            ' w3af will use Internet Explorer\'s proxy settings'
+            ' w4af will use Internet Explorer\'s proxy settings'
         o = opt_factory('proxy_address', cfg.get('proxy_address'), d,
                         STRING, help=h, tabid='Outgoing proxy')
         ol.add(o)
@@ -569,14 +569,14 @@ class OpenerSettings(Configurable):
         ol.add(o)
 
         d = 'Use random User-Agent header'
-        h = 'Enable to make w3af choose a random user agent for each HTTP'\
+        h = 'Enable to make w4af choose a random user agent for each HTTP'\
             ' request sent to the target web application'
         o = opt_factory('rand_user_agent', cfg.get('rand_user_agent'), d, BOOL,
                         help=h, tabid='Misc')
         ol.add(o)
 
         d = 'Maximum file size'
-        h = 'Indicates the maximum file size (in bytes) that w3af will'\
+        h = 'Indicates the maximum file size (in bytes) that w4af will'\
             ' retrieve from the remote server'
         o = opt_factory('max_file_size', cfg.get('max_file_size'), d,
                         INT, help=h, tabid='Misc')

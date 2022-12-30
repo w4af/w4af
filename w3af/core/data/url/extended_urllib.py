@@ -3,19 +3,19 @@ extended_urllib.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -38,30 +38,30 @@ from http.client import BadStatusLine
 from darts.lib.utils.lru import SynchronizedLRUDict
 # pylint: enable=E0401
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
 from . import opener_settings
 
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               ConnectionPoolException,
                                               HTTPRequestException,
                                               ScanMustStopByUnknownReasonExc,
                                               ScanMustStopByKnownReasonExc,
                                               ScanMustStopByUserRequest)
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.parsers.doc.http_request_parser import http_request_parser
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.handlers.keepalive import URLTimeoutError
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.url.HTTPRequest import HTTPRequest
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.dc.generic.data_container import DataContainer
-from w3af.core.data.user_agent.random_user_agent import get_random_user_agent
-from w3af.core.data.misc.encoding import smart_unicode
-from w3af.core.data.url.helpers import get_clean_body, get_exception_reason
-from w3af.core.data.url.response_meta import ResponseMeta, SUCCESS
-from w3af.core.data.url.get_average_rtt import GetAverageRTTForMutant
-from w3af.core.data.url.constants import (MAX_ERROR_COUNT,
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.parsers.doc.http_request_parser import http_request_parser
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.handlers.keepalive import URLTimeoutError
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.url.HTTPRequest import HTTPRequest
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.dc.generic.data_container import DataContainer
+from w4af.core.data.user_agent.random_user_agent import get_random_user_agent
+from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.url.helpers import get_clean_body, get_exception_reason
+from w4af.core.data.url.response_meta import ResponseMeta, SUCCESS
+from w4af.core.data.url.get_average_rtt import GetAverageRTTForMutant
+from w4af.core.data.url.constants import (MAX_ERROR_COUNT,
                                           MAX_RESPONSE_COLLECT,
                                           SOCKET_ERROR_DELAY,
                                           TIMEOUT_MULT_CONST,
@@ -86,7 +86,7 @@ class ExtendedUrllib(object):
     def __init__(self):
         self.settings = opener_settings.OpenerSettings()
         self._opener = None
-        self._w3af_core = None
+        self._w4af_core = None
         self._average_rtt_mutant = GetAverageRTTForMutant(self)
 
         # In exploit mode we disable some timeout/delay/error handling stuff
@@ -149,14 +149,14 @@ class ExtendedUrllib(object):
         """
         self._user_stopped = True
 
-    def set_w3af_core(self, w3af_core):
-        self._w3af_core = w3af_core
+    def set_w4af_core(self, w4af_core):
+        self._w4af_core = w4af_core
 
-    def get_w3af_core(self):
-        return self._w3af_core
+    def get_w4af_core(self):
+        return self._w4af_core
 
-    def has_w3af_core(self):
-        return self._w3af_core is not None
+    def has_w4af_core(self):
+        return self._w4af_core is not None
 
     def _before_send_hook(self, request):
         """
@@ -237,12 +237,12 @@ class ExtendedUrllib(object):
     def _auto_adjust_timeout(self, request):
         """
         By default the timeout value at OpenerSettings is set to 0, which means
-        that w3af needs to auto-adjust it based on the HTTP request/response
+        that w4af needs to auto-adjust it based on the HTTP request/response
         RTT. This method takes care of the process of adjusting the socket
         timeout.
 
         The objective of auto-adjusting the timeout is to "fail fast" on
-        requests which are going to fail anyways. In previous versions of w3af
+        requests which are going to fail anyways. In previous versions of w4af
         the default timeout was 15 seconds, which made the scanner delay A LOT
         on URLs which (for some reason like heavy processing on the server side)
         failed anyways.
@@ -256,7 +256,7 @@ class ExtendedUrllib(object):
         The TIMEOUT_MULT_CONST might be lowered by advanced users to achieve
         faster scans in scenarios where timeouts are slowing down the scans.
 
-        :see: https://github.com/andresriancho/w3af/issues/8698
+        :see: https://github.com/andresriancho/w4af/issues/8698
         :return: None, we adjust the value at the "settings" attribute
         """
         with self._adjust_timeout_lock:
@@ -369,7 +369,7 @@ class ExtendedUrllib(object):
 
         The objective of this method is to give the remote server, or local
         connection, the chance to recover from their errors without killing the
-        w3af scan.
+        w4af scan.
 
         When the error rate is lower than 5% nothing is done. We accept some
         errors.
@@ -384,8 +384,8 @@ class ExtendedUrllib(object):
         The error rate starts at zero, so no delay is added at the beginning
 
         :return: None, but might delay the requests which go out to the network
-        :see: https://github.com/andresriancho/w3af/issues/4811
-        :see: https://github.com/andresriancho/w3af/issues/8852
+        :see: https://github.com/andresriancho/w4af/issues/4811
+        :see: https://github.com/andresriancho/w4af/issues/8852
         """
         with self._rate_limit_lock:
 
@@ -475,7 +475,7 @@ class ExtendedUrllib(object):
     def _raise_if_should_stop(self):
         # There might be errors that make us stop the process, the exception
         # was already raised (see below) but we want to make sure that we
-        # keep raising it until the w3afCore really stops.
+        # keep raising it until the w4afCore really stops.
         if self._stop_exception is not None:
             # pylint: disable=E0702
             raise self._stop_exception
@@ -991,9 +991,9 @@ class ExtendedUrllib(object):
                                              original_url_inst)
 
     def _decrease_worker_pool_size(self):
-        w3af_core = self.get_w3af_core()
-        worker_pool = w3af_core.worker_pool
-        min_workers = w3af_core.MIN_WORKER_THREADS
+        w4af_core = self.get_w4af_core()
+        worker_pool = w4af_core.worker_pool
+        min_workers = w4af_core.MIN_WORKER_THREADS
 
         error_rate = self.get_error_rate()
 
@@ -1006,15 +1006,15 @@ class ExtendedUrllib(object):
             msg = 'Decreased the worker pool size to %s (error rate: %i%%)'
         else:
             msg = ('Not decreasing the worker pool size since it is lower'
-                   ' than the min value required by w3af: %s (error rate:'
+                   ' than the min value required by w4af: %s (error rate:'
                    ' %i%%)')
 
         om.out.debug(msg % (new_worker_count, error_rate))
 
     def _increase_worker_pool_size(self):
-        w3af_core = self.get_w3af_core()
-        worker_pool = w3af_core.worker_pool
-        max_workers = w3af_core.MAX_WORKER_THREADS
+        w4af_core = self.get_w4af_core()
+        worker_pool = w4af_core.worker_pool
+        max_workers = w4af_core.MAX_WORKER_THREADS
 
         error_rate = self.get_error_rate()
 
@@ -1054,7 +1054,7 @@ class ExtendedUrllib(object):
         Increase or decrease the worker pool size
         :return: None
         """
-        if not self.has_w3af_core():
+        if not self.has_w4af_core():
             return
 
         if not self._should_adjust_workers():
@@ -1314,7 +1314,7 @@ class ExtendedUrllib(object):
         :return: True if we should stop the scan due to too many consecutive
                  errors being received from the server.
 
-        :see: https://github.com/andresriancho/w3af/issues/8698
+        :see: https://github.com/andresriancho/w4af/issues/8698
         """
         #
         # We're looking for this pattern in the last_responses:
@@ -1383,12 +1383,12 @@ class ExtendedUrllib(object):
         host = uri.get_domain()
 
         # We drastically increase the timeout for this request. What
-        # could have happen is that w3af lowered the timeout for HTTP
+        # could have happen is that w4af lowered the timeout for HTTP
         # responses in a very aggressive way and then sent many HTTP
         # requests at the same time. Those requests failed due to the
         # aggressive timeout which lead to multiple sequential failures
         #
-        # When multiple failures are detected, w3af tries to check if
+        # When multiple failures are detected, w4af tries to check if
         # the remote site is still up using this method. If we don't
         # increase the timeout like this we'll still use the incorrectly
         # set timeout, which would (one more time) trigger an error.
@@ -1440,7 +1440,7 @@ class ExtendedUrllib(object):
         Logs the error rate to the debug() log, useful to understand why a scan
         fails with "Too many consecutive errors"
 
-        :see: https://github.com/andresriancho/w3af/issues/8698
+        :see: https://github.com/andresriancho/w4af/issues/8698
         """
         error_rate = self.get_error_rate()
         om.out.debug('ExtendedUrllib error rate is at %i%%' % error_rate)
@@ -1450,7 +1450,7 @@ class ExtendedUrllib(object):
         Handle the case where we exceeded MAX_ERROR_COUNT
         """
         # Create a detailed exception message
-        msg = ('w3af found too many consecutive errors while performing'
+        msg = ('w4af found too many consecutive errors while performing'
                ' HTTP requests. In most cases this means that the remote web'
                ' server is not reachable anymore, the network is down, or'
                ' a WAF is blocking our tests. The last exception message'

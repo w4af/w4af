@@ -102,7 +102,7 @@ class DetailedMaybeEncodingError(MaybeEncodingError):
 
 def worker(inqueue, outqueue, initializer=None, initargs=(), maxtasks=None):
     """
-    WARNING: w3af doesn't use this worker anymore!
+    WARNING: w4af doesn't use this worker anymore!
              See the worker class in threadpool.py
     """
     assert maxtasks is None or (type(maxtasks) == int and maxtasks > 0)
@@ -622,7 +622,7 @@ class Pool(object):
                     try:
                         p.terminate()
                     except AttributeError:
-                        # https://github.com/andresriancho/w3af/issues/9361
+                        # https://github.com/andresriancho/w4af/issues/9361
                         continue
 
         debug('joining task handler')

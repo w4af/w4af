@@ -3,19 +3,19 @@ phishtank.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,18 +23,18 @@ import os.path
 import socket
 import csv
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.constants.severity as severity
-from w3af import ROOT_PATH
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.quick_match.multi_in import MultiIn
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.exceptions import RunOnce, BaseFrameworkException
-from w3af.core.controllers.misc.decorators import runonce
-from w3af.core.controllers.misc.is_ip_address import is_ip_address
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.constants.severity as severity
+from w4af import ROOT_PATH
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.quick_match.multi_in import MultiIn
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.exceptions import RunOnce, BaseFrameworkException
+from w4af.core.controllers.misc.decorators import runonce
+from w4af.core.controllers.misc.is_ip_address import is_ip_address
 
 
 class phishtank(CrawlPlugin):

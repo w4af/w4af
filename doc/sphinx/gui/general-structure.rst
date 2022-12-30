@@ -1,7 +1,7 @@
 General structure
 =================
 
-In this section the general structure of the w3af graphical user interface is
+In this section the general structure of the w4af graphical user interface is
 explained. The following is the main window, the first image that you'll see
 from the system after it's completely loaded (during the load you'll see a
 splash image that gives you information about how the system is loading):
@@ -17,7 +17,7 @@ notebook tabs [3]. At the bottom of the window you have the the toolbar [4]
 and an indicator about the found elements [5]. In the notebook tab that you
 can see at the program beginning, there are three vertical panes: the profiles [6],
 the plugin selector [7], and the plugin configuration area [8] (where so far you
-see the w3af icon because you didn't select any plugin yet). Above them you also
+see the w4af icon because you didn't select any plugin yet). Above them you also
 have the target URL [9].
 
 The toolbar

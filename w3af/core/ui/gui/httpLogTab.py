@@ -3,19 +3,19 @@ httpLogTab.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a     copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,15 +26,15 @@ gi.require_version('Pango', '1.0')
 from gi.repository import Pango as pango
 
 # The elements to create the req/res viewer
-from w3af.core.ui.gui.reqResViewer import ReqResViewer
-from w3af.core.ui.gui.entries import (EasyTable, RememberingHPaned,
+from w4af.core.ui.gui.reqResViewer import ReqResViewer
+from w4af.core.ui.gui.entries import (EasyTable, RememberingHPaned,
                                       RememberingVPaned, wrapperWidgets,
                                       TextInput)
-from w3af.core.controllers.exceptions import BaseFrameworkException, DBException
-from w3af.core.data.db.history import HistoryItem
-from w3af.core.data.options.preferences import Preferences
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
+from w4af.core.controllers.exceptions import BaseFrameworkException, DBException
+from w4af.core.data.db.history import HistoryItem
+from w4af.core.data.options.preferences import Preferences
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
 
 
 class httpLogTab(RememberingHPaned):
@@ -43,10 +43,10 @@ class httpLogTab(RememberingHPaned):
 
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
-    def __init__(self, w3af, padding=10, time_refresh=False):
+    def __init__(self, w4af, padding=10, time_refresh=False):
         """Init object."""
-        super(httpLogTab, self).__init__(w3af, "pane-httplogtab", 300)
-        self.w3af = w3af
+        super(httpLogTab, self).__init__(w4af, "pane-httplogtab", 300)
+        self.w4af = w4af
         self._padding = padding
         self._lastId = 0
         self._historyItem = HistoryItem()
@@ -66,7 +66,7 @@ class httpLogTab(RememberingHPaned):
 
     def _initReqResViewer(self, mainvbox):
         """Create the req/res viewer."""
-        self._req_res_viewer = ReqResViewer(self.w3af, editableRequest=False,
+        self._req_res_viewer = ReqResViewer(self.w4af, editableRequest=False,
                                             editableResponse=False)
         self._req_res_viewer.set_sensitive(False)
         # Create the req/res selector (when a search with more
@@ -100,7 +100,7 @@ class httpLogTab(RememberingHPaned):
         #self._sw.set_sensitive(False)
         self._sw.show_all()
         # I want all sections to be resizable
-        self._vpan = RememberingVPaned(self.w3af, "pane-swandrRV", 100)
+        self._vpan = RememberingVPaned(self.w4af, "pane-swandrRV", 100)
         self._vpan.pack1(self._sw)
         self._vpan.pack2(self._req_res_viewer)
         self._vpan.show()
@@ -474,7 +474,7 @@ class httpLogTab(RememberingHPaned):
             return
 
         # Error handling for .trace file problems
-        # https://github.com/andresriancho/w3af/issues/1101
+        # https://github.com/andresriancho/w4af/issues/1101
         try:
             # These lines will trigger the code that reads the .trace file
             # from disk and if they aren't there an exception will rise
@@ -485,7 +485,7 @@ class httpLogTab(RememberingHPaned):
             return
 
         # Now we know that these two lines will work and we won't trigger
-        # https://github.com/andresriancho/w3af/issues/1101
+        # https://github.com/andresriancho/w4af/issues/1101
         self._req_res_viewer.request.show_object(history_item.request)
         self._req_res_viewer.response.show_object(history_item.response)
         if history_item.info:

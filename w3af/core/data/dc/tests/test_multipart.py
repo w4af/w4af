@@ -3,19 +3,19 @@ test_multipart.py
 
 Copyright 2014 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,13 +25,13 @@ import os
 
 import pytest
 
-from w3af.core.controllers.misc.io import NamedBytesIO
-from w3af.core.data.dc.utils.multipart import multipart_encode
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.db.disk_set import DiskSet
-from w3af.core.data.parsers.utils.form_params import FormParameters
-from w3af.core.data.dc.multipart_container import MultipartContainer
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.controllers.misc.io import NamedBytesIO
+from w4af.core.data.dc.utils.multipart import multipart_encode
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.db.disk_set import DiskSet
+from w4af.core.data.parsers.utils.form_params import FormParameters
+from w4af.core.data.dc.multipart_container import MultipartContainer
+from w4af.core.data.misc.encoding import smart_unicode
 
 MULTIPART_TEST = '''\
 --4266ff2e00ac63588a571483e5727142

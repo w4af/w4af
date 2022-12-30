@@ -3,32 +3,32 @@ os_commanding.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import w3af.core.controllers.output_manager as om
-import w3af.plugins.attack.payloads.shell_handler as shell_handler
+import w4af.core.controllers.output_manager as om
+import w4af.plugins.attack.payloads.shell_handler as shell_handler
 
-from w3af.plugins.attack.payloads.decorators.exec_decorator import exec_debug
-from w3af.core.data.kb.exec_shell import ExecShell
-from w3af.core.data.fuzzer.utils import rand_alpha
-from w3af.core.data.fuzzer.mutants.headers_mutant import HeadersMutant
-from w3af.core.controllers.plugins.attack_plugin import AttackPlugin
-from w3af.core.controllers.misc.common_attack_methods import CommonAttackMethods
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+from w4af.plugins.attack.payloads.decorators.exec_decorator import exec_debug
+from w4af.core.data.kb.exec_shell import ExecShell
+from w4af.core.data.fuzzer.utils import rand_alpha
+from w4af.core.data.fuzzer.mutants.headers_mutant import HeadersMutant
+from w4af.core.controllers.plugins.attack_plugin import AttackPlugin
+from w4af.core.controllers.misc.common_attack_methods import CommonAttackMethods
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               BodyCutException)
 
 
@@ -100,7 +100,7 @@ class BasicExploitStrategy(SeparatorExploitStrategy, CommonAttackMethods):
         try:
             return self._cut(http_response.get_body())
         except BodyCutException as bce:
-            issue = 'https://github.com/andresriancho/w3af/issues/5139'
+            issue = 'https://github.com/andresriancho/w4af/issues/5139'
 
             msg = ('Unexpected exception "%s" while trying to extract the'
                    ' command output from the HTTP response body. Please try'
@@ -183,9 +183,9 @@ class ShellShock(ExploitStrategy):
         if not isinstance(self.vuln.get_mutant(), HeadersMutant):
             return False
 
-        test_command = 'echo -n w3af'
+        test_command = 'echo -n w4af'
         http_response = self.send(self.generate_command(test_command), opener)
-        return self.extract_result(http_response) == b'w3af'
+        return self.extract_result(http_response) == b'w4af'
 
     def generate_command(self, command):
         return self.PAYLOAD_FMT % command

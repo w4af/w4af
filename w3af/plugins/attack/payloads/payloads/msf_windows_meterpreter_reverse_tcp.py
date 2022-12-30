@@ -1,4 +1,4 @@
-from w3af.plugins.attack.payloads.payloads.metasploit import metasploit
+from w4af.plugins.attack.payloads.payloads.metasploit import metasploit
 
 
 class msf_windows_meterpreter_reverse_tcp(metasploit):

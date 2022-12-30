@@ -6,7 +6,7 @@ import os
 from . import pluginEditorDialogs
 from gi.repository import Gtk as gtk
 
-from w3af import ROOT_PATH
+from w4af import ROOT_PATH
 
 BLOCK_SIZE = 2048
 RESPONSE_FORWARD = 1

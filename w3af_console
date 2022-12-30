@@ -9,12 +9,12 @@ import base64
 import re
 
 # Check if I have all needed dependencies
-from w3af.core.controllers.dependency_check.dependency_check import dependency_check
+from w4af.core.controllers.dependency_check.dependency_check import dependency_check
 dependency_check()
 
-from w3af.core.ui.console.console_ui import ConsoleUI
-from w3af.core.controllers.misc.get_w3af_version import get_w3af_version
-import w3af.core.controllers.output_manager as om
+from w4af.core.ui.console.console_ui import ConsoleUI
+from w4af.core.controllers.misc.get_w4af_version import get_w4af_version
+import w4af.core.controllers.output_manager as om
 
 
 # from https://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters
@@ -22,13 +22,13 @@ URL_RE = re.compile(r'^([a-z]|[A-Z]|[0-9]|\.|-|_|~|\[|\]|#|\'|\(|\)|;|:|@|&|=|\+
 
 
 USAGE_DOC = """
-w3af - Web Application Attack and Audit Framework
+w4af - Web Application Attack and Audit Framework
 
 Usage:
 
-    ./w3af_console -h
-    ./w3af_console -t
-    ./w3af_console [-s <script_file>]
+    ./w4af_console -h
+    ./w4af_console -t
+    ./w4af_console [-s <script_file>]
 
 Options:
 
@@ -53,7 +53,7 @@ Options:
         Run with the selected <profile> in batch mode
     
     -v or --version
-        Show w3af's version
+        Show w4af's version
 
     -y or --yes
         Automatically agree to disclaimer prompt
@@ -61,19 +61,19 @@ Options:
     -t or --target
         Target URL for scan
 
-For more info visit http://w3af.org/
+For more info visit http://w4af.org/
 """
 
 
 def _configure_output_manager():
     """
     Make sure that the output manager is started before doing anything else,
-    since it is used by most w3af modules
+    since it is used by most w4af modules
     """ 
     try:
         om.manager.set_output_plugins(['console'])
     except Exception as e:
-        print('Something went wrong, w3af failed to start the output manager.')
+        print('Something went wrong, w4af failed to start the output manager.')
         print('Exception: "%s"' % e)
         sys.exit(-9)
 
@@ -163,7 +163,7 @@ def main():
             _usage()
             return 0
         if o in ('-v', '--version'):
-            print(get_w3af_version())
+            print(get_w4af_version())
             return 0
         if o in ('-f', '--force-update'):
             do_update = True

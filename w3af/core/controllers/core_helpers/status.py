@@ -3,19 +3,19 @@ status.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,10 +23,10 @@ import time
 
 from operator import xor
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.misc.epoch_to_string import epoch_to_string
-from w3af.core.controllers.misc.number_generator import consecutive_number_generator
+from w4af.core.controllers.misc.epoch_to_string import epoch_to_string
+from w4af.core.controllers.misc.number_generator import consecutive_number_generator
 
 PAUSED = 'Paused'
 STOPPED = 'Stopped'
@@ -39,14 +39,14 @@ GREP = 'grep'
 
 class CoreStatus(object):
     """
-    This class maintains the status of the w3afCore. During scan the different
+    This class maintains the status of the w4afCore. During scan the different
     phases of the process will change the status (set) and the UI will be
     calling the different methods to (get) the information required.
     """
 
-    def __init__(self, w3af_core, scans_completed=0):
+    def __init__(self, w4af_core, scans_completed=0):
         # Store the core to be able to access the queues to get status
-        self._w3af_core = w3af_core
+        self._w4af_core = w4af_core
 
         # Init some internal values
         self._is_running = False
@@ -68,8 +68,8 @@ class CoreStatus(object):
                             GREP: 0,
                             CRAWL: 0}
 
-    def set_w3af_core(self, w3af_core):
-        self._w3af_core = w3af_core
+    def set_w4af_core(self, w4af_core):
+        self._w4af_core = w4af_core
 
     def pause(self, pause_yes_no):
         self._paused = pause_yes_no
@@ -86,7 +86,7 @@ class CoreStatus(object):
 
     def get_status(self):
         """
-        :return: A string representing the current w3af core status.
+        :return: A string representing the current w4af core status.
         """
         if self._paused:
             return PAUSED
@@ -125,8 +125,8 @@ class CoreStatus(object):
         This method saves the phase and plugin name in order to be shown
         to the user.
 
-        :param plugin_name: The plugin_type which the w3afCore is running
-        :param plugin_name: The plugin_name which the w3afCore is running
+        :param plugin_name: The plugin_type which the w4afCore is running
+        :param plugin_name: The plugin_name which the w4afCore is running
         """
         self._running_plugin[plugin_type] = plugin_name
         self._latest_ptype, self._latest_pname = plugin_type, plugin_name
@@ -200,28 +200,28 @@ class CoreStatus(object):
 
     def get_current_fuzzable_request(self, plugin_type):
         """
-        :return: The current fuzzable request that the w3afCore is working on.
+        :return: The current fuzzable request that the w4afCore is working on.
         """
         return self._current_fuzzable_request.get(plugin_type, None)
 
     # pylint: disable=E0202
     def set_current_fuzzable_request(self, plugin_type, fuzzable_request):
         """
-        :param fuzzable_request: The FuzzableRequest that the w3afCore is
+        :param fuzzable_request: The FuzzableRequest that the w4afCore is
         working on right now.
         """
         self._current_fuzzable_request[plugin_type] = fuzzable_request
 
     def get_crawl_input_speed(self):
-        dc = self._w3af_core.strategy.get_discovery_consumer()
+        dc = self._w4af_core.strategy.get_discovery_consumer()
         return 0 if dc is None else dc.in_queue.get_input_rpm()
 
     def get_crawl_output_speed(self):
-        dc = self._w3af_core.strategy.get_discovery_consumer()
+        dc = self._w4af_core.strategy.get_discovery_consumer()
         return 0 if dc is None else dc.in_queue.get_output_rpm()
 
     def get_crawl_qsize(self):
-        dc = self._w3af_core.strategy.get_discovery_consumer()
+        dc = self._w4af_core.strategy.get_discovery_consumer()
         if dc is None:
             return 0
 
@@ -230,15 +230,15 @@ class CoreStatus(object):
         return running_tasks + queued_tasks
 
     def get_crawl_output_qsize(self):
-        dc = self._w3af_core.strategy.get_discovery_consumer()
+        dc = self._w4af_core.strategy.get_discovery_consumer()
         return 0 if dc is None else dc.out_queue.qsize()
 
     def get_crawl_processed_tasks(self):
-        dc = self._w3af_core.strategy.get_discovery_consumer()
+        dc = self._w4af_core.strategy.get_discovery_consumer()
         return 0 if dc is None else dc.out_queue.get_processed_tasks()
 
     def has_finished_crawl(self):
-        dc = self._w3af_core.strategy.get_discovery_consumer()
+        dc = self._w4af_core.strategy.get_discovery_consumer()
 
         # The user never enabled crawl plugins or the scan has already finished
         # and no crawl plugins will be run
@@ -260,11 +260,11 @@ class CoreStatus(object):
                                   adjustment=adjustment)
 
     def get_grep_processed_tasks(self):
-        gc = self._w3af_core.strategy.get_grep_consumer()
+        gc = self._w4af_core.strategy.get_grep_consumer()
         return None if gc is None else gc.in_queue.get_processed_tasks()
 
     def get_grep_qsize(self):
-        gc = self._w3af_core.strategy.get_grep_consumer()
+        gc = self._w4af_core.strategy.get_grep_consumer()
         if gc is None:
             return 0
 
@@ -273,7 +273,7 @@ class CoreStatus(object):
         return running_tasks + queued_tasks
 
     def has_finished_grep(self):
-        gc = self._w3af_core.strategy.get_grep_consumer()
+        gc = self._w4af_core.strategy.get_grep_consumer()
 
         # The user never enabled grep plugins or the scan has already finished
         # and no grep plugins will be run
@@ -283,11 +283,11 @@ class CoreStatus(object):
         return gc.has_finished()
 
     def get_grep_input_speed(self):
-        gc = self._w3af_core.strategy.get_grep_consumer()
+        gc = self._w4af_core.strategy.get_grep_consumer()
         return 0 if gc is None else gc.in_queue.get_input_rpm()
 
     def get_grep_output_speed(self):
-        gc = self._w3af_core.strategy.get_grep_consumer()
+        gc = self._w4af_core.strategy.get_grep_consumer()
         return 0 if gc is None else gc.in_queue.get_output_rpm()
 
     def get_grep_eta(self):
@@ -300,15 +300,15 @@ class CoreStatus(object):
                                   adjustment=adjustment)
 
     def get_audit_input_speed(self):
-        ac = self._w3af_core.strategy.get_audit_consumer()
+        ac = self._w4af_core.strategy.get_audit_consumer()
         return 0 if ac is None else ac.in_queue.get_input_rpm()
 
     def get_audit_output_speed(self):
-        ac = self._w3af_core.strategy.get_audit_consumer()
+        ac = self._w4af_core.strategy.get_audit_consumer()
         return 0 if ac is None else ac.in_queue.get_output_rpm()
 
     def get_audit_qsize(self):
-        ac = self._w3af_core.strategy.get_audit_consumer()
+        ac = self._w4af_core.strategy.get_audit_consumer()
         if ac is None:
             return 0
 
@@ -317,14 +317,14 @@ class CoreStatus(object):
         return running_tasks + queued_tasks
 
     def get_audit_processed_tasks(self):
-        ac = self._w3af_core.strategy.get_audit_consumer()
+        ac = self._w4af_core.strategy.get_audit_consumer()
         return 0 if ac is None else ac.in_queue.get_processed_tasks()
 
     def get_audit_current_fr(self):
         return self.get_current_fuzzable_request('audit')
 
     def has_finished_audit(self):
-        ac = self._w3af_core.strategy.get_audit_consumer()
+        ac = self._w4af_core.strategy.get_audit_consumer()
 
         # The user never enabled audit plugins or the scan has already finished
         # and no audit plugins will be run
@@ -343,7 +343,7 @@ class CoreStatus(object):
                                   adjustment=adjustment)
 
     def get_core_worker_pool_queue_size(self):
-        return self._w3af_core.worker_pool.in_queue.qsize()
+        return self._w4af_core.worker_pool.in_queue.qsize()
 
     def log_calculate_eta(self, eta, input_speed, output_speed, queue_size,
                           _type, adjustment):

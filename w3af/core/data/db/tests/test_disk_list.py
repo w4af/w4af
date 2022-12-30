@@ -2,19 +2,19 @@
 """
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -28,13 +28,13 @@ import msgpack
 
 import pytest
 
-from w3af.core.controllers.misc.temp_dir import create_temp_dir
-from w3af.core.data.db.disk_list import DiskList
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.db.dbms import get_default_temp_db_instance
-from w3af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.controllers.misc.temp_dir import create_temp_dir
+from w4af.core.data.db.disk_list import DiskList
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.db.dbms import get_default_temp_db_instance
+from w4af.core.data.url.HTTPResponse import HTTPResponse
 
 
 class TestDiskList(unittest.TestCase):
@@ -95,28 +95,28 @@ class TestDiskList(unittest.TestCase):
     def test_urlobject(self):
         dl = DiskList()
 
-        dl.append(URL('http://w3af.org/?id=2'))
-        dl.append(URL('http://w3af.org/?id=3'))
+        dl.append(URL('http://w4af.org/?id=2'))
+        dl.append(URL('http://w4af.org/?id=3'))
 
-        self.assertEqual(dl[0], URL('http://w3af.org/?id=2'))
-        self.assertEqual(dl[1], URL('http://w3af.org/?id=3'))
-        self.assertNotIn(URL('http://w3af.org/?id=4'), dl)
-        self.assertIn(URL('http://w3af.org/?id=2'), dl)
+        self.assertEqual(dl[0], URL('http://w4af.org/?id=2'))
+        self.assertEqual(dl[1], URL('http://w4af.org/?id=3'))
+        self.assertNotIn(URL('http://w4af.org/?id=4'), dl)
+        self.assertIn(URL('http://w4af.org/?id=2'), dl)
 
     def test_fuzzable_request(self):
         dl = DiskList()
 
-        uri = URL('http://w3af.org/?id=2')
+        uri = URL('http://w4af.org/?id=2')
         qsr1 = FuzzableRequest(uri, method='GET', headers=Headers(
-            [('Referer', 'http://w3af.org/')]))
+            [('Referer', 'http://w4af.org/')]))
 
-        uri = URL('http://w3af.org/?id=3')
+        uri = URL('http://w4af.org/?id=3')
         qsr2 = FuzzableRequest(uri, method='OPTIONS', headers=Headers(
-            [('Referer', 'http://w3af.org/')]))
+            [('Referer', 'http://w4af.org/')]))
 
-        uri = URL('http://w3af.org/?id=7')
+        uri = URL('http://w4af.org/?id=7')
         qsr3 = FuzzableRequest(uri, method='FOO', headers=Headers(
-            [('Referer', 'http://w3af.org/')]))
+            [('Referer', 'http://w4af.org/')]))
 
         dl.append(qsr1)
         dl.append(qsr2)
@@ -392,7 +392,7 @@ class TestDiskList(unittest.TestCase):
         #
         body = '<html><a href="http://moth/abc.jsp">test</a></html>'
         headers = Headers([('Content-Type', 'text/html')])
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         response = HTTPResponse(200, body, headers, url, url, _id=1)
 
         count = 30000
@@ -411,7 +411,7 @@ class TestDiskList(unittest.TestCase):
         #
         body = '<html><a href="http://moth/abc.jsp">test</a></html>'
         headers = Headers([('Content-Type', 'text/html')])
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         response = HTTPResponse(200, body, headers, url, url, _id=1)
 
         def dump(http_response):

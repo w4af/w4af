@@ -1,4 +1,4 @@
-# This script shows how w3af reads a crossdomain.xml file
+# This script shows how w4af reads a crossdomain.xml file
 
 plugins
 crawl ria_enumerator 

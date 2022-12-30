@@ -3,36 +3,36 @@ misc_settings.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from vulndb import DBVuln
 
-import w3af.core.data.kb.config as cf
+import w4af.core.data.kb.config as cf
 
-from w3af.core.controllers.configurable import Configurable
-from w3af.core.controllers.misc.get_local_ip import get_local_ip
-from w3af.core.controllers.misc.get_net_iface import get_net_iface
-from w3af.core.data.parsers.utils.form_id_matcher_list import FormIDMatcherList
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.db.variant_db import (PATH_MAX_VARIANTS,
+from w4af.core.controllers.configurable import Configurable
+from w4af.core.controllers.misc.get_local_ip import get_local_ip
+from w4af.core.controllers.misc.get_net_iface import get_net_iface
+from w4af.core.data.parsers.utils.form_id_matcher_list import FormIDMatcherList
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.db.variant_db import (PATH_MAX_VARIANTS,
                                           PARAMS_MAX_VARIANTS,
                                           MAX_EQUAL_FORM_VARIANTS)
-from w3af.core.data.options.option_types import (URL_LIST, COMBO, BOOL, LIST,
+from w4af.core.data.options.option_types import (URL_LIST, COMBO, BOOL, LIST,
                                                  STRING, INT, FORM_ID_LIST)
 
 EXCLUDE = 'exclude'
@@ -42,7 +42,7 @@ INCLUDE = 'include'
 class MiscSettings(Configurable):
     """
     A class that acts as an interface for the user interfaces, so they can
-    configure w3af settings using get_options and SetOptions.
+    configure w4af settings using get_options and SetOptions.
     """
 
     def __init__(self):
@@ -118,7 +118,7 @@ class MiscSettings(Configurable):
         #
         # Fuzzer parameters
         #
-        d = 'Indicates if w3af plugins will use cookies as a fuzzable parameter'
+        d = 'Indicates if w4af plugins will use cookies as a fuzzable parameter'
         opt = opt_factory('fuzz_cookies',
                           cf.cf.get('fuzz_cookies'),
                           d,
@@ -126,9 +126,9 @@ class MiscSettings(Configurable):
                           tabid='Fuzzer parameters')
         ol.add(opt)
 
-        d = ('Indicates if w3af plugins will send payloads in the content of'
+        d = ('Indicates if w4af plugins will send payloads in the content of'
              ' multipart/post form files.')
-        h = ('If enabled, and multipart/post forms with files are found, w3af'
+        h = ('If enabled, and multipart/post forms with files are found, w4af'
              'will fill those file inputs with pseudo-files containing the'
              'payloads required to identify vulnerabilities.')
         opt = opt_factory('fuzz_form_files',
@@ -139,10 +139,10 @@ class MiscSettings(Configurable):
                           help=h)
         ol.add(opt)
 
-        d = ('Indicates if w3af plugins will send fuzzed file names in order to'
+        d = ('Indicates if w4af plugins will send fuzzed file names in order to'
              ' find vulnerabilities')
         h = ('For example, if the discovered URL is http://test/filename.php,'
-             ' and fuzz_url_filenames is enabled, w3af will request among'
+             ' and fuzz_url_filenames is enabled, w4af will request among'
              ' other things: http://test/file\'a\'a\'name.php in order to'
              ' find SQL injections. This type of vulns are getting more '
              ' common every day!')
@@ -154,10 +154,10 @@ class MiscSettings(Configurable):
                           tabid='Fuzzer parameters')
         ol.add(opt)
 
-        desc = ('Indicates if w3af plugins will send fuzzed URL parts in order'
+        desc = ('Indicates if w4af plugins will send fuzzed URL parts in order'
                 ' to find vulnerabilities')
         h = ('For example, if the discovered URL is http://test/foo/bar/123,'
-             ' and fuzz_url_parts is enabled, w3af will request among other '
+             ' and fuzz_url_parts is enabled, w4af will request among other '
              ' things: http://test/bar/<script>alert(document.cookie)</script>'
              ' in order to find XSS.')
         opt = opt_factory('fuzz_url_parts',
@@ -184,10 +184,10 @@ class MiscSettings(Configurable):
                           tabid='Fuzzer parameters')
         ol.add(opt)
 
-        d = ('Indicates what HTML form combo values w3af plugins will use:'
+        d = ('Indicates what HTML form combo values w4af plugins will use:'
              ' all, tb, tmb, t, b')
         h = ('Indicates what HTML form combo values, e.g. select options values,'
-             ' w3af plugins will use: all (All values), tb (only top and bottom'
+             ' w4af plugins will use: all (All values), tb (only top and bottom'
              ' values), tmb (top, middle and bottom values), t (top values), b'
              ' (bottom values).')
         options = ['tmb', 'all', 'tb', 't', 'b']
@@ -206,7 +206,7 @@ class MiscSettings(Configurable):
         h = ('This feature is only useful for developers that want their scan'
              ' to stop on the first exception that is raised by a plugin.'
              ' Users should leave this as False in order to get better'
-             ' exception handling from w3af\'s core.')
+             ' exception handling from w4af\'s core.')
         opt = opt_factory('stop_on_first_exception',
                           cf.cf.get('stop_on_first_exception'),
                           desc,
@@ -305,7 +305,7 @@ class MiscSettings(Configurable):
         #
         desc = 'List of URLs that must be completely ignored by the scan engine'
         h = ('A comma separated list of URLs which must never receive an'
-             ' HTTP requests from w3af')
+             ' HTTP requests from w4af')
         opt = opt_factory('blacklist_http_request',
                           cf.cf.get('blacklist_http_request'),
                           desc,
@@ -329,10 +329,10 @@ class MiscSettings(Configurable):
         desc = 'Filter forms to scan using form IDs'
         h = ('Form IDs allow the user to specify which forms will be either'
              ' included of excluded in the scan. The form IDs identified by'
-             ' w3af will be written to the log (when verbose is set to true)'
+             ' w4af will be written to the log (when verbose is set to true)'
              ' and can be used to define this setting for new scans.\n\n'
              'Find more about form IDs in the "Advanced use cases" section'
-             'of the w3af documentation.')
+             'of the w4af documentation.')
         opt = opt_factory('form_id_list',
                           cf.cf.get('form_id_list'),
                           desc,

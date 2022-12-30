@@ -3,19 +3,19 @@ xpath.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,12 +26,12 @@ import math
 
 from random import randint
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.plugins.attack_plugin import AttackPlugin
-from w3af.core.controllers.threads.threadpool import return_args
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.kb.shell import Shell
+from w4af.core.controllers.plugins.attack_plugin import AttackPlugin
+from w4af.core.controllers.threads.threadpool import return_args
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.kb.shell import Shell
 
 ERROR_MSG = 'Empty search result'
 XML_FILTER = '//*'
@@ -214,7 +214,7 @@ class xpath(AttackPlugin):
         except BaseFrameworkException as e:
             om.out.debug('Error "%s"' % e)
         except RuntimeError as rte:
-            issue = 'https://github.com/andresriancho/w3af/issues/5278'
+            issue = 'https://github.com/andresriancho/w4af/issues/5278'
 
             msg = ('An unhandled exception occurred while trying to setup'
                    ' the error detection for XPATH injection. This situation'

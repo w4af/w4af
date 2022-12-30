@@ -3,19 +3,19 @@ pluginconfig.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from gi.repository import Gtk as gtk
@@ -24,12 +24,12 @@ from gi.repository import Gdk as gdk
 from gi.repository import GdkPixbuf
 import os
 
-from w3af.core.ui.gui import GUI_DATA_PATH
-from w3af.core.ui.gui import confpanel, entries, helpers
-from w3af.core.ui.gui.pluginEditor import pluginEditor
-from w3af.core.ui.gui.misc.text_wrap_label import WrapLabel
+from w4af.core.ui.gui import GUI_DATA_PATH
+from w4af.core.ui.gui import confpanel, entries, helpers
+from w4af.core.ui.gui.pluginEditor import pluginEditor
+from w4af.core.ui.gui.misc.text_wrap_label import WrapLabel
 
-from w3af.core.controllers.misc.home_dir import get_home_dir
+from w4af.core.controllers.misc.home_dir import get_home_dir
 
             
 class OptionsPanel(gtk.VBox):
@@ -79,7 +79,7 @@ class OptionsPanel(gtk.VBox):
         self.pack_end(hbox, expand=False, fill=False)
 
         # middle (the heart of the panel)
-        self.options = confpanel.OnlyOptions(self, self.plugin_tree.w3af,
+        self.options = confpanel.OnlyOptions(self, self.plugin_tree.w4af,
                                              plugin, save_btn, rvrt_btn)
         self.pack_start(self.options, expand=True, fill=False)
 
@@ -115,7 +115,7 @@ class ConfigPanel(gtk.VBox):
         else:
             # put image
             img = gtk.Image.new_from_file(os.path.join(GUI_DATA_PATH,
-                                                       'w3af_logo.png'))
+                                                       'w4af_logo.png'))
             self.widg = img
             img.show()
             img.set_sensitive(False)
@@ -191,14 +191,14 @@ class PluginTree(gtk.TreeView):
     """A tree showing all the plugins grouped by type.
 
     :param mainwin: The mainwin where the scanok button leaves.
-    :param w3af: The main core class.
+    :param w4af: The main core class.
     :param config_panel: The configuration panel, to handle each plugin config
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, style, config_panel):
-        self.mainwin = w3af.mainwin
-        self.w3af = w3af
+    def __init__(self, w4af, style, config_panel):
+        self.mainwin = w4af.mainwin
+        self.w4af = w4af
         self.config_panel = config_panel
 
         # create the TreeStore, with the following columns:
@@ -214,7 +214,7 @@ class PluginTree(gtk.TreeView):
         # decide which type in function of style
         if style == "standard":
             plugins_toshow = sorted(
-                x for x in w3af.plugins.get_plugin_types() if x != "output")
+                x for x in w4af.plugins.get_plugin_types() if x != "output")
             col_title = _("Plugin")
         elif style == "output":
             plugins_toshow = ("output",)
@@ -226,8 +226,8 @@ class PluginTree(gtk.TreeView):
         for plugintype in plugins_toshow:
 
             # let's see if some of the children are activated or not
-            pluginlist = w3af.plugins.get_plugin_list(plugintype)
-            activated = set(w3af.plugins.get_enabled_plugins(plugintype))
+            pluginlist = w4af.plugins.get_plugin_list(plugintype)
+            activated = set(w4af.plugins.get_enabled_plugins(plugintype))
             if not activated:
                 activ = 0
                 incons = 0
@@ -242,7 +242,7 @@ class PluginTree(gtk.TreeView):
 
             dlg = gtk.Dialog()
             editpixbuf = dlg.render_icon(gtk.STOCK_EDIT, gtk.IconSize.MENU)
-            for plugin in sorted(w3af.plugins.get_plugin_list(plugintype)):
+            for plugin in sorted(w4af.plugins.get_plugin_list(plugintype)):
                 activ = int(plugin in activated)
                 if self._getEditablePlugin(plugin, plugintype):
                     thispixbuf = editpixbuf
@@ -300,7 +300,7 @@ class PluginTree(gtk.TreeView):
 
     def _getEditablePlugin(self, pname, ptype):
         """Returns if the plugin has options."""
-        plugin = self.w3af.plugins.get_plugin_inst(ptype, pname)
+        plugin = self.w4af.plugins.get_plugin_inst(ptype, pname)
         options = plugin.get_options()
         return bool(len(options))
 
@@ -358,7 +358,7 @@ class PluginTree(gtk.TreeView):
         # here it must use the name in the column 3, as it's always the original
         pname = self.treestore[path][3]
         ptype = self.treestore[path[:1]][3]
-        plugin = self.w3af.plugins.get_plugin_inst(ptype, pname)
+        plugin = self.w4af.plugins.get_plugin_inst(ptype, pname)
         plugin.pname = pname
         plugin.ptype = ptype
         self.plugin_instances[path] = plugin
@@ -422,11 +422,11 @@ class PluginTree(gtk.TreeView):
 
         # Reload the plugin
         try:
-            self.w3af.plugins.reload_modified_plugin(plugin_type, plugin_name)
+            self.w4af.plugins.reload_modified_plugin(plugin_type, plugin_name)
         except Exception as e:
             msg = 'The plugin you modified raised the following exception'
             msg += ' while trying to reload it: "%s",' % str(e)
-            msg += ' please fix this issue before continuing or w3af will crash.'
+            msg += ' please fix this issue before continuing or w4af will crash.'
             dlg = gtk.MessageDialog(
                 None, gtk.DialogFlags.MODAL, gtk.MessageType.INFO, gtk.ButtonsType.OK, msg)
             dlg.run()
@@ -448,7 +448,7 @@ class PluginTree(gtk.TreeView):
 
         if len(path) == 1:
             plugin_type = self.treestore[path][3]
-            desc = self.w3af.plugins.get_plugin_type_desc(plugin_type)
+            desc = self.w4af.plugins.get_plugin_type_desc(plugin_type)
             label = helpers.clean_description(desc)
             self.config_panel.clear(label=label)
         else:
@@ -581,13 +581,13 @@ class PluginConfigBody(gtk.VBox):
     """The main Plugin Configuration Body.
 
     :param mainwin: the tab of the main notepad
-    :param w3af: the main core class
+    :param w4af: the main core class
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, mainwin, w3af):
+    def __init__(self, mainwin, w4af):
         super(PluginConfigBody, self).__init__()
-        self.w3af = w3af
+        self.w4af = w4af
         targetbox = gtk.HBox()
 
         # label
@@ -634,14 +634,14 @@ class PluginConfigBody(gtk.VBox):
 
     def _buildpan(self, profile_description=None):
         """Builds the panel."""
-        pan = entries.RememberingHPaned(self.w3af, "pane-plugconfigbody", 250)
-        leftpan = entries.RememberingVPaned(self.w3af, "pane-plugconfigleft", 320)
+        pan = entries.RememberingHPaned(self.w4af, "pane-plugconfigbody", 250)
+        leftpan = entries.RememberingVPaned(self.w4af, "pane-plugconfigleft", 320)
         self.config_panel = ConfigPanel(profile_description)
 
         # upper left
         scrollwin1u = gtk.ScrolledWindow()
         scrollwin1u.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
-        self.std_plugin_tree = PluginTree(self.w3af, "standard",
+        self.std_plugin_tree = PluginTree(self.w4af, "standard",
                                           self.config_panel)
         scrollwin1u.add(self.std_plugin_tree)
         scrollwin1u.show()
@@ -649,7 +649,7 @@ class PluginConfigBody(gtk.VBox):
         # lower left
         scrollwin1l = gtk.ScrolledWindow()
         scrollwin1l.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
-        self.out_plugin_tree = PluginTree(self.w3af, "output",
+        self.out_plugin_tree = PluginTree(self.w4af, "output",
                                           self.config_panel)
         scrollwin1l.add(self.out_plugin_tree)
         scrollwin1l.show()
@@ -678,7 +678,7 @@ class PluginConfigBody(gtk.VBox):
         Before building the widget we verify that the target set in the main
         window is a valid target, this allows us to avoid some issues like
 
-        https://github.com/andresriancho/w3af/issues/2410
+        https://github.com/andresriancho/w4af/issues/2410
         """
         url = self.target.get_text()
 
@@ -692,11 +692,11 @@ class PluginConfigBody(gtk.VBox):
             return
 
         # overwrite the plugin info with the target url
-        configurable_target = self.w3af.target
+        configurable_target = self.w4af.target
 
         # open config
         confpanel.AdvancedTargetConfigDialog(_("Advanced target settings"),
-                                             self.w3af, configurable_target,
+                                             self.w4af, configurable_target,
                                              {"target": url})
 
         # update the Entry with plugin info
@@ -735,15 +735,15 @@ class PluginConfigBody(gtk.VBox):
     def reload(self, profile_description):
         """Reloads all the configurations."""
         # target url
-        configurable_obj = self.w3af.target
+        configurable_obj = self.w4af.target
         options = configurable_obj.get_options()
         newurl = options['target'].get_default_value_str()
         if newurl:
             self.target.set_text_wrapper(newurl)
-            self.w3af.mainwin.scanok.change(self.target, True)
+            self.w4af.mainwin.scanok.change(self.target, True)
         else:
             self.target.reset()
-            self.w3af.mainwin.scanok.change(self.target, False)
+            self.w4af.mainwin.scanok.change(self.target, False)
 
         # replace panel
         pan = self.get_children()[0]

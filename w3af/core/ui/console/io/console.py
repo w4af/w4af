@@ -3,25 +3,25 @@ console.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 CTRL_CODES = list(range(1, 27))
@@ -133,17 +133,17 @@ def terminal_width():
 try:
     import tty
     import termios
-    from w3af.core.ui.console.io.unixctrl import *
+    from w4af.core.ui.console.io.unixctrl import *
 except Exception as e:
     # We aren't on unix !
     try:
         # pylint: disable=E0401
         import msvcrt
-        from w3af.core.ui.console.io.winctrl import *
+        from w4af.core.ui.console.io.winctrl import *
     except Exception as a:
         print(str(e + '\n' + a))
         # We arent on windows nor unix
         raise BaseFrameworkException(
-            'w3af support for OS X isn\'t available yet! Please contribute.')
+            'w4af support for OS X isn\'t available yet! Please contribute.')
 
 #extKeys = [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]

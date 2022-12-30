@@ -3,19 +3,19 @@ fuzzy_requests.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,21 +25,21 @@ import os
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
 
-from w3af import ROOT_PATH
-from w3af.core.ui.gui import helpers, entries
-from w3af.core.ui.gui.reqResViewer import ReqResViewer, RequestPart
-from w3af.core.ui.gui.clusterGraph import distance_function_selector
-from w3af.core.ui.gui.payload_generators import create_generator_menu
-from w3af.core.ui.gui.tools.helpers import fuzzygen
-from w3af.core.data.db.history import HistoryItem
-from w3af.core.controllers.exceptions import (HTTPRequestException,
+from w4af import ROOT_PATH
+from w4af.core.ui.gui import helpers, entries
+from w4af.core.ui.gui.reqResViewer import ReqResViewer, RequestPart
+from w4af.core.ui.gui.clusterGraph import distance_function_selector
+from w4af.core.ui.gui.payload_generators import create_generator_menu
+from w4af.core.ui.gui.tools.helpers import fuzzygen
+from w4af.core.data.db.history import HistoryItem
+from w4af.core.controllers.exceptions import (HTTPRequestException,
                                               ScanMustStopException)
 
 
 FUZZY_REQUEST_EXAMPLE = """\
 GET http://localhost/$range(10)$ HTTP/1.0
 Host: www.some_host.com
-User-Agent: w3af.org
+User-Agent: w4af.org
 Pragma: no-cache
 Content-Type: application/x-www-form-urlencoded
 """
@@ -84,8 +84,8 @@ class PreviewWindow(entries.RememberingWindow):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, parent, fg):
-        super(PreviewWindow, self).__init__(w3af, "fuzzypreview", "Preview",
+    def __init__(self, w4af, parent, fg):
+        super(PreviewWindow, self).__init__(w4af, "fuzzypreview", "Preview",
                                             "Fuzzy_Requests")
         self.pages = []
         self.generator = fg.generate()
@@ -93,7 +93,7 @@ class PreviewWindow(entries.RememberingWindow):
         self.set_transient_for(parent)
 
         # content
-        self.panes = RequestPart(self, w3af, editable=False,
+        self.panes = RequestPart(self, w4af, editable=False,
                                  widgname="fuzzypreview")
         self.vbox.pack_start(self.panes)
         self.panes.show()
@@ -101,7 +101,7 @@ class PreviewWindow(entries.RememberingWindow):
         # the ok button
         centerbox = gtk.HBox()
         quant = fg.calculate_quantity()
-        self.pagesControl = entries.PagesControl(w3af, self.page_change, quant)
+        self.pagesControl = entries.PagesControl(w4af, self.page_change, quant)
         centerbox.pack_start(self.pagesControl, True, False)
         centerbox.show()
         self.vbox.pack_start(centerbox, False, False, padding=5)
@@ -124,11 +124,11 @@ class FuzzyRequests(entries.RememberingWindow):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, initial_request=None):
-        super(FuzzyRequests, self).__init__(w3af, "fuzzyreq",
-                                            "w3af - Fuzzy Requests",
+    def __init__(self, w4af, initial_request=None):
+        super(FuzzyRequests, self).__init__(w4af, "fuzzyreq",
+                                            "w4af - Fuzzy Requests",
                                             "Fuzzy_Requests")
-        self.w3af = w3af
+        self.w4af = w4af
         self.historyItem = HistoryItem()
         mainhbox = gtk.HBox()
 
@@ -155,7 +155,7 @@ class FuzzyRequests(entries.RememberingWindow):
         self._fix_content_lengthCB.show()
 
         # request
-        self.originalReq = RequestPart(self, w3af,
+        self.originalReq = RequestPart(self, w4af,
                                        [analyzBut.set_sensitive,
                                         self.sendPlayBut.set_sensitive,
                                         functools.partial(self.sSB_state.change, 'rRV')],
@@ -221,7 +221,7 @@ class FuzzyRequests(entries.RememberingWindow):
         vbox.pack_start(self.title0, False, True)
 
         # result itself
-        self.resultReqResp = ReqResViewer(w3af, withFuzzy=False,
+        self.resultReqResp = ReqResViewer(w4af, withFuzzy=False,
                                           editableRequest=False,
                                           editableResponse=False)
         self.resultReqResp.set_sensitive(False)
@@ -230,7 +230,7 @@ class FuzzyRequests(entries.RememberingWindow):
 
         # result control
         centerbox = gtk.HBox()
-        self.pagesControl = entries.PagesControl(w3af, self.page_change)
+        self.pagesControl = entries.PagesControl(w4af, self.page_change)
         centerbox.pack_start(self.pagesControl, True, False)
         centerbox.show()
 
@@ -292,7 +292,7 @@ class FuzzyRequests(entries.RememberingWindow):
                 data.append(historyItem.response)
 
         if data:
-            distance_function_selector(self.w3af, data)
+            distance_function_selector(self.w4af, data)
         else:
             # Let the user know ahout the problem
             msg = "There are no HTTP responses available to cluster."
@@ -314,7 +314,7 @@ class FuzzyRequests(entries.RememberingWindow):
 
         # raise the window only if preview is active
         if self.preview.get_active():
-            PreviewWindow(self.w3af, self, fg)
+            PreviewWindow(self.w4af, self, fg)
 
     def _send_stop(self, widg=None):
         """Stop the requests being sent."""
@@ -405,10 +405,10 @@ class FuzzyRequests(entries.RememberingWindow):
 
         # Clear any errors that might have been generated by previous runs
         # of this or other GUI tools
-        self.w3af.uri_opener.clear()
+        self.w4af.uri_opener.clear()
 
         try:
-            http_resp = self.w3af.uri_opener.send_raw_request(realreq, realbody,
+            http_resp = self.w4af.uri_opener.send_raw_request(realreq, realbody,
                                                               fixContentLength)
             error_msg = None
             self.result_ok += 1

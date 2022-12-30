@@ -3,19 +3,19 @@ test_response_splitting.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import re
@@ -24,8 +24,8 @@ import urllib.request, urllib.parse, urllib.error
 import pytest
 from email.header import decode_header
 
-from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
-from w3af.core.data.misc.encoding import smart_str, smart_unicode
+from w4af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
+from w4af.core.data.misc.encoding import smart_str, smart_unicode
 
 
 class ResponseSplittingMockResponse(MockResponse):
@@ -53,8 +53,8 @@ class ResponseSplittingMockResponse(MockResponse):
 @pytest.mark.smoke
 class TestResponseSplitting(PluginTest):
 
-    target_url = 'http://w3af.org/?header='
-    target_url_re = re.compile('http://w3af\\.org/\\?header=.*')
+    target_url = 'http://w4af.org/?header='
+    target_url_re = re.compile('http://w4af\\.org/\\?header=.*')
 
     MOCK_RESPONSES = [ResponseSplittingMockResponse(target_url_re,
                                                     body='',
@@ -79,7 +79,7 @@ class TestResponseSplitting(PluginTest):
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
         self.assertEqual('Response splitting vulnerability', vuln.get_name())
-        self.assertEqual('http://w3af.org/', str(vuln.get_url()))
+        self.assertEqual('http://w4af.org/', str(vuln.get_url()))
         self.assertEqual('header', vuln.get_token_name())
 
 
@@ -111,8 +111,8 @@ class ResponseSplittingParameterModifiesResponseMockResponse(MockResponse):
 
 
 class TestResponseSplittingParameterModifiesResponse(PluginTest):
-    target_url = 'http://w3af.org/?header='
-    target_url_re = re.compile('http://w3af\\.org/\\?header=.*')
+    target_url = 'http://w4af.org/?header='
+    target_url_re = re.compile('http://w4af\\.org/\\?header=.*')
 
     MOCK_RESPONSES = [ResponseSplittingParameterModifiesResponseMockResponse(target_url_re,
                                                                              body='',
@@ -137,7 +137,7 @@ class TestResponseSplittingParameterModifiesResponse(PluginTest):
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
         self.assertEqual('Parameter modifies response headers', vuln.get_name())
-        self.assertEqual('http://w3af.org/', str(vuln.get_url()))
+        self.assertEqual('http://w4af.org/', str(vuln.get_url()))
         self.assertEqual('header', vuln.get_token_name())
 
 
@@ -167,8 +167,8 @@ class ResponseSplittingHeaderMockResponse(MockResponse):
 
 
 class TestResponseSplittingHeader(PluginTest):
-    target_url = 'http://w3af.org/'
-    target_url_re = re.compile('http://w3af\\.org/.*')
+    target_url = 'http://w4af.org/'
+    target_url_re = re.compile('http://w4af\\.org/.*')
 
     MOCK_RESPONSES = [ResponseSplittingHeaderMockResponse(target_url_re,
                                                           body='',
@@ -197,5 +197,5 @@ class TestResponseSplittingHeader(PluginTest):
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
         self.assertEqual('Response splitting vulnerability', vuln.get_name())
-        self.assertEqual('http://w3af.org/', str(vuln.get_url()))
+        self.assertEqual('http://w4af.org/', str(vuln.get_url()))
         self.assertEqual('referer', vuln.get_token_name())

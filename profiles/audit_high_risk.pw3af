@@ -9,7 +9,7 @@ use_echo = True
 [audit.dav]
 
 [audit.rfi]
-use_w3af_site = True
+use_w4af_site = True
 listen_address = 
 listen_port = 44449
 
@@ -45,7 +45,7 @@ ntlm_auth_user =
 ntlm_auth_passwd = 
 ignore_session_cookies = False
 timeout = 0
-user_agent = w3af.org
+user_agent = w4af.org
 basic_auth_user = 
 basic_auth_passwd = 
 string_match_404 = 

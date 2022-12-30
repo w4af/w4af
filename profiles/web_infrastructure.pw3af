@@ -1,5 +1,5 @@
 [profile]
-description = Use all the available techniques in w3af to fingerprint the remote Web infrastructure.
+description = Use all the available techniques in w4af to fingerprint the remote Web infrastructure.
 name = web_infrastructure
 
 [infrastructure.shared_hosting]
@@ -37,7 +37,7 @@ ntlm_auth_user =
 ntlm_auth_passwd = 
 ignore_session_cookies = False
 timeout = 0
-user_agent = w3af.org
+user_agent = w4af.org
 basic_auth_user = 
 basic_auth_passwd = 
 string_match_404 = 

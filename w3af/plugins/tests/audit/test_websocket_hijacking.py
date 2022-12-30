@@ -3,27 +3,27 @@ test_websocket_hijacking.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.kb.info import Info
-from w3af.plugins.grep.websockets_links import WebSocketInfoSet
-from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.kb.info import Info
+from w4af.plugins.grep.websockets_links import WebSocketInfoSet
+from w4af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
 
 
 RUN_CONFIG = {
@@ -178,7 +178,7 @@ class BasicAuthWebSocketTest(WebSocketTest):
                                     headers=SUCCESSFUL_UPGRADE)]
 
     def setup_basic_authentication(self):
-        self.w3afcore.uri_opener.settings.set_basic_auth(URL('websocket.com'),
+        self.w4afcore.uri_opener.settings.set_basic_auth(URL('websocket.com'),
                                                          'user1', 'password')
 
     def test_basic_auth_websockets(self):
@@ -219,10 +219,10 @@ class OpenWebSocketsWithCrawlTest(WebSocketTest):
     Test that we can grep a page, extract WS links, and then audit them in
     the audit plugin.
     """
-    target_url = 'http://w3af.com/'
+    target_url = 'http://w4af.com/'
 
-    target_ws_http = 'http://w3af.com/echo'
-    target_ws = 'ws://w3af.com/echo'
+    target_ws_http = 'http://w4af.com/echo'
+    target_ws = 'ws://w4af.com/echo'
 
     INDEX_BODY = ('<html>'
                   '<a href="/ws-index">ws index</a>'
@@ -230,7 +230,7 @@ class OpenWebSocketsWithCrawlTest(WebSocketTest):
 
     WS_BODY = ('<html>'
                '<script>'
-               'var connection = new WebSocket("ws://w3af.com/echo");'
+               'var connection = new WebSocket("ws://w4af.com/echo");'
                '</script>'
                '</html>')
 

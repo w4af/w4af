@@ -3,19 +3,19 @@ retirejs.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,20 +26,20 @@ import hashlib
 import tempfile
 import subprocess
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.controllers.misc.temp_dir import get_temp_dir
-from w3af.core.controllers.plugins.grep_plugin import GrepPlugin
-from w3af.core.controllers.misc.which import which
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.misc.encoding import smart_str_ignore
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import URL as URL_OPTION
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.controllers.misc.temp_dir import get_temp_dir
+from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
+from w4af.core.controllers.misc.which import which
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import URL as URL_OPTION
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class retirejs(GrepPlugin):
@@ -162,7 +162,7 @@ class retirejs(GrepPlugin):
 
     def _download_retire_db(self):
         """
-        Downloads RETIRE_DB_URL, saves it to the w3af temp directory and
+        Downloads RETIRE_DB_URL, saves it to the w4af temp directory and
         saves the full path to the DB in self._retire_db_filename
 
         :return: None
@@ -173,7 +173,7 @@ class retirejs(GrepPlugin):
             if self._retire_db_filename is not None:
                 return
 
-            # w3af grep plugins shouldn't (by definition) perform HTTP requests
+            # w4af grep plugins shouldn't (by definition) perform HTTP requests
             # But in this case we're breaking that general rule to retrieve the
             # DB at the beginning of the scan
             try:
@@ -323,7 +323,7 @@ class retirejs(GrepPlugin):
         # Note: The file needs to have .js extension to force retirejs to
         #       scan it. Any other extension will be ignored.
         response_file = tempfile.NamedTemporaryFile(prefix='retirejs-response-',
-                                                    suffix='.w3af.js',
+                                                    suffix='.w4af.js',
                                                     delete=False,
                                                     dir=self._get_js_temp_directory())
 

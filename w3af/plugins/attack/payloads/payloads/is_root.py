@@ -1,4 +1,4 @@
-from w3af.plugins.attack.payloads.base_payload import Payload
+from w4af.plugins.attack.payloads.base_payload import Payload
 
 
 class is_root(Payload):

@@ -3,35 +3,35 @@ url_fuzzer.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from itertools import chain, repeat
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.kb.info import Info
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.core_helpers.fingerprint_404 import is_404
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.kb.info import Info
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
 
 
 class url_fuzzer(CrawlPlugin):
@@ -153,15 +153,15 @@ class url_fuzzer(CrawlPlugin):
         :return: A list of URL's that mutate the original url passed
                  as parameter.
 
-        >>> from w3af.core.data.parsers.doc.url import URL
+        >>> from w4af.core.data.parsers.doc.url import URL
         >>> u = url_fuzzer()
-        >>> url = URL('http://www.w3af.com/')
+        >>> url = URL('http://www.w4af.com/')
         >>> mutants = list(u._mutate_domain_name(url))
-        >>> URL('http://www.w3af.com/www.tar.gz') in mutants
+        >>> URL('http://www.w4af.com/www.tar.gz') in mutants
         True
-        >>> URL('http://www.w3af.com/www.w3af.tar.gz') in mutants
+        >>> URL('http://www.w4af.com/www.w4af.tar.gz') in mutants
         True
-        >>> URL('http://www.w3af.com/www.w3af.com.tar.gz') in mutants
+        >>> URL('http://www.w4af.com/www.w4af.com.tar.gz') in mutants
         True
         >>> len(mutants) > 20
         True
@@ -189,16 +189,16 @@ class url_fuzzer(CrawlPlugin):
         :return: A list of URL's that mutate the original url passed
                  as parameter.
 
-        >>> from w3af.core.data.parsers.doc.url import URL
+        >>> from w4af.core.data.parsers.doc.url import URL
         >>> u = url_fuzzer()
-        >>> url = URL( 'http://www.w3af.com/' )
+        >>> url = URL( 'http://www.w4af.com/' )
         >>> mutants = u._mutate_by_appending( url )
         >>> list(mutants)
         []
 
-        >>> url = URL( 'http://www.w3af.com/foo.html' )
+        >>> url = URL( 'http://www.w4af.com/foo.html' )
         >>> mutants = u._mutate_by_appending( url )
-        >>> URL( 'http://www.w3af.com/foo.html~' ) in mutants
+        >>> URL( 'http://www.w4af.com/foo.html~' ) in mutants
         True
         >>> len(list(mutants)) > 20
         True
@@ -231,16 +231,16 @@ class url_fuzzer(CrawlPlugin):
         :param url: A URL to transform.
         :return: A list of URL's that mutate the original url passed as parameter.
 
-        >>> from w3af.core.data.parsers.doc.url import URL
+        >>> from w4af.core.data.parsers.doc.url import URL
         >>> u = url_fuzzer()
-        >>> list(u._mutate_file_type(URL('http://www.w3af.com/')))
+        >>> list(u._mutate_file_type(URL('http://www.w4af.com/')))
         []
 
-        >>> url = URL('http://www.w3af.com/foo.html')
+        >>> url = URL('http://www.w4af.com/foo.html')
         >>> mutants = list(u._mutate_file_type( url))
-        >>> URL('http://www.w3af.com/foo.tar.gz') in mutants
+        >>> URL('http://www.w4af.com/foo.tar.gz') in mutants
         True
-        >>> URL('http://www.w3af.com/foo.disco') in mutants
+        >>> URL('http://www.w4af.com/foo.disco') in mutants
         True
         >>> len(mutants) > 20
         True
@@ -261,23 +261,23 @@ class url_fuzzer(CrawlPlugin):
         :return: A list of URL's that mutate the original url passed
                  as parameter.
 
-        >>> from w3af.core.data.parsers.doc.url import URL
+        >>> from w4af.core.data.parsers.doc.url import URL
         >>> u = url_fuzzer()
-        >>> url = URL( 'http://www.w3af.com/' )
+        >>> url = URL( 'http://www.w4af.com/' )
         >>> list(u._mutate_path(url))
         []
 
-        >>> url = URL( 'http://www.w3af.com/foo.html' )
+        >>> url = URL( 'http://www.w4af.com/foo.html' )
         >>> list(u._mutate_path(url))
         []
 
-        >>> url = URL('http://www.w3af.com/foo/bar.html' )
+        >>> url = URL('http://www.w4af.com/foo/bar.html' )
         >>> mutants = list(u._mutate_path(url))
-        >>> URL('http://www.w3af.com/foo.tar.gz') in mutants
+        >>> URL('http://www.w4af.com/foo.tar.gz') in mutants
         True
-        >>> URL('http://www.w3af.com/foo.old') in mutants
+        >>> URL('http://www.w4af.com/foo.old') in mutants
         True
-        >>> URL('http://www.w3af.com/foo.zip') in mutants
+        >>> URL('http://www.w4af.com/foo.zip') in mutants
         True
         """
         url_string = url.url_string

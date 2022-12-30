@@ -3,19 +3,19 @@ error_handlers.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,8 +25,8 @@ import traceback
 from flask import jsonify
 from os.path import basename
 
-from w3af.core.ui.api import app
-from w3af.core.ui.api.utils.auth import requires_auth
+from w4af.core.ui.api import app
+from w4af.core.ui.api.utils.auth import requires_auth
 
 
 @app.errorhandler(404)
@@ -48,13 +48,13 @@ def method_not_allowed(error):
 @app.errorhandler(500)
 def error_500_handler(error):
     """
-    This error handler will catch all unhandled exceptions in the w3af REST API
+    This error handler will catch all unhandled exceptions in the w4af REST API
     and return something useful to the user for debugging.
 
     Please note that this will only work if the Flask application is run without
     the debug flag on.
     """
-    new_issue = 'https://github.com/andresriancho/w3af/issues/new'
+    new_issue = 'https://github.com/andresriancho/w4af/issues/new'
 
     try:
         # Extract the filename and line number where the exception was raised

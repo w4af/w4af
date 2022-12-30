@@ -8,22 +8,22 @@ import os
 import base64
 
 # Perform the GTK UI dependency check, this will verify that the current system
-# has all the modules required to run w3af (including the core dependencies)
-from w3af.core.ui.gui.dependency_check.dependency_check import dependency_check
+# has all the modules required to run w4af (including the core dependencies)
+from w4af.core.ui.gui.dependency_check.dependency_check import dependency_check
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
       
 USAGE_DOC = '''
-w3af - Web Application Attack and Audit Framework
+w4af - Web Application Attack and Audit Framework
 
-WARNING: The w3af GUI is NOT CURRENTLY MAINTAINED, and is NOT WORKING.
+WARNING: The w4af GUI is NOT CURRENTLY MAINTAINED, and is NOT WORKING.
          If you wish nevertheless to run the GUI, pass the option
         --i-am-a-developer.
 
 Usage:
 
-    ./w3af_gui [OPTIONS]
+    ./w4af_gui [OPTIONS]
 
 Options:
 
@@ -52,12 +52,12 @@ For more info visit https://w4af.readthedocs.io/
 def _configure_output_manager():
     """
     Make sure that the output manager is started before doing anything else,
-    since it is used by most w3af modules
+    since it is used by most w4af modules
     """
     try:
         om.manager.set_output_plugins(['console'])
     except Exception as e:
-        print('Something went wrong, w3af failed to start the output manager.')
+        print('Something went wrong, w4af failed to start the output manager.')
         print('Exception: "%s"' % e)
         sys.exit(-9)
 
@@ -114,7 +114,7 @@ def main():
                          " not use any graphical program without it...")
             return -1
 
-    from w3af.core.ui.gui.main import main as gui_main
+    from w4af.core.ui.gui.main import main as gui_main
     gui_main(profile, doupdate)
 
 

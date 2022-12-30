@@ -3,35 +3,35 @@ ssi.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
 
-import w3af.core.data.constants.severity as severity
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.data.quick_match.multi_in import MultiIn
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.fuzzer.utils import rand_number
-from w3af.core.data.db.disk_dict import DiskDict
-from w3af.core.data.kb.vuln import Vuln
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.data.quick_match.multi_in import MultiIn
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.fuzzer.utils import rand_number
+from w4af.core.data.db.disk_dict import DiskDict
+from w4af.core.data.kb.vuln import Vuln
 
 
 class ssi(AuditPlugin):

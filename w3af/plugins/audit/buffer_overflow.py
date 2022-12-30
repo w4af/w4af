@@ -3,35 +3,35 @@ buffer_overflow.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from itertools import repeat
 from tblib.decorators import Error
 
-import w3af.core.data.constants.severity as severity
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.controllers.threads.decorators import apply_with_return_error
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+from w4af.core.controllers.threads.decorators import apply_with_return_error
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               ScanMustStopException)
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.quick_match.multi_in import MultiIn
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.kb.info import Info
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.quick_match.multi_in import MultiIn
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.kb.info import Info
 
 
 class buffer_overflow(AuditPlugin):
@@ -66,7 +66,7 @@ class buffer_overflow(AuditPlugin):
                 *** stack smashing detected ***:
 
                     /var/www/.../buffer_overflow.cgi terminated,
-                    referer: http://localhost/w3af/buffer_overflow.cgi
+                    referer: http://localhost/w4af/buffer_overflow.cgi
 
                     Premature end of script headers: buffer_overflow.cgi,
                     referer: ...
@@ -112,7 +112,7 @@ class buffer_overflow(AuditPlugin):
         for result in self.worker_pool.imap_unordered(apply_with_return_error, args):
             # re-raise the thread exception in the main thread with this method
             # so we get a nice traceback instead of things like the ones we see
-            # in https://github.com/andresriancho/w3af/issues/7287
+            # in https://github.com/andresriancho/w4af/issues/7287
             if isinstance(result, Error):
                 result.reraise()
 

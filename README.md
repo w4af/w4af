@@ -31,14 +31,14 @@ pytest -m "not moth and not fails and not git and not gui and not integration an
 You can launch the integration environment with docker-compose:
 
 ```
-./w3af/tests/add-test-routes.sh
-docker-compose -f ./w3af/tests/docker-compose.yml up
+./w4af/tests/add-test-routes.sh
+docker-compose -f ./w4af/tests/docker-compose.yml up
 ```
 
 With that running, some integration tests are also passing:
 
 ```
-pytest -m "w3af_moth and not fails"
+pytest -m "w4af_moth and not fails"
 ```
 
 ## Installation

@@ -3,32 +3,32 @@ auth_plugin.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from collections import deque
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.config as cf
 
-from w3af.core.controllers.plugins.plugin import Plugin
-from w3af.core.data.kb.info import Info
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.url.helpers import is_no_content_response
+from w4af.core.controllers.plugins.plugin import Plugin
+from w4af.core.data.kb.info import Info
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.url.helpers import is_no_content_response
 
 
 class AuthPlugin(Plugin):
@@ -74,7 +74,7 @@ class AuthPlugin(Plugin):
         """
         Login user into web application.
 
-        It is called in the begging of w3afCore::_discover_and_bruteforce() method
+        It is called in the begging of w4afCore::_discover_and_bruteforce() method
         if current user session is not valid.
 
         """
@@ -84,7 +84,7 @@ class AuthPlugin(Plugin):
         """
         Logout user from web application.
 
-        TODO: need to add calling of this method to w3afCore::_end()
+        TODO: need to add calling of this method to w4afCore::_end()
 
         """
         raise NotImplementedError('Plugin is not implementing required method logout')
@@ -93,7 +93,7 @@ class AuthPlugin(Plugin):
         """
         Check if current session is still valid.
 
-        It is called in the begging of w3afCore::_discover_and_bruteforce() method.
+        It is called in the begging of w4afCore::_discover_and_bruteforce() method.
         """
         raise NotImplementedError('Plugin is not implementing required method isLogged')
 
@@ -111,7 +111,7 @@ class AuthPlugin(Plugin):
         This method will prevent audit plugins from sending requests to /login
 
         The worse case scenario is that there is a vulnerability in the /login URL
-        and w3af doesn't find it because it was ignoring the URL during the audit
+        and w4af doesn't find it because it was ignoring the URL during the audit
         phase.
 
         The solution to the worse case scenario is for the user to run a second

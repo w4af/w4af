@@ -3,34 +3,34 @@ rfd.py
  
 Copyright 2006 Andres Riancho
  
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
  
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
  
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
  
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
-from w3af.core.data.misc.encoding import smart_unicode_escape
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
+from w4af.core.data.misc.encoding import smart_unicode_escape
 
 
-PATH_PARAM = '%3B/w3af.cmd%3B/w3af.cmd'
-EXEC_TOKEN = 'w3afExecToken'
+PATH_PARAM = '%3B/w4af.cmd%3B/w4af.cmd'
+EXEC_TOKEN = 'w4afExecToken'
 ESCAPE_CHARS = ('"', '&', '|', '\n')
 SHELL_CHARS = ('&', '|')
 NOT_VULNERABLE_TYPES = ('application/xml', 'text/xml', 'text/html')

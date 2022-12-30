@@ -11,7 +11,7 @@ on:
 
 jobs:
   test:
-    name: Test w3af (not slow)
+    name: Test w4af (not slow)
 
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -41,7 +41,7 @@ jobs:
       uses: GabrielBB/xvfb-action@v1
       with:
         run: |
-          pipenv run pytest --cov=w3af --splits 8 --group ${{ matrix.group }} -m "not moth and not wavsep and not w3af_moth and not sqlmap and not mcir and not wivet and not phpmoth and not fails and not git and not gui and not integration and not ci_ignore and not slow and not wordpress and not modsecurity"
+          pipenv run pytest --cov=w4af --splits 8 --group ${{ matrix.group }} -m "not moth and not wavsep and not w4af_moth and not sqlmap and not mcir and not wivet and not phpmoth and not fails and not git and not gui and not integration and not ci_ignore and not slow and not wordpress and not modsecurity"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
@@ -49,14 +49,14 @@ jobs:
         path: .coverage
 
   integration_test:
-    name: w3af integration tests with docker environments
+    name: w4af integration tests with docker environments
 
     runs-on: ubuntu-latest
     needs: [test]
     timeout-minutes: 40
     strategy:
       matrix:
-        group: [moth,w3af_moth,sqlmap,mcir,wivet,phpmoth]
+        group: [moth,w4af_moth,sqlmap,mcir,wivet,phpmoth]
 
 
     steps:
@@ -67,10 +67,10 @@ jobs:
         cache: 'pipenv'
     - name: Add test routes
       run: |
-        ./w3af/tests/add-test-routes.sh
+        ./w4af/tests/add-test-routes.sh
     - uses: isbang/compose-action@v1.3.2
       with:
-        compose-file: "./w3af/tests/docker-compose.yml"
+        compose-file: "./w4af/tests/docker-compose.yml"
         services: ${{ matrix.group }}
     - name: Install Gtk
       run: sudo apt-get update && sudo apt-get install -y libgirepository1.0-dev gir1.2-gtk-3.0 libgtk-3-dev gir1.2-pango-1.0 libpango1.0-dev gir1.2-gtksource-4 libgtksourceview-4-dev libicu-dev gir1.2-webkit2-4.0 libwebkit2gtk-4.0-dev graphviz libssl-dev libffi-dev libsqlite3-dev libxml2-dev git
@@ -86,7 +86,7 @@ jobs:
       uses: GabrielBB/xvfb-action@v1
       with:
         run: |
-          pipenv run pytest --cov=w3af -m "${{ matrix.group }} and not fails"
+          pipenv run pytest --cov=w4af -m "${{ matrix.group }} and not fails"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
@@ -94,7 +94,7 @@ jobs:
         path: .coverage
 
   slow_test:
-    name: Test w3af (slow tests)
+    name: Test w4af (slow tests)
 
     runs-on: ubuntu-latest
     timeout-minutes: 55
@@ -122,7 +122,7 @@ jobs:
       uses: GabrielBB/xvfb-action@v1
       with:
         run: |
-          pipenv run pytest --cov=w3af -m "slow_group${{matrix.group}}"
+          pipenv run pytest --cov=w4af -m "slow_group${{matrix.group}}"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
@@ -130,7 +130,7 @@ jobs:
         path: .coverage
 
   external_test:
-    name: Test w3af (external tests)
+    name: Test w4af (external tests)
 
     runs-on: ubuntu-latest
     timeout-minutes: 55
@@ -161,7 +161,7 @@ jobs:
         continue_on_error: true
         max_attempts: 1
         command: |
-          xvfb-run --auto-servernum pipenv run pytest --cov=w3af -m "external_group${{matrix.group}}"
+          xvfb-run --auto-servernum pipenv run pytest --cov=w4af -m "external_group${{matrix.group}}"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:

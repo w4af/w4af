@@ -3,19 +3,19 @@ scanrun.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import urllib.request, urllib.error, urllib.parse
@@ -35,19 +35,19 @@ from gi.repository import GtkSource as gtksource
 from multiprocessing.dummy import Process, Event
 from markdown import markdown
 
-from w3af.core.ui.gui import httpLogTab, entries
-from w3af.core.ui.gui.reqResViewer import ReqResViewer
-from w3af.core.ui.gui.kb.kbtree import KBTree
-from w3af.core.ui.gui.tools.fuzzy_requests import FuzzyRequests
-from w3af.core.ui.gui.tools.manual_requests import ManualRequests
-from w3af.core.ui.gui.misc.xdot_wrapper import WrappedDotWidget
+from w4af.core.ui.gui import httpLogTab, entries
+from w4af.core.ui.gui.reqResViewer import ReqResViewer
+from w4af.core.ui.gui.kb.kbtree import KBTree
+from w4af.core.ui.gui.tools.fuzzy_requests import FuzzyRequests
+from w4af.core.ui.gui.tools.manual_requests import ManualRequests
+from w4af.core.ui.gui.misc.xdot_wrapper import WrappedDotWidget
 
-from w3af.core.data.db.history import HistoryItem
-from w3af.core.data.kb.info import Info
-from w3af.core.data.kb.kb_observer import KBObserver
-from w3af.core.controllers.exceptions import DBException
+from w4af.core.data.db.history import HistoryItem
+from w4af.core.data.kb.info import Info
+from w4af.core.data.kb.kb_observer import KBObserver
+from w4af.core.controllers.exceptions import DBException
 
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.knowledge_base as kb
 
 RECURSION_LIMIT = sys.getrecursionlimit() - 5
 RECURSION_MSG = "Recursion limit: can't go deeper"
@@ -56,13 +56,13 @@ DB_VULN_NOT_FOUND = markdown('The detailed description for this vulnerability'
                              ' is not available in our database, please'
                              ' contribute to the open source'
                              ' [vulndb/data project](https://github.com/vulndb/data)'
-                             ' to improve w3af\'s output.')
+                             ' to improve w4af\'s output.')
 
 FILE = 'file:///'
 
 
 class FullKBTree(KBTree):
-    def __init__(self, w3af, kbbrowser, ifilter):
+    def __init__(self, w4af, kbbrowser, ifilter):
         """A tree showing all the info.
 
         This also gives a long description of the element when clicked.
@@ -72,7 +72,7 @@ class FullKBTree(KBTree):
 
         :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
         """
-        super(FullKBTree, self).__init__(w3af, ifilter,
+        super(FullKBTree, self).__init__(w4af, ifilter,
                                          'Knowledge Base', strict=False)
         self._historyItem = HistoryItem()
         self.kbbrowser = kbbrowser
@@ -154,7 +154,7 @@ class FullKBTree(KBTree):
                 return
 
             # Error handling for .trace file problems
-            # https://github.com/andresriancho/w3af/issues/1174
+            # https://github.com/andresriancho/w4af/issues/1174
             try:
                 # These lines will trigger the code that reads the .trace file
                 # from disk and if they aren't there an exception will rise
@@ -165,7 +165,7 @@ class FullKBTree(KBTree):
                 return
 
             # Now we know that these two lines will work and we won't trigger
-            # https://github.com/andresriancho/w3af/issues/1174
+            # https://github.com/andresriancho/w4af/issues/1174
             self.kbbrowser.rrV.request.show_object(history_item.request)
             self.kbbrowser.rrV.response.show_object(history_item.response)
 
@@ -206,8 +206,8 @@ class KBBrowser(entries.RememberingHPaned):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af):
-        super(KBBrowser, self).__init__(w3af, "pane-kbbrowser", 250)
+    def __init__(self, w4af):
+        super(KBBrowser, self).__init__(w4af, "pane-kbbrowser", 250)
 
         # Internal variables:
         # Save the request and response ids to be used in the page control
@@ -232,7 +232,7 @@ class KBBrowser(entries.RememberingHPaned):
         filterbox.show()
 
         # the kb tree
-        self.kbtree = FullKBTree(w3af, self, self.filters)
+        self.kbtree = FullKBTree(w4af, self, self.filters)
 
         # all in the first pane
         kbtree_scrollwin = gtk.ScrolledWindow()
@@ -247,7 +247,7 @@ class KBBrowser(entries.RememberingHPaned):
         treebox.show()
 
         # the vulnerability information
-        summary = self.get_notebook_summary(w3af)
+        summary = self.get_notebook_summary(w4af)
         description = self.get_notebook_description()
 
         self.vuln_notebook = gtk.Notebook()
@@ -279,7 +279,7 @@ class KBBrowser(entries.RememberingHPaned):
 
         return desc_scroll
 
-    def get_notebook_summary(self, w3af):
+    def get_notebook_summary(self, w4af):
         summary_tv = gtk.TextView()
         summary_tv.set_editable(False)
         summary_tv.set_cursor_visible(False)
@@ -293,7 +293,7 @@ class KBBrowser(entries.RememberingHPaned):
         summary_scrollwin.show()
 
         # The request/response viewer
-        self.rrV = ReqResViewer(w3af, withAudit=False)
+        self.rrV = ReqResViewer(w4af, withAudit=False)
         self.rrV.set_sensitive(False)
 
         # Create the title label to show the request id
@@ -302,7 +302,7 @@ class KBBrowser(entries.RememberingHPaned):
 
         # Create page changer to handle info/vuln objects that have MORE THAN
         # ONE related request/response
-        self.pagesControl = entries.PagesControl(w3af, self.page_change, 0)
+        self.pagesControl = entries.PagesControl(w4af, self.page_change, 0)
         self.pagesControl.deactivate()
         self.page_change(0)
         center_box = gtk.HBox()
@@ -320,7 +320,7 @@ class KBBrowser(entries.RememberingHPaned):
         center_box.show()
 
         # The summary and http data go in a vbox too
-        summary_data_vbox = entries.RememberingVPaned(w3af,
+        summary_data_vbox = entries.RememberingVPaned(w4af,
                                                       'pane-kbbexplainview',
                                                       100)
         summary_data_vbox.pack1(summary_scrollwin)
@@ -361,9 +361,9 @@ class URLsGraph(gtk.VBox):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af):
+    def __init__(self, w4af):
         super(URLsGraph, self).__init__()
-        self.w3af = w3af
+        self.w4af = w4af
 
         self.toolbox = gtk.HBox()
         b = entries.SemiStockButton("", gtk.STOCK_ZOOM_IN, 'Zoom In')
@@ -419,7 +419,7 @@ class URLsGraph(gtk.VBox):
             msg = ('A ValueError exception with message "%s" was found while'
                    ' trying to render a new dotcode. Please create a new'
                    ' bug report at %s including the following info:\n\n%s')
-            new_issue = 'https://github.com/andresriancho/w3af/issues/new'
+            new_issue = 'https://github.com/andresriancho/w4af/issues/new'
             args = (ve, new_issue, dotcode)
             raise ValueError(msg % args)
         else:
@@ -474,7 +474,7 @@ class URLsGraph(gtk.VBox):
 HEAD_TO_SEND = """\
 GET %s HTTP/1.0
 Host: %s
-User-Agent: w3af.org
+User-Agent: w4af.org
 """
 
 
@@ -491,8 +491,8 @@ class URLsTree(gtk.TreeView):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, grapher):
-        self.w3af = w3af
+    def __init__(self, w4af, grapher):
+        self.w4af = w4af
         self.grapher = grapher
 
         # simple empty Tree Store
@@ -659,7 +659,7 @@ class URLsTree(gtk.TreeView):
         webbrowser.open_new_tab(text)
 
     def _send_request(self, widg, text, func):
-        func(self.w3af, (text, ""))
+        func(self.w4af, (text, ""))
 
 
 class ScanRunBody(gtk.Notebook):
@@ -667,9 +667,9 @@ class ScanRunBody(gtk.Notebook):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af):
+    def __init__(self, w4af):
         super(ScanRunBody, self).__init__()
-        self.w3af = w3af
+        self.w4af = w4af
         self.helpChapter = ("Browsing_the_Knowledge_Base",
                             "Site_structure", "Requests_and_Responses")
         self.connect("switch-page", self.changed_page)
@@ -677,14 +677,14 @@ class ScanRunBody(gtk.Notebook):
         # KB Browser
         # this one does not go inside a scrolled window, because that's handled
         # in each widget of itself
-        kbbrowser = KBBrowser(w3af)
+        kbbrowser = KBBrowser(w4af)
         l = gtk.Label(_("KB Browser"))
         self.append_page(kbbrowser, l)
 
         # urlstree, the tree
-        pan = entries.RememberingHPaned(w3af, "pane-urltreegraph")
-        urlsgraph = URLsGraph(w3af)
-        urlstree = URLsTree(w3af, urlsgraph)
+        pan = entries.RememberingHPaned(w4af, "pane-urltreegraph")
+        urlsgraph = URLsGraph(w4af)
+        urlstree = URLsTree(w4af, urlsgraph)
         scrollwin1 = gtk.ScrolledWindow()
         scrollwin1.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         scrollwin1.add_with_viewport(urlstree)
@@ -696,7 +696,7 @@ class ScanRunBody(gtk.Notebook):
         self.append_page(pan, l)
 
         # Request Response navigator
-        httplog = httpLogTab.httpLogTab(w3af)
+        httplog = httpLogTab.httpLogTab(w4af)
         l = gtk.Label(_("Request/Response navigator"))
         self.append_page(httplog, l)
 
@@ -704,4 +704,4 @@ class ScanRunBody(gtk.Notebook):
 
     def changed_page(self, notebook, page, page_num):
         """Changed the page in the Notebook."""
-        self.w3af.helpChapters["scanrun"] = self.helpChapter[page_num]
+        self.w4af.helpChapters["scanrun"] = self.helpChapter[page_num]

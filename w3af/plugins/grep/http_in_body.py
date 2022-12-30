@@ -3,30 +3,30 @@ http_in_body.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af.core.controllers.plugins.grep_plugin import GrepPlugin
-from w3af.core.data.quick_match.multi_re import MultiRE
-from w3af.core.data.kb.info import Info
+from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
+from w4af.core.data.quick_match.multi_re import MultiRE
+from w4af.core.data.kb.info import Info
 
 
 class http_in_body(GrepPlugin):

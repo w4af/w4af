@@ -3,36 +3,36 @@ version_manager.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import weakref
 from datetime import date
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
-from w3af.core.controllers.auto_update.git_client import GitClient, GitClientError
-from w3af.core.data.db.startup_cfg import StartUpConfig
-from w3af.core.controllers.auto_update.utils import (to_short_id,
+from w4af.core.controllers.misc.home_dir import w4af_LOCAL_PATH
+from w4af.core.controllers.auto_update.git_client import GitClient, GitClientError
+from w4af.core.data.db.startup_cfg import StartUpConfig
+from w4af.core.controllers.auto_update.utils import (to_short_id,
                                                      get_commit_id_date)
 
 
 class VersionMgr(object):
     """
-    Perform git w3af code update and commit. When an instance is created loads
+    Perform git w4af code update and commit. When an instance is created loads
     data from a .conf file that will be used when actions are executed.
     Also provides some callbacks as well as events to register to.
 
@@ -76,9 +76,9 @@ class VersionMgr(object):
     HEAD = 'HEAD'
     BACK = 'BACK'
 
-    def __init__(self, localpath=W3AF_LOCAL_PATH, log=None):
+    def __init__(self, localpath=w4af_LOCAL_PATH, log=None):
         """
-        w3af version manager class. Handles the logic concerning the
+        w4af version manager class. Handles the logic concerning the
         automatic update/commit process of the code.
 
         :param localpath: Working directory
@@ -124,10 +124,10 @@ class VersionMgr(object):
         msg = ('Your installation is already on the latest available version.')
         self.register(VersionMgr.ON_ALREADY_LATEST, log, msg)
         
-        msg = 'w3af is updating from github.com ...'
+        msg = 'w4af is updating from github.com ...'
         self.register(VersionMgr.ON_UPDATE, log, msg)
         
-        msg = ('The third-party dependencies for w3af have changed, please'
+        msg = ('The third-party dependencies for w4af have changed, please'
                ' exit the framework and run it again to load all changes'
                ' and install any missing modules.')
         self.register(VersionMgr.ON_UPDATE_ADDED_DEP, log, msg)
@@ -185,7 +185,7 @@ class VersionMgr(object):
             
             # pylint: disable=E1102
             # pylint: disable=E1103
-            msg = 'Your current w3af installation is %s (%s). Do you want '\
+            msg = 'Your current w4af installation is %s (%s). Do you want '\
                   'to update to %s (%s)?'
             proceed_upd = callback(msg % (short_local_head_id,
                                           get_commit_id_date(local_head_id),

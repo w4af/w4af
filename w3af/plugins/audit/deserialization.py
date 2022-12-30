@@ -3,19 +3,19 @@ deserialization.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,22 +23,22 @@ import os
 import json
 import base64
 
-import w3af.core.data.constants.severity as severity
+import w4af.core.data.constants.severity as severity
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.delay_detection.exact_delay_controller import ExactDelayController
-from w3af.core.controllers.delay_detection.exact_delay import ExactDelay
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.data.misc.base64_nopadding import maybe_decode_base64
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.dc.generic.form import Form
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.parsers.utils.form_constants import INPUT_TYPE_FILE, INPUT_TYPE_HIDDEN
-from w3af.core.data.serialization.detect import (is_java_serialized_data,
+from w4af import ROOT_PATH
+from w4af.core.controllers.delay_detection.exact_delay_controller import ExactDelayController
+from w4af.core.controllers.delay_detection.exact_delay import ExactDelay
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.data.misc.base64_nopadding import maybe_decode_base64
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.dc.generic.form import Form
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.parsers.utils.form_constants import INPUT_TYPE_FILE, INPUT_TYPE_HIDDEN
+from w4af.core.data.serialization.detect import (is_java_serialized_data,
                                                  is_net_serialized_data,
                                                  is_nodejs_serialized_data,
                                                  is_pickled_data)
-from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
+from w4af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 class deserialization(AuditPlugin):

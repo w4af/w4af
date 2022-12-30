@@ -3,28 +3,28 @@ test_import_results.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import pytest
 
-from w3af import ROOT_PATH
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.data.dc.multipart_container import MultipartContainer
+from w4af import ROOT_PATH
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.data.dc.multipart_container import MultipartContainer
 
 
 @pytest.mark.moth
@@ -35,12 +35,12 @@ class TestImportResults(PluginTest):
     BASE_PATH = os.path.join(ROOT_PATH, 'plugins', 'tests', 'crawl',
                              'import_results')
 
-    input_base64 = os.path.join(BASE_PATH, 'w3af.base64')
+    input_base64 = os.path.join(BASE_PATH, 'w4af.base64')
     input_burp = os.path.join(BASE_PATH, 'burp-no-base64.xml')
     input_burp_b64 = os.path.join(BASE_PATH, 'burp-base64.xml')
 
     _run_configs = {
-        'w3af': {
+        'w4af': {
             'target': base_url,
             'plugins': {'crawl': (PluginConfig('import_results',
                                                ('input_base64', input_base64,
@@ -67,7 +67,7 @@ class TestImportResults(PluginTest):
     }
 
     def test_base64(self):
-        cfg = self._run_configs['w3af']
+        cfg = self._run_configs['w4af']
         self._scan(cfg['target'], cfg['plugins'])
 
         fuzzable_requests = self.kb.get_all_known_fuzzable_requests()
@@ -116,8 +116,8 @@ class TestImportResults(PluginTest):
             'http://127.0.0.1:8000/static/moth/css/style.css',
             'http://127.0.0.1:8000/about/',
             'http://127.0.0.1:8000/static/moth/css/bootstrap.min.css',
-            'http://127.0.0.1:8000/w3af/file_upload/',
-            'http://127.0.0.1:8000/static/moth/images/w3af.png',
+            'http://127.0.0.1:8000/w4af/file_upload/',
+            'http://127.0.0.1:8000/static/moth/images/w4af.png',
         }
 
         self.assertEqual(set(urls), expected_urls)

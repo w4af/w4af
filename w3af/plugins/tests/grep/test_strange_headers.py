@@ -3,33 +3,33 @@ test_strange_headers.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import time
 import unittest
 
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.headers import Headers
-from w3af.core.controllers.misc.temp_dir import create_temp_dir
-from w3af.plugins.grep.strange_headers import strange_headers
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.headers import Headers
+from w4af.core.controllers.misc.temp_dir import create_temp_dir
+from w4af.plugins.grep.strange_headers import strange_headers
 
 
 class TestStrangeHeaders(unittest.TestCase):
@@ -44,7 +44,7 @@ class TestStrangeHeaders(unittest.TestCase):
 
     def test_strange_headers_positive(self):
         body = 'Hello world'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html'),
                            ('hello-world', 'yes!')])
         request = FuzzableRequest(url, method='GET')
@@ -60,14 +60,14 @@ class TestStrangeHeaders(unittest.TestCase):
                          ' the uncommon response header "hello-world", one'
                          ' of the received header values is "yes!". The'
                          ' first ten URLs which sent the uncommon header'
-                         ' are:\n - http://www.w3af.com/\n')
+                         ' are:\n - http://www.w4af.com/\n')
         self.assertEqual(info.get_name(), 'Strange header')
         self.assertEqual(info.get_url(), url)
         self.assertEqual(info.get_desc(), expected_desc)
 
     def test_strange_headers_timing(self):
         body = 'Hello world'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html'),
                            ('hello-world', 'yes!')])
         request = FuzzableRequest(url, method='GET')
@@ -85,14 +85,14 @@ class TestStrangeHeaders(unittest.TestCase):
     def test_strange_headers_no_group(self):
         body = 'Hello world'
 
-        url_1 = URL('http://www.w3af.com/1')
+        url_1 = URL('http://www.w4af.com/1')
         headers_1 = Headers([('content-type', 'text/html'),
                              ('hello-world', 'yes!')])
         request_1 = FuzzableRequest(url_1, method='GET')
         resp_1 = HTTPResponse(200, body, headers_1, url_1, url_1, _id=1)
         self.plugin.grep(request_1, resp_1)
 
-        url_2 = URL('http://www.w3af.com/2')
+        url_2 = URL('http://www.w4af.com/2')
         headers_2 = Headers([('content-type', 'text/html'),
                              ('bye-bye', 'chau')])
         request_2 = FuzzableRequest(url_2, method='GET')
@@ -105,14 +105,14 @@ class TestStrangeHeaders(unittest.TestCase):
     def test_strange_headers_group(self):
         body = 'Hello world'
 
-        url_1 = URL('http://www.w3af.com/1')
+        url_1 = URL('http://www.w4af.com/1')
         headers_1 = Headers([('content-type', 'text/html'),
                            ('hello-world', 'yes!')])
         request_1 = FuzzableRequest(url_1, method='GET')
         resp_1 = HTTPResponse(200, body, headers_1, url_1, url_1, _id=1)
         self.plugin.grep(request_1, resp_1)
 
-        url_2 = URL('http://www.w3af.com/2')
+        url_2 = URL('http://www.w4af.com/2')
         headers_2 = Headers([('content-type', 'text/html'),
                            ('hello-world', 'nope')])
         request_2 = FuzzableRequest(url_2, method='GET')
@@ -124,7 +124,7 @@ class TestStrangeHeaders(unittest.TestCase):
 
     def test_strange_headers_negative(self):
         body = 'Hello world'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html'),
                            ('x-pad', 'yes!')])
         request = FuzzableRequest(url, method='GET')

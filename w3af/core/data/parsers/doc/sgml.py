@@ -4,19 +4,19 @@ sgml.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -27,15 +27,15 @@ import io
 
 from lxml import etree
 
-import w3af.core.data.kb.config as cf
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.misc_settings import EXCLUDE, INCLUDE
-from w3af.core.data.parsers.doc.baseparser import BaseParser
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.constants.encodings import DEFAULT_ENCODING
-from w3af.core.data.misc.encoding import smart_unicode
-from w3af.core.controllers.exceptions import ParserException
+from w4af.core.controllers.misc_settings import EXCLUDE, INCLUDE
+from w4af.core.data.parsers.doc.baseparser import BaseParser
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.constants.encodings import DEFAULT_ENCODING
+from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.controllers.exceptions import ParserException
 
 
 class Tag(object):
@@ -214,7 +214,7 @@ class SGMLParser(BaseParser):
         Parse the HTTP response body
         """
         # HTML Parser raises XMLSyntaxError on empty response body #8695
-        # https://github.com/andresriancho/w3af/issues/8695
+        # https://github.com/andresriancho/w4af/issues/8695
         if not resp_body:
             # Simply return, don't even try to parse this response, it's empty
             # anyways. The result of this return is to have an empty SGMLParser
@@ -297,13 +297,13 @@ class SGMLParser(BaseParser):
 
         :return: Yield tuples with (tag_name, tag_attrs, tag_text)
 
-        :see: https://github.com/andresriancho/w3af/issues/9990
+        :see: https://github.com/andresriancho/w4af/issues/9990
         :see: _parse_response_body_as_string for more/better docs
         """
         resp_body = self.get_http_response().body
 
         # HTML Parser raises XMLSyntaxError on empty response body #8695
-        # https://github.com/andresriancho/w3af/issues/8695
+        # https://github.com/andresriancho/w4af/issues/8695
         if not resp_body:
             # Don't even try to parse this response, it's empty anyways.
             return
@@ -461,7 +461,7 @@ class SGMLParser(BaseParser):
     @property
     def references(self):
         """
-        Searches for references on a page. w3af searches references in every
+        Searches for references on a page. w4af searches references in every
         html tag, including "a", "forms", "images", "frames", etc.
 
         Return a tuple containing two sets, one with the parsed URLs, and the

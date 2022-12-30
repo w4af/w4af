@@ -4,19 +4,19 @@ url.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -31,14 +31,14 @@ from functools import wraps, total_ordering
 from collections import OrderedDict
 from tldextract import TLDExtract
 
-from w3af.core.controllers.misc.is_ip_address import is_ip_address
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.misc.is_ip_address import is_ip_address
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
-from w3af.core.data.constants.encodings import DEFAULT_ENCODING
-from w3af.core.data.dc.generic.data_container import DataContainer
-from w3af.core.data.dc.query_string import QueryString
-from w3af.core.data.db.disk_item import DiskItem
-from w3af.core.data.misc.encoding import (smart_str, PERCENT_ENCODE,
+from w4af.core.data.constants.encodings import DEFAULT_ENCODING
+from w4af.core.data.dc.generic.data_container import DataContainer
+from w4af.core.data.dc.query_string import QueryString
+from w4af.core.data.db.disk_item import DiskItem
+from w4af.core.data.misc.encoding import (smart_str, PERCENT_ENCODE,
                                           is_known_encoding, smart_str_ignore, smart_unicode)
 
 
@@ -190,7 +190,7 @@ class URL(DiskItem):
         parsed = urllib.parse.urlparse(data)
         #
         # This is the case when someone creates a URL like
-        # this: URL('www.w3af.com')
+        # this: URL('www.w4af.com')
         #
         if parsed.scheme == parsed.netloc == '' and not parsed.path.startswith('/'):
             # By default we set the protocol to "http"
@@ -366,7 +366,7 @@ class URL(DiskItem):
             baseURL = 'http:/abc/'
             relativeURL = '/../f00.b4r'
 
-        w3af would try to GET http:/abc/../f00.b4r; while mozilla would
+        w4af would try to GET http:/abc/../f00.b4r; while mozilla would
         try to get http:/abc/f00.b4r. In some cases, the first is ok,
         on other cases the first one doesn't even work and return a 403
         error message.
@@ -382,7 +382,7 @@ class URL(DiskItem):
             http://host.tld:80/foo/bar
 
         As you may have noticed, the ":80" is redundant, and what's even
-        worse, it can confuse w3af when performing string comparisons:
+        worse, it can confuse w4af when performing string comparisons:
         http://host.tld:80/foo/bar != http://host.tld/foo/bar , and
         http://host.tld/foo/bar could also be found by the web_spider
         plugin, so we are analyzing the same thing twice.
@@ -443,7 +443,7 @@ class URL(DiskItem):
         # Put everything together, do NOT use urlparse.urljoin here or you'll
         # introduce a bug! For more information read:
         #       test_url.py -> test_url_in_filename
-        #       https://github.com/andresriancho/w3af/issues/475
+        #       https://github.com/andresriancho/w4af/issues/475
         #
         fixed_url = urllib.parse.urlunparse((protocol, net_location, self.path,
                                          self.params, '', self.fragment))

@@ -18,7 +18,7 @@ if [ ! -d venv/lib/python2.7/dist-packages ]; then
 fi
 
 # Install the GUI dependencies
-python -c 'from w3af.core.ui.gui.dependency_check.dependency_check import dependency_check;dependency_check()'
+python -c 'from w4af.core.ui.gui.dependency_check.dependency_check import dependency_check;dependency_check()'
 
 if [ -f requirements.txt ]; then
     pip install -r requirements.txt

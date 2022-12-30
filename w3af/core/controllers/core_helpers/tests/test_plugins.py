@@ -4,19 +4,19 @@ test_plugins.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -27,26 +27,26 @@ from os import listdir as orig_listdir
 import pytest
 from unittest.mock import patch
 
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 TEST_PLUGIN_NAME = 'failing_spider'
 
 
 @pytest.mark.smoke
-class TestW3afCorePlugins(unittest.TestCase):
+class Testw4afCorePlugins(unittest.TestCase):
 
     def setUp(self):
-        super(TestW3afCorePlugins, self).setUp()
+        super(Testw4afCorePlugins, self).setUp()
 
         self.listdir_patch = patch('os.listdir')
         self.listdir_mock = self.listdir_patch.start()
         self.listdir_mock.side_effect = listdir_remove_fs
 
-        self.core = w3afCore()
+        self.core = w4afCore()
 
     def tearDown(self):
-        super(TestW3afCorePlugins, self).tearDown()
+        super(Testw4afCorePlugins, self).tearDown()
 
         self.listdir_patch.stop()
         self.core.worker_pool.terminate_join()
@@ -141,7 +141,7 @@ class TestW3afCorePlugins(unittest.TestCase):
                           'auth', 'generic', options)
 
         # Do not start the scan if the user failed to configure the plugins
-        # https://github.com/andresriancho/w3af/issues/7477
+        # https://github.com/andresriancho/w4af/issues/7477
         self.assertRaises(BaseFrameworkException,
                           self.core.plugins.init_plugins)
 
@@ -280,7 +280,7 @@ def listdir_remove_fs(query_dir):
     the files in the the query_dir, removing 'failing_spider' plugin name from
     the list.
 
-    [0] https://circleci.com/gh/andresriancho/w3af/801
+    [0] https://circleci.com/gh/andresriancho/w4af/801
 
     :param query_dir: The directory to query
     :return: A list without 'failing_spider'

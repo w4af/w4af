@@ -1,14 +1,14 @@
 import os
 
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af.plugins.attack.payloads.base_payload import Payload
-from w3af.core.ui.console.tables import table
+from w4af.plugins.attack.payloads.base_payload import Payload
+from w4af.core.ui.console.tables import table
 
 
 class get_source_code(Payload):
     """
-    Get the source code for all files that were spidered by w3af.
+    Get the source code for all files that were spidered by w4af.
 
     Usage: get_source_code <output_directory>
     """

@@ -3,19 +3,19 @@ helpers.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -27,28 +27,28 @@ import http.client
 import OpenSSL
 import itertools
 
-from w3af.core.controllers.misc.itertools_toolset import unique_everseen_hash
+from w4af.core.controllers.misc.itertools_toolset import unique_everseen_hash
 from errno import (ECONNREFUSED, EHOSTUNREACH, ECONNRESET, ENETDOWN,
                    ENETUNREACH, ETIMEDOUT, ENOSPC)
 
-from w3af.core.data.misc.encoding import smart_unicode, PERCENT_ENCODE
-from w3af.core.controllers.exceptions import HTTPRequestException
-from w3af.core.data.url.handlers.keepalive import URLTimeoutError
-from w3af.core.data.constants.response_codes import NO_CONTENT
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.misc.web_encodings import (URL_ENCODING_FUNCTIONS,
+from w4af.core.data.misc.encoding import smart_unicode, PERCENT_ENCODE
+from w4af.core.controllers.exceptions import HTTPRequestException
+from w4af.core.data.url.handlers.keepalive import URLTimeoutError
+from w4af.core.data.constants.response_codes import NO_CONTENT
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.misc.web_encodings import (URL_ENCODING_FUNCTIONS,
                                                HTML_ENCODING_FUNCTIONS,
                                                JSON_ENCODING_FUNCTIONS,
                                                generate_html_encoding_functions,
                                                generate_url_encoding_functions)
 
-from w3af.core.controllers.misc.number_generator import consecutive_number_generator
+from w4af.core.controllers.misc.number_generator import consecutive_number_generator
 
 # Known reason errors. See errno module for more info on these errors
 EUNKNSERV = -2        # Name or service not known error
 EINVHOSTNAME = -5     # No address associated with hostname
-EUNEXPECTEDEOF = -1   # https://github.com/andresriancho/w3af/issues/10290
+EUNEXPECTEDEOF = -1   # https://github.com/andresriancho/w4af/issues/10290
 
 NO_CONTENT_MSG = 'No Content'
 
@@ -64,7 +64,7 @@ def new_no_content_resp(uri, add_id=False):
     # WARNING: You are about to change this code? Please read the related
     #          race condition in this commit [0]
     #
-    # [0] https://github.com/andresriancho/w3af/commit/682bc2e4ad7d075bbdc469bc5d24a28e6d2e7804
+    # [0] https://github.com/andresriancho/w4af/commit/682bc2e4ad7d075bbdc469bc5d24a28e6d2e7804
     #
     no_content_response = HTTPResponse(code=NO_CONTENT,
                                        read='',
@@ -278,7 +278,7 @@ def get_clean_body_impl(body, strings_to_replace_list, multi_encode=True,
         # chars in the mod_value then we end up with an UnicodeDecodeError, so
         # I convert it myself with some error handling
         #
-        # https://github.com/andresriancho/w3af/issues/8953
+        # https://github.com/andresriancho/w4af/issues/8953
         unicode_to_repl = smart_unicode(str_to_repl, errors=PERCENT_ENCODE)
 
         # unquote, just in case the plugin did an extra encoding of some type.

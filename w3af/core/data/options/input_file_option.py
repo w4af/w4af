@@ -3,19 +3,19 @@ input_file_option.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,11 +26,11 @@ import base64
 import tempfile
 import codecs
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.misc.temp_dir import create_temp_dir
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.options.baseoption import BaseOption
-from w3af.core.data.options.option_types import INPUT_FILE
+from w4af import ROOT_PATH
+from w4af.core.controllers.misc.temp_dir import create_temp_dir
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.options.baseoption import BaseOption
+from w4af.core.data.options.option_types import INPUT_FILE
 
 ROOT_PATH_VAR = '%ROOT_PATH%'
 
@@ -39,14 +39,14 @@ class InputFileOption(BaseOption):
 
     _type = INPUT_FILE
 
-    DATA_PREFIX = 'w3af-'
+    DATA_PREFIX = 'w4af-'
     DATA_SUFFIX = '-sc.dat'
     DATA_PROTO = 'base64://'
 
     def set_value(self, value):
         """
         :param value: The value parameter is set by the user interface, which
-        for example sends "w3af/plugins/audit/ssl_certificate/ca.pem" or
+        for example sends "w4af/plugins/audit/ssl_certificate/ca.pem" or
         "%ROOT_PATH%/plugins/audit/ssl_certificate/ca.pem".
 
         If required we replace the %ROOT_PATH% with the right value for this
@@ -57,7 +57,7 @@ class InputFileOption(BaseOption):
         like that is set, we decode+unzip, save the data to a temp file and
         set that file path as value.
 
-        [0] https://github.com/andresriancho/w3af/issues/10949
+        [0] https://github.com/andresriancho/w4af/issues/10949
         """
         if value == '':
             self._value = value
@@ -80,7 +80,7 @@ class InputFileOption(BaseOption):
         This method is called before saving the option value to the profile file
 
         Added when fixing:
-            https://github.com/andresriancho/w3af/issues/402
+            https://github.com/andresriancho/w4af/issues/402
 
         :return: A string representation of the path, with the ROOT_PATH
                  replaced with %ROOT_PATH%. Then when we load a value in

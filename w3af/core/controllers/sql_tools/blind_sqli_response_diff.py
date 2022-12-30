@@ -3,33 +3,33 @@ blind_sqli_response_diff.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import time
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.fuzzer.utils import rand_number
-from w3af.core.data.misc.encoding import smart_str_ignore
-from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal_return_distance
-from w3af.core.controllers.exceptions import HTTPRequestException
-from w3af.core.controllers.misc.diff import chunked_diff
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.fuzzer.utils import rand_number
+from w4af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.controllers.misc.fuzzy_string_cmp import fuzzy_equal_return_distance
+from w4af.core.controllers.exceptions import HTTPRequestException
+from w4af.core.controllers.misc.diff import chunked_diff
 
 
 class BlindSqliResponseDiff(object):
@@ -190,7 +190,7 @@ class BlindSqliResponseDiff(object):
 
         if body_true_response == body_false_response:
             msg = ('There is NO CHANGE between the true and false responses.'
-                   ' NO WAY w3af is going to detect a blind SQL injection'
+                   ' NO WAY w4af is going to detect a blind SQL injection'
                    ' using response diffs in this case.')
             self.debug(msg, mutant=mutant)
             return None
@@ -258,7 +258,7 @@ class BlindSqliResponseDiff(object):
         # couple of results, which I assume is because the search
         # engine is trying to search for more terms.
         #
-        # Removing the special characters will make w3af search for
+        # Removing the special characters will make w4af search for
         # `46  OR  46   46  OR  46   46`, which yields many results in
         # the application's search engine, which I assume is because the
         # search engine just needs to match objects with 46 / OR.

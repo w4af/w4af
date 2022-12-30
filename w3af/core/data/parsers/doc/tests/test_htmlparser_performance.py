@@ -4,19 +4,19 @@ test_htmlparser_performance.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -28,12 +28,12 @@ import os
 import pytest
 from memory_profiler import profile
 
-from w3af import ROOT_PATH
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.parsers.doc.html import HTMLParser
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.parsers.doc.tests.generate_html_file import OUTPUT_FILE
+from w4af import ROOT_PATH
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.parsers.doc.html import HTMLParser
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.parsers.doc.tests.generate_html_file import OUTPUT_FILE
 
 
 class TestHTMLParserPerformance(unittest.TestCase):
@@ -49,7 +49,7 @@ class TestHTMLParserPerformance(unittest.TestCase):
         headers['content-type'] = 'text/html'
         with open(self.HTML_FILE) as f:
             body = f.read()
-        url = URL('http://www.w3af.org/')
+        url = URL('http://www.w4af.org/')
         response = HTTPResponse(200, body, headers, url, url, charset='utf-8')
 
         #self.measure_memory(1)
@@ -98,7 +98,7 @@ class TestHTMLParserPerformance(unittest.TestCase):
 def test():
     """
     Run using:
-        python -m memory_profiler w3af/core/data/parsers/tests/test_htmlparser_performance.py
+        python -m memory_profiler w4af/core/data/parsers/tests/test_htmlparser_performance.py
 
     That will activate the profiler.
     """

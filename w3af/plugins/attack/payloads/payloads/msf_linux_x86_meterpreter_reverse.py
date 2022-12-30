@@ -1,4 +1,4 @@
-from w3af.plugins.attack.payloads.payloads.metasploit import metasploit
+from w4af.plugins.attack.payloads.payloads.metasploit import metasploit
 
 
 class msf_linux_x86_meterpreter_reverse(metasploit):

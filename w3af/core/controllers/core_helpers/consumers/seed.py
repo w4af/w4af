@@ -3,19 +3,19 @@ seed.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,12 +24,12 @@ import traceback
 from queue import Empty
 from multiprocessing.dummy import Queue, Process
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.controllers.core_helpers.consumers.constants import POISON_PILL
-from w3af.core.controllers.exceptions import (ScanMustStopException,
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.controllers.core_helpers.consumers.constants import POISON_PILL
+from w4af.core.controllers.exceptions import (ScanMustStopException,
                                               HTTPRequestException)
 
 
@@ -40,13 +40,13 @@ class seed(Process):
     requests.
     """
 
-    def __init__(self, w3af_core):
+    def __init__(self, w4af_core):
         """
-        :param w3af_core: The w3af core that we'll use for status reporting
+        :param w4af_core: The w4af core that we'll use for status reporting
         """
         super(seed, self).__init__(name='%sController' % self.get_name())
 
-        self._w3af_core = w3af_core
+        self._w4af_core = w4af_core
 
         # See documentation in the property below
         self._out_queue = Queue()
@@ -100,7 +100,7 @@ class seed(Process):
                 #    GET the initial target URLs in order to save them
                 #    in a list and use them as our bootstrap URLs
                 #
-                response = self._w3af_core.uri_opener.GET(url, cache=True)
+                response = self._w4af_core.uri_opener.GET(url, cache=True)
             except ScanMustStopException as w3:
                 om.out.error('The target server is unreachable. Stopping.')
                 raise w3

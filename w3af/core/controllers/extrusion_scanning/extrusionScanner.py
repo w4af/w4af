@@ -3,19 +3,19 @@ extrusionScanner.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,18 +25,18 @@ import socket
 import time
 import threading
 
-from w3af import ROOT_PATH
-import w3af.core.data.kb.config as cf
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.output_manager as om
+from w4af import ROOT_PATH
+import w4af.core.data.kb.config as cf
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.extrusion_scanning.server.extrusionServer import extrusionServer
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.intrusion_tools.execMethodHelpers import (
+from w4af.core.controllers.extrusion_scanning.server.extrusionServer import extrusionServer
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.intrusion_tools.execMethodHelpers import (
     os_detection_exec,
     get_remote_temp_file)
-from w3af.core.controllers.payload_transfer.echo_windows import EchoWindows
-from w3af.core.controllers.payload_transfer.echo_linux import EchoLinux
+from w4af.core.controllers.payload_transfer.echo_windows import EchoWindows
+from w4af.core.controllers.payload_transfer.echo_linux import EchoLinux
 
 
 class extrusionScanner(object):
@@ -120,16 +120,16 @@ class extrusionScanner(object):
             if remoteId in saved_results:
                 msg = 'Reusing previous result from the knowledge base:'\
                       '- Selecting port "%s" for inbound connections from the'\
-                      ' compromised server to w3af.'
+                      ' compromised server to w4af.'
                 om.out.information(msg % saved_results[remoteId])
                 return saved_results[remoteId]
 
         om.out.information(
-            'Please wait some seconds while w3af performs an extrusion scan.')
+            'Please wait some seconds while w4af performs an extrusion scan.')
 
         es = extrusionServer(self._tcp_port_list, self._udp_port_list)
         if not es.can_sniff():
-            msg = 'The user running w3af can\'t sniff on the specified'
+            msg = 'The user running w4af can\'t sniff on the specified'
             msg += ' interface. Hints: Are you root? Does this interface'
             msg += ' exist?'
             raise BaseFrameworkException(msg)
@@ -153,7 +153,7 @@ class extrusionScanner(object):
                 raise BaseFrameworkException(msg)
             else:
                 host = res[0][0]
-                msg = 'The remote host: "%s" can connect to w3af with these ports:'
+                msg = 'The remote host: "%s" can connect to w4af with these ports:'
                 om.out.information(msg % host)
                 port = None
                 portList = []
@@ -173,7 +173,7 @@ class extrusionScanner(object):
                     raise BaseFrameworkException('All the inbound ports are in use.')
                 else:
                     msg = 'The following ports are not bound to a local process'
-                    msg += ' and can be used by w3af:'
+                    msg += ' and can be used by w4af:'
                     om.out.information(msg)
                     for lp, proto in localPorts:
                         om.out.information('- ' + str(lp) + '/' + proto)
@@ -183,7 +183,7 @@ class extrusionScanner(object):
                             port = lp
 
                     msg = 'Selecting port "%s/%s" for inbound connections from'
-                    msg += ' the compromised server to w3af.'
+                    msg += ' the compromised server to w4af.'
                     om.out.information(msg % (port, proto))
 
                     if not self._forceReRun:

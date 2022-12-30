@@ -3,41 +3,41 @@ open_api.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from itertools import repeat
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.config as cf
 
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.options.option_types import QUERY_STRING, HEADER, BOOL, INPUT_FILE
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.parsers.doc.open_api import OpenAPI
-from w3af.core.data.db.disk_set import DiskSet
-from w3af.core.data.kb.info import Info
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.dc.query_string import QueryString
-from w3af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.options.option_types import QUERY_STRING, HEADER, BOOL, INPUT_FILE
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.parsers.doc.open_api import OpenAPI
+from w4af.core.data.db.disk_set import DiskSet
+from w4af.core.data.kb.info import Info
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.core_helpers.fingerprint_404 import is_404
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.dc.query_string import QueryString
+from w4af.core.data.url.HTTPResponse import HTTPResponse
 
 import os.path
 
@@ -102,7 +102,7 @@ class open_api(CrawlPlugin):
         """
         Enable file name fuzzing:
 
-            http://w3af.org/api/1.0/pets/{fuzz-this-part}
+            http://w4af.org/api/1.0/pets/{fuzz-this-part}
 
         Users are not going to remember to enable this in misc-settings, and
         most of the APIs which are documented with Open API are REST APIs,

@@ -4,32 +4,32 @@ test_get_clean_body.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
 import urllib.request, urllib.parse, urllib.error
 
-from w3af.core.data.url.helpers import get_clean_body, apply_multi_escape_table
-from w3af.core.data.misc.web_encodings import SPECIAL_CHARS
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.fuzzer.mutants.tests.test_mutant import FakeMutant
+from w4af.core.data.url.helpers import get_clean_body, apply_multi_escape_table
+from w4af.core.data.misc.web_encodings import SPECIAL_CHARS
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.fuzzer.mutants.tests.test_mutant import FakeMutant
 
 
 class TestGetCleanBody(unittest.TestCase):
@@ -37,11 +37,11 @@ class TestGetCleanBody(unittest.TestCase):
         payload = 'payload'
 
         body = 'abc %s def' % payload
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         headers = Headers([('Content-Type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url)
 
-        freq = FuzzableRequest(URL('http://w3af.com/?a=1'))
+        freq = FuzzableRequest(URL('http://w4af.com/?a=1'))
         created_mutants = FakeMutant.create_mutants(freq, [payload], [],
                                                     False, {})
 
@@ -56,11 +56,11 @@ class TestGetCleanBody(unittest.TestCase):
         payload = 'PayLoaD'
 
         body = 'abc %s def' % payload
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         headers = Headers([('Content-Type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url)
 
-        freq = FuzzableRequest(URL('http://w3af.com/?a=1'))
+        freq = FuzzableRequest(URL('http://w4af.com/?a=1'))
         created_mutants = FakeMutant.create_mutants(freq, [payload], [],
                                                     False, {})
 
@@ -75,11 +75,11 @@ class TestGetCleanBody(unittest.TestCase):
         payload = 'hello/world'
 
         body = 'abc %s def' % urllib.parse.urlencode({'a': payload})
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         headers = Headers([('Content-Type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url)
 
-        freq = FuzzableRequest(URL('http://w3af.com/?a=1'))
+        freq = FuzzableRequest(URL('http://w4af.com/?a=1'))
         created_mutants = FakeMutant.create_mutants(freq, [payload], [],
                                                     False, {})
 
@@ -97,11 +97,11 @@ class TestGetCleanBody(unittest.TestCase):
         body = 'abc %s def' % urllib.parse.urlencode({'a': payload})
         body = body.replace('%2f', '%2F')
 
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         headers = Headers([('Content-Type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url)
 
-        freq = FuzzableRequest(URL('http://w3af.com/?a=1'))
+        freq = FuzzableRequest(URL('http://w4af.com/?a=1'))
         created_mutants = FakeMutant.create_mutants(freq, [payload], [],
                                                     False, {})
 
@@ -116,11 +116,11 @@ class TestGetCleanBody(unittest.TestCase):
         payload = 'hello/world'
 
         body = 'abc %s def' % urllib.parse.quote_plus(urllib.parse.quote_plus(payload))
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         headers = Headers([('Content-Type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url)
 
-        freq = FuzzableRequest(URL('http://w3af.com/?a=1'))
+        freq = FuzzableRequest(URL('http://w4af.com/?a=1'))
         created_mutants = FakeMutant.create_mutants(freq, [payload], [],
                                                     False, {})
 
@@ -136,11 +136,11 @@ class TestGetCleanBody(unittest.TestCase):
             payload = 'x%sy' % char
 
             body = 'abc %s def' % urllib.parse.quote_plus(payload)
-            url = URL('http://w3af.com')
+            url = URL('http://w4af.com')
             headers = Headers([('Content-Type', 'text/html')])
             response = HTTPResponse(200, body, headers, url, url, charset='utf-8')
 
-            freq = FuzzableRequest(URL('http://w3af.com/?a=1'))
+            freq = FuzzableRequest(URL('http://w4af.com/?a=1'))
             created_mutants = FakeMutant.create_mutants(freq, [payload], [],
                                                         False, {})
 
@@ -158,11 +158,11 @@ class TestGetCleanBody(unittest.TestCase):
         payload = ' '.join(SPECIAL_CHARS)
 
         body = 'abc %s def' % urllib.parse.quote_plus(payload)
-        url = URL('http://w3af.com')
+        url = URL('http://w4af.com')
         headers = Headers([('Content-Type', 'text/html')])
         response = HTTPResponse(200, body, headers, url, url)
 
-        freq = FuzzableRequest(URL('http://w3af.com/?a=1'))
+        freq = FuzzableRequest(URL('http://w4af.com/?a=1'))
         created_mutants = FakeMutant.create_mutants(freq, [payload], [],
                                                     False, {})
 

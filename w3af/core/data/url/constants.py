@@ -14,10 +14,10 @@ MAX_HTTP_RETRIES = 2
 #
 # I've found some websites that check the user-agent string, and don't allow you
 # to access if you don't have IE (mostly ASP.NET applications do this). So now
-# we use the following user-agent string in w3af:
+# we use the following user-agent string in w4af:
 #
 USER_AGENT = ('Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1;'
-              ' Trident/4.0; w3af.org)')
+              ' Trident/4.0; w4af.org)')
 
 # The error rate is multiplied by SOCKET_ERROR_DELAY to get the real delay time
 # in seconds.
@@ -31,7 +31,7 @@ ACCEPTABLE_ERROR_RATE = 5
 # the stats analysis only makes sense once every N requests:
 ERROR_DELAY_LIMIT = 5
 
-# When we start scanning a site and w3af is configured to use auto-adjustable
+# When we start scanning a site and w4af is configured to use auto-adjustable
 # timeouts we actually need *some* timeout to start from, this is the value:
 DEFAULT_TIMEOUT = 6
 
@@ -68,7 +68,7 @@ TIMEOUT_ADJUST_LIMIT = 15
 #
 #   timeout = average_response_time * TIMEOUT_MULT_CONST
 #
-# https://github.com/andresriancho/w3af/issues/8698
+# https://github.com/andresriancho/w4af/issues/8698
 TIMEOUT_MULT_CONST = 7.5
 
 # How much to increase the timeout setting after a timeout error has happen

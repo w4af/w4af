@@ -3,19 +3,19 @@ basic.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
@@ -23,25 +23,25 @@ import os
 
 import pytest
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.plugins.attack_plugin import AttackPlugin
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.controllers.plugins.auth_plugin import AuthPlugin
-from w3af.core.controllers.plugins.bruteforce_plugin import BruteforcePlugin
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.plugins.evasion_plugin import EvasionPlugin
-from w3af.core.controllers.plugins.grep_plugin import GrepPlugin
-from w3af.core.controllers.plugins.infrastructure_plugin import InfrastructurePlugin
-from w3af.core.controllers.plugins.mangle_plugin import ManglePlugin
-from w3af.core.controllers.plugins.output_plugin import OutputPlugin
+from w4af import ROOT_PATH
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.plugins.attack_plugin import AttackPlugin
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.controllers.plugins.auth_plugin import AuthPlugin
+from w4af.core.controllers.plugins.bruteforce_plugin import BruteforcePlugin
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.plugins.evasion_plugin import EvasionPlugin
+from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
+from w4af.core.controllers.plugins.infrastructure_plugin import InfrastructurePlugin
+from w4af.core.controllers.plugins.mangle_plugin import ManglePlugin
+from w4af.core.controllers.plugins.output_plugin import OutputPlugin
 
-from w3af.core.data.options.option_types import (
+from w4af.core.data.options.option_types import (
     BOOL, INT, FLOAT, STRING, URL, IPPORT, LIST,
     REGEX, COMBO, INPUT_FILE, OUTPUT_FILE, PORT, IP,
     QUERY_STRING, HEADER)
 
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
 
 PLUGIN_TYPES = {'attack': AttackPlugin,
                 'audit': AuditPlugin,
@@ -59,16 +59,16 @@ PLUGIN_TYPES = {'attack': AttackPlugin,
 class TestBasic(unittest.TestCase):
 
     def setUp(self):
-        self.w3afcore = w3afCore()
+        self.w4afcore = w4afCore()
 
-        self.plugin_types = self.w3afcore.plugins.get_plugin_types()
+        self.plugin_types = self.w4afcore.plugins.get_plugin_types()
         self.plugin_types += ['attack']
         self.plugins = {}
 
         for plugin_type in self.plugin_types:
             self.plugins[plugin_type] = []
-            for plugin_name in self.w3afcore.plugins.get_plugin_list(plugin_type):
-                plugin = self.w3afcore.plugins.get_plugin_inst(
+            for plugin_name in self.w4afcore.plugins.get_plugin_list(plugin_type):
+                plugin = self.w4afcore.plugins.get_plugin_inst(
                     plugin_type, plugin_name)
                 self.plugins[plugin_type].append(plugin)
 
@@ -105,12 +105,12 @@ class TestBasic(unittest.TestCase):
                     self.assertTrue(isinstance(dep, str))
                     plugin_type, plugin_name = dep.split('.')
 
-                    self.assertTrue(plugin_type in self.w3afcore.plugins.get_plugin_types())
+                    self.assertTrue(plugin_type in self.w4afcore.plugins.get_plugin_types())
 
                     msg = '%s is not of type %s in %s plugin dependency.' % (
                         plugin_name, plugin_type, plugin)
                     self.assertIn(plugin_name,
-                                  self.w3afcore.plugins.get_plugin_list(plugin_type),
+                                  self.w4afcore.plugins.get_plugin_list(plugin_type),
                                   msg)
 
     def test_plugin_desc(self):
@@ -140,8 +140,8 @@ class TestBasic(unittest.TestCase):
             plugin.get_root_probability()
 
     def test_plugin_type_description(self):
-        for plugin_type in self.w3afcore.plugins.get_plugin_types():
-            self.w3afcore.plugins.get_plugin_type_desc(plugin_type)
+        for plugin_type in self.w4afcore.plugins.get_plugin_types():
+            self.w4afcore.plugins.get_plugin_type_desc(plugin_type)
 
     def test_no_kb_access_from_plugin(self):
         audit_path = os.path.join(ROOT_PATH, 'plugins', 'audit')

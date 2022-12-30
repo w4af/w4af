@@ -3,37 +3,37 @@ clusterTable.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import threading
 
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
-from w3af.core.ui.gui import helpers, entries
+from w4af.core.ui.gui import helpers, entries
 
 
 # The clustering stuff
 from cluster import HierarchicalClustering
 
-from w3af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.url.HTTPResponse import HTTPResponse
 
 
 class ClusterCellWindow(entries.RememberingWindow):
 
-    def __init__(self, w3af, data=[]):
+    def __init__(self, w4af, data=[]):
         """
         A window that stores the clusterCellData and the level changer.
 
@@ -41,7 +41,7 @@ class ClusterCellWindow(entries.RememberingWindow):
         """
         # First we save the data
         self._data = data
-        self.w3af = w3af
+        self.w4af = w4af
         self._cl_data_widget = None
 
         # The level used in the process of clustering
@@ -49,7 +49,7 @@ class ClusterCellWindow(entries.RememberingWindow):
 
         # Create a new window
         super(ClusterCellWindow, self).__init__(
-            w3af, "clusterWindow", "w3af - HTTP Response Clustering",
+            w4af, "clusterWindow", "w4af - HTTP Response Clustering",
             "cluster")
         self.set_size_request(400, 400)
 
@@ -456,7 +456,7 @@ def main():
 
 if __name__ == "__main__":
 
-    from w3af.core.data.parsers.doc.url import URL
+    from w4af.core.data.parsers.doc.url import URL
     url_instance = URL('http://a/index.html')
 
     #    We create the data

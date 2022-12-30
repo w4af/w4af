@@ -3,19 +3,19 @@ find_dvcs.py
 
 Copyright 2011 Adam Baldwin
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,17 +24,17 @@ import struct
 import sqlite3
 import tempfile
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
-from w3af.core.controllers.misc.temp_dir import get_temp_dir
-from w3af.core.data.misc.encoding import smart_unicode
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.kb.vuln import Vuln
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.core_helpers.fingerprint_404 import is_404
+from w4af.core.controllers.misc.temp_dir import get_temp_dir
+from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.kb.vuln import Vuln
 
 
 class DVCSTest(object):
@@ -350,7 +350,7 @@ class find_dvcs(CrawlPlugin):
         """
         filenames = set()
 
-        temp_db = tempfile.NamedTemporaryFile(prefix='w3af-find-dvcs-',
+        temp_db = tempfile.NamedTemporaryFile(prefix='w4af-find-dvcs-',
                                               suffix='-wc.db',
                                               delete=False,
                                               dir=get_temp_dir())
@@ -485,19 +485,19 @@ class find_dvcs(CrawlPlugin):
         This plugin search git, hg, bzr, svn or cvs repositories and checks for files containing.
 
         For example, if the input is:
-            - http://host.tld/w3af/index.php
+            - http://host.tld/w4af/index.php
 
         The plugin will perform requests to:
-            - http://host.tld/w3af/.git/index
-            - http://host.tld/w3af/.gitignore
-            - http://host.tld/w3af/.hg/store/fncache
-            - http://host.tld/w3af/.hgignore
-            - http://host.tld/w3af/.bzr/checkout/dirstate
-            - http://host.tld/w3af/.bzrignore
-            - http://host.tld/w3af/.svn/entries
-            - http://host.tld/w3af/.svnignore
-            - http://host.tld/w3af/CVS/Entries
-            - http://host.tld/w3af/.cvsignore
+            - http://host.tld/w4af/.git/index
+            - http://host.tld/w4af/.gitignore
+            - http://host.tld/w4af/.hg/store/fncache
+            - http://host.tld/w4af/.hgignore
+            - http://host.tld/w4af/.bzr/checkout/dirstate
+            - http://host.tld/w4af/.bzrignore
+            - http://host.tld/w4af/.svn/entries
+            - http://host.tld/w4af/.svnignore
+            - http://host.tld/w4af/CVS/Entries
+            - http://host.tld/w4af/.cvsignore
             - http://host.tld/.git/index
             - http://host.tld/.gitignore
             - http://host.tld/.hg/store/fncache

@@ -6,7 +6,7 @@
     "description": "A model that is defined by another model",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
-      "name": "w3af API Team"
+      "name": "w4af API Team"
     },
     "license": {
       "name": "MIT"

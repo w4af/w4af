@@ -3,19 +3,19 @@ info.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,16 +24,16 @@ import uuid
 
 from vulndb import DBVuln
 
-import w3af.core.data.kb.config as cf
+import w4af.core.data.kb.config as cf
 
-from w3af.core.data.constants.severity import INFORMATION
-from w3af.core.data.fuzzer.mutants.mutant import Mutant
-from w3af.core.data.fuzzer.mutants.empty_mutant import EmptyMutant
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.constants.vulns import is_valid_name, VULNS
-from w3af.core.controllers.tests.running_tests import is_running_tests
-from w3af.core.controllers.ci.constants import ARTIFACTS_DIR
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.constants.severity import INFORMATION
+from w4af.core.data.fuzzer.mutants.mutant import Mutant
+from w4af.core.data.fuzzer.mutants.empty_mutant import EmptyMutant
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.constants.vulns import is_valid_name, VULNS
+from w4af.core.controllers.tests.running_tests import is_running_tests
+from w4af.core.controllers.ci.constants import ARTIFACTS_DIR
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 class Info(dict):
@@ -228,8 +228,8 @@ class Info(dict):
         if not is_running_tests():
             return
 
-        from w3af.core.data.kb.tests.test_info import MockInfo
-        from w3af.core.data.kb.tests.test_vuln import MockVuln
+        from w4af.core.data.kb.tests.test_info import MockInfo
+        from w4af.core.data.kb.tests.test_vuln import MockVuln
 
         if isinstance(self, (MockVuln, MockInfo)):
             return

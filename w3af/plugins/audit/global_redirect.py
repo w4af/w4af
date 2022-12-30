@@ -3,33 +3,33 @@ global_redirect.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
 
-import w3af.core.data.constants.severity as severity
-import w3af.core.data.parsers.parser_cache as parser_cache
+import w4af.core.data.constants.severity as severity
+import w4af.core.data.parsers.parser_cache as parser_cache
 
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.plugins.audit_plugin import AuditPlugin
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
+from w4af.core.data.misc.encoding import smart_unicode
 
 def compile_expressions(regexp_list, domain):
     return [re.compile(r % domain) for r in regexp_list]
@@ -39,7 +39,7 @@ class global_redirect(AuditPlugin):
     Find scripts that redirect the browser to any site.
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
-    TEST_DOMAIN = 'w3af.org'
+    TEST_DOMAIN = 'w4af.org'
 
     EXTENDED_PAYLOADS = None
     BASIC_PAYLOADS = {'http://www.%s/' % TEST_DOMAIN,
@@ -136,7 +136,7 @@ class global_redirect(AuditPlugin):
         """
         Create payloads based on the fuzzable request
 
-        Note that the payloads will be the same during the whole scan because w3af
+        Note that the payloads will be the same during the whole scan because w4af
         only scans one domain at the time, and the extended payloads are based on
         the host header of the fuzzable request.
 
@@ -298,21 +298,21 @@ class global_redirect(AuditPlugin):
         Test for JavaScript redirects, these are some common redirects:
 
             // These also work without the `window.` at the beginning
-            window.location = "http://www.w3af.org/";
-            window.location.href = "http://www.w3af.org/";
-            window.location.replace("http://www.w3af.org");
-            window.location.assign('http://www.w3af.org');
+            window.location = "http://www.w4af.org/";
+            window.location.href = "http://www.w4af.org/";
+            window.location.replace("http://www.w4af.org");
+            window.location.assign('http://www.w4af.org');
 
-            self.location = 'http://www.w3af.org';
-            top.location = 'http://www.w3af.org';
+            self.location = 'http://www.w4af.org';
+            top.location = 'http://www.w4af.org';
 
             // jQuery
-            $(location).attr('href', 'http://www.w3af.org');
-            $(window).attr('location', 'http://www.w3af.org');
-            $(location).prop('href', 'http://www.w3af.org');
+            $(location).attr('href', 'http://www.w4af.org');
+            $(window).attr('location', 'http://www.w4af.org');
+            $(location).prop('href', 'http://www.w4af.org');
 
             // Only for old IE
-            window.navigate('http://www.w3af.org');
+            window.navigate('http://www.w4af.org');
         """
         for statement in self._extract_script_code(response):
             if self.TEST_DOMAIN not in statement:

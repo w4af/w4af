@@ -4,19 +4,19 @@ connections.py
 
 Copyright 2019 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import threading
@@ -33,9 +33,9 @@ import OpenSSL
 from .http_response import HTTPResponse
 from .utils import debug
 
-from w3af.core.controllers.exceptions import HTTPRequestException
-from w3af.core.data.url.openssl_wrapper.ssl_wrapper import wrap_socket
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.controllers.exceptions import HTTPRequestException
+from w4af.core.data.url.openssl_wrapper.ssl_wrapper import wrap_socket
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class UniqueID(object):
@@ -72,9 +72,9 @@ class _HTTPConnection(http.client.HTTPConnection, UniqueID):
         Connect to the host and port specified in __init__ , overriding to set
         the socket options which should allow us to avoid issues like:
 
-            https://github.com/andresriancho/w3af/issues/11359
+            https://github.com/andresriancho/w4af/issues/11359
 
-        In systems that are running many instances of w3af and/or other network
+        In systems that are running many instances of w4af and/or other network
         intensive software.
         """
         self.sock = create_connection((self.host, self.port),
@@ -101,7 +101,7 @@ def create_connection(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
             sock = socket.socket(af, socktype, proto)
 
             # This is what I've added to the create_connection function
-            # https://github.com/andresriancho/w3af/issues/11359
+            # https://github.com/andresriancho/w4af/issues/11359
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
             if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
@@ -207,7 +207,7 @@ class SSLNegotiatorConnection(http.client.HTTPSConnection, UniqueID):
 
     References:
         http://bugs.python.org/msg128686
-        https://github.com/andresriancho/w3af/issues/5802
+        https://github.com/andresriancho/w4af/issues/5802
         https://gist.github.com/flandr/74be22d1c3d7c1dfefdd
     """
     def __init__(self, *args, **kwargs):

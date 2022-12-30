@@ -1,7 +1,7 @@
 import re
 
-from w3af.plugins.attack.payloads.base_payload import Payload
-from w3af.core.ui.console.tables import table
+from w4af.plugins.attack.payloads.base_payload import Payload
+from w4af.core.ui.console.tables import table
 
 
 class mysql_config_directory(Payload):

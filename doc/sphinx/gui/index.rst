@@ -2,16 +2,16 @@ GUI Introduction
 ================
 
 This documentation section is a user guide for the Graphical User Interface for
-Web Application Attack and Audit Framework (w3af), its goal is to provide a
+Web Application Attack and Audit Framework (w4af), its goal is to provide a
 basic overview of how to use the application, how it works, and what you can do
 with it.
 
-We recommend you read through the `w3af users guide <http://docs.w3af.org/>`_
+We recommend you read through the `w4af users guide <http://docs.w4af.org/>`_
 before diving into this GUI-specific section.
 
  .. image:: images/gui-screenshot-main.png
    :scale: 80 %                                   
-   :target: https://github.com/andresriancho/w3af/
+   :target: https://github.com/andresriancho/w4af/
    :alt: GUI screenshot
 
 

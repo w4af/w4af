@@ -51,7 +51,7 @@ copyright = '2022, w4af team'
 # built documents.
 #
 # The short X.Y version.
-with open('../../w3af/core/data/constants/version.txt', encoding='utf-8', errors='replace') as versionfile:
+with open('../../w4af/core/data/constants/version.txt', encoding='utf-8', errors='replace') as versionfile:
      version = versionfile.read()
 # The full version, including alpha/beta/rc tags.
 release = version
@@ -172,7 +172,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'w3af-Webapplicationattackandauditframeworkdoc'
+htmlhelp_basename = 'w4af-Webapplicationattackandauditframeworkdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -192,7 +192,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'w3af-Webapplicationattackandauditframework.tex', 'w3af - Web application attack and audit framework Documentation',
+  ('index', 'w4af-Webapplicationattackandauditframework.tex', 'w4af - Web application attack and audit framework Documentation',
    'Andres Riancho', 'manual'),
 ]
 
@@ -222,7 +222,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'w3af-webapplicationattackandauditframework', 'w3af - Web application attack and audit framework Documentation',
+    ('index', 'w4af-webapplicationattackandauditframework', 'w4af - Web application attack and audit framework Documentation',
      ['Andres Riancho'], 1)
 ]
 
@@ -236,8 +236,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'w3af-Webapplicationattackandauditframework', 'w3af - Web application attack and audit framework Documentation',
-   'Andres Riancho', 'w3af-Webapplicationattackandauditframework', 'Web application security scanner',
+  ('index', 'w4af-Webapplicationattackandauditframework', 'w4af - Web application attack and audit framework Documentation',
+   'Andres Riancho', 'w4af-Webapplicationattackandauditframework', 'Web application security scanner',
    'Miscellaneous'),
 ]
 

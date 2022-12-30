@@ -3,19 +3,19 @@ test_spiderman.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
@@ -25,11 +25,11 @@ import urllib.request, urllib.error, urllib.parse
 
 from multiprocessing.dummy import Process
 
-from w3af.core.controllers.misc.get_unused_port import get_unused_port
-from w3af.core.controllers.ci.moth import get_moth_http, get_moth_https
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.plugins.crawl.spider_man import TERMINATE_URL
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.controllers.misc.get_unused_port import get_unused_port
+from w4af.core.controllers.ci.moth import get_moth_http, get_moth_https
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.plugins.crawl.spider_man import TERMINATE_URL
+from w4af.core.data.misc.encoding import smart_unicode
 
 BROWSE_URLS = (
     ('GET', '/audit/', None),
@@ -142,7 +142,7 @@ class TestSpiderman(PluginTest):
         for index, e_response in enumerate(expected_response_contents):
             self.assertIn(e_response, smart_unicode(responses[index]))
 
-        # w3af needs to know about the browsed URLs
+        # w4af needs to know about the browsed URLs
         kb_urls = [u.uri2url().url_string for u in kb_urls]
         for _, e_url, _ in BROWSE_URLS:
             self.assertIn(url_resolver(e_url), kb_urls)

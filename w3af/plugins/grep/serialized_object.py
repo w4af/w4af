@@ -3,19 +3,19 @@ serialized_object.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,17 +25,17 @@ import itertools
 
 from collections import deque
 
-import w3af.core.data.constants.severity as severity
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.plugins.grep_plugin import GrepPlugin
-from w3af.core.data.misc.encoding import smart_str_ignore
-from w3af.core.data.misc.base64_nopadding import maybe_decode_base64
-from w3af.core.data.dc.cookie import Cookie
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.kb.info_set import InfoSet
-from w3af.core.data.dc.factory import dc_from_hdrs_post
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
+from w4af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.data.misc.base64_nopadding import maybe_decode_base64
+from w4af.core.data.dc.cookie import Cookie
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.kb.info_set import InfoSet
+from w4af.core.data.dc.factory import dc_from_hdrs_post
+from w4af.core.data.misc.encoding import smart_unicode
 
 class serialized_object(GrepPlugin):
     """

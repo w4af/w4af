@@ -1,7 +1,7 @@
 import os
 
 from jinja2 import Environment, FileSystemLoader
-from w3af import ROOT_PATH
+from w4af import ROOT_PATH
 
 
 def render(template_name, context):

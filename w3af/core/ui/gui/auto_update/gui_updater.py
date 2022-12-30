@@ -3,36 +3,36 @@ gui_updater.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from gi.repository import Gtk as gtk
 
-from w3af.core.ui.gui.constants import W3AF_ICON
-from w3af.core.ui.gui import entries
+from w4af.core.ui.gui.constants import w4af_ICON
+from w4af.core.ui.gui import entries
 
-from w3af.core.controllers.auto_update.version_manager import VersionMgr
-from w3af.core.controllers.auto_update.ui_wrapper import UIUpdater
-from w3af.core.controllers.auto_update.utils import to_short_id, get_commit_id_date
+from w4af.core.controllers.auto_update.version_manager import VersionMgr
+from w4af.core.controllers.auto_update.ui_wrapper import UIUpdater
+from w4af.core.controllers.auto_update.utils import to_short_id, get_commit_id_date
 
 
 def ask(msg):
     dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
                             gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, msg)
-    dlg.set_icon_from_file(W3AF_ICON)
+    dlg.set_icon_from_file(w4af_ICON)
     opt = dlg.run()
     dlg.destroy()
     return opt == gtk.RESPONSE_YES
@@ -41,7 +41,7 @@ def ask(msg):
 def notify(msg):
     dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
                             gtk.MESSAGE_QUESTION, gtk.BUTTONS_OK, msg)
-    dlg.set_icon_from_file(W3AF_ICON)
+    dlg.set_icon_from_file(w4af_ICON)
     dlg.run()
     dlg.destroy()
         
@@ -61,7 +61,7 @@ class GUIUpdater(UIUpdater):
         self._register(
             VersionMgr.ON_UPDATE_ADDED_DEP,
             notify,
-            _('New dependencies added, please restart w3af.')
+            _('New dependencies added, please restart w4af.')
         )
         
         #
@@ -108,7 +108,7 @@ class GUIUpdater(UIUpdater):
         ldate = get_commit_id_date(local_commit_id)
         rdate = get_commit_id_date(remote_commit_id)
         
-        report = 'The following changes were applied to the local w3af'\
+        report = 'The following changes were applied to the local w4af'\
                  ' installation during the last update from %s (%s) to'\
                  ' %s (%s):\n\n%s'
         
@@ -122,7 +122,7 @@ class GUIUpdater(UIUpdater):
             if changelog.get_changes():
 
                 dlg = entries.TextDialog("Update report",
-                                         icon=W3AF_ICON)
+                                         icon=w4af_ICON)
                 dlg.add_message(self._generate_report(changelog,
                                                       local_commit_id,
                                                       remote_commit_id))

@@ -3,19 +3,19 @@ helper.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
@@ -32,24 +32,24 @@ import httpretty
 
 from functools import wraps
 
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.misc.home_dir import W3AF_LOCAL_PATH
-from w3af.core.controllers.misc.decorators import retry
-from w3af.core.controllers.misc_settings import MiscSettings
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import URL_LIST
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.kb.read_shell import ReadShell
-from w3af.core.data.kb.info_set import InfoSet
-from w3af.core.data.misc.encoding import smart_str
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.misc.home_dir import w4af_LOCAL_PATH
+from w4af.core.controllers.misc.decorators import retry
+from w4af.core.controllers.misc_settings import MiscSettings
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import URL_LIST
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.kb.read_shell import ReadShell
+from w4af.core.data.kb.info_set import InfoSet
+from w4af.core.data.misc.encoding import smart_str
 
 
-os.chdir(W3AF_LOCAL_PATH)
+os.chdir(w4af_LOCAL_PATH)
 RE_COMPILE_TYPE = type(re.compile(''))
 
 
@@ -63,7 +63,7 @@ class PluginTest(unittest.TestCase):
 
     For example:
 
-        HTTP_PROXY=127.0.0.1:8080 nosetests -s w3af/plugins/tests/infrastructure/test_allowed_methods.py
+        HTTP_PROXY=127.0.0.1:8080 nosetests -s w4af/plugins/tests/infrastructure/test_allowed_methods.py
 
     Remember that nosetests can't find test generators in unittest.TestCase,
     http://stackoverflow.com/questions/6689537/nose-test-generators-inside-class
@@ -77,7 +77,7 @@ class PluginTest(unittest.TestCase):
 
     def setUp(self):
         self.kb.cleanup()
-        self.w3afcore = w3afCore()
+        self.w4afcore = w4afCore()
         self.misc_settings = MiscSettings()
 
         self.request_callback_call_count = 0
@@ -118,7 +118,7 @@ class PluginTest(unittest.TestCase):
                                    body=self.__internal_request_callback)
 
     def tearDown(self):
-        self.w3afcore.quit()
+        self.w4afcore.quit()
         self.kb.cleanup()
         self.assert_all_get_desc_work()
 
@@ -283,12 +283,12 @@ class PluginTest(unittest.TestCase):
             self._verify_targets_up(target)
         
         target_opts = create_target_option_list_with_os(target_os, *target)
-        self.w3afcore.target.set_options(target_opts)
+        self.w4afcore.target.set_options(target_opts)
 
     def _set_enabled_plugins(self, plugins):
         # Enable plugins to be tested
         for ptype, plugincfgs in list(plugins.items()):
-            self.w3afcore.plugins.set_plugins([p.name for p in plugincfgs],
+            self.w4afcore.plugins.set_plugins([p.name for p in plugincfgs],
                                               ptype)
 
             for pcfg in plugincfgs:
@@ -296,7 +296,7 @@ class PluginTest(unittest.TestCase):
                 if pcfg.name == 'all':
                     continue
 
-                plugin_instance = self.w3afcore.plugins.get_plugin_inst(ptype,
+                plugin_instance = self.w4afcore.plugins.get_plugin_inst(ptype,
                                                                         pcfg.name)
                 default_option_list = plugin_instance.get_options()
                 unit_test_options = pcfg.options
@@ -305,7 +305,7 @@ class PluginTest(unittest.TestCase):
                     if option.get_name() not in unit_test_options:
                         unit_test_options.add(option)
 
-                self.w3afcore.plugins.set_plugin_options(ptype, pcfg.name,
+                self.w4afcore.plugins.set_plugin_options(ptype, pcfg.name,
                                                          unit_test_options)
 
     def _set_output_manager(self, debug):
@@ -318,7 +318,7 @@ class PluginTest(unittest.TestCase):
         # Set a special user agent to be able to grep the logs and identify
         # requests sent by each test
         custom_test_agent = self.get_custom_agent()
-        self.w3afcore.uri_opener.settings.set_user_agent(custom_test_agent)
+        self.w4afcore.uri_opener.settings.set_user_agent(custom_test_agent)
 
     def _set_misc_settings(self, misc_settings):
         if misc_settings is None:
@@ -333,9 +333,9 @@ class PluginTest(unittest.TestCase):
 
     def _init_and_start(self, assert_exceptions):
         # Verify env and start the scan
-        self.w3afcore.plugins.init_plugins()
-        self.w3afcore.verify_environment()
-        self.w3afcore.start()
+        self.w4afcore.plugins.init_plugins()
+        self.w4afcore.verify_environment()
+        self.w4afcore.start()
 
         #
         # I want to make sure that we don't have *any hidden* exceptions in our
@@ -344,7 +344,7 @@ class PluginTest(unittest.TestCase):
         # exceptions in the scan and they were hidden.
         #
         if assert_exceptions:
-            caught_exceptions = self.w3afcore.exception_handler.get_all_exceptions()
+            caught_exceptions = self.w4afcore.exception_handler.get_all_exceptions()
             tracebacks = [e.get_details() for e in caught_exceptions]
             self.assertEqual(len(caught_exceptions), 0, tracebacks)
 
@@ -411,7 +411,7 @@ class PluginTest(unittest.TestCase):
         """
         :return: The test agent for easier log grep
         """
-        return 'Mozilla/4.0 (compatible; w3af.org; TestCase: %s)' % self.id()
+        return 'Mozilla/4.0 (compatible; w4af.org; TestCase: %s)' % self.id()
 
     def _formatMessage(self, msg, standardMsg):
         """Honour the longMessage attribute when generating failure messages.
@@ -437,9 +437,9 @@ class PluginTest(unittest.TestCase):
         ptype = 'output'
         pname = 'text_file'
 
-        enabled_output = self.w3afcore.plugins.get_enabled_plugins(ptype)
+        enabled_output = self.w4afcore.plugins.get_enabled_plugins(ptype)
         enabled_output += [pname]
-        self.w3afcore.plugins.set_plugins(enabled_output, ptype)
+        self.w4afcore.plugins.set_plugins(enabled_output, ptype)
 
         # Now we configure the output file to point to CircleCI's artifact
         # directory (when run on circle) and /tmp/ when run on our
@@ -449,7 +449,7 @@ class PluginTest(unittest.TestCase):
         text_output = os.path.join(output_dir, 'output-%s.txt' % rnd)
         http_output = os.path.join(output_dir, 'output-http-%s.txt' % rnd)
 
-        text_file_inst = self.w3afcore.plugins.get_plugin_inst(ptype, pname)
+        text_file_inst = self.w4afcore.plugins.get_plugin_inst(ptype, pname)
 
         default_opts = text_file_inst.get_options()
         default_opts['output_file'].set_value(text_output)
@@ -458,7 +458,7 @@ class PluginTest(unittest.TestCase):
 
         print('Logging to %s' % text_output)
 
-        self.w3afcore.plugins.set_plugin_options(ptype, pname, default_opts)
+        self.w4afcore.plugins.set_plugin_options(ptype, pname, default_opts)
 
 
 class PluginConfig(object):
@@ -489,8 +489,8 @@ class PluginConfig(object):
 
 class ReadExploitTest(PluginTest):
     def _exploit_vuln(self, vuln_to_exploit_id, exploit_plugin):
-        self.w3afcore.uri_opener.set_exploit_mode(True)
-        plugin = self.w3afcore.plugins.get_plugin_inst('attack', exploit_plugin)
+        self.w4afcore.uri_opener.set_exploit_mode(True)
+        plugin = self.w4afcore.plugins.get_plugin_inst('attack', exploit_plugin)
 
         self.assertTrue(plugin.can_exploit(vuln_to_exploit_id))
 

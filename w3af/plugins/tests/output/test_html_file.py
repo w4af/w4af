@@ -3,19 +3,19 @@ test_html_file.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
@@ -25,14 +25,14 @@ from io import StringIO
 
 from lxml import etree
 
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.data.kb.tests.test_vuln import MockVuln
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.db.history import HistoryItem
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.url.HTTPRequest import HTTPRequest
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.data.kb.tests.test_vuln import MockVuln
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.db.history import HistoryItem
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.url.HTTPRequest import HTTPRequest
 
 
 @pytest.mark.moth
@@ -127,8 +127,8 @@ class TestHTMLOutput(PluginTest):
 
 class TestHTMLRendering(PluginTest):
 
-    CONTEXT = {'target_urls': ['http://w3af.com/', 'http://w3af.com/blog'],
-               'target_domain': 'w3af.com',
+    CONTEXT = {'target_urls': ['http://w4af.com/', 'http://w4af.com/blog'],
+               'target_domain': 'w4af.com',
                'enabled_plugins': {'audit': ['xss'],
                                    'crawl': ['web_spider']},
                'findings': [MockVuln('SQL injection', None, 'High', 1, 'sqli'),
@@ -138,18 +138,18 @@ class TestHTMLRendering(PluginTest):
                'debug_log': [('Fri Mar 13 14:11:58 2015', 'debug', 'Log 1' * 40),
                              ('Fri Mar 13 14:11:59 2015', 'debug', 'Log 2'),
                              ('Fri Mar 13 14:11:59 2015', 'error', 'Log 3' * 5)],
-               'known_urls': [URL('http://w3af.com'),
-                              URL('http://w3af.com/blog'),
-                              URL('http://w3af.com/oss')]}
+               'known_urls': [URL('http://w4af.com'),
+                              URL('http://w4af.com/blog'),
+                              URL('http://w4af.com/oss')]}
 
     def setUp(self):
         super(TestHTMLRendering, self).setUp()
-        self.plugin = self.w3afcore.plugins.get_plugin_inst('output',
+        self.plugin = self.w4afcore.plugins.get_plugin_inst('output',
                                                             'html_file')
 
         HistoryItem().init()
 
-        url = URL('http://w3af.com/a/b/c.php')
+        url = URL('http://w4af.com/a/b/c.php')
         request = HTTPRequest(url, data='a=1')
         hdr = Headers([('Content-Type', 'text/html')])
         res = HTTPResponse(200, '<html>', hdr, url, url)
@@ -159,7 +159,7 @@ class TestHTMLRendering(PluginTest):
         h1.response = res
         h1.save()
 
-        url = URL('http://w3af.com/foo.py')
+        url = URL('http://w4af.com/foo.py')
         request = HTTPRequest(url, data='text=xss')
         hdr = Headers([('Content-Type', 'text/html')])
         res = HTTPResponse(200, '<html>empty</html>', hdr, url, url)

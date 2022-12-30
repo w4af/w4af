@@ -1,7 +1,7 @@
 The ``/traffic/`` resource
 ==========================
 
-Once a ``w3af`` scan starts the plugins send HTTP requests which get stored in
+Once a ``w4af`` scan starts the plugins send HTTP requests which get stored in
 an internal database. HTTP requests and responses associated with a vulnerability
 can be accessed using the REST API at ``/scans/<scan-id>/traffic/<traffic-id>``.
 

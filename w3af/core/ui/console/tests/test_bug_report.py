@@ -3,19 +3,19 @@ test_bug_report.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
@@ -25,13 +25,13 @@ import shutil
 from github import Github
 import pytest
 
-from w3af import ROOT_PATH
-from w3af.core.ui.console.console_ui import ConsoleUI
-from w3af.core.ui.console.tests.helper import ConsoleTestHelper
+from w4af import ROOT_PATH
+from w4af.core.ui.console.console_ui import ConsoleUI
+from w4af.core.ui.console.tests.helper import ConsoleTestHelper
 
-from w3af.core.controllers.misc.file_lock import FileLock
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.controllers.easy_contribution.github_issues import OAUTH_TOKEN
+from w4af.core.controllers.misc.file_lock import FileLock
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.controllers.easy_contribution.github_issues import OAUTH_TOKEN
 
 
 @pytest.mark.moth
@@ -109,7 +109,7 @@ class TestConsoleBugReport(ConsoleTestHelper):
         self.console = ConsoleUI(commands=commands_to_run, do_upd=False)
         self.console.sh()
 
-        caught_exceptions = self.console._w3af.exception_handler.get_all_exceptions()
+        caught_exceptions = self.console._w4af.exception_handler.get_all_exceptions()
         self.assertEqual(len(caught_exceptions), 1, self._mock_stdout.messages)
         
         assert_result, msg = self.startswith_expected_in_output(expected)
@@ -120,7 +120,7 @@ class TestConsoleBugReport(ConsoleTestHelper):
         self.assertFalse(found_errors)
         
         # Clear the exceptions, we don't need them anymore.
-        self.console._w3af.exception_handler.clear()
+        self.console._w4af.exception_handler.clear()
         
         # Close issue from github
         issue_id_re = re.compile(r'https://github.com/w4af/w4af/issues/(\d*)')

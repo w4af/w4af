@@ -1,14 +1,14 @@
 # Scan log analysis
 The `scan_log_analysis.py` tool provides a quick way to analyze the *debug* logs of a scan.
 
-This document explains what this tool shows, a little bit of `w3af` internals are required
+This document explains what this tool shows, a little bit of `w4af` internals are required
 to understand the results, so please read the documentation and maybe even the source code
 to fully understand the results.
 
 # Running the tool
 
 ```
-python w3af/core/controllers/profiling/scan_log_analysis.py scan-log.txt
+python w4af/core/controllers/profiling/scan_log_analysis.py scan-log.txt
 ```
 
 You might have to install a few `pip` dependencies, but installation should be trivial.
@@ -30,7 +30,7 @@ The scan finished without errors / exceptions.
 ```
 
 If any errors were found during the scan, they are shown in this section. Zero errors
-is what we aim for, but a few errors in this output are also acceptable as `w3af` will
+is what we aim for, but a few errors in this output are also acceptable as `w4af` will
 most likely recover from them.
 
 ## Thread wall time
@@ -43,7 +43,7 @@ Wall time used by threads:
     output() took 10 seconds
 ```
 
-This shows how much time was used to run different plugins in w3af. Please note a few things:
+This shows how much time was used to run different plugins in w4af. Please note a few things:
 
  * The scan finished in ~3 minutes and audit() run for ~27 minutes. This is possible because there are multiple threads
    running audit() at the same time. This is called "wall time".
@@ -100,7 +100,7 @@ RTT Histogram
 Socket timeout over time
 ```
 
-Shows an histogram of how much time did `w3af` wait for HTTP responses. A graph like the one above tells us that
+Shows an histogram of how much time did `w4af` wait for HTTP responses. A graph like the one above tells us that
 most of the responses (around 1741) were answered in a very short time (around 0.1 seconds) and only very few
 responses took more than 1.81 seconds.
 
@@ -137,8 +137,8 @@ High counts of RTTs indicates that the remote server is slow.
            | 1515788729.000001515788748.000001515788767.000001515788786.000001515788805.000001515788824.000001515788843.000001515788862.000001515788881.000001515788900.00000
 ```
 
-`w3af` creates a lot of TCP/IP connections to send HTTP requests. These connections have a timeout: if the remote end
-fails to respond to the request in that time, the connection is closed. When the connection timeout is reached, `w3af`
+`w4af` creates a lot of TCP/IP connections to send HTTP requests. These connections have a timeout: if the remote end
+fails to respond to the request in that time, the connection is closed. When the connection timeout is reached, `w4af`
 increases the timeout for the next connections. When many connections succeed and don't reach the timeout, it is lowered.
 
 Increasing timeouts (like the one shown above) are bad.
@@ -177,8 +177,8 @@ Time waited for worker threads for an available TCP/IP connection
            | 1515719170.000001515719327.111111515719484.222221515719641.333331515719798.444441515719955.555561515720112.666671515720269.777781515720426.888891515720584.00000
 ```
 
-`w3af` has a per-host TCP/IP connection pool. When a connection is in use, it can't be used by any other thread.
-`w3af` uses threads for sending HTTP requests. If there are too many threads and the connection pool is too small,
+`w4af` has a per-host TCP/IP connection pool. When a connection is in use, it can't be used by any other thread.
+`w4af` uses threads for sending HTTP requests. If there are too many threads and the connection pool is too small,
 the threads need to wait a lot of time for an available connection, these waits will delay the scan.
 
 Increasing the connection pool size is not recommended since it can flood the remote server. At the moment the connection
@@ -263,7 +263,7 @@ they should show the same data here.
            | 1515788730.000001515788748.888891515788767.777781515788786.666671515788805.555561515788824.444441515788843.333331515788862.222221515788881.111111515788900.00000
 ```
 
-`w3af` implements a job queue to process HTTP requests and responses in grep plugins. Different parts of the framework
+`w4af` implements a job queue to process HTTP requests and responses in grep plugins. Different parts of the framework
 add tasks to this job queue, and grep plugins read from it.
 
 The job queue size is shown in this graph.
@@ -374,9 +374,9 @@ In this case we see that the crawl plugins run pretty fast, quickly reducing the
            | 1515788727.000001515788746.222221515788765.444441515788784.666671515788803.888891515788823.111111515788842.333331515788861.555561515788880.777781515788900.00000
 ```
 
-`w3af` runs worker threads to send HTTP requests and perform other tasks.
+`w4af` runs worker threads to send HTTP requests and perform other tasks.
 
-This graph shows the number of worker threads used by `w3af`. The number of threads is adjusted based on the error rate
+This graph shows the number of worker threads used by `w4af`. The number of threads is adjusted based on the error rate
 generated by the HTTP client. Less errors increase the worker pool size, more errors reduce it.
 
 Ideally we would have an ever increasing line.
@@ -410,7 +410,7 @@ Ideally we would have an ever increasing line.
            | 1515788728.000001515788747.111111515788766.222221515788785.333331515788804.444441515788823.555561515788842.666671515788861.777781515788880.888891515788900.00000
 ```
 
-Shows how many threads are in use by `w3af`, this shows threads used by:
+Shows how many threads are in use by `w4af`, this shows threads used by:
  * Worker pool
  * audit pool
  * crawl pool
@@ -426,7 +426,7 @@ These consumers were join()'ed
 ```
 
 In specific times during the scan the consumers are asked to stop working. For example, after no more URLs are found
-the `CrawlInfra` consumer is asked to stop by the `w3af` core. These lines show how much time the core had to wait
+the `CrawlInfra` consumer is asked to stop by the `w4af` core. These lines show how much time the core had to wait
 for the consumer to actually stop.
 
 We expect:

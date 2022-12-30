@@ -2,7 +2,7 @@ Common use cases
 ================
 Due to the multiple configuration settings the framework has it's sometimes difficult
 to find how to perform a specific task, this page explains how to perform some common
-use cases using w3af.
+use cases using w4af.
 
 Scanning only one directory
 ---------------------------
@@ -25,4 +25,4 @@ scan it's possible to use the ``output.export_requests`` plugin which will write
 the URLs to a user configured file.
 
 Loading the saved data is achieved using the ``import_results`` plugin, which
-reads all the information and feeds it into w3af's core.
+reads all the information and feeds it into w4af's core.

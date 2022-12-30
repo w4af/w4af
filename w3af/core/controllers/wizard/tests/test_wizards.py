@@ -3,19 +3,19 @@ test_wizards.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,11 +23,11 @@ import os
 
 import pytest
 
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.misc.factory import factory
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.options.bool_option import BoolOption
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.misc.factory import factory
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.options.bool_option import BoolOption
 
 
 class test_wizards(object):
@@ -36,21 +36,21 @@ class test_wizards(object):
 
     @pytest.mark.smoke
     def test_all_wizards(self):
-        mod = 'w3af.core.controllers.wizard.wizards.%s'
-        w3af_core = w3afCore()
+        mod = 'w4af.core.controllers.wizard.wizards.%s'
+        w4af_core = w4afCore()
 
-        for filename in os.listdir('w3af/core/controllers/wizard/wizards/'):
+        for filename in os.listdir('w4af/core/controllers/wizard/wizards/'):
             wizard_id, ext = os.path.splitext(filename)
 
             if wizard_id in ('__init__', '.git', '__pycache__') or ext == '.pyc':
                 continue
 
             klass = mod % wizard_id
-            wizard_inst = factory(klass, w3af_core)
+            wizard_inst = factory(klass, w4af_core)
 
             yield self._test_wizard_correct, wizard_inst
 
-            wizard_inst = factory(klass, w3af_core)
+            wizard_inst = factory(klass, w4af_core)
             yield self._test_wizard_fail, wizard_inst
 
     @pytest.mark.smoke
@@ -109,7 +109,7 @@ class test_wizards(object):
                  what he's doing and doesn't make any mistakes.
         """
         values = {
-            'target': URL('http://www.w3af.org'),
+            'target': URL('http://www.w4af.org'),
             'target_os': 'Unix',
             'target_framework': 'PHP'
         }
@@ -129,7 +129,7 @@ class test_wizards(object):
                  doesn't know what he's doing and makes all the mistakes.
         """
         values = {
-            'target': URL('foo://www.w3af.org'),
+            'target': URL('foo://www.w4af.org'),
             'target_os': 'Minix',
             'target_framework': 'C++'
         }

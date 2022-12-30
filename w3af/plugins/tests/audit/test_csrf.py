@@ -4,41 +4,41 @@ test_csrf.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 import unittest
 
-from w3af.plugins.tests.helper import PluginTest, PluginConfig, LOREM
-from w3af.plugins.audit.csrf import csrf
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.parsers.doc.url import URL, parse_qs
-from w3af.core.data.parsers.utils.form_params import FormParameters
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.dc.urlencoded_form import URLEncodedForm
-from w3af.core.data.dc.cookie import Cookie
-from w3af.core.data.url.extended_urllib import ExtendedUrllib
-from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
+from w4af.plugins.tests.helper import PluginTest, PluginConfig, LOREM
+from w4af.plugins.audit.csrf import csrf
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.parsers.doc.url import URL, parse_qs
+from w4af.core.data.parsers.utils.form_params import FormParameters
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.dc.urlencoded_form import URLEncodedForm
+from w4af.core.data.dc.cookie import Cookie
+from w4af.core.data.url.extended_urllib import ExtendedUrllib
+from w4af.core.controllers.ci.w4af_moth import get_w4af_moth_http
 
 
-@pytest.mark.w3af_moth
+@pytest.mark.w4af_moth
 class TestCSRF(PluginTest):
 
-    target_url = get_w3af_moth_http('/w3af/audit/csrf/')
+    target_url = get_w4af_moth_http('/w4af/audit/csrf/')
 
     _run_configs = {
         'cfg': {
@@ -63,12 +63,12 @@ class TestCSRF(PluginTest):
 
     def test_found_csrf(self):
         expected = [
-            '/w3af/audit/csrf/vulnerable/buy.php',
-            '/w3af/audit/csrf/vulnerable-rnd/buy.php',
-            '/w3af/audit/csrf/link-vote/vote.php',
+            '/w4af/audit/csrf/vulnerable/buy.php',
+            '/w4af/audit/csrf/vulnerable-rnd/buy.php',
+            '/w4af/audit/csrf/link-vote/vote.php',
 
-            # See https://github.com/andresriancho/w3af/issues/120
-            # '/w3af/audit/csrf/vulnerable-token-ignored/buy.php',
+            # See https://github.com/andresriancho/w4af/issues/120
+            # '/w4af/audit/csrf/vulnerable-token-ignored/buy.php',
         ]
         
         # Run the scan
@@ -84,7 +84,7 @@ class TestCSRF(PluginTest):
             all(['CSRF vulnerability' == v.get_name() for v in vulns]))
 
     def test_resp_is_equal(self):
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
 
         r1 = HTTPResponse(200, 'body', headers, url, url)
@@ -100,28 +100,28 @@ class TestCSRF(PluginTest):
         self.assertTrue(self.csrf_plugin._is_resp_equal(r1, r2))
 
     def test_is_suitable(self):
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
 
         res = HTTPResponse(200, 'body', headers, url, url)
 
         # False because no cookie is set and no QS nor post-data
-        url = URL(get_w3af_moth_http())
+        url = URL(get_w4af_moth_http())
         req = FuzzableRequest(url, method='GET')
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertFalse(suitable)
 
         # False because no cookie is set
-        url = URL(get_w3af_moth_http('/?id=3'))
+        url = URL(get_w4af_moth_http('/?id=3'))
         req = FuzzableRequest(url, method='GET')
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertFalse(suitable)
 
-        url_sends_cookie = URL(get_w3af_moth_http('/w3af/core/cookie_handler/set-cookie.php'))
+        url_sends_cookie = URL(get_w4af_moth_http('/w4af/core/cookie_handler/set-cookie.php'))
         self.uri_opener.GET(url_sends_cookie)
         
         # Still false because it doesn't have any QS or POST data
-        url = URL(get_w3af_moth_http())
+        url = URL(get_w4af_moth_http())
         req = FuzzableRequest(url, method='GET')
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertFalse(suitable)
@@ -129,19 +129,19 @@ class TestCSRF(PluginTest):
         self.csrf_plugin._strict_mode = True
 
         # Still false because of the strict mode
-        url = URL(get_w3af_moth_http('/?id=3'))
+        url = URL(get_w4af_moth_http('/?id=3'))
         req = FuzzableRequest(url, method='GET')
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertFalse(suitable)
 
         # False, no items in post-data
-        url = URL(get_w3af_moth_http())
+        url = URL(get_w4af_moth_http())
         req = FuzzableRequest(url, method='POST', post_data=URLEncodedForm())
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertFalse(suitable)
 
         # True, items in DC, POST (passes strict mode) and cookies
-        url = URL(get_w3af_moth_http())
+        url = URL(get_w4af_moth_http())
         form_params = FormParameters()
         form_params.add_field_by_attr_items([('name', 'test'), ('type', 'text')])
         form = URLEncodedForm(form_params)
@@ -152,14 +152,14 @@ class TestCSRF(PluginTest):
         self.csrf_plugin._strict_mode = False
 
         # True now that we have strict mode off, cookies and QS
-        url = URL(get_w3af_moth_http('/?id=3'))
+        url = URL(get_w4af_moth_http('/?id=3'))
         req = FuzzableRequest(url, method='GET')
         suitable = self.csrf_plugin._is_suitable(req, res)
         self.assertTrue(suitable)
 
     def test_is_origin_checked_true_case01(self):
-        url = URL(get_w3af_moth_http('/w3af/audit/csrf/referer/buy.php?shares=123'))
-        headers = Headers([('Referer', get_w3af_moth_http('/w3af/audit/csrf/referer/'))])
+        url = URL(get_w4af_moth_http('/w4af/audit/csrf/referer/buy.php?shares=123'))
+        headers = Headers([('Referer', get_w4af_moth_http('/w4af/audit/csrf/referer/'))])
         freq = FuzzableRequest(url, method='GET', headers=headers)
         
         orig_response = self.uri_opener.send_mutant(freq)
@@ -168,8 +168,8 @@ class TestCSRF(PluginTest):
         self.assertTrue(origin_checked)
 
     def test_is_origin_checked_true_case02(self):
-        url = URL(get_w3af_moth_http('/w3af/audit/csrf/referer-rnd/buy.php?shares=123'))
-        headers = Headers([('Referer', get_w3af_moth_http('/w3af/audit/csrf/referer-rnd/'))])
+        url = URL(get_w4af_moth_http('/w4af/audit/csrf/referer-rnd/buy.php?shares=123'))
+        headers = Headers([('Referer', get_w4af_moth_http('/w4af/audit/csrf/referer-rnd/'))])
         freq = FuzzableRequest(url, method='GET', headers=headers)
         
         orig_response = self.uri_opener.send_mutant(freq)
@@ -178,8 +178,8 @@ class TestCSRF(PluginTest):
         self.assertTrue(origin_checked)
 
     def test_is_origin_checked_false(self):
-        url = URL(get_w3af_moth_http('/w3af/audit/csrf/vulnerable/buy.php?shares=123'))
-        headers = Headers([('Referer', get_w3af_moth_http('/w3af/audit/csrf/referer-rnd/'))])
+        url = URL(get_w4af_moth_http('/w4af/audit/csrf/vulnerable/buy.php?shares=123'))
+        headers = Headers([('Referer', get_w4af_moth_http('/w4af/audit/csrf/referer-rnd/'))])
         freq = FuzzableRequest(url, method='GET', headers=headers)
         
         orig_response = self.uri_opener.send_mutant(freq)
@@ -189,7 +189,7 @@ class TestCSRF(PluginTest):
 
     @pytest.mark.skip("This function has not yet been implemented and tested")
     def test_is_token_checked_true(self):
-        generator = URL(get_w3af_moth_http('/w3af/audit/csrf/secure-replay-allowed/'))
+        generator = URL(get_w4af_moth_http('/w4af/audit/csrf/secure-replay-allowed/'))
         http_response = self.uri_opener.GET(generator)
 
         # Please note that this freq holds a fresh/valid CSRF token
@@ -213,7 +213,7 @@ class TestCSRF(PluginTest):
         This covers the case where there is a token but for some reason it
         is NOT verified by the web application.
         """
-        generator = URL(get_w3af_moth_http('/w3af/audit/csrf/vulnerable-token-ignored/'))
+        generator = URL(get_w4af_moth_http('/w4af/audit/csrf/vulnerable-token-ignored/'))
         http_response = self.uri_opener.GET(generator)
 
         # Please note that this freq holds a fresh/valid CSRF token
@@ -273,7 +273,7 @@ class TestLowLevelCSRF(unittest.TestCase):
         self.assertFalse(self.csrf_plugin.is_csrf_token('token', 'f842e'))
 
     def test_find_csrf_token_true_simple(self):
-        url = URL('http://moth/w3af/audit/csrf/')
+        url = URL('http://moth/w4af/audit/csrf/')
         query_string = parse_qs('secret=f842eb01b87a8ee18868d3bf80a558f3')
         freq = FuzzableRequest(url, method='GET')
         freq.set_querystring(query_string)
@@ -282,7 +282,7 @@ class TestLowLevelCSRF(unittest.TestCase):
         self.assertIn(b'secret', token)
 
     def test_find_csrf_token_true_repeated(self):
-        url = URL('http://moth/w3af/audit/csrf/')
+        url = URL('http://moth/w4af/audit/csrf/')
         query_string = parse_qs('secret=f842eb01b87a8ee18868d3bf80a558f3'
                                 '&secret=not a token')
         freq = FuzzableRequest(url, method='GET')
@@ -292,7 +292,7 @@ class TestLowLevelCSRF(unittest.TestCase):
         self.assertIn(b'secret', token)
 
     def test_find_csrf_token_false(self):
-        url = URL('http://moth/w3af/audit/csrf/')
+        url = URL('http://moth/w4af/audit/csrf/')
         query_string = parse_qs('secret=not a token')
         freq = FuzzableRequest(url, method='GET')
         freq.set_querystring(query_string)

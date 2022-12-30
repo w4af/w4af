@@ -3,25 +3,25 @@ exact_delay_controller.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
-from w3af.core.controllers.exceptions import HTTPRequestException
-from w3af.core.controllers.output_manager import out
-from w3af.core.controllers.delay_detection.exact_delay import ExactDelay
-from w3af.core.data.url.helpers import new_no_content_resp
+from w4af.core.controllers.exceptions import HTTPRequestException
+from w4af.core.controllers.output_manager import out
+from w4af.core.controllers.delay_detection.exact_delay import ExactDelay
+from w4af.core.data.url.helpers import new_no_content_resp
 
 
 class ExactDelayController(object):
@@ -230,7 +230,7 @@ class ExactDelayController(object):
         #     instead of 1 second which was the expected result. This could be
         #     because of outliers in the measurement
         #
-        #           https://github.com/andresriancho/w3af/issues/16902
+        #           https://github.com/andresriancho/w4af/issues/16902
         #
         #   * lower_bound is then set to original_wait_time - delta + delay
         #

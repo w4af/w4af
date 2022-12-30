@@ -3,19 +3,19 @@ test_strategy_low_level.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import re
@@ -27,11 +27,11 @@ from time import sleep
 from unittest.mock import Mock
 import pytest
 
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.core_helpers.strategy import CoreStrategy
-from w3af.core.controllers.exceptions import ScanMustStopException
-from w3af.core.data.kb.knowledge_base import kb
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.core_helpers.strategy import CoreStrategy
+from w4af.core.controllers.exceptions import ScanMustStopException
+from w4af.core.data.kb.knowledge_base import kb
 
 
 class TestStrategy(unittest.TestCase):
@@ -55,7 +55,7 @@ class TestStrategy(unittest.TestCase):
     @pytest.mark.moth
     @pytest.mark.xfail
     def test_strategy_run(self):
-        core = w3afCore()
+        core = w4afCore()
         
         target = core.target.get_options()
         target['target'].set_value(self.TARGET_URL)
@@ -126,7 +126,7 @@ class TestStrategy(unittest.TestCase):
     def test_strategy_exception(self):
         self._await_correct_thread_names()
 
-        core = w3afCore()
+        core = w4afCore()
         
         target = core.target.get_options()
         target['target'].set_value(self.TARGET_URL)
@@ -154,7 +154,7 @@ class TestStrategy(unittest.TestCase):
         self._assert_thread_names()
         
     def test_strategy_verify_target_server_up(self):
-        core = w3afCore()
+        core = w4afCore()
         
         # TODO: Change 2312 by an always closed/non-http port
         INVALID_TARGET = 'http://localhost:2312/'
@@ -189,16 +189,16 @@ class TestStrategy(unittest.TestCase):
         Tests that the protocol redirection is detected and reported in
         the kb
         """
-        core = w3afCore()
+        core = w4afCore()
 
         httpretty.register_uri(httpretty.GET,
-                               re.compile("w3af.com/(.*)"),
+                               re.compile("w4af.com/(.*)"),
                                body='301',
                                status=301,
-                               adding_headers={'Location': 'https://w3af.com/'})
+                               adding_headers={'Location': 'https://w4af.com/'})
 
         target = core.target.get_options()
-        target['target'].set_value('http://w3af.com/')
+        target['target'].set_value('http://w4af.com/')
         core.target.set_options(target)
 
         core.plugins.set_plugins(['sqli'], 'audit')
@@ -223,16 +223,16 @@ class TestStrategy(unittest.TestCase):
         Tests that the domain redirection is detected and reported in
         the kb
         """
-        core = w3afCore()
+        core = w4afCore()
 
         httpretty.register_uri(httpretty.GET,
-                               re.compile("w3af.com/(.*)"),
+                               re.compile("w4af.com/(.*)"),
                                body='301',
                                status=301,
-                               adding_headers={'Location': 'http://www.w3af.com/'})
+                               adding_headers={'Location': 'http://www.w4af.com/'})
 
         target = core.target.get_options()
-        target['target'].set_value('http://w3af.com/')
+        target['target'].set_value('http://w4af.com/')
         core.target.set_options(target)
 
         core.plugins.set_plugins(['sqli'], 'audit')
@@ -256,16 +256,16 @@ class TestStrategy(unittest.TestCase):
         """
         Tests that no info is created if the site redirects internally
         """
-        core = w3afCore()
+        core = w4afCore()
 
         httpretty.register_uri(httpretty.GET,
-                               re.compile("w3af.com/(.*)"),
+                               re.compile("w4af.com/(.*)"),
                                body='301',
                                status=301,
-                               adding_headers={'Location': 'http://w3af.com/xyz'})
+                               adding_headers={'Location': 'http://w4af.com/xyz'})
 
         target = core.target.get_options()
-        target['target'].set_value('http://w3af.com/')
+        target['target'].set_value('http://w4af.com/')
         core.target.set_options(target)
 
         core.plugins.set_plugins(['sqli'], 'audit')

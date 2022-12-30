@@ -2,19 +2,19 @@
 """
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,18 +25,18 @@ import os.path
 
 import pytest
 
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af.core.controllers.exceptions import DBException
-from w3af.core.controllers.misc.temp_dir import create_temp_dir, remove_temp_dir
-from w3af.core.data.db.dbms import get_default_temp_db_instance
-from w3af.core.data.db.history import HistoryItem, TraceReadException
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.url.HTTPRequest import HTTPRequest
-from w3af.plugins.tests.helper import LOREM
+from w4af.core.controllers.exceptions import DBException
+from w4af.core.controllers.misc.temp_dir import create_temp_dir, remove_temp_dir
+from w4af.core.data.db.dbms import get_default_temp_db_instance
+from w4af.core.data.db.history import HistoryItem, TraceReadException
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.url.HTTPRequest import HTTPRequest
+from w4af.plugins.tests.helper import LOREM
 
 
 @pytest.mark.smoke
@@ -59,7 +59,7 @@ class TestHistoryItem(unittest.TestCase):
 
     def test_find(self):
         find_id = random.randint(1, 499)
-        url = URL('http://w3af.org/a/b/foobar.php?foo=123')
+        url = URL('http://w4af.org/a/b/foobar.php?foo=123')
         tag_value = rand_alnum(10)
 
         for i in range(0, 500):
@@ -94,7 +94,7 @@ class TestHistoryItem(unittest.TestCase):
 
     def test_mark(self):
         mark_id = 3
-        url = URL('http://w3af.org/a/b/c.php')
+        url = URL('http://w4af.org/a/b/c.php')
         
         for i in range(0, 500):
             request = HTTPRequest(url, data='a=1')
@@ -118,7 +118,7 @@ class TestHistoryItem(unittest.TestCase):
 
     def test_save_load(self):
         i = random.randint(1, 499)
-        url = URL('http://w3af.com/a/b/c.php')
+        url = URL('http://w4af.com/a/b/c.php')
         request = HTTPRequest(url, data='a=1')
 
         hdr = Headers([('Content-Type', 'text/html')])
@@ -144,7 +144,7 @@ class TestHistoryItem(unittest.TestCase):
         force_compression_count = HistoryItem._UNCOMPRESSED_FILES + HistoryItem._COMPRESSED_FILE_BATCH
         force_compression_count += 150
 
-        url = URL('http://w3af.com/a/b/c.php')
+        url = URL('http://w4af.com/a/b/c.php')
         headers = Headers([('Content-Type', 'text/html')])
         body = '<html>' + LOREM * 20
 
@@ -181,7 +181,7 @@ class TestHistoryItem(unittest.TestCase):
     def test_delete(self):
         i = random.randint(1, 499)
         
-        url = URL('http://w3af.com/a/b/c.php')
+        url = URL('http://w4af.com/a/b/c.php')
         request = HTTPRequest(url, data='a=1')
         hdr = Headers([('Content-Type', 'text/html')])
         res = HTTPResponse(200, '<html>', hdr, url, url)
@@ -201,7 +201,7 @@ class TestHistoryItem(unittest.TestCase):
         self.assertFalse(os.path.exists(fname))
 
     def test_clear(self):
-        url = URL('http://w3af.com/a/b/c.php')
+        url = URL('http://w4af.com/a/b/c.php')
         request = HTTPRequest(url, data='a=1')
         hdr = Headers([('Content-Type', 'text/html')])
         res = HTTPResponse(200, '<html>', hdr, url, url)
@@ -228,7 +228,7 @@ class TestHistoryItem(unittest.TestCase):
         self.assertTrue(db.table_exists(table_name))        
 
     def test_clear_clear(self):
-        url = URL('http://w3af.com/a/b/c.php')
+        url = URL('http://w4af.com/a/b/c.php')
         request = HTTPRequest(url, data='a=1')
         hdr = Headers([('Content-Type', 'text/html')])
         res = HTTPResponse(200, '<html>', hdr, url, url)
@@ -250,7 +250,7 @@ class TestHistoryItem(unittest.TestCase):
     def test_tag(self):
         tag_id = random.randint(501, 999)
         tag_value = rand_alnum(10)
-        url = URL('http://w3af.org/a/b/c.php')
+        url = URL('http://w4af.org/a/b/c.php')
 
         for i in range(501, 1000):
             request = HTTPRequest(url, data='a=1')
@@ -269,7 +269,7 @@ class TestHistoryItem(unittest.TestCase):
         self.assertEqual(h2.tag, tag_value)
 
     def test_save_load_unicode_decode_error(self):
-        url = URL('http://w3af.com/a/b/é.php?x=á')
+        url = URL('http://w4af.com/a/b/é.php?x=á')
         request = HTTPRequest(url, data='a=1')
         headers = Headers([('Content-Type', 'text/html')])
 

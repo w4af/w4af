@@ -3,31 +3,31 @@ test_grep.py
 
 Copyright 2019 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 import unittest
 
-import w3af.core.data.kb.config as cf
+import w4af.core.data.kb.config as cf
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.core_helpers.consumers.grep import grep
-from w3af.plugins.grep.code_disclosure import code_disclosure
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.tests.helpers.parse_http_log import iter_http_request_responses
+from w4af import ROOT_PATH
+from w4af.core.controllers.core_helpers.consumers.grep import grep
+from w4af.plugins.grep.code_disclosure import code_disclosure
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.tests.helpers.parse_http_log import iter_http_request_responses
 
 
 class TestGrepConsumer(unittest.TestCase):
@@ -43,7 +43,7 @@ class TestGrepConsumer(unittest.TestCase):
 
         This method is usually run as:
 
-            kernprof -o nose.lprof -v -l nosetests -s -v w3af/core/controllers/core_helpers/consumers/tests/test_grep.py
+            kernprof -o nose.lprof -v -l nosetests -s -v w4af/core/controllers/core_helpers/consumers/tests/test_grep.py
 
         Remember to:
 
@@ -55,7 +55,7 @@ class TestGrepConsumer(unittest.TestCase):
             return
 
         grep_plugins = [code_disclosure()]
-        core = w3afCore()
+        core = w4afCore()
 
         grep_consumer = grep(grep_plugins, core)
 

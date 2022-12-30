@@ -1,21 +1,21 @@
 """
-w3afAgentManager.py
+w4afAgentManager.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,22 +25,22 @@ import socket
 
 from multiprocessing.dummy import Process
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.w3afAgent.server.w3afAgentServer import w3afAgentServer
-from w3af.core.controllers.payload_transfer.payload_transfer_factory import payload_transfer_factory
-from w3af.core.controllers.extrusion_scanning.extrusionScanner import extrusionScanner
-from w3af.core.controllers.intrusion_tools.delayedExecutionFactory import delayedExecutionFactory
-from w3af.core.controllers.intrusion_tools.execMethodHelpers import get_remote_temp_file
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af import ROOT_PATH
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.w4afAgent.server.w4afAgentServer import w4afAgentServer
+from w4af.core.controllers.payload_transfer.payload_transfer_factory import payload_transfer_factory
+from w4af.core.controllers.extrusion_scanning.extrusionScanner import extrusionScanner
+from w4af.core.controllers.intrusion_tools.delayedExecutionFactory import delayedExecutionFactory
+from w4af.core.controllers.intrusion_tools.execMethodHelpers import get_remote_temp_file
+from w4af.core.data.misc.encoding import smart_unicode
 
 
-class w3afAgentManager(Process):
+class w4afAgentManager(Process):
     """
-    Start a w3afAgent, to do this, I must transfer the agent client to the
-    remote end and start the w3afServer in this local machine.
+    Start a w4afAgent, to do this, I must transfer the agent client to the
+    remote end and start the w4afServer in this local machine.
 
     This is a Process, so the entry point is start() , which will
     internally call the run() method.
@@ -71,12 +71,12 @@ class w3afAgentManager(Process):
         Entry point for the whole process.
         """
 
-        # First, I have to check if I have a good w3afAgentClient to send to the
+        # First, I have to check if I have a good w4afAgentClient to send to the
         # other end...
         try:
             interpreter, client_code, extension = self._select_client()
         except BaseFrameworkException:
-            om.out.error('Failed to find a suitable w3afAgentClient for the remote server.')
+            om.out.error('Failed to find a suitable w4afAgentClient for the remote server.')
         else:
 
             #
@@ -85,9 +85,9 @@ class w3afAgentManager(Process):
             inbound_port = self._get_inbound_port()
 
             #
-            #    Start the w3afAgentServer on this machine
+            #    Start the w4afAgentServer on this machine
             #
-            agent_server = w3afAgentServer(self._ip_address,
+            agent_server = w4afAgentServer(self._ip_address,
                                            socks_port=self._socks_port,
                                            listen_port=inbound_port)
             self._agent_server = agent_server
@@ -107,35 +107,35 @@ class w3afAgentManager(Process):
                 transferHandler = ptf.get_transfer_handler(inbound_port)
 
                 if not transferHandler.can_transfer():
-                    raise BaseFrameworkException('Can\'t transfer w3afAgent client to remote host, can_transfer() returned False.')
+                    raise BaseFrameworkException('Can\'t transfer w4afAgent client to remote host, can_transfer() returned False.')
                 else:
                     #    Let the user know how much time it will take to transfer the file
                     estimatedTime = transferHandler.estimate_transfer_time(
                         len(client_code))
-                    om.out.debug('The w3afAgent client transfer will take "' +
+                    om.out.debug('The w4afAgent client transfer will take "' +
                                  str(estimatedTime) + '" seconds.')
 
                     filename = get_remote_temp_file(self._exec_method)
                     filename += '.' + extension
 
                     #    Upload the file and check integrity
-                    om.out.console('Starting w3afAgent client upload, remote filename is: "%s" ...' % filename)
+                    om.out.console('Starting w4afAgent client upload, remote filename is: "%s" ...' % filename)
 
                     upload_success = transferHandler.transfer(
                         client_code, filename)
                     if not upload_success:
-                        raise BaseFrameworkException('The w3afAgent client failed to upload. Remote file hash does NOT match.')
+                        raise BaseFrameworkException('The w4afAgent client failed to upload. Remote file hash does NOT match.')
 
-                    om.out.console('Finished w3afAgent client upload!')
+                    om.out.console('Finished w4afAgent client upload!')
 
-                    #    And now start the w3afAgentClient on the remote server using cron / at
+                    #    And now start the w4afAgentClient on the remote server using cron / at
                     self._delayedExecution(smart_unicode(interpreter) + ' ' + filename + ' ' + self._ip_address + ' ' + str(inbound_port))
 
                     #
                     #    This checks if the remote server connected back to the agent_server
                     #
                     if not agent_server.is_working():
-                        om.out.console('Something went wrong, the w3afAgent client failed to connect back.')
+                        om.out.console('Something went wrong, the w4afAgent client failed to connect back.')
                     else:
                         msg = 'A SOCKS proxy is listening on %s:%s' % (
                             self._ip_address, self._socks_port)
@@ -156,33 +156,33 @@ class w3afAgentManager(Process):
         dH = dexecf.get_delayed_execution_handler()
 
         if not dH.can_delay():
-            msg = '[w3afAgentManager] Failed to create cron entry.'
+            msg = '[w4afAgentManager] Failed to create cron entry.'
             om.out.debug(msg)
             raise BaseFrameworkException(msg)
         else:
             wait_time = dH.add_to_schedule(command)
 
             om.out.debug(
-                '[w3afAgentManager] Crontab entry successfully added.')
+                '[w4afAgentManager] Crontab entry successfully added.')
             wait_time += 2
             om.out.information('Please wait ' + str(
-                wait_time) + ' seconds for w3afAgentClient execution.')
+                wait_time) + ' seconds for w4afAgentClient execution.')
             time.sleep(wait_time)
 
-            om.out.debug('[w3afAgentManager] Restoring old crontab.')
+            om.out.debug('[w4afAgentManager] Restoring old crontab.')
             dH.restore_old_schedule()
 
     def _select_client(self):
         """
-        This method selects the w3afAgent client to use based on the remote OS and some other factors
+        This method selects the w4afAgent client to use based on the remote OS and some other factors
         like having a working python installation.
         """
         python = self._exec('which python3')
         python = python.strip()
 
         if python.startswith(b'/'):
-            client = os.path.join(ROOT_PATH, 'core', 'controllers', 'w3afAgent',
-                                  'client', 'w3afAgentClient.py')
+            client = os.path.join(ROOT_PATH, 'core', 'controllers', 'w4afAgent',
+                                  'client', 'w4afAgentClient.py')
             with open(client) as client_fh:
                 file_content = client_fh.read()
             extension = 'py'

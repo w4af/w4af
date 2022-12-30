@@ -3,19 +3,19 @@ test_mutant.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,18 +24,18 @@ import copy
 
 from unittest.mock import patch
 
-from w3af.core.data.fuzzer.mutants.mutant import Mutant
-from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.parsers.utils.form_params import FormParameters
-from w3af.core.data.dc.utils.token import DataToken
-from w3af.core.data.dc.query_string import QueryString
-from w3af.core.data.dc.urlencoded_form import URLEncodedForm
-from w3af.core.data.dc.multipart_container import MultipartContainer
-from w3af.core.data.constants.file_templates.file_templates import get_file_from_template
-from w3af.core.controllers.misc.io import NamedBytesIO
-from w3af.core.data.dc.utils.multipart import encode_as_multipart, get_boundary
+from w4af.core.data.fuzzer.mutants.mutant import Mutant
+from w4af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.parsers.utils.form_params import FormParameters
+from w4af.core.data.dc.utils.token import DataToken
+from w4af.core.data.dc.query_string import QueryString
+from w4af.core.data.dc.urlencoded_form import URLEncodedForm
+from w4af.core.data.dc.multipart_container import MultipartContainer
+from w4af.core.data.constants.file_templates.file_templates import get_file_from_template
+from w4af.core.controllers.misc.io import NamedBytesIO
+from w4af.core.data.dc.utils.multipart import encode_as_multipart, get_boundary
 
 
 class FakeMutant(Mutant):
@@ -166,7 +166,7 @@ class TestMutant(unittest.TestCase):
         form = MultipartContainer(form_params)
         freq = FuzzableRequest(self.url, post_data=form)
 
-        ph = 'w3af.core.data.constants.file_templates.file_templates.rand_alpha'
+        ph = 'w4af.core.data.constants.file_templates.file_templates.rand_alpha'
 
         with patch(ph) as mock_rand_alpha:
             mock_rand_alpha.return_value = 'upload'

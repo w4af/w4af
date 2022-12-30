@@ -17,7 +17,7 @@ from urllib.request import HTTPErrorProcessor
 from ntlm3 import ntlm
 import hashlib
 
-from w3af.core.data.misc.md4 import MD4
+from w4af.core.data.misc.md4 import MD4
 
 original_hashlib_new = hashlib.new
 
@@ -39,7 +39,7 @@ class AbstractNtlmAuthHandler(urllib.request.BaseHandler):
     urllib2 handler which adds NTLM v1 support.
     
     NTLM v2 is NOT supported since the "ntlm" library does NOT support it.
-    Nathaniel Cole confirmed this in the w3af-users mailing list.
+    Nathaniel Cole confirmed this in the w4af-users mailing list.
     """
     
     auth_header = None

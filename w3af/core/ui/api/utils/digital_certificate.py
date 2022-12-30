@@ -3,19 +3,19 @@ digital_certificate.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,14 +23,14 @@ import os
 import socket
 
 from OpenSSL import crypto
-from w3af.core.controllers.misc.home_dir import get_home_dir
+from w4af.core.controllers.misc.home_dir import get_home_dir
 
 
 class SSLCertificate(object):
     def __init__(self):
         ssl_dir = os.path.join(get_home_dir(), 'ssl')
-        self.key_path = os.path.join(ssl_dir, 'w3af.key')
-        self.cert_path = os.path.join(ssl_dir, 'w3af.crt')
+        self.key_path = os.path.join(ssl_dir, 'w4af.key')
+        self.cert_path = os.path.join(ssl_dir, 'w4af.crt')
         if not os.path.exists(ssl_dir):
             os.makedirs(ssl_dir)
 
@@ -47,9 +47,9 @@ class SSLCertificate(object):
         cert = crypto.X509()
         cert.get_subject().C = 'US'
         cert.get_subject().ST = 'CA'
-        cert.get_subject().L = 'w3af.org'
-        cert.get_subject().O = 'w3af.org'
-        cert.get_subject().OU = 'w3af.org'
+        cert.get_subject().L = 'w4af.org'
+        cert.get_subject().O = 'w4af.org'
+        cert.get_subject().OU = 'w4af.org'
         cert.get_subject().CN = host
         cert.set_serial_number(111111111111111111111111111)
         cert.gmtime_adj_notBefore(0)
@@ -82,7 +82,7 @@ class SSLCertificate(object):
         # Flask/Werkzeug have an issue where in one version they supported
         # SSL.Context (from the OpenSSL library) and then they deprecated that
         # when ssl.Context appeared in 2.7.9. The problem with this change is
-        # that we don't want to force w3af users to migrate to python 2.7.9,
+        # that we don't want to force w4af users to migrate to python 2.7.9,
         # and we don't want to downgrade our flask/werkzeug version might break
         # things or add bugs.
         #

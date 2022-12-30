@@ -3,19 +3,19 @@ profile.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -25,12 +25,12 @@ import shutil
 import string
 import configparser
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.core_helpers.target import CoreTarget
-from w3af.core.controllers.misc.factory import factory
-from w3af.core.controllers.misc.home_dir import get_home_dir
-from w3af.core.data.constants.encodings import UTF8
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af import ROOT_PATH
+from w4af.core.controllers.core_helpers.target import CoreTarget
+from w4af.core.controllers.misc.factory import factory
+from w4af.core.controllers.misc.home_dir import get_home_dir
+from w4af.core.data.constants.encodings import UTF8
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 class profile(object):
@@ -41,7 +41,7 @@ class profile(object):
     """
 
     PROFILE_SECTION = 'profile'
-    EXTENSION = '.pw3af'
+    EXTENSION = '.pw4af'
 
     def __init__(self, profname='', workdir="."):
         """
@@ -52,7 +52,7 @@ class profile(object):
         When reading a profile, you should use p = profile(profname).
         """
         # The default optionxform transforms the option to lower case;
-        # w3af needs the value as it is
+        # w4af needs the value as it is
         optionxform = lambda opt: opt
 
         self._config = configparser.ConfigParser()
@@ -90,7 +90,7 @@ class profile(object):
 
         >>> p = profile()
         >>> p.get_real_profile_path('OWASP_TOP10', '.')
-        './profiles/OWASP_TOP10.pw3af'
+        './profiles/OWASP_TOP10.pw4af'
         """
         # Add extension if necessary
         if not profile_name.endswith(self.EXTENSION):
@@ -109,7 +109,7 @@ class profile(object):
         # This is the worse case scenario, where the file name is different from
         # the "name = ..." value which is inside the file
         #
-        # https://github.com/andresriancho/w3af/issues/561
+        # https://github.com/andresriancho/w4af/issues/561
         for profile_path in self.get_profile_paths(workdir):
             for profile_file in os.listdir(profile_path):
 
@@ -286,7 +286,7 @@ class profile(object):
                 { 'LICENSE_KEY':'AAAA' }
         """
         # Get the plugin defaults with their types
-        plugin = 'w3af.plugins.%s.%s' % (plugin_type, plugin_name)
+        plugin = 'w4af.plugins.%s.%s' % (plugin_type, plugin_name)
         plugin_instance = factory(plugin)
         options_list = plugin_instance.get_options()
 
@@ -348,7 +348,7 @@ class profile(object):
         Get the misc settings options.
         :return: The misc settings in an OptionList
         """
-        from w3af.core.controllers.misc_settings import MiscSettings
+        from w4af.core.controllers.misc_settings import MiscSettings
         misc_settings = MiscSettings()
         return self._get_x_settings('misc-settings', misc_settings)
 
@@ -357,7 +357,7 @@ class profile(object):
         Get the http settings options.
         :return: The http settings in an OptionList
         """
-        import w3af.core.data.url.opener_settings as opener_settings
+        import w4af.core.data.url.opener_settings as opener_settings
         url_settings = opener_settings.OpenerSettings()
         return self._get_x_settings('http-settings', url_settings)
 

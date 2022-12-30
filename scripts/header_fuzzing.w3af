@@ -8,7 +8,7 @@ back
 plugins
 output console,text_file
 output config text_file
-set output_file output-w3af.txt
+set output_file output-w4af.txt
 set verbose True
 back
 output config console
@@ -19,7 +19,7 @@ audit xss
 back
 
 target
-set target http://moth/w3af/core/header_fuzzing/index.php
+set target http://moth/w4af/core/header_fuzzing/index.php
 back
 
 start

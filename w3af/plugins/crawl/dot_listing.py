@@ -3,33 +3,33 @@ dot_listing.py
 
 Copyright 2012 Tomas Velazquez
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.data.constants.severity as severity
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.data.constants.severity as severity
 
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.kb.vuln import Vuln
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.core_helpers.fingerprint_404 import is_404
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
 
 
 class dot_listing(CrawlPlugin):
@@ -37,7 +37,7 @@ class dot_listing(CrawlPlugin):
     Search for .listing files and extracts new filenames from it.
     :author: Tomas Velazquez ( tomas.velazquezz@gmail.com )
     """
-    # -rw-r--r--    1 andresr   w3af         8139 Apr 12 13:23 foo.zip
+    # -rw-r--r--    1 andresr   w4af         8139 Apr 12 13:23 foo.zip
     regex_str = r'[a-z-]{10}\s*\d+\s*(.*?)\s+(.*?)\s+\d+\s+\w+\s+\d+\s+[0-9:]{4,5}\s+(.*)'
     LISTING_PARSER_RE = re.compile(regex_str)
     
@@ -133,9 +133,9 @@ class dot_listing(CrawlPlugin):
         """
         Extract info from .listing file content, each line looks like:
 
-        -rw-r--r--    1 andresr   w3af         8139 Apr 12 13:23 foo.zip
+        -rw-r--r--    1 andresr   w4af         8139 Apr 12 13:23 foo.zip
 
-        We're going to extract "andresr" (user), "w3af" (group) and "foo.zip"
+        We're going to extract "andresr" (user), "w4af" (group) and "foo.zip"
         (file).
 
         :return: A list with the information extracted from the listing_file_content
@@ -157,9 +157,9 @@ class dot_listing(CrawlPlugin):
         "wget" and argument "-m" or "--no-remove-listing".
         
         For example, if the input is:
-            - http://host.tld/w3af/index.php
+            - http://host.tld/w4af/index.php
 
         The plugin will perform these requests:
-            - http://host.tld/w3af/.listing
+            - http://host.tld/w4af/.listing
             - http://host.tld/.listing
         """

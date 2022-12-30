@@ -3,19 +3,19 @@ ghdb.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,23 +23,23 @@ import os.path
 import random
 import xml.dom.minidom
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.constants.severity as severity
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.constants.severity as severity
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af import ROOT_PATH
+from w4af import ROOT_PATH
 
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
-from w3af.core.controllers.misc.decorators import runonce
-from w3af.core.controllers.misc.is_private_site import is_private_site
-from w3af.core.controllers.exceptions import BaseFrameworkException, RunOnce
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.core_helpers.fingerprint_404 import is_404
+from w4af.core.controllers.misc.decorators import runonce
+from w4af.core.controllers.misc.is_private_site import is_private_site
+from w4af.core.controllers.exceptions import BaseFrameworkException, RunOnce
 
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.search_engines.bing import bing
-from w3af.core.data.kb.vuln import Vuln
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.search_engines.bing import bing
+from w4af.core.data.kb.vuln import Vuln
 
 
 class ghdb(CrawlPlugin):

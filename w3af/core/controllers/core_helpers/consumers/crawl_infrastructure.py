@@ -3,42 +3,42 @@ CrawlInfrastructure.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import time
 import queue
 
-import w3af.core.data.kb.config as cf
-import w3af.core.data.kb.knowledge_base as kb
-import w3af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.db.variant_db import VariantDB
-from w3af.core.data.fuzzer.utils import rand_alnum
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.misc.ordered_cached_queue import OrderedCachedQueue
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.db.variant_db import VariantDB
+from w4af.core.data.fuzzer.utils import rand_alnum
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.misc.ordered_cached_queue import OrderedCachedQueue
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
 
-from w3af.core.controllers.profiling.took_helper import TookLine
-from w3af.core.controllers.threads.threadpool import return_args
-from w3af.core.controllers.core_helpers.consumers.constants import POISON_PILL
-from w3af.core.controllers.exceptions import BaseFrameworkException, RunOnce, ScanMustStopException
-from w3af.core.controllers.core_helpers.consumers.base_consumer import (BaseConsumer,
+from w4af.core.controllers.profiling.took_helper import TookLine
+from w4af.core.controllers.threads.threadpool import return_args
+from w4af.core.controllers.core_helpers.consumers.constants import POISON_PILL
+from w4af.core.controllers.exceptions import BaseFrameworkException, RunOnce, ScanMustStopException
+from w4af.core.controllers.core_helpers.consumers.base_consumer import (BaseConsumer,
                                                                         task_decorator)
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 class CrawlInfrastructure(BaseConsumer):
@@ -49,17 +49,17 @@ class CrawlInfrastructure(BaseConsumer):
     again for continuing with the discovery process.
     """
 
-    def __init__(self, crawl_infrastructure_plugins, w3af_core,
+    def __init__(self, crawl_infrastructure_plugins, w4af_core,
                  max_discovery_time):
         """
         :param crawl_infrastructure_plugins: Instances of CrawlInfrastructure
                                              plugins in a list
-        :param w3af_core: The w3af core that we'll use for status reporting
+        :param w4af_core: The w4af core that we'll use for status reporting
         :param max_discovery_time: The max time (in seconds) to use for the
                                    discovery phase
         """
         super(CrawlInfrastructure, self).__init__(crawl_infrastructure_plugins,
-                                                  w3af_core,
+                                                  w4af_core,
                                                   thread_name=self.get_name(),
                                                   max_pool_queued_tasks=100)
         self._max_discovery_time = max_discovery_time
@@ -93,7 +93,7 @@ class CrawlInfrastructure(BaseConsumer):
             try:
                 work_unit = self.in_queue.get(timeout=0.1)
             except KeyboardInterrupt:
-                # https://github.com/andresriancho/w3af/issues/9587
+                # https://github.com/andresriancho/w4af/issues/9587
                 #
                 # If we don't do this, the thread will die and will never
                 # process the POISON_PILL, which will end up in an endless
@@ -326,8 +326,8 @@ class CrawlInfrastructure(BaseConsumer):
         """
         Remove the crawl and bruteforce plugins from memory.
         """
-        self._w3af_core.plugins.plugins['crawl'] = []
-        self._w3af_core.plugins.plugins['infrastructure'] = []
+        self._w4af_core.plugins.plugins['crawl'] = []
+        self._w4af_core.plugins.plugins['infrastructure'] = []
 
         self._disabled_plugins = set()
         self._consumer_plugins = []
@@ -375,7 +375,7 @@ class CrawlInfrastructure(BaseConsumer):
         if not self._running:
             return True
 
-        if self._w3af_core.status.get_run_time() < self._max_discovery_time:
+        if self._w4af_core.status.get_run_time() < self._max_discovery_time:
             return False
 
         if self._report_max_time:
@@ -392,7 +392,7 @@ class CrawlInfrastructure(BaseConsumer):
         exception during the crawl phase.
         """
         for plugin_type in ('crawl', 'infrastructure'):
-            if plugin_to_remove in self._w3af_core.plugins.plugins[plugin_type]:
+            if plugin_to_remove in self._w4af_core.plugins.plugins[plugin_type]:
 
                 msg = 'The %s plugin: "%s" wont be run anymore.'
                 om.out.debug(msg % (plugin_type, plugin_to_remove.get_name()))
@@ -440,7 +440,7 @@ class CrawlInfrastructure(BaseConsumer):
         #       - http://host.tld/?id=payload1
         #       - http://host.tld/?id=payload1
         #
-        # w3af has a cache, but its still a waste of time to send those requests.
+        # w4af has a cache, but its still a waste of time to send those requests.
         #
         #   Now lets analyze this with more than one parameter. Crawled URIs:
         #       - http://host.tld/?id=3739286&action=create
@@ -484,7 +484,7 @@ class CrawlInfrastructure(BaseConsumer):
         om.out.debug(msg % fuzzable_request)
 
         # Log the new finding to the user, without dups
-        # https://github.com/andresriancho/w3af/issues/8496
+        # https://github.com/andresriancho/w4af/issues/8496
         url = fuzzable_request.get_url()
         if self._reported_found_urls.add(url):
             msg = 'New URL found by %s plugin: "%s"'
@@ -518,14 +518,14 @@ class CrawlInfrastructure(BaseConsumer):
         args = (plugin.get_name(), fuzzable_request.get_uri(), debugging_id)
         om.out.debug('%s.discover(%s, did=%s)' % args)
 
-        took_line = TookLine(self._w3af_core,
+        took_line = TookLine(self._w4af_core,
                              plugin.get_name(),
                              'discover',
                              debugging_id=debugging_id,
                              method_params={'uri': fuzzable_request.get_uri()})
 
         # Status reporting
-        status = self._w3af_core.status
+        status = self._w4af_core.status
         status.set_running_plugin('crawl', plugin.get_name())
         status.set_current_fuzzable_request('crawl', fuzzable_request)
 

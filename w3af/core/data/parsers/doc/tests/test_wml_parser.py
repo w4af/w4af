@@ -3,34 +3,34 @@ test_wml_parser.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
 
-from w3af.core.data.parsers.doc.wml_parser import WMLParser
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.HTTPResponse import HTTPResponse as HTTPResponse
-from w3af.core.data.dc.headers import Headers
+from w4af.core.data.parsers.doc.wml_parser import WMLParser
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.HTTPResponse import HTTPResponse as HTTPResponse
+from w4af.core.data.dc.headers import Headers
 
 
 class TestWMLParser(unittest.TestCase):
 
     def setUp(self):
-        self.url = URL('http://www.w3af.com/')
+        self.url = URL('http://www.w4af.com/')
 
     def test_parser_simple_form(self):
         form = """<go method="post" href="post.php">
@@ -49,7 +49,7 @@ class TestWMLParser(unittest.TestCase):
         form = forms[0]
         
         self.assertEqual(form.get_action().url_string,
-                         'http://www.w3af.com/post.php')
+                         'http://www.w4af.com/post.php')
         
         self.assertIn('clave', form)
         self.assertIn('cuenta', form)
@@ -64,5 +64,5 @@ class TestWMLParser(unittest.TestCase):
         
         # TODO: Shouldn't this be the other way around?!
         self.assertEqual(len(parsed), 0)
-        self.assertEqual('http://www.w3af.com/index.aspx', re[0].url_string)
+        self.assertEqual('http://www.w4af.com/index.aspx', re[0].url_string)
 

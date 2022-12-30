@@ -3,29 +3,29 @@ config.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.ui.console.menu import menu
-from w3af.core.ui.console.util import suggest
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.controllers.plugins.plugin import Plugin
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.ui.console.menu import menu
+from w4af.core.ui.console.util import suggest
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.controllers.plugins.plugin import Plugin
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 class ConfigMenu(menu):
@@ -36,8 +36,8 @@ class ConfigMenu(menu):
     :author: Alexander Berezhnoy (alexander.berezhnoy |at| gmail.com)
     """
 
-    def __init__(self, name, console, w3af, parent, configurable):
-        menu.__init__(self, 'config:' + name, console, w3af, parent)
+    def __init__(self, name, console, w4af, parent, configurable):
+        menu.__init__(self, 'config:' + name, console, w4af, parent)
 
         self._configurable = configurable
         self._options = self._configurable.get_options()
@@ -61,7 +61,7 @@ class ConfigMenu(menu):
         """
         # Some configurable objects require us to reload the options each time
         # we're going to show them in the console.
-        # https://github.com/andresriancho/w3af/issues/291
+        # https://github.com/andresriancho/w4af/issues/291
         self._options = self._configurable.get_options()
         self._group_options_by_tabid()
         
@@ -123,15 +123,15 @@ class ConfigMenu(menu):
 
         # All the options are set to the configurable on "back", this is
         # to handle the issue of configuration parameters which depend on
-        # each other: https://github.com/andresriancho/w3af/issues/108
+        # each other: https://github.com/andresriancho/w4af/issues/108
         # @see: _cmd_back()
         #
         # There is an exception to that rule, calling:
-        #    w3af>>> target set target http://w3af.org/
+        #    w4af>>> target set target http://w4af.org/
         #
         # Is different from calling:
-        #    w3af>>> target
-        #    w3af/config:target>>> set target http://w3af.org/
+        #    w4af>>> target
+        #    w4af/config:target>>> set target http://w4af.org/
         #
         # The first one has an implied save:
         if self._child_call:
@@ -146,7 +146,7 @@ class ConfigMenu(menu):
             self._configurable.set_options(self._options)
 
             if isinstance(self._configurable, Plugin):
-                self._w3af.plugins.set_plugin_options(
+                self._w4af.plugins.set_plugin_options(
                     self._configurable.get_type(),
                     self._configurable.get_name(),
                     self._options)

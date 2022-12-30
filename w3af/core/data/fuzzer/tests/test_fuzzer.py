@@ -3,40 +3,40 @@ test_fuzzer.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
 
-from w3af.core.data.kb.config import Config
-from w3af.core.data.kb.config import cf as cf_singleton
-from w3af.core.data.fuzzer.fuzzer import create_mutants
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.parsers.utils.form_params import FormParameters
-from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
-from w3af.core.data.fuzzer.mutants.cookie_mutant import CookieMutant
-from w3af.core.data.fuzzer.mutants.headers_mutant import HeadersMutant
-from w3af.core.data.fuzzer.mutants.filename_mutant import FileNameMutant
-from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
-from w3af.core.data.fuzzer.mutants.xmlrpc_mutant import XmlRpcMutant
-from w3af.core.data.parsers.doc.tests.test_xmlrpc import XML_WITH_FUZZABLE
-from w3af.core.data.dc.cookie import Cookie
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.dc.urlencoded_form import URLEncodedForm
+from w4af.core.data.kb.config import Config
+from w4af.core.data.kb.config import cf as cf_singleton
+from w4af.core.data.fuzzer.fuzzer import create_mutants
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.parsers.utils.form_params import FormParameters
+from w4af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
+from w4af.core.data.fuzzer.mutants.cookie_mutant import CookieMutant
+from w4af.core.data.fuzzer.mutants.headers_mutant import HeadersMutant
+from w4af.core.data.fuzzer.mutants.filename_mutant import FileNameMutant
+from w4af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
+from w4af.core.data.fuzzer.mutants.xmlrpc_mutant import XmlRpcMutant
+from w4af.core.data.parsers.doc.tests.test_xmlrpc import XML_WITH_FUZZABLE
+from w4af.core.data.dc.cookie import Cookie
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.dc.urlencoded_form import URLEncodedForm
 
 
 class TestFuzzer(unittest.TestCase):
@@ -102,7 +102,7 @@ class TestFuzzer(unittest.TestCase):
 
     @unittest.skip("Not sure what the correct output should be here")
     def test_special_url_characters(self):
-        initial_url = 'http://w3af.org/' \
+        initial_url = 'http://w4af.org/' \
                       '?__VIEWSTATE=/' \
                       '&__EVENTVALIDATION=\\X+W=='\
                       '&_ctl0:TextBox1=%s'
@@ -111,7 +111,7 @@ class TestFuzzer(unittest.TestCase):
         freq = FuzzableRequest(url)
         generated_mutants = create_mutants(freq, self.payloads)
 
-        decoded_url = 'http://w3af.org/' \
+        decoded_url = 'http://w4af.org/' \
                       '?__VIEWSTATE=/' \
                       '&__EVENTVALIDATION=\\X%%20W=='\
                       '&_ctl0:TextBox1=%s'
@@ -219,7 +219,7 @@ class TestFuzzer(unittest.TestCase):
         Even when fuzz_cookies is True, we won't create HeaderMutants based
         on a FuzzableRequest. This is one of the ugly things related with
 
-            https://github.com/andresriancho/w3af/issues/3149
+            https://github.com/andresriancho/w4af/issues/3149
 
         Which we fixed!
         """
@@ -329,7 +329,7 @@ class TestFuzzer(unittest.TestCase):
 
         form = URLEncodedForm(form_params)
 
-        freq = FuzzableRequest(URL('http://www.w3af.com/?id=3'), post_data=form,
+        freq = FuzzableRequest(URL('http://www.w4af.com/?id=3'), post_data=form,
                                method='PUT')
 
         mutants = create_mutants(freq, self.payloads)
@@ -339,12 +339,12 @@ class TestFuzzer(unittest.TestCase):
 
         self.assertTrue(all(m.get_method() == 'PUT' for m in mutants))
 
-        expected_uris = {'http://www.w3af.com/?id=abc',
-                         'http://www.w3af.com/?id=def',
-                         'http://www.w3af.com/?id=3',
-                         'http://www.w3af.com/?id=3',
-                         'http://www.w3af.com/?id=3',
-                         'http://www.w3af.com/?id=3'}
+        expected_uris = {'http://www.w4af.com/?id=abc',
+                         'http://www.w4af.com/?id=def',
+                         'http://www.w4af.com/?id=3',
+                         'http://www.w4af.com/?id=3',
+                         'http://www.w4af.com/?id=3',
+                         'http://www.w4af.com/?id=3'}
         created_uris = set([i.get_uri().url_string for i in mutants])
         self.assertEqual(expected_uris, created_uris)
 

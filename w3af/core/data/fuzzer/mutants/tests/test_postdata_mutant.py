@@ -3,30 +3,30 @@ test_postdata_mutant.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
 
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
-from w3af.core.data.dc.urlencoded_form import URLEncodedForm
-from w3af.core.data.dc.multipart_container import MultipartContainer
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.utils.form_params import FormParameters
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
+from w4af.core.data.dc.urlencoded_form import URLEncodedForm
+from w4af.core.data.dc.multipart_container import MultipartContainer
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.utils.form_params import FormParameters
 
 
 class TestPostDataMutant(unittest.TestCase):
@@ -41,12 +41,12 @@ class TestPostDataMutant(unittest.TestCase):
         form_params.add_field_by_attr_items([("name", "address"), ("value", "")])
 
         form = URLEncodedForm(form_params)
-        freq = FuzzableRequest(URL('http://www.w3af.com/?id=3'), post_data=form,
+        freq = FuzzableRequest(URL('http://www.w4af.com/?id=3'), post_data=form,
                                method='PUT')
         m = PostDataMutant(freq)
         m.get_dc().set_token(('username', 0))
 
-        expected = '"http://www.w3af.com/?id=3", using HTTP method PUT. '\
+        expected = '"http://www.w4af.com/?id=3", using HTTP method PUT. '\
                    'The sent post-data was: "username=&address=" '\
                    'which modifies the "username" parameter.'
         self.assertEqual(m.found_at(), expected)
@@ -57,7 +57,7 @@ class TestPostDataMutant(unittest.TestCase):
         form_params.add_field_by_attr_items([("name", "address"), ("value", "")])
 
         form = URLEncodedForm(form_params)
-        freq = FuzzableRequest(URL('http://www.w3af.com/?id=3'), post_data=form,
+        freq = FuzzableRequest(URL('http://www.w4af.com/?id=3'), post_data=form,
                                method='PUT')
 
         created_mutants = PostDataMutant.create_mutants(freq, self.payloads, [],
@@ -105,7 +105,7 @@ class TestPostDataMutant(unittest.TestCase):
         form_params.add_field_by_attr_items([("name", "id"), ("value", "")])
 
         form = URLEncodedForm(form_params)
-        freq = FuzzableRequest(URL('http://w3af.com/?foo=3'), post_data=form,
+        freq = FuzzableRequest(URL('http://w4af.com/?foo=3'), post_data=form,
                                method='GET')
 
         created_mutants = PostDataMutant.create_mutants(freq, self.payloads, [],
@@ -141,7 +141,7 @@ class TestPostDataMutant(unittest.TestCase):
         form_params.add_field_by_attr_items([("name", "file_upload"), ("type", "file")])
 
         form = MultipartContainer(form_params)
-        freq = FuzzableRequest(URL('http://www.w3af.com/upload'),
+        freq = FuzzableRequest(URL('http://www.w4af.com/upload'),
                                post_data=form, method='POST')
 
         with open(__file__, "rb") as f:

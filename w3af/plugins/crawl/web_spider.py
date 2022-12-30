@@ -3,47 +3,47 @@ web_spider.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
 import itertools
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.config as cf
-import w3af.core.data.parsers.parser_cache as parser_cache
-import w3af.core.data.constants.response_codes as http_constants
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
+import w4af.core.data.parsers.parser_cache as parser_cache
+import w4af.core.data.constants.response_codes as http_constants
 
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
-from w3af.core.controllers.misc.itertools_toolset import unique_justseen
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.core_helpers.fingerprint_404 import is_404
+from w4af.core.controllers.misc.itertools_toolset import unique_justseen
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
-from w3af.core.data.parsers.utils.header_link_extract import headers_url_generator
-from w3af.core.data.db.variant_db import VariantDB
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.db.disk_set import DiskSet
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.dc.factory import dc_from_form_params
-from w3af.core.data.dc.generic.form import Form
-from w3af.core.data.dc.cookie import Cookie
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_types import BOOL, REGEX, LIST
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.utils.header_link_extract import headers_url_generator
+from w4af.core.data.db.variant_db import VariantDB
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.db.disk_set import DiskSet
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.dc.factory import dc_from_form_params
+from w4af.core.data.dc.generic.form import Form
+from w4af.core.data.dc.cookie import Cookie
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_types import BOOL, REGEX, LIST
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
 
 
 class web_spider(CrawlPlugin):
@@ -215,7 +215,7 @@ class web_spider(CrawlPlugin):
         :param resp: HTTP response object
         :param fuzzable_req: The HTTP request that generated the response
         """
-        # Analyze all directories, if the URL w3af just found is:
+        # Analyze all directories, if the URL w4af just found is:
         #
         #   http://localhost/a/b/c/f00.php
         #
@@ -279,7 +279,7 @@ class web_spider(CrawlPlugin):
         :param ref: A URL instance to match against the user configured filters
         :return: True if we should navigate to this URL
         """
-        # I don't want w3af sending requests to 3rd parties!
+        # I don't want w4af sending requests to 3rd parties!
         if ref.get_domain() != self._target_domain:
             msg = 'web_spider will ignore %s (different domain name)'
             args = (ref.get_domain(),)

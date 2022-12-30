@@ -3,33 +3,33 @@ entries.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
 
-from w3af.core.ui.gui import history
-from w3af.core.ui.gui import helpers
-from w3af.core.ui.gui.constants import W3AF_ICON
-from w3af.core.ui.gui.user_help.open_help import open_help
+from w4af.core.ui.gui import history
+from w4af.core.ui.gui import helpers
+from w4af.core.ui.gui.constants import w4af_ICON
+from w4af.core.ui.gui.user_help.open_help import open_help
 
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.options.preferences import Preferences
-from w3af.core.data.parsers.doc.sgml import SGMLParser
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.options.preferences import Preferences
+from w4af.core.data.parsers.doc.sgml import SGMLParser
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 class ValidatedEntry(gtk.Entry):
@@ -642,7 +642,7 @@ class RememberingWindow(gtk.Window):
 
     Also has a vertical box for the content.
 
-    :param w3af: the w3af core
+    :param w4af: the w4af core
     :param idstring: an id for the configuration
     :param title: the window title
     :param helpid: the chapter of the help guide
@@ -654,14 +654,14 @@ class RememberingWindow(gtk.Window):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, idstring, title, helpid='', onDestroy=None, guessResize=True):
+    def __init__(self, w4af, idstring, title, helpid='', onDestroy=None, guessResize=True):
         super(RememberingWindow, self).__init__(gtk.WINDOW_TOPLEVEL)
-        self.set_icon_from_file(W3AF_ICON)
+        self.set_icon_from_file(w4af_ICON)
         self.onDestroy = onDestroy
         self.helpid = helpid
 
         # position and dimensions
-        self.winconfig = w3af.mainwin.generalconfig
+        self.winconfig = w4af.mainwin.generalconfig
         self.id_size = idstring + "-size"
         self.id_position = idstring + "-position"
         conf_position = self.winconfig.get(self.id_position, (100, 100))
@@ -702,7 +702,7 @@ class RememberingWindow(gtk.Window):
             self.winconfig[self.id_size] = self.get_size()
             self.winconfig[self.id_position] = self.get_position()
         except ValueError:
-            # https://github.com/andresriancho/w3af/issues/8890
+            # https://github.com/andresriancho/w4af/issues/8890
             pass
 
         return False
@@ -743,7 +743,7 @@ class PagesEntry(ValidatedEntry):
 class PagesControl(gtk.HBox):
     """The control to pass the pages.
 
-    :param w3af: the w3af core
+    :param w4af: the w4af core
     :param callback: the function to call back when a page is changed.
     :param maxpages: the quantity of pages.
 
@@ -752,8 +752,8 @@ class PagesControl(gtk.HBox):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, callback, maxpages=None):
-        self.w3af = w3af
+    def __init__(self, w4af, callback, maxpages=None):
+        self.w4af = w4af
         gtk.HBox.__init__(self)
         self.callback = callback
         self.page = 1
@@ -802,7 +802,7 @@ class PagesControl(gtk.HBox):
     def _textpage(self, widg):
         val = self.pageentry.get_text()
         if not self.pageentry.is_valid():
-            self.w3af.mainwin.sb(_("%r is not a good value!") % val)
+            self.w4af.mainwin.sb(_("%r is not a good value!") % val)
             return
         self.set_page(int(val))
 
@@ -876,15 +876,15 @@ class _RememberingPane(object):
 
     Don't use it directly, you should use the ones provided below this.
 
-    :param w3af: the core
+    :param w4af: the core
     :param widgname: the name of the widget (the remembering key)
     :param dimension: 0 for horizontal, 1 for vertical
     :param defaultInitPos: the default position for the first time
                            (overrides "half of the screen").
     """
-    def __init__(self, w3af, widgname, dimension, defaultInitPos=None):
+    def __init__(self, w4af, widgname, dimension, defaultInitPos=None):
         self.connect('notify', self.move_handle)
-        self.winconfig = w3af.mainwin.generalconfig
+        self.winconfig = w4af.mainwin.generalconfig
         self.widgname = widgname
         self.dimension = dimension
 
@@ -893,7 +893,7 @@ class _RememberingPane(object):
         try:
             widgname in self.winconfig
         except ValueError:
-            # https://github.com/andresriancho/w3af/issues/332
+            # https://github.com/andresriancho/w4af/issues/332
             # ValueError: invalid operation on closed shelf
             self.signal = self.connect('draw', self.draw)
         else:
@@ -915,7 +915,7 @@ class _RememberingPane(object):
             try:
                 self.winconfig[self.widgname] = pos
             except ValueError:
-                # https://github.com/andresriancho/w3af/issues/8890
+                # https://github.com/andresriancho/w4af/issues/8890
                 pass
 
     def draw(self, area, event):
@@ -934,27 +934,27 @@ class _RememberingPane(object):
 class RememberingHPaned(gtk.HPaned, _RememberingPane):
     """Remembering horizontal pane.
 
-    :param w3af: the core
+    :param w4af: the core
     :param widgname: the name of the widget (the remembering key)
     :param defPos: the default position for the first time (overrides
                    "half of the screen").
     """
-    def __init__(self, w3af, widgname, defPos=None):
+    def __init__(self, w4af, widgname, defPos=None):
         gtk.HPaned.__init__(self)
-        _RememberingPane.__init__(self, w3af, widgname, 0, defPos)
+        _RememberingPane.__init__(self, w4af, widgname, 0, defPos)
 
 
 class RememberingVPaned(gtk.VPaned, _RememberingPane):
     """Remembering vertical pane.
 
-    :param w3af: the core
+    :param w4af: the core
     :param widgname: the name of the widget (the remembering key)
     :param defPos: the default position for the first time (overrides
                    "half of the screen").
     """
-    def __init__(self, w3af, widgname, defPos=None):
+    def __init__(self, w4af, widgname, defPos=None):
         gtk.VPaned.__init__(self)
-        _RememberingPane.__init__(self, w3af, widgname, 1, defPos)
+        _RememberingPane.__init__(self, w4af, widgname, 1, defPos)
 
 
 class StatusBar(gtk.Statusbar):
@@ -1004,16 +1004,16 @@ class StatusBar(gtk.Statusbar):
 
 class ConfigOptions(gtk.VBox, Preferences):
     """Configuration class.
-    :param w3af: The Core
+    :param w4af: The Core
     :param parentWidg: The parentWidg widget with *reload_options* method
     """
-    def __init__(self, w3af, parentWidg, label='config'):
+    def __init__(self, w4af, parentWidg, label='config'):
         gtk.VBox.__init__(self)
         Preferences.__init__(self, label)
 
         self.set_spacing(5)
         self.def_padding = 5
-        self.w3af = w3af
+        self.w4af = w4af
         self.parentWidg = parentWidg
         self.widgets_status = {}
         self.propagAnyWidgetChanged = helpers.PropagateBuffer(
@@ -1140,14 +1140,14 @@ class ConfigOptions(gtk.VBox, Preferences):
         for section, optList in list(self.options.items()):
             for opt in optList:
                 opt.widg.save()
-        self.w3af.mainwin.sb(_("Configuration saved successfully"))
+        self.w4af.mainwin.sb(_("Configuration saved successfully"))
         self.parentWidg.reload_options()
 
     def _revertPanel(self, *vals):
         """Revert all widgets to their initial state."""
         for widg in self.widgets_status:
             widg.revert_value()
-        self.w3af.mainwin.sb(
+        self.w4af.mainwin.sb(
             _("The configuration was reverted to its last saved state"))
         self.parentWidg.reload_options()
 

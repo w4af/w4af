@@ -3,19 +3,19 @@ test_info.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -27,12 +27,12 @@ import unittest
 import pytest
 from vulndb.db_vuln import Reference, DBVuln
 
-from w3af.core.data.kb.info import Info
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.dc.query_string import QueryString
-from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
-from w3af.core.data.dc.generic.nr_kv_container import NonRepeatKeyValueContainer
+from w4af.core.data.kb.info import Info
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.dc.query_string import QueryString
+from w4af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
+from w4af.core.data.dc.generic.nr_kv_container import NonRepeatKeyValueContainer
 
 
 BLIND_SQLI_REFS = [{"url": "http://capec.mitre.org/data/definitions/7.html",
@@ -96,18 +96,18 @@ class TestInfo(unittest.TestCase):
 
     def test_set_uri(self):
         i = MockInfo()
-        self.assertRaises(TypeError, i.set_uri, 'http://www.w3af.com/')
+        self.assertRaises(TypeError, i.set_uri, 'http://www.w4af.com/')
         
-        uri = URL('http://www.w3af.com/')
+        uri = URL('http://www.w4af.com/')
         i.set_uri(uri)
         self.assertEqual(i.get_uri(), uri)
 
     def test_set_url(self):
         i = MockInfo()
-        self.assertRaises(TypeError, i.set_url, 'http://www.w3af.com/?id=1')
+        self.assertRaises(TypeError, i.set_url, 'http://www.w4af.com/?id=1')
         
-        uri = URL('http://www.w3af.com/?id=1')
-        url = URL('http://www.w3af.com/')
+        uri = URL('http://www.w4af.com/?id=1')
+        url = URL('http://www.w4af.com/')
         
         i.set_url(uri)
         
@@ -125,7 +125,7 @@ class TestInfo(unittest.TestCase):
 
     def test_get_desc_new_line(self):
         """
-        https://github.com/andresriancho/w3af/issues/12220
+        https://github.com/andresriancho/w4af/issues/12220
         """
         i = MockInfo(desc=('This is a rather long and complex desc which has'
                            'a new line at the end.\n\n'))
@@ -189,7 +189,7 @@ class TestInfo(unittest.TestCase):
         self.assertIsInstance(inst.get_dc(), QueryString)
 
     def test_get_uniq_id(self):
-        uri = URL('http://www.w3af.com/')
+        uri = URL('http://www.w4af.com/')
 
         i = MockInfo()
         i.set_uri(uri)
@@ -197,7 +197,7 @@ class TestInfo(unittest.TestCase):
         self.assertIsInstance(i.get_uniq_id(), str)
 
     def test_get_uniq_id_with_copy(self):
-        uri = URL('http://www.w3af.com/')
+        uri = URL('http://www.w4af.com/')
 
         i1 = MockInfo()
         i1.set_uri(uri)

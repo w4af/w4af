@@ -3,28 +3,28 @@ test_url_parameter.py
 
 Copyright 2016 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
 import httpretty
 
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.url.HTTPRequest import HTTPRequest
-from w3af.core.data.url import opener_settings
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.url.HTTPRequest import HTTPRequest
+from w4af.core.data.url import opener_settings
 
 class TestURLParameterHandler(unittest.TestCase):
 
@@ -54,7 +54,7 @@ class TestURLParameterHandler(unittest.TestCase):
     @httpretty.activate(allow_net_connect=False)
     def test_handler_integration_http(self):
         """
-        Integration test for http with w3af's URL opener.
+        Integration test for http with w4af's URL opener.
         """
         self.handler_integration_with_protocol('http')
 
@@ -62,6 +62,6 @@ class TestURLParameterHandler(unittest.TestCase):
     @httpretty.activate(allow_net_connect=False)
     def test_handler_integration_https(self):
         """
-        Integration test for https with w3af's URL opener.
+        Integration test for https with w4af's URL opener.
         """
         self.handler_integration_with_protocol('https')

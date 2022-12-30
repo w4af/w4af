@@ -3,25 +3,25 @@ test_javascript_in_html.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 
-from w3af.core.data.context.context.main import get_context
-from w3af.core.data.context.context.html import (ScriptText,
+from w4af.core.data.context.context.main import get_context
+from w4af.core.data.context.context.html import (ScriptText,
                                                  HtmlAttrSingleQuote,
                                                  HtmlAttrDoubleQuote)
 
@@ -56,7 +56,7 @@ class TestJavaScriptInHTML(unittest.TestCase):
     def test_payload_javascript_value(self):
         """
         Test for false positive reported at
-        https://github.com/andresriancho/w3af/issues/13359
+        https://github.com/andresriancho/w4af/issues/13359
 
         :return: Should not find a XSS
         """
@@ -107,7 +107,7 @@ class TestJavaScriptInHTML(unittest.TestCase):
     def test_payload_href_append_no_exec(self):
         html = """
         <html>
-            <a href="http://w3af.org/PAYLOAD">foo</a>
+            <a href="http://w4af.org/PAYLOAD">foo</a>
         </html>
         """
         context = get_context(html, 'PAYLOAD')[0]
@@ -279,8 +279,8 @@ class TestJavaScriptInHTML(unittest.TestCase):
     def test_payload_with_space_equal_not_executable_attr(self):
         """
         Related with:
-            https://github.com/andresriancho/w3af/issues/1557
-            https://github.com/andresriancho/w3af/issues/2919
+            https://github.com/andresriancho/w4af/issues/1557
+            https://github.com/andresriancho/w4af/issues/2919
         """
         html = """
         <html>
@@ -293,8 +293,8 @@ class TestJavaScriptInHTML(unittest.TestCase):
     def test_payload_with_space_equal_src_executable(self):
         """
         Related with:
-            https://github.com/andresriancho/w3af/issues/1557
-            https://github.com/andresriancho/w3af/issues/2919
+            https://github.com/andresriancho/w4af/issues/1557
+            https://github.com/andresriancho/w4af/issues/2919
         """
         html = """
         <html>

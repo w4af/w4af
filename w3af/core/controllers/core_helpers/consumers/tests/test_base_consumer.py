@@ -3,19 +3,19 @@ test_base_consumer.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import threading
@@ -23,10 +23,10 @@ import unittest
 
 from unittest.mock import Mock
 
-from w3af.core.controllers.core_helpers.consumers.base_consumer import BaseConsumer
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.doc.url import URL
+from w4af.core.controllers.core_helpers.consumers.base_consumer import BaseConsumer
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.doc.url import URL
 
 
 EXPECTED_THREAD_NAMES = {
@@ -43,7 +43,7 @@ EXPECTED_THREAD_NAMES = {
 class TestBaseConsumer(unittest.TestCase):
 
     def setUp(self):
-        self.core = w3afCore()
+        self.core = w4afCore()
         self.assertEqual(self._get_running_threads(), set(EXPECTED_THREAD_NAMES))
         self.bc = BaseConsumer([], self.core, 'TestConsumer')
 

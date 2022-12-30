@@ -3,26 +3,26 @@ is_source_file.py
 
 Copyright 2010 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
 import string
 
-from w3af.core.data.quick_match.multi_re import MultiRE
+from w4af.core.data.quick_match.multi_re import MultiRE
 
 PHP = 'PHP'
 ASP = 'ASP'
@@ -42,7 +42,7 @@ SOURCE_CODE = (
     (r'<\?php\r.*?\?>', {PHP}),       # and are repeated over the list
 
     # Need to review how to re-add these in the future
-    # https://github.com/andresriancho/w3af/issues/2129
+    # https://github.com/andresriancho/w4af/issues/2129
     #
     #('<\? .*?\?>', {PHP}),
     #('<\?\n.*?\?>', {PHP}),
@@ -132,8 +132,8 @@ def is_false_positive(http_response, match, detected_langs):
             return True
 
     # Avoid some (rather common) false positives that appear in JS files
-    # https://github.com/andresriancho/w3af/issues/5379
-    # https://github.com/andresriancho/w3af/issues/12379
+    # https://github.com/andresriancho/w4af/issues/5379
+    # https://github.com/andresriancho/w4af/issues/12379
     #
     # The detection for some languages is weaker, thus we don't fully trust
     # them:

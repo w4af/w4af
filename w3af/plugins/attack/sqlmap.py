@@ -3,19 +3,19 @@ sqlmap.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,16 +26,16 @@ import textwrap
 
 from multiprocessing.dummy import Process
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.exceptions import OSDetectionException
-from w3af.core.controllers.plugins.attack_plugin import AttackPlugin
-from w3af.core.controllers.intrusion_tools.readMethodHelpers import read_os_detection
-from w3af.core.data.kb.read_shell import ReadShell
-from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
-from w3af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
-from w3af.plugins.attack.db.sqlmap_wrapper import Target, SQLMapWrapper
-from w3af.plugins.attack.payloads.decorators.read_decorator import read_debug
+from w4af.core.controllers.exceptions import OSDetectionException
+from w4af.core.controllers.plugins.attack_plugin import AttackPlugin
+from w4af.core.controllers.intrusion_tools.readMethodHelpers import read_os_detection
+from w4af.core.data.kb.read_shell import ReadShell
+from w4af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
+from w4af.core.data.fuzzer.mutants.postdata_mutant import PostDataMutant
+from w4af.plugins.attack.db.sqlmap_wrapper import Target, SQLMapWrapper
+from w4af.plugins.attack.payloads.decorators.read_decorator import read_debug
 
 
 class sqlmap(AttackPlugin):
@@ -94,7 +94,7 @@ class sqlmap(AttackPlugin):
 
         if not isinstance(mutant, (QSMutant, PostDataMutant)):
             msg = ('The SQL injection vulnerability at %s can not be exploited'
-                   ' by w3af\'s sqlmap wrapper because it can only handle'
+                   ' by w4af\'s sqlmap wrapper because it can only handle'
                    ' query string and url-encoded post data parameters.')
             om.out.console(msg % (mutant.get_url(),))
             return False
@@ -102,7 +102,7 @@ class sqlmap(AttackPlugin):
         orig_value = mutant.get_token().get_original_value()
 
         # When the original value of the parameter was empty, mostly when it
-        # was an HTML form, sqlmap can't find the vulnerability (and w3af does)
+        # was an HTML form, sqlmap can't find the vulnerability (and w4af does)
         # so we're adding a '1' here just in case.
         parameter_values = {orig_value, '1'}
 
@@ -118,8 +118,8 @@ class sqlmap(AttackPlugin):
             try:
                 sqlmap = SQLMapWrapper(target, self._uri_opener)
             except TypeError:
-                issue_url = 'https://github.com/andresriancho/w3af/issues/6439'
-                msg = ('w3af\'s sqlmap wrapper has some limitations, and you'
+                issue_url = 'https://github.com/andresriancho/w4af/issues/6439'
+                msg = ('w4af\'s sqlmap wrapper has some limitations, and you'
                        ' just found one of them. For more information please'
                        ' visit %s .')
                 om.out.console(msg % issue_url)
@@ -140,8 +140,8 @@ class sqlmap(AttackPlugin):
                     # Some error that we don't have a special handling for
                     return False
 
-                issue_url = 'https://github.com/andresriancho/w3af/issues/1989'
-                msg = ('w3af\'s sqlmap wrapper has some limitations, and you'
+                issue_url = 'https://github.com/andresriancho/w4af/issues/1989'
+                msg = ('w4af\'s sqlmap wrapper has some limitations, and you'
                        ' just found one of them. For more information please'
                        ' visit %s and add the steps required to reproduce this'
                        ' issue which will help us debug and fix it.')
@@ -235,7 +235,7 @@ class SQLMapShell(ReadShell):
         # any code.
         #
         # Not using super() due to some issues I've found in real life
-        #   https://github.com/andresriancho/w3af/issues/3610
+        #   https://github.com/andresriancho/w4af/issues/3610
         #
         # Documented here:
         #   http://goo.gl/jhRznU

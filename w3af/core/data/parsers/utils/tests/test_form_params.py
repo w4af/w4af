@@ -2,19 +2,19 @@
 """
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,13 +24,13 @@ import copy
 import math
 import time
 
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.parsers.utils.form_constants import (MODE_ALL, MODE_TB,
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.parsers.utils.form_constants import (MODE_ALL, MODE_TB,
                                                          MODE_B, MODE_T,
                                                          MODE_TMB,
                                                          INPUT_TYPE_RADIO,
                                                          INPUT_TYPE_SELECT)
-from w3af.core.data.parsers.utils.form_params import (FormParameters,
+from w4af.core.data.parsers.utils.form_params import (FormParameters,
                                                       DEFAULT_FORM_ENCODING)
 
 
@@ -71,11 +71,11 @@ ALL_FORMS = (form_with_radio, form_with_checkbox, form_select_cars)
 class TestFormParams(unittest.TestCase):
     def test_set_action_str(self):
         f = FormParameters()
-        self.assertRaises(TypeError, f.set_action, 'http://www.w3af.com/')
+        self.assertRaises(TypeError, f.set_action, 'http://www.w4af.com/')
 
     def test_set_action_url(self):
         f = FormParameters()
-        action = URL('http://www.w3af.com/')
+        action = URL('http://www.w4af.com/')
         f.set_action(action)
 
         self.assertIs(f.get_action(), action)
@@ -346,7 +346,7 @@ class TestFormParams(unittest.TestCase):
 
         In this case I'm going to call get_variants with mode=MODE_TB
 
-        This is the case reported by Taras at https://sourceforge.net/apps/trac/w3af/ticket/171015
+        This is the case reported by Taras at https://sourceforge.net/apps/trac/w4af/ticket/171015
         """
         new_form = create_form_params_helper(form_with_radio +
                                              form_select_cars +
@@ -398,8 +398,8 @@ class TestFormParams(unittest.TestCase):
                           INPUT_TYPE_RADIO)
 
     def test_get_form_id(self):
-        action = URL('http://www.w3af.com/action')
-        hosted_at_url = URL('http://www.w3af.com/')
+        action = URL('http://www.w4af.com/action')
+        hosted_at_url = URL('http://www.w4af.com/')
         attributes = {'class': 'form-main'}
 
         form = FormParameters(method='GET', action=action,

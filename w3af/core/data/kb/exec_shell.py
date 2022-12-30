@@ -3,33 +3,33 @@ exec_shell.py
 
 Copyright 2010 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import textwrap
 
-import w3af.plugins.attack.payloads.payload_handler as payload_handler
-import w3af.core.controllers.output_manager as om
+import w4af.plugins.attack.payloads.payload_handler as payload_handler
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.intrusion_tools.execMethodHelpers import os_detection_exec
-from w3af.core.controllers.payload_transfer.payload_transfer_factory import payload_transfer_factory
-from w3af.core.data.kb.shell import Shell
-from w3af.plugins.attack.payloads.decorators.read_decorator import read_debug
-from w3af.plugins.attack.payloads.decorators.download_decorator import download_debug
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.intrusion_tools.execMethodHelpers import os_detection_exec
+from w4af.core.controllers.payload_transfer.payload_transfer_factory import payload_transfer_factory
+from w4af.core.data.kb.shell import Shell
+from w4af.plugins.attack.payloads.decorators.read_decorator import read_debug
+from w4af.plugins.attack.payloads.decorators.download_decorator import download_debug
 
 
 class ExecShell(Shell):

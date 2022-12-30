@@ -3,39 +3,39 @@ profiles.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 from gi.repository import Gtk as gtk
 import html
 
-from w3af.core.ui.gui import helpers, entries
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.data.profile.profile import profile as profile
+from w4af.core.ui.gui import helpers, entries
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.data.profile.profile import profile as profile
 
 
 class ProfileList(gtk.TreeView):
     """A list showing all the profiles.
 
-    :param w3af: The main core class.
+    :param w4af: The main core class.
     :param initial: The profile to start
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, initial=None):
-        self.w3af = w3af
+    def __init__(self, w4af, initial=None):
+        self.w4af = w4af
 
         super(ProfileList, self).__init__()
 
@@ -65,7 +65,7 @@ class ProfileList(gtk.TreeView):
         # easily to it
         self.pluginsConfigs = {None: {}}
         self.origActPlugins = sorted(
-            self.w3af.mainwin.pcbody.get_activated_plugins())
+            self.w4af.mainwin.pcbody.get_activated_plugins())
 
         self.show()
 
@@ -81,7 +81,7 @@ class ProfileList(gtk.TreeView):
         self.profile_instances = {None: None}
 
         # build the list with the profiles name, description, profile_instance
-        instance_list, invalid_profiles = self.w3af.profiles.get_profile_list()
+        instance_list, invalid_profiles = self.w4af.profiles.get_profile_list()
         tmpprofiles = []
         for profile_obj in instance_list:
             nom = profile_obj.get_name()
@@ -89,7 +89,7 @@ class ProfileList(gtk.TreeView):
             tmpprofiles.append((nom, desc, profile_obj))
 
         # Also add to that list the "selected" profile, that was specified by
-        # the user with the "-p" parameter when executing w3af
+        # the user with the "-p" parameter when executing w4af
         if self._parameter_profile:
             try:
                 profile_obj = profile(self._parameter_profile)
@@ -170,14 +170,14 @@ class ProfileList(gtk.TreeView):
     def _controlDifferences(self):
         """Returns if something is different against initial state."""
         # Always check activation status
-        nowActive = sorted(self.w3af.mainwin.pcbody.get_activated_plugins())
+        nowActive = sorted(self.w4af.mainwin.pcbody.get_activated_plugins())
         if nowActive != self.origActPlugins:
             return True
 
         # Check plugins config
-        for ptype in self.w3af.plugins.get_plugin_types():
-            for pname in self.w3af.plugins.get_plugin_list(ptype):
-                opts = self.w3af.plugins.get_plugin_options(ptype, pname)
+        for ptype in self.w4af.plugins.get_plugin_types():
+            for pname in self.w4af.plugins.get_plugin_list(ptype):
+                opts = self.w4af.plugins.get_plugin_options(ptype, pname)
                 if not opts:
                     continue
 
@@ -221,7 +221,7 @@ class ProfileList(gtk.TreeView):
 
         # update the mainwin buttons
         newstatus = self._get_actionsSensitivity(path)
-        self.w3af.mainwin.activate_profile_actions([True] + newstatus)
+        self.w4af.mainwin.activate_profile_actions([True] + newstatus)
 
     def plugin_config(self, plugin):
         """Gets executed when a plugin config panel is created.
@@ -268,7 +268,7 @@ class ProfileList(gtk.TreeView):
                 # unbold it and set it as not modified
                 row[0] = row[4]
                 row[3] = False
-                self.w3af.mainwin.sb(
+                self.w4af.mainwin.sb(
                     _("The previous profile configuration was discarded"))
             return stayhere
         return False
@@ -384,7 +384,7 @@ class ProfileList(gtk.TreeView):
         self.selectedProfile = profile_name
 
         try:
-            self.w3af.profiles.use_profile(profile_obj.get_profile_file())
+            self.w4af.profiles.use_profile(profile_obj.get_profile_file())
         except BaseFrameworkException as w3:
             dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
                                     gtk.MESSAGE_WARNING, gtk.BUTTONS_OK,
@@ -395,15 +395,15 @@ class ProfileList(gtk.TreeView):
 
         # Reload the UI
         profdesc = None if profile_obj is None else profile_obj.get_desc()
-        self.w3af.mainwin.pcbody.reload(profdesc)
+        self.w4af.mainwin.pcbody.reload(profdesc)
 
         # get the activated plugins
-        self.origActPlugins = self.w3af.mainwin.pcbody.get_activated_plugins()
+        self.origActPlugins = self.w4af.mainwin.pcbody.get_activated_plugins()
 
         # update the mainwin buttons
         path = self.get_cursor()[0]
         newstatus = self._get_actionsSensitivity(path)
-        self.w3af.mainwin.activate_profile_actions(newstatus)
+        self.w4af.mainwin.activate_profile_actions(newstatus)
 
     def new_profile(self, widget=None):
         """Creates a new profile."""
@@ -418,7 +418,7 @@ class ProfileList(gtk.TreeView):
 
         # use the empty profile
         try:
-            self.w3af.profiles.use_profile(None)
+            self.w4af.profiles.use_profile(None)
         except BaseFrameworkException as w3:
             dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
                                     gtk.MESSAGE_WARNING,
@@ -426,29 +426,29 @@ class ProfileList(gtk.TreeView):
             dlg.run()
             dlg.destroy()
             return
-        self.w3af.mainwin.pcbody.reload(None)
+        self.w4af.mainwin.pcbody.reload(None)
 
         # save it
         filename, description = dlgResponse
         filename = html.escape(filename)
         try:
             profile_obj = helpers.coreWrap(
-                self.w3af.profiles.save_current_to_new_profile,
+                self.w4af.profiles.save_current_to_new_profile,
                 filename, description)
         except BaseFrameworkException:
             #FIXME: This message should be more descriptive
-            self.w3af.mainwin.sb(_("Problem hit!"))
+            self.w4af.mainwin.sb(_("Problem hit!"))
             return
-        self.w3af.mainwin.sb(_("New profile created"))
+        self.w4af.mainwin.sb(_("New profile created"))
         self.load_profiles(selected=profile_obj.get_name())
 
         # get the activated plugins
-        self.origActPlugins = self.w3af.mainwin.pcbody.get_activated_plugins()
+        self.origActPlugins = self.w4af.mainwin.pcbody.get_activated_plugins()
 
         # update the mainwin buttons
         path = self.get_cursor()[0]
         newstatus = self._get_actionsSensitivity(path)
-        self.w3af.mainwin.activate_profile_actions(newstatus)
+        self.w4af.mainwin.activate_profile_actions(newstatus)
 
     def save_profile(self, widget=None):
         """Saves the selected profile."""
@@ -456,16 +456,16 @@ class ProfileList(gtk.TreeView):
 
         if profile_obj is None:
             # AttributeError: 'NoneType' object has no attribute 'get_name'
-            # https://github.com/andresriancho/w3af/issues/11941
+            # https://github.com/andresriancho/w4af/issues/11941
             return
 
-        if not self.w3af.mainwin.save_state_to_core(relaxedTarget=True):
+        if not self.w4af.mainwin.save_state_to_core(relaxedTarget=True):
             return
 
-        self.w3af.profiles.save_current_to_profile(profile_obj.get_name(),
+        self.w4af.profiles.save_current_to_profile(profile_obj.get_name(),
                                                    prof_desc=profile_obj.get_desc(),
                                                    prof_path=profile_obj.get_profile_file())
-        self.w3af.mainwin.sb(_('Profile saved'))
+        self.w4af.mainwin.sb(_('Profile saved'))
         path = self.get_cursor()[0]
         row = self.liststore[path]
         row[0] = row[4]
@@ -473,7 +473,7 @@ class ProfileList(gtk.TreeView):
 
     def save_as_profile(self, widget=None):
         """Copies the selected profile."""
-        if not self.w3af.mainwin.save_state_to_core(relaxedTarget=True):
+        if not self.w4af.mainwin.save_state_to_core(relaxedTarget=True):
             return
 
         dlg = entries.EntryDialog(_("Save as..."), gtk.STOCK_SAVE_AS,
@@ -485,13 +485,13 @@ class ProfileList(gtk.TreeView):
             filename, description = dlgResponse
             filename = html.escape(filename)
             try:
-                profile_obj = helpers.coreWrap(self.w3af.profiles.save_current_to_new_profile,
+                profile_obj = helpers.coreWrap(self.w4af.profiles.save_current_to_new_profile,
                                                filename, description)
             except BaseFrameworkException:
-                self.w3af.mainwin.sb(
+                self.w4af.mainwin.sb(
                     _("There was a problem saving the profile!"))
                 return
-            self.w3af.mainwin.sb(_("New profile created"))
+            self.w4af.mainwin.sb(_("New profile created"))
             self.load_profiles(selected=profile_obj.get_name())
 
     def revert_profile(self, widget=None):
@@ -508,7 +508,7 @@ class ProfileList(gtk.TreeView):
             path = self.get_cursor()[0]
 
             if not path:
-                # https://github.com/andresriancho/w3af/issues/1886
+                # https://github.com/andresriancho/w4af/issues/1886
                 return
 
             row = self.liststore[path]
@@ -516,7 +516,7 @@ class ProfileList(gtk.TreeView):
             row[0] = row[4]
             row[3] = False
             self._use_profile()
-            self.w3af.mainwin.sb(_("The profile configuration was reverted to"
+            self.w4af.mainwin.sb(_("The profile configuration was reverted to"
                                    " its last saved state"))
 
     def delete_profile(self, widget=None):
@@ -535,6 +535,6 @@ class ProfileList(gtk.TreeView):
             if profile_obj.get_profile_file() == self._parameter_profile:
                 self._parameter_profile = None
 
-            self.w3af.profiles.remove_profile(profile_obj.get_profile_file())
-            self.w3af.mainwin.sb(_("The profile was deleted"))
+            self.w4af.profiles.remove_profile(profile_obj.get_profile_file())
+            self.w4af.mainwin.sb(_("The profile was deleted"))
             self.load_profiles()

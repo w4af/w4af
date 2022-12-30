@@ -18,7 +18,7 @@
 This file is part of urlgrabber, a high-level cross-protocol url-grabber
 Copyright 2002-2004 Michael D. Stenner, Ryan Tomayko
 
-This file was modified (considerably) to be integrated with w3af. Some
+This file was modified (considerably) to be integrated with w4af. Some
 modifications are:
   - Added the size limit for responses
   - Raising ConnectionPoolException in some places
@@ -40,7 +40,7 @@ from .utils import debug, error, to_utf8_raw
 from .connection_manager import ConnectionManager
 from .connections import (ProxyHTTPConnection, ProxyHTTPSConnection,
                           HTTPConnection, HTTPSConnection)
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               HTTPRequestException,
                                               ConnectionPoolException)
 
@@ -211,7 +211,7 @@ class KeepAliveHandler(object):
             # read the response here because we're closer to the error and can
             # better understand it.
             #
-            # https://github.com/andresriancho/w3af/issues/2074
+            # https://github.com/andresriancho/w4af/issues/2074
             self._cm.remove_connection(conn, reason='http connection died')
             raise HTTPRequestException('The HTTP connection died: %s' % e)
         except Exception as e:

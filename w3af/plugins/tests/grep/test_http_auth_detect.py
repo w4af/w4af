@@ -3,36 +3,36 @@ test_http_auth_detect.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import unittest
 
-import w3af.core.data.kb.knowledge_base as kb
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.headers import Headers
-from w3af.plugins.grep.http_auth_detect import http_auth_detect
+import w4af.core.data.kb.knowledge_base as kb
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.headers import Headers
+from w4af.plugins.grep.http_auth_detect import http_auth_detect
 
 
 class test_http_auth_detect(unittest.TestCase):
 
     def setUp(self):
-        self.url = URL('http://www.w3af.com/')
+        self.url = URL('http://www.w4af.com/')
         self.headers = Headers(list({'content-type': 'text/html'}.items()))
         self.request = FuzzableRequest(self.url, method='GET')
         self.plugin = http_auth_detect()
@@ -56,7 +56,7 @@ class test_http_auth_detect(unittest.TestCase):
 
     def test_http_auth_detect_uri(self):
         body = 'ABC ' * 100
-        body += '<a href="http://abc:def@www.w3af.com/foo.bar">test</a>'
+        body += '<a href="http://abc:def@www.w4af.com/foo.bar">test</a>'
         body += '</br> ' * 50
         response = HTTPResponse(200, body, self.headers, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)
@@ -73,7 +73,7 @@ class test_http_auth_detect(unittest.TestCase):
 
     def test_http_auth_detect_simple(self):
         body = ''
-        hdrs = {'content-type': 'text/html', 'www-authenticate': 'realm-w3af'}
+        hdrs = {'content-type': 'text/html', 'www-authenticate': 'realm-w4af'}
         hdrs = Headers(list(hdrs.items()))
         response = HTTPResponse(401, body, hdrs, self.url, self.url, _id=1)
         self.plugin.grep(self.request, response)

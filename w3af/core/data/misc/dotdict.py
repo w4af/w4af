@@ -1,4 +1,4 @@
-from w3af.core.data.misc.encoding import smart_str_ignore, smart_unicode
+from w4af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 class dotdict(dict):

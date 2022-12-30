@@ -3,19 +3,19 @@ manager.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -29,12 +29,12 @@ import multiprocessing as mp
 from multiprocessing.dummy import Process
 from functools import wraps
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.misc.factory import factory
-from w3af.core.controllers.threads.threadpool import Pool
-from w3af.core.controllers.core_helpers.consumers.constants import POISON_PILL
-from w3af.core.controllers.threads.silent_joinable_queue import SilentJoinableQueue
-from w3af.core.data.constants.encodings import UTF8
+from w4af import ROOT_PATH
+from w4af.core.controllers.misc.factory import factory
+from w4af.core.controllers.threads.threadpool import Pool
+from w4af.core.controllers.core_helpers.consumers.constants import POISON_PILL
+from w4af.core.controllers.threads.silent_joinable_queue import SilentJoinableQueue
+from w4af.core.data.constants.encodings import UTF8
 
 
 def start_thread_on_demand(func):
@@ -49,7 +49,7 @@ def start_thread_on_demand(func):
     """
     @wraps(func)
     def od_wrapper(*args, **kwds):
-        from w3af.core.controllers.output_manager import manager
+        from w4af.core.controllers.output_manager import manager
 
         if manager.is_alive():
             return func(*args, **kwds)
@@ -65,8 +65,8 @@ def start_thread_on_demand(func):
                 # In the second case, we can't start() it again and thus we'll
                 # get a RuntimeError
                 #
-                # https://github.com/andresriancho/w3af/issues/7453
-                # https://github.com/andresriancho/w3af/issues/5354
+                # https://github.com/andresriancho/w4af/issues/7453
+                # https://github.com/andresriancho/w4af/issues/5354
                 pass
 
         return func(*args, **kwds)
@@ -88,13 +88,13 @@ class OutputManager(Process):
 
     # If the FLUSH_TIMEOUT is larger (60 seconds for example) the time it takes
     # for the plugin to process all the messages / vulnerabilities in a call to
-    # flush() will be larger, because w3af will (most likely) have found more
+    # flush() will be larger, because w4af will (most likely) have found more
     # vulnerabilities. So we're calling the flush() method more often and having
     # shorter calls to flush() than before.
     FLUSH_TIMEOUT = 30
 
     # To prevent locks this always needs to be larger than the output plugins
-    # available in the w3af framework
+    # available in the w4af framework
     WORKER_THREADS = 10
 
     # Thread locking to avoid starting the om many times from different threads
@@ -114,13 +114,13 @@ class OutputManager(Process):
         # Internal variables
         self.in_queue = SilentJoinableQueue(ctx=self.ctx)
         self.in_queue.cancel_join_thread()
-        self._w3af_core = None
+        self._w4af_core = None
         self._last_output_flush = None
         self._is_shutting_down = False
         self._worker_pool = self.get_worker_pool()
 
-    def set_w3af_core(self, w3af_core):
-        self._w3af_core = w3af_core
+    def set_w4af_core(self, w4af_core):
+        self._w4af_core = w4af_core
 
     def get_worker_pool(self):
         return Pool(self.WORKER_THREADS,
@@ -200,7 +200,7 @@ class OutputManager(Process):
 
         Only flush once every FLUSH_TIMEOUT seconds.
 
-        :see: https://github.com/andresriancho/w3af/issues/6726
+        :see: https://github.com/andresriancho/w4af/issues/6726
         :return: None
         """
         if not self.should_flush():
@@ -233,7 +233,7 @@ class OutputManager(Process):
         # and the output manager calls flush() for a second time while
         # we're still running the first call, just ignore.
         if o_plugin.is_running_flush:
-            import w3af.core.controllers.output_manager as om
+            import w4af.core.controllers.output_manager as om
 
             msg = ('The %s plugin is still running flush(), the output'
                    ' manager will not call flush() again to give the'
@@ -260,11 +260,11 @@ class OutputManager(Process):
             spent_time = time.time() - start_time
             args = (o_plugin.get_name(), spent_time)
 
-            import w3af.core.controllers.output_manager as om
+            import w4af.core.controllers.output_manager as om
             om.out.debug('%s.flush() took %.2fs to run' % args)
 
     def _handle_output_plugin_exception(self, o_plugin, exception):
-        if self._w3af_core is None:
+        if self._w4af_core is None:
             return
 
         # Smart error handling, much better than just crashing.
@@ -276,19 +276,19 @@ class OutputManager(Process):
         # FIXME: I need to import this here because of the awful
         #        singletons I use all over the framework. If imported
         #        at the top, they will generate circular import errors
-        from w3af.core.controllers.core_helpers.status import CoreStatus
+        from w4af.core.controllers.core_helpers.status import CoreStatus
 
         class FakeStatus(CoreStatus):
             pass
 
-        status = FakeStatus(self._w3af_core)
+        status = FakeStatus(self._w4af_core)
         status.set_current_fuzzable_request('output', 'n/a')
         status.set_running_plugin('output', o_plugin.get_name(),
                                   log=False)
 
         exec_info = sys.exc_info()
         enabled_plugins = 'n/a'
-        self._w3af_core.exception_handler.handle(status, exception,
+        self._w4af_core.exception_handler.handle(status, exception,
                                                  exec_info,
                                                  enabled_plugins)
 
@@ -384,11 +384,11 @@ class OutputManager(Process):
         This method logs to the output plugins the enabled plugins and their
         configuration.
 
-        :param enabled_plugins: As returned by w3afCore's
+        :param enabled_plugins: As returned by w4afCore's
                                 get_all_enabled_plugins() looks similar to:
                    {'audit':[],'grep':[],'bruteforce':[],'crawl':[],...}
 
-        :param plugins_options: As defined in the w3afCore, looks similar to:
+        :param plugins_options: As defined in the w4afCore, looks similar to:
                    {'audit':{},'grep':{},'bruteforce':{},'crawl':{},...}
         """
         for o_plugin in self._output_plugin_instances:
@@ -504,8 +504,8 @@ class OutputManager(Process):
             self._output_plugin_instances.append(plugin)
 
     def _get_plugin_instance(self, plugin_name):
-        plugin = factory('w3af.plugins.output.%s' % plugin_name)
-        plugin.set_w3af_core(self._w3af_core)
+        plugin = factory('w4af.plugins.output.%s' % plugin_name)
+        plugin.set_w4af_core(self._w4af_core)
 
         if plugin_name in list(self._plugin_options.keys()):
             plugin.set_options(self._plugin_options[plugin_name])

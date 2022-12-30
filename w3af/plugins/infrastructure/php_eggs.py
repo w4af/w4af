@@ -3,19 +3,19 @@ php_eggs.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,16 +26,16 @@ import os.path
 from itertools import repeat
 from collections import namedtuple
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af import ROOT_PATH
-from w3af.core.controllers.plugins.infrastructure_plugin import InfrastructurePlugin
-from w3af.core.controllers.exceptions import NoMoreCalls
-from w3af.core.controllers.threads.threadpool import one_to_many
-from w3af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w3af.core.data.kb.info import Info
-from w3af.core.data.misc.encoding import smart_str_ignore
+from w4af import ROOT_PATH
+from w4af.core.controllers.plugins.infrastructure_plugin import InfrastructurePlugin
+from w4af.core.controllers.exceptions import NoMoreCalls
+from w4af.core.controllers.threads.threadpool import one_to_many
+from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
+from w4af.core.data.kb.info import Info
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class php_eggs(InfrastructurePlugin):
@@ -259,7 +259,7 @@ class php_eggs(InfrastructurePlugin):
 
                 msg = ('The PHP version could not be identified using PHP eggs,'
                        ' please send this signature and the PHP version to the'
-                       ' w3af project develop mailing list. Signature:'
+                       ' w4af project develop mailing list. Signature:'
                        ' EGG_DB[\'%s\'] = %r\n')
                 msg = msg % (version, desc_hashes)
                 om.out.information(msg)

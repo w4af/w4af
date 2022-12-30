@@ -1,8 +1,8 @@
 import re
 
-from w3af.plugins.attack.payloads.base_payload import Payload, read_error_handler
-from w3af.core.ui.console.tables import table
-from w3af.core.controllers.exceptions import BaseFrameworkException
+from w4af.plugins.attack.payloads.base_payload import Payload, read_error_handler
+from w4af.core.ui.console.tables import table
+from w4af.core.controllers.exceptions import BaseFrameworkException
 
 
 class apache_config_directory(Payload):

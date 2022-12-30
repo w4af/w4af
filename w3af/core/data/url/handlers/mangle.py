@@ -3,27 +3,27 @@ mangle.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import urllib.request, urllib.error, urllib.parse
 
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.url.handlers.keepalive import HTTPResponse as kaHTTPResponse
-from w3af.core.data.url.handlers.output_manager import OutputManagerHandler
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.url.handlers.keepalive import HTTPResponse as kaHTTPResponse
+from w4af.core.data.url.handlers.output_manager import OutputManagerHandler
 
 
 class MangleHandler(urllib.request.BaseHandler):
@@ -91,7 +91,7 @@ class MangledKeepAliveHTTPResponse(kaHTTPResponse):
         instance. At this point I've already read everything I needed from the
         socket, so it doesn't make any sense to keep a pointer to it.
 
-        :see: https://github.com/andresriancho/w3af/issues/2172
+        :see: https://github.com/andresriancho/w4af/issues/2172
         """
         self._rbuf = b''
         self._method = None
@@ -101,7 +101,7 @@ class MangledKeepAliveHTTPResponse(kaHTTPResponse):
         Since this HTTP response doesn't have a socket, there is nothing to
         close. We just "pass" to avoid issues like
 
-            https://github.com/andresriancho/w3af/issues/11822
+            https://github.com/andresriancho/w4af/issues/11822
 
         :return: None
         """
@@ -112,7 +112,7 @@ class MangledKeepAliveHTTPResponse(kaHTTPResponse):
         Since this HTTP response doesn't have a socket, there is nothing to
         close. We just "pass" to avoid issues like
 
-            https://github.com/andresriancho/w3af/issues/11822
+            https://github.com/andresriancho/w4af/issues/11822
 
         :return: None
         """

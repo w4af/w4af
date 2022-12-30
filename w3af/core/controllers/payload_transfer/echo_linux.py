@@ -3,28 +3,28 @@ EchoLinux.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import time
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.payload_transfer.base_payload_transfer import BasePayloadTransfer
-from w3af.core.data.misc.encoding import smart_str
+from w4af.core.controllers.payload_transfer.base_payload_transfer import BasePayloadTransfer
+from w4af.core.data.misc.encoding import smart_str
 
 
 class EchoLinux(BasePayloadTransfer):
@@ -46,10 +46,10 @@ class EchoLinux(BasePayloadTransfer):
         arrived as expected to the other end.
         """
         # Check if echo exists and works as expected
-        res = smart_str(self._exec_method("/bin/echo -n 'w3af'"))
-        if b'w3af' != res.strip():
+        res = smart_str(self._exec_method("/bin/echo -n 'w4af'"))
+        if b'w4af' != res.strip():
             om.out.debug('Remote server returned: "' + str(res) +
-                         '" when expecting "w3af".')
+                         '" when expecting "w4af".')
             return False
         else:
             return True
@@ -59,7 +59,7 @@ class EchoLinux(BasePayloadTransfer):
         :return: An estimated transfer time for a file with the specified size.
         """
         before = time.time()
-        res = self._exec_method("echo w3af")
+        res = self._exec_method("echo w4af")
         after = time.time()
 
         # Estimate the time...
@@ -73,7 +73,7 @@ class EchoLinux(BasePayloadTransfer):
 
     def transfer(self, data_str, destination):
         """
-        This method is used to transfer the data_str from w3af to the compromised server.
+        This method is used to transfer the data_str from w4af to the compromised server.
         """
         self._filename = destination
 

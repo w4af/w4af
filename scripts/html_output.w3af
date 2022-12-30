@@ -3,7 +3,7 @@
 plugins
 output console, html_file
 output config html_file
-set output_file output-w3af.html
+set output_file output-w4af.html
 set verbose True
 back
 output config console
@@ -17,7 +17,7 @@ audit xss
 back
 
 target
-set target http://moth/w3af/audit/xss/
+set target http://moth/w4af/audit/xss/
 back
 
 start

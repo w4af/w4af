@@ -4,19 +4,19 @@ test_html.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -24,21 +24,21 @@ import unittest
 import os
 import pytest
 
-import w3af.core.data.kb.config as cf
+import w4af.core.data.kb.config as cf
 
-from w3af import ROOT_PATH
+from w4af import ROOT_PATH
 
-from w3af.core.controllers.misc_settings import EXCLUDE, INCLUDE
+from w4af.core.controllers.misc_settings import EXCLUDE, INCLUDE
 
-from w3af.core.data.dc.urlencoded_form import URLEncodedForm
-from w3af.core.data.dc.factory import dc_from_form_params
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.parsers.utils.form_id_matcher_list import FormIDMatcherList
-from w3af.core.data.parsers.doc.html import HTMLParser
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.parsers.doc.tests.test_sgml import build_http_response
-from w3af.core.data.parsers.doc.tests.data.constants import *
-from w3af.core.data.parsers.utils.form_params import (FormParameters,
+from w4af.core.data.dc.urlencoded_form import URLEncodedForm
+from w4af.core.data.dc.factory import dc_from_form_params
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.parsers.utils.form_id_matcher_list import FormIDMatcherList
+from w4af.core.data.parsers.doc.html import HTMLParser
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.parsers.doc.tests.test_sgml import build_http_response
+from w4af.core.data.parsers.doc.tests.data.constants import *
+from w4af.core.data.parsers.utils.form_params import (FormParameters,
                                                       DEFAULT_FORM_ENCODING)
 
 
@@ -50,7 +50,7 @@ class RaiseHTMLParser(HTMLParser):
 @pytest.mark.smoke
 class TestHTMLParser(unittest.TestCase):
     
-    url = URL('http://w3af.com')
+    url = URL('http://w4af.com')
 
     def test_forms(self):
         body = HTML_DOC % \
@@ -260,15 +260,15 @@ class TestHTMLParser(unittest.TestCase):
         p = RaiseHTMLParser(resp)
         p.parse()
 
-        self.assertEqual([URL('http://w3af.com/home.php')], p.references[0])
+        self.assertEqual([URL('http://w4af.com/home.php')], p.references[0])
 
     def test_script_tag_link_extraction(self):
-        body = '''<script>window.location = "http://w3af.com/";</script>'''
+        body = '''<script>window.location = "http://w4af.com/";</script>'''
         resp = build_http_response(self.url, body)
         p = RaiseHTMLParser(resp)
         p.parse()
 
-        self.assertEqual([URL('http://w3af.com/')], p.references[1])
+        self.assertEqual([URL('http://w4af.com/')], p.references[1])
 
     def test_script_tag_link_extraction_relative(self):
         body = '''<script>window.location = "/foo.php";</script>'''
@@ -276,7 +276,7 @@ class TestHTMLParser(unittest.TestCase):
         p = RaiseHTMLParser(resp)
         p.parse()
 
-        self.assertEqual([URL('http://w3af.com/foo.php')], p.references[1])
+        self.assertEqual([URL('http://w4af.com/foo.php')], p.references[1])
 
     def test_tricky_multipart_get_form_11997(self):
         body = """
@@ -368,7 +368,7 @@ class TestHTMLParser(unittest.TestCase):
         p.parse()
 
         self.assertEqual(len(p.forms), 1)
-        self.assertEqual(p.forms[0]._action, URL('http://w3af.com/bar'))
+        self.assertEqual(p.forms[0]._action, URL('http://w4af.com/bar'))
 
     def test_form_exclude_zero_of_two(self):
         user_value = '[{"action": "/foo", "method": "post"}, {"action": "/nomatch", "method": "post"}]'

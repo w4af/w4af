@@ -2,19 +2,19 @@
 """
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,14 +23,14 @@ import threading
 
 import pytest
 
-from w3af.core.controllers.misc.temp_dir import create_temp_dir
-from w3af.core.data.db.disk_set import DiskSet
-from w3af.core.data.parsers.utils.form_params import FormParameters
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.db.dbms import get_default_temp_db_instance
-from w3af.core.data.dc.factory import dc_from_form_params
+from w4af.core.controllers.misc.temp_dir import create_temp_dir
+from w4af.core.data.db.disk_set import DiskSet
+from w4af.core.data.parsers.utils.form_params import FormParameters
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.db.dbms import get_default_temp_db_instance
+from w4af.core.data.dc.factory import dc_from_form_params
 
 
 class TestDiskSet(unittest.TestCase):
@@ -53,28 +53,28 @@ class TestDiskSet(unittest.TestCase):
     def test_add_urlobject(self):
         ds = DiskSet()
 
-        ds.add(URL('http://w3af.org/?id=2'))
-        ds.add(URL('http://w3af.org/?id=3'))
-        ds.add(URL('http://w3af.org/?id=3'))
+        ds.add(URL('http://w4af.org/?id=2'))
+        ds.add(URL('http://w4af.org/?id=3'))
+        ds.add(URL('http://w4af.org/?id=3'))
 
-        self.assertEqual(ds[0], URL('http://w3af.org/?id=2'))
-        self.assertEqual(ds[1], URL('http://w3af.org/?id=3'))
+        self.assertEqual(ds[0], URL('http://w4af.org/?id=2'))
+        self.assertEqual(ds[1], URL('http://w4af.org/?id=3'))
         self.assertEqual(len(ds), 2)
-        self.assertFalse(URL('http://w3af.org/?id=4') in ds)
-        self.assertTrue(URL('http://w3af.org/?id=2') in ds)
+        self.assertFalse(URL('http://w4af.org/?id=4') in ds)
+        self.assertTrue(URL('http://w4af.org/?id=2') in ds)
 
     def test_add_QsRequest(self):
         ds = DiskSet()
 
-        uri = URL('http://w3af.org/?id=2')
-        hdr = Headers([('Referer', 'http://w3af.org/')])
+        uri = URL('http://w4af.org/?id=2')
+        hdr = Headers([('Referer', 'http://w4af.org/')])
 
         qsr1 = FuzzableRequest(uri, method='GET', headers=hdr)
 
-        uri = URL('http://w3af.org/?id=3')
+        uri = URL('http://w4af.org/?id=3')
         qsr2 = FuzzableRequest(uri, method='GET', headers=hdr)
 
-        uri = URL('http://w3af.org/?id=7')
+        uri = URL('http://w4af.org/?id=7')
         qsr3 = FuzzableRequest(uri, method='FOO', headers=hdr)
 
         ds.add(qsr1)

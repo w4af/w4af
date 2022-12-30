@@ -3,19 +3,19 @@ parser_cache.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -30,20 +30,20 @@ from concurrent.futures import TimeoutError
 from darts.lib.utils.lru import SynchronizedLRUDict
 # pylint: enable=E0401
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.controllers.threads.is_main_process import is_main_process
-from w3af.core.controllers.profiling.core_stats import core_profiling_is_enabled
-from w3af.core.controllers.exceptions import (BaseFrameworkException,
+from w4af.core.controllers.threads.is_main_process import is_main_process
+from w4af.core.controllers.profiling.core_stats import core_profiling_is_enabled
+from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               ScanMustStopException)
 
-from w3af.core.data.parsers.mp_document_parser import mp_doc_parser
-from w3af.core.data.parsers.utils.cache_stats import CacheStats
-from w3af.core.data.parsers.document_parser import DocumentParser
-from w3af.core.data.db.disk_set import DiskSet
-from w3af.core.data.parsers.utils.response_uniq_id import (get_response_unique_id,
+from w4af.core.data.parsers.mp_document_parser import mp_doc_parser
+from w4af.core.data.parsers.utils.cache_stats import CacheStats
+from w4af.core.data.parsers.document_parser import DocumentParser
+from w4af.core.data.db.disk_set import DiskSet
+from w4af.core.data.parsers.utils.response_uniq_id import (get_response_unique_id,
                                                            get_body_unique_id)
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 class ParserCache(CacheStats):

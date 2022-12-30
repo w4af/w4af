@@ -3,33 +3,33 @@ test_cross_domain_js.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 import unittest
 
-import w3af.core.data.kb.knowledge_base as kb
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.data.url.HTTPResponse import HTTPResponse
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.headers import Headers
-from w3af.core.controllers.misc.temp_dir import create_temp_dir
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.plugins.grep.cross_domain_js import cross_domain_js
+import w4af.core.data.kb.knowledge_base as kb
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.data.url.HTTPResponse import HTTPResponse
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.headers import Headers
+from w4af.core.controllers.misc.temp_dir import create_temp_dir
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.plugins.grep.cross_domain_js import cross_domain_js
 
 
 @pytest.mark.smoke
@@ -57,7 +57,7 @@ class TestCrossDomainJS(PluginTest):
         self.assertEqual(2, len(info_sets), info_sets)
 
         self.assertEqual(set([i.get_attribute('domain') for i in info_sets]),
-                         {'moth', 'www.w3af.org'})
+                         {'moth', 'www.w4af.org'})
 
         self.assertEqual(set([i.get_name() for i in info_sets]),
                          {'Cross-domain javascript source'})
@@ -84,7 +84,7 @@ class TestCrossDomainJSRaw(unittest.TestCase):
 
     def test_cross_domain_third_party_is_secure(self):
         body = '<script src="https://cdn.akamai.net/foo.js"></script>'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         request = FuzzableRequest(url, method='GET')
         resp = HTTPResponse(200, body, headers, url, url, _id=1)
@@ -97,7 +97,7 @@ class TestCrossDomainJSRaw(unittest.TestCase):
 
     def test_cross_domain_third_party_is_insecure(self):
         body = '<script src="https://cdn.akamai-wannabe.net/foo.js"></script>'
-        url = URL('http://www.w3af.com/')
+        url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         request = FuzzableRequest(url, method='GET')
         resp = HTTPResponse(200, body, headers, url, url, _id=1)
@@ -110,8 +110,8 @@ class TestCrossDomainJSRaw(unittest.TestCase):
 
     def test_cross_domain_third_party_is_insecure_group_info_set(self):
         body = '<script src="https://cdn.akamai-wannabe.net/foo.js"></script>'
-        url_1 = URL('http://www.w3af.com/1')
-        url_2 = URL('http://www.w3af.com/2')
+        url_1 = URL('http://www.w4af.com/1')
+        url_2 = URL('http://www.w4af.com/2')
         headers = Headers([('content-type', 'text/html')])
         request = FuzzableRequest(url_1, method='GET')
         resp_1 = HTTPResponse(200, body, headers, url_1, url_1, _id=1)
@@ -127,8 +127,8 @@ class TestCrossDomainJSRaw(unittest.TestCase):
                         ' third party site. This practice is not recommended' \
                         ' because it delegates the security of the site to' \
                         ' an external entity. The first two vulnerable URLs' \
-                        ' are:\n - http://www.w3af.com/1\n' \
-                        ' - http://www.w3af.com/2\n'
+                        ' are:\n - http://www.w4af.com/1\n' \
+                        ' - http://www.w4af.com/2\n'
 
         # pylint: disable=E1103
         info_set = kb.kb.get_one('cross_domain_js', 'cross_domain_js')

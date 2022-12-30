@@ -3,36 +3,36 @@ wordnet.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from itertools import chain, repeat
 
-from w3af.core.controllers.plugins.crawl_plugin import CrawlPlugin
-from w3af.core.controllers.core_helpers.fingerprint_404 import is_404
-from w3af.core.controllers.misc.fuzzy_string_cmp import fuzzy_not_equal
+from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
+from w4af.core.controllers.core_helpers.fingerprint_404 import is_404
+from w4af.core.controllers.misc.fuzzy_string_cmp import fuzzy_not_equal
 
-from w3af.core.data.fuzzer.utils import rand_alpha
-from w3af.core.data.fuzzer.mutants.filename_mutant import FileNameMutant
-from w3af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
-from w3af.core.data.nltk_wrapper.nltk_wrapper import wn
-from w3af.core.data.options.opt_factory import opt_factory
-from w3af.core.data.options.option_list import OptionList
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.fuzzer.utils import rand_alpha
+from w4af.core.data.fuzzer.mutants.filename_mutant import FileNameMutant
+from w4af.core.data.fuzzer.mutants.querystring_mutant import QSMutant
+from w4af.core.data.nltk_wrapper.nltk_wrapper import wn
+from w4af.core.data.options.opt_factory import opt_factory
+from w4af.core.data.options.option_list import OptionList
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.misc.encoding import smart_unicode
 
 
 class wordnet(CrawlPlugin):
@@ -248,6 +248,6 @@ class wordnet(CrawlPlugin):
 
         If the response for those URL's is not a 404 error, and has not the same
         body content, then we have found a new URI. The wordnet database is
-        bundled with w3af, more information about wordnet can be found at:
+        bundled with w4af, more information about wordnet can be found at:
         http://wn.princeton.edu/
         """

@@ -3,39 +3,39 @@ profiles.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import os
 
-from w3af import ROOT_PATH
-import w3af.core.data.kb.config as cf
+from w4af import ROOT_PATH
+import w4af.core.data.kb.config as cf
 
-from w3af.core.controllers.misc_settings import MiscSettings
-from w3af.core.controllers.misc.get_local_ip import get_local_ip
-from w3af.core.controllers.misc.get_file_list import get_file_list
-from w3af.core.controllers.exceptions import BaseFrameworkException
-from w3af.core.controllers.misc.home_dir import get_home_dir
-from w3af.core.data.profile.profile import profile as profile
+from w4af.core.controllers.misc_settings import MiscSettings
+from w4af.core.controllers.misc.get_local_ip import get_local_ip
+from w4af.core.controllers.misc.get_file_list import get_file_list
+from w4af.core.controllers.exceptions import BaseFrameworkException
+from w4af.core.controllers.misc.home_dir import get_home_dir
+from w4af.core.data.profile.profile import profile as profile
 
 
 class CoreProfiles(object):
 
-    def __init__(self, w3af_core):
-        self._w3af_core = w3af_core
+    def __init__(self, w4af_core):
+        self._w4af_core = w4af_core
 
     def save_current_to_new_profile(self, profile_name, profile_desc='',
                                     self_contained=False):
@@ -71,19 +71,19 @@ class CoreProfiles(object):
         new_profile = profile(profile_name, workdir=os.path.dirname(prof_path))
 
         # shortcut
-        w3af_plugins = self._w3af_core.plugins
+        w4af_plugins = self._w4af_core.plugins
 
         # Save the enabled plugins
-        for plugin_type in w3af_plugins.get_plugin_types():
+        for plugin_type in w4af_plugins.get_plugin_types():
             enabled_plugins = []
-            for plugin_name in w3af_plugins.get_enabled_plugins(plugin_type):
+            for plugin_name in w4af_plugins.get_enabled_plugins(plugin_type):
                 enabled_plugins.append(plugin_name)
             new_profile.set_enabled_plugins(plugin_type, enabled_plugins)
 
         # Save the plugin options
-        for plugin_type in w3af_plugins.get_plugin_types():
-            for plugin_name in w3af_plugins.get_enabled_plugins(plugin_type):
-                plugin_options = w3af_plugins.get_plugin_options(plugin_type,
+        for plugin_type in w4af_plugins.get_plugin_types():
+            for plugin_name in w4af_plugins.get_enabled_plugins(plugin_type):
+                plugin_options = w4af_plugins.get_plugin_options(plugin_type,
                                                                  plugin_name)
                 if plugin_options:
                     new_profile.set_plugin_options(plugin_type,
@@ -100,7 +100,7 @@ class CoreProfiles(object):
         misc_settings = MiscSettings()
         new_profile.set_misc_settings(misc_settings.get_options())
         new_profile.set_http_settings(
-            self._w3af_core.uri_opener.settings.get_options())
+            self._w4af_core.uri_opener.settings.get_options())
 
         # Save the profile name and description
         new_profile.set_desc(prof_desc)
@@ -114,7 +114,7 @@ class CoreProfiles(object):
     def use_profile(self, profile_name, workdir=None):
         """
         Gets all the information from the profile and stores it in the
-        w3af core plugins / target attributes for later use.
+        w4af core plugins / target attributes for later use.
 
         :raise BaseFrameworkException: if the profile to load has some type of
                                        problem, or the plugins are incorrectly
@@ -123,9 +123,9 @@ class CoreProfiles(object):
         error_messages = []
 
         # Clear all the current configuration before loading a new profile
-        self._w3af_core.plugins.zero_enabled_plugins()
+        self._w4af_core.plugins.zero_enabled_plugins()
         MiscSettings().set_default_values()
-        self._w3af_core.uri_opener.settings.set_default_values()
+        self._w4af_core.uri_opener.settings.set_default_values()
 
         if profile_name is None:
             # If the profile name is None, I just clear the enabled plugins and
@@ -139,7 +139,7 @@ class CoreProfiles(object):
         # It exists, work with it!
 
         # Set the target settings of the profile to the core
-        self._w3af_core.target.set_options(profile_inst.get_target())
+        self._w4af_core.target.set_options(profile_inst.get_target())
 
         # Set the misc and http settings
         try:
@@ -167,7 +167,7 @@ class CoreProfiles(object):
                    ' due to unknown or invalid configuration parameters. %s')
             error_messages.append(msg % e)
         else:
-            self._w3af_core.uri_opener.settings.set_options(http_settings)
+            self._w4af_core.uri_opener.settings.set_options(http_settings)
 
         #
         #    Handle plugin options
@@ -189,9 +189,9 @@ class CoreProfiles(object):
                      ' message. If this warning does not disappear you can'
                      ' manually edit the profile file to fix it.')
 
-        core_set_plugins = self._w3af_core.plugins.set_plugins
+        core_set_plugins = self._w4af_core.plugins.set_plugins
 
-        for plugin_type in self._w3af_core.plugins.get_plugin_types():
+        for plugin_type in self._w4af_core.plugins.get_plugin_types():
             plugin_names = profile_inst.get_enabled_plugins(plugin_type)
 
             # Handle errors that might have been triggered from a possibly
@@ -201,7 +201,7 @@ class CoreProfiles(object):
                                                    raise_on_error=False)
             except KeyError as ke:
                 msg = ('The profile references the "%s" plugin type which is'
-                       ' unknown to the w3af framework.')
+                       ' unknown to the w4af framework.')
                 error_messages.append(msg % plugin_type)
                 continue
                 
@@ -211,7 +211,7 @@ class CoreProfiles(object):
                 error_messages.append(msg % (plugin_type, unknown_plugin))
 
             # Now we set the plugin options, which can also trigger errors with
-            # "outdated" profiles that users could have in their ~/.w3af/
+            # "outdated" profiles that users could have in their ~/.w4af/
             # directory.
             for plugin_name in set(plugin_names) - set(unknown_plugins):
 
@@ -219,7 +219,7 @@ class CoreProfiles(object):
                     plugin_options = profile_inst.get_plugin_options(
                         plugin_type,
                         plugin_name)
-                    self._w3af_core.plugins.set_plugin_options(plugin_type,
+                    self._w4af_core.plugins.set_plugin_options(plugin_type,
                                                                plugin_name,
                                                                plugin_options)
                 except BaseFrameworkException as w3e:

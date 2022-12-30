@@ -4,14 +4,14 @@ plugins
 audit lfi
 output console,text_file
 output config text_file
-set output_file output-w3af.txt
+set output_file output-w4af.txt
 set verbose True
 back
 
 back
 
 target
-set target http://moth/w3af/audit/local_file_read/local_file_read.php?file=section.txt
+set target http://moth/w4af/audit/local_file_read/local_file_read.php?file=section.txt
 back
 
 start

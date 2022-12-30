@@ -3,19 +3,19 @@ test_autocomplete.py
 
 Copyright 2019 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
@@ -23,11 +23,11 @@ import unittest
 from httpretty import httpretty
 from unittest.mock import Mock
 
-import w3af.core.data.kb.knowledge_base as kb
+import w4af.core.data.kb.knowledge_base as kb
 
-from w3af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
-from w3af.plugins.auth.autocomplete import autocomplete
-from w3af.core.data.parsers.doc.url import URL
+from w4af.plugins.tests.helper import PluginTest, PluginConfig, MockResponse
+from w4af.plugins.auth.autocomplete import autocomplete
+from w4af.core.data.parsers.doc.url import URL
 
 USER = 'user@mail.com'
 PASS = 'passw0rd'
@@ -70,7 +70,7 @@ class LoginMockResponse(MockResponse):
         # Build the response
         #
         response_headers['Set-Cookie'] = 'session=naming_is_hard'
-        response_headers['Location'] = 'http://w3af.org/admin'
+        response_headers['Location'] = 'http://w4af.org/admin'
         response_headers['status'] = 302
 
         return self.status, response_headers, 'Success!'
@@ -89,7 +89,7 @@ class SessionCheckMockResponse(MockResponse):
         if 'naming_is_hard' not in cookie:
             return 403, response_headers, 'Forbidden'
 
-        response_headers['Location'] = 'http://w3af.org/unittest'
+        response_headers['Location'] = 'http://w4af.org/unittest'
         response_headers['status'] = 302
 
         global SUCCESS
@@ -99,7 +99,7 @@ class SessionCheckMockResponse(MockResponse):
 
 
 class TestAutocomplete(PluginTest):
-    target_url = 'http://w3af.org/'
+    target_url = 'http://w4af.org/'
 
     login_form_url = URL(target_url + 'login_form.py')
     login_post_handler_url = URL(target_url + 'login_post.py')
@@ -108,19 +108,19 @@ class TestAutocomplete(PluginTest):
     check_string = 'Logged in'
 
     MOCK_RESPONSES = [
-                      MockResponse('http://w3af.org/login_form.py',
+                      MockResponse('http://w4af.org/login_form.py',
                                    HTML_LOGIN_FORM,
                                    status=200,
                                    method='GET',
                                    headers={'Set-Cookie': '__csrf=09876xyzxyz'}),
 
-                      LoginMockResponse('http://w3af.org/login_post.py',
+                      LoginMockResponse('http://w4af.org/login_post.py',
                                         '',
                                         method='POST'),
 
-                      SessionCheckMockResponse('http://w3af.org/admin', ''),
+                      SessionCheckMockResponse('http://w4af.org/admin', ''),
 
-                      MockResponse('http://w3af.org/unittest',
+                      MockResponse('http://w4af.org/unittest',
                                    'Success',
                                    status=200,
                                    method='GET')
@@ -155,7 +155,7 @@ class TestAutocomplete(PluginTest):
 
 
 class TestAutocompleteInvalidCredentials(PluginTest):
-    target_url = 'http://w3af.org/'
+    target_url = 'http://w4af.org/'
 
     login_form_url = URL(target_url + 'login_form.py')
     login_post_handler_url = URL(target_url + 'login_post.py')
@@ -164,19 +164,19 @@ class TestAutocompleteInvalidCredentials(PluginTest):
     check_string = 'Logged in'
 
     MOCK_RESPONSES = [
-                      MockResponse('http://w3af.org/login_form.py',
+                      MockResponse('http://w4af.org/login_form.py',
                                    HTML_LOGIN_FORM,
                                    status=200,
                                    method='GET',
                                    headers={'Set-Cookie': '__csrf=09876xyzxyz'}),
 
-                      LoginMockResponse('http://w3af.org/login_post.py',
+                      LoginMockResponse('http://w4af.org/login_post.py',
                                         '',
                                         method='POST'),
 
-                      SessionCheckMockResponse('http://w3af.org/admin', ''),
+                      SessionCheckMockResponse('http://w4af.org/admin', ''),
 
-                      MockResponse('http://w3af.org/unittest',
+                      MockResponse('http://w4af.org/unittest',
                                    'Success',
                                    status=200,
                                    method='GET')
@@ -212,8 +212,8 @@ class TestAutocompleteInvalidCredentials(PluginTest):
             'The following are the last log messages from the authentication plugin:\n'
             '\n'
             ' - Logging into the application with user: user@mail.com\n'
-            ' - Login form with action http://w3af.org/login_post.py found in HTTP response with ID 21\n'
-            ' - Login form sent to http://w3af.org/login_post.py in HTTP request ID 22\n'
+            ' - Login form with action http://w4af.org/login_post.py found in HTTP response with ID 21\n'
+            ' - Login form sent to http://w4af.org/login_post.py in HTTP request ID 22\n'
             ' - Checking if session for user user@mail.com is active\n'
             ' - User "user@mail.com" is NOT logged into the application, the `check_string` was not found in the HTTP response with ID 23.'
         )

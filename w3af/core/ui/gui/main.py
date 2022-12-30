@@ -3,19 +3,19 @@ main.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -34,40 +34,40 @@ from gi.repository import GObject as gobject
 
 from multiprocessing.dummy import Process
 
-import w3af.core.controllers.output_manager as om
-import w3af.core.data.kb.config as cf
+import w4af.core.controllers.output_manager as om
+import w4af.core.data.kb.config as cf
 
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.misc_settings import MiscSettings
-from w3af.core.controllers.exceptions import BaseFrameworkException, ScanMustStopByUserRequest
-from w3af.core.controllers.exception_handling.helpers import pprint_plugins, get_versions
-from w3af.core.controllers.misc.home_dir import get_home_dir
-from w3af.core.controllers.misc.get_w3af_version import get_w3af_version
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.misc_settings import MiscSettings
+from w4af.core.controllers.exceptions import BaseFrameworkException, ScanMustStopByUserRequest
+from w4af.core.controllers.exception_handling.helpers import pprint_plugins, get_versions
+from w4af.core.controllers.misc.home_dir import get_home_dir
+from w4af.core.controllers.misc.get_w4af_version import get_w4af_version
 
-from w3af.core.ui.gui import GUI_DATA_PATH
-from w3af.core.ui.gui.splash import Splash
-from w3af.core.ui.gui.disclaimer import DisclaimerController
-from w3af.core.ui.gui.exception_handling import unhandled
-from w3af.core.ui.gui.exception_handling import user_reports_bug
-from w3af.core.ui.gui.constants import W3AF_ICON, MAIN_TITLE, UI_MENU
-from w3af.core.ui.gui.output.gtk_output import GtkOutput
-from w3af.core.ui.gui.auto_update.gui_updater import GUIUpdater
+from w4af.core.ui.gui import GUI_DATA_PATH
+from w4af.core.ui.gui.splash import Splash
+from w4af.core.ui.gui.disclaimer import DisclaimerController
+from w4af.core.ui.gui.exception_handling import unhandled
+from w4af.core.ui.gui.exception_handling import user_reports_bug
+from w4af.core.ui.gui.constants import w4af_ICON, MAIN_TITLE, UI_MENU
+from w4af.core.ui.gui.output.gtk_output import GtkOutput
+from w4af.core.ui.gui.auto_update.gui_updater import GUIUpdater
  
-from w3af.core.ui.gui import scanrun, helpers, profiles, compare
-from w3af.core.ui.gui import export_request
-from w3af.core.ui.gui import entries, pluginconfig, confpanel
-from w3af.core.ui.gui import wizard, guardian
-from w3af.core.ui.gui.tools import encdec
-from w3af.core.ui.gui.user_help.open_help import open_help
-from w3af.core.ui.gui.tabs.log.main_body import LogBody
-from w3af.core.ui.gui.tabs.exploit.main_body import ExploitBody
-from w3af.core.ui.gui.tools.fuzzy_requests import FuzzyRequests
-from w3af.core.ui.gui.tools.manual_requests import ManualRequests
-from w3af.core.ui.gui.tools.proxywin import ProxiedRequests
+from w4af.core.ui.gui import scanrun, helpers, profiles, compare
+from w4af.core.ui.gui import export_request
+from w4af.core.ui.gui import entries, pluginconfig, confpanel
+from w4af.core.ui.gui import wizard, guardian
+from w4af.core.ui.gui.tools import encdec
+from w4af.core.ui.gui.user_help.open_help import open_help
+from w4af.core.ui.gui.tabs.log.main_body import LogBody
+from w4af.core.ui.gui.tabs.exploit.main_body import ExploitBody
+from w4af.core.ui.gui.tools.fuzzy_requests import FuzzyRequests
+from w4af.core.ui.gui.tools.manual_requests import ManualRequests
+from w4af.core.ui.gui.tools.proxywin import ProxiedRequests
 
 # This is just general info, to help people know their system and report more
 # complete bugs
-print("Starting w3af, running on:")
+print("Starting w4af, running on:")
 print(get_versions())
 
 # pylint: disable=E1101
@@ -91,7 +91,7 @@ class AboutDialog(gtk.Dialog):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af):
+    def __init__(self, w4af):
         super(
             AboutDialog, self).__init__(_("About..."), None, gtk.DIALOG_MODAL,
                                         (_("Check the web site"), gtk.RESPONSE_CANCEL,
@@ -100,7 +100,7 @@ class AboutDialog(gtk.Dialog):
         # content
         img = gtk.image_new_from_file(os.path.join(GUI_DATA_PATH, 'splash.png'))
         self.vbox.pack_start(img)
-        version = get_w3af_version()
+        version = get_w4af_version()
         self.label = gtk.Label(version)
         #self.label.set_justify(gtk.JUSTIFY_CENTER)
         self.vbox.pack_start(self.label)
@@ -118,7 +118,7 @@ class AboutDialog(gtk.Dialog):
     def _goWeb(self, w):
         """Opens the web site and closes the dialog."""
         try:
-            webbrowser.open("http://w3af.org/")
+            webbrowser.open("http://w4af.org/")
         except Exception:
             #
             #   This catches bug #2685576
@@ -132,8 +132,8 @@ class AboutDialog(gtk.Dialog):
 
 
 class WindowsCommunication(object):
-    def __init__(self, w3af, winCreator):
-        self.w3af = w3af
+    def __init__(self, w4af, winCreator):
+        self.w4af = w4af
         self.winCreator = winCreator
         self.isActive = False
 
@@ -159,7 +159,7 @@ class WindowsCommunication(object):
         if self.isActive:
             self.client.present()
         else:
-            self.winCreator(self.w3af, self)
+            self.winCreator(self.w4af, self)
             self.isActive = True
         if info is not None:
             self.send(info)
@@ -197,7 +197,7 @@ class MainApp(object):
 
         # Create a new window
         self.window = gtk.Window(gtk.WindowType.TOPLEVEL)
-        self.window.set_icon_from_file(W3AF_ICON)
+        self.window.set_icon_from_file(w4af_ICON)
         self.window.connect("delete_event", self.quit)
         self.window.connect('key_press_event', self.help_f1)
         
@@ -207,10 +207,10 @@ class MainApp(object):
         
         splash.push(_("Loading..."))
 
-        self.w3af = w3af_core = w3afCore()
+        self.w4af = w4af_core = w4afCore()
 
         # Now we start the error handling
-        unhandled.set_except_hook(w3af_core)
+        unhandled.set_except_hook(w4af_core)
 
         # Please note that this doesn't block the Splash window since it will
         # (hopefully) call splash.push once every time it has made some
@@ -249,12 +249,12 @@ class MainApp(object):
 
         # status bar
         splash.push(_("Building the status bar..."))
-        guard = guardian.FoundObjectsGuardian(self.w3af)
-        self.exceptions_sb = guardian.FoundExceptionsStatusBar(self.w3af)
+        guard = guardian.FoundObjectsGuardian(self.w4af)
+        self.exceptions_sb = guardian.FoundExceptionsStatusBar(self.w4af)
         self.sb = entries.StatusBar(_("Program started"), [self.exceptions_sb,
                                                            guard])
 
-        self.w3af.mainwin = self
+        self.w4af.mainwin = self
         self.is_running = False
         self.paused = False
         self.scan_should = "start"
@@ -398,7 +398,7 @@ class MainApp(object):
         toolbar.insert(self.throbber, -1)
 
         # help structure
-        self.w3af.helpChapters = dict(main="Configuring_the_scan",
+        self.w4af.helpChapters = dict(main="Configuring_the_scan",
                                       scanrun="Browsing_the_Knowledge_Base")
         self.helpChapter = ("Configuring_the_scan",
                             "Running_the_scan", "--RESULTS--", "Exploitation")
@@ -411,16 +411,16 @@ class MainApp(object):
         self.nb.show()
 
         # scan config tab
-        pan = entries.RememberingHPaned(self.w3af, "pane-scanconfig", 150)
-        self.pcbody = pluginconfig.PluginConfigBody(self, self.w3af)
+        pan = entries.RememberingHPaned(self.w4af, "pane-scanconfig", 150)
+        self.pcbody = pluginconfig.PluginConfigBody(self, self.w4af)
         try:
-            self.profiles = profiles.ProfileList(self.w3af, initial=profile)
+            self.profiles = profiles.ProfileList(self.w4af, initial=profile)
         except ValueError as ve:
             # This is raised when the profile doesn't exist
             #
             # I handle this by creating the profiles without an initial profile
             # selected and by reporting it to the user in a toolbar
-            self.profiles = profiles.ProfileList(self.w3af, initial=None)
+            self.profiles = profiles.ProfileList(self.w4af, initial=None)
             self.sb(str(ve))
 
         pan.pack1(self.profiles)
@@ -440,7 +440,7 @@ class MainApp(object):
         self.set_tabs(False)
 
         label = gtk.Label(_("Exploit"))
-        exploit_tab_body = ExploitBody(self.w3af)
+        exploit_tab_body = ExploitBody(self.w4af)
         self.nb.append_page(exploit_tab_body, label)
         self.notetabs[_("Exploit")] = exploit_tab_body
 
@@ -448,7 +448,7 @@ class MainApp(object):
         mainvbox.pack_start(self.sb, False, False, 0)
 
         # communication between different windows
-        self.commCompareTool = WindowsCommunication(self.w3af, compare.Compare)
+        self.commCompareTool = WindowsCommunication(self.w4af, compare.Compare)
 
         # finish it
         self.window.show()
@@ -531,14 +531,14 @@ class MainApp(object):
             # windows are still open and want to get some data from it, this
             # prevents: "ValueError: invalid operation on closed shelf"
             #
-            #       https://github.com/andresriancho/w3af/issues/2691
+            #       https://github.com/andresriancho/w4af/issues/2691
             #
             self.generalconfig = FakeShelve()
 
             # Quit the mainloop
             gtk.main_quit()
             time.sleep(0.5)
-            self.w3af.quit()
+            self.w4af.quit()
 
             return False
 
@@ -556,16 +556,16 @@ class MainApp(object):
         :return: True if all went ok
         """
         # Clear everything
-        for plugin_type in self.w3af.plugins.get_plugin_types():
-            self.w3af.plugins.set_plugins([], plugin_type)
+        for plugin_type in self.w4af.plugins.get_plugin_types():
+            self.w4af.plugins.set_plugins([], plugin_type)
 
         # save the activated plugins
         for plugin_type, plugins in self.pcbody.get_activated_plugins():
-            self.w3af.plugins.set_plugins(plugins, plugin_type)
+            self.w4af.plugins.set_plugins(plugins, plugin_type)
 
         # save the URL, the rest of the options are saved in the "Advanced"
         # dialog
-        options = self.w3af.target.get_options()
+        options = self.w4af.target.get_options()
 
         # unicode str needed. pygtk works with 'utf8'
         url = self.pcbody.target.get_text().decode('utf8')
@@ -573,7 +573,7 @@ class MainApp(object):
         if relaxedTarget:
             try:
                 target_option.set_value(url)
-                self.w3af.target.set_options(options)
+                self.w4af.target.set_options(options)
             except:
                 pass
             return True
@@ -581,7 +581,7 @@ class MainApp(object):
             
             try:
                 helpers.coreWrap(target_option.set_value, url)
-                helpers.coreWrap(self.w3af.target.set_options, options)
+                helpers.coreWrap(self.w4af.target.set_options, options)
             except BaseFrameworkException:
                 return False
             
@@ -597,12 +597,12 @@ class MainApp(object):
         def real_scan_start():
             # Verify that everything is ready to run
             try:
-                helpers.coreWrap(self.w3af.plugins.init_plugins)
-                helpers.coreWrap(self.w3af.verify_environment)
+                helpers.coreWrap(self.w4af.plugins.init_plugins)
+                helpers.coreWrap(self.w4af.verify_environment)
             except BaseFrameworkException:
                 return
             
-            self.w3af.start()
+            self.w4af.start()
 
         def start_scan_wrap():
             # Just in case, make sure we have a GtkOutput in the output manager
@@ -626,16 +626,16 @@ class MainApp(object):
                 #    The only exceptions that can get here are the ones in the
                 #    framework and UI itself.
                 #
-                plugins_str = pprint_plugins(self.w3af)
+                plugins_str = pprint_plugins(self.w4af)
                 exc_class, exc_inst, exc_tb = sys.exc_info()
-                unhandled.handle_crash(self.w3af, exc_class, exc_inst,
+                unhandled.handle_crash(self.w4af, exc_class, exc_inst,
                                        exc_tb, plugins=plugins_str)
             finally:
                 gobject.idle_add(self._scan_stopfeedback)
                 self._scan_finished()
 
         # Starting output manager to try to avoid bug
-        # https://github.com/andresriancho/w3af/issues/997
+        # https://github.com/andresriancho/w4af/issues/997
         om.out.debug('Starting output manager')
 
         # start real work in background, and start supervising if it ends
@@ -663,14 +663,14 @@ class MainApp(object):
         if targets:
             target_domain_obj = targets[0]
             target_domain = target_domain_obj.get_domain()
-            self.window.set_title("w3af - " + target_domain)
+            self.window.set_title("w4af - " + target_domain)
 
     def _scan_pause(self, widget):
         """Pauses the scan."""
         shall_pause = widget.get_active()
 
         # stop/start core and throbber
-        self.w3af.pause(shall_pause)
+        self.w4af.pause(shall_pause)
         self.startstopbtns.set_sensitive(not shall_pause)
         self.toolbut_pause.set_sensitive(not shall_pause)
         self.throbber.running(not shall_pause)
@@ -687,7 +687,7 @@ class MainApp(object):
         """Stops the scanning."""
         def stop_scan_wrap():
             try:
-                self.w3af.stop()
+                self.w4af.stop()
             except Exception:
                 #
                 #    Exceptions generated by plugins are handled in
@@ -696,9 +696,9 @@ class MainApp(object):
                 #    The only exceptions that can get here are the ones in the
                 #    framework and UI itself.
                 #
-                plugins_str = pprint_plugins(self.w3af)
+                plugins_str = pprint_plugins(self.w4af)
                 exc_class, exc_inst, exc_tb = sys.exc_info()
-                unhandled.handle_crash(self.w3af, exc_class, exc_inst,
+                unhandled.handle_crash(self.w4af, exc_class, exc_inst,
                                        exc_tb, plugins=plugins_str)
 
         # start real work in background, and start supervising if it ends
@@ -738,7 +738,7 @@ class MainApp(object):
         # features for exploitation
         om.manager.set_output_plugin_inst(GtkOutput())
         
-        exception_list = self.w3af.exception_handler.get_unique_exceptions()
+        exception_list = self.w4af.exception_handler.get_unique_exceptions()
         if exception_list:
             # damn...
             self.sb(_("Scan finished with exceptions"))
@@ -748,7 +748,7 @@ class MainApp(object):
         """Clears core and gui, and fixes button to next step."""
         # cleanup
         self.nb.set_current_page(0)
-        self.w3af.cleanup()
+        self.w4af.cleanup()
         self.set_tabs(False)
         self.sb(_("Scan results cleared"))
         self.exploitallsens.set_sensitive(False, "stopstart")
@@ -767,7 +767,7 @@ class MainApp(object):
 
         :return: True to be called again
         """
-        if self.w3af.status.is_running():
+        if self.w4af.status.is_running():
             return True
 
         if self.paused:
@@ -798,7 +798,7 @@ class MainApp(object):
         # create title and window/label
         label = gtk.Label(title)
         if sensit:
-            newone = realWidget(self.w3af)
+            newone = realWidget(self.w4af)
         else:
             newone = gtk.Label(_("The scan has not started: no info yet"))
             newone.show()
@@ -814,15 +814,15 @@ class MainApp(object):
 
     def menu_config_http(self, action):
         """Configure HTTP options."""
-        configurable = self.w3af.uri_opener.settings
-        confpanel.ConfigDialog(_("Configure HTTP settings"), self.w3af,
+        configurable = self.w4af.uri_opener.settings
+        confpanel.ConfigDialog(_("Configure HTTP settings"), self.w4af,
                                configurable)
 
     def menu_config_misc(self, action):
         """Configure Misc options."""
         configurable = MiscSettings()
         confpanel.ConfigDialog(
-            _("Configure Misc settings"), self.w3af, configurable)
+            _("Configure Misc settings"), self.w4af, configurable)
 
     def dyn_panels(self, widget, panel):
         """Turns on and off the Log Panel."""
@@ -840,7 +840,7 @@ class MainApp(object):
         """
         ch = notebook.get_nth_page(page_num)
         page = notebook.get_tab_label(ch).get_text()
-        self.w3af.helpChapters["main"] = self.helpChapter[page_num]
+        self.w4af.helpChapters["main"] = self.helpChapter[page_num]
 
         self.viewSignalRecipient = None
         for name, menu in list(self.menuViews.items()):
@@ -882,7 +882,7 @@ class MainApp(object):
 
     def menu_about(self, action):
         """Shows the about message."""
-        dlg = AboutDialog(self.w3af)
+        dlg = AboutDialog(self.w4af)
         dlg.run()
 
     def report_bug(self, action):
@@ -896,19 +896,19 @@ class MainApp(object):
 
     def _manual_request(self, action):
         """Generate manual HTTP requests."""
-        ManualRequests(self.w3af)
+        ManualRequests(self.w4af)
 
     def _export_request(self, action):
         """Export HTTP requests to python, javascript, etc."""
-        export_request.export_request(self.w3af)
+        export_request.export_request(self.w4af)
 
     def _fuzzy_request(self, action):
         """Generate fuzzy HTTP requests."""
-        FuzzyRequests(self.w3af)
+        FuzzyRequests(self.w4af)
 
     def _encode_decode(self, action):
         """Generate fuzzy HTTP requests."""
-        encdec.EncodeDecode(self.w3af)
+        encdec.EncodeDecode(self.w4af)
 
     def _compare(self, action):
         """Generate fuzzy HTTP requests."""
@@ -917,19 +917,19 @@ class MainApp(object):
     def _proxy_tool(self, action):
         """Proxies the HTTP calls."""
         self.set_tabs(True)
-        ProxiedRequests(self.w3af)
+        ProxiedRequests(self.w4af)
 
     def _wizards(self, action):
         """Execute the wizards machinery."""
-        wizard.WizardChooser(self.w3af)
+        wizard.WizardChooser(self.w4af)
 
     def help_f1(self, widget, event):
         if event.keyval != 65470:  # F1, check: gdk.keyval_name(event.keyval)
             return
 
-        chapter = self.w3af.helpChapters["main"]
+        chapter = self.w4af.helpChapters["main"]
         if chapter == "--RESULTS--":
-            chapter = self.w3af.helpChapters["scanrun"]
+            chapter = self.w4af.helpChapters["scanrun"]
 
         open_help(chapter)
 

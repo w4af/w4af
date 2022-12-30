@@ -4,19 +4,19 @@ form_params.py
 
 Copyright 2014 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -26,19 +26,19 @@ import copy
 
 from collections import OrderedDict
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.data.dc.utils.multipart import is_file_like
-from w3af.core.data.constants.encodings import DEFAULT_ENCODING
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.parsers.utils.form_id import FormID
-from w3af.core.data.parsers.utils.form_fields import (FileFormField,
+from w4af.core.data.dc.utils.multipart import is_file_like
+from w4af.core.data.constants.encodings import DEFAULT_ENCODING
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.parsers.utils.form_id import FormID
+from w4af.core.data.parsers.utils.form_fields import (FileFormField,
                                                       get_value_by_key,
                                                       SelectFormField,
                                                       GenericFormField,
                                                       RadioFormField,
                                                       CheckboxFormField)
-from w3af.core.data.parsers.utils.form_constants import (DEFAULT_FORM_ENCODING,
+from w4af.core.data.parsers.utils.form_constants import (DEFAULT_FORM_ENCODING,
                                                          INPUT_TYPE_CHECKBOX,
                                                          INPUT_TYPE_RADIO,
                                                          INPUT_TYPE_TEXT,
@@ -120,22 +120,22 @@ class FormParameters(OrderedDict):
         # Call the setters (in a specific order!) so they can mangle the form
         # params if required
         #
-        # https://github.com/andresriancho/w3af/issues/11998
-        # https://github.com/andresriancho/w3af/issues/11997
+        # https://github.com/andresriancho/w4af/issues/11998
+        # https://github.com/andresriancho/w4af/issues/11997
         self.set_encoding(encoding)
         self.set_method(method)
         self.set_action(action)
         self.set_form_encoding(form_encoding)
 
         # We need these for the form-id matching feature
-        # https://github.com/andresriancho/w3af/issues/15161
+        # https://github.com/andresriancho/w4af/issues/15161
         self._hosted_at_url = hosted_at_url
         self._attributes = attributes
 
     def get_form_id(self):
         """
         :return: A FormID which can be used to compare two forms
-        :see: https://github.com/andresriancho/w3af/issues/15161
+        :see: https://github.com/andresriancho/w4af/issues/15161
         """
         return FormID(action=self._action,
                       inputs=list(self.meta.keys()),
@@ -163,8 +163,8 @@ class FormParameters(OrderedDict):
         means that they override the "user defined" multipart.
 
         Situations like this triggered bugs:
-            https://github.com/andresriancho/w3af/issues/11997
-            https://github.com/andresriancho/w3af/issues/11998
+            https://github.com/andresriancho/w4af/issues/11997
+            https://github.com/andresriancho/w4af/issues/11998
 
         So I had to change the method to be a little bit smarter and override
         the form encoding in specific cases.
@@ -225,7 +225,7 @@ class FormParameters(OrderedDict):
 
     def has_post_data(self):
         """
-        When w3af translates the form params into a request at
+        When w4af translates the form params into a request at
         FuzzableRequest.from_form() it uses this method to determine if the
         form parameters are send in the query string or in the post-data
 
@@ -465,7 +465,7 @@ class FormParameters(OrderedDict):
                     select tag name that is always an empty string.
 
                     This case reported by Taras at
-                    https://sourceforge.net/apps/trac/w3af/ticket/171015
+                    https://sourceforge.net/apps/trac/w4af/ticket/171015
                     """
                     value = ''
 
@@ -495,7 +495,7 @@ class FormParameters(OrderedDict):
             # matrix by using `SEED` in the random generation
             if variants_total > self.TOP_VARIANTS:
                 # Inform user
-                msg = ('w3af found an HTML form that has several'
+                msg = ('w4af found an HTML form that has several'
                        ' checkbox, radio and select input tags inside.'
                        ' Testing all combinations of those values would'
                        ' take too much time, the framework will only'

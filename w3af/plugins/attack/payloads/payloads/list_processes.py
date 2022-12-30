@@ -1,9 +1,9 @@
 import re
 
-import w3af.core.controllers.output_manager as om
+import w4af.core.controllers.output_manager as om
 
-from w3af.core.ui.console.tables import table
-from w3af.plugins.attack.payloads.base_payload import Payload
+from w4af.core.ui.console.tables import table
+from w4af.plugins.attack.payloads.base_payload import Payload
 
 
 class list_processes(Payload):

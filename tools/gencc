@@ -21,7 +21,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335  USA
 
-Modded for w3af.
+Modded for w4af.
 """
 from __future__ import print_function
 
@@ -144,7 +144,7 @@ generator.seed()        # Seed from current time
 types = ['mastercard','visa16','visa13','amex','discover','diners','enRoute','jcb15','jcb16','voyager']
 
 def usage():
-    print('w3af - Credit Card Generator, original version: Graham King')
+    print('w4af - Credit Card Generator, original version: Graham King')
     print('')
     print('Options:')
     print('    -h  Print this help message.')

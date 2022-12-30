@@ -3,19 +3,19 @@ exceptions.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -23,11 +23,11 @@ import sys
 
 from flask import jsonify
 
-from w3af.core.ui.api import app
-from w3af.core.ui.api.utils.error import abort
-from w3af.core.ui.api.utils.auth import requires_auth
-from w3af.core.ui.api.utils.scans import get_scan_info_from_id
-from w3af.core.controllers.core_helpers.status import CoreStatus
+from w4af.core.ui.api import app
+from w4af.core.ui.api.utils.error import abort
+from w4af.core.ui.api.utils.auth import requires_auth
+from w4af.core.ui.api.utils.scans import get_scan_info_from_id
+from w4af.core.controllers.core_helpers.status import CoreStatus
 
 
 @app.route('/scans/<int:scan_id>/exceptions/', methods=['GET'])
@@ -49,7 +49,7 @@ def list_exceptions(scan_id):
 
     data = []
 
-    all_exceptions = scan_info.w3af_core.exception_handler.get_all_exceptions()
+    all_exceptions = scan_info.w4af_core.exception_handler.get_all_exceptions()
 
     for exception_id, exception_data in enumerate(all_exceptions):
         data.append(exception_to_json(exception_data, scan_id, exception_id))
@@ -71,7 +71,7 @@ def get_exception_details(scan_id, exception_id):
     if scan_info is None:
         abort(404, 'Scan not found')
 
-    all_exceptions = scan_info.w3af_core.exception_handler.get_all_exceptions()
+    all_exceptions = scan_info.w4af_core.exception_handler.get_all_exceptions()
 
     for i_exception_id, exception_data in enumerate(all_exceptions):
         if exception_id == i_exception_id:
@@ -92,7 +92,7 @@ def exception_to_json(exception_data, scan_id, exception_id, detailed=False):
     summary = {'id': exception_id,
                'href': '/scans/%s/exceptions/%s' % (scan_id, exception_id)}
 
-    # Get all the data from w3af
+    # Get all the data from w4af
     summary.update(exception_data.to_json())
 
     if not detailed:
@@ -117,7 +117,7 @@ def exception_creator(scan_id):
     current_status = FakeStatus(None)
     current_status.set_running_plugin('phase', 'plugin')
     current_status.set_current_fuzzable_request('phase',
-                                                'http://www.w3af.org/')
+                                                'http://www.w4af.org/')
 
     try:
         raise Exception('unittest')
@@ -125,8 +125,8 @@ def exception_creator(scan_id):
         exec_info = sys.exc_info()
         enabled_plugins = ''
 
-        scan_info.w3af_core.exception_handler.write_crash_file = lambda x: x
-        scan_info.w3af_core.exception_handler.handle(current_status, exception,
+        scan_info.w4af_core.exception_handler.write_crash_file = lambda x: x
+        scan_info.w4af_core.exception_handler.handle(current_status, exception,
                                                      exec_info, enabled_plugins)
 
     return jsonify({'code': 201}), 201

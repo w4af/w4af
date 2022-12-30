@@ -3,23 +3,23 @@ utils.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 """
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.dc.headers import Headers
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.dc.headers import Headers
 
 # Keys representing CORS headers for manipulations.
 ACCESS_CONTROL_ALLOW_ORIGIN = "ACCESS-CONTROL-ALLOW-ORIGIN"
@@ -34,7 +34,7 @@ def provides_cors_features(freq, url_opener, debugging_id):
     Method to detect if url provides CORS features.
 
     :param freq: A fuzzableRequest object.
-    :param url_opener: "w3af.core.data.url.ExtendedUrllib" class instance to use for
+    :param url_opener: "w4af.core.data.url.ExtendedUrllib" class instance to use for
                        HTTP request/response processing.
     :param debugging_id: A unique identifier for this call to audit()
 
@@ -46,7 +46,7 @@ def provides_cors_features(freq, url_opener, debugging_id):
     if ac_value is not None:
         return True
 
-    headers = Headers(list({'Origin': 'www.w3af.org'}.items()))
+    headers = Headers(list({'Origin': 'www.w4af.org'}.items()))
     response = url_opener.GET(freq.get_url(), headers=headers, debugging_id=debugging_id)
     ac_value = retrieve_cors_header(response, ACCESS_CONTROL_ALLOW_ORIGIN)
     if ac_value is not None:

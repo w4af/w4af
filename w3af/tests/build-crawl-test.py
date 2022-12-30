@@ -24,7 +24,7 @@ Description:
         cd site/
         python -m SimpleHTTPServer 8000
         
-    And run a w3af scan against http://localhost:8000/ . 
+    And run a w4af scan against http://localhost:8000/ . 
     
     The tool is deterministic: will always generate the same site for the same 
     parameter names, so it is something you can use for unittests.

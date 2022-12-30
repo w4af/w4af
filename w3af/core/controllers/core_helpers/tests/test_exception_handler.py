@@ -4,19 +4,19 @@ test_exception_handler.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
@@ -27,13 +27,13 @@ import threading
 
 import pytest
 
-from w3af.core.controllers.w3afCore import w3afCore
-from w3af.core.controllers.core_helpers.exception_handler import ExceptionHandler, ExceptionData
-from w3af.core.controllers.core_helpers.status import CoreStatus
-from w3af.core.data.request.fuzzable_request import FuzzableRequest
-from w3af.core.data.parsers.doc.url import URL
-from w3af.core.data.dc.headers import Headers
-from w3af.core.data.dc.generic.kv_container import KeyValueContainer
+from w4af.core.controllers.w4afCore import w4afCore
+from w4af.core.controllers.core_helpers.exception_handler import ExceptionHandler, ExceptionData
+from w4af.core.controllers.core_helpers.status import CoreStatus
+from w4af.core.data.request.fuzzable_request import FuzzableRequest
+from w4af.core.data.parsers.doc.url import URL
+from w4af.core.data.dc.headers import Headers
+from w4af.core.data.dc.generic.kv_container import KeyValueContainer
 
 
 class TestExceptionHandler(unittest.TestCase):
@@ -47,7 +47,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.status = FakeStatus(None)
         self.status.set_running_plugin('phase', 'plugin')
         self.status.set_current_fuzzable_request('phase',
-                                                 'http://www.w3af.org/')
+                                                 'http://www.w4af.org/')
 
     @pytest.mark.smoke
     def test_handle_one(self):
@@ -78,7 +78,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertTrue('traceback' in edata.get_details())
         self.assertEqual(edata.plugin, 'plugin')
         self.assertEqual(edata.phase, 'phase')
-        self.assertEqual(edata.fuzzable_request, 'http://www.w3af.org/')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.org/')
         self.assertEqual(edata.filename, __file__)
         self.assertEqual(edata.exception_msg, str(caught_exception))
         self.assertEqual(edata.exception_class, caught_exception.__class__.__name__)
@@ -110,7 +110,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertTrue('traceback' in edata.get_details())
         self.assertEqual(edata.plugin, 'plugin')
         self.assertEqual(edata.phase, 'phase')
-        self.assertEqual(edata.fuzzable_request, 'http://www.w3af.org/')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.org/')
         self.assertEqual(edata.filename, __file__)
 
     def test_get_unique_exceptions(self):
@@ -137,7 +137,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertTrue('traceback' in edata.get_details())
         self.assertEqual(edata.plugin, 'plugin')
         self.assertEqual(edata.phase, 'phase')
-        self.assertEqual(edata.fuzzable_request, 'http://www.w3af.org/')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.org/')
         self.assertEqual(edata.filename, __file__)
 
     def test_handle_threads_calls(self):
@@ -167,7 +167,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertTrue('traceback' in edata.get_details())
         self.assertEqual(edata.plugin, 'plugin')
         self.assertEqual(edata.phase, 'phase')
-        self.assertEqual(edata.fuzzable_request, 'http://www.w3af.org/')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.org/')
         self.assertEqual(edata.filename, __file__)
         # This is very very very dependant on changes to this file, but it was
         # the only way to do it without much effort
@@ -210,7 +210,7 @@ class TestExceptionData(unittest.TestCase):
     def get_fuzzable_request(self):
         headers = Headers([('Hello', 'World')])
         post_data = KeyValueContainer(init_val=[('a', ['b'])])
-        url = URL('http://w3af.org')
+        url = URL('http://w4af.org')
         return FuzzableRequest(url, method='GET', post_data=post_data,
                                headers=headers)
 
@@ -220,7 +220,7 @@ class TestExceptionData(unittest.TestCase):
 
         fr = self.get_fuzzable_request()
 
-        core = w3afCore()
+        core = w4afCore()
         status = CoreStatus(core)
         status.set_running_plugin('audit', 'sqli', log=False)
         status.set_current_fuzzable_request('audit', fr)
@@ -246,7 +246,7 @@ class TestExceptionData(unittest.TestCase):
 
             fr = self.get_fuzzable_request()
 
-            core = w3afCore()
+            core = w4afCore()
             status = CoreStatus(core)
             status.set_running_plugin('audit', 'sqli', log=False)
             status.set_current_fuzzable_request('audit', fr)
@@ -272,7 +272,7 @@ class TestExceptionData(unittest.TestCase):
 
             fr = self.get_fuzzable_request()
 
-            core = w3afCore()
+            core = w4afCore()
             status = CoreStatus(core)
             status.set_running_plugin('audit', 'sqli', log=False)
             status.set_current_fuzzable_request('audit', fr)

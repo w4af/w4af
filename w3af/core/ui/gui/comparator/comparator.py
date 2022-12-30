@@ -11,7 +11,7 @@ from . import diffutil
 import traceback
 from functools import total_ordering
 
-from w3af import ROOT_PATH
+from w4af import ROOT_PATH
 
 
 class FifoScheduler(object):

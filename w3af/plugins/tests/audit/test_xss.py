@@ -3,44 +3,44 @@ test_xss.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import pytest
 from unittest import TestCase
 
-from w3af.core.data.kb.config import cf
+from w4af.core.data.kb.config import cf
 
-from w3af.core.data.context.context.html import ALL_CONTEXTS as ALL_HTML_CONTEXTS
-from w3af.core.data.context.context.javascript import ALL_CONTEXTS as ALL_JS_CONTEXTS
-from w3af.core.data.context.context.css import ALL_CONTEXTS as ALL_CSS_CONTEXTS
-from w3af.core.data.misc.encoding import smart_str
-from w3af.core.controllers.ci.moth import get_moth_http
-from w3af.core.controllers.ci.w3af_moth import get_w3af_moth_http
-from w3af.core.controllers.ci.wavsep import get_wavsep_http
-from w3af.core.controllers.ci.php_moth import get_php_moth_http
-from w3af.plugins.tests.helper import PluginTest, PluginConfig
-from w3af.plugins.audit.xss import xss
+from w4af.core.data.context.context.html import ALL_CONTEXTS as ALL_HTML_CONTEXTS
+from w4af.core.data.context.context.javascript import ALL_CONTEXTS as ALL_JS_CONTEXTS
+from w4af.core.data.context.context.css import ALL_CONTEXTS as ALL_CSS_CONTEXTS
+from w4af.core.data.misc.encoding import smart_str
+from w4af.core.controllers.ci.moth import get_moth_http
+from w4af.core.controllers.ci.w4af_moth import get_w4af_moth_http
+from w4af.core.controllers.ci.wavsep import get_wavsep_http
+from w4af.core.controllers.ci.php_moth import get_php_moth_http
+from w4af.plugins.tests.helper import PluginTest, PluginConfig
+from w4af.plugins.audit.xss import xss
 
-import w3af.core.data.constants.severity as severity
+import w4af.core.data.constants.severity as severity
 
 
 class TestXSS(PluginTest):
 
     XSS_PATH = get_moth_http('/audit/xss/')
-    XSS_302_URL = get_w3af_moth_http('/w3af/audit/xss/302/')
+    XSS_302_URL = get_w4af_moth_http('/w4af/audit/xss/302/')
     XSS_URL_SMOKE = get_moth_http('/audit/xss/')
 
     WAVSEP_BASE = '/wavsep/active/Reflected-XSS/RXSS-Detection-Evaluation-GET/'
@@ -131,8 +131,8 @@ class TestXSS(PluginTest):
     @pytest.mark.wavsep
     def test_2919_javascript_src_frame(self):
         """
-        https://github.com/andresriancho/w3af/issues/2919
-        https://github.com/andresriancho/w3af/issues/1557
+        https://github.com/andresriancho/w4af/issues/2919
+        https://github.com/andresriancho/w4af/issues/1557
         """
         cfg = self._run_configs['smoke']
         self._scan(self.WAVSEP_2919 + '?userinput=1', cfg['plugins'])
@@ -156,7 +156,7 @@ class TestXSS(PluginTest):
         Avoiding false positives in the case where the payload is echoed back
         inside an attribute and the quotes are removed.
         
-        :see: https://github.com/andresriancho/w3af/pull/499
+        :see: https://github.com/andresriancho/w4af/pull/499
         """
         cfg = self._run_configs['smoke']
         self._scan(self.XSS_PATH + '499_check.py?text=1', cfg['plugins'])
@@ -174,7 +174,7 @@ class TestXSS(PluginTest):
     def test_user_configured_find_in_file_upload_content(self):
         """
         Do not send file content mutants unless the user configures it.
-        https://github.com/andresriancho/w3af/issues/3149
+        https://github.com/andresriancho/w4af/issues/3149
         """
         # Set the value to False (True is the default)
         cf.save('fuzz_form_files', False)
@@ -192,7 +192,7 @@ class TestXSS(PluginTest):
     def test_find_in_file_upload_content(self):
         """
         Find XSS in the content of an uploaded file
-        https://github.com/andresriancho/w3af/issues/3149
+        https://github.com/andresriancho/w4af/issues/3149
         """
         self.scan_file_upload_fuzz_files()
         target_path = get_php_moth_http('/audit/file_upload/echo_content/')
@@ -221,11 +221,11 @@ class TestXSS(PluginTest):
             ('simple_xss.py', 'text', ['text']),
 
             # Form with GET method
-            # https://github.com/andresriancho/w3af/issues/3149
+            # https://github.com/andresriancho/w4af/issues/3149
             ('simple_xss_GET_form.py', 'text', ['Submit', 'text']),
 
             # Form with multipart enctype
-            # https://github.com/andresriancho/w3af/issues/3149
+            # https://github.com/andresriancho/w4af/issues/3149
             ('xss_multipart_form.py', 'text', ['text']),
 
             # Simple filters
@@ -265,7 +265,7 @@ class TestXSS(PluginTest):
                          csp_vulns)
 
     @pytest.mark.ci_fails
-    @pytest.mark.w3af_moth
+    @pytest.mark.w4af_moth
     def test_found_xss_with_redirect(self):
         cfg = self._run_configs['cfg']
         self._scan(self.XSS_302_URL, cfg['plugins'])

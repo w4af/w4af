@@ -3,29 +3,29 @@ headers.py
 
 Copyright 2010 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from gi.repository import Gtk as gtk
 from gi.repository import GObject as gobject
 from gi.repository import Pango as pango
-from w3af.core.data.parsers.doc.http_request_parser import http_request_parser
+from w4af.core.data.parsers.doc.http_request_parser import http_request_parser
 
-from w3af.core.ui.gui.httpeditor import HttpEditor
-from w3af.core.ui.gui.entries import RememberingVPaned
+from w4af.core.ui.gui.httpeditor import HttpEditor
+from w4af.core.ui.gui.entries import RememberingVPaned
 
 CR = '\r'
 LF = '\n'
@@ -38,9 +38,9 @@ class HttpHeadersView(RememberingVPaned):
     Headers + raw payload view.
     """
 
-    def __init__(self, w3af, parentView, editable=False):
+    def __init__(self, w4af, parentView, editable=False):
         """Make object."""
-        RememberingVPaned.__init__(self, w3af, 'headers_view')
+        RememberingVPaned.__init__(self, w4af, 'headers_view')
         self.id = 'HttpHeadersView'
         self.label = 'Headers'
         self.startLine = ''
@@ -93,7 +93,7 @@ class HttpHeadersView(RememberingVPaned):
         box.show()
         self.add(box)
 
-        self._raw = HttpEditor(w3af)
+        self._raw = HttpEditor(w4af)
         self._raw.show()
         self._raw.set_editable(editable)
         self._raw.set_wrap(True)

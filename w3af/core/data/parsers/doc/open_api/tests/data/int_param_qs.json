@@ -5,7 +5,7 @@
     "title": "Query String",
     "description": "foo"
   },
-  "host": "w3af.org",
+  "host": "w4af.org",
   "basePath": "/api",
   "schemes": [
     "http"

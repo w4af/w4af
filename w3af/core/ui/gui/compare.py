@@ -3,34 +3,34 @@ compare.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w3af, http://w3af.org/ .
+This file is part of w4af, http://w4af.org/ .
 
-w3af is free software; you can redistribute it and/or modify
+w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
 
-w3af is distributed in the hope that it will be useful,
+w4af is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with w3af; if not, write to the Free Software
+along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import os
 
 from gi.repository import Gtk as gtk
 
-from w3af.core.ui.gui import GUI_DATA_PATH
-from w3af.core.ui.gui import entries
-from w3af.core.ui.gui.user_help.open_help import open_help
-from w3af.core.ui.gui.tools.fuzzy_requests import FuzzyRequests
-from w3af.core.ui.gui.tools.manual_requests import ManualRequests
-from w3af.core.ui.gui.comparator import comparator
+from w4af.core.ui.gui import GUI_DATA_PATH
+from w4af.core.ui.gui import entries
+from w4af.core.ui.gui.user_help.open_help import open_help
+from w4af.core.ui.gui.tools.fuzzy_requests import FuzzyRequests
+from w4af.core.ui.gui.tools.manual_requests import ManualRequests
+from w4af.core.ui.gui.comparator import comparator
 
 # Alternative ways of seeing the data
-from w3af.core.ui.gui.clusterGraph import distance_function_selector
+from w4af.core.ui.gui.clusterGraph import distance_function_selector
 
 
 ui_menu = """
@@ -54,11 +54,11 @@ class Compare(entries.RememberingWindow):
 
     :author: Facundo Batista <facundobatista =at= taniquetil.com.ar>
     """
-    def __init__(self, w3af, commHandler):
+    def __init__(self, w4af, commHandler):
         entries.RememberingWindow.__init__(
-            self, w3af, "compare", "w3af - Compare", "Comparing_HTTP_traffic",
+            self, w4af, "compare", "w4af - Compare", "Comparing_HTTP_traffic",
             onDestroy=commHandler.destroy)
-        self.w3af = w3af
+        self.w4af = w4af
         self.commHandler = commHandler
         commHandler.enable(self, self.add_element)
 
@@ -91,13 +91,13 @@ class Compare(entries.RememberingWindow):
 
         gtk.stock_add((
             ('req_head', "Show Request Headers", 0,
-             gtk.gdk.keyval_from_name('1'), 'w3af'),
+             gtk.gdk.keyval_from_name('1'), 'w4af'),
             ('req_body', "Show Request Body", 0,
-             gtk.gdk.keyval_from_name('2'), 'w3af'),
+             gtk.gdk.keyval_from_name('2'), 'w4af'),
             ('res_head', "Show Response Headers", 0,
-             gtk.gdk.keyval_from_name('3'), 'w3af'),
+             gtk.gdk.keyval_from_name('3'), 'w4af'),
             ('res_body', "Show Response Body", 0,
-             gtk.gdk.keyval_from_name('4'), 'w3af'),
+             gtk.gdk.keyval_from_name('4'), 'w4af'),
         ))
 
         actiongroup.add_toggle_actions([
@@ -155,7 +155,7 @@ class Compare(entries.RememberingWindow):
 
         # the page control
         box = gtk.HBox()
-        self.pagesControl = entries.PagesControl(w3af, self.page_change)
+        self.pagesControl = entries.PagesControl(w4af, self.page_change)
         box.pack_start(self.pagesControl, False, False, padding=5)
         self.delbut = gtk.Button("Delete")
         self.delbut.connect("clicked", self._delete)
@@ -309,14 +309,14 @@ class Compare(entries.RememberingWindow):
         else:
             element = self.elements[self.showingPage]
         (reqhead, reqbody, httpResp) = element
-        func(self.w3af, (reqhead, reqbody))
+        func(self.w4af, (reqhead, reqbody))
 
     def _sendCluster(self, widg):
         """Send the request to the cluster window."""
         data = [r[2] for r in self.elements if r[2] is not None]
 
         if data:
-            distance_function_selector(self.w3af, data)
+            distance_function_selector(self.w4af, data)
         else:
             # Let the user know ahout the problem
             msg = "There are no HTTP responses available to cluster."
