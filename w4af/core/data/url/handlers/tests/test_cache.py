@@ -4,7 +4,7 @@ test_cache.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ class TestCacheHandler(unittest.TestCase):
         CacheHandler().clear()
     
     def test_basic(self):
-        url = URL('http://www.w4af.org')
+        url = URL('http://www.w4af.net')
         request = HTTPRequest(url, cache=True)
         
         cache = CacheHandler()
@@ -80,7 +80,7 @@ class TestCacheHandler(unittest.TestCase):
         self.assertEqual(cached_response.geturl(), response.geturl())
 
     def test_no_cache(self):
-        url = URL('http://www.w4af.org')
+        url = URL('http://www.w4af.net')
         request = HTTPRequest(url, cache=False)
         
         cache = CacheHandler()
@@ -98,7 +98,9 @@ class CacheIntegrationTest(unittest.TestCase):
         settings.build_openers()
         opener = settings.get_custom_opener()
 
-        url = URL('http://w4af.org/foo-bar-not-exists.htm')
+        # w4af.net currently is only a redirect to readthedocs. Therefore 301 is returned, adapt url to make test work again;
+        # TODO: replace again once we have a proper homepage
+        url = URL('https://w4af.readthedocs.io/foo-bar-not-exists.htm')
         request = HTTPRequest(url, cache=False)
 
         with patch('w4af.core.data.url.handlers.cache.CacheClass') as cc_mock:
