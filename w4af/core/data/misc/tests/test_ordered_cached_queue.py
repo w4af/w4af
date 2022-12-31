@@ -229,7 +229,8 @@ class TestOrderedCachedQueue(unittest.TestCase):
 def create_simple_fuzzable_request(unique_id):
     unique_id = str(unique_id)
 
-    url = URL('http://w4af.com/')
+    # TODO: replace by w4af.org once we have a proper homepage
+    url = URL('http://w3af.com/')
     headers = Headers([('Hello', 'World')])
     post_data = KeyValueContainer(init_val=[('a', [unique_id])])
 
