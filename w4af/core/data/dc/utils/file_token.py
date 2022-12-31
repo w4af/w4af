@@ -4,7 +4,7 @@ file_token.py
 
 Copyright 2014 Andres Riancho
 
-This file is part of w4af, http://w4af.net/ .
+This file is part of w4af, https://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
