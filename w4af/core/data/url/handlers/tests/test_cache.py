@@ -100,7 +100,7 @@ class CacheIntegrationTest(unittest.TestCase):
 
         # w4af.net currently is only a redirect to readthedocs. Therefore 301 is returned, adapt url to make test work again;
         # TODO: replace again once we have a proper homepage
-        url = URL('https://w3af.org/foo-bar-not-exists.htm')
+        url = URL('http://w3af.org/foo-bar-not-exists.htm')
         request = HTTPRequest(url, cache=False)
 
         with patch('w4af.core.data.url.handlers.cache.CacheClass') as cc_mock:
