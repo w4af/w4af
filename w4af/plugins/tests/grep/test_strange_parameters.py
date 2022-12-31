@@ -3,7 +3,7 @@ test_strange_parameters.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -96,10 +96,10 @@ class TestStrangeParameters(unittest.TestCase):
         self.assertEqual(len(vulns), 2, vulns)
 
     def test_strange_parameters_sent_false_positive_01(self):
-        body = ('<link rel="amphtml" href="http://w4af.org/?searchsubmit='
+        body = ('<link rel="amphtml" href="http://w4af.net/?searchsubmit='
                 'S%C3%B6k&#038;s=echo+str_repeat%28%27ruvkt%27%2C5%29%3B&#038;amp">')
 
-        url = URL('http://w4af.org/?searchsubmit=S%C3%B6k&s=echo%20str_repeat%28%27ruvkt%27%2C5%29%3B')
+        url = URL('http://w4af.net/?searchsubmit=S%C3%B6k&s=echo%20str_repeat%28%27ruvkt%27%2C5%29%3B')
         response = HTTPResponse(200, body, self.headers, url, url, _id=1)
 
         request = FuzzableRequest(url)

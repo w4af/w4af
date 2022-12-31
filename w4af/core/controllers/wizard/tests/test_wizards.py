@@ -3,7 +3,7 @@ test_wizards.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -109,7 +109,7 @@ class test_wizards(object):
                  what he's doing and doesn't make any mistakes.
         """
         values = {
-            'target': URL('http://www.w4af.org'),
+            'target': URL('http://www.w4af.net'),
             'target_os': 'Unix',
             'target_framework': 'PHP'
         }
@@ -129,7 +129,7 @@ class test_wizards(object):
                  doesn't know what he's doing and makes all the mistakes.
         """
         values = {
-            'target': URL('foo://www.w4af.org'),
+            'target': URL('foo://www.w4af.net'),
             'target_os': 'Minix',
             'target_framework': 'C++'
         }

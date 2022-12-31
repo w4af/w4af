@@ -3,7 +3,7 @@ utils.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ def provides_cors_features(freq, url_opener, debugging_id):
     if ac_value is not None:
         return True
 
-    headers = Headers(list({'Origin': 'www.w4af.org'}.items()))
+    headers = Headers(list({'Origin': 'www.w4af.net'}.items()))
     response = url_opener.GET(freq.get_url(), headers=headers, debugging_id=debugging_id)
     ac_value = retrieve_cors_header(response, ACCESS_CONTROL_ALLOW_ORIGIN)
     if ac_value is not None:

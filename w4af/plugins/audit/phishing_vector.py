@@ -3,7 +3,7 @@ phishing_vector.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,10 +44,10 @@ class phishing_vector(AuditPlugin):
     #
     # I also use hTtp instead of http because I want to evade some (stupid)
     # case sensitive filters
-    TEST_URLS = ('hTtp://w4af.org/',
-                 'htTps://w4af.org/',
-                 'fTp://w4af.org/',
-                 '//w4af.org')
+    TEST_URLS = ('hTtp://w4af.net/',
+                 'htTps://w4af.net/',
+                 'fTp://w4af.net/',
+                 '//w4af.net')
 
     def audit(self, freq, orig_response, debugging_id):
         """

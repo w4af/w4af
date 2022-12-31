@@ -3,7 +3,7 @@ test_audit.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ class TestAuditConsumer(unittest.TestCase):
         audit_consumer = audit(audit_plugins, w4af_core)
         audit_consumer.start()
 
-        url = 'http://w4af.org/?id=1'
+        url = 'http://w4af.net/?id=1'
 
         httpretty.register_uri(httpretty.GET, url,
                                body='hello world',

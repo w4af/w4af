@@ -3,7 +3,7 @@ exceptions.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ def exception_creator(scan_id):
     current_status = FakeStatus(None)
     current_status.set_running_plugin('phase', 'plugin')
     current_status.set_current_fuzzable_request('phase',
-                                                'http://www.w4af.org/')
+                                                'http://www.w4af.net/')
 
     try:
         raise Exception('unittest')

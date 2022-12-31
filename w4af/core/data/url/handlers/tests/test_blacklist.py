@@ -3,7 +3,7 @@ test_blacklist.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,9 +36,9 @@ from w4af.core.data.url import opener_settings
 
 class TestBlacklistHandler(unittest.TestCase):
 
-    MOCK_URL = 'http://w4af.org/scanner/'
-    MOCK_URL_BLOCK = 'http://w4af.org/block/'
-    MOCK_URL_PASS = 'http://w4af.org/pass/'
+    MOCK_URL = 'http://w4af.net/scanner/'
+    MOCK_URL_BLOCK = 'http://w4af.net/block/'
+    MOCK_URL_PASS = 'http://w4af.net/pass/'
     MOCK_BODY = 'Hello world'
     
     def setUp(self):

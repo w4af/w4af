@@ -6,12 +6,12 @@
     "title": "REST Tutorial API",
     "contact": {
       "name": "Andres Riancho",
-      "url": "http://www.w4af.org",
-      "email": "andres@w4af.org"
+      "url": "http://www.w4af.net",
+      "email": "andres@w4af.net"
     },
     "license": {}
   },
-  "host": "w4af.org",
+  "host": "w4af.net",
   "basePath": "/",
   "tags": [
     {

@@ -3,7 +3,7 @@ rfi.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -469,7 +469,7 @@ class rfi(AuditPlugin):
             - use_w4af_site
 
         There are two ways of running this plugin, the most common one is to use
-        w4af's site (w4af.org) as the URL to include. This is convenient and
+        w4af's site (w4af.net) as the URL to include. This is convenient and
         requires zero configuration but leaks information about vulnerable sites
         to w4af's staff.
 

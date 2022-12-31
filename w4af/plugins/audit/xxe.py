@@ -3,7 +3,7 @@ xxe.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ class xxe(AuditPlugin):
         'https://raw.githubusercontent.com/w4af/w4af/main/w4af/tests/fixtures/xxe.txt'
     ]
 
-    # This is the only content stored in the https://w4af.org/xxe.txt file
+    # This is the only content stored in the https://w4af.net/xxe.txt file
     REMOTE_SUCCESS = '667067323'
 
     ENTITY_DEF = '<!DOCTYPE xxe_test [ <!ENTITY xxe_test SYSTEM "%s"> ]>'

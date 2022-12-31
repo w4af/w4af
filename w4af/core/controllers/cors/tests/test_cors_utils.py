@@ -4,7 +4,7 @@ test_utils.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ class TestUtils(unittest.TestCase):
 
         cors = provides_cors_features(fr, url_opener_mock, 'abc')
 
-        call_header = Headers(list({'Origin': 'www.w4af.org'}.items()))
+        call_header = Headers(list({'Origin': 'www.w4af.net'}.items()))
         url_opener_mock.GET.assert_called_with(url, headers=call_header, debugging_id='abc')
 
         self.assertFalse(cors)
@@ -58,7 +58,7 @@ class TestUtils(unittest.TestCase):
         url = URL('http://moth/')
         fr = FuzzableRequest(url)
 
-        hdrs = list({'Access-Control-Allow-Origin': 'http://www.w4af.org/'}.items())
+        hdrs = list({'Access-Control-Allow-Origin': 'http://www.w4af.net/'}.items())
         cors_headers = Headers(hdrs)
         http_response = HTTPResponse(200, '', cors_headers, url, url)
 
@@ -74,7 +74,7 @@ class TestUtils(unittest.TestCase):
     def test_retrieve_cors_header_true(self):
         url = URL('http://moth/')
 
-        w4af_url = 'http://www.w4af.org/'
+        w4af_url = 'http://www.w4af.net/'
         hrds = list({'Access-Control-Allow-Origin': w4af_url}.items())
         cors_headers = Headers(hrds)
         http_response = HTTPResponse(200, '', cors_headers, url, url)

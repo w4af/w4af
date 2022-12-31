@@ -3,7 +3,7 @@ scanrun.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -474,7 +474,7 @@ class URLsGraph(gtk.VBox):
 HEAD_TO_SEND = """\
 GET %s HTTP/1.0
 Host: %s
-User-Agent: w4af.org
+User-Agent: w4af.net
 """
 
 

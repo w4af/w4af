@@ -3,7 +3,7 @@ open_api.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -102,7 +102,7 @@ class open_api(CrawlPlugin):
         """
         Enable file name fuzzing:
 
-            http://w4af.org/api/1.0/pets/{fuzz-this-part}
+            http://w4af.net/api/1.0/pets/{fuzz-this-part}
 
         Users are not going to remember to enable this in misc-settings, and
         most of the APIs which are documented with Open API are REST APIs,

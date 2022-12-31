@@ -3,7 +3,7 @@ test_fuzzy_request_editor.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ from w4af.core.data.url.tests.helpers.http_daemon import HTTPDaemon
 FUZZY_REQUEST_EXAMPLE = """\
 GET http://localhost/$xrange(10)$ HTTP/1.0
 Host: www.some_host.com
-User-Agent: w4af.org
+User-Agent: w4af.net
 Pragma: no-cache
 Content-Type: application/x-www-form-urlencoded
 """

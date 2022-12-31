@@ -4,7 +4,7 @@ info:
     This is an HTTP API
   title: API
   version: 1.2.3
-host: w4af.org
+host: w4af.net
 basePath: /
 schemes:
   - https

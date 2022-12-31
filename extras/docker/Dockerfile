@@ -1,4 +1,4 @@
-# w4af.org
+# w4af.net
 # https://github.com/andresriancho/w4af/tree/master/extras
 
 FROM ubuntu:18.04

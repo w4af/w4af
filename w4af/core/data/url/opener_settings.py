@@ -3,7 +3,7 @@ opener_settings.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -101,7 +101,7 @@ class OpenerSettings(Configurable):
         cfg.save('configured_timeout', 0)
         cfg.save('headers_file', '')
         cfg.save('cookie_jar_file', '')
-        cfg.save('user_agent', 'w4af.org')
+        cfg.save('user_agent', 'w4af.net')
         cfg.save('rand_user_agent', False)
 
         cfg.save('proxy_address', '')
@@ -190,7 +190,7 @@ class OpenerSettings(Configurable):
         except http.cookiejar.LoadError as cle:
             # pylint: disable=E1101
             if cle.message.startswith('invalid Netscape format cookies file'):
-                docs_url = ('http://docs.w4af.org/en/latest/'
+                docs_url = ('http://docs.w4af.net/en/latest/'
                             'authentication.html#setting-http-cookie')
 
                 msg = ('The supplied cookiejar file is not in Netscape format'

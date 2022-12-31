@@ -3,7 +3,7 @@ global_redirect.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ class global_redirect(AuditPlugin):
     Find scripts that redirect the browser to any site.
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
-    TEST_DOMAIN = 'w4af.org'
+    TEST_DOMAIN = 'w4af.net'
 
     EXTENDED_PAYLOADS = None
     BASIC_PAYLOADS = {'http://www.%s/' % TEST_DOMAIN,
@@ -298,21 +298,21 @@ class global_redirect(AuditPlugin):
         Test for JavaScript redirects, these are some common redirects:
 
             // These also work without the `window.` at the beginning
-            window.location = "http://www.w4af.org/";
-            window.location.href = "http://www.w4af.org/";
-            window.location.replace("http://www.w4af.org");
-            window.location.assign('http://www.w4af.org');
+            window.location = "http://www.w4af.net/";
+            window.location.href = "http://www.w4af.net/";
+            window.location.replace("http://www.w4af.net");
+            window.location.assign('http://www.w4af.net');
 
-            self.location = 'http://www.w4af.org';
-            top.location = 'http://www.w4af.org';
+            self.location = 'http://www.w4af.net';
+            top.location = 'http://www.w4af.net';
 
             // jQuery
-            $(location).attr('href', 'http://www.w4af.org');
-            $(window).attr('location', 'http://www.w4af.org');
-            $(location).prop('href', 'http://www.w4af.org');
+            $(location).attr('href', 'http://www.w4af.net');
+            $(window).attr('location', 'http://www.w4af.net');
+            $(location).prop('href', 'http://www.w4af.net');
 
             // Only for old IE
-            window.navigate('http://www.w4af.org');
+            window.navigate('http://www.w4af.net');
         """
         for statement in self._extract_script_code(response):
             if self.TEST_DOMAIN not in statement:

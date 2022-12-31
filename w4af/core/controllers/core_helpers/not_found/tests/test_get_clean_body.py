@@ -4,7 +4,7 @@ test_get_clean_body.py
 
 Copyright 2017 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,12 +37,12 @@ class TestGetCleanBody(unittest.TestCase):
         Trying to fix issue 14955
         https://github.com/andresriancho/w4af/issues/14955
         """
-        url = URL('http://w4af.org/.git/.git/.git/index')
+        url = URL('http://w4af.net/.git/.git/.git/index')
         headers = Headers([('Content-Type', 'text/html')])
 
         body = ('<head><title>Document Moved</title></head>'
                 '<body><h1>Object Moved</h1>This document may be found '
-                '<a HREF="http://w4af.org/.git/.git/.git/index/">here</a></body>')
+                '<a HREF="http://w4af.net/.git/.git/.git/index/">here</a></body>')
 
         resp = HTTPResponse(200, body, headers, url, url)
 
@@ -58,7 +58,7 @@ class TestGetCleanBody(unittest.TestCase):
         Trying to fix issue 14956
         https://github.com/andresriancho/w4af/issues/14956
         """
-        url = URL('http://w4af.org/install.php?mode=phpinfo')
+        url = URL('http://w4af.net/install.php?mode=phpinfo')
         headers = Headers([('Content-Type', 'text/html')])
 
         # Note that the redirect changes the protocol, which is probably why the
@@ -67,7 +67,7 @@ class TestGetCleanBody(unittest.TestCase):
         # Also, after this URL is not removed
         body = ('<head><title>Document Moved</title></head>'
                 '<body><h1>Object Moved</h1>This document may be found '
-                '<a HREF="https://w4af.org/install.php?mode=phpinfo">here</a></body>')
+                '<a HREF="https://w4af.net/install.php?mode=phpinfo">here</a></body>')
 
         resp = HTTPResponse(200, body, headers, url, url)
 

@@ -3,7 +3,7 @@ test_profile.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ cookie_jar_file =
 ignore_session_cookies = False
 proxy_port = 8080
 proxy_address =
-user_agent = w4af.org
+user_agent = w4af.net
 rand_user_agent = False
 max_file_size = 400000
 max_http_retries = 2
@@ -134,7 +134,7 @@ cookie_jar_file =
 ignore_session_cookies = False
 proxy_port = 8080
 proxy_address =
-user_agent = w4af.org
+user_agent = w4af.net
 rand_user_agent = False
 max_file_size = 400000
 max_http_retries = 2

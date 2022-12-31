@@ -3,7 +3,7 @@ menu.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -154,11 +154,11 @@ class menu(object):
     def set_child_call(self, true_false):
         """
         This will set _child_call to True for handling the "set" command:
-            w4af>>> target set target http://w4af.org/
+            w4af>>> target set target http://w4af.net/
         
         While this won't ever set it to true:
             w4af>>> target
-            w4af/config:target>>> set target http://w4af.org/
+            w4af/config:target>>> set target http://w4af.net/
         """
         self._child_call = true_false
 

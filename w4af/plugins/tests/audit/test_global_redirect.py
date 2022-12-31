@@ -3,7 +3,7 @@ test_global_redirect.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -80,9 +80,9 @@ class TestGlobalRedirectBasic(PluginTest):
                                    '<a href="/redir?target=">redirect</a>'),
                       MockResponse('http://httpretty/redir?target=',
                                    'No redirect'),
-                      MockResponse('http://httpretty/redir?target=http://www.w4af.org/',
+                      MockResponse('http://httpretty/redir?target=http://www.w4af.net/',
                                    status=302,
-                                   headers={'Location': 'https://www.w4af.org/'},
+                                   headers={'Location': 'https://www.w4af.net/'},
                                    body='')]
 
     def test_original_response_has_no_redirect(self):
@@ -107,8 +107,8 @@ class TestGlobalRedirectBasicWithMetaRedir(PluginTest):
                                    '<a href="/redir?target=">redirect</a>'),
                       MockResponse('http://httpretty/redir?target=',
                                    '<meta http-equiv="refresh" content="0; url=">'),
-                      MockResponse('http://httpretty/redir?target=http://www.w4af.org/',
-                                   body='<meta http-equiv="refresh" content="0; url=http://www.w4af.org/">')]
+                      MockResponse('http://httpretty/redir?target=http://www.w4af.net/',
+                                   body='<meta http-equiv="refresh" content="0; url=http://www.w4af.net/">')]
 
     def test_original_response_has_meta_redirect(self):
         cfg = SCAN_CONFIG['cfg']
@@ -134,9 +134,9 @@ class TestGlobalRedirectExtendedPayloadSet(PluginTest):
                                    status=302,
                                    headers={'Location': 'http://httpretty/default'},
                                    body=''),
-                      MockResponse('http://httpretty/redir?target=//httpretty.w4af.org/',
+                      MockResponse('http://httpretty/redir?target=//httpretty.w4af.net/',
                                    status=302,
-                                   headers={'Location': 'httpretty.w4af.org'},
+                                   headers={'Location': 'httpretty.w4af.net'},
                                    body='')]
 
     def test_original_response_has_redirect(self):
@@ -184,7 +184,7 @@ class TestGlobalRedirectUnitJSRedirect(TestCase):
     def test_javascript_redirect_simple(self):
         plugin = global_redirect()
 
-        body = '<script>window.location = "http://w4af.org/"</script>'
+        body = '<script>window.location = "http://w4af.net/"</script>'
         url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         resp = HTTPResponse(200, body, headers, url, url, _id=1)
@@ -194,7 +194,7 @@ class TestGlobalRedirectUnitJSRedirect(TestCase):
     def test_javascript_redirect_assign(self):
         plugin = global_redirect()
 
-        body = '<script>window.location.assign("http://www.w4af.org")</script>'
+        body = '<script>window.location.assign("http://www.w4af.net")</script>'
         url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         resp = HTTPResponse(200, body, headers, url, url, _id=1)
@@ -208,7 +208,7 @@ class TestGlobalRedirectUnitResponseHasRedirect(TestCase):
 
         body = ''
         url = URL('http://www.w4af.com/')
-        headers = Headers([('content-type', 'text/html'), ('Location',  'http://w4af.org')])
+        headers = Headers([('content-type', 'text/html'), ('Location',  'http://w4af.net')])
         resp = HTTPResponse(200, body, headers, url, url, _id=1)
 
         self.assertTrue(plugin._response_has_redirect(resp))
@@ -227,7 +227,7 @@ class TestGlobalRedirectUnitResponseHasRedirect(TestCase):
     def test_response_has_redirect_js_1(self):
         plugin = global_redirect()
 
-        body = '<script>window.location.assign("http://www.w4af.org")</script>'
+        body = '<script>window.location.assign("http://www.w4af.net")</script>'
         url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         resp = HTTPResponse(200, body, headers, url, url, _id=1)
@@ -237,7 +237,7 @@ class TestGlobalRedirectUnitResponseHasRedirect(TestCase):
     def test_response_has_redirect_js_2(self):
         plugin = global_redirect()
 
-        body = '<script>window.location.href = "http://www.w4af.org"</script>'
+        body = '<script>window.location.href = "http://www.w4af.net"</script>'
         url = URL('http://www.w4af.com/')
         headers = Headers([('content-type', 'text/html')])
         resp = HTTPResponse(200, body, headers, url, url, _id=1)

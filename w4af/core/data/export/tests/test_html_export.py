@@ -3,7 +3,7 @@ test_html_export.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,13 +24,13 @@ import unittest
 from w4af.core.data.export.html_export import html_export
 
 EXPECTED_SIMPLE = """
-<form action="http://www.w4af.org/" method="GET">
+<form action="http://www.w4af.net/" method="GET">
 <input type="submit">
 </form>
 """
 
 EXPECTED_POST = """
-<form action="http://www.w4af.org/" method="POST">
+<form action="http://www.w4af.net/" method="POST">
 <label>a</label>
 <input type="text" name="a" value="1">
 <input type="submit">
@@ -38,7 +38,7 @@ EXPECTED_POST = """
 """
 
 EXPECTED_POST_REPEATED = """
-<form action="http://www.w4af.org/" method="POST">
+<form action="http://www.w4af.net/" method="POST">
 <label>a</label>
 <input type="text" name="a" value="1">
 <label>a</label>
@@ -51,16 +51,16 @@ EXPECTED_POST_REPEATED = """
 class TestHTMLExport(unittest.TestCase):
 
     def test_export_GET(self):
-        http_request = 'GET http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'GET http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Foo: bar\n' \
                        '\n'
         html_code = html_export(http_request)
         self.assertTrue(EXPECTED_SIMPLE in html_code)
 
     def test_export_POST(self):
-        http_request = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 3\n' \
                        'Content-Type: application/x-www-form-urlencoded\n' \
                        '\n' \
@@ -69,8 +69,8 @@ class TestHTMLExport(unittest.TestCase):
         self.assertTrue(EXPECTED_POST in html_code)
 
     def test_export_POST_repeated(self):
-        http_request = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 7\n' \
                        'Content-Type: application/x-www-form-urlencoded\n' \
                        'Foo: spam\n' \
@@ -81,8 +81,8 @@ class TestHTMLExport(unittest.TestCase):
         self.assertTrue(EXPECTED_POST_REPEATED in html_code)
 
     def test_export_inject(self):
-        http_request = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 7\n' \
                        'Content-Type: application/x-www-form-urlencoded\n' \
                        'Foo: spam\n' \

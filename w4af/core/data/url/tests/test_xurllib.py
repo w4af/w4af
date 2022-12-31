@@ -4,7 +4,7 @@ test_xurllib.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ from w4af.core.controllers.exceptions import (ScanMustStopByUserRequest,
 class TestXUrllib(unittest.TestCase):
 
     MOTH_MESSAGE = '<title>moth: vulnerable web application</title>'
-    MOCK_URL = 'http://www.w4af.org/'
+    MOCK_URL = 'http://www.w4af.net/'
 
     def setUp(self):
         self.uri_opener = ExtendedUrllib()

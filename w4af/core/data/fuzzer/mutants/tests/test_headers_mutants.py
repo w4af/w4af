@@ -3,7 +3,7 @@ test_headers_mutant.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,8 +34,8 @@ class TestHeadersMutant(unittest.TestCase):
         self.fuzzer_config = {'fuzzable_headers': ['Referer']}
 
     def test_basic(self):
-        referer_1 = 'http://w4af.org/'
-        referer_2 = 'http://spam.w4af.org/'
+        referer_1 = 'http://w4af.net/'
+        referer_2 = 'http://spam.w4af.net/'
 
         freq = FuzzableRequest(URL('http://www.w4af.com/'),
                                headers=Headers([('Referer', referer_1)]))

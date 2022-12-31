@@ -4,7 +4,7 @@ test_main.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -156,7 +156,7 @@ class TestOpenAPIMain(unittest.TestCase):
         #
         api_call = api_calls[0]
 
-        e_url = 'http://w4af.org/api/cats'
+        e_url = 'http://w4af.net/api/cats'
         e_force_fuzzing_headers = ['X-Awesome-Header', 'X-Foo-Header']
         e_headers = Headers([
             ('X-Awesome-Header', '2018'),
@@ -173,7 +173,7 @@ class TestOpenAPIMain(unittest.TestCase):
         #
         api_call = api_calls[1]
 
-        e_url = 'http://w4af.org/api/cats?limit=42'
+        e_url = 'http://w4af.net/api/cats?limit=42'
         e_force_fuzzing_headers = ['X-Awesome-Header', 'X-Foo-Header']
         e_headers = Headers([
             ('X-Awesome-Header', '2018'),
@@ -190,7 +190,7 @@ class TestOpenAPIMain(unittest.TestCase):
         #
         api_call = api_calls[2]
 
-        e_url = 'http://w4af.org/api/pets'
+        e_url = 'http://w4af.net/api/pets'
         e_force_fuzzing_headers = ['X-Bar-Header', 'X-Foo-Header']
         e_headers = Headers([
             ('X-Foo-Header', '42'),
@@ -206,7 +206,7 @@ class TestOpenAPIMain(unittest.TestCase):
         #
         api_call = api_calls[3]
 
-        e_url = 'http://w4af.org/api/pets'
+        e_url = 'http://w4af.net/api/pets'
         e_force_fuzzing_headers = ['X-Bar-Header', 'X-Foo-Header']
         e_headers = Headers([
             ('X-Bar-Header', '56'),
@@ -242,7 +242,7 @@ class TestOpenAPIMain(unittest.TestCase):
         #
         api_call = api_calls[1]
 
-        e_url = 'http://w4af.org/api/pets'
+        e_url = 'http://w4af.net/api/pets'
         e_force_fuzzing_headers = []
         e_headers = Headers([('Content-Type', 'application/vnd.w4af+json')])
         e_post_data_headers = Headers([('Content-Type', 'application/vnd.w4af+json')])
@@ -262,7 +262,7 @@ class TestOpenAPIMain(unittest.TestCase):
         #
         api_call = api_calls[0]
 
-        e_url = 'http://w4af.org/api/pets'
+        e_url = 'http://w4af.net/api/pets'
         e_force_fuzzing_headers = ['X-Foo-Header']
         e_headers = Headers([('Content-Type', 'application/vnd.w4af+json'), ('X-Foo-Header', '42')])
         e_post_data_headers = Headers([('Content-Type', 'application/vnd.w4af+json')])
@@ -360,7 +360,7 @@ class TestOpenAPIMain(unittest.TestCase):
         #
         api_call = api_calls[0]
 
-        e_url = 'http://w4af.org/api/cats'
+        e_url = 'http://w4af.net/api/cats'
         e_headers = Headers([
             ('X-Awesome-Header', '2018'),
             ('X-Foo-Header', 'foo'),
@@ -376,7 +376,7 @@ class TestOpenAPIMain(unittest.TestCase):
         #
         api_call = api_calls[1]
 
-        e_url = 'http://w4af.org/api/cats?limit=42'
+        e_url = 'http://w4af.net/api/cats?limit=42'
         e_headers = Headers([
             ('X-Awesome-Header', '2018'),
             ('X-Foo-Header', 'foo'),
@@ -392,7 +392,7 @@ class TestOpenAPIMain(unittest.TestCase):
         #
         api_call = api_calls[2]
 
-        e_url = 'http://w4af.org/api/pets'
+        e_url = 'http://w4af.net/api/pets'
         e_headers = Headers([
             ('X-Foo-Header', '42'),
             ('Content-Type', 'application/json')])
@@ -407,7 +407,7 @@ class TestOpenAPIMain(unittest.TestCase):
         #
         api_call = api_calls[3]
 
-        e_url = 'http://w4af.org/api/pets'
+        e_url = 'http://w4af.net/api/pets'
         e_headers = Headers([
             ('X-Bar-Header', '56'),
             ('X-Foo-Header', '42'),
@@ -438,7 +438,7 @@ class TestOpenAPIMain(unittest.TestCase):
         self.assertEqual(len(api_calls), 1)
 
         api_call = api_calls[0]
-        e_url = 'http://w4af.org/api/pets'
+        e_url = 'http://w4af.net/api/pets'
         e_force_fuzzing_headers = []
         e_headers = Headers([('Content-Type', 'application/json')])
         e_body = '{"pet": {"age": 42}}'
@@ -473,79 +473,79 @@ class TestOpenAPIMain(unittest.TestCase):
         api_calls = parser.get_api_calls()
 
         e_api_calls = [('GET',
-                        'https://w4af.org/bankid/tokens/4271a25e-7211-4306-b527-46196eb2af28',
+                        'https://w4af.net/bankid/tokens/4271a25e-7211-4306-b527-46196eb2af28',
                         Headers([('Content-Type', 'application/json')]),
                         ''),
                        ('POST',
-                        'https://w4af.org/bankid/tokens',
+                        'https://w4af.net/bankid/tokens',
                         Headers([('Content-Type', 'application/json')]),
                         '{"body": null}'),
                        ('POST',
-                        'https://w4af.org/bankid/tokens',
+                        'https://w4af.net/bankid/tokens',
                         Headers([('Authorization', 'FrAmE30.'), ('Content-Type', 'application/json')]),
                         '{"body": {"orderRef": "e475f288-4e9b-43ea-966c-d3912e7a25b2"}}'),
                        ('POST',
-                        'https://w4af.org/bankid/orders',
+                        'https://w4af.net/bankid/orders',
                         Headers([('Content-Type', 'application/json')]),
                         '{"body": null}'),
                        ('POST',
-                        'https://w4af.org/bankid/orders',
+                        'https://w4af.net/bankid/orders',
                         Headers([('Content-Type', 'application/json')]),
                         '{"body": {"pid": "191212121212"}}'),
                        ('GET',
-                        'https://w4af.org/persons/3419/partners',
+                        'https://w4af.net/persons/3419/partners',
                         Headers([('Content-Type', 'application/json')]),
                         ''),
                        ('GET',
-                        'https://w4af.org/persons/3419/partners',
+                        'https://w4af.net/persons/3419/partners',
                         Headers([('Authorization', 'FrAmE30.'), ('Content-Type', 'application/json')]),
                         ''),
                        ('GET',
-                        'https://w4af.org/persons/3419/partners/3419',
+                        'https://w4af.net/persons/3419/partners/3419',
                         Headers([('Content-Type', 'application/json')]),
                         ''),
                        ('GET',
-                        'https://w4af.org/persons/3419/partners/3419',
+                        'https://w4af.net/persons/3419/partners/3419',
                         Headers([('Authorization', 'FrAmE30.'), ('Content-Type', 'application/json')]),
                         ''),
                        ('GET',
-                        'https://w4af.org/persons/3419',
+                        'https://w4af.net/persons/3419',
                         Headers([('Content-Type', 'application/json')]),
                         ''),
                        ('GET',
-                        'https://w4af.org/persons/3419',
+                        'https://w4af.net/persons/3419',
                         Headers([('Authorization', 'FrAmE30.'), ('Content-Type', 'application/json')]),
                         ''),
                        ('POST',
-                        'https://w4af.org/persons/3419/partners',
+                        'https://w4af.net/persons/3419/partners',
                         Headers([('Content-Type', 'application/json')]),
                         '{"body": null}'),
                        ('POST',
-                        'https://w4af.org/persons/3419/partners',
+                        'https://w4af.net/persons/3419/partners',
                         Headers([('Authorization', 'FrAmE30.'), ('Content-Type', 'application/json')]),
                         '{"body": {"partner": "19101010****", "termsAccepted": false}}'),
                        ('PATCH',
-                        'https://w4af.org/persons/3419',
+                        'https://w4af.net/persons/3419',
                         Headers([('Content-Type', 'application/json')]),
                         '{"body": null}'),
                        ('PATCH',
-                        'https://w4af.org/persons/3419',
+                        'https://w4af.net/persons/3419',
                         Headers([('Authorization', 'FrAmE30.'), ('Content-Type', 'application/json')]),
                         '{"body": {"termsAccepted": false}}'),
                        ('PUT',
-                        'https://w4af.org/persons/3419/partners/3419',
+                        'https://w4af.net/persons/3419/partners/3419',
                         Headers([('Content-Type', 'application/json')]),
                         '{"body": null}'),
                        ('PUT',
-                        'https://w4af.org/persons/3419/partners/3419',
+                        'https://w4af.net/persons/3419/partners/3419',
                         Headers([('Authorization', 'FrAmE30.'), ('Content-Type', 'application/json')]),
                         '{"body": {"partner": "19101010****", "termsAccepted": false}}'),
                        ('POST',
-                        'https://w4af.org/events',
+                        'https://w4af.net/events',
                         Headers([('Content-Type', 'application/json')]),
                         '{"body": null}'),
                        ('POST',
-                        'https://w4af.org/events',
+                        'https://w4af.net/events',
                         Headers([('Authorization', 'FrAmE30.'), ('Content-Type', 'application/json')]),
                         '{"body": {"event": "start doktor24"}}')
                        ]

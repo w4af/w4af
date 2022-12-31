@@ -4,7 +4,7 @@ test_xurllib_integration.py
 
 Copyright 2011 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ class TestUpperCaseHeaders(unittest.TestCase):
         This gives w4af a modified view of the reality, we never see what was
         really sent to us.
         """
-        url = "http://w4af.org/"
+        url = "http://w4af.net/"
 
         httpretty.register_uri(httpretty.GET, url,
                                body='hello world',

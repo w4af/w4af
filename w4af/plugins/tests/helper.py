@@ -3,7 +3,7 @@ helper.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -411,7 +411,7 @@ class PluginTest(unittest.TestCase):
         """
         :return: The test agent for easier log grep
         """
-        return 'Mozilla/4.0 (compatible; w4af.org; TestCase: %s)' % self.id()
+        return 'Mozilla/4.0 (compatible; w4af.net; TestCase: %s)' % self.id()
 
     def _formatMessage(self, msg, standardMsg):
         """Honour the longMessage attribute when generating failure messages.

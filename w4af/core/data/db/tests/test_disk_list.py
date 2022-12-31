@@ -2,7 +2,7 @@
 """
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -95,28 +95,28 @@ class TestDiskList(unittest.TestCase):
     def test_urlobject(self):
         dl = DiskList()
 
-        dl.append(URL('http://w4af.org/?id=2'))
-        dl.append(URL('http://w4af.org/?id=3'))
+        dl.append(URL('http://w4af.net/?id=2'))
+        dl.append(URL('http://w4af.net/?id=3'))
 
-        self.assertEqual(dl[0], URL('http://w4af.org/?id=2'))
-        self.assertEqual(dl[1], URL('http://w4af.org/?id=3'))
-        self.assertNotIn(URL('http://w4af.org/?id=4'), dl)
-        self.assertIn(URL('http://w4af.org/?id=2'), dl)
+        self.assertEqual(dl[0], URL('http://w4af.net/?id=2'))
+        self.assertEqual(dl[1], URL('http://w4af.net/?id=3'))
+        self.assertNotIn(URL('http://w4af.net/?id=4'), dl)
+        self.assertIn(URL('http://w4af.net/?id=2'), dl)
 
     def test_fuzzable_request(self):
         dl = DiskList()
 
-        uri = URL('http://w4af.org/?id=2')
+        uri = URL('http://w4af.net/?id=2')
         qsr1 = FuzzableRequest(uri, method='GET', headers=Headers(
-            [('Referer', 'http://w4af.org/')]))
+            [('Referer', 'http://w4af.net/')]))
 
-        uri = URL('http://w4af.org/?id=3')
+        uri = URL('http://w4af.net/?id=3')
         qsr2 = FuzzableRequest(uri, method='OPTIONS', headers=Headers(
-            [('Referer', 'http://w4af.org/')]))
+            [('Referer', 'http://w4af.net/')]))
 
-        uri = URL('http://w4af.org/?id=7')
+        uri = URL('http://w4af.net/?id=7')
         qsr3 = FuzzableRequest(uri, method='FOO', headers=Headers(
-            [('Referer', 'http://w4af.org/')]))
+            [('Referer', 'http://w4af.net/')]))
 
         dl.append(qsr1)
         dl.append(qsr2)

@@ -3,7 +3,7 @@ test_fuzzer.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -102,7 +102,7 @@ class TestFuzzer(unittest.TestCase):
 
     @unittest.skip("Not sure what the correct output should be here")
     def test_special_url_characters(self):
-        initial_url = 'http://w4af.org/' \
+        initial_url = 'http://w4af.net/' \
                       '?__VIEWSTATE=/' \
                       '&__EVENTVALIDATION=\\X+W=='\
                       '&_ctl0:TextBox1=%s'
@@ -111,7 +111,7 @@ class TestFuzzer(unittest.TestCase):
         freq = FuzzableRequest(url)
         generated_mutants = create_mutants(freq, self.payloads)
 
-        decoded_url = 'http://w4af.org/' \
+        decoded_url = 'http://w4af.net/' \
                       '?__VIEWSTATE=/' \
                       '&__EVENTVALIDATION=\\X%%20W=='\
                       '&_ctl0:TextBox1=%s'

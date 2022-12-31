@@ -3,7 +3,7 @@ websocket_hijacking.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,8 +35,8 @@ class websocket_hijacking(AuditPlugin):
     Detect Cross-Site WebSocket hijacking vulnerabilities.
     :author: Dmitry Roshchin (nixwizard@gmail.com)
     """
-    w4af_DOMAIN = 'w4af.org'
-    w4af_ORIGIN = 'http://www.w4af.org/'
+    w4af_DOMAIN = 'w4af.net'
+    w4af_ORIGIN = 'http://www.w4af.net/'
 
     def __init__(self):
         super(websocket_hijacking, self).__init__()

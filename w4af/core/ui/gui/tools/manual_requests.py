@@ -3,7 +3,7 @@ manual_requests.py
 
 Copyright 2007 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,8 +33,8 @@ from w4af.core.controllers.exceptions import (BaseFrameworkException,
                                               ProxyException)
 
 MANUAL_REQUEST_EXAMPLE = """\
-GET http://w4af.org/ HTTP/1.1
-Host: w4af.org
+GET http://w4af.net/ HTTP/1.1
+Host: w4af.net
 User-Agent: Firefox
 """
 

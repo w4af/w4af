@@ -3,7 +3,7 @@ test_python_export.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@ from w4af.core.data.export.python_export import python_export
 
 EXPECTED_SIMPLE = """import urllib.request
 
-url = "http://www.w4af.org/"
+url = "http://www.w4af.net/"
 data = None
 headers = {
-    "Host" : "www.w4af.org",
+    "Host" : "www.w4af.net",
     "Foo" : "bar"
 }
 
@@ -43,10 +43,10 @@ print(response_body)
 
 EXPECTED_POST = """import urllib.request
 
-url = "http://www.w4af.org/"
+url = "http://www.w4af.net/"
 data = b"a=1"
 headers = {
-    "Host" : "www.w4af.org",
+    "Host" : "www.w4af.net",
     "Content-Type" : "application/x-www-form-urlencoded"
 }
 
@@ -58,10 +58,10 @@ print(response_body)
 
 EXPECTED_POST_REPEATED = """import urllib.request
 
-url = "http://www.w4af.org/"
+url = "http://www.w4af.net/"
 data = b"a=1&a=2"
 headers = {
-    "Host" : "www.w4af.org",
+    "Host" : "www.w4af.net",
     "Content-Type" : "application/x-www-form-urlencoded",
     "Foo" : "spam, eggs"
 }
@@ -90,8 +90,8 @@ class TestPythonExport(unittest.TestCase):
             os.unlink(name)
 
     def test_export_GET(self):
-        http_request = 'GET http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'GET http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Foo: bar\n' \
                        '\n'
         python_code = python_export(http_request)
@@ -99,8 +99,8 @@ class TestPythonExport(unittest.TestCase):
         self.assertEqual(python_code, EXPECTED_SIMPLE)
 
     def test_export_POST(self):
-        http_request = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 3\n' \
                        'Content-Type: application/x-www-form-urlencoded\n' \
                        '\n' \
@@ -110,8 +110,8 @@ class TestPythonExport(unittest.TestCase):
         self.assertEqual(python_code, EXPECTED_POST)
 
     def test_export_POST_repeated(self):
-        http_request = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 7\n' \
                        'Content-Type: application/x-www-form-urlencoded\n' \
                        'Foo: spam\n' \
@@ -123,8 +123,8 @@ class TestPythonExport(unittest.TestCase):
         self.assertEqual(python_code, EXPECTED_POST_REPEATED)
 
     def test_export_inject(self):
-        http_request = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 7\n' \
                        'Content-Type: application/x-www-form-urlencoded\n' \
                        'Foo: sp"am\n' \

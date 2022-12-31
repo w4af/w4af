@@ -4,7 +4,7 @@ test_url_regex.py
 
 Copyright 2019 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,43 +28,43 @@ from w4af.core.data.parsers.utils.url_regex import URL_RE, RELATIVE_URL_RE
 
 class TestURLRegex(unittest.TestCase):
     def test_simple_domain(self):
-        matches = URL_RE.findall('http://w4af.org/')
-        self.assertEqual(matches[0][0], 'http://w4af.org/')
+        matches = URL_RE.findall('http://w4af.net/')
+        self.assertEqual(matches[0][0], 'http://w4af.net/')
 
     def test_case_insensitive(self):
-        matches = URL_RE.findall('hTTp://w4af.org/')
-        self.assertEqual(matches[0][0], 'hTTp://w4af.org/')
+        matches = URL_RE.findall('hTTp://w4af.net/')
+        self.assertEqual(matches[0][0], 'hTTp://w4af.net/')
 
     def test_simple_domain_padding(self):
-        matches = URL_RE.findall('123 http://w4af.org/ 456')
-        self.assertEqual(matches[0][0], 'http://w4af.org/')
+        matches = URL_RE.findall('123 http://w4af.net/ 456')
+        self.assertEqual(matches[0][0], 'http://w4af.net/')
 
     def test_domain_filename_padding(self):
-        matches = URL_RE.findall('123 http://w4af.org/scanner 456')
-        self.assertEqual(matches[0][0], 'http://w4af.org/scanner')
+        matches = URL_RE.findall('123 http://w4af.net/scanner 456')
+        self.assertEqual(matches[0][0], 'http://w4af.net/scanner')
 
     def test_domain_filename_query_string_padding(self):
-        matches = URL_RE.findall('123 http://w4af.org/scanner?id=1 456')
-        self.assertEqual(matches[0][0], 'http://w4af.org/scanner?id=1')
+        matches = URL_RE.findall('123 http://w4af.net/scanner?id=1 456')
+        self.assertEqual(matches[0][0], 'http://w4af.net/scanner?id=1')
 
     def test_domain_filename_query_string_multiple_params_padding(self):
-        matches = URL_RE.findall('123 http://w4af.org/scanner?id=1&foo=bar 456')
-        self.assertEqual(matches[0][0], 'http://w4af.org/scanner?id=1&foo=bar')
+        matches = URL_RE.findall('123 http://w4af.net/scanner?id=1&foo=bar 456')
+        self.assertEqual(matches[0][0], 'http://w4af.net/scanner?id=1&foo=bar')
 
     def test_no_match_1(self):
-        matches = URL_RE.findall('ftp://w4af.org')
+        matches = URL_RE.findall('ftp://w4af.net')
         self.assertEqual(matches, [])
 
     def test_no_match_2(self):
-        matches = URL_RE.findall('httt://w4af.org')
+        matches = URL_RE.findall('httt://w4af.net')
         self.assertEqual(matches, [])
 
     def test_no_match_3(self):
-        matches = URL_RE.findall('http!://w4af.org')
+        matches = URL_RE.findall('http!://w4af.net')
         self.assertEqual(matches, [])
 
     def test_no_match_4(self):
-        matches = URL_RE.findall('http:--w4af.org')
+        matches = URL_RE.findall('http:--w4af.net')
         self.assertEqual(matches, [])
 
 
@@ -113,8 +113,8 @@ class TestRelativeURLRegex(unittest.TestCase):
 
     def test_full_url(self):
         # This is filtered by ReExtract._filter_false_urls
-        matches = RELATIVE_URL_RE.findall('http://w4af.org/foo.html')
-        self.assertEqual(matches[0][0], '://w4af.org/foo.html')
+        matches = RELATIVE_URL_RE.findall('http://w4af.net/foo.html')
+        self.assertEqual(matches[0][0], '://w4af.net/foo.html')
 
     def test_with_fake_start(self):
         matches = RELATIVE_URL_RE.findall('</abc> /def.html')

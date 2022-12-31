@@ -3,7 +3,7 @@ test_response.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,38 +30,38 @@ from w4af.core.data.dc.headers import Headers
 
 class TestFourOhFourResponse(unittest.TestCase):
     def test_normalize_path_paths(self):
-        url = URL('https://w4af.org/a/b/c/')
+        url = URL('https://w4af.net/a/b/c/')
         normalized_path = FourOhFourResponse.normalize_path(url)
 
-        self.assertEqual(normalized_path, 'https://w4af.org/a/b/path/')
+        self.assertEqual(normalized_path, 'https://w4af.net/a/b/path/')
 
     def test_normalize_path_filenames(self):
-        url_0 = URL('https://w4af.org/assets/uploads/2015/09/index.php')
+        url_0 = URL('https://w4af.net/assets/uploads/2015/09/index.php')
         normalized_path_0 = FourOhFourResponse.normalize_path(url_0)
 
-        url_1 = URL('https://w4af.org/assets/uploads/2015/09/nidex.php')
+        url_1 = URL('https://w4af.net/assets/uploads/2015/09/nidex.php')
         normalized_path_1 = FourOhFourResponse.normalize_path(url_1)
 
-        url_2 = URL('https://w4af.org/assets/uploads/2015/09/hppvresion.php')
+        url_2 = URL('https://w4af.net/assets/uploads/2015/09/hppvresion.php')
         normalized_path_2 = FourOhFourResponse.normalize_path(url_2)
 
         self.assertEqual(normalized_path_0, normalized_path_1)
         self.assertEqual(normalized_path_1, normalized_path_2)
 
     def test_normalize_path_with_querystring(self):
-        url_0 = URL('https://w4af.org/index.php?id=1')
+        url_0 = URL('https://w4af.net/index.php?id=1')
         normalized_path_0 = FourOhFourResponse.normalize_path(url_0)
 
-        url_1 = URL('https://w4af.org/test.php?id=3')
+        url_1 = URL('https://w4af.net/test.php?id=3')
         normalized_path_1 = FourOhFourResponse.normalize_path(url_1)
 
         self.assertEqual(normalized_path_0, normalized_path_1)
 
     def test_normalize_path_with_querystring_no_filename(self):
-        url_0 = URL('https://w4af.org/?id=1')
+        url_0 = URL('https://w4af.net/?id=1')
         normalized_path_0 = FourOhFourResponse.normalize_path(url_0)
 
-        url_1 = URL('https://w4af.org/?id=3')
+        url_1 = URL('https://w4af.net/?id=3')
         normalized_path_1 = FourOhFourResponse.normalize_path(url_1)
 
         self.assertEqual(normalized_path_0, normalized_path_1)

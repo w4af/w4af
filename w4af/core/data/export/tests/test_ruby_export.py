@@ -3,7 +3,7 @@ test_ruby_export.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,10 +25,10 @@ from w4af.core.data.export.ruby_export import ruby_export
 
 EXPECTED_SIMPLE = """require 'net/https'
 
-url = URI.parse("http://www.w4af.org/")
+url = URI.parse("http://www.w4af.net/")
 data = nil
 headers = {
-    "Host" => "www.w4af.org",
+    "Host" => "www.w4af.net",
     "Foo" => "bar"
 }
 res = Net::HTTP.start(url.host, url.port) do |http|
@@ -41,10 +41,10 @@ puts res.body
 
 EXPECTED_POST = """require 'net/https'
 
-url = URI.parse("http://www.w4af.org/")
+url = URI.parse("http://www.w4af.net/")
 data = "a=1"
 headers = {
-    "Host" => "www.w4af.org",
+    "Host" => "www.w4af.net",
     "Content-Type" => "application/x-www-form-urlencoded"
 }
 res = Net::HTTP.start(url.host, url.port) do |http|
@@ -57,10 +57,10 @@ puts res.body
 
 EXPECTED_POST_REPEATED = """require 'net/https'
 
-url = URI.parse("http://www.w4af.org/")
+url = URI.parse("http://www.w4af.net/")
 data = "a=1&a=2"
 headers = {
-    "Host" => "www.w4af.org",
+    "Host" => "www.w4af.net",
     "Content-Type" => "application/x-www-form-urlencoded",
     "Foo" => "spam, eggs"
 }
@@ -76,16 +76,16 @@ puts res.body
 class TestRubyExport(unittest.TestCase):
 
     def test_export_GET(self):
-        http_request = 'GET http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'GET http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Foo: bar\n' \
                        '\n'
         ruby_code = ruby_export(http_request)
         self.assertEqual(ruby_code, EXPECTED_SIMPLE)
 
     def test_export_POST(self):
-        http_request = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 3\n' \
                        'Content-Type: application/x-www-form-urlencoded\n' \
                        '\n' \
@@ -94,8 +94,8 @@ class TestRubyExport(unittest.TestCase):
         self.assertEqual(ruby_code, EXPECTED_POST)
 
     def test_export_POST_repeated(self):
-        http_request = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 7\n' \
                        'Content-Type: application/x-www-form-urlencoded\n' \
                        'Foo: spam\n' \
@@ -106,8 +106,8 @@ class TestRubyExport(unittest.TestCase):
         self.assertEqual(ruby_code, EXPECTED_POST_REPEATED)
 
     def test_export_inject(self):
-        http_request = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 7\n' \
                        'Content-Type: application/x-www-form-urlencoded\n' \
                        'Foo: sp"am\n' \

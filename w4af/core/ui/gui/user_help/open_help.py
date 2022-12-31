@@ -3,7 +3,7 @@ open_help.py
 
 Copyright 2014 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ from w4af.core.controllers.auto_update.utils import (get_current_branch,
                                                      DETACHED_HEAD)
 
 
-DOC_ROOT_FMT = 'http://docs.w4af.org/en/%s/gui/'
+DOC_ROOT_FMT = 'http://docs.w4af.net/en/%s/gui/'
 DOC_ROUTER = {
               'wizards': 'tools.html#wizards',
               'fuzzy_requests': 'tools.html#fuzzy-requests',

@@ -3,7 +3,7 @@ test_update_URLs_in_KB.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,16 +32,16 @@ class TestUpdateURLs(unittest.TestCase):
         kb.kb.cleanup()
 
     def test_basic(self):
-        u1 = URL('http://w4af.org/')
+        u1 = URL('http://w4af.net/')
         r1 = FuzzableRequest(u1, method='GET')
         kb.kb.add_fuzzable_request(r1)
         result = kb.kb.get_all_known_urls()
         self.assertEqual(len(result), 1)
-        self.assertEqual("http://w4af.org/", list(result)[0].url_string)
+        self.assertEqual("http://w4af.net/", list(result)[0].url_string)
 
-        u2 = URL('http://w4af.org/blog/')
+        u2 = URL('http://w4af.net/blog/')
         r2 = FuzzableRequest(u2, method='GET')
-        u3 = URL('http://w4af.org/')
+        u3 = URL('http://w4af.net/')
         r3 = FuzzableRequest(u3, method='GET')
         kb.kb.add_fuzzable_request(r1)
         kb.kb.add_fuzzable_request(r2)
@@ -49,6 +49,6 @@ class TestUpdateURLs(unittest.TestCase):
 
         result = kb.kb.get_all_known_urls()
         self.assertEqual(len(result), 2)
-        expected_set = set(["http://w4af.org/", "http://w4af.org/blog/"])
+        expected_set = set(["http://w4af.net/", "http://w4af.net/blog/"])
         self.assertEqual(expected_set,
                          set([u.url_string for u in result]))

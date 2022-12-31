@@ -3,7 +3,7 @@ un_ssl.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,8 +46,8 @@ class un_ssl(AuditPlugin):
         """
         Check if the protocol specified in freq is https and fetch the same URL
         using http. ie:
-            - input: https://w4af.org/
-            - check: http://w4af.org/
+            - input: https://w4af.net/
+            - check: http://w4af.net/
 
         :param freq: A FuzzableRequest
         :param orig_response: The HTTP response associated with the fuzzable request

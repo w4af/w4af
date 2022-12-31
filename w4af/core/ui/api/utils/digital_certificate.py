@@ -3,7 +3,7 @@ digital_certificate.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,9 +47,9 @@ class SSLCertificate(object):
         cert = crypto.X509()
         cert.get_subject().C = 'US'
         cert.get_subject().ST = 'CA'
-        cert.get_subject().L = 'w4af.org'
-        cert.get_subject().O = 'w4af.org'
-        cert.get_subject().OU = 'w4af.org'
+        cert.get_subject().L = 'w4af.net'
+        cert.get_subject().O = 'w4af.net'
+        cert.get_subject().OU = 'w4af.net'
         cert.get_subject().CN = host
         cert.set_serial_number(111111111111111111111111111)
         cert.gmtime_adj_notBefore(0)

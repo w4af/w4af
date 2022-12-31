@@ -4,7 +4,7 @@ test_get_average_rtt.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ from w4af.core.data.request.fuzzable_request import FuzzableRequest
 @pytest.mark.smoke
 class TestGetAverageRTT(unittest.TestCase):
 
-    MOCK_URL = 'http://www.w4af.org/'
+    MOCK_URL = 'http://www.w4af.net/'
 
     def setUp(self):
         self.uri_opener = ExtendedUrllib()

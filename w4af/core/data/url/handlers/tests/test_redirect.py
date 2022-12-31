@@ -3,7 +3,7 @@ test_redirect.py
 
 Copyright 2013 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,8 +34,8 @@ from w4af.core.data.url import opener_settings
 
 class TestRedirectHandlerLowLevel(unittest.TestCase):
 
-    REDIR_DEST = 'http://w4af.org/dest'
-    REDIR_SRC = 'http://w4af.org/src'
+    REDIR_DEST = 'http://w4af.net/dest'
+    REDIR_SRC = 'http://w4af.net/src'
     OK_BODY = 'Body!'
 
     def setUp(self):
@@ -94,8 +94,8 @@ class TestRedirectHandlerExtendedUrllib(unittest.TestCase):
     """
     Test the redirect handler using ExtendedUrllib
     """
-    REDIR_DEST = 'http://w4af.org/dest'
-    REDIR_SRC = 'http://w4af.org/src'
+    REDIR_DEST = 'http://w4af.net/dest'
+    REDIR_SRC = 'http://w4af.net/src'
     OK_BODY = 'Body!'
 
     def setUp(self):

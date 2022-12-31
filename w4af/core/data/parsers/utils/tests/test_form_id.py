@@ -2,7 +2,7 @@
 """
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,8 +28,8 @@ from w4af.core.data.parsers.utils.form_id_matcher_list import FormIDMatcherList
 
 
 class TestFormID(unittest.TestCase):
-    HOSTED_AT_URL = URL('http://w4af.org/products/product-132')
-    ACTION_URL = URL('http://w4af.org/products/comments')
+    HOSTED_AT_URL = URL('http://w4af.net/products/product-132')
+    ACTION_URL = URL('http://w4af.net/products/comments')
 
     def test_form_id_trivial(self):
         form_id = FormID(hosted_at_url=self.HOSTED_AT_URL,
@@ -178,7 +178,7 @@ class TestFormID(unittest.TestCase):
     def test_not_match_hosted_at_regex(self):
         user_configured_json = {'hosted_at_url': '/products/.*'}
         form_matcher = self.create_form_matcher(user_configured_json)
-        found_form_id = FormID(hosted_at_url=URL('http://w4af.org/another/product-132'),
+        found_form_id = FormID(hosted_at_url=URL('http://w4af.net/another/product-132'),
                                inputs=['comment', 'submit'])
 
         match = found_form_id.matches(form_matcher)
@@ -237,7 +237,7 @@ class TestFormID(unittest.TestCase):
         user_value = '[{"action": "/foo", "method": "post"}, {"action": "/products/product-.*", "method": "get"}]'
         form_list = FormIDMatcherList(user_value)
 
-        found_form_id = FormID(action=URL('http://w4af.org/products/product-132'),
+        found_form_id = FormID(action=URL('http://w4af.net/products/product-132'),
                                inputs=['comment', 'submit'],
                                hosted_at_url=self.HOSTED_AT_URL,
                                method='post',
@@ -251,7 +251,7 @@ class TestFormID(unittest.TestCase):
         user_value = '[{"action": "/foo", "method": "post"}, {"action": "/products/product-.*", "method": "get"}]'
         form_list = FormIDMatcherList(user_value)
 
-        found_form_id = FormID(action=URL('http://w4af.org/products/product-132'),
+        found_form_id = FormID(action=URL('http://w4af.net/products/product-132'),
                                inputs=['comment', 'submit'],
                                hosted_at_url=self.HOSTED_AT_URL,
                                method='get',

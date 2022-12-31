@@ -1,5 +1,5 @@
 ## w4af - Web application security scanner
-Official docker image for [w4af](http://w4af.org/)
+Official docker image for [w4af](http://w4af.net/)
 
 There are two different Docker images for w4af: `stable` and `unstable`. The
 `stable` image is built from the `master` branch in the project repositories while

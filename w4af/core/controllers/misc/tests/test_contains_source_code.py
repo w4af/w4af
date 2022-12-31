@@ -4,7 +4,7 @@ test_contains_source_code.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ class TestContainsSourceCode(unittest.TestCase):
     def create_response(self, body, content_type=None):
         content_type = content_type if content_type is not None else 'text/html'
         headers = Headers([('Content-Type', content_type)])
-        url = URL('http://www.w4af.org/')
+        url = URL('http://www.w4af.net/')
         return HTTPResponse(200, body, headers, url, url)
 
     def test_php(self):

@@ -3,7 +3,7 @@ test_variant_identification.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ class TestVariantIdentification(unittest.TestCase):
     def test_diff_domain_params(self):
         self.assertFalse(
             are_variants(URL('http://w4af.com/foo.php?id=1&foo=bar'),
-                         URL('http://w4af.org/foo.php?id=1')))
+                         URL('http://w4af.net/foo.php?id=1')))
 
     def test_same_params_diff_values(self):
         self.assertTrue(
@@ -60,4 +60,4 @@ class TestVariantIdentification(unittest.TestCase):
     def test_raises(self):
         self.assertRaises(AttributeError, are_variants,
                           'http://w4af.com/foo.php?id=1',
-                          'http://w4af.org/foo.php?id=1')
+                          'http://w4af.net/foo.php?id=1')

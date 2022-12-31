@@ -3,7 +3,7 @@ test_http_request_parser.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,8 +32,8 @@ from w4af.core.data.parsers.doc.http_request_parser import (http_request_parser,
 class TestHttpRequestParser(unittest.TestCase):
 
     def test_head_post_data(self):
-        request_head = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        request_head = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 7\n' \
                        'Content-Type: application/x-www-form-urlencoded\n'
         post_data = 'foo=bar'
@@ -59,32 +59,32 @@ class TestHttpRequestParser(unittest.TestCase):
                           'ABCDEF', '')
 
     def test_simple_GET(self):
-        http_request = 'GET http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        http_request = 'GET http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Foo: bar\n'
 
         fr = http_request_parser(http_request, '')
-        exp_headers = Headers([('Host', 'www.w4af.org'), ('Foo', 'bar')])
+        exp_headers = Headers([('Host', 'www.w4af.net'), ('Foo', 'bar')])
 
         self.assertEqual(fr.get_headers(), exp_headers)
-        self.assertEqual(fr.get_url().get_domain(), 'www.w4af.org')
+        self.assertEqual(fr.get_url().get_domain(), 'www.w4af.net')
         self.assertEqual(fr.get_data(), None)
 
     def test_simple_GET_relative(self):
         http_request = 'GET / HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+                       'Host: www.w4af.net\n' \
                        'Foo: bar\n'
 
         fr = http_request_parser(http_request, '')
-        exp_headers = Headers([('Host', 'www.w4af.org'), ('Foo', 'bar')])
+        exp_headers = Headers([('Host', 'www.w4af.net'), ('Foo', 'bar')])
 
         self.assertEqual(fr.get_headers(), exp_headers)
-        self.assertEqual(fr.get_url().get_domain(), 'www.w4af.org')
+        self.assertEqual(fr.get_url().get_domain(), 'www.w4af.net')
         self.assertEqual(fr.get_data(), None)
 
     def test_POST_repeated(self):
-        request_head = 'POST http://www.w4af.org/ HTTP/1.1\n' \
-                       'Host: www.w4af.org\n' \
+        request_head = 'POST http://www.w4af.net/ HTTP/1.1\n' \
+                       'Host: www.w4af.net\n' \
                        'Content-Length: 7\n' \
                        'Content-Type: application/x-www-form-urlencoded\n' \
                        'Foo: spam\n' \
@@ -92,7 +92,7 @@ class TestHttpRequestParser(unittest.TestCase):
         post_data = 'a=1&a=2'
         fr = http_request_parser(request_head, post_data)
 
-        exp_headers = Headers([('Host', 'www.w4af.org'),
+        exp_headers = Headers([('Host', 'www.w4af.net'),
                                ('Content-Type',
                                 'application/x-www-form-urlencoded'),
                                ('Foo', 'spam, eggs')])

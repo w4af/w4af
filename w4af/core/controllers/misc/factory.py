@@ -3,7 +3,7 @@ factory.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ def factory(module_name, *args):
         msg = ('It seems that your Python installation does not have all the'
                ' modules required by the w4af framework. For more information'
                ' about how to install and debug dependency issues please browse'
-               ' to http://docs.w4af.org/en/latest/install.html')
+               ' to http://docs.w4af.net/en/latest/install.html')
         print(msg)
 
         # Raise so the user sees the whole traceback

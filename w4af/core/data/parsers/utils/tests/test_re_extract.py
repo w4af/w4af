@@ -4,7 +4,7 @@ test_re_extract.py
 
 Copyright 2019 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,11 +29,11 @@ from w4af.core.data.parsers.doc.url import URL
 class TestReExtract(unittest.TestCase):
     def test_relative_regex(self):
         doc_string = '123 ../../foobar/uploads/foo.png 465'
-        base_url = URL('https://w4af.org/abc/def/')
+        base_url = URL('https://w4af.net/abc/def/')
 
         re_extract = ReExtract(doc_string, base_url, 'utf-8')
         re_extract.parse()
 
         references = re_extract.get_references()
 
-        self.assertEqual(references, [URL('https://w4af.org/foobar/uploads/foo.png')])
+        self.assertEqual(references, [URL('https://w4af.net/foobar/uploads/foo.png')])

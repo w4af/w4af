@@ -5,7 +5,7 @@ This documentation section is a user guide for w4af's REST API service, its goal
 is to provide developers the knowledge to consume w4af as a service using any
 development language.
 
-We recommend you read through the `w4af users guide <http://docs.w4af.org/>`_
+We recommend you read through the `w4af users guide <http://docs.w4af.net/>`_
 before diving into this REST API-specific section.
 
 Starting the REST API service
@@ -54,7 +54,7 @@ For example, using the ``curl`` command:
 
     $ curl -u admin:secret http://127.0.0.1:5000
     {
-      "docs": "http://docs.w4af.org/en/latest/api/index.html" 
+      "docs": "http://docs.w4af.net/en/latest/api/index.html" 
     }
 
 Please note that even with basic authentication, traffic passing to and from the 

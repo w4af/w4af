@@ -3,7 +3,7 @@ test_javascript_in_html.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -107,7 +107,7 @@ class TestJavaScriptInHTML(unittest.TestCase):
     def test_payload_href_append_no_exec(self):
         html = """
         <html>
-            <a href="http://w4af.org/PAYLOAD">foo</a>
+            <a href="http://w4af.net/PAYLOAD">foo</a>
         </html>
         """
         context = get_context(html, 'PAYLOAD')[0]

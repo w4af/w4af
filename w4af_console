@@ -61,7 +61,7 @@ Options:
     -t or --target
         Target URL for scan
 
-For more info visit http://w4af.org/
+For more info visit http://w4af.net/
 """
 
 

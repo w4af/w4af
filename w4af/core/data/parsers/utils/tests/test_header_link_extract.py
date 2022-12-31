@@ -4,7 +4,7 @@ test_header_link_extract.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ from w4af.core.data.dc.headers import Headers
 
 
 def build_http_response(extra_headers):
-    url = URL('http://www.w4af.org/')
+    url = URL('http://www.w4af.net/')
 
     headers = Headers()
     for header_name, header_value in extra_headers:
@@ -46,35 +46,35 @@ class TestHeaderURLGenerator(unittest.TestCase):
 
     def test_simple(self):
         self.assertEqual(self.get_urls([('Location', '/abc')]),
-                         [URL('http://www.w4af.org/abc')])
+                         [URL('http://www.w4af.net/abc')])
 
     def test_empty(self):
         self.assertEqual(self.get_urls([]), [])
 
     def test_x_pingback(self):
-        extra_headers = [('x-pingback', 'http://www.w4af.org/xmlrpc.php')]
+        extra_headers = [('x-pingback', 'http://www.w4af.net/xmlrpc.php')]
         self.assertEqual(self.get_urls(extra_headers),
-                         [URL('http://www.w4af.org/xmlrpc.php')])
+                         [URL('http://www.w4af.net/xmlrpc.php')])
 
     def test_link(self):
         extra_headers = [('link',
-                          '<http://www.w4af.org/?p=4758>; rel=shortlink')]
+                          '<http://www.w4af.net/?p=4758>; rel=shortlink')]
         self.assertEqual(self.get_urls(extra_headers),
-                         [URL('http://www.w4af.org/?p=4758')])
+                         [URL('http://www.w4af.net/?p=4758')])
 
     def test_link_x_pingback(self):
         extra_headers = [('link',
-                          '<http://www.w4af.org/?p=4758>; rel=shortlink'),
-                         ('x-pingback', 'http://www.w4af.org/xmlrpc.php')]
+                          '<http://www.w4af.net/?p=4758>; rel=shortlink'),
+                         ('x-pingback', 'http://www.w4af.net/xmlrpc.php')]
         self.assertEqual(set(self.get_urls(extra_headers)),
-                         {URL('http://www.w4af.org/?p=4758'),
-                          URL('http://www.w4af.org/xmlrpc.php')})
+                         {URL('http://www.w4af.net/?p=4758'),
+                          URL('http://www.w4af.net/xmlrpc.php')})
 
     def test_set_cookie(self):
         extra_headers = [('set-cookie',
-                          '__cfduid=...; path=/x; domain=.w4af.org; HttpOnly')]
+                          '__cfduid=...; path=/x; domain=.w4af.net; HttpOnly')]
         self.assertEqual(self.get_urls(extra_headers),
-                         [URL('http://www.w4af.org/x')])
+                         [URL('http://www.w4af.net/x')])
 
     def test_link_invalid_format(self):
         extra_headers = [('link', 'xyz')]

@@ -3,7 +3,7 @@ test_open_api.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ API_KEY = '0x12345'
 @pytest.mark.skip("Hangs forever")
 class TestOpenAPIFindAllEndpointsWithAuth(PluginTest):
 
-    target_url = 'http://w4af.org/'
+    target_url = 'http://w4af.net/'
     allow_net_connect = True
 
     _run_configs = {
@@ -53,14 +53,14 @@ class TestOpenAPIFindAllEndpointsWithAuth(PluginTest):
         }
     }
 
-    MOCK_RESPONSES = [MockResponse('http://w4af.org/',
+    MOCK_RESPONSES = [MockResponse('http://w4af.net/',
                                    body='',
                                    method='GET',
                                    status=200),
-                      MockResponse('http://w4af.org/swagger.json?api_key=%s' % API_KEY,
+                      MockResponse('http://w4af.net/swagger.json?api_key=%s' % API_KEY,
                                    IntParamQueryString().get_specification(),
                                    content_type='application/json'),
-                      MockResponse(re.compile(r'http:\/\/w4af.org\/.+'),
+                      MockResponse(re.compile(r'http:\/\/w4af.net\/.+'),
                                    body='Not Found (Mock)',
                                    method='GET',
                                    status=404)]
@@ -96,7 +96,7 @@ class TestOpenAPIFindAllEndpointsWithAuth(PluginTest):
         #
         fuzzable_request = fuzzable_requests[0]
 
-        e_url = 'http://w4af.org/api/pets?api_key=0x12345'
+        e_url = 'http://w4af.net/api/pets?api_key=0x12345'
         e_headers = Headers([('Content-Type', 'application/json')])
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
@@ -109,7 +109,7 @@ class TestOpenAPIFindAllEndpointsWithAuth(PluginTest):
         #
         fuzzable_request = fuzzable_requests[1]
 
-        e_url = 'http://w4af.org/api/pets?limit=42&api_key=0x12345'
+        e_url = 'http://w4af.net/api/pets?limit=42&api_key=0x12345'
         e_headers = Headers([('Content-Type', 'application/json')])
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
@@ -144,7 +144,7 @@ class TestOpenAPINestedModelSpec(PluginTest):
 
     BEARER = 'bearer 0x12345'
 
-    target_url = 'http://w4af.org/'
+    target_url = 'http://w4af.net/'
 
     _run_configs = {
         'cfg': {
@@ -179,11 +179,11 @@ class TestOpenAPINestedModelSpec(PluginTest):
 
             return self.status, response_headers, response_body
 
-    MOCK_RESPONSES = [HeaderAuthenticatedMockResponse('http://w4af.org/openapi.json',
+    MOCK_RESPONSES = [HeaderAuthenticatedMockResponse('http://w4af.net/openapi.json',
                                                       NestedModel().get_specification(),
                                                       content_type='application/json'),
 
-                      SQLIMockResponse(re.compile('http://w4af.org/api/pets.*'),
+                      SQLIMockResponse(re.compile('http://w4af.net/api/pets.*'),
                                        body=None,
                                        method='GET',
                                        status=200)]
@@ -221,7 +221,7 @@ class TestOpenAPINestedModelSpec(PluginTest):
         #
         fuzzable_request = fuzzable_requests[0]
 
-        e_url = 'http://w4af.org/api/pets'
+        e_url = 'http://w4af.net/api/pets'
         e_data = '{"pet": {"tag": "7", "name": "John", "id": 42}}'
         e_headers = Headers([('Content-Type', 'application/json'),
                              ('Basic', 'bearer 0x12345')])
@@ -237,7 +237,7 @@ class TestOpenAPINestedModelSpec(PluginTest):
 
 @pytest.mark.skip("Hangs forever")
 class TestOpenAPIRaisesWarningIfNoAuth(PluginTest):
-    target_url = 'http://w4af.org/'
+    target_url = 'http://w4af.net/'
 
     _run_configs = {
         'cfg': {
@@ -246,7 +246,7 @@ class TestOpenAPIRaisesWarningIfNoAuth(PluginTest):
         }
     }
 
-    MOCK_RESPONSES = [MockResponse('http://w4af.org/openapi.json',
+    MOCK_RESPONSES = [MockResponse('http://w4af.net/openapi.json',
                                    NestedModel().get_specification(),
                                    content_type='application/json')]
 
@@ -269,7 +269,7 @@ class TestOpenAPIRaisesWarningIfNoAuth(PluginTest):
 
 @pytest.mark.skip("Hangs forever")
 class TestOpenAPIRaisesWarningIfParsingError(PluginTest):
-    target_url = 'http://w4af.org/'
+    target_url = 'http://w4af.net/'
 
     _run_configs = {
         'cfg': {
@@ -278,7 +278,7 @@ class TestOpenAPIRaisesWarningIfParsingError(PluginTest):
         }
     }
 
-    MOCK_RESPONSES = [MockResponse('http://w4af.org/openapi.json',
+    MOCK_RESPONSES = [MockResponse('http://w4af.net/openapi.json',
                                    NestedModel().get_specification()[:-1],
                                    content_type='application/json')]
 
@@ -297,7 +297,7 @@ class TestOpenAPIRaisesWarningIfParsingError(PluginTest):
         info = infos[0]
 
         expected_desc = (
-            'An Open API specification was found at: "http://w4af.org/openapi.json",'
+            'An Open API specification was found at: "http://w4af.net/openapi.json",'
             ' but the scanner was unable to extract any API endpoints. In most'
             ' cases this is because of a syntax error in the Open API specification.\n'
             '\n'
@@ -305,7 +305,7 @@ class TestOpenAPIRaisesWarningIfParsingError(PluginTest):
             ' identify and fix any issues and try again.\n\nThe errors found by'
             ' the parser were:\n'
             '\n'
-            ' - The OpenAPI specification at http://w4af.org/openapi.json is not in'
+            ' - The OpenAPI specification at http://w4af.net/openapi.json is not in'
             ' JSON or YAML format'
         )
 
@@ -315,7 +315,7 @@ class TestOpenAPIRaisesWarningIfParsingError(PluginTest):
 
 @pytest.mark.skip("Hangs forever")
 class TestOpenAPIFindsSpecInOtherDirectory(PluginTest):
-    target_url = 'http://w4af.org/'
+    target_url = 'http://w4af.net/'
 
     _run_configs = {
         'cfg': {
@@ -324,7 +324,7 @@ class TestOpenAPIFindsSpecInOtherDirectory(PluginTest):
         }
     }
 
-    MOCK_RESPONSES = [MockResponse('http://w4af.org/api/v2/openapi.json',
+    MOCK_RESPONSES = [MockResponse('http://w4af.net/api/v2/openapi.json',
                                    NestedModel().get_specification(),
                                    content_type='application/json')]
 
@@ -344,7 +344,7 @@ class TestOpenAPIFindsSpecInOtherDirectory(PluginTest):
 
 @pytest.mark.skip("Hangs forever")
 class TestOpenAPIFindsSpecInOtherDirectory2(PluginTest):
-    target_url = 'http://w4af.org/a/b/c/'
+    target_url = 'http://w4af.net/a/b/c/'
 
     _run_configs = {
         'cfg': {
@@ -353,7 +353,7 @@ class TestOpenAPIFindsSpecInOtherDirectory2(PluginTest):
         }
     }
 
-    MOCK_RESPONSES = [MockResponse('http://w4af.org/a/openapi.json',
+    MOCK_RESPONSES = [MockResponse('http://w4af.net/a/openapi.json',
                                    NestedModel().get_specification(),
                                    content_type='application/json')]
 

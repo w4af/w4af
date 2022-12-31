@@ -4,7 +4,7 @@ test_xml_file.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -572,14 +572,14 @@ class TestScanInfo(XMLNodeGeneratorTest):
 
         plugins_dict = w4af_core.plugins.get_all_enabled_plugins()
         options_dict = w4af_core.plugins.get_all_plugin_options()
-        scan_target = 'https://w4af.org'
+        scan_target = 'https://w4af.net'
 
         x = xml_file()
 
         scan_info = ScanInfo(x._get_jinja2_env(), scan_target, plugins_dict, options_dict)
         xml = scan_info.to_string()
 
-        expected = ('<scan-info target="https://w4af.org">\n'
+        expected = ('<scan-info target="https://w4af.net">\n'
                     '    <audit>\n'
                     '            <plugin name="sqli">\n'
                     '            </plugin>\n'
@@ -635,11 +635,11 @@ class TestScanStatus(XMLNodeGeneratorTest):
         status = w4af_core.status.get_status_as_dict()
 
         known_urls = URLTree()
-        known_urls.add_url(URL('http://w4af.org/'))
-        known_urls.add_url(URL('http://w4af.org/foo/'))
-        known_urls.add_url(URL('http://w4af.org/foo/abc.html'))
-        known_urls.add_url(URL('http://w4af.org/foo/bar/'))
-        known_urls.add_url(URL('http://w4af.org/123.txt'))
+        known_urls.add_url(URL('http://w4af.net/'))
+        known_urls.add_url(URL('http://w4af.net/foo/'))
+        known_urls.add_url(URL('http://w4af.net/foo/abc.html'))
+        known_urls.add_url(URL('http://w4af.net/foo/bar/'))
+        known_urls.add_url(URL('http://w4af.net/123.txt'))
 
         total_urls = 150
 
@@ -699,7 +699,7 @@ class TestScanStatus(XMLNodeGeneratorTest):
                     '\n'
                     '    <total-urls>150</total-urls>\n'
                     '    <known-urls>    \n'   
-                    '    <node url="http://w4af.org" exists="1">\n'
+                    '    <node url="http://w4af.net" exists="1">\n'
                     '                                        \n'
                     '        <node url="123.txt" exists="1" />        \n'
                     '        <node url="foo" exists="1">\n'

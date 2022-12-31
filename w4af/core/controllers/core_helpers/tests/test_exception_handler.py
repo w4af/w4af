@@ -4,7 +4,7 @@ test_exception_handler.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.status = FakeStatus(None)
         self.status.set_running_plugin('phase', 'plugin')
         self.status.set_current_fuzzable_request('phase',
-                                                 'http://www.w4af.org/')
+                                                 'http://www.w4af.net/')
 
     @pytest.mark.smoke
     def test_handle_one(self):
@@ -78,7 +78,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertTrue('traceback' in edata.get_details())
         self.assertEqual(edata.plugin, 'plugin')
         self.assertEqual(edata.phase, 'phase')
-        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.org/')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.net/')
         self.assertEqual(edata.filename, __file__)
         self.assertEqual(edata.exception_msg, str(caught_exception))
         self.assertEqual(edata.exception_class, caught_exception.__class__.__name__)
@@ -110,7 +110,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertTrue('traceback' in edata.get_details())
         self.assertEqual(edata.plugin, 'plugin')
         self.assertEqual(edata.phase, 'phase')
-        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.org/')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.net/')
         self.assertEqual(edata.filename, __file__)
 
     def test_get_unique_exceptions(self):
@@ -137,7 +137,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertTrue('traceback' in edata.get_details())
         self.assertEqual(edata.plugin, 'plugin')
         self.assertEqual(edata.phase, 'phase')
-        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.org/')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.net/')
         self.assertEqual(edata.filename, __file__)
 
     def test_handle_threads_calls(self):
@@ -167,7 +167,7 @@ class TestExceptionHandler(unittest.TestCase):
         self.assertTrue('traceback' in edata.get_details())
         self.assertEqual(edata.plugin, 'plugin')
         self.assertEqual(edata.phase, 'phase')
-        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.org/')
+        self.assertEqual(edata.fuzzable_request, 'http://www.w4af.net/')
         self.assertEqual(edata.filename, __file__)
         # This is very very very dependant on changes to this file, but it was
         # the only way to do it without much effort
@@ -210,7 +210,7 @@ class TestExceptionData(unittest.TestCase):
     def get_fuzzable_request(self):
         headers = Headers([('Hello', 'World')])
         post_data = KeyValueContainer(init_val=[('a', ['b'])])
-        url = URL('http://w4af.org')
+        url = URL('http://w4af.net')
         return FuzzableRequest(url, method='GET', post_data=post_data,
                                headers=headers)
 

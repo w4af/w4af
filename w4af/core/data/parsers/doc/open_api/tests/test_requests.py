@@ -4,7 +4,7 @@ test_requests.py
 
 Copyright 2018 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -121,7 +121,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://w4af.org/api/pets'
+        e_url = 'http://w4af.net/api/pets'
         e_headers = Headers([('Content-Type', 'application/json')])
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
@@ -137,7 +137,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://w4af.org/api/pets?limit=42'
+        e_url = 'http://w4af.net/api/pets?limit=42'
         e_headers = Headers([('Content-Type', 'application/json')])
 
         self.assertEqual(fuzzable_request.get_method(), 'GET')
@@ -336,7 +336,7 @@ class TestRequests(unittest.TestCase):
         factory = RequestFactory(*data_i)
         fuzzable_request = factory.get_fuzzable_request()
 
-        e_url = 'http://w4af.org/api/pets'
+        e_url = 'http://w4af.net/api/pets'
         e_headers = Headers([('Content-Type', 'application/json')])
         e_data = '{"pet": {"tag": "7", "name": "John", "id": 42}}'
 

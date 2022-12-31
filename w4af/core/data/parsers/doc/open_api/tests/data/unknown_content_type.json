@@ -12,7 +12,7 @@
       "name": "MIT"
     }
   },
-  "host": "w4af.org",
+  "host": "w4af.net",
   "basePath": "/api",
   "schemes": [
     "http"

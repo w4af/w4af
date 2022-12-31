@@ -3,7 +3,7 @@ cors_origin.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ class cors_origin(AuditPlugin):
         AuditPlugin.__init__(self)
 
         # Define plugin options configuration variables
-        self.origin_header_value = "http://w4af.org/"
+        self.origin_header_value = "http://w4af.net/"
 
         # Internal variables
         self._reported_global = set()

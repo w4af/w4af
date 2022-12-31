@@ -3,7 +3,7 @@ index.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,4 +27,4 @@ from flask import jsonify
 @app.route('/', methods=['GET'])
 @requires_auth
 def index():
-    return jsonify({'docs': 'http://docs.w4af.org/en/latest/api/index.html'})
+    return jsonify({'docs': 'http://docs.w4af.net/en/latest/api/index.html'})

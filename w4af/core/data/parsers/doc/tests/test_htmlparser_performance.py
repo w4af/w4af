@@ -4,7 +4,7 @@ test_htmlparser_performance.py
 
 Copyright 2015 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ class TestHTMLParserPerformance(unittest.TestCase):
         headers['content-type'] = 'text/html'
         with open(self.HTML_FILE) as f:
             body = f.read()
-        url = URL('http://www.w4af.org/')
+        url = URL('http://www.w4af.net/')
         response = HTTPResponse(200, body, headers, url, url, charset='utf-8')
 
         #self.measure_memory(1)

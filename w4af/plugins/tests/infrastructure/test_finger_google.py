@@ -3,7 +3,7 @@ test_finger_google.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ from w4af.plugins.tests.helper import PluginTest, PluginConfig
 @pytest.mark.skip("Google searches are not working")
 class TestFingerGoogle(PluginTest):
 
-    base_url = 'http://www.w4af.org/'
+    base_url = 'http://www.w4af.net/'
 
     _run_configs = {
         'cfg': {

@@ -3,7 +3,7 @@ test_cross_domain_js.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ class TestCrossDomainJS(PluginTest):
         self.assertEqual(2, len(info_sets), info_sets)
 
         self.assertEqual(set([i.get_attribute('domain') for i in info_sets]),
-                         {'moth', 'www.w4af.org'})
+                         {'moth', 'www.w4af.net'})
 
         self.assertEqual(set([i.get_name() for i in info_sets]),
                          {'Cross-domain javascript source'})

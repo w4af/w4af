@@ -2,7 +2,7 @@
 """
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,28 +53,28 @@ class TestDiskSet(unittest.TestCase):
     def test_add_urlobject(self):
         ds = DiskSet()
 
-        ds.add(URL('http://w4af.org/?id=2'))
-        ds.add(URL('http://w4af.org/?id=3'))
-        ds.add(URL('http://w4af.org/?id=3'))
+        ds.add(URL('http://w4af.net/?id=2'))
+        ds.add(URL('http://w4af.net/?id=3'))
+        ds.add(URL('http://w4af.net/?id=3'))
 
-        self.assertEqual(ds[0], URL('http://w4af.org/?id=2'))
-        self.assertEqual(ds[1], URL('http://w4af.org/?id=3'))
+        self.assertEqual(ds[0], URL('http://w4af.net/?id=2'))
+        self.assertEqual(ds[1], URL('http://w4af.net/?id=3'))
         self.assertEqual(len(ds), 2)
-        self.assertFalse(URL('http://w4af.org/?id=4') in ds)
-        self.assertTrue(URL('http://w4af.org/?id=2') in ds)
+        self.assertFalse(URL('http://w4af.net/?id=4') in ds)
+        self.assertTrue(URL('http://w4af.net/?id=2') in ds)
 
     def test_add_QsRequest(self):
         ds = DiskSet()
 
-        uri = URL('http://w4af.org/?id=2')
-        hdr = Headers([('Referer', 'http://w4af.org/')])
+        uri = URL('http://w4af.net/?id=2')
+        hdr = Headers([('Referer', 'http://w4af.net/')])
 
         qsr1 = FuzzableRequest(uri, method='GET', headers=hdr)
 
-        uri = URL('http://w4af.org/?id=3')
+        uri = URL('http://w4af.net/?id=3')
         qsr2 = FuzzableRequest(uri, method='GET', headers=hdr)
 
-        uri = URL('http://w4af.org/?id=7')
+        uri = URL('http://w4af.net/?id=7')
         qsr3 = FuzzableRequest(uri, method='FOO', headers=hdr)
 
         ds.add(qsr1)

@@ -3,7 +3,7 @@ test_form_auth.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -136,8 +136,8 @@ class FormAuthTest(GenericFormAuthTest):
 
 class TestFormAuthFailedLoginMatchTrivial(GenericFormAuthTest):
 
-    target_url = 'http://w4af.org/'
-    login_url = 'http://w4af.org/login'
+    target_url = 'http://w4af.net/'
+    login_url = 'http://w4af.net/login'
 
     FORM = ('<form method="POST" action="/login">'
             '    <input name="username" type="text" />'
@@ -191,8 +191,8 @@ class TestFormAuthFailedLoginMatchTrivial(GenericFormAuthTest):
 @pytest.mark.skip("Depends on external site that no longer exists")
 class TestFormAuthFailedLoginMatchWithStaticLargeResponse(GenericFormAuthTest):
 
-    target_url = 'http://w4af.org/'
-    login_url = 'http://w4af.org/login'
+    target_url = 'http://w4af.net/'
+    login_url = 'http://w4af.net/login'
 
     FORM = ('<form method="POST" action="/login">'
             '    <input name="username" type="text" />'
@@ -253,8 +253,8 @@ class TestFormAuthFailedLoginMatchWithStaticLargeResponse(GenericFormAuthTest):
 @pytest.mark.skip("Depends on external site that no longer exists")
 class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponse(GenericFormAuthTest):
 
-    target_url = 'http://w4af.org/'
-    login_url = 'http://w4af.org/login'
+    target_url = 'http://w4af.net/'
+    login_url = 'http://w4af.net/login'
 
     FORM = ('<form method="POST" action="/login">'
             '    <input name="username" type="text" />'
@@ -319,8 +319,8 @@ class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponse(GenericFormAuthT
 
 class TestFormAuthFailedLoginMatchWithLargeRandomFailedResponseShortSuccess(GenericFormAuthTest):
 
-    target_url = 'http://w4af.org/'
-    login_url = 'http://w4af.org/login'
+    target_url = 'http://w4af.net/'
+    login_url = 'http://w4af.net/login'
 
     FORM = ('<form method="POST" action="/login">'
             '    <input name="username" type="text" />'
@@ -386,8 +386,8 @@ captcha_count = 1
 
 class TestFormAuthFailedLoginMatchWithCAPTCHA(GenericFormAuthTest):
 
-    target_url = 'http://w4af.org/'
-    login_url = 'http://w4af.org/login'
+    target_url = 'http://w4af.net/'
+    login_url = 'http://w4af.net/login'
 
     FORM = ('<form method="POST" action="/login">'
             '    <input name="username" type="text" />'

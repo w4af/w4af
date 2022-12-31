@@ -3,7 +3,7 @@ test_cors_origin.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ class TestCORSOrigin(PluginTest):
 
     def test_allow_methods_no(self):
         allow_methods = 'GET, POST, Options'
-        allow_origin = 'http://w4af.org/'
+        allow_origin = 'http://w4af.net/'
         allow_credentials = 'false'
 
         self.co._allow_methods(self.request, self.url, self.origin,
@@ -103,7 +103,7 @@ class TestCORSOrigin(PluginTest):
     def test_allow_methods_strange(self):
 
         allow_methods = 'GET, POST, OPTIONS, FOO'
-        allow_origin = 'http://w4af.org/'
+        allow_origin = 'http://w4af.net/'
         allow_credentials = 'false'
 
         self.co._allow_methods(self.request, self.url, self.origin,
@@ -120,7 +120,7 @@ class TestCORSOrigin(PluginTest):
     def test_allow_methods_sensitive(self):
 
         allow_methods = 'GET, POST, OPTIONS, PUT'
-        allow_origin = 'http://w4af.org/'
+        allow_origin = 'http://w4af.net/'
         allow_credentials = 'false'
 
         self.co._allow_methods(self.request, self.url, self.origin,
@@ -137,7 +137,7 @@ class TestCORSOrigin(PluginTest):
     def test_allow_methods_sensitive_strange(self):
 
         allow_methods = 'GET, POST, OPTIONS, PUT, FOO'
-        allow_origin = 'http://w4af.org/'
+        allow_origin = 'http://w4af.net/'
         allow_credentials = 'false'
 
         self.co._allow_methods(self.request, self.url, self.origin,
@@ -157,7 +157,7 @@ class TestCORSOrigin(PluginTest):
     def test_allow_methods_sensitive_call_max(self):
 
         allow_methods = 'GET, POST, OPTIONS, PUT'
-        allow_origin = 'http://w4af.org/'
+        allow_origin = 'http://w4af.net/'
         allow_credentials = 'false'
 
         for i in range(InfoSet.MAX_INFO_INSTANCES + 2):
@@ -177,7 +177,7 @@ class TestCORSOrigin(PluginTest):
 
     def test_universal_allow_not(self):
         allow_methods = 'GET, POST, OPTIONS'
-        allow_origin = 'http://w4af.org/'
+        allow_origin = 'http://w4af.net/'
         allow_credentials = 'false'
 
         self.co._analyze_server_response(self.request, self.url, self.origin,

@@ -4,7 +4,7 @@ test_url.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -100,8 +100,8 @@ class TestURLParser(unittest.TestCase):
         self.assertEqual(u.path, '/')
 
     def test_url_in_qs(self):
-        u = URL('http://w4af.org/?foo=http://w4af.com')
-        self.assertEqual(u.netloc, 'w4af.org')
+        u = URL('http://w4af.net/?foo=http://w4af.com')
+        self.assertEqual(u.netloc, 'w4af.net')
 
     def test_url_in_filename(self):
         """
@@ -128,11 +128,11 @@ class TestURLParser(unittest.TestCase):
         Which lives inside the normalize_url method in URL:
             fixed_url = urlparse.urljoin(base_url, self.get_path_qs())
         """
-        u = URL('http://w4af.org/foo-http://external-test.com/.zip')
-        self.assertEqual(u.netloc, 'w4af.org')
+        u = URL('http://w4af.net/foo-http://external-test.com/.zip')
+        self.assertEqual(u.netloc, 'w4af.net')
 
     def test_invalid_encoding(self):
-        self.assertRaises(ValueError, URL, 'http://w4af.org/', encoding='x-euc-jp')
+        self.assertRaises(ValueError, URL, 'http://w4af.net/', encoding='x-euc-jp')
 
     def test_invalid_no_port(self):
         self.assertRaises(ValueError, URL, "http://w4af.com:")
@@ -335,8 +335,8 @@ class TestURLParser(unittest.TestCase):
 
     def test_url_join_case07(self):
         u = URL('http://w4af.com/')
-        self.assertEqual(u.url_join('http://w4af.org:8080/abc.html').url_string,
-                         'http://w4af.org:8080/abc.html')
+        self.assertEqual(u.url_join('http://w4af.net:8080/abc.html').url_string,
+                         'http://w4af.net:8080/abc.html')
 
     def test_url_join_with_query_string(self):
         u = URL('http://w4af.com/abc/?id=1')

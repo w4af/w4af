@@ -3,7 +3,7 @@ test_keepalive.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -200,8 +200,8 @@ class TestConnectionMgr(unittest.TestCase):
     def test_get_available_conn_reuse(self):
         # We don't need a new HTTPConnection for each request
         self.request.new_connection = False
-        self.request.get_host = lambda: 'w4af.org'
-        self.request.get_netloc = lambda: 'w4af.org'
+        self.request.get_host = lambda: 'w4af.net'
+        self.request.get_netloc = lambda: 'w4af.net'
 
         self.cm.MAX_CONNECTIONS = 1  # Only a single connection
         self.assertEqual(0, len(self.cm._used_conns))

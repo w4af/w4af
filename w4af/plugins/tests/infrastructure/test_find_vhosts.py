@@ -3,7 +3,7 @@ test_find_vhosts.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ from w4af.core.data.url.tests.helpers.upper_daemon import ThreadingUpperDaemon
 class TestFindVhosts(PluginTest):
     #
     # Note: I tried implementing this test using httpretty and found
-    #       that it doesn't support the connection to w4af.org with
+    #       that it doesn't support the connection to w4af.net with
     #       a Host header that specifies a different host.
     #
     #       That is why we need a real server for testing.
@@ -60,7 +60,7 @@ class TestFindVhosts(PluginTest):
 
 
 class TestFindVhostsInHTML(PluginTest):
-    target_url = 'http://w4af.org'
+    target_url = 'http://w4af.net'
 
     MOCK_RESPONSES = [MockResponse(target_url, '<a href="http://intranet/">x</a>')]
 
@@ -99,8 +99,8 @@ class MultipleVHostsHandler(socketserver.BaseRequestHandler):
         data = self.request.recv(1024).strip()
 
         # Match hosts
-        if b'Host: w4af.org\r\n' in data:
-            body = b'Welcome to w4af.org'
+        if b'Host: w4af.net\r\n' in data:
+            body = b'Welcome to w4af.net'
             self.request.sendall(self.RESPONSE % (str(len(body)).encode('utf-8'), body))
 
         if b'Host: intranet\r\n' in data:

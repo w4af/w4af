@@ -3,7 +3,7 @@ test_archive_dot_org.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ from w4af.plugins.tests.helper import PluginTest, PluginConfig
 @pytest.mark.skip("Archive.org has changed - better to use the API to make this plugin work")
 class TestArchiveDotOrg(PluginTest):
 
-    archive_url = 'http://w4af.org/'
+    archive_url = 'http://w4af.net/'
 
     _run_config = {
         'target': None,

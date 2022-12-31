@@ -4,7 +4,7 @@ form_filler.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ PARAM_NAME_KNOWLEDGE = {
 
     'w4af@email.com': ['mail', 'email', 'e-mail', 'correo', 'correio', 'to',
                        'cc', 'bcc'],
-    'http://www.w4af.org/': ['link', 'enlace', 'target', 'destino', 'website',
+    'http://www.w4af.net/': ['link', 'enlace', 'target', 'destino', 'website',
                              'web', 'url', 'page', 'homepage'],
 
     'AK': ['state', 'estado'],
@@ -89,7 +89,7 @@ PARAM_NAME_KNOWLEDGE = {
 
     '127.0.0.1': ['ip', 'ipaddress', 'host', 'server', 'servidor'],
     '255.255.255.0': ['netmask', 'mask', 'mascara'],
-    'www.w4af.org': ['domain', 'dominio'],
+    'www.w4af.net': ['domain', 'dominio'],
 
     '4271a25e-7211-4306-b527-46196eb2af28': ['token', 'uuid', 'unique-id', 'random']
 }

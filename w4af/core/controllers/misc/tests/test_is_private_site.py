@@ -3,7 +3,7 @@ test_is_private_site.py
 
 Copyright 2008 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,5 +38,5 @@ class TestIsPrivateSite(unittest.TestCase):
         self.assertFalse(is_private_site('192.1.0.1'))
 
     def test_is_private_site_false_case02(self):
-        self.assertFalse(is_private_site('www.w4af.org'))
+        self.assertFalse(is_private_site('www.w4af.net'))
         

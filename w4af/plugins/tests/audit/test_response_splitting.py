@@ -3,7 +3,7 @@ test_response_splitting.py
 
 Copyright 2012 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ class ResponseSplittingMockResponse(MockResponse):
 @pytest.mark.smoke
 class TestResponseSplitting(PluginTest):
 
-    target_url = 'http://w4af.org/?header='
+    target_url = 'http://w4af.net/?header='
     target_url_re = re.compile('http://w4af\\.org/\\?header=.*')
 
     MOCK_RESPONSES = [ResponseSplittingMockResponse(target_url_re,
@@ -79,7 +79,7 @@ class TestResponseSplitting(PluginTest):
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
         self.assertEqual('Response splitting vulnerability', vuln.get_name())
-        self.assertEqual('http://w4af.org/', str(vuln.get_url()))
+        self.assertEqual('http://w4af.net/', str(vuln.get_url()))
         self.assertEqual('header', vuln.get_token_name())
 
 
@@ -111,7 +111,7 @@ class ResponseSplittingParameterModifiesResponseMockResponse(MockResponse):
 
 
 class TestResponseSplittingParameterModifiesResponse(PluginTest):
-    target_url = 'http://w4af.org/?header='
+    target_url = 'http://w4af.net/?header='
     target_url_re = re.compile('http://w4af\\.org/\\?header=.*')
 
     MOCK_RESPONSES = [ResponseSplittingParameterModifiesResponseMockResponse(target_url_re,
@@ -137,7 +137,7 @@ class TestResponseSplittingParameterModifiesResponse(PluginTest):
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
         self.assertEqual('Parameter modifies response headers', vuln.get_name())
-        self.assertEqual('http://w4af.org/', str(vuln.get_url()))
+        self.assertEqual('http://w4af.net/', str(vuln.get_url()))
         self.assertEqual('header', vuln.get_token_name())
 
 
@@ -167,7 +167,7 @@ class ResponseSplittingHeaderMockResponse(MockResponse):
 
 
 class TestResponseSplittingHeader(PluginTest):
-    target_url = 'http://w4af.org/'
+    target_url = 'http://w4af.net/'
     target_url_re = re.compile('http://w4af\\.org/.*')
 
     MOCK_RESPONSES = [ResponseSplittingHeaderMockResponse(target_url_re,
@@ -197,5 +197,5 @@ class TestResponseSplittingHeader(PluginTest):
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
         self.assertEqual('Response splitting vulnerability', vuln.get_name())
-        self.assertEqual('http://w4af.org/', str(vuln.get_url()))
+        self.assertEqual('http://w4af.net/', str(vuln.get_url()))
         self.assertEqual('referer', vuln.get_token_name())

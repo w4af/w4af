@@ -3,7 +3,7 @@ csrf.py
 
 Copyright 2006 Andres Riancho
 
-This file is part of w4af, http://w4af.org/ .
+This file is part of w4af, http://w4af.net/ .
 
 w4af is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -171,7 +171,7 @@ class csrf(AuditPlugin):
         :return: True if the remote web application verifies the Referer before
                  processing the HTTP request.
         """
-        fake_ref = 'http://www.w4af.org/'
+        fake_ref = 'http://www.w4af.net/'
 
         mutant = HeadersMutant(copy.deepcopy(freq))
         headers = mutant.get_dc()
