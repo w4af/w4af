@@ -447,7 +447,7 @@ class GenericIgnoredPartTest(Generic404Test):
                               ''
                               'The good news is that most likely the get_directories()'
                               ' in web_spider is helping in these cases. For example,'
-                              ' when http://w4af.net/foo/ignored is found, then the'
+                              ' when https://w4af.net/foo/ignored is found, then the'
                               ' get_directories() call will test TWO URLs, one with'
                               ' the filename, and one without. The one without the'
                               ' ignored filename will most likely not be marked as a'
