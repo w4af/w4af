@@ -108,7 +108,7 @@ Content-Length: 3323
 	scanners, teaching web application security, etc.</p>
 	
 	<p>
-	    This is a rewrite of the <a href="https://github.com/andresriancho/w4af-moth">PHP-based moth web application</a>.
+	    This is a rewrite of the <a href="https://github.com/andresriancho/w3af-moth">PHP-based moth web application</a>.
 	</p>
 	
 	<h2>Vulnerabilities</h2>
