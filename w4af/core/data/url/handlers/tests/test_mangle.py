@@ -34,7 +34,7 @@ class TestMangleHandler(unittest.TestCase):
         """
         Reproduces [0] to make sure we don't make that mistake again.
 
-        [0] https://github.com/andresriancho/w4af/issues/1326
+        [0] https://github.com/andresriancho/w3af/issues/1326
         """
         http_request = 'GET %s HTTP/1.1\n' \
                        'Host: localhost\n' \

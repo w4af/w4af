@@ -61,7 +61,7 @@ class ConfigMenu(menu):
         """
         # Some configurable objects require us to reload the options each time
         # we're going to show them in the console.
-        # https://github.com/andresriancho/w4af/issues/291
+        # https://github.com/andresriancho/w3af/issues/291
         self._options = self._configurable.get_options()
         self._group_options_by_tabid()
         
@@ -123,7 +123,7 @@ class ConfigMenu(menu):
 
         # All the options are set to the configurable on "back", this is
         # to handle the issue of configuration parameters which depend on
-        # each other: https://github.com/andresriancho/w4af/issues/108
+        # each other: https://github.com/andresriancho/w3af/issues/108
         # @see: _cmd_back()
         #
         # There is an exception to that rule, calling:

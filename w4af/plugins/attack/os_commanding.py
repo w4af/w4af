@@ -100,7 +100,7 @@ class BasicExploitStrategy(SeparatorExploitStrategy, CommonAttackMethods):
         try:
             return self._cut(http_response.get_body())
         except BodyCutException as bce:
-            issue = 'https://github.com/andresriancho/w4af/issues/5139'
+            issue = 'https://github.com/andresriancho/w3af/issues/5139'
 
             msg = ('Unexpected exception "%s" while trying to extract the'
                    ' command output from the HTTP response body. Please try'

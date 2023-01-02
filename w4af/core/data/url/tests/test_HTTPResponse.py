@@ -220,7 +220,7 @@ class TestHTTPResponse(unittest.TestCase):
 
     def test_dump_response_head_3661(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/3661
+        :see: https://github.com/andresriancho/w3af/issues/3661
         """
         url = URL('http://w4af.com')
         # '\xf3' is o-tilde in windows-1251
@@ -237,7 +237,7 @@ class TestHTTPResponse(unittest.TestCase):
 
     def test_dump_response_head_5416(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/5416
+        :see: https://github.com/andresriancho/w3af/issues/5416
         """
         url = URL('http://w4af.com')
         headers = Headers()
@@ -250,10 +250,10 @@ class TestHTTPResponse(unittest.TestCase):
 
     def test_http_response_with_binary_no_escape(self):
 
-        pytest.skip('See: https://github.com/andresriancho/w4af/issues/15741')
+        pytest.skip('See: https://github.com/andresriancho/w3af/issues/15741')
 
         # This test reproduces issue
-        # https://github.com/andresriancho/w4af/issues/15741
+        # https://github.com/andresriancho/w3af/issues/15741
         CONTENT_TYPES = ['application/binary', 'image/jpeg', 'binary', 'text/html']
         TEST_FILE = os.path.join(ROOT_PATH, 'core', 'controllers', 'misc', 'tests',
                                  'data', 'code-detect-false-positive.jpg')

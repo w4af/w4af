@@ -96,7 +96,7 @@ class BlindSQLTimeDelay(object):
 
         # TODO: Add Oracle support
         # TODO: Add XXXXX support
-        # TODO: https://github.com/andresriancho/w4af/issues/12385
+        # TODO: https://github.com/andresriancho/w3af/issues/12385
     ]
 
     def __init__(self, uri_opener):

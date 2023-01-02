@@ -120,22 +120,22 @@ class FormParameters(OrderedDict):
         # Call the setters (in a specific order!) so they can mangle the form
         # params if required
         #
-        # https://github.com/andresriancho/w4af/issues/11998
-        # https://github.com/andresriancho/w4af/issues/11997
+        # https://github.com/andresriancho/w3af/issues/11998
+        # https://github.com/andresriancho/w3af/issues/11997
         self.set_encoding(encoding)
         self.set_method(method)
         self.set_action(action)
         self.set_form_encoding(form_encoding)
 
         # We need these for the form-id matching feature
-        # https://github.com/andresriancho/w4af/issues/15161
+        # https://github.com/andresriancho/w3af/issues/15161
         self._hosted_at_url = hosted_at_url
         self._attributes = attributes
 
     def get_form_id(self):
         """
         :return: A FormID which can be used to compare two forms
-        :see: https://github.com/andresriancho/w4af/issues/15161
+        :see: https://github.com/andresriancho/w3af/issues/15161
         """
         return FormID(action=self._action,
                       inputs=list(self.meta.keys()),
@@ -163,8 +163,8 @@ class FormParameters(OrderedDict):
         means that they override the "user defined" multipart.
 
         Situations like this triggered bugs:
-            https://github.com/andresriancho/w4af/issues/11997
-            https://github.com/andresriancho/w4af/issues/11998
+            https://github.com/andresriancho/w3af/issues/11997
+            https://github.com/andresriancho/w3af/issues/11998
 
         So I had to change the method to be a little bit smarter and override
         the form encoding in specific cases.

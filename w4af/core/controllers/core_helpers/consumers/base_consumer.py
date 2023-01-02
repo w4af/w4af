@@ -166,7 +166,7 @@ class BaseConsumer(Process):
             try:
                 work_unit = self.in_queue.get()
             except KeyboardInterrupt:
-                # https://github.com/andresriancho/w4af/issues/9587
+                # https://github.com/andresriancho/w3af/issues/9587
                 #
                 # If we don't do this, the thread will die and will never
                 # process the POISON_PILL, which will end up in an endless
@@ -435,7 +435,7 @@ class BaseConsumer(Process):
         if self._poison_pill_sent:
             return
 
-        # https://github.com/andresriancho/w4af/issues/9587
+        # https://github.com/andresriancho/w3af/issues/9587
         # let put() know that all new tasks should be ignored
         self._poison_pill_sent = True
 
@@ -468,7 +468,7 @@ class BaseConsumer(Process):
             om.out.debug(msg % self._thread_name)
         else:
             # This return has a long history, follow it here:
-            # https://github.com/andresriancho/w4af/issues/1172
+            # https://github.com/andresriancho/w3af/issues/1172
             msg = 'The %s consumer thread was not alive'
             om.out.debug(msg % self._thread_name)
 

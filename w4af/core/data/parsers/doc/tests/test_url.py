@@ -105,7 +105,7 @@ class TestURLParser(unittest.TestCase):
 
     def test_url_in_filename(self):
         """
-        Test https://github.com/andresriancho/w4af/issues/475
+        Test https://github.com/andresriancho/w3af/issues/475
 
         Before the fix parsing a URL like:
             http://site.com/foo-http://external-test.com/.zip
@@ -1089,7 +1089,7 @@ class TestURLParser(unittest.TestCase):
 
     def test_can_pickle_via_queue(self):
         """
-        https://github.com/andresriancho/w4af/issues/8748
+        https://github.com/andresriancho/w3af/issues/8748
         """
         ctx = multiprocessing.get_context("spawn")
         sq = ctx.SimpleQueue()

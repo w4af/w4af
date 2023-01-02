@@ -299,7 +299,7 @@ class FileReaderShell(ReadShell):
         try:
             cut_response = self._cut(response.get_body())
         except BodyCutException as bce:
-            issue = 'https://github.com/andresriancho/w4af/issues/5139'
+            issue = 'https://github.com/andresriancho/w3af/issues/5139'
 
             msg = ('Unexpected exception "%s" while trying to extract the file'
                    ' content from the HTTP response body. Please try again.\n\n'

@@ -123,7 +123,7 @@ class path_disclosure(GrepPlugin):
         if request.sent(match):
             return True
 
-        # https://github.com/andresriancho/w4af/issues/6640
+        # https://github.com/andresriancho/w3af/issues/6640
         url_list = kb.kb.get_all_known_urls()
 
         for url in url_list:

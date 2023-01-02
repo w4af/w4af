@@ -256,7 +256,7 @@ class ExtendedUrllib(object):
         The TIMEOUT_MULT_CONST might be lowered by advanced users to achieve
         faster scans in scenarios where timeouts are slowing down the scans.
 
-        :see: https://github.com/andresriancho/w4af/issues/8698
+        :see: https://github.com/andresriancho/w3af/issues/8698
         :return: None, we adjust the value at the "settings" attribute
         """
         with self._adjust_timeout_lock:
@@ -384,8 +384,8 @@ class ExtendedUrllib(object):
         The error rate starts at zero, so no delay is added at the beginning
 
         :return: None, but might delay the requests which go out to the network
-        :see: https://github.com/andresriancho/w4af/issues/4811
-        :see: https://github.com/andresriancho/w4af/issues/8852
+        :see: https://github.com/andresriancho/w3af/issues/4811
+        :see: https://github.com/andresriancho/w3af/issues/8852
         """
         with self._rate_limit_lock:
 
@@ -1314,7 +1314,7 @@ class ExtendedUrllib(object):
         :return: True if we should stop the scan due to too many consecutive
                  errors being received from the server.
 
-        :see: https://github.com/andresriancho/w4af/issues/8698
+        :see: https://github.com/andresriancho/w3af/issues/8698
         """
         #
         # We're looking for this pattern in the last_responses:
@@ -1440,7 +1440,7 @@ class ExtendedUrllib(object):
         Logs the error rate to the debug() log, useful to understand why a scan
         fails with "Too many consecutive errors"
 
-        :see: https://github.com/andresriancho/w4af/issues/8698
+        :see: https://github.com/andresriancho/w3af/issues/8698
         """
         error_rate = self.get_error_rate()
         om.out.debug('ExtendedUrllib error rate is at %i%%' % error_rate)

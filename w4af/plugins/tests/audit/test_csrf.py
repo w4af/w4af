@@ -67,7 +67,7 @@ class TestCSRF(PluginTest):
             '/w4af/audit/csrf/vulnerable-rnd/buy.php',
             '/w4af/audit/csrf/link-vote/vote.php',
 
-            # See https://github.com/andresriancho/w4af/issues/120
+            # See https://github.com/andresriancho/w3af/issues/120
             # '/w4af/audit/csrf/vulnerable-token-ignored/buy.php',
         ]
         

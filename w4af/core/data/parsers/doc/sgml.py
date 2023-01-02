@@ -214,7 +214,7 @@ class SGMLParser(BaseParser):
         Parse the HTTP response body
         """
         # HTML Parser raises XMLSyntaxError on empty response body #8695
-        # https://github.com/andresriancho/w4af/issues/8695
+        # https://github.com/andresriancho/w3af/issues/8695
         if not resp_body:
             # Simply return, don't even try to parse this response, it's empty
             # anyways. The result of this return is to have an empty SGMLParser
@@ -297,13 +297,13 @@ class SGMLParser(BaseParser):
 
         :return: Yield tuples with (tag_name, tag_attrs, tag_text)
 
-        :see: https://github.com/andresriancho/w4af/issues/9990
+        :see: https://github.com/andresriancho/w3af/issues/9990
         :see: _parse_response_body_as_string for more/better docs
         """
         resp_body = self.get_http_response().body
 
         # HTML Parser raises XMLSyntaxError on empty response body #8695
-        # https://github.com/andresriancho/w4af/issues/8695
+        # https://github.com/andresriancho/w3af/issues/8695
         if not resp_body:
             # Don't even try to parse this response, it's empty anyways.
             return

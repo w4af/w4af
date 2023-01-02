@@ -253,7 +253,7 @@ class HistoryItem(object):
         try:
             request_dict, response_dict, canary = data
         except TypeError:
-            # https://github.com/andresriancho/w4af/issues/1101
+            # https://github.com/andresriancho/w3af/issues/1101
             # 'NoneType' object is not iterable
             raise TraceReadException('Not all components found in %s' % serialized_req_res)
 
@@ -495,7 +495,7 @@ class HistoryItem(object):
             # I want to investigate which path doesn't exist, so I'm starting
             # from the first and add directories until reaching the last one
             #
-            # https://github.com/andresriancho/w4af/issues/9022
+            # https://github.com/andresriancho/w3af/issues/9022
             path, fname = os.path.split(path_fname)
             split_path = path.split('/')
 

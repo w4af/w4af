@@ -58,7 +58,7 @@ class auth(BaseConsumer):
             try:
                 action = self.in_queue.get(timeout=self._timeout)
             except KeyboardInterrupt:
-                # https://github.com/andresriancho/w4af/issues/9587
+                # https://github.com/andresriancho/w3af/issues/9587
                 #
                 # If we don't do this, the thread will die and will never
                 # process the POISON_PILL, which will end up in an endless

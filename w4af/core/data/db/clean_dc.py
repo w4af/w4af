@@ -90,7 +90,7 @@ def clean_fuzzable_request_form(fuzzable_request, dc_handler=clean_data_containe
     The main goal of this function is to return a "unique representation"
     of how the HTTP request looks like WITHOUT including the URL.
 
-    Related with https://github.com/andresriancho/w4af/issues/15970
+    Related with https://github.com/andresriancho/w3af/issues/15970
 
     :param fuzzable_request: The fuzzable request instance to clean
     """

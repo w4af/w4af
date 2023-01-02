@@ -168,7 +168,7 @@ def to_encodable_string(obj, encoding):
         obj = obj.get_value()
 
     if isinstance(obj, str):
-        # https://github.com/andresriancho/w4af/issues/10267
+        # https://github.com/andresriancho/w3af/issues/10267
         #
         # Forced to use "ignore" here because there is not better
         # choice. I could try to encode it with strict and if it

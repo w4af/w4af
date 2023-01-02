@@ -181,7 +181,7 @@ def generate_404_filename(filename, seed=1):
         find a file like this we'll just randomize the filename and
         keep the extension.
 
-    [0] https://github.com/andresriancho/w4af/issues/17092
+    [0] https://github.com/andresriancho/w3af/issues/17092
 
     :param filename: The original filename
     :param seed: The seed to control how the random files are changed

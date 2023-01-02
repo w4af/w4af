@@ -31,7 +31,7 @@ class TestWrappedw4afConsole(unittest.TestCase):
     def test_wrapped_w4af(self):
         """
         Strange behaviour when wrapping w4af_console
-        https://github.com/andresriancho/w4af/issues/1299
+        https://github.com/andresriancho/w3af/issues/1299
         """
         # Just in case... we don't want to break other tests
         startup_cfg = StartUpConfig()

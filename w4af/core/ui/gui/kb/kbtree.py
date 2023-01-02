@@ -387,7 +387,7 @@ class KBTree(gtk.TreeView):
             # Get the potential vuln object
             vuln = self.get_instance(path)
             
-            # https://github.com/andresriancho/w4af/issues/181
+            # https://github.com/andresriancho/w3af/issues/181
             # FIXME: for some reason, in some edge case, the get_instance
             #        returns a dict instead of a vuln object which then
             #        triggers a bug, so we have a workaround for it:
@@ -425,7 +425,7 @@ class KBTree(gtk.TreeView):
                 # Get the potential vuln object
                 vuln = self.get_instance(path)
                 
-                # https://github.com/andresriancho/w4af/issues/181
+                # https://github.com/andresriancho/w3af/issues/181
                 # FIXME: for some reason, in some edge case, the get_instance
                 #        returns a dict instead of a vuln object which then
                 #        triggers a bug, so we have a workaround for it:

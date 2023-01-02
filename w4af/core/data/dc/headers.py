@@ -130,7 +130,7 @@ class Headers(NonRepeatKeyValueContainer):
         This is just a shortcut to iget plus some extras to make this Header
         class inter-exchangeable with the urllib2 / headers.
 
-        https://github.com/andresriancho/w4af/issues/10769
+        https://github.com/andresriancho/w3af/issues/10769
 
         :param header_name: The header name to query
         :return: A list with the header values

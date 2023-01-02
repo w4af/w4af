@@ -131,8 +131,8 @@ class TestXSS(PluginTest):
     @pytest.mark.wavsep
     def test_2919_javascript_src_frame(self):
         """
-        https://github.com/andresriancho/w4af/issues/2919
-        https://github.com/andresriancho/w4af/issues/1557
+        https://github.com/andresriancho/w3af/issues/2919
+        https://github.com/andresriancho/w3af/issues/1557
         """
         cfg = self._run_configs['smoke']
         self._scan(self.WAVSEP_2919 + '?userinput=1', cfg['plugins'])
@@ -174,7 +174,7 @@ class TestXSS(PluginTest):
     def test_user_configured_find_in_file_upload_content(self):
         """
         Do not send file content mutants unless the user configures it.
-        https://github.com/andresriancho/w4af/issues/3149
+        https://github.com/andresriancho/w3af/issues/3149
         """
         # Set the value to False (True is the default)
         cf.save('fuzz_form_files', False)
@@ -192,7 +192,7 @@ class TestXSS(PluginTest):
     def test_find_in_file_upload_content(self):
         """
         Find XSS in the content of an uploaded file
-        https://github.com/andresriancho/w4af/issues/3149
+        https://github.com/andresriancho/w3af/issues/3149
         """
         self.scan_file_upload_fuzz_files()
         target_path = get_php_moth_http('/audit/file_upload/echo_content/')
@@ -221,11 +221,11 @@ class TestXSS(PluginTest):
             ('simple_xss.py', 'text', ['text']),
 
             # Form with GET method
-            # https://github.com/andresriancho/w4af/issues/3149
+            # https://github.com/andresriancho/w3af/issues/3149
             ('simple_xss_GET_form.py', 'text', ['Submit', 'text']),
 
             # Form with multipart enctype
-            # https://github.com/andresriancho/w4af/issues/3149
+            # https://github.com/andresriancho/w3af/issues/3149
             ('xss_multipart_form.py', 'text', ['text']),
 
             # Simple filters

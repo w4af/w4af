@@ -64,7 +64,7 @@ class TestPathDisclosure(unittest.TestCase):
         self.assertEqual(path, '/etc/passwd')
 
     def test_path_disclosure_false_positive_6640(self):
-        # see: https://github.com/andresriancho/w4af/issues/6640
+        # see: https://github.com/andresriancho/w3af/issues/6640
         path = '/media/js/spotlight.js'
         kb.kb.add_url(URL('http://mock%s' % path))
 

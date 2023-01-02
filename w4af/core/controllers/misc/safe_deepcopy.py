@@ -35,8 +35,8 @@ def safe_deepcopy(instance):
     I don't want to debug the real issue since it only happen once and I can
     live with the retry.
 
-    :see: https://github.com/andresriancho/w4af/issues/8956
-    :see: https://github.com/andresriancho/w4af/issues/9449
+    :see: https://github.com/andresriancho/w3af/issues/8956
+    :see: https://github.com/andresriancho/w3af/issues/9449
 
     :param instance: The object instance we want to copy
     :return: A deep copy of the instance

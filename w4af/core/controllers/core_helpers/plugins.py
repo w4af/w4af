@@ -135,7 +135,7 @@ class CorePlugins(object):
         #
         #   * If the user ignores the error raised by set_options() and tries
         #     to start the scan init_plugins will fail, this is:
-        #     https://github.com/andresriancho/w4af/issues/7477
+        #     https://github.com/andresriancho/w3af/issues/7477
         #
         self._plugins_options[plugin_type][plugin_name] = plugin_options
 
@@ -374,7 +374,7 @@ class CorePlugins(object):
                         # during our iteration
                         #
                         # ValueError: 'detect_reverse_proxy' is not in list
-                        # https://github.com/andresriancho/w4af/issues/11062
+                        # https://github.com/andresriancho/w3af/issues/11062
                         continue
 
                     if dependency_index < plugin_index:

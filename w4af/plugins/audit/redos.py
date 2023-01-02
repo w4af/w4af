@@ -109,7 +109,7 @@ class redos(AuditPlugin):
         # TODO: Improve the performance for this method since it's doing
         #       two potentially unnecessary SELECT statements to the DB
         #       maybe the way to avoid this is to use the observer pattern
-        #       suggested here https://github.com/andresriancho/w4af/issues/54
+        #       suggested here https://github.com/andresriancho/w3af/issues/54
         #       subscribe to changes to these kb locations and perform checks
         #       on local attributes which are updated only when the kb sends
         #       us some information

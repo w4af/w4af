@@ -139,7 +139,7 @@ class DataContainer(DiskItem):
 
     def iter_bound_tokens(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/580
+        :see: https://github.com/andresriancho/w3af/issues/580
         :see: Mostly used in Mutant._create_mutants_worker
         :yield: Tuples with:
                     - A copy of self

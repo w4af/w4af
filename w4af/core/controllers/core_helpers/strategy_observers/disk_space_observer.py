@@ -41,7 +41,7 @@ class DiskSpaceObserver(StrategyObserver):
     headers.
 
     [0] http://man7.org/linux/man-pages/man7/fanotify.7.html
-    :see: https://github.com/andresriancho/w4af/issues/5343
+    :see: https://github.com/andresriancho/w3af/issues/5343
     """
     MIN_FREE_MB = 100
     MIN_FREE_BYTES = MIN_FREE_MB * 1024 * 1024

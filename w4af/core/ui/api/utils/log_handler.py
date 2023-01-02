@@ -51,7 +51,7 @@ class RESTAPIOutput(OutputPlugin):
         # on anything related with w4af, DiskList uses DBMS which is cleared
         # and (ab)used by the framework
         #
-        # https://github.com/andresriancho/w4af/issues/11214
+        # https://github.com/andresriancho/w3af/issues/11214
         self.log = shelve.open(self.get_db_backend(), protocol=2)
 
     def get_db_backend(self):

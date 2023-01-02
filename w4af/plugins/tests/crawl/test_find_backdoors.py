@@ -62,7 +62,7 @@ class TestFindBackdoor(PluginTest):
 
 class TestFalsePositiveFindBackdoor2017_1(PluginTest):
     """
-    :see: https://github.com/andresriancho/w4af/issues/2017
+    :see: https://github.com/andresriancho/w3af/issues/2017
     """
     domain = 'httpretty-mock'
     target_url = 'http://%s/' % domain

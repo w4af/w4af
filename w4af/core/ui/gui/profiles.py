@@ -456,7 +456,7 @@ class ProfileList(gtk.TreeView):
 
         if profile_obj is None:
             # AttributeError: 'NoneType' object has no attribute 'get_name'
-            # https://github.com/andresriancho/w4af/issues/11941
+            # https://github.com/andresriancho/w3af/issues/11941
             return
 
         if not self.w4af.mainwin.save_state_to_core(relaxedTarget=True):
@@ -508,7 +508,7 @@ class ProfileList(gtk.TreeView):
             path = self.get_cursor()[0]
 
             if not path:
-                # https://github.com/andresriancho/w4af/issues/1886
+                # https://github.com/andresriancho/w3af/issues/1886
                 return
 
             row = self.liststore[path]

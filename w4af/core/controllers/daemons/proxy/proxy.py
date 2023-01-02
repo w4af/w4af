@@ -127,7 +127,7 @@ class Proxy(Process):
                 # with some broken stuff they have
                 #
                 # https://github.com/mitmproxy/mitmproxy/issues/281
-                # https://github.com/andresriancho/w4af/issues/10716
+                # https://github.com/andresriancho/w3af/issues/10716
                 #
                 # AttributeError: 'module' object has no attribute '_lib'
                 raise ProxyException(self.INCORRECT_SETUP % ae)

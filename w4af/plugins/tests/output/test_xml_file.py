@@ -121,7 +121,7 @@ class TestXMLOutput(PluginTest):
         plugin_instance = xml_file()
         plugin_instance.set_w4af_core(w4af_core)
 
-        # https://github.com/andresriancho/w4af/issues/12924
+        # https://github.com/andresriancho/w3af/issues/12924
         plugin_instance.error('\0')
         plugin_instance.flush()
 

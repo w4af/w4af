@@ -32,7 +32,7 @@ INVALID_JSON = 'HTTP request body must be valid JSON object.'
 def require_json():
     """
     Helper to let users know that they should submit the content-type header
-    https://github.com/andresriancho/w4af/issues/13323
+    https://github.com/andresriancho/w3af/issues/13323
 
     :return: abort() if an error occured
     """

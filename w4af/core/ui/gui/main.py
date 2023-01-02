@@ -531,7 +531,7 @@ class MainApp(object):
             # windows are still open and want to get some data from it, this
             # prevents: "ValueError: invalid operation on closed shelf"
             #
-            #       https://github.com/andresriancho/w4af/issues/2691
+            #       https://github.com/andresriancho/w3af/issues/2691
             #
             self.generalconfig = FakeShelve()
 
@@ -635,7 +635,7 @@ class MainApp(object):
                 self._scan_finished()
 
         # Starting output manager to try to avoid bug
-        # https://github.com/andresriancho/w4af/issues/997
+        # https://github.com/andresriancho/w3af/issues/997
         om.out.debug('Starting output manager')
 
         # start real work in background, and start supervising if it ends

@@ -96,7 +96,7 @@ class ProfilesMenu(menu):
 
         elif len(params) == 2:
             # This is the case to support self contained profiles
-            # https://github.com/andresriancho/w4af/issues/10949
+            # https://github.com/andresriancho/w3af/issues/10949
             profile_name = params[0]
             self_contained = params[1]
 

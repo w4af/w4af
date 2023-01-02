@@ -54,7 +54,7 @@ def factory(module_name, *args):
         raise BaseFrameworkException(msg % module_name)
 
     try:
-        # https://github.com/andresriancho/w4af/issues/10705
+        # https://github.com/andresriancho/w3af/issues/10705
         warnings.filterwarnings('ignore',
                                 message='Not importing directory .*',
                                 module='w4af.*')
@@ -67,7 +67,7 @@ def factory(module_name, *args):
         # Useful for development and users which failed to install all
         # dependencies
         #
-        # https://github.com/andresriancho/w4af/issues/9688
+        # https://github.com/andresriancho/w3af/issues/9688
         msg = ('It seems that your Python installation does not have all the'
                ' modules required by the w4af framework. For more information'
                ' about how to install and debug dependency issues please browse'

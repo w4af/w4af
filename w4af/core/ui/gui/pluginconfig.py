@@ -678,7 +678,7 @@ class PluginConfigBody(gtk.VBox):
         Before building the widget we verify that the target set in the main
         window is a valid target, this allows us to avoid some issues like
 
-        https://github.com/andresriancho/w4af/issues/2410
+        https://github.com/andresriancho/w3af/issues/2410
         """
         url = self.target.get_text()
 

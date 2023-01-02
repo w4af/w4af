@@ -84,7 +84,7 @@ class QueueSpeedMeasurement(object):
         time_delta = last_item - first_item
 
         # Protect against cases in which the two items were added "at the same
-        # time" such as https://github.com/andresriancho/w4af/issues/342
+        # time" such as https://github.com/andresriancho/w3af/issues/342
         if time_delta == 0:
             time_delta = 0.01
 

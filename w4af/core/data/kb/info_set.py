@@ -80,7 +80,7 @@ class InfoSet(object):
           such as severity, name, description, etc. Those should all be common
           to the set being hold here.
 
-    :see: https://github.com/andresriancho/w4af/issues/3955
+    :see: https://github.com/andresriancho/w3af/issues/3955
     """
     TEMPLATE = None
     ITAG = None

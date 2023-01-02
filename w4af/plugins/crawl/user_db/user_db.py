@@ -46,7 +46,7 @@ def get_users_from_csv(ident):
                 break
             except csv.Error:
                 # line contains NULL byte, and other similar things.
-                # https://github.com/andresriancho/w4af/issues/1490
+                # https://github.com/andresriancho/w3af/issues/1490
                 msg = 'user_dir: Ignoring data with CSV error at line "%s"'
                 om.out.debug(msg % reader.line_num)
                 continue

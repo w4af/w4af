@@ -76,7 +76,7 @@ class CookieHandler(HTTPCookieProcessor):
             cookiejar = self.get_cookie_jar(request)
             cookiejar.add_cookie_header(request)
         except AttributeError:
-            # https://github.com/andresriancho/w4af/issues/13842
+            # https://github.com/andresriancho/w3af/issues/13842
             pass
 
         return request

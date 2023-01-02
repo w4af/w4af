@@ -133,7 +133,7 @@ class ria_enumerator(CrawlPlugin):
 
     def _analyze_crossdomain_clientaccesspolicy(self, url, response, file_name):
 
-        # https://github.com/andresriancho/w4af/issues/14491
+        # https://github.com/andresriancho/w3af/issues/14491
         if file_name not in self.FILE_TAG_ATTR:
             return
 

@@ -332,7 +332,7 @@ class TestNiktoTestParser(PluginTest):
         that both files: the one from nikto and the one we have are in the same
         format).
         
-        https://github.com/andresriancho/w4af/issues/317
+        https://github.com/andresriancho/w3af/issues/317
         """
         config = Config([], [], [], [], [])
         url = URL('http://moth/')

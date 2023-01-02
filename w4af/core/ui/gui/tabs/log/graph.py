@@ -130,7 +130,7 @@ class LogGraph(gtk.DrawingArea, MessageConsumer):
             yield True
 
         # Handle the case where the DBMS has been stopped and the tables cleared
-        # https://github.com/andresriancho/w4af/issues/5107
+        # https://github.com/andresriancho/w3af/issues/5107
         try:
             len_all_messages = len(self.all_messages)
         except NoSuchTableException:
@@ -152,7 +152,7 @@ class LogGraph(gtk.DrawingArea, MessageConsumer):
             # getting the -1 and 0 indexes. According to len(self.all_messages)
             # those indexes exist... so... we get here on rare race conditions
             #
-            # https://github.com/andresriancho/w4af/issues/4211
+            # https://github.com/andresriancho/w3af/issues/4211
             yield True
 
         self.window.clear()
@@ -166,7 +166,7 @@ class LogGraph(gtk.DrawingArea, MessageConsumer):
             # Note that this line was changed from the previous (buggy line):
             #       self.timeGrouping *= int(tspan / usableWidth) + 1
             #
-            # Which triggers https://github.com/andresriancho/w4af/issues/488
+            # Which triggers https://github.com/andresriancho/w3af/issues/488
             # The new line makes it impossible for self.timeGrouping to be zero
             #
             self.timeGrouping = self.timeGrouping * int(tspan / usableWidth) + 1

@@ -318,7 +318,7 @@ class TestXUrllib(unittest.TestCase):
 
     def test_ssl_fail_when_requesting_moth_http(self):
         """
-        https://github.com/andresriancho/w4af/issues/7989
+        https://github.com/andresriancho/w3af/issues/7989
 
         This test takes considerable time to run since it needs to timeout the
         SSL connection for each SSL protocol
@@ -423,7 +423,7 @@ class TestXUrllib(unittest.TestCase):
         8125 is basically an issue with the way HTTP SSL connections handle the
         Connection: Close header.
 
-        :see: https://github.com/andresriancho/w4af/issues/8125
+        :see: https://github.com/andresriancho/w3af/issues/8125
         """
         raw_http_response = (b'HTTP/1.1 200 Ok\r\n'
                              b'Connection: close\r\n'

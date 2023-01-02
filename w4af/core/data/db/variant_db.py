@@ -82,7 +82,7 @@ PARAMS_MAX_VARIANTS = 15
 #   * They have the same parameter names and types
 #   * They have at least two parameters
 #
-# https://github.com/andresriancho/w4af/issues/15970
+# https://github.com/andresriancho/w3af/issues/15970
 #
 MAX_EQUAL_FORM_VARIANTS = 5
 

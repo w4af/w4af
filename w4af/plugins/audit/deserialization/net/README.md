@@ -27,5 +27,5 @@ Change the `77` number in the for loop in order to modify how much time to delay
 
 ## Status
 
-[These comments]()https://github.com/andresriancho/w4af/issues/16280#issuecomment-371280578)
+[These comments]()https://github.com/andresriancho/w3af/issues/16280#issuecomment-371280578)
 show the status of the .NET payloads.

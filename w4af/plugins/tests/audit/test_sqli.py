@@ -143,7 +143,7 @@ class TestSQLMapTestEnv(PluginTest):
             '',
 
             # This one is not OK to miss, but we're missing it anyways
-            # https://github.com/andresriancho/w4af/issues/12257
+            # https://github.com/andresriancho/w3af/issues/12257
             'csrf/post.php',
         }
 

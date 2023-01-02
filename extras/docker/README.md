@@ -100,9 +100,9 @@ users to be able to perform these tasks:
  * Passing parameters to the docker: scripts, profiles, dictionary files
    (how do I run ./w4af_console -s foo.w4af ?). I believe that the helper script
    would have to "forward" the parameters to the docker run command.
-   [#8461](https://github.com/andresriancho/w4af/issues/8461)
- * Run the GUI environment [#8460](https://github.com/andresriancho/w4af/issues/8460)
- * Remove root requirement for helper script [#8493](https://github.com/andresriancho/w4af/issues/8493)
+   [#8461](https://github.com/andresriancho/w3af/issues/8461)
+ * Run the GUI environment [#8460](https://github.com/andresriancho/w3af/issues/8460)
+ * Remove root requirement for helper script [#8493](https://github.com/andresriancho/w3af/issues/8493)
 
 Want to help? Just follow the link to the task and add a comment saying you'll
 be working on it.

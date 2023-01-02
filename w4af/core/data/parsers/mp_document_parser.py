@@ -85,7 +85,7 @@ class MultiProcessingDocumentParser(object):
 
     # Increasing the timeout when profiling is enabled seems to fix issue #9713
     #
-    # https://github.com/andresriancho/w4af/issues/9713
+    # https://github.com/andresriancho/w3af/issues/9713
     PROFILING_ENABLED = (user_wants_memory_profiling() or
                          user_wants_pytracemalloc() or
                          user_wants_cpu_profiling())

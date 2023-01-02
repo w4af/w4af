@@ -91,7 +91,7 @@ class MangledKeepAliveHTTPResponse(kaHTTPResponse):
         instance. At this point I've already read everything I needed from the
         socket, so it doesn't make any sense to keep a pointer to it.
 
-        :see: https://github.com/andresriancho/w4af/issues/2172
+        :see: https://github.com/andresriancho/w3af/issues/2172
         """
         self._rbuf = b''
         self._method = None
@@ -101,7 +101,7 @@ class MangledKeepAliveHTTPResponse(kaHTTPResponse):
         Since this HTTP response doesn't have a socket, there is nothing to
         close. We just "pass" to avoid issues like
 
-            https://github.com/andresriancho/w4af/issues/11822
+            https://github.com/andresriancho/w3af/issues/11822
 
         :return: None
         """
@@ -112,7 +112,7 @@ class MangledKeepAliveHTTPResponse(kaHTTPResponse):
         Since this HTTP response doesn't have a socket, there is nothing to
         close. We just "pass" to avoid issues like
 
-            https://github.com/andresriancho/w4af/issues/11822
+            https://github.com/andresriancho/w3af/issues/11822
 
         :return: None
         """

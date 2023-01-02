@@ -72,7 +72,7 @@ class Test404Detection(Generic404Test):
     def test_issue_3234(self):
         #
         # is_404 can not handle URLs with : in path #3234
-        # https://github.com/andresriancho/w4af/issues/3234
+        # https://github.com/andresriancho/w3af/issues/3234
         #
         httpretty.register_uri(httpretty.GET,
                                re.compile("w4af.com/(.*)"),

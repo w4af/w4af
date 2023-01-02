@@ -215,7 +215,7 @@ class BasicKnowledgeBase(object):
         If filter_func doesn't match any existing InfoSet instances, then a new
         one is created using `group_klass` and `info_inst` is appended to it.
 
-        :see: https://github.com/andresriancho/w4af/issues/3955
+        :see: https://github.com/andresriancho/w3af/issues/3955
 
         :param location_a: The "a" address
         :param location_b: The "b" address
@@ -538,7 +538,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
 
         Similar to raw_read, but checking types.
 
-        :see: https://github.com/andresriancho/w4af/issues/3955
+        :see: https://github.com/andresriancho/w3af/issues/3955
         """
         location_a = self._get_real_name(location_a)
         result = self.get(location_a, location_b, check_types=True)

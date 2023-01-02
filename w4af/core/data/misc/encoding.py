@@ -91,7 +91,7 @@ def smart_unicode(s,
             try:
                 guessed_encoding = chardet.detect(s)['encoding']
             except TypeError:
-                # https://github.com/andresriancho/w4af/issues/13819
+                # https://github.com/andresriancho/w3af/issues/13819
                 guessed_encoding = None
 
             if guessed_encoding is None:

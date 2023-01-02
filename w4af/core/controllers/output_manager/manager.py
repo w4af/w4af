@@ -65,8 +65,8 @@ def start_thread_on_demand(func):
                 # In the second case, we can't start() it again and thus we'll
                 # get a RuntimeError
                 #
-                # https://github.com/andresriancho/w4af/issues/7453
-                # https://github.com/andresriancho/w4af/issues/5354
+                # https://github.com/andresriancho/w3af/issues/7453
+                # https://github.com/andresriancho/w3af/issues/5354
                 pass
 
         return func(*args, **kwds)
@@ -200,7 +200,7 @@ class OutputManager(Process):
 
         Only flush once every FLUSH_TIMEOUT seconds.
 
-        :see: https://github.com/andresriancho/w4af/issues/6726
+        :see: https://github.com/andresriancho/w3af/issues/6726
         :return: None
         """
         if not self.should_flush():

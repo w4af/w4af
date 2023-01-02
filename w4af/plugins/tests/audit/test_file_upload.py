@@ -85,7 +85,7 @@ class TestFileUpload(PluginTest):
                           self.file_upload_url)
 
     def test_reported_file_uploads_issue_534(self):
-        # https://github.com/andresriancho/w4af/issues/534
+        # https://github.com/andresriancho/w3af/issues/534
         cfg = self._run_configs['crawling']
         self._scan(cfg['target'], cfg['plugins'])
 

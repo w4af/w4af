@@ -124,7 +124,7 @@ class JSONContainer(DataContainer):
     def token_filter(self, token_path, token_value):
         """
         Only return tokens for strings and None (which is null in JSON)
-        :see: https://github.com/andresriancho/w4af/issues/12000
+        :see: https://github.com/andresriancho/w3af/issues/12000
         """
         if token_value is None:
             return True

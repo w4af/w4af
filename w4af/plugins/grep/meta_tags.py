@@ -85,7 +85,7 @@ class meta_tags(GrepPlugin):
             for attr_name, attr_value in list(tag.items()):
 
                 if not attr_name or not attr_value:
-                    # https://github.com/andresriancho/w4af/issues/2012
+                    # https://github.com/andresriancho/w3af/issues/2012
                     continue
 
                 for word in self.INTERESTING_WORDS:

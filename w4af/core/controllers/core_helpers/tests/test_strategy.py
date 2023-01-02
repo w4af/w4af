@@ -88,7 +88,7 @@ class TestStrategy(PluginTest):
         """
         Pseudo-random number of vulnerabilities found in audit phase (xss)
 
-        https://github.com/andresriancho/w4af/issues/1557
+        https://github.com/andresriancho/w3af/issues/1557
         """
         script = TEST_SCRIPT_1557 % (OUTPUT_PATH, get_wavsep_http())
         with open(SCRIPT_PATH, "w") as f:

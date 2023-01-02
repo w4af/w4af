@@ -58,7 +58,7 @@ DB_MALFORMED_ERROR = ('SQLite raised a database disk image is malformed'
                       ' information. Just send us a comment at #4905 [1].\n\n'
                       ''
                       '[0] https://www.sqlite.org/howtocorrupt.html\n'
-                      '[1] https://github.com/andresriancho/w4af/issues/4905')
+                      '[1] https://github.com/andresriancho/w3af/issues/4905')
 
 
 def verify_started(meth):
@@ -317,7 +317,7 @@ class SQLiteExecutor():
         # Commented line to be: Slower but (hopefully) without malformed
         # databases
         #
-        # https://github.com/andresriancho/w4af/issues/4937
+        # https://github.com/andresriancho/w3af/issues/4937
         #
         # It doesn't seem to help because I'm still getting malformed database
         # files, but I'll keep it anyways because I'm assuming that it's going

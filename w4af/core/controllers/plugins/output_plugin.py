@@ -160,7 +160,7 @@ class OutputPlugin(Plugin):
         OutputManager and is useful to give feedback to the user before the
         scan ends.
 
-        :see: https://github.com/andresriancho/w4af/issues/6726
+        :see: https://github.com/andresriancho/w3af/issues/6726
         :return: None
         """
         pass
@@ -170,7 +170,7 @@ class OutputPlugin(Plugin):
         :param string_to_clean: A string that should be cleaned before using
                                 it in a message object.
         """
-        # https://github.com/andresriancho/w4af/issues/3586
+        # https://github.com/andresriancho/w3af/issues/3586
         if string_to_clean is None:
             return ''
 

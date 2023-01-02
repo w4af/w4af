@@ -57,7 +57,7 @@ class InputFileOption(BaseOption):
         like that is set, we decode+unzip, save the data to a temp file and
         set that file path as value.
 
-        [0] https://github.com/andresriancho/w4af/issues/10949
+        [0] https://github.com/andresriancho/w3af/issues/10949
         """
         if value == '':
             self._value = value
@@ -80,7 +80,7 @@ class InputFileOption(BaseOption):
         This method is called before saving the option value to the profile file
 
         Added when fixing:
-            https://github.com/andresriancho/w4af/issues/402
+            https://github.com/andresriancho/w3af/issues/402
 
         :return: A string representation of the path, with the ROOT_PATH
                  replaced with %ROOT_PATH%. Then when we load a value in

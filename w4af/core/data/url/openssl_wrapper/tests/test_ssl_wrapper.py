@@ -29,7 +29,7 @@ from w4af.core.data.url.openssl_wrapper.ssl_wrapper import OpenSSLReformattedErr
 class TestSSLError(unittest.TestCase):
     def test_str_8663_1(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/8663
+        :see: https://github.com/andresriancho/w3af/issues/8663
         """
         e = Exception('Message')
         self.assertEqual(str(OpenSSLReformattedError(e)), 'Message')

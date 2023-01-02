@@ -516,7 +516,7 @@ class TestKnowledgeBase(unittest.TestCase):
     def test_kb_list_shells_sqlmap_2181(self):
         """
         Also very related with test_pickleable_shells
-        :see: https://github.com/andresriancho/w4af/issues/2181
+        :see: https://github.com/andresriancho/w3af/issues/2181
         """
         w4af_core = w4afCore()
         target = Target(URL('http://w4af.net/'))
@@ -540,7 +540,7 @@ class TestKnowledgeBase(unittest.TestCase):
 
     def test_kb_list_shells_dav_2181(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/2181
+        :see: https://github.com/andresriancho/w3af/issues/2181
         """
         w4af_core = w4afCore()
         exploit_url = URL('http://w4af.net/')
@@ -562,7 +562,7 @@ class TestKnowledgeBase(unittest.TestCase):
 
     def test_kb_list_shells_eval_2181(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/2181
+        :see: https://github.com/andresriancho/w3af/issues/2181
         """
         w4af_core = w4afCore()
 
@@ -587,7 +587,7 @@ class TestKnowledgeBase(unittest.TestCase):
 
     def test_kb_list_shells_file_upload_2181(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/2181
+        :see: https://github.com/andresriancho/w3af/issues/2181
         """
         w4af_core = w4afCore()
         exploit_url = URL('http://w4af.net/')
@@ -609,7 +609,7 @@ class TestKnowledgeBase(unittest.TestCase):
 
     def test_kb_list_shells_file_read_2181(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/2181
+        :see: https://github.com/andresriancho/w3af/issues/2181
         """
         w4af_core = w4afCore()
         header_len, footer_len = 1, 1
@@ -634,7 +634,7 @@ class TestKnowledgeBase(unittest.TestCase):
 
     def test_kb_list_shells_os_commanding_2181(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/2181
+        :see: https://github.com/andresriancho/w3af/issues/2181
         """
         w4af_core = w4afCore()
 
@@ -659,7 +659,7 @@ class TestKnowledgeBase(unittest.TestCase):
 
     def test_kb_list_shells_rfi_2181(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/2181
+        :see: https://github.com/andresriancho/w3af/issues/2181
         """
         w4af_core = w4afCore()
 
@@ -685,7 +685,7 @@ class TestKnowledgeBase(unittest.TestCase):
 
     def test_kb_list_shells_rfi_port_scan_2181(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/2181
+        :see: https://github.com/andresriancho/w3af/issues/2181
         """
         w4af_core = w4afCore()
 
@@ -711,7 +711,7 @@ class TestKnowledgeBase(unittest.TestCase):
 
     def test_kb_list_shells_xpath_2181(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/2181
+        :see: https://github.com/andresriancho/w3af/issues/2181
         """
         w4af_core = w4afCore()
         vuln = MockVuln()

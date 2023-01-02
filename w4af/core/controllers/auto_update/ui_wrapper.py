@@ -66,7 +66,7 @@ class UIUpdater(object):
             except Exception as ex:
                 self._logger('An error occurred while updating: "%s"' % ex)
 
-            # TODO: Please read https://github.com/andresriancho/w4af/issues/6
+            # TODO: Please read https://github.com/andresriancho/w3af/issues/6
             # for more information on what's missing here 
             """
             if repo_has_conflicts():

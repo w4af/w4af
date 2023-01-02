@@ -67,7 +67,7 @@ class HistorySuggestion(object):
                     #
                     # We were able to read using pickle, migrate the file to
                     # msgpack to prevent deserialization issues
-                    # https://github.com/andresriancho/w4af/issues/17807
+                    # https://github.com/andresriancho/w3af/issues/17807
                     #
                     with open(filename, 'wb') as f:
                         msgpack.dump(self.history, f)

@@ -177,7 +177,7 @@ class ConsoleUI(object):
             except KeyboardInterrupt:
                 # The user might be in a hurry, and after "w4af>>> exit" he
                 # might also press Ctrl+C like seen here:
-                #     https://github.com/andresriancho/w4af/issues/148
+                #     https://github.com/andresriancho/w3af/issues/148
                 #
                 # Since we don't want to show any tracebacks on this situation
                 # just "pass". 

@@ -125,7 +125,7 @@ class TestInfo(unittest.TestCase):
 
     def test_get_desc_new_line(self):
         """
-        https://github.com/andresriancho/w4af/issues/12220
+        https://github.com/andresriancho/w3af/issues/12220
         """
         i = MockInfo(desc=('This is a rather long and complex desc which has'
                            'a new line at the end.\n\n'))

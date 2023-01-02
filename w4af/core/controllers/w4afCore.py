@@ -232,7 +232,7 @@ class w4afCore(object):
             om.out.error(NO_MEMORY_MSG)
 
         except OSError as os_err:
-            # https://github.com/andresriancho/w4af/issues/10186
+            # https://github.com/andresriancho/w3af/issues/10186
             # OSError: [Errno 12] Cannot allocate memory
             if os_err.errno == errno.ENOMEM:
                 print(NO_MEMORY_MSG)
@@ -243,7 +243,7 @@ class w4afCore(object):
         except IOError as io_err:
             (error_id, error_msg) = io_err.args
 
-            # https://github.com/andresriancho/w4af/issues/9653
+            # https://github.com/andresriancho/w3af/issues/9653
             # IOError: [Errno 28] No space left on device
             if error_id == errno.ENOSPC:
                 msg = ('The w4af scan will stop because the file system'
@@ -309,7 +309,7 @@ class w4afCore(object):
             self.scan_end_hook()
 
             # Make sure this line is the last one. This avoids race conditions
-            # https://github.com/andresriancho/w4af/issues/1487
+            # https://github.com/andresriancho/w3af/issues/1487
             self.status.scan_finished()
 
     @property
@@ -584,8 +584,8 @@ class w4afCore(object):
         # affect other parts of the tool such as the exploitation or manual HTTP
         # request sending from the GUI
         #
-        # https://github.com/andresriancho/w4af/issues/2704
-        # https://github.com/andresriancho/w4af/issues/2711
+        # https://github.com/andresriancho/w3af/issues/2704
+        # https://github.com/andresriancho/w3af/issues/2711
         self.uri_opener.clear()
 
         # Disable some internal checks so the exploits can "bend" the matrix

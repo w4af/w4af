@@ -558,7 +558,7 @@ class CoreStrategy(object):
         Alert the user when the configured target is set to a site which will
         301 redirect all requests to https://
 
-        :see: https://github.com/andresriancho/w4af/issues/14976
+        :see: https://github.com/andresriancho/w3af/issues/14976
         :return: True if the site returns 301 for all resources. Also an Info
                  instance is saved to the KB in order to alert the user.
         """

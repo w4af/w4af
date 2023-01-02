@@ -68,7 +68,7 @@ TIMEOUT_ADJUST_LIMIT = 15
 #
 #   timeout = average_response_time * TIMEOUT_MULT_CONST
 #
-# https://github.com/andresriancho/w4af/issues/8698
+# https://github.com/andresriancho/w3af/issues/8698
 TIMEOUT_MULT_CONST = 7.5
 
 # How much to increase the timeout setting after a timeout error has happen

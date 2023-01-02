@@ -223,7 +223,7 @@ class html_file(OutputPlugin):
             # to have available, and then if it doesn't work apply this
             # workaround for Kali
             #
-            # https://github.com/andresriancho/w4af/issues/9552
+            # https://github.com/andresriancho/w3af/issues/9552
             env_config.pop('lstrip_blocks')
             jinja2_env = Environment(**env_config)
 

@@ -58,7 +58,7 @@ class TestXssedDotCom(PluginTest):
     def test_xssed_dot_com_too_generic_12717(self):
         """
         Test for issue #12717
-        https://github.com/andresriancho/w4af/issues/12717
+        https://github.com/andresriancho/w3af/issues/12717
         """
         cfg = self._run_configs['cfg']
         self._scan('https://digi.ninja', cfg['plugins'])

@@ -154,7 +154,7 @@ class CoreTarget(Configurable):
                             # invalid, and the pieces of code which consume
                             # this method only handle BaseFrameworkException
                             #
-                            # https://github.com/andresriancho/w4af/issues/12006
+                            # https://github.com/andresriancho/w3af/issues/12006
                             #
                             msg = ('The target URL "%s" specified inside the'
                                    ' target file "%s" is invalid: "%s"')

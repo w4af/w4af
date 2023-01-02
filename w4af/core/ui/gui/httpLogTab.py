@@ -474,7 +474,7 @@ class httpLogTab(RememberingHPaned):
             return
 
         # Error handling for .trace file problems
-        # https://github.com/andresriancho/w4af/issues/1101
+        # https://github.com/andresriancho/w3af/issues/1101
         try:
             # These lines will trigger the code that reads the .trace file
             # from disk and if they aren't there an exception will rise
@@ -485,7 +485,7 @@ class httpLogTab(RememberingHPaned):
             return
 
         # Now we know that these two lines will work and we won't trigger
-        # https://github.com/andresriancho/w4af/issues/1101
+        # https://github.com/andresriancho/w3af/issues/1101
         self._req_res_viewer.request.show_object(history_item.request)
         self._req_res_viewer.response.show_object(history_item.response)
         if history_item.info:

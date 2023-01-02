@@ -622,7 +622,7 @@ class Pool(object):
                     try:
                         p.terminate()
                     except AttributeError:
-                        # https://github.com/andresriancho/w4af/issues/9361
+                        # https://github.com/andresriancho/w3af/issues/9361
                         continue
 
         debug('joining task handler')

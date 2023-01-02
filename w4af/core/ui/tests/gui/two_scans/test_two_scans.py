@@ -71,7 +71,7 @@ class TestTwoScans(XpresserUnittest):
         for _ in range(len(self.TARGET_1)): self.type(['<Delete>'], False)
 
         # This type() seems to trigger the same bug I get in prompt.py:
-        # https://github.com/andresriancho/w4af/issues/228
+        # https://github.com/andresriancho/w3af/issues/228
         self.type(self.TARGET_2, False)
         self.type(['<Tab>'], False)
         self.type(['<Enter>',], False)

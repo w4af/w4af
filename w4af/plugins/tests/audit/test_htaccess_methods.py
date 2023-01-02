@@ -76,13 +76,13 @@ class TestHTAccessFalsePositiveGeneric(PluginTest):
 
 
 class TestHTaccessCheck1915_1(TestHTAccessFalsePositiveGeneric):
-    # https://github.com/andresriancho/w4af/issues/1915
+    # https://github.com/andresriancho/w3af/issues/1915
     MOCK_RESPONSES = [MockResponse(TestHTAccessFalsePositiveGeneric.target_url,
                                    'Bad credentials', method='GET', status=401)]
 
 
 class TestHTaccessCheck1915_2(TestHTAccessFalsePositiveGeneric):
-    # https://github.com/andresriancho/w4af/issues/1915
+    # https://github.com/andresriancho/w3af/issues/1915
     MOCK_RESPONSES = [MockResponse(TestHTAccessFalsePositiveGeneric.target_url,
                                    'Bad credentials', method='GET', status=401),
                       MockResponse(TestHTAccessFalsePositiveGeneric.target_url,

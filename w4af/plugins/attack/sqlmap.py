@@ -118,7 +118,7 @@ class sqlmap(AttackPlugin):
             try:
                 sqlmap = SQLMapWrapper(target, self._uri_opener)
             except TypeError:
-                issue_url = 'https://github.com/andresriancho/w4af/issues/6439'
+                issue_url = 'https://github.com/andresriancho/w3af/issues/6439'
                 msg = ('w4af\'s sqlmap wrapper has some limitations, and you'
                        ' just found one of them. For more information please'
                        ' visit %s .')
@@ -140,7 +140,7 @@ class sqlmap(AttackPlugin):
                     # Some error that we don't have a special handling for
                     return False
 
-                issue_url = 'https://github.com/andresriancho/w4af/issues/1989'
+                issue_url = 'https://github.com/andresriancho/w3af/issues/1989'
                 msg = ('w4af\'s sqlmap wrapper has some limitations, and you'
                        ' just found one of them. For more information please'
                        ' visit %s and add the steps required to reproduce this'
@@ -235,7 +235,7 @@ class SQLMapShell(ReadShell):
         # any code.
         #
         # Not using super() due to some issues I've found in real life
-        #   https://github.com/andresriancho/w4af/issues/3610
+        #   https://github.com/andresriancho/w3af/issues/3610
         #
         # Documented here:
         #   http://goo.gl/jhRznU

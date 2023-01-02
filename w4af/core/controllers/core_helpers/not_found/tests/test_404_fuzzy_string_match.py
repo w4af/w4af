@@ -54,7 +54,7 @@ class Test404FuzzyStringMatch(unittest.TestCase):
         * The patch I'm working on can distinguish 404s just as good as the slow
         fuzzy_equal, and is much faster.
 
-    :see: https://github.com/andresriancho/w4af/issues/2072
+    :see: https://github.com/andresriancho/w3af/issues/2072
     """
     not_exists_data = None
     empty_headers = Headers()

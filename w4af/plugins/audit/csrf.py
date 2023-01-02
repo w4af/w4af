@@ -211,7 +211,7 @@ class csrf(AuditPlugin):
         Please note that this method generates lots of false positives and
         negatives. Read the github issue for more information.
         
-        :see: https://github.com/andresriancho/w4af/issues/120
+        :see: https://github.com/andresriancho/w3af/issues/120
         :return: True if the CSRF token is NOT verified by the web application
         """
         token_pname_lst = list(token.keys())

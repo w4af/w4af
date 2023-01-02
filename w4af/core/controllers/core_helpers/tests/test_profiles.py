@@ -141,7 +141,7 @@ class TestCoreProfiles(unittest.TestCase):
 
     def test_cant_start_new_thread_bug(self):
         """
-        This tests that https://github.com/andresriancho/w4af/issues/56 was
+        This tests that https://github.com/andresriancho/w3af/issues/56 was
         properly fixed after the change in how sqlite threads were managed.
         """
         valid, _ = self.core.profiles.get_profile_list('.')

@@ -43,7 +43,7 @@ class SQLMapWrapper(object):
     # because we don't want to have a sqlmap.deb and duplicate the same files
     # in w4af.deb
     #
-    # https://github.com/andresriancho/w4af/issues/10538
+    # https://github.com/andresriancho/w3af/issues/10538
     #
     INSTALLED_DEFAULT_ARGS = ['sqlmap',
                               '--ignore-stdin',
@@ -154,7 +154,7 @@ class SQLMapWrapper(object):
             * sqlmap is in PATH
             * The embedded sqlmap is not available
 
-        :see: https://github.com/andresriancho/w4af/issues/10538
+        :see: https://github.com/andresriancho/w3af/issues/10538
 
         :return: The base args to execute sqlmap in this environment, or raise
                  an exception if something is wrong.
@@ -200,7 +200,7 @@ class SQLMapWrapper(object):
                                        universal_newlines=True,
                                        cwd=cwd)
         except OSError as os_err:
-            # https://github.com/andresriancho/w4af/issues/10186
+            # https://github.com/andresriancho/w3af/issues/10186
             # OSError: [Errno 12] Cannot allocate memory
             if os_err.errno == errno.ENOMEM:
                 msg = ('The operating system is running low on memory and'

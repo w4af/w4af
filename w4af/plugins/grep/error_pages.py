@@ -108,7 +108,7 @@ class error_pages(GrepPlugin):
         'at org.apache.tomcat.',
         'at org.apache.jasper.',
 
-        # https://github.com/andresriancho/w4af/issues/4001
+        # https://github.com/andresriancho/w3af/issues/4001
         '<html><head><title>Application Exception</title>',
 
         # ruby

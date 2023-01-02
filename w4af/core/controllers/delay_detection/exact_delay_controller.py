@@ -230,7 +230,7 @@ class ExactDelayController(object):
         #     instead of 1 second which was the expected result. This could be
         #     because of outliers in the measurement
         #
-        #           https://github.com/andresriancho/w4af/issues/16902
+        #           https://github.com/andresriancho/w3af/issues/16902
         #
         #   * lower_bound is then set to original_wait_time - delta + delay
         #

@@ -155,7 +155,7 @@ class rootMenu(menu):
             # usability bug where the user gets a strange message saying he
             # disabled the console output, so we re-enable it
             #
-            # https://github.com/andresriancho/w4af/issues/8114
+            # https://github.com/andresriancho/w3af/issues/8114
             self._w4af.plugins.set_plugins(['console'], 'output')
 
     def handle_keypress_during_scan(self):

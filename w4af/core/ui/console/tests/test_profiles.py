@@ -214,7 +214,7 @@ class TestProfilesConsoleUI(ConsoleTestHelper):
         This is a unittest for the bug reported by a user where his settings
         are not saved to the profile.
 
-        https://github.com/andresriancho/w4af/issues/291
+        https://github.com/andresriancho/w3af/issues/291
 
         Actually, the settings are saved but not properly displayed, but that's
         not so important. The important thing is that the user was seeing the

@@ -168,7 +168,7 @@ class http_vs_https_dist(InfrastructurePlugin):
             from scapy.error import Scapy_Exception
         except socket.error:
             # [Errno 1] Operation not permitted #12131
-            # https://github.com/andresriancho/w4af/issues/12131
+            # https://github.com/andresriancho/w3af/issues/12131
             return False
 
         try:

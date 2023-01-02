@@ -443,7 +443,7 @@ class URL(DiskItem):
         # Put everything together, do NOT use urlparse.urljoin here or you'll
         # introduce a bug! For more information read:
         #       test_url.py -> test_url_in_filename
-        #       https://github.com/andresriancho/w4af/issues/475
+        #       https://github.com/andresriancho/w3af/issues/475
         #
         fixed_url = urllib.parse.urlunparse((protocol, net_location, self.path,
                                          self.params, '', self.fragment))

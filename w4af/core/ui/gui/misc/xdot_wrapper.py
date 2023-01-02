@@ -36,7 +36,7 @@ class WrappedDotWidget(DotWidget):
         I don't care much about this bug since it only appears once every 6
         months or so in my issue tracker.
 
-        :see: https://github.com/andresriancho/w4af/issues/726
+        :see: https://github.com/andresriancho/w3af/issues/726
         :see: https://github.com/jrfonseca/xdot.py/issues/1
         """
         # pylint: disable=E1101

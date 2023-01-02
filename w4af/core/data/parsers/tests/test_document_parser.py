@@ -95,7 +95,7 @@ class TestDocumentParserFactory(unittest.TestCase):
         
     def test_issue_106_invalid_url(self):
         """
-        Issue to verify https://github.com/andresriancho/w4af/issues/106
+        Issue to verify https://github.com/andresriancho/w3af/issues/106
         """
         with open(self.HTML_FILE) as f:
             sharepoint_pl = f.read()

@@ -81,7 +81,7 @@ class TestSaveConsoleUI(ConsoleTestHelper):
 
     def test_menu_simple_save_with_view(self):
         """
-        Reproduces the issue at https://github.com/andresriancho/w4af/issues/474
+        Reproduces the issue at https://github.com/andresriancho/w3af/issues/474
         where a "view" call overwrites any previously set value with the default
         """
         commands_to_run = ['plugins crawl config dir_file_bruter',

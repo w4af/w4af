@@ -76,7 +76,7 @@ class TestDBMS(unittest.TestCase):
         #
         # This lead to race conditions like:
         #
-        #   https://github.com/andresriancho/w4af/issues/16171
+        #   https://github.com/andresriancho/w3af/issues/16171
         #
         result1 = db.execute('UPDATE TEST SET data = ? WHERE id = ?', ('c', 1)).result()
         result2 = db.execute('UPDATE TEST SET data = ? WHERE id = ?', ('nope', 3)).result()

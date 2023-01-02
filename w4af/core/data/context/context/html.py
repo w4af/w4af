@@ -183,7 +183,7 @@ class HTMLAttrQuoteGeneric(BaseContext):
         we check that the tag attribute name is one that allows/knows how to
         handle the "javascript:" protocol.
 
-        [0] https://github.com/andresriancho/w4af/issues/13359
+        [0] https://github.com/andresriancho/w3af/issues/13359
         """
         if self.name not in JS_EVENTS and self.name not in EXECUTABLE_ATTRS:
             return False

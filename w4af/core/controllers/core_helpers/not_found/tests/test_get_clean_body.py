@@ -35,7 +35,7 @@ class TestGetCleanBody(unittest.TestCase):
     def test_get_clean_body_14955(self):
         """
         Trying to fix issue 14955
-        https://github.com/andresriancho/w4af/issues/14955
+        https://github.com/andresriancho/w3af/issues/14955
         """
         url = URL('http://w4af.net/.git/.git/.git/index')
         headers = Headers([('Content-Type', 'text/html')])
@@ -56,7 +56,7 @@ class TestGetCleanBody(unittest.TestCase):
     def test_get_clean_body_14956(self):
         """
         Trying to fix issue 14956
-        https://github.com/andresriancho/w4af/issues/14956
+        https://github.com/andresriancho/w3af/issues/14956
         """
         url = URL('http://w4af.net/install.php?mode=phpinfo')
         headers = Headers([('Content-Type', 'text/html')])

@@ -56,7 +56,7 @@ class TestJavaScriptInHTML(unittest.TestCase):
     def test_payload_javascript_value(self):
         """
         Test for false positive reported at
-        https://github.com/andresriancho/w4af/issues/13359
+        https://github.com/andresriancho/w3af/issues/13359
 
         :return: Should not find a XSS
         """
@@ -279,8 +279,8 @@ class TestJavaScriptInHTML(unittest.TestCase):
     def test_payload_with_space_equal_not_executable_attr(self):
         """
         Related with:
-            https://github.com/andresriancho/w4af/issues/1557
-            https://github.com/andresriancho/w4af/issues/2919
+            https://github.com/andresriancho/w3af/issues/1557
+            https://github.com/andresriancho/w3af/issues/2919
         """
         html = """
         <html>
@@ -293,8 +293,8 @@ class TestJavaScriptInHTML(unittest.TestCase):
     def test_payload_with_space_equal_src_executable(self):
         """
         Related with:
-            https://github.com/andresriancho/w4af/issues/1557
-            https://github.com/andresriancho/w4af/issues/2919
+            https://github.com/andresriancho/w3af/issues/1557
+            https://github.com/andresriancho/w3af/issues/2919
         """
         html = """
         <html>

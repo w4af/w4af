@@ -56,9 +56,9 @@ def sigsegv_handler(signum, frame):
     #
     # For now I'm making this handler as small as possible to avoid issues like:
     #
-    # https://github.com/andresriancho/w4af/issues/1850
-    # https://github.com/andresriancho/w4af/issues/1899
-    # https://github.com/andresriancho/w4af/issues/10931
+    # https://github.com/andresriancho/w3af/issues/1850
+    # https://github.com/andresriancho/w3af/issues/1899
+    # https://github.com/andresriancho/w3af/issues/10931
     #
     # Since python is "broken" inside this signal handler, the error string is
     # pre-allocated in memory

@@ -191,8 +191,8 @@ class TestXUrllibErrorHandling(PluginTest):
     threads were sending requests to a URL which was timing out, thus reaching
     the MAX_ERROR_COUNT and stopping the whole scan.
 
-    :see: https://github.com/andresriancho/w4af/issues/8698#issuecomment-77625343
-    :see: https://github.com/andresriancho/w4af/issues/8698
+    :see: https://github.com/andresriancho/w3af/issues/8698#issuecomment-77625343
+    :see: https://github.com/andresriancho/w3af/issues/8698
     """
     _run_configs = {
         'cfg': {

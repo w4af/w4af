@@ -216,7 +216,7 @@ class LoggingHandler(ProxyHandler):
 
     def _is_terminate_favicon(self, http_request):
         """
-        :see: https://github.com/andresriancho/w4af/issues/9135
+        :see: https://github.com/andresriancho/w3af/issues/9135
         """
         if http_request.get_uri() == TERMINATE_FAVICON_URL:
             return True

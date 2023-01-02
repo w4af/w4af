@@ -166,7 +166,7 @@ class TestInfoSet(unittest.TestCase):
 
     def test_match_different_itag(self):
         """
-        https://github.com/andresriancho/w4af/issues/10286
+        https://github.com/andresriancho/w3af/issues/10286
         """
         itag_1 = 'hello'
         i1 = MockInfo(ids=1)
@@ -182,7 +182,7 @@ class TestInfoSet(unittest.TestCase):
 
     def test_match_same_itag(self):
         """
-        https://github.com/andresriancho/w4af/issues/10286
+        https://github.com/andresriancho/w3af/issues/10286
         """
         itag_1 = 'hello'
         i1 = MockInfo(ids=1)

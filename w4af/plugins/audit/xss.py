@@ -105,7 +105,7 @@ class xss(AuditPlugin):
         # Before we run each fake mutant check in a different thread using the
         # worker_pool, but this lead to a strange dead-lock
         #
-        #   https://github.com/andresriancho/w4af/issues/4068
+        #   https://github.com/andresriancho/w3af/issues/4068
         #
         # So I simply migrated this to a slower for loop.
         for fake_mutant in fake_mutants:
@@ -225,7 +225,7 @@ class xss(AuditPlugin):
             
             sent_payload = mutant.get_token_payload()
 
-            # TODO: https://github.com/andresriancho/w4af/issues/12305
+            # TODO: https://github.com/andresriancho/w3af/issues/12305
             body_lower = response.get_body().lower()
             sent_payload_lower = sent_payload.lower()
 

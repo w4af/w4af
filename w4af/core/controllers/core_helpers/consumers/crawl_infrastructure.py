@@ -93,7 +93,7 @@ class CrawlInfrastructure(BaseConsumer):
             try:
                 work_unit = self.in_queue.get(timeout=0.1)
             except KeyboardInterrupt:
-                # https://github.com/andresriancho/w4af/issues/9587
+                # https://github.com/andresriancho/w3af/issues/9587
                 #
                 # If we don't do this, the thread will die and will never
                 # process the POISON_PILL, which will end up in an endless
@@ -484,7 +484,7 @@ class CrawlInfrastructure(BaseConsumer):
         om.out.debug(msg % fuzzable_request)
 
         # Log the new finding to the user, without dups
-        # https://github.com/andresriancho/w4af/issues/8496
+        # https://github.com/andresriancho/w3af/issues/8496
         url = fuzzable_request.get_url()
         if self._reported_found_urls.add(url):
             msg = 'New URL found by %s plugin: "%s"'

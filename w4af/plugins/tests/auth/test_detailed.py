@@ -250,7 +250,7 @@ class TestDetailedRedirectLoop(PluginTest):
 @pytest.mark.moth
 class TestDetailedSquareBrackets(PluginTest):
     """
-    :see: https://github.com/andresriancho/w4af/issues/5593
+    :see: https://github.com/andresriancho/w3af/issues/5593
     """
     target_url = get_moth_http('/auth/')
 

@@ -115,7 +115,7 @@ class TestSQLMapShell(ReadExploitTest):
     @pytest.mark.moth
     def test_found_exploit_blind_sqli_form_GET(self):
         """
-        Reproduce bug https://github.com/andresriancho/w4af/issues/262
+        Reproduce bug https://github.com/andresriancho/w3af/issues/262
         "it appears that you have provided tainted parameter values"
         """
         target = get_moth_http('/audit/blind_sqli/blind_where_integer_form_get.py')

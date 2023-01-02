@@ -73,7 +73,7 @@ class TestMPDocumentParser(unittest.TestCase):
 
     def test_parser_timeout(self):
         """
-        Test to verify fix for https://github.com/andresriancho/w4af/issues/6723
+        Test to verify fix for https://github.com/andresriancho/w3af/issues/6723
         "w4af running long time more than 24h"
         """
         mmpdp = 'w4af.core.data.parsers.mp_document_parser.%s'
@@ -106,7 +106,7 @@ class TestMPDocumentParser(unittest.TestCase):
             #   We now want to make sure that after we kill the process the Pool
             #   creates a new process for handling our tasks
             #
-            #   https://github.com/andresriancho/w4af/issues/9713
+            #   https://github.com/andresriancho/w3af/issues/9713
             #
             html = '<html>foo-</html>'
             http_resp = _build_http_response(html, 'text/html')
@@ -345,7 +345,7 @@ class TestMPDocumentParser(unittest.TestCase):
     def test_dictproxy_pickle_8748(self):
         """
         MaybeEncodingError - PicklingError: Can't pickle dictproxy #8748
-        https://github.com/andresriancho/w4af/issues/8748
+        https://github.com/andresriancho/w3af/issues/8748
         """
         html_body = os.path.join(ROOT_PATH, '/core/data/parsers/tests/data/',
                                  'pickle-8748.htm')

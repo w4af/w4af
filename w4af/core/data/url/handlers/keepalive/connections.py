@@ -72,7 +72,7 @@ class _HTTPConnection(http.client.HTTPConnection, UniqueID):
         Connect to the host and port specified in __init__ , overriding to set
         the socket options which should allow us to avoid issues like:
 
-            https://github.com/andresriancho/w4af/issues/11359
+            https://github.com/andresriancho/w3af/issues/11359
 
         In systems that are running many instances of w4af and/or other network
         intensive software.
@@ -101,7 +101,7 @@ def create_connection(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
             sock = socket.socket(af, socktype, proto)
 
             # This is what I've added to the create_connection function
-            # https://github.com/andresriancho/w4af/issues/11359
+            # https://github.com/andresriancho/w3af/issues/11359
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
             if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
@@ -207,7 +207,7 @@ class SSLNegotiatorConnection(http.client.HTTPSConnection, UniqueID):
 
     References:
         http://bugs.python.org/msg128686
-        https://github.com/andresriancho/w4af/issues/5802
+        https://github.com/andresriancho/w3af/issues/5802
         https://gist.github.com/flandr/74be22d1c3d7c1dfefdd
     """
     def __init__(self, *args, **kwargs):

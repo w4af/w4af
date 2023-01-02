@@ -54,7 +54,7 @@ def error_500_handler(error):
     Please note that this will only work if the Flask application is run without
     the debug flag on.
     """
-    new_issue = 'https://github.com/andresriancho/w4af/issues/new'
+    new_issue = 'https://github.com/andresriancho/w3af/issues/new'
 
     try:
         # Extract the filename and line number where the exception was raised

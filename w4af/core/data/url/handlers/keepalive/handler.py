@@ -211,7 +211,7 @@ class KeepAliveHandler(object):
             # read the response here because we're closer to the error and can
             # better understand it.
             #
-            # https://github.com/andresriancho/w4af/issues/2074
+            # https://github.com/andresriancho/w3af/issues/2074
             self._cm.remove_connection(conn, reason='http connection died')
             raise HTTPRequestException('The HTTP connection died: %s' % e)
         except Exception as e:

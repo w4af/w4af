@@ -59,7 +59,7 @@ class FormIDMatcher(object):
 
     And then used in a call to FormID.match(...)
 
-    :see: https://github.com/andresriancho/w4af/issues/15161
+    :see: https://github.com/andresriancho/w3af/issues/15161
     """
 
     ALLOWED_ATTRS = ['action', 'inputs', 'attributes', 'hosted_at_url',

@@ -80,7 +80,7 @@ class BaseOption(object):
         value.
 
         Added when fixing:
-            https://github.com/andresriancho/w4af/issues/402
+            https://github.com/andresriancho/w3af/issues/402
 
         :param self_contained: If set to True the profile option will be
                                serialized in such a way that it can be read in

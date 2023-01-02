@@ -109,7 +109,7 @@ class profile(object):
         # This is the worse case scenario, where the file name is different from
         # the "name = ..." value which is inside the file
         #
-        # https://github.com/andresriancho/w4af/issues/561
+        # https://github.com/andresriancho/w3af/issues/561
         for profile_path in self.get_profile_paths(workdir):
             for profile_file in os.listdir(profile_path):
 

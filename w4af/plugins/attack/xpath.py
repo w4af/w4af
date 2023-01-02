@@ -214,7 +214,7 @@ class xpath(AttackPlugin):
         except BaseFrameworkException as e:
             om.out.debug('Error "%s"' % e)
         except RuntimeError as rte:
-            issue = 'https://github.com/andresriancho/w4af/issues/5278'
+            issue = 'https://github.com/andresriancho/w3af/issues/5278'
 
             msg = ('An unhandled exception occurred while trying to setup'
                    ' the error detection for XPATH injection. This situation'

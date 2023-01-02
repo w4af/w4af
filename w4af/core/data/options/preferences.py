@@ -127,7 +127,7 @@ class Preferences(object):
                             # In some cases the user touches the file by hand
                             # and then the framework will fail to validate
                             #
-                            # https://github.com/andresriancho/w4af/issues/1816
+                            # https://github.com/andresriancho/w3af/issues/1816
                             pass
 
     def save(self):

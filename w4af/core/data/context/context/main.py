@@ -45,7 +45,7 @@ def get_context_iter(data, payload):
 
     :return: A context iterator
 
-    :see: https://github.com/andresriancho/w4af/issues/37
+    :see: https://github.com/andresriancho/w3af/issues/37
     """
     # We don't care if the payload we sent was processed with something like
     # payload.title() , payload.upper() or payload.lower() and then pushed

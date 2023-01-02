@@ -67,7 +67,7 @@ class TestAuditPlugin(unittest.TestCase):
 
         Very similar test is TestXUrllib.test_timeout
 
-        :see: https://github.com/andresriancho/w4af/issues/7112
+        :see: https://github.com/andresriancho/w3af/issues/7112
         """
         upper_daemon = UpperDaemon(TimeoutTCPHandler)
         upper_daemon.start()

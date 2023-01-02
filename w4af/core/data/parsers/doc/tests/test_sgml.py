@@ -279,7 +279,7 @@ class TestSGMLParser(unittest.TestCase):
 
     def test_get_clear_text_issue_4402(self):
         """
-        :see: https://github.com/andresriancho/w4af/issues/4402
+        :see: https://github.com/andresriancho/w3af/issues/4402
         """
         test_file_path = 'core/data/url/tests/data/encoding_4402.php'
         test_file = os.path.join(ROOT_PATH, test_file_path)

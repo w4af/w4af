@@ -219,7 +219,7 @@ class TestFuzzer(unittest.TestCase):
         Even when fuzz_cookies is True, we won't create HeaderMutants based
         on a FuzzableRequest. This is one of the ugly things related with
 
-            https://github.com/andresriancho/w4af/issues/3149
+            https://github.com/andresriancho/w3af/issues/3149
 
         Which we fixed!
         """

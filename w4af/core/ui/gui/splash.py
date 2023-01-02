@@ -52,7 +52,7 @@ class Splash(gtk.Window):
         vbox.pack_start(self.label, False, False, 0)
 
         # Splash screen doesn't have decoration (at least where supported)
-        # https://github.com/andresriancho/w4af/issues/9084
+        # https://github.com/andresriancho/w3af/issues/9084
         if not MacOSX.is_current_platform():
             self.set_decorated(False)
 

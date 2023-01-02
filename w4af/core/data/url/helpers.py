@@ -48,7 +48,7 @@ from w4af.core.controllers.misc.number_generator import consecutive_number_gener
 # Known reason errors. See errno module for more info on these errors
 EUNKNSERV = -2        # Name or service not known error
 EINVHOSTNAME = -5     # No address associated with hostname
-EUNEXPECTEDEOF = -1   # https://github.com/andresriancho/w4af/issues/10290
+EUNEXPECTEDEOF = -1   # https://github.com/andresriancho/w3af/issues/10290
 
 NO_CONTENT_MSG = 'No Content'
 
@@ -278,7 +278,7 @@ def get_clean_body_impl(body, strings_to_replace_list, multi_encode=True,
         # chars in the mod_value then we end up with an UnicodeDecodeError, so
         # I convert it myself with some error handling
         #
-        # https://github.com/andresriancho/w4af/issues/8953
+        # https://github.com/andresriancho/w3af/issues/8953
         unicode_to_repl = smart_unicode(str_to_repl, errors=PERCENT_ENCODE)
 
         # unquote, just in case the plugin did an extra encoding of some type.

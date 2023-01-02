@@ -42,7 +42,7 @@ def extract_link_from_header_simple(http_response, header_name, header_value):
     :param header_name: The http response header name
     :param header_value: The http response header value (where the URL lives)
     :return: Yield URL instances
-    :see: https://github.com/andresriancho/w4af/issues/9493
+    :see: https://github.com/andresriancho/w3af/issues/9493
     """
     if not header_value:
         return
@@ -68,7 +68,7 @@ def extract_link_from_link_header(http_response, header_name, header_value):
     :param header_name: The http response header name
     :param header_value: The http response header value (where the URL lives)
     :return: Yield URL instances
-    :see: https://github.com/andresriancho/w4af/issues/9493
+    :see: https://github.com/andresriancho/w3af/issues/9493
     """
     re_match = LINK_HEADER_RE.search(header_value)
     if re_match:
@@ -100,7 +100,7 @@ def extract_link_from_set_cookie_header(http_response, header_name, header_value
     :param header_name: The http response header name
     :param header_value: The http response header value (where the URL lives)
     :return: Yield URL instances
-    :see: https://github.com/andresriancho/w4af/issues/9493
+    :see: https://github.com/andresriancho/w3af/issues/9493
     """
     try:
         cookie = parse_cookie(header_value)

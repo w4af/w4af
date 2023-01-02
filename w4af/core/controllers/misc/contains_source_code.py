@@ -42,7 +42,7 @@ SOURCE_CODE = (
     (r'<\?php\r.*?\?>', {PHP}),       # and are repeated over the list
 
     # Need to review how to re-add these in the future
-    # https://github.com/andresriancho/w4af/issues/2129
+    # https://github.com/andresriancho/w3af/issues/2129
     #
     #('<\? .*?\?>', {PHP}),
     #('<\?\n.*?\?>', {PHP}),
@@ -132,8 +132,8 @@ def is_false_positive(http_response, match, detected_langs):
             return True
 
     # Avoid some (rather common) false positives that appear in JS files
-    # https://github.com/andresriancho/w4af/issues/5379
-    # https://github.com/andresriancho/w4af/issues/12379
+    # https://github.com/andresriancho/w3af/issues/5379
+    # https://github.com/andresriancho/w3af/issues/12379
     #
     # The detection for some languages is weaker, thus we don't fully trust
     # them:

@@ -112,7 +112,7 @@ class buffer_overflow(AuditPlugin):
         for result in self.worker_pool.imap_unordered(apply_with_return_error, args):
             # re-raise the thread exception in the main thread with this method
             # so we get a nice traceback instead of things like the ones we see
-            # in https://github.com/andresriancho/w4af/issues/7287
+            # in https://github.com/andresriancho/w3af/issues/7287
             if isinstance(result, Error):
                 result.reraise()
 

@@ -243,7 +243,7 @@ class Plugin(Configurable):
         for result in imap_unordered(awre, args):
             # re-raise the thread exception in the main thread with this method
             # so we get a nice traceback instead of things like the ones we see
-            # in https://github.com/andresriancho/w4af/issues/7286
+            # in https://github.com/andresriancho/w3af/issues/7286
             if isinstance(result, Error):
                 result.reraise()
             else:
@@ -296,7 +296,7 @@ class UrlOpenerProxy(object):
     #   * Don't raise HTTPRequestException
     #
     # I noticed this issue when #8705 was reported
-    # https://github.com/andresriancho/w4af/issues/8705
+    # https://github.com/andresriancho/w3af/issues/8705
     NO_WRAPPER_FOR = {'send_clean',
                       'clear',
                       'end',

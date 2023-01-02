@@ -40,7 +40,7 @@ class FormIDMatcherList(object):
 
     And then used in a call to FormID.matches_one_of(...)
 
-    :see: https://github.com/andresriancho/w4af/issues/15161
+    :see: https://github.com/andresriancho/w3af/issues/15161
     """
     def __init__(self, form_id_list_as_str):
         """

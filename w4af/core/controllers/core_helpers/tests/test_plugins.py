@@ -141,7 +141,7 @@ class Testw4afCorePlugins(unittest.TestCase):
                           'auth', 'generic', options)
 
         # Do not start the scan if the user failed to configure the plugins
-        # https://github.com/andresriancho/w4af/issues/7477
+        # https://github.com/andresriancho/w3af/issues/7477
         self.assertRaises(BaseFrameworkException,
                           self.core.plugins.init_plugins)
 

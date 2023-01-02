@@ -702,7 +702,7 @@ class RememberingWindow(gtk.Window):
             self.winconfig[self.id_size] = self.get_size()
             self.winconfig[self.id_position] = self.get_position()
         except ValueError:
-            # https://github.com/andresriancho/w4af/issues/8890
+            # https://github.com/andresriancho/w3af/issues/8890
             pass
 
         return False
@@ -893,7 +893,7 @@ class _RememberingPane(object):
         try:
             widgname in self.winconfig
         except ValueError:
-            # https://github.com/andresriancho/w4af/issues/332
+            # https://github.com/andresriancho/w3af/issues/332
             # ValueError: invalid operation on closed shelf
             self.signal = self.connect('draw', self.draw)
         else:
@@ -915,7 +915,7 @@ class _RememberingPane(object):
             try:
                 self.winconfig[self.widgname] = pos
             except ValueError:
-                # https://github.com/andresriancho/w4af/issues/8890
+                # https://github.com/andresriancho/w3af/issues/8890
                 pass
 
     def draw(self, area, event):

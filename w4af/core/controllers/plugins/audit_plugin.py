@@ -124,7 +124,7 @@ class AuditPlugin(Plugin):
         :param fuzzable_request: A FuzzableRequest
         :param orig_resp: The HTTP response we get from sending the freq
         :param debugging_id: A unique identifier for this call to audit().
-                             See https://github.com/andresriancho/w4af/issues/16220
+                             See https://github.com/andresriancho/w3af/issues/16220
 
         Copy the FuzzableRequest before auditing.
 
@@ -141,7 +141,7 @@ class AuditPlugin(Plugin):
             # process. FYI: This doesn't break the xurllib error handling which
             # happens at lower layers.
             #
-            # https://github.com/andresriancho/w4af/issues/8949
+            # https://github.com/andresriancho/w3af/issues/8949
             om.out.debug('%s' % ffde)
 
     def audit(self, freq, orig_resp, debugging_id):
@@ -153,7 +153,7 @@ class AuditPlugin(Plugin):
         :param freq: A FuzzableRequest
         :param orig_resp: The HTTP response we get from sending the freq
         :param debugging_id: A unique identifier for this call to audit()
-                             See https://github.com/andresriancho/w4af/issues/16220
+                             See https://github.com/andresriancho/w3af/issues/16220
         """
         msg = 'Plugin is not implementing required method audit'
         raise NotImplementedError(msg)

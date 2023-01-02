@@ -154,7 +154,7 @@ class FullKBTree(KBTree):
                 return
 
             # Error handling for .trace file problems
-            # https://github.com/andresriancho/w4af/issues/1174
+            # https://github.com/andresriancho/w3af/issues/1174
             try:
                 # These lines will trigger the code that reads the .trace file
                 # from disk and if they aren't there an exception will rise
@@ -165,7 +165,7 @@ class FullKBTree(KBTree):
                 return
 
             # Now we know that these two lines will work and we won't trigger
-            # https://github.com/andresriancho/w4af/issues/1174
+            # https://github.com/andresriancho/w3af/issues/1174
             self.kbbrowser.rrV.request.show_object(history_item.request)
             self.kbbrowser.rrV.response.show_object(history_item.response)
 
@@ -419,7 +419,7 @@ class URLsGraph(gtk.VBox):
             msg = ('A ValueError exception with message "%s" was found while'
                    ' trying to render a new dotcode. Please create a new'
                    ' bug report at %s including the following info:\n\n%s')
-            new_issue = 'https://github.com/andresriancho/w4af/issues/new'
+            new_issue = 'https://github.com/andresriancho/w3af/issues/new'
             args = (ve, new_issue, dotcode)
             raise ValueError(msg % args)
         else:

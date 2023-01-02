@@ -197,7 +197,7 @@ What you need to do is:
  * Install it
  * Run ``./w4af_console`` again. Repeat until fixed
 
-Please `create a ticket <https://github.com/andresriancho/w4af/issues/new>`_
+Please `create a ticket <https://github.com/andresriancho/w3af/issues/new>`_
 explaining the packages you installed, your distribution, etc. and we'll add
 the code necessary for others to be able to install ``w4af`` without going
 through any manual steps.
@@ -206,7 +206,7 @@ through any manual steps.
 How do I ask for support on installation issues?
 ________________________________________________
 
-You can `create a ticket <https://github.com/andresriancho/w4af/issues/new>`_
+You can `create a ticket <https://github.com/andresriancho/w3af/issues/new>`_
 containing the following information:
 
  * Your linux distribution (usually the contents of ``/etc/lsb-release`` will be enough)

@@ -186,7 +186,7 @@ class TestWebSpider(PluginTest):
 
         coverage = get_coverage_for_scan_id(stats[0][0])
         # TODO: Sometimes coverage is 44 and sometimes it is 41!
-        # https://github.com/andresriancho/w4af/issues/2309
+        # https://github.com/andresriancho/w3af/issues/2309
         self.assertEqual(coverage, 41)
 
 
@@ -243,7 +243,7 @@ class TestRelativePathsIn404(PluginTest):
     """
     This test reproduces the issue #5834 which generates an endless crawl loop
 
-    :see: https://github.com/andresriancho/w4af/issues/5834
+    :see: https://github.com/andresriancho/w3af/issues/5834
     """
     target_url = 'http://mock/'
 
@@ -321,7 +321,7 @@ class TestFormExclusions(PluginTest):
     """
     This is an integration test for form exclusions
 
-    :see: https://github.com/andresriancho/w4af/issues/15161
+    :see: https://github.com/andresriancho/w3af/issues/15161
     """
     target_url = 'http://mock/'
 

@@ -58,7 +58,7 @@ class GrepPlugin(Plugin):
             # process. FYI: This doesn't break the xurllib error handling which
             # happens at lower layers.
             #
-            # https://github.com/andresriancho/w4af/issues/8949
+            # https://github.com/andresriancho/w3af/issues/8949
             om.out.debug('%s' % ffde)
 
     def grep(self, fuzzable_request, response):

@@ -42,7 +42,7 @@ class StringExtractor(object):
     in case I actually want to do something advanced with a javascript source
     code.
 
-    :see: https://github.com/andresriancho/w4af/issues/2104
+    :see: https://github.com/andresriancho/w3af/issues/2104
     """
     CHILD_ATTRS = ['thenPart', 'elsePart', 'expression', 'body', 'initializer']
  
