@@ -114,7 +114,7 @@ Advanced users who want to use their own SSL certificates can:
 REST API Source code
 --------------------
 
-The `REST API <https://github.com/andresriancho/w4af/tree/master/w4af/core/ui/api/>`_
+The `REST API <https://github.com/w4af/w4af/tree/master/w4af/core/ui/api/>`_
 is implemented in Flask and is pretty well documented for your reading pleasure.
 
 REST API clients
@@ -122,7 +122,7 @@ REST API clients
 
 Wrote a REST API client? Let us know and get it linked here!
 
- * `Official Python REST API client <https://github.com/andresriancho/w4af-api-client>`_
+ * `Official Python REST API client <https://github.com/andresriancho/w3af-api-client>`_
    which is also available at `pypi <https://pypi.python.org/pypi/w4af-api-client>`_
 
 

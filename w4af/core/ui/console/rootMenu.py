@@ -164,7 +164,7 @@ class rootMenu(menu):
         """
         #
         # if run with detached terminal mode (like cron)
-        # https://github.com/andresriancho/w4af/pull/17235
+        # https://github.com/andresriancho/w3af/pull/17235
         #
         if not sys.stdin.isatty():
             while self._w4af.status.is_running() or self._w4af.status.is_paused():

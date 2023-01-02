@@ -222,7 +222,7 @@ class GetAverageRTTForMutant(object):
         #
         # TODO: perform outlier analysis
         #
-        # https://github.com/andresriancho/w4af/commit/9494b49acab10833f629fae58dcc104b37f9720f
+        # https://github.com/andresriancho/w3af/commit/9494b49acab10833f629fae58dcc104b37f9720f
         #
         return False
 

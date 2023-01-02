@@ -1,5 +1,5 @@
 # w4af.net
-# https://github.com/andresriancho/w4af/tree/master/extras
+# https://github.com/w4af/w4af/tree/master/extras
 
 FROM ubuntu:18.04
 MAINTAINER Andres Riancho <andres.riancho@gmail.com>

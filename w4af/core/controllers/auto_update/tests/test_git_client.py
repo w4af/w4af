@@ -34,7 +34,7 @@ class TestGitClient(unittest.TestCase):
     def test_get_URL(self):
         client = GitClient(w4af_LOCAL_PATH)
         
-        # https://github.com/andresriancho/w4af/ provides a list of all the
+        # https://github.com/andresriancho/w3af/ provides a list of all the
         # URLs which can be used to clone the repo
         REPO_URLS = ('git@github.com:codders/w4af-python3.git',
                      'https://github.com/codders/w4af-python3.git',

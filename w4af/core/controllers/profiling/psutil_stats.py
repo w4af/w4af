@@ -150,7 +150,7 @@ def get_threads_cpu_percent(interval=0.1):
     proc = psutil.Process()
 
     # pylint: disable=E1101
-    # https://circleci.com/gh/andresriancho/w4af/1927
+    # https://circleci.com/gh/andresriancho/w3af/1927
     total_percent = proc.get_cpu_percent(interval=interval)
     # pylint: enable=E1101
 

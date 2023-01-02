@@ -280,7 +280,7 @@ def listdir_remove_fs(query_dir):
     the files in the the query_dir, removing 'failing_spider' plugin name from
     the list.
 
-    [0] https://circleci.com/gh/andresriancho/w4af/801
+    [0] https://circleci.com/gh/andresriancho/w3af/801
 
     :param query_dir: The directory to query
     :return: A list without 'failing_spider'

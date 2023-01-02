@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 #
 #   New to this code? Take a look at the exceptions documentation!
-#   https://github.com/andresriancho/w4af/wiki/HTTP-error-handling-in-w4af
+#   https://github.com/andresriancho/w3af/wiki/HTTP-error-handling-in-w4af
 #
 
 

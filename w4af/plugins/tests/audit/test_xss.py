@@ -156,7 +156,7 @@ class TestXSS(PluginTest):
         Avoiding false positives in the case where the payload is echoed back
         inside an attribute and the quotes are removed.
         
-        :see: https://github.com/andresriancho/w4af/pull/499
+        :see: https://github.com/andresriancho/w3af/pull/499
         """
         cfg = self._run_configs['smoke']
         self._scan(self.XSS_PATH + '499_check.py?text=1', cfg['plugins'])

@@ -47,7 +47,7 @@ def create_home_dir():
             # where multiple w4af processes are starting and creating the same
             # directory
             #
-            # https://circleci.com/gh/andresriancho/w4af/1347
+            # https://circleci.com/gh/andresriancho/w3af/1347
             if not os.path.exists(home_path):
                 return False
 
@@ -61,7 +61,7 @@ def create_home_dir():
             # where multiple w4af processes are starting and creating the same
             # directory
             #
-            # https://circleci.com/gh/andresriancho/w4af/1347
+            # https://circleci.com/gh/andresriancho/w3af/1347
             if not os.path.exists(webroot):
                 return False
 

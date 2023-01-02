@@ -380,7 +380,7 @@ class BaseConsumer(Process):
         # If anything is put to the queue after POISON_PILL, a race condition
         # might happen and the consumer might never stop
         #
-        # https://github.com/andresriancho/w4af/pull/16063
+        # https://github.com/andresriancho/w3af/pull/16063
         if self._poison_pill_sent and not force:
             return
         

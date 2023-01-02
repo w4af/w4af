@@ -55,7 +55,7 @@ Operating System / Linux distribution, and then have support for creating the
 for Ubuntu we use ``apt-get install`` and for Suse we use ``yum install``.
 
 The list of distributions ``w4af`` knows how to generate the installation script
-for `is extensive <https://github.com/andresriancho/w4af/tree/master/w4af/core/controllers/dependency_check/platforms>`_ .
+for `is extensive <https://github.com/w4af/w4af/tree/master/w4af/core/controllers/dependency_check/platforms>`_ .
 If we don't support your distribution, we'll default to Ubuntu.
 
 Installation in Kali
@@ -115,7 +115,7 @@ Once the docker installation is running these steps will yield a running
     w4af>>>
 
 For advanced usage of ``w4af``'s docker container please read the documentation
-at the `docker registry hub <https://registry.hub.docker.com/u/andresriancho/w4af/>`_
+at the `docker registry hub <https://registry.hub.docker.com/u/andresriancho/w3af/>`_
 
 Installation in Mac OSX
 -----------------------

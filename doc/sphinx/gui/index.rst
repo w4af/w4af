@@ -11,7 +11,7 @@ before diving into this GUI-specific section.
 
  .. image:: images/gui-screenshot-main.png
    :scale: 80 %                                   
-   :target: https://github.com/andresriancho/w4af/
+   :target: https://github.com/w4af/w4af/
    :alt: GUI screenshot
 
 

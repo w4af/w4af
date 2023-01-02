@@ -30,7 +30,7 @@ except ImportError:
     #
     # Create a mock just to allow nosetests/pylint to PASS
     #
-    # https://circleci.com/gh/andresriancho/w4af/1495
+    # https://circleci.com/gh/andresriancho/w3af/1495
     class msvcrt(object):
         @staticmethod
         def getch():

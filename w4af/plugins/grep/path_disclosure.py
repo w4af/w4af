@@ -192,7 +192,7 @@ class path_disclosure(GrepPlugin):
                 - Apply the regular expression over those strings only, avoiding
                   the cost of applying the regex to the whole HTML response
 
-        [0] https://github.com/andresriancho/w4af/commit/f1029328fcaf7e790cc317701b63954c55a3f4c8
+        [0] https://github.com/andresriancho/w3af/commit/f1029328fcaf7e790cc317701b63954c55a3f4c8
         [1] https://haacked.com/archive/2004/10/25/usingregularexpressionstomatchhtml.aspx/
 
         :return: True if path_disclosure_string is the value of an attribute

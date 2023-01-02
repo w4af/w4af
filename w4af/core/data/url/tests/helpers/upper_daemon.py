@@ -64,7 +64,7 @@ class UpperDaemon(threading.Thread):
             self.server.serve_forever()
         except AttributeError:
             # Catch some ugly tracebacks on shutdown
-            # https://circleci.com/gh/andresriancho/w4af/1568
+            # https://circleci.com/gh/andresriancho/w3af/1568
             pass
 
     def get_host_port(self):

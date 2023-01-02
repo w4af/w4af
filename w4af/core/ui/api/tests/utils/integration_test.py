@@ -57,7 +57,7 @@ class IntegrationTest(unittest.TestCase):
                 with open(os.path.join(tempdir, _file)) as f:
                     crash = f.read()
 
-                # https://circleci.com/gh/andresriancho/w4af/2041
+                # https://circleci.com/gh/andresriancho/w3af/2041
                 if 'failing_spider' in crash:
                     continue
 

@@ -193,7 +193,7 @@ class TestMPDocumentParser(unittest.TestCase):
         """
         pytest.skip('This test breaks the build because it uses A LOT'
                        ' of memory, for more information take a look at'
-                       ' https://circleci.com/gh/andresriancho/w4af/2819 .'
+                       ' https://circleci.com/gh/andresriancho/w3af/2819 .'
                        ' Note that there is no memory leak here, just a'
                        ' test which is designed to use a lot of memory'
                        ' to force a specific state.')

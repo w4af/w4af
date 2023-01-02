@@ -28,7 +28,7 @@ from w4af.core.controllers.auto_update.changelog import ChangeLog
 class TestChangeLog(unittest.TestCase):
     
     def test_changes_between(self):
-        # Hashes from https://github.com/andresriancho/w4af/commits/threading2
+        # Hashes from https://github.com/andresriancho/w3af/commits/threading2
         start = 'cb751e941bfa2063ebcef711642ed5d22ff9db87'
         end = '9c5f5614412dce67ac13411e1eebd754b4c6fb6a'
         
@@ -52,7 +52,7 @@ class TestChangeLog(unittest.TestCase):
                                                 ('M', 'core/controllers/tests/pylint.rc')])
     
     def test_str(self):
-        # Hashes from https://github.com/andresriancho/w4af/commits/threading2
+        # Hashes from https://github.com/andresriancho/w3af/commits/threading2
         start = 'cb751e941bfa2063ebcef711642ed5d22ff9db87'
         end = '9c5f5614412dce67ac13411e1eebd754b4c6fb6a'
         

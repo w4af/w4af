@@ -64,7 +64,7 @@ def new_no_content_resp(uri, add_id=False):
     # WARNING: You are about to change this code? Please read the related
     #          race condition in this commit [0]
     #
-    # [0] https://github.com/andresriancho/w4af/commit/682bc2e4ad7d075bbdc469bc5d24a28e6d2e7804
+    # [0] https://github.com/andresriancho/w3af/commit/682bc2e4ad7d075bbdc469bc5d24a28e6d2e7804
     #
     no_content_response = HTTPResponse(code=NO_CONTENT,
                                        read='',

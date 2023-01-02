@@ -192,7 +192,7 @@ def split_by_sep(sequence):
     # algorithm... a new idea appears and reduces the time from 4.5 to 0.17...
     # amazing!
     #
-    # [0] https://github.com/andresriancho/w4af/blob/2ded693c959c91dc3e4daca276460d6c64ada479/w4af/core/controllers/misc/diff.py#L173
+    # [0] https://github.com/andresriancho/w3af/blob/2ded693c959c91dc3e4daca276460d6c64ada479/w4af/core/controllers/misc/diff.py#L173
     #
     if isinstance(sequence, bytes):
         sequence = smart_unicode(sequence)
