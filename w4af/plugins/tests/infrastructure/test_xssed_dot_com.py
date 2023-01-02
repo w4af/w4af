@@ -34,7 +34,7 @@ class TestXssedDotCom(PluginTest):
         }
     }
 
-    @pytest.mark.skip("Not working, TODO: check if xss still present on alarabiya?")
+    @unittest.skip("Not working, TODO: check if xss still present on alarabiya?")
     def test_xssed_dot_com_positive(self):
         cfg = self._run_configs['cfg']
         self._scan(self.vuln_url, cfg['plugins'])
