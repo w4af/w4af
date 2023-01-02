@@ -19,6 +19,7 @@ along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
+import pytest
 from w4af.plugins.tests.helper import PluginTest, PluginConfig
 
 
@@ -34,7 +35,7 @@ class TestXssedDotCom(PluginTest):
         }
     }
 
-    @unittest.skip("Not working, TODO: check if xss still present on alarabiya?")
+    @pytest.skip("Not working, TODO: check if xss still present on alarabiya?")
     def test_xssed_dot_com_positive(self):
         cfg = self._run_configs['cfg']
         self._scan(self.vuln_url, cfg['plugins'])
