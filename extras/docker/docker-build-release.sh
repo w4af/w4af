@@ -19,14 +19,14 @@ else
     exit 1
 fi
 
-docker-tag-naming bump andresriancho/w4af ${ENV} --commit-id ${CIRCLE_SHA1:0:7} > /tmp/new-w4af-docker-tag.txt
+docker-tag-naming bump w4af/w4af ${ENV} --commit-id ${CIRCLE_SHA1:0:7} > /tmp/new-w4af-docker-tag.txt
 NEW_TAG=`cat /tmp/new-w4af-docker-tag.txt`
 
-docker build -t andresriancho/w4af:${ENV} .
-docker tag andresriancho/w4af:${ENV} andresriancho/w4af:${NEW_TAG}
+docker build -t w4af/w4af:${ENV} .
+docker tag w4af/w4af:${ENV} w4af/w4af:${NEW_TAG}
 
-docker push andresriancho/w4af:${ENV}
-docker push andresriancho/w4af:${NEW_TAG}
+docker push w4af/w4af:${ENV}
+docker push w4af/w4af:${NEW_TAG}
 
 rm -rf Dockerfile
 rm -rf .dockerignore

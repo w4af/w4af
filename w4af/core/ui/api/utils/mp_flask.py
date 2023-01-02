@@ -13,7 +13,7 @@ class ThreadedFlask(Flask):
     Sub-class to prevent 'Thread' object has no attribute '_children' , search
     for the "Override here" comments to understand what changes.
 
-    https://circleci.com/gh/andresriancho/w4af-api-docker/50
+    https://circleci.com/gh/w4af/w4af-api-docker/50
     """
     def run(self, host=None, port=None, debug=None, **options):
         # Override here

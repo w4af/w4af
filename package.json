@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andresriancho/w4af.git"
+    "url": "git+https://github.com/w4af/w4af.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/andresriancho/w3af/issues"
   },
-  "homepage": "https://github.com/andresriancho/w4af#readme",
+  "homepage": "https://github.com/w4af/w4af#readme",
   "dependencies": {
     "retire": "^3.0.6"
   }

@@ -16,7 +16,7 @@ more features but also potential bugs.
  between 1 and 5 minutes depending on your internet connection speed:
 
 ```
-git clone https://github.com/andresriancho/w4af.git
+git clone https://github.com/w4af/w4af.git
 cd w4af/extras/docker/scripts/
 sudo ./w4af_console_docker
 ```
@@ -47,7 +47,7 @@ latest available docker image for w4af. Since we're improving our scanner almost
 every week, you might want to get the latest docker image by running:
 
 ```
-sudo docker pull andresriancho/w4af
+sudo docker pull w4af/w4af
 ```
 
 ## Debugging the container
@@ -79,7 +79,7 @@ $ sudo ./docker-build-local.sh
 ...
 ```
 
-This will build a local image named `andresriancho/w4af` with the latest git
+This will build a local image named `w4af/w4af` with the latest git
 commit as tag. Run `docker images` to find the created tag and then:
 
 ```

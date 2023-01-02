@@ -15,7 +15,7 @@ Installation
 
 .. code-block:: bash
 
-    git clone https://github.com/andresriancho/w4af.git
+    git clone https://github.com/w4af/w4af.git
     cd w4af/
     ./w4af_console
     . /tmp/w4af_dependency_install.sh
@@ -82,7 +82,7 @@ are recommended:
     apt-get update
     apt-get install -y python-pip w4af
     pip install --upgrade pip
-    git clone https://github.com/andresriancho/w4af.git
+    git clone https://github.com/w4af/w4af.git
     cd w4af
     ./w4af_console
     . /tmp/w4af_dependency_install.sh
@@ -109,7 +109,7 @@ Once the docker installation is running these steps will yield a running
 
 .. code-block:: console
 
-    $ git clone https://github.com/andresriancho/w4af.git
+    $ git clone https://github.com/w4af/w4af.git
     $ cd w4af/extras/docker/scripts/
     $ sudo ./w4af_console_docker
     w4af>>>

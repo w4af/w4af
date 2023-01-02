@@ -34,7 +34,7 @@ if __name__ == '__main__':
                   ' -v ~/w4af-shared:/root/w4af-shared'
                   ' -p 5000:5000'
                   ' -p 44444:44444'
-                  ' andresriancho/w4af')
+                  ' w4af/w4af')
 
     container_id = start_container(args.tag, command=docker_run)
 

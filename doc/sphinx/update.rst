@@ -45,7 +45,7 @@ We use ``git flow`` to manage our development process, this means that you'll fi
 
 .. code-block:: bash
 
-    git clone git@github.com:andresriancho/w4af.git
+    git clone git@github.com:w4af/w4af.git
     cd w4af/
     git checkout develop
     git branch

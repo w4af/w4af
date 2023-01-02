@@ -30,7 +30,7 @@ According to Kali's documentation [0] in order to avoid breaking the packaged\
 cd ~
 apt-get install -y python-pip
 pip install --upgrade pip
-git clone https/github.com/andresriancho/w4af.git
+git clone https/github.com/w4af/w4af.git
 cd w4af
 ./w4af_console
 . /tmp/w4af_dependency_install.sh

@@ -37,7 +37,7 @@ Making sure you're on the latest version
 ``w4af`` is usually installed in two different ways by our users:
 
  * ``apt-get install w4af`` (or similar)
- * ``git clone git@github.com:andresriancho/w4af.git``
+ * ``git clone git@github.com:w4af/w4af.git``
 
 Installing using the Operating System package manager is the easiest way, but
 will usually install an old version of the software that won't be able to :doc:`update.rst`.

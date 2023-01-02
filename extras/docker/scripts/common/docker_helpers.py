@@ -10,7 +10,7 @@ DOCKER_RUN = ('docker run'
               ' -v ~/.w4af:/root/.w4af'
               ' -v ~/w4af-shared:/root/w4af-shared'
               ' -p 44444:44444'
-              ' andresriancho/w4af')
+              ' w4af/w4af')
 
 
 def start_container(tag, command=DOCKER_RUN):

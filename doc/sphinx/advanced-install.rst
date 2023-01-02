@@ -25,7 +25,7 @@ Moving to bleeding edge ``w4af`` is easy:
 
 .. code-block:: bash
 
-    git clone https://github.com/andresriancho/w4af.git
+    git clone https://github.com/w4af/w4af.git
     cd w4af/
     git checkout develop
     ./w4af_console

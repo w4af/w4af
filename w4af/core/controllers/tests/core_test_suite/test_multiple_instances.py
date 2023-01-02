@@ -57,7 +57,7 @@ class Testw4afCore(unittest.TestCase):
         """
         Create different w4afCore instances, in different threads.
 
-        https://github.com/andresriancho/w4af-module/issues/5
+        https://github.com/w4af/w4af-module/issues/5
         """
         t = DummyProcess(target=start_w4af_core,
                          args=(self._exception_handler,))
@@ -70,7 +70,7 @@ class Testw4afCore(unittest.TestCase):
         """
         Create different w4afCore instances, in different threads.
 
-        https://github.com/andresriancho/w4af-module/issues/5
+        https://github.com/w4af/w4af-module/issues/5
         """
         def outer():
             t = DummyProcess(target=start_w4af_core,

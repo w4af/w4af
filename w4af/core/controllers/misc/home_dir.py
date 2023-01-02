@@ -75,7 +75,7 @@ def create_home_dir():
                               os.path.join(ROOT_PATH, '../profiles'),
                               os.path.join(sys.prefix, 'profiles'),
                               os.path.join(sys.exec_prefix, 'profiles'),
-                              # https://github.com/andresriancho/w4af-module/issues/4
+                              # https://github.com/w4af/w4af-module/issues/4
                               os.path.join(sys.prefix, 'local', 'profiles'),
                               os.path.join(sys.exec_prefix, 'local', 'profiles')]
 
