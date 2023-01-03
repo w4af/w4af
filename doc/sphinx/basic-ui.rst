@@ -1,15 +1,15 @@
-Running w3af
+Running w4af
 ============
 
-``w3af`` has two user interfaces, the console user interface and the graphical
+``w4af`` has two user interfaces, the console user interface and the graphical
 user interface. This user guide will focus on the console user interface where
 it's easier to explain the framework's features. To fire up the console UI
 execute:
 
 .. code-block:: none
 
-    $ ./w3af_console
-    w3af>>>
+    $ ./w4af_console
+    w4af>>>
 
 
 From this prompt you will be able to configure framework and plugin settings,
@@ -20,7 +20,7 @@ that commands are case sensitive):
 
 .. code-block:: none
 
-    w3af>>> help
+    w4af>>> help
     |----------------------------------------------------------------|
     | start         | Start the scan.                                |
     | plugins       | Enable and configure plugins.                  |
@@ -30,23 +30,23 @@ that commands are case sensitive):
     |----------------------------------------------------------------|
     | help          | Display help. Issuing: help [command] , prints |
     |               | more specific help about "command"             |
-    | version       | Show w3af version information.                 |
+    | version       | Show w4af version information.                 |
     | keys          | Display key shortcuts.                         |
     |----------------------------------------------------------------|
     | http-settings | Configure the HTTP settings of the framework.  |
-    | misc-settings | Configure w3af misc settings.                  |
+    | misc-settings | Configure w4af misc settings.                  |
     | target        | Configure the target URL.                      |
     |----------------------------------------------------------------|
     | back          | Go to the previous menu.                       |
-    | exit          | Exit w3af.                                     |
+    | exit          | Exit w4af.                                     |
     |----------------------------------------------------------------|
     | kb            | Browse the vulnerabilities stored in the       |
     |               | Knowledge Base                                 |
     |----------------------------------------------------------------|
-    w3af>>>
-    w3af>>> help target
+    w4af>>>
+    w4af>>> help target
     Configure the target URL.
-    w3af>>>
+    w4af>>>
 
 The main menu commands are explained in the help that is displayed above. The
 internals of every menu will be seen later in this document. As you already
@@ -62,8 +62,8 @@ you will see how the prompt changes and you are now in that context:
 
 .. code-block:: none
 
-    w3af>>> http-settings
-    w3af/config:http-settings>>>
+    w4af>>> http-settings
+    w4af/config:http-settings>>>
 
 All the configuration menus provide the following commands:
 
@@ -76,16 +76,16 @@ Here is a usage example of these commands in the ``http-settings`` menu:
 
 .. code-block:: none
 
-    w3af/config:http-settings>>> help
+    w4af/config:http-settings>>> help
     |-----------------------------------------------------------------|
     | view  | List the available options and their values.            |
     | set   | Set a parameter value.                                  |
     | save  | Save the configured settings.                           |
     |-----------------------------------------------------------------|
     | back  | Go to the previous menu.                                |
-    | exit  | Exit w3af.                                              |
+    | exit  | Exit w4af.                                              |
     |-----------------------------------------------------------------|
-    w3af/config:http-settings>>> view
+    w4af/config:http-settings>>> view
     |-----------------------------------------------------------------------------------------------|
     | Setting                | Value    | Description                                               |
     |-----------------------------------------------------------------------------------------------|
@@ -101,10 +101,10 @@ Here is a usage example of these commands in the ``http-settings`` menu:
     | basic_auth_passwd      |          | Set the basic authentication password for HTTP requests   |
     | basic_auth_domain      |          | Set the basic authentication domain for HTTP requests     |
     |-----------------------------------------------------------------------------------------------|
-    w3af/config:http-settings>>> set timeout 5
-    w3af/config:http-settings>>> save
-    w3af/config:http-settings>>> back
-    w3af>>>
+    w4af/config:http-settings>>> set timeout 5
+    w4af/config:http-settings>>> save
+    w4af/config:http-settings>>> back
+    w4af>>>
 
 To summarize, the ``view`` command is used to list all configurable parameters,
 with their values and a description. The ``set`` command is used to change a
@@ -114,31 +114,31 @@ menu. A detailed help for every configuration parameter can be obtained using
 
 .. code-block:: none
 
-    w3af/config:http-settings>>> help timeout
+    w4af/config:http-settings>>> help timeout
     Help for parameter timeout:
     ===========================
     Set low timeouts for LAN use and high timeouts for slow Internet connections.
 
-    w3af/config:http-settings>>>
+    w4af/config:http-settings>>>
 
 
 The ``http-settings`` and the ``misc-settings`` configuration menus are used to
 set system wide parameters that are used by the framework. All the parameters
-have defaults and in most cases you can leave them as they are. ``w3af`` was
+have defaults and in most cases you can leave them as they are. ``w4af`` was
 designed in a way that allows beginners to run it without having to learn a lot
 of its internals.
 
 It is also flexible enough to be tuned by experts that know what they want and
 need to change internal configuration parameters to fulfill their tasks.
 
-Running w3af with GTK user interface
+Running w4af with GTK user interface
 ------------------------------------
 
 The framework has also a graphical user interface that you can start by executing:
 
 .. code-block:: none
 
-    $ ./w3af_gui
+    $ ./w4af_gui
 
 The graphical user interface allows you to perform all the actions that the
 framework offers and features a much easier and faster way to start a scan and
@@ -156,13 +156,13 @@ The plugins are configured using the “plugins” configuration menu.
 
 .. code-block:: none
 
-    w3af>>> plugins
-    w3af/plugins>>> help
+    w4af>>> plugins
+    w4af/plugins>>> help
     |-----------------------------------------------------------------------------|
     | list             | List available plugins.                                  |
     |-----------------------------------------------------------------------------|
     | back             | Go to the previous menu.                                 |
-    | exit             | Exit w3af.                                               |
+    | exit             | Exit w4af.                                               |
     |-----------------------------------------------------------------------------|
     | output           | View, configure and enable output plugins                |
     | audit            | View, configure and enable audit plugins                 |
@@ -174,15 +174,15 @@ The plugins are configured using the “plugins” configuration menu.
     | auth             | View, configure and enable auth plugins                  |
     | mangle           | View, configure and enable mangle plugins                |
     |-----------------------------------------------------------------------------|
-    w3af/plugins>>> 
+    w4af/plugins>>> 
 
 All plugins except the ``attack`` plugins can be configured within this menu.
 Lets list all the plugins of the ``audit`` type:
 
 .. code-block:: none
 
-    w3af>>> plugins
-    w3af/plugins>>> list audit
+    w4af>>> plugins
+    w4af/plugins>>> list audit
     |-----------------------------------------------------------------------------|
     | Plugin name        | Status | Conf | Description                            |
     |-----------------------------------------------------------------------------|
@@ -196,8 +196,8 @@ understood by the framework, we issue this set of commands:
 
 .. code-block:: none
 
-    w3af/plugins>>> audit xss, sqli
-    w3af/plugins>>> audit
+    w4af/plugins>>> audit xss, sqli
+    w4af/plugins>>> audit
     |----------------------------------------------------------------------------|
     | Plugin name        | Status  | Conf | Description                          |
     |----------------------------------------------------------------------------|
@@ -215,7 +215,7 @@ understood by the framework, we issue this set of commands:
     | xst                |         |      | Find Cross Site Tracing              |
     |                    |         |      | vulnerabilities.                     |
     |----------------------------------------------------------------------------|
-    w3af/plugins>>>
+    w4af/plugins>>>
 
 
 Or if the user is interested in knowing exactly what a plugin does, he can also
@@ -223,7 +223,7 @@ run the ``desc`` command like this:
 
 .. code-block:: none
 
-    w3af/plugins>>> audit desc xss
+    w4af/plugins>>> audit desc xss
 
     This plugin finds Cross Site Scripting (XSS) vulnerabilities.
 
@@ -237,24 +237,24 @@ run the ``desc`` command like this:
     sent to the web application and at the end, request all URLs again
     searching for those specially crafted strings.
 
-    w3af/plugins>>> 
+    w4af/plugins>>> 
 
 Now we know what this plugin does, but let's check its internals:
 
 .. code-block:: none
 
-    w3af/plugins>>> audit config xss
-    w3af/plugins/audit/config:xss>>> view
+    w4af/plugins>>> audit config xss
+    w4af/plugins/audit/config:xss>>> view
     |-----------------------------------------------------------------------------|
     | Setting        | Value | Description                                        |
     |-----------------------------------------------------------------------------|
     | persistent_xss | True  | Identify persistent cross site scripting           |
     |                |       | vulnerabilities                                    |
     |-----------------------------------------------------------------------------|
-    w3af/plugins/audit/config:xss>>> set persistent_xss False
-    w3af/plugins/audit/config:xss>>> back
+    w4af/plugins/audit/config:xss>>> set persistent_xss False
+    w4af/plugins/audit/config:xss>>> back
     The configuration has been saved.
-    w3af/plugins>>> 
+    w4af/plugins>>> 
 
 The configuration menus for the plugins also have the ``set`` command for
 changing the parameters values, and the ``view`` command for listing existing
@@ -269,20 +269,20 @@ information to a profile:
 
 .. code-block:: none
 
-    w3af>>> profiles
-    w3af/profiles>>> save_as tutorial
+    w4af>>> profiles
+    w4af/profiles>>> save_as tutorial
     Profile saved.
 
-Profiles are saved as files in ``~/.w3af/profiles/``. The saved configuration
+Profiles are saved as files in ``~/.w4af/profiles/``. The saved configuration
 can be loaded in order to run a new scan:
 
 .. code-block:: none
 
-    w3af>>> profiles
-    w3af/profiles>>> use fast_scan
+    w4af>>> profiles
+    w4af/profiles>>> use fast_scan
     The plugins configured by the scan profile have been enabled, and their options configured.
     Please set the target URL(s) and start the scan.
-    w3af/profiles>>>
+    w4af/profiles>>>
 
 Sharing a profile with another user might be problematic, since they include
 full paths to the files referenced by plugin configurations which would require
@@ -292,8 +292,8 @@ was added:
 
 .. code-block:: none
 
-    w3af>>> profiles
-    w3af/profiles>>> save_as tutorial self-contained
+    w4af>>> profiles
+    w4af/profiles>>> save_as tutorial self-contained
     Profile saved.
 
 A ``self-contained`` profile bundles all the referenced files inside the profile
@@ -307,20 +307,20 @@ finally start the scan. The target selection is done this way:
 
 .. code-block:: none
 
-    w3af>>> target
-    w3af/config:target>>> set target http://localhost/
-    w3af/config:target>>> back
-    w3af>>>
+    w4af>>> target
+    w4af/config:target>>> set target http://localhost/
+    w4af/config:target>>> back
+    w4af>>>
 
 Finally, run ``start`` in order to run all the configured plugins.
 
 .. code-block:: none
 
-    w3af>>> start
+    w4af>>> start
 
 At any time during the scan, you can hit ``<enter>`` in order to get a live
-status of the w3af core. Status lines look like this:
+status of the w4af core. Status lines look like this:
 
 .. code-block:: none
 
-    Status: Running discovery.web_spider on http://localhost/w3af/ | Method: GET.
+    Status: Running discovery.web_spider on http://localhost/w4af/ | Method: GET.

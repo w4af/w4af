@@ -1,0 +1,29 @@
+# webspider
+
+plugins
+output console,text_file
+output config text_file
+set output_file output-w4af.txt
+set verbose True
+back
+output config console
+set verbose False
+back
+
+infrastructure allowed_methods
+crawl web_spider
+crawl config web_spider
+set only_forward True
+back
+
+back
+
+target
+set target http://moth/w4af/crawl/web_spider/
+back
+
+start
+
+
+
+exit

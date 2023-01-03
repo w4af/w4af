@@ -7,15 +7,15 @@ import os
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 DOCKER_RUN = ('docker run'
               ' -d'
-              ' -v ~/.w3af:/root/.w3af'
-              ' -v ~/w3af-shared:/root/w3af-shared'
+              ' -v ~/.w4af:/root/.w4af'
+              ' -v ~/w4af-shared:/root/w4af-shared'
               ' -p 44444:44444'
-              ' andresriancho/w3af')
+              ' w4af/w4af')
 
 
 def start_container(tag, command=DOCKER_RUN):
     """
-    Start a new w3af container so we can connect using SSH and run w3af
+    Start a new w4af container so we can connect using SSH and run w4af
 
     :return: The container id we just started
     """
@@ -28,7 +28,7 @@ def start_container(tag, command=DOCKER_RUN):
     try:
         container_id = subprocess.check_output(docker_run, shell=True)
     except subprocess.CalledProcessError as cpe:
-        print(('w3af container failed to start: "%s"' % cpe))
+        print(('w4af container failed to start: "%s"' % cpe))
         sys.exit(1)
     else:
         # Let the container start the ssh daemon
@@ -38,12 +38,12 @@ def start_container(tag, command=DOCKER_RUN):
 
 def stop_container(container_id):
     """
-    Stop a running w3af container
+    Stop a running w4af container
     """
     try:
         subprocess.check_output('docker stop %s' % container_id, shell=True)
     except subprocess.CalledProcessError as cpe:
-        print(('w3af container failed to stop: "%s"' % cpe))
+        print(('w4af container failed to stop: "%s"' % cpe))
         sys.exit(1)
 
 
@@ -51,14 +51,14 @@ def create_volumes():
     """
     Create the directories if they don't exist
     """
-    w3af_home = os.path.expanduser('~/.w3af')
-    w3af_shared = os.path.expanduser('~/w3af-shared')
+    w4af_home = os.path.expanduser('~/.w4af')
+    w4af_shared = os.path.expanduser('~/w4af-shared')
 
-    if not os.path.exists(w3af_home):
-        os.mkdir(w3af_home)
+    if not os.path.exists(w4af_home):
+        os.mkdir(w4af_home)
 
-    if not os.path.exists(w3af_shared):
-        os.mkdir(w3af_shared)
+    if not os.path.exists(w4af_shared):
+        os.mkdir(w4af_shared)
 
 
 def connect_to_container(container_id, cmd, extra_ssh_flags=()):
@@ -78,7 +78,7 @@ def connect_to_container(container_id, cmd, extra_ssh_flags=()):
         print('Invalid JSON output from inspect command')
         sys.exit(1)
 
-    ssh_key = os.path.join(ROOT_PATH, 'w3af-docker.prv')
+    ssh_key = os.path.join(ROOT_PATH, 'w4af-docker.prv')
 
     # git can't store this
     # https://stackoverflow.com/questions/11230171
@@ -111,25 +111,25 @@ def check_root():
 
 def restore_file_ownership():
     """
-    There are some issues with "sudo w3af_api_docker" (and any other *_docker)
-    where we write to the ~/.w3af/ file but we're doing it as root, and then
-    the user wants to execute ./w3af_api and this message appears:
+    There are some issues with "sudo w4af_api_docker" (and any other *_docker)
+    where we write to the ~/.w4af/ file but we're doing it as root, and then
+    the user wants to execute ./w4af_api and this message appears:
 
-    Either the w3af home directory "/home/user/.w3af" or its contents are not
+    Either the w4af home directory "/home/user/.w4af" or its contents are not
     writable or readable. Please set the correct permissions and ownership.
-    This usually happens when running w3af as root using "sudo"
+    This usually happens when running w4af as root using "sudo"
 
-    So we restore the file ownership of all files inside ~/.w3af/ before exit
+    So we restore the file ownership of all files inside ~/.w4af/ before exit
 
     :return: True if we were able to apply the changes
     """
-    path = os.path.join(os.path.expanduser('~/'), '.w3af')
+    path = os.path.join(os.path.expanduser('~/'), '.w4af')
     if not os.path.exists(path):
         return False
 
     try:
         # These two are set by sudo, which is the most common way our users
-        # will run w3af inside docker: sudo w3af_console_docker
+        # will run w4af inside docker: sudo w4af_console_docker
         uid = int(os.getenv('SUDO_UID'))
         gid = int(os.getenv('SUDO_GID'))
     except ValueError:

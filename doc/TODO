@@ -1,13 +1,12 @@
-The w3af project has a very well defined roadmap, which aims to deliver value
+The w4af project has a very well defined roadmap, which aims to deliver value
 to our users and the community in every step we take. The roadmap can be found
 in our Github issue tracker:
 
-    https://github.com/andresriancho/w3af/milestones
+    https://github.com/w4af/w4af/milestones
 
 There are lots of very interesting problems to solve, they range from enhancing
 algorithms for detecting vulnerabilities and low level performance improvements
 to user interface usability enhancements.
 
-If you feel like contributing, please let us know by sending an email to our
-w3af-develop mailing list. Thanks!
+If you feel like contributing, please let us know by opening an issue or a discussion on github. Thanks!
 

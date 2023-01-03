@@ -1,7 +1,7 @@
 The ``/exceptions/`` resource
 =============================
 
-In most cases ``w3af`` will complete the scan process without raising any
+In most cases ``w4af`` will complete the scan process without raising any
 exceptions, but when it does all the information related to the raised
 exceptions is stored and accessible using the ``/scans/<scan-id>/exceptions/``
 endpoint.
@@ -9,7 +9,7 @@ endpoint.
 Reporting vulnerabilities
 -------------------------
 
-If you're writing a client that will consume ``w3af``'s REST API please consider
+If you're writing a client that will consume ``w4af``'s REST API please consider
 implementing an automated bug report feature that will read the exceptions at
 the end of the scan and create an issue in our github repository.
 

@@ -1,0 +1,38 @@
+# This is the os_commanding demo for linux! ( with w4afAgent )
+
+misc-settings
+set interface lo
+set localAddress 127.0.0.1
+back
+
+plugins
+output console,text_file
+output
+output config text_file
+set output_file output-w4af.txt
+set verbose True
+back
+output config console
+set verbose False
+back
+back
+
+plugins
+audit os_commanding
+audit
+back
+
+target
+set target http://moth/w4af/os_commanding/vulnerable.php?command=list
+back
+start
+exploit
+exploit os_commanding
+
+interact 0
+
+start w4afAgent
+
+exit
+
+

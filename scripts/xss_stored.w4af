@@ -1,0 +1,25 @@
+# permanent xss detection
+
+plugins
+output console,text_file
+output config text_file
+set output_file output-w4af.txt
+set verbose True
+back
+output config console
+set verbose False
+back
+
+audit xss
+back
+
+target
+set target http://moth/w4af/audit/xss/stored/reader.php?a=f00, http://moth/w4af/audit/xss/stored/writer.php?a=g99&b=00
+back
+
+start
+
+
+
+exit
+

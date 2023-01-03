@@ -1,0 +1,24 @@
+# check allowed_methods
+
+plugins
+output console,text_file
+output config text_file
+set output_file output-w4af.txt
+set verbose True
+back
+output config console
+set verbose False
+back
+infrastructure allowed_methods
+back
+
+target
+set target http://moth/w4af/
+back
+
+start
+
+
+
+
+exit

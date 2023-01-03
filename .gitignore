@@ -43,7 +43,7 @@ nose.cfg
 .idea
 .vscode
 
-# w3af stuff
+# w4af stuff
 parser.out
 parsetab.py
 output-http.txt
@@ -68,33 +68,33 @@ top-1m.csv.zip
 /Dockerfile
 
 # To make testing easier
-test.w3af
-output-w3af.txt
+test.w4af
+output-w4af.txt
 
 # Ignore some profiling data
 *.dump
 
 # Ignore intermediate XML file
-w3af/plugins/crawl/phishtank/index.xml
+w4af/plugins/crawl/phishtank/index.xml
 
 # For debian package build
 .pc/
 debian/files
-debian/w3af-console.debhelper.log
-debian/w3af-console.postinst.debhelper
-debian/w3af-console.prerm.debhelper
-debian/w3af-console.substvars
-debian/w3af-console/
-debian/w3af.debhelper.log
-debian/w3af.postinst.debhelper
-debian/w3af.postrm.debhelper
-debian/w3af.prerm.debhelper
-debian/w3af.substvars
-debian/w3af/
+debian/w4af-console.debhelper.log
+debian/w4af-console.postinst.debhelper
+debian/w4af-console.prerm.debhelper
+debian/w4af-console.substvars
+debian/w4af-console/
+debian/w4af.debhelper.log
+debian/w4af.postinst.debhelper
+debian/w4af.postrm.debhelper
+debian/w4af.prerm.debhelper
+debian/w4af.substvars
+debian/w4af/
 docker/kali-debootstrap
 *.deb
 
-w3af/core/data/parsers/tests/data/huge.html
+w4af/core/data/parsers/tests/data/huge.html
 
 # Helpers to create deserialization payloads
 ysoserial-0.0.6-SNAPSHOT-all.jar

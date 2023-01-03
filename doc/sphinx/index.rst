@@ -1,7 +1,7 @@
 Welcome to w4af's documentation
 ===============================
 
-This document is the user's guide for the Web Advanced Application Attack and Audit Framework (w3af), its goal is to provide a basic overview of what the framework is, how it works and what you can do with it.
+This document is the user's guide for the Web Advanced Application Attack and Audit Framework (w4af), its goal is to provide a basic overview of what the framework is, how it works and what you can do with it.
 
 w4af is a complete environment for auditing and exploiting Web applications. This environment provides a solid platform for web vulnerability assessments and penetration tests.
 
@@ -12,14 +12,14 @@ w4af is a complete environment for auditing and exploiting Web applications. Thi
 
 .. |w4af| 
    :scale: 50 %                          
-   :target: https://w4af.org/            
+   :target: https://w4af.net/            
    :alt: w4af homepage                   
 
                                             
 +-----------------------------------------------------------------------------------------+---------------------+
 | `Github repository <https://github.com/w4af/w4af>`_                           		  |  |Github|           |
 +-----------------------------------------------------------------------------------------+---------------------+
-| `w4af homepage <https://w4af.org/>`_                                                    |  |w4af|             |
+| `w4af homepage <https://w4af.net/>`_                                                    |  |w4af|             |
 +-----------------------------------------------------------------------------------------+---------------------+
 
 Contents

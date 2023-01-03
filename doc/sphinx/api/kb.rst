@@ -1,7 +1,7 @@
 The ``/kb/`` resource
 =====================
 
-Once a ``w3af`` scan has started the knowledge base is populated with the
+Once a ``w4af`` scan has started the knowledge base is populated with the
 vulnerabilities which are identified by the plugins. This information can be
 accessed using the REST API using these resources:
 

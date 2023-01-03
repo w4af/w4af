@@ -1,7 +1,7 @@
 The ``/scans/`` resource
 ========================
 
-Scanning a Web application using w3af's REST API requires the developer to
+Scanning a Web application using w4af's REST API requires the developer to
 understand this basic workflow:
 
  * Start a new scan using ``POST`` to ``/scans/``
@@ -32,15 +32,15 @@ Starting a scan
 Performing a ``POST`` to the ``/scans/`` resource is one of the most complex
 requests in our REST API. The call requires two specially crafted variables:
 
- * ``scan_profile`` which must contain the contents of a ``w3af`` scan profile (not the file name)
- * ``target_urls`` a list containing URLs to seed ``w3af``'s crawler
+ * ``scan_profile`` which must contain the contents of a ``w4af`` scan profile (not the file name)
+ * ``target_urls`` a list containing URLs to seed ``w4af``'s crawler
 
 .. code-block:: python
 
     import requests
     import json
 
-    data = {'scan_profile': file('/path/to/profile.pw3af').read(),
+    data = {'scan_profile': file('/path/to/profile.pw4af').read(),
             'target_urls': ['http://127.0.0.1:8000/audit/sql_injection/']}
 
     response = requests.post('http://127.0.0.1:5000/scans/',
@@ -74,7 +74,7 @@ And the expected answer is a ``201`` status code:
     HTTP/1.0 201 CREATED
     Content-Type: application/json; charset=UTF-8
     Content-Length: 61
-    Server: REST API - w3af
+    Server: REST API - w4af
     X-Content-Type-Options: nosniff
     X-Frame-Options: DENY
     X-XSS-Protection: 1; mode=block

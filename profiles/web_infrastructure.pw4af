@@ -1,0 +1,101 @@
+[profile]
+description = Use all the available techniques in w4af to fingerprint the remote Web infrastructure.
+name = web_infrastructure
+
+[infrastructure.shared_hosting]
+result_limit = 300
+
+[misc-settings]
+form_fuzzing_mode = tmb
+fuzzed_files_extension = gif
+fuzzable_headers = 
+fuzz_form_files = True
+fuzz_url_filenames = False
+max_discovery_time = 120
+blacklist_http_request = 
+blacklist_audit =
+fuzz_url_parts = False
+stop_on_first_exception = False
+interface = ppp0
+local_ip_address = 10.5.6.18
+msf_location = /opt/metasploit3/bin/
+
+[infrastructure.fingerprint_os]
+
+[infrastructure.afd]
+
+[http-settings]
+proxy_port = 8080
+url_parameter = 
+never_404 = 
+headers_file = 
+proxy_address = 
+basic_auth_domain = 
+always_404 = 
+max_http_retries = 2
+ntlm_auth_user = 
+ntlm_auth_passwd = 
+ignore_session_cookies = False
+timeout = 0
+user_agent = w4af.net
+basic_auth_user = 
+basic_auth_passwd = 
+string_match_404 = 
+cookie_jar_file = 
+ntlm_auth_domain = 
+ntlm_auth_url = 
+
+[output.console]
+verbose = False
+use_colors = True
+
+[infrastructure.fingerprint_WAF]
+
+[infrastructure.detect_transparent_proxy]
+
+[infrastructure.find_vhosts]
+
+[infrastructure.detect_reverse_proxy]
+
+[infrastructure.zone_h]
+
+[infrastructure.finger_google]
+
+[infrastructure.favicon_identification]
+
+[infrastructure.server_header]
+
+[infrastructure.shared_hosting]
+
+[infrastructure.fingerprint_os]
+
+[infrastructure.find_vhosts]
+
+[infrastructure.detect_reverse_proxy]
+
+[infrastructure.afd]
+
+[infrastructure.dns_wildcard]
+
+[infrastructure.server_status]
+
+[infrastructure.http_vs_https_dist]
+
+[infrastructure.detect_transparent_proxy]
+
+[infrastructure.find_jboss]
+
+[infrastructure.finger_bing]
+
+[infrastructure.domain_dot]
+
+[infrastructure.finger_pks]
+
+[infrastructure.fingerprint_WAF]
+
+[infrastructure.allowed_methods]
+run_once = True
+dav_only = True
+
+[infrastructure.xssed_dot_com]
+

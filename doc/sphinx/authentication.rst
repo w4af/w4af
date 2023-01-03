@@ -1,13 +1,13 @@
 Authentication
 ==============
-These types of authentication schemes are supported by w3af:
+These types of authentication schemes are supported by w4af:
 
  * HTTP Basic authentication
  * NTLM authentication
  * Form authentication
  * Setting an HTTP cookie
 
-If the user provides credentials ``w3af`` will make sure that the scan is run
+If the user provides credentials ``w4af`` will make sure that the scan is run
 using an active user session.
 
 HTTP Basic and NTLM authentication are two types of HTTP level authentication
@@ -23,8 +23,8 @@ configuration set in this section will affect all plugins and other core librari
 
 .. code-block:: none
 
-    w3af>>> http-settings
-    w3af/config:http-settings>>> view
+    w4af>>> http-settings
+    w4af/config:http-settings>>> view
     |--------------------------------------------------------------------------------------|
     | Setting                | Description                                                 |
     |--------------------------------------------------------------------------------------|
@@ -42,7 +42,7 @@ configuration set in this section will affect all plugins and other core librari
     | basic_auth_passwd      | Set the basic authentication password for HTTP requests     |
     | basic_auth_domain      | Set the basic authentication domain for HTTP requests       |
     |--------------------------------------------------------------------------------------|
-    w3af/config:http-settings>>>
+    w4af/config:http-settings>>>
 
 Please note the two different configuration sections for basic HTTP authentication
 and NTLM authentication. Enter your preferred settings and then ``save``. The scanner
@@ -52,13 +52,13 @@ specific plugins and start the scan.
 .. note::
 
     NTML and basic authentication usually require usernames with the ``\`` character,
-    which needs to be entered as `\\\\` in the w3af-console. For example to use
+    which needs to be entered as `\\\\` in the w4af-console. For example to use
     `domain\\user` as the user use ``set basic_auth_user domain\\user``.
 
 
 Form authentication
 -------------------
-Form authentication has changed significantly in the latest w3af versions.
+Form authentication has changed significantly in the latest w4af versions.
 Starting with version 1.6 the form authentication is configured using ``auth``
 plugins. There are two authentication plugins available in the framework:
 
@@ -85,7 +85,7 @@ which has the following options:
 Once all these settings have been configured, it is recommended to start a test
 scan only with ``crawl.web_spider`` and ``auth.generic`` in order to verify that
 all the post-authentication forms and links are identified. Also, keep an eye on
-w3af’s log since the authentication plugins will create log entries if there is
+w4af’s log since the authentication plugins will create log entries if there is
 any issue with the authentication process. Log entries like:
 
     ``Login success for admin/password``
@@ -114,7 +114,7 @@ Setting HTTP Cookie
 -------------------
 For the cases in which the form authentication doesn’t work, which might be
 related with login forms containing anti-CSRF tokens or two factor authentication,
-``w3af`` provides users with a method to set one or more HTTP cookies to use during
+``w4af`` provides users with a method to set one or more HTTP cookies to use during
 the scan.
 
 You can capture those cookies in any way you like: directly from the browser,
@@ -147,7 +147,7 @@ menu to point to it.
 Setting HTTP headers
 --------------------
 Some Web applications use custom HTTP headers for authentication, this is also
-supported by the w3af framework.
+supported by the w4af framework.
 
 This method will set an HTTP request header which will be added to each HTTP
 request that is sent by the framework, note that no verification of the session’s
@@ -160,10 +160,10 @@ In order to use this method you’ll first have to:
    ``Cookie: <insert-cookie-here>``, without the quotes and inserting the desired
    session cookie.
 
- * Then, in w3af’s ``http-settings`` configuration menu set the ``headers_file``
+ * Then, in w4af’s ``http-settings`` configuration menu set the ``headers_file``
    configuration parameter to point to the recently created file.
 
  * ``save``
 
-The w3af scanner is now configured to use the HTTP session cookie for all HTTP
+The w4af scanner is now configured to use the HTTP session cookie for all HTTP
 requests.

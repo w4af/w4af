@@ -1,0 +1,28 @@
+# This is a fuzz file name demo:
+
+misc-settings
+set fuzzFileName true
+back
+
+plugins
+output console,text_file
+output config text_file
+set output_file output-w4af.txt
+set verbose True
+back
+output config console
+set verbose False
+back
+
+audit xss
+back
+
+target
+set target http://moth/w4af/core/fuzzFileName/f00.php?var=1
+back
+
+start
+
+
+
+exit

@@ -1,11 +1,11 @@
 REST API Introduction
 =====================
 
-This documentation section is a user guide for w3af's REST API service, its goal
-is to provide developers the knowledge to consume w3af as a service using any
+This documentation section is a user guide for w4af's REST API service, its goal
+is to provide developers the knowledge to consume w4af as a service using any
 development language.
 
-We recommend you read through the `w3af users guide <http://docs.w3af.org/>`_
+We recommend you read through the `w4af users guide <http://docs.w4af.net/>`_
 before diving into this REST API-specific section.
 
 Starting the REST API service
@@ -15,7 +15,7 @@ The REST API can be started by running:
 
 .. code-block:: none
 
-    $ ./w3af_api
+    $ ./w4af_api
      * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 
 Or it can also be run inside a docker container:
@@ -23,7 +23,7 @@ Or it can also be run inside a docker container:
 .. code-block:: none
 
     $ cd extras/docker/scripts/
-    $ ./w3af_api_docker
+    $ ./w4af_api_docker
      * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 
 Authentication
@@ -42,7 +42,7 @@ running:
     $ echo -n "secret" | sha512sum
     bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d682ce56b4d64a9ef097761ced99e0f67265b5f76085e5b0ee7ca4696b2ad6fe2b2  -
 
-    $ ./w3af_api -p "bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d682ce56b4d64a9ef097761ced99e0f67265b5f76085e5b0ee7ca4696b2ad6fe2b2"
+    $ ./w4af_api -p "bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d682ce56b4d64a9ef097761ced99e0f67265b5f76085e5b0ee7ca4696b2ad6fe2b2"
      * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 
 In the above example, users are only able to connect using HTTP basic
@@ -54,7 +54,7 @@ For example, using the ``curl`` command:
 
     $ curl -u admin:secret http://127.0.0.1:5000
     {
-      "docs": "http://docs.w3af.org/en/latest/api/index.html" 
+      "docs": "http://docs.w4af.net/en/latest/api/index.html" 
     }
 
 Please note that even with basic authentication, traffic passing to and from the 
@@ -92,29 +92,29 @@ runs.
 Serve using TLS/SSL
 -------------------
 
-``w3af``'s REST API is served using Flask, which can be used to deliver content
-over TLS/SSL. By default ``w3af`` will generate a self signed certificate and
+``w4af``'s REST API is served using Flask, which can be used to deliver content
+over TLS/SSL. By default ``w4af`` will generate a self signed certificate and
 bind to port 5000 using the ``https`` protocol.
 
 To disable ``https`` users can set the ``--no-ssl`` command line argument.
 
 Advanced users who want to use their own SSL certificates can:
 
- * Start ``w3af`` in HTTP mode and use a proxy such as ``nginx`` to handle
+ * Start ``w4af`` in HTTP mode and use a proxy such as ``nginx`` to handle
    the SSL traffic and forward unencrypted traffic to the REST API.
 
- * Copy the user generated SSL certificate and key to ``/.w3af/ssl/w3af.crt``
-   and ``/.w3af/ssl/w3af.key`` and start ``./w3af_api`` without ``--no-ssl``.
+ * Copy the user generated SSL certificate and key to ``/.w4af/ssl/w4af.crt``
+   and ``/.w4af/ssl/w4af.key`` and start ``./w4af_api`` without ``--no-ssl``.
 
 .. note::
 
-    Using ``nginx`` to serve ``w3af``'s API will give the user more configuration
-    options and security than running SSL in ``w3af_api``.
+    Using ``nginx`` to serve ``w4af``'s API will give the user more configuration
+    options and security than running SSL in ``w4af_api``.
 
 REST API Source code
 --------------------
 
-The `REST API <https://github.com/andresriancho/w3af/tree/master/w3af/core/ui/api/>`_
+The `REST API <https://github.com/w4af/w4af/tree/master/w4af/core/ui/api/>`_
 is implemented in Flask and is pretty well documented for your reading pleasure.
 
 REST API clients
@@ -123,7 +123,7 @@ REST API clients
 Wrote a REST API client? Let us know and get it linked here!
 
  * `Official Python REST API client <https://github.com/andresriancho/w3af-api-client>`_
-   which is also available at `pypi <https://pypi.python.org/pypi/w3af-api-client>`_
+   which is also available at `pypi <https://pypi.python.org/pypi/w4af-api-client>`_
 
 
 API endpoints

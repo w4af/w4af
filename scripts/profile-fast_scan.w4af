@@ -1,0 +1,21 @@
+# Simple fast_scan usage
+
+profiles
+list
+
+use fast_scan
+
+back
+
+plugins
+audit
+crawl
+output
+back
+
+target
+set target http://moth/w4af/
+back
+
+start
+exit

@@ -1,7 +1,7 @@
 The ``/version`` resource
 =========================
 
-Query the w3af version using the REST API:
+Query the w4af version using the REST API:
 
 .. code-block:: none
 

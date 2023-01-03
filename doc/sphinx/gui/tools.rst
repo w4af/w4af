@@ -1,7 +1,7 @@
 Tools
 =====
 
-Apart from the w3af core functionality, that is to scan for vulnerabilities and
+Apart from the w4af core functionality, that is to scan for vulnerabilities and
 exploit them, there are other tools that help you in the day by day work.
 
 Manual Requests
@@ -192,7 +192,7 @@ Using the Proxy
 ---------------
 
 This tool is a proxy that listen to a port in the machine you're running the
-w3af program. You can configure any program that issues HTTP request (like your
+w4af program. You can configure any program that issues HTTP request (like your
 internet browser, for example) to use this proxy.
 
 When this other program issues the request, the proxy captures it and shows it
@@ -222,7 +222,7 @@ and a Configuration button (see chapter 7.4 for help about this configuration).
 
 .. note::
 
-    See :doc:`/ca-config` for details about how to configure ``w3af``'s
+    See :doc:`/ca-config` for details about how to configure ``w4af``'s
     certificate authority (CA) in your browser.
 
 

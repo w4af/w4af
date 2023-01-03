@@ -1,11 +1,11 @@
 Scan REST APIs
 ==============
 
-``w3af`` can be used to identify and exploit vulnerabilities in REST APIs.
+``w4af`` can be used to identify and exploit vulnerabilities in REST APIs.
 
 The scanner supports extracting endpoints and parameters from REST APIs
 documented using the `Open API specification <https://swagger.io/docs/specification/about/>`_ ,
-this means that ``w3af`` will be able to scan these APIs in a completely
+this means that ``w4af`` will be able to scan these APIs in a completely
 automated way.
 
 When the REST API is not documented using the Open API specification, the user
@@ -20,12 +20,12 @@ Open API specification document (usually ``openapi.json`` in the API root direct
 and parse it.
 
 After parsing the endpoints, headers and parameters the plugin sends this
-information to ``w3af``'s core, where the audit plugin can be used to
+information to ``w4af``'s core, where the audit plugin can be used to
 identify vulnerabilities.
 
 Using this plugin to scan REST APIs is easy, but here are some tips:
 
- * If you know the Open API specification document URL, include it in ``w3af``'s
+ * If you know the Open API specification document URL, include it in ``w4af``'s
    target URLs, this will make sure that the API is found and scanned.
 
  * If you have credentials, provide them in ``query_string_auth`` or ``header_auth``,
@@ -36,15 +36,15 @@ using the Open API specification is also a good idea, since the plugin will
 find the document and create an informational finding to make sure it is
 manually reviewed.
 
-Feeding HTTP requests into w3af
+Feeding HTTP requests into w4af
 -------------------------------
 
 When the REST API is not documented using the Open API specification, the only
-way for ``w3af`` to find all endpoints and parameters is for the user to manually
+way for ``w4af`` to find all endpoints and parameters is for the user to manually
 feed this information into the framework.
 
 This process can be used for any REST API, just follow these steps to feed the
-HTTP requests into ``w3af``:
+HTTP requests into ``w4af``:
 
  * Start ``spider_man`` using the steps outlined in ``Advanced use cases``
  * Configure the REST API client to send HTTP requests through ``127.0.0.1:44444``
@@ -53,7 +53,7 @@ HTTP requests into ``w3af``:
 
 .. note::
 
-    Since these REST APIs can not be crawled ``w3af`` will only audit the HTTP
-    requests captured by the proxy. The steps where the user teaches ``w3af``
+    Since these REST APIs can not be crawled ``w4af`` will only audit the HTTP
+    requests captured by the proxy. The steps where the user teaches ``w4af``
     about all the API endpoints and parameters is key to the success
     of the security audit.

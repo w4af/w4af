@@ -1,5 +1,5 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: w3af
+Upstream-Name: w4af
 Upstream-Contact: Arthur Taylor <arthur.taylor@gmail.com>
 Source: https://github.com/w4af/w4af
 
@@ -11,7 +11,7 @@ Files: doc/*
 Copyright: 2020 Andres Riancho <self@andresriancho.com>
 License: GPL-2.0-only
 
-Files: w3af/*
+Files: w4af/*
 Copyright: Andres Riancho <self@andresriancho.com>
 License: GPL-2.0-only
 

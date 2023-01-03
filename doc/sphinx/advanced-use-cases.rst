@@ -5,7 +5,7 @@ Complex Web applications
 ------------------------
 
 Some Web applications use browser-side technologies such as JavaScript, Flash
-and Java applets, technologies that the browsers understand; and ``w3af``
+and Java applets, technologies that the browsers understand; and ``w4af``
 is still unable to.
 
 A plugin called ``spider_man`` was created to solve this issue, allowing users
@@ -22,30 +22,30 @@ will extract information from the requests and send them to the enabled
 
 .. note::
 
-    See :doc:`ca-config` for details about how to configure ``w3af``'s
+    See :doc:`ca-config` for details about how to configure ``w4af``'s
     certificate authority (CA) in your browser.
 
 
-A simple example will clarify things, let's suppose that ``w3af`` is auditing a
+A simple example will clarify things, let's suppose that ``w4af`` is auditing a
 site and can't find any links on the main page. After a closer inspection of
 the results by the user, it is clear that the main page has a Java applet menu
-where all the other sections are linked from. The user runs ``w3af`` once again
+where all the other sections are linked from. The user runs ``w4af`` once again
 and now activates the ``crawl.spider_man`` plugin, navigates the site manually
 using the browser and the spiderman proxy. When the user has finished his
-browsing, w3af will continue with all the hard auditing work.
+browsing, w4af will continue with all the hard auditing work.
 
 This is a sample ``spider_man`` plugin run:
 
 .. code-block:: none
 
-    w3af>>> plugins 
-    w3af/plugins>>> crawl spider_man
-    w3af/plugins>>> audit sqli
-    w3af/plugins>>> back
-    w3af>>> target
-    w3af/target>>> set target http://localhost/
-    w3af/target>>> back
-    w3af>>> start
+    w4af>>> plugins 
+    w4af/plugins>>> crawl spider_man
+    w4af/plugins>>> audit sqli
+    w4af/plugins>>> back
+    w4af>>> target
+    w4af/target>>> set target http://localhost/
+    w4af/target>>> back
+    w4af>>> start
     spider_man proxy is running on 127.0.0.1:44444 .
     Please configure your browser to use these proxy settings and navigate the target site.
     To exit spider_man plugin please navigate to http://127.7.7.7/spider_man?terminate .
@@ -60,7 +60,7 @@ run over the identified HTTP requests.
 Ignoring specific forms
 -----------------------
 
-``w3af`` allows users to configure which forms to ignore using a feature called
+``w4af`` allows users to configure which forms to ignore using a feature called
 form ID exclusions. This feature was created when users identified limitations in
 the previous (more simplistic) exclusion model which only allowed forms to be
 ignored using URL matching.
@@ -115,23 +115,23 @@ This feature is configured using two variables in the ``misc-settings`` menu:
 
  * ``form_id_list``: A string containing the format explained above to match forms.
  * ``form_id_action``: The default action is to exclude the forms which are found
-   by ``w3af`` and match at least one of the form IDs specified in ``form_id_list``,
+   by ``w4af`` and match at least one of the form IDs specified in ``form_id_list``,
    but the user can also specify ``include`` to only scan the forms which match at least
    one of the form IDs in the list.
 
-To ease the configuration of this setting ``w3af`` will add a ``debug`` line to the
+To ease the configuration of this setting ``w4af`` will add a ``debug`` line to the
 output (make sure to set verbose to true to see these lines in the output file plugin)
 containing the form ID of each identified form.
 
 .. note::
 
     This feature works well together with ``blacklist_http_request``.
-    ``w3af`` will only send requests to the target if they match both filters.
+    ``w4af`` will only send requests to the target if they match both filters.
 
 Ignoring URLs during fuzzing
 ----------------------------
 
-``w3af`` allows users to configure a set of URLs that will be used for crawling
+``w4af`` allows users to configure a set of URLs that will be used for crawling
 (finding new URLs) but will be ignored during the ``audit`` phase. In order to
 use this feature users need to set the URLs to be excluded in
 ``misc-settings.blacklist_audit``.
@@ -156,7 +156,7 @@ the product page.
 The main goal of an application security scan is to achieve full test coverage
 (all the application code is tested) with the least amount of HTTP requests.
 
-``w3af`` needs to be able to efficiently crawl sites like this, reducing the
+``w4af`` needs to be able to efficiently crawl sites like this, reducing the
 number of HTTP requests to reach full test coverage. Some assumptions can be
 made:
 
