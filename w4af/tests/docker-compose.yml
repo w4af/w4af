@@ -25,7 +25,7 @@ phpmoth:
 # The old w3af-moth, now as a docker image
 #
 w4af_moth:
-  image: w4af/w3af-moth:latest
+  image: w4af/w4af-moth:latest
   ports:
     - "9008:80"
 
