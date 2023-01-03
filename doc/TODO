@@ -7,6 +7,7 @@ in our Github issue tracker:
 There are lots of very interesting problems to solve, they range from enhancing
 algorithms for detecting vulnerabilities and low level performance improvements
 to user interface usability enhancements.
+We will be transfering the milestones from the old w3af project to the w4af project on the coming months.
 
 If you feel like contributing, please let us know by opening an issue or a discussion on github. Thanks!
 
