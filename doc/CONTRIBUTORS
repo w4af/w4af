@@ -1,10 +1,10 @@
-This is the list of people that contributed with w4af, a small summary of what they have done follows their name.
+This is the list of people that contributed with w4af (or its predecessor w3af), a small summary of what they have done follows their name.
 
 Project leader:
     Andres Riancho
     
 Main contributors:
-    Javier Andalia <javier_andalia!rapid7.com> - Full time employee working on w4af!
+    Javier Andalia <javier_andalia!rapid7.com> - Full time employee working on w3af!
     Alexander Berezhnoy - spiderMan refactoring, new console user interface, plugins
     Taras Ivashchenko <oxdef!oxdef.info> - A lot of BIG contributions.
 
@@ -45,3 +45,4 @@ General:
     Kevin Denver - xmlFile plugin, urlParser extension, bug fixing, testing and more!
     Martin Tartarelli - Hacked around the cmd.aspx file in order to evade AV detection, documentation, and more.
 
+Please also see the contributors showed by github, see https://github.com/w4af/w4af/graphs/contributors
