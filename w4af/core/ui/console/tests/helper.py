@@ -53,7 +53,7 @@ class ConsoleTestHelper(unittest.TestCase):
     OUTPUT_HTTP_FILE = 'output-w4af-unittest-http.txt'
 
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         self.mock_sys()
 
     def tearDown(self):
