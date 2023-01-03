@@ -106,6 +106,7 @@ class TestImportResults(PluginTest):
         #
         urls = [fr.get_uri().url_string for fr in fuzzable_requests]
 
+        # TODO: replace w3af by w4af
         expected_urls = {
             'http://127.0.0.1:8000/',
             'http://127.0.0.1:8000/static/moth/css/sticky-footer-navbar.css',
@@ -116,8 +117,8 @@ class TestImportResults(PluginTest):
             'http://127.0.0.1:8000/static/moth/css/style.css',
             'http://127.0.0.1:8000/about/',
             'http://127.0.0.1:8000/static/moth/css/bootstrap.min.css',
-            'http://127.0.0.1:8000/w4af/file_upload/',
-            'http://127.0.0.1:8000/static/moth/images/w4af.png',
+            'http://127.0.0.1:8000/w3af/file_upload/',
+            'http://127.0.0.1:8000/static/moth/images/w3af.png',
         }
 
         self.assertEqual(set(urls), expected_urls)

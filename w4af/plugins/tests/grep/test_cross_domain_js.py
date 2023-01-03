@@ -56,8 +56,9 @@ class TestCrossDomainJS(PluginTest):
         info_sets = self.kb.get('cross_domain_js', 'cross_domain_js')
         self.assertEqual(2, len(info_sets), info_sets)
 
+        # TODO: replace w3af by w4af
         self.assertEqual(set([i.get_attribute('domain') for i in info_sets]),
-                         {'moth', 'www.w4af.net'})
+                         {'moth', 'www.w3af.org'})
 
         self.assertEqual(set([i.get_name() for i in info_sets]),
                          {'Cross-domain javascript source'})
