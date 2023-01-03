@@ -27,7 +27,9 @@ import pytest
 from itertools import repeat, starmap
 from random import choice
 
-from w4af.core.data.db.dbms import SQLiteDBMS, get_default_temp_db_instance
+from w4af.core.data.db.dbms import (SQLiteDBMS,
+                                    get_default_temp_db_instance,
+                                    DBMSException)
 from w4af.core.controllers.exceptions import DBException, NoSuchTableException
 from w4af.core.controllers.misc.temp_dir import (get_temp_dir,
                                                  create_temp_dir,
@@ -165,7 +167,7 @@ class TestDBMS(unittest.TestCase):
         db = SQLiteDBMS(get_temp_filename())
         db.close()
 
-        self.assertRaises(AssertionError, db.close)
+        self.assertRaises(DBMSException, db.close)
 
 
 class TestDefaultDB(unittest.TestCase):

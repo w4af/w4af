@@ -31,4 +31,5 @@ class test_kernel_version(ApachePayloadTestHelper):
     def test_kernel_version(self):
         result = exec_payload(self.shell, 'kernel_version', use_api=True)
 
-        self.assertTrue(result['kernel_version'].startswith('5.'))
+        self.assertTrue(result['kernel_version'].startswith('5.') or \
+            result['kernel_version'].startswith('6.'))

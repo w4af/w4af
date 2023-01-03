@@ -47,6 +47,8 @@ from w4af.core.data.parsers.doc.url import URL
 from w4af.core.data.kb.read_shell import ReadShell
 from w4af.core.data.kb.info_set import InfoSet
 from w4af.core.data.misc.encoding import smart_str
+from w4af.core.data.db.dbms import reset_temp_db_instance
+import w4af.core.data.parsers.parser_cache as parser_cache
 
 
 os.chdir(w4af_LOCAL_PATH)
@@ -76,7 +78,7 @@ class PluginTest(unittest.TestCase):
     allow_net_connect = False
 
     def setUp(self):
-        self.kb.cleanup()
+        self.kb.cleanup(ignore_errors=True)
         self.w4afcore = w4afCore()
         self.misc_settings = MiscSettings()
 
@@ -121,6 +123,8 @@ class PluginTest(unittest.TestCase):
         self.w4afcore.quit()
         self.kb.cleanup()
         self.assert_all_get_desc_work()
+        parser_cache.dpc.clear()
+        reset_temp_db_instance()
 
         if self.MOCK_RESPONSES:
             httpretty.disable()

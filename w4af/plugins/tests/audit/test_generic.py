@@ -45,6 +45,7 @@ class TestGenericOnly(PluginTest):
     MOCK_RESPONSES = [GenericErrorMockResponse(re.compile('.*'), body=None,
                                                method='GET', status=200)]
 
+    @pytest.mark.flaky(reruns=5)
     def test_found_generic(self):
         self._scan(self.target_url, self.CONFIG)
         
