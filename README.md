@@ -6,11 +6,19 @@
 [w4af](https://w4af.readthedocs.io/en/latest/) is an [open source](https://www.gnu.org/licenses/gpl-2.0.txt)
 web application security scanner which helps developers and penetration testers
 identify and exploit vulnerabilities in their web applications.
+It is originally based on w3af.
 
 The scanner is able to identify [200+ vulnerabilities](w4af/core/data/constants/vulns.py),
 including [Cross-Site Scripting](w4af/plugins/audit/xss.py),
 [SQL injection](w4af/plugins/audit/sqli.py) and
 [OS commanding](w4af/plugins/audit/os_commanding.py).
+
+## Documentation
+
+We recommend you to read the user's guide before starting to use w4af, there
+are many FAQs, tips and tricks and other important pieces of information in
+the manual.
+[w4af](https://w4af.readthedocs.io/en/latest/)
 
 ## Python3 Port Progress
 
@@ -45,7 +53,7 @@ pytest -m "w4af_moth and not fails"
 
 ### Python
 
-The project expects to use Python 3.10 or later. The project's Python dependencies can be install with pipenv:
+The project expects to use Python 3.10. The project's Python dependencies can be install with pipenv:
 
 ```
 python -m pip install --upgrade pipenv wheel
