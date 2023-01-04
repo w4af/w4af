@@ -20,6 +20,7 @@ along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
+import httpretty
 import urllib.request, urllib.error, urllib.parse
 import unittest
 
@@ -93,14 +94,17 @@ class TestCacheHandler(unittest.TestCase):
 
 
 class CacheIntegrationTest(unittest.TestCase):
+
+    @httpretty.activate(allow_net_connect=False)
     def test_cache_http_errors(self):
         settings = opener_settings.OpenerSettings()
         settings.build_openers()
         opener = settings.get_custom_opener()
 
-        # w4af.net currently is only a redirect to readthedocs. Therefore 301 is returned, adapt url to make test work again;
-        # TODO: replace again once we have a proper homepage
-        url = URL('http://w3af.org/foo-bar-not-exists.htm')
+        httpretty.register_uri(httpretty.GET,
+            'http://w4af.net/foo-bar-not-exists.htm',
+            body="not found", status=404)
+        url = URL('http://w4af.net/foo-bar-not-exists.htm')
         request = HTTPRequest(url, cache=False)
 
         with patch('w4af.core.data.url.handlers.cache.CacheClass') as cc_mock:

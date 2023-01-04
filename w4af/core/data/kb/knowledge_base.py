@@ -44,6 +44,7 @@ from w4af.core.data.kb.info import Info
 from w4af.core.data.kb.shell import Shell
 from w4af.core.data.kb.info_set import InfoSet
 from w4af.core.data.constants.severity import INFORMATION, LOW, MEDIUM, HIGH
+from w4af.core.data.db.dbms import DBMSException
 
 
 class BasicKnowledgeBase(object):
@@ -814,22 +815,27 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         return result_dict
 
     @requires_setup
-    def cleanup(self):
+    def cleanup(self, ignore_errors = False):
         """
         Cleanup internal data.
         """
-        self.db.execute("DELETE FROM %s WHERE 1=1" % self.table_name)
+        try:
+            self.db.execute("DELETE FROM %s WHERE 1=1" % self.table_name)
+        except DBMSException as e:
+            if not ignore_errors:
+                raise e
 
         # Remove the old, create new.
         old_urls = self.urls
         self.urls = DiskSet(table_prefix='kb_urls')
-        old_urls.cleanup()
+        old_urls.cleanup(ignore_errors=ignore_errors)
 
         old_fuzzable_requests = self.fuzzable_requests
         self.fuzzable_requests = DiskSet(table_prefix='kb_fuzzable_requests')
-        old_fuzzable_requests.cleanup()
+        old_fuzzable_requests.cleanup(ignore_errors=ignore_errors)
 
         self.observers.clear()
+        self.initialized = False
 
     @requires_setup
     def remove(self):

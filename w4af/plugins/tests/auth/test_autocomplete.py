@@ -226,7 +226,7 @@ class TestAutocompleteInvalidCredentials(PluginTest):
 class TestAutocompleteAuthenticationFailure(unittest.TestCase):
     def test_consecutive_authentication_failure(self):
         plugin = autocomplete()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
         for i in range(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT - 1):
             plugin._log_debug(str(i))
@@ -256,7 +256,7 @@ class TestAutocompleteAuthenticationFailure(unittest.TestCase):
 
     def test_mixed_authentication_results(self):
         plugin = autocomplete()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
         for i in range(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT):
             plugin._log_debug(str(i))
@@ -273,7 +273,7 @@ class TestAutocompleteAuthenticationFailure(unittest.TestCase):
 
     def test_mixed_authentication_results_fail_fail_success(self):
         plugin = autocomplete()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
         for i in range(autocomplete.MAX_CONSECUTIVE_FAILED_LOGIN_COUNT):
             plugin._log_debug(str(i))

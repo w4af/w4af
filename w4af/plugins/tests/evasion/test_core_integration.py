@@ -28,16 +28,19 @@ from w4af.core.controllers.ci.moth import get_moth_http
 from w4af.core.controllers.w4afCore import w4afCore
 from w4af.core.data.parsers.doc.url import URL
 from w4af.plugins.tests.helper import create_target_option_list
+import w4af.core.data.kb.knowledge_base as kb
 
 
 @pytest.mark.moth
 class TestCoreIntegration(unittest.TestCase):
     
     def setUp(self):
+        kb.kb.cleanup(ignore_errors=True)
         self.w4afcore = w4afCore()
 
     def tearDown(self):
         self.w4afcore.quit()
+        kb.kb.cleanup(ignore_errors=True)
             
     def test_send_mangled(self):
         

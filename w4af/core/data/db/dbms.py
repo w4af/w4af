@@ -60,6 +60,9 @@ DB_MALFORMED_ERROR = ('SQLite raised a database disk image is malformed'
                       '[0] https://www.sqlite.org/howtocorrupt.html\n'
                       '[1] https://github.com/andresriancho/w3af/issues/4905')
 
+class DBMSException(Exception):
+    def __init__(self, message):
+        self.message = message
 
 def verify_started(meth):
     
@@ -67,7 +70,8 @@ def verify_started(meth):
     def inner_verify_started(self, *args, **kwds):
         msg = 'No calls to SQLiteDBMS can be made after stop().'
 
-        assert not self.sql_executor.get_received_poison_pill(), msg
+        if self.sql_executor.get_received_poison_pill():
+            raise DBMSException(msg)
 
         return meth(self, *args, **kwds)
     

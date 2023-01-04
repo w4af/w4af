@@ -67,6 +67,7 @@ from w4af.core.controllers.exceptions import (BaseFrameworkException,
 
 from w4af.core.data.url.extended_urllib import ExtendedUrllib
 from w4af.core.data.kb.knowledge_base import kb
+from w4af.core.data.db.dbms import DBMSException
 
 
 NO_MEMORY_MSG = ('The operating system was unable to allocate memory for'
@@ -388,10 +389,14 @@ class w4afCore(object):
         self.exception_handler.clear()
         
         # Clean all data that is stored in the kb
-        kb.cleanup()
+        try:
+            kb.cleanup()
+        except DBMSException as e:
+            msg = "Exception trying to clean up KB instance during shutdown"
+            om.out.error(msg + ": " + e.message)
 
         # Stop the parser subprocess
-        parser_cache.dpc.clear()
+        parser_cache.dpc.clear(ignore_errors=True)
 
         # Remove the xurllib cache, bloom filters, DiskLists, etc.
         #
@@ -482,7 +487,7 @@ class w4afCore(object):
         remove_temp_dir(ignore_errors=True)
 
         # Stop the parser subprocess
-        parser_cache.dpc.clear()
+        parser_cache.dpc.clear(ignore_errors=True)
 
     def pause(self, pause_yes_no):
         """
@@ -540,7 +545,7 @@ class w4afCore(object):
         This method is called when the process ends normally or by an error.
         """
         stop_profiling(self)
-        parser_cache.dpc.clear()
+        parser_cache.dpc.clear(ignore_errors=True)
 
         try:
             #

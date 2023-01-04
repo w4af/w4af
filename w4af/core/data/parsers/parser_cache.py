@@ -29,6 +29,7 @@ from concurrent.futures import TimeoutError
 # pylint: disable=E0401
 from darts.lib.utils.lru import SynchronizedLRUDict
 # pylint: enable=E0401
+from functools import wraps
 
 import w4af.core.controllers.output_manager as om
 
@@ -45,6 +46,17 @@ from w4af.core.data.parsers.utils.response_uniq_id import (get_response_unique_i
                                                            get_body_unique_id)
 from w4af.core.data.misc.encoding import smart_unicode
 
+def needs_parser_blacklist(meth):
+
+    @wraps(meth)
+    def inner_needs_parser_blacklist(self, *args, **kwds):
+        if self._parser_blacklist is None:
+            om.out.debug("Lazy init of parser blacklist")
+            self._parser_blacklist = DiskSet()
+
+        return meth(self, *args, **kwds)
+
+    return inner_needs_parser_blacklist
 
 class ParserCache(CacheStats):
     """
@@ -58,13 +70,15 @@ class ParserCache(CacheStats):
 
     def __init__(self):
         super(ParserCache, self).__init__()
-        
+        self._reset()
+
+    def _reset(self):
         self._cache = SynchronizedLRUDict(self.CACHE_SIZE)
         self._can_parse_cache = SynchronizedLRUDict(self.CACHE_SIZE * 10)
         self._parser_finished_events = {}
-        self._parser_blacklist = DiskSet()
+        self._parser_blacklist = None
 
-    def clear(self):
+    def clear(self, ignore_errors = False):
         """
         Clear all the internal variables
         :return: None
@@ -82,6 +96,9 @@ class ParserCache(CacheStats):
         # We don't need the parsers anymore
         self._cache.clear()
         self._can_parse_cache.clear()
+        if self._parser_blacklist is not None:
+            self._parser_blacklist.cleanup(ignore_errors=ignore_errors)
+            self._parser_blacklist = None
 
     def should_cache(self, http_response):
         """
@@ -118,6 +135,7 @@ class ParserCache(CacheStats):
         self._can_parse_cache[can_parse] = can_parse
         return can_parse
 
+    @needs_parser_blacklist
     def add_to_blacklist(self, hash_string):
         """
         Add a hash_string representing an HTTP response to the blacklist,
@@ -127,6 +145,8 @@ class ParserCache(CacheStats):
         """
         self._parser_blacklist.add(hash_string)
 
+
+    @needs_parser_blacklist
     def get_document_parser_for(self, http_response, cache=True):
         """
         Get a document parser for http_response using the cache if possible
@@ -154,9 +174,11 @@ class ParserCache(CacheStats):
 
         hash_string = get_response_unique_id(http_response)
 
+        # pylint: disable=E1135
         if hash_string in self._parser_blacklist:
             msg = 'Exceeded timeout while parsing "%s" in the past. Not trying again.'
             raise BaseFrameworkException(msg % http_response.get_url())
+        # pylint: enable=E1135
 
         #
         # We know that we can parse this document, lets work!
@@ -232,6 +254,7 @@ class ParserCache(CacheStats):
         msg += detail
         om.out.debug(msg % http_response.get_uri())
 
+    @needs_parser_blacklist
     def get_tags_by_filter(self, http_response, tags, yield_text=False, cache=True):
         """
         Get specific tags from http_response using the cache if possible
@@ -286,9 +309,11 @@ class ParserCache(CacheStats):
         args = '%r%r' % (tags, yield_text)
         hash_string = get_body_unique_id(http_response, prepend=args)
 
+        # pylint: disable=E1135
         if hash_string in self._parser_blacklist:
             self._log_return_empty(http_response, 'HTTP response is blacklisted')
             return []
+        # pylint: enable=E1135
 
         #
         # We know that we can parse this document, lets work!
@@ -364,7 +389,7 @@ class ParserCache(CacheStats):
 @atexit.register
 def cleanup_pool():
     if 'dpc' in globals():
-        dpc.clear()
+        dpc.clear(ignore_errors=True)
     
 
 if is_main_process():

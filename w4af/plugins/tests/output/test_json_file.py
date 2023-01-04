@@ -96,4 +96,4 @@ class TestJsonOutput(PluginTest):
         except:
             pass
         finally:
-            self.kb.cleanup()
+            self.kb.cleanup(ignore_errors=True)

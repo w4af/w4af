@@ -46,7 +46,10 @@ class test_http_vs_https_dist(unittest.TestCase):
                                5: ('207.46.47.14', True)}}
 
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
+
+    def tearDown(self):
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_discover_override_port(self):
         plugininst = hvshsdist.http_vs_https_dist()

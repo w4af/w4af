@@ -24,7 +24,8 @@ import unittest
 import pytest
 
 from w4af.core.controllers.misc_settings import MiscSettings
-from w4af.core.controllers.misc.temp_dir import create_temp_dir
+from w4af.core.controllers.misc.temp_dir import (create_temp_dir,
+                                                 remove_temp_dir)
 from w4af.core.data.dc.json_container import JSONContainer
 from w4af.core.data.fuzzer.utils import rand_alnum
 from w4af.core.data.request.fuzzable_request import FuzzableRequest
@@ -58,6 +59,7 @@ class TestVariantDB(unittest.TestCase):
     def tearDown(self):
         self.vdb.cleanup()
         reset_temp_db_instance()
+        remove_temp_dir()
 
     def test_db_int(self):
         url_fmt = 'http://w4af.net/foo.htm?id=%s'

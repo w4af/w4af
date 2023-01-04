@@ -112,7 +112,7 @@ class TestXMLOutput(PluginTest):
         except:
             pass
         finally:
-            self.kb.cleanup()
+            self.kb.cleanup(ignore_errors=True)
 
     def test_error_null_byte(self):
         w4af_core = w4afCore()
@@ -131,7 +131,7 @@ class TestNoDuplicate(unittest.TestCase):
     FILENAME = 'output-unittest.xml'
     
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         create_temp_dir()
         CachedXMLNode.create_cache_path()
         FindingsCache.create_cache_path()
@@ -142,7 +142,7 @@ class TestNoDuplicate(unittest.TestCase):
     def tearDown(self):
         remove_temp_dir()
         HistoryItem().clear()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_no_duplicate_vuln_reports(self):
         # The xml_file plugin had a bug where vulnerabilities were written to
@@ -330,7 +330,7 @@ class TestXMLOutputBinary(PluginTest):
         except:
             pass
         finally:
-            self.kb.cleanup()
+            self.kb.cleanup(ignore_errors=True)
 
 
 class TestXML0x0B(PluginTest):
@@ -382,7 +382,7 @@ class TestXML0x0B(PluginTest):
         except:
             pass
         finally:
-            self.kb.cleanup()
+            self.kb.cleanup(ignore_errors=True)
 
 
 class TestSpecialCharacterInURL(PluginTest):
@@ -431,7 +431,7 @@ class TestSpecialCharacterInURL(PluginTest):
         except:
             pass
         finally:
-            self.kb.cleanup()
+            self.kb.cleanup(ignore_errors=True)
 
 
 class XMLNodeGeneratorTest(unittest.TestCase):
@@ -442,7 +442,7 @@ class XMLNodeGeneratorTest(unittest.TestCase):
 
 class TestHTTPTransaction(XMLNodeGeneratorTest):
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         create_temp_dir()
         CachedXMLNode.create_cache_path()
         FindingsCache.create_cache_path()
@@ -451,7 +451,7 @@ class TestHTTPTransaction(XMLNodeGeneratorTest):
     def tearDown(self):
         remove_temp_dir()
         HistoryItem().clear()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_render_simple(self):
         url = URL('http://w4af.com/a/b/c.php')
@@ -548,7 +548,7 @@ class TestHTTPTransaction(XMLNodeGeneratorTest):
 
 class TestScanInfo(XMLNodeGeneratorTest):
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         create_temp_dir()
         CachedXMLNode.create_cache_path()
         FindingsCache.create_cache_path()
@@ -557,7 +557,7 @@ class TestScanInfo(XMLNodeGeneratorTest):
     def tearDown(self):
         remove_temp_dir()
         HistoryItem().clear()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_render_simple(self):
         w4af_core = w4afCore()
@@ -619,13 +619,13 @@ def clear_variable_tags(xml_string):
 
 class TestScanStatus(XMLNodeGeneratorTest):
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         create_temp_dir()
 
     def tearDown(self):
         remove_temp_dir()
         HistoryItem().clear()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_render_simple(self):
         w4af_core = w4afCore()
@@ -719,7 +719,7 @@ class TestScanStatus(XMLNodeGeneratorTest):
 
 class TestFinding(XMLNodeGeneratorTest):
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         create_temp_dir()
         CachedXMLNode.create_cache_path()
         FindingsCache.create_cache_path()
@@ -728,7 +728,7 @@ class TestFinding(XMLNodeGeneratorTest):
     def tearDown(self):
         remove_temp_dir()
         HistoryItem().clear()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_render_simple(self):
         _id = 2
@@ -962,7 +962,7 @@ class TestFinding(XMLNodeGeneratorTest):
 
 class TestFindingsCache(XMLNodeGeneratorTest):
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         create_temp_dir()
         CachedXMLNode.create_cache_path()
         FindingsCache.create_cache_path()
@@ -971,7 +971,7 @@ class TestFindingsCache(XMLNodeGeneratorTest):
     def tearDown(self):
         remove_temp_dir()
         HistoryItem().clear()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_cache_works_as_expected(self):
         #

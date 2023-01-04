@@ -32,11 +32,12 @@ from w4af.plugins.grep.analyze_cookies import analyze_cookies
 class TestAnalyzeCookies(unittest.TestCase):
 
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         self.plugin = analyze_cookies()
 
     def tearDown(self):
         self.plugin.end()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_analyze_cookies_negative(self):
         body = ''

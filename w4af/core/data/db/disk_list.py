@@ -27,7 +27,8 @@ import pickle
 
 from w4af.core.data.misc.cpickle_dumps import cpickle_dumps
 from w4af.core.data.db.disk_item import DiskItem
-from w4af.core.data.db.dbms import get_default_temp_db_instance
+from w4af.core.data.db.dbms import (get_default_temp_db_instance,
+                                    DBMSException)
 from w4af.core.data.fuzzer.utils import rand_alpha
 
 # Disk list states
@@ -87,10 +88,20 @@ class DiskList(object):
 
         self._state = OPEN
 
-    def cleanup(self):
-        assert self._state == OPEN
+    def cleanup(self, ignore_errors = False):
+        if self._state != OPEN:
+            if not ignore_errors:
+                raise DBMSException("Disk List already closed")
+            return
 
-        self.db.drop_table(self.table_name)
+        try:
+            self.db.drop_table(self.table_name)
+        except DBMSException as e:
+            if not ignore_errors:
+                raise e
+        except RuntimeError as e:
+            if not ignore_errors:
+                raise e
         self._state = CLOSED
 
     def _dump(self, obj):

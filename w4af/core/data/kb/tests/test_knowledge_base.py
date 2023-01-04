@@ -57,6 +57,9 @@ class TestKnowledgeBase(unittest.TestCase):
     def setUp(self):
         kb.cleanup()
 
+    def tearDown(self):
+        kb.cleanup()
+
     def test_basic(self):
         kb.raw_write('a', 'b', 'c')
         data = kb.raw_read('a', 'b')

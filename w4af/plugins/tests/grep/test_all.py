@@ -33,6 +33,7 @@ from w4af.core.data.url.HTTPResponse import HTTPResponse
 from w4af.core.data.dc.headers import Headers
 from w4af.core.data.request.fuzzable_request import FuzzableRequest
 from w4af.core.data.parsers.doc.url import URL
+import w4af.core.data.kb.knowledge_base as kb
 
 
 class test_all(unittest.TestCase):
@@ -43,6 +44,7 @@ class test_all(unittest.TestCase):
         self.url_str = 'http://moth/'
         self.url_inst = URL(self.url_str)
 
+        kb.kb.cleanup(ignore_errors=True)
         self._w4af = w4afCore()
         self._plugins = []
         for pname in self._w4af.plugins.get_plugin_list('grep'):

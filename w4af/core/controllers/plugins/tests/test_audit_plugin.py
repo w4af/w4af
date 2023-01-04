@@ -36,12 +36,12 @@ from w4af.core.controllers.w4afCore import w4afCore
 class TestAuditPlugin(unittest.TestCase):
 
     def setUp(self):
-        kb.cleanup()
+        kb.cleanup(ignore_errors=True)
         self.w4af = w4afCore()
 
     def tearDown(self):
         self.w4af.quit()
-        kb.cleanup()
+        kb.cleanup(ignore_errors=True)
     
     def test_audit_return_vulns(self):
         plugin_inst = self.w4af.plugins.get_plugin_inst('audit', 'sqli')
