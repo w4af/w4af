@@ -174,9 +174,11 @@ class ParserCache(CacheStats):
 
         hash_string = get_response_unique_id(http_response)
 
+        # pylint: disable=E1135
         if hash_string in self._parser_blacklist:
             msg = 'Exceeded timeout while parsing "%s" in the past. Not trying again.'
             raise BaseFrameworkException(msg % http_response.get_url())
+        # pylint: enable=E1135
 
         #
         # We know that we can parse this document, lets work!
@@ -307,9 +309,11 @@ class ParserCache(CacheStats):
         args = '%r%r' % (tags, yield_text)
         hash_string = get_body_unique_id(http_response, prepend=args)
 
+        # pylint: disable=E1135
         if hash_string in self._parser_blacklist:
             self._log_return_empty(http_response, 'HTTP response is blacklisted')
             return []
+        # pylint: enable=E1135
 
         #
         # We know that we can parse this document, lets work!

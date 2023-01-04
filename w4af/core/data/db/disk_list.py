@@ -99,6 +99,9 @@ class DiskList(object):
         except DBMSException as e:
             if not ignore_errors:
                 raise e
+        except RuntimeError as e:
+            if not ignore_errors:
+                raise e
         self._state = CLOSED
 
     def _dump(self, obj):
