@@ -545,7 +545,7 @@ class w4afCore(object):
         This method is called when the process ends normally or by an error.
         """
         stop_profiling(self)
-        parser_cache.dpc.clear()
+        parser_cache.dpc.clear(ignore_errors=True)
 
         try:
             #
