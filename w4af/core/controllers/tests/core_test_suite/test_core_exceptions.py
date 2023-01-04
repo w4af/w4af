@@ -31,6 +31,7 @@ from w4af.core.controllers.exceptions import (ScanMustStopException,
                                               ScanMustStopByUnknownReasonExc,
                                               ScanMustStopByUserRequest)
 from w4af.plugins.tests.helper import create_target_option_list
+from w4af.core.data.kb.knowledge_base import kb
 
 
 @pytest.mark.moth
@@ -49,6 +50,7 @@ class TestCoreExceptions(unittest.TestCase):
 
         In the tearDown method, I'll remove the file.
         """
+        kb.cleanup(ignore_errors=True)
         self.w4afcore = w4afCore()
         
         target_opts = create_target_option_list(URL(get_moth_http()))
@@ -68,6 +70,7 @@ class TestCoreExceptions(unittest.TestCase):
     
     def tearDown(self):
         self.w4afcore.quit()
+        kb.cleanup(ignore_errors=True)
                         
     def test_stop_on_must_stop_exception(self):
         """
