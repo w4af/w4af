@@ -7,8 +7,10 @@ Prerequisites
 Make sure you have the following software ready before starting the installation:
 
  * Git client: ``sudo apt-get install git``
- * Python 2.7, which is installed by default in most systems
- * Pip version 1.1: ``sudo apt-get install python-pip``
+ * Python 3.10, which is installed by default in most systems
+ * Pip version 22.x: ``sudo apt-get install python3-pip``
+ * node-js
+ * Optional: If you want python3 to launch when typing python: ``sudo apt-get install python-is-python``
 
 Installation
 ------------
@@ -17,46 +19,38 @@ Installation
 
     git clone https://github.com/w4af/w4af.git
     cd w4af/
+    python -m pip install --upgrade pipenv wheel
+    pipenv install
+    npm install
+    pipenv shell
     ./w4af_console
-    . /tmp/w4af_dependency_install.sh
-
 
 Let me explain what's going on there:
 
  * First we use ``git`` to download ``w4af``'s source code
- * Then we try to run the ``w4af_console`` command, which will most likely fail
-   because of missing dependencies. This command will generate a helper script
-   at ``/tmp/w4af_dependency_install.sh`` that when run will install all the
-   required dependencies.
- * Dependencies are installed by running ``/tmp/w4af_dependency_install.sh``
+ * Then we install pipenv and wheel
+ * Dependencies are installed by running ``pipenv install`` and ``npm install``
+ * virtual environment is started with ``pipenv shell``
 
 The framework dependencies don't change too often, but don't be alarmed if after
-updating your installation ``w4af`` requires you to install new dependencies.
+updating your installation ``w4af`` requires you to install new dependencies via the above commands
 
 Supported platforms
 -------------------
 
-The framework should work on all Python supported platforms and has been tested
-in various Linux distributions, Mac OSX, FreeBSD and OpenBSD.
+The framework should work on all Python supported platforms.
 
 .. note::
 
-   The platform used for development is Ubuntu 14.04 and running our continuous integration tests
-   is Ubuntu 12.04 LTS.
+   The platform used for development is Ubuntu 22.04 and running our continuous integration tests
+   is Ubuntu 22.04 LTS.
 
 .. warning::
 
    While in theory you can install w4af in Microsoft Windows, we don't recommend
    nor support that installation process.
 
-One of the ugly details users can find is that ``w4af`` needs to detect the
-Operating System / Linux distribution, and then have support for creating the
-``/tmp/w4af_dependency_install.sh`` for that specific combination. In other words,
-for Ubuntu we use ``apt-get install`` and for Suse we use ``yum install``.
 
-The list of distributions ``w4af`` knows how to generate the installation script
-for `is extensive <https://github.com/w4af/w4af/tree/master/w4af/core/controllers/dependency_check/platforms>`_ .
-If we don't support your distribution, we'll default to Ubuntu.
 
 Installation in Kali
 --------------------
@@ -119,7 +113,8 @@ at the `docker registry hub <https://registry.hub.docker.com/u/andresriancho/w3a
 
 Installation in Mac OSX
 -----------------------
-In order to start the process, you need XCode and MacPorts installed. 
+In order to start the process, you need XCode and MacPorts installed.
+TODO: Update to python 3.10
 
 .. code-block:: console
 
