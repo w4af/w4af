@@ -112,7 +112,7 @@ class TestXMLOutput(PluginTest):
         except:
             pass
         finally:
-            self.kb.cleanup()
+            self.kb.cleanup(ignore_errors=True)
 
     def test_error_null_byte(self):
         w4af_core = w4afCore()
