@@ -60,11 +60,10 @@ class ConsoleTestHelper(unittest.TestCase):
         #sys.exit.assert_called_once_with(0)
         self.restore_sys()
         self._mock_stdout.clear()
+        kb.kb.cleanup(ignore_errors=True)
 
-        #
         # I want to make sure that we don't have *any hidden* exceptions
         # in our tests.
-        #
         if self.console is not None:
             caught_exceptions = self.console._w4af.exception_handler.get_all_exceptions()
             msg = [e.get_summary() for e in caught_exceptions]

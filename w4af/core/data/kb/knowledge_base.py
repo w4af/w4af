@@ -835,6 +835,7 @@ class DBKnowledgeBase(BasicKnowledgeBase):
         old_fuzzable_requests.cleanup(ignore_errors=ignore_errors)
 
         self.observers.clear()
+        self.initialized = False
 
     @requires_setup
     def remove(self):

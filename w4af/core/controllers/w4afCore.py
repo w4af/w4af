@@ -396,7 +396,7 @@ class w4afCore(object):
             om.out.error(msg + ": " + e.message)
 
         # Stop the parser subprocess
-        parser_cache.dpc.clear()
+        parser_cache.dpc.clear(ignore_errors=True)
 
         # Remove the xurllib cache, bloom filters, DiskLists, etc.
         #
@@ -487,7 +487,7 @@ class w4afCore(object):
         remove_temp_dir(ignore_errors=True)
 
         # Stop the parser subprocess
-        parser_cache.dpc.clear()
+        parser_cache.dpc.clear(ignore_errors=True)
 
     def pause(self, pause_yes_no):
         """

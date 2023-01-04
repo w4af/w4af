@@ -123,7 +123,7 @@ class PluginTest(unittest.TestCase):
         self.w4afcore.quit()
         self.kb.cleanup()
         self.assert_all_get_desc_work()
-        parser_cache.dpc.clear()
+        parser_cache.dpc.clear(ignore_errors=True)
         reset_temp_db_instance()
 
         if self.MOCK_RESPONSES:

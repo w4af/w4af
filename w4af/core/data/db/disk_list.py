@@ -89,7 +89,10 @@ class DiskList(object):
         self._state = OPEN
 
     def cleanup(self, ignore_errors = False):
-        assert self._state == OPEN
+        if self._state != OPEN:
+            if not ignore_errors:
+                raise DBMSException("Disk List already closed")
+            return
 
         try:
             self.db.drop_table(self.table_name)
