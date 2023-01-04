@@ -44,7 +44,7 @@ SERIALIZED_PHP_OBJECTS = [
 class TestSerializedObject(unittest.TestCase):
 
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
         self.plugin = serialized_object()
 
@@ -54,6 +54,7 @@ class TestSerializedObject(unittest.TestCase):
 
     def tearDown(self):
         self.plugin.end()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_php_serialized_objects_query_string(self):
 

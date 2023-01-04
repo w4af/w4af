@@ -32,7 +32,7 @@ from w4af.plugins.grep.ssn import ssn
 class test_ssn(unittest.TestCase):
 
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         self.plugin = ssn()
         self.plugin._already_inspected = set()
         self.url = URL('http://www.w4af.com/')
@@ -40,6 +40,7 @@ class test_ssn(unittest.TestCase):
 
     def tearDown(self):
         self.plugin.end()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_ssn_empty_string(self):
         body = ''

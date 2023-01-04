@@ -32,11 +32,12 @@ from w4af.core.data.dc.headers import Headers
 class test_objects(unittest.TestCase):
 
     def setUp(self):
+        kb.kb.cleanup(ignore_errors=True)
         self.plugin = objects()
-        kb.kb.clear('objects', 'objects')
 
     def tearDown(self):
         self.plugin.end()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_object(self):
         body = """header

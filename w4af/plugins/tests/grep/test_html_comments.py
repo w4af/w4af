@@ -80,12 +80,13 @@ class TestHTMLCommentsIntegration(PluginTest):
 class TestHTMLCommentsUnit(unittest.TestCase):
 
     def setUp(self):
+        kb.kb.cleanup(ignore_errors=True)
         create_temp_dir()
-        kb.kb.cleanup()
         self.plugin = html_comments()
 
     def tearDown(self):
         self.plugin.end()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_html_comment(self):
         body = '<!-- secret password123 -->'

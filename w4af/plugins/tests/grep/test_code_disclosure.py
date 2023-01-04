@@ -38,10 +38,11 @@ class TestCodeDisclosurePlugin(unittest.TestCase):
 
     def setUp(self):
         self.plugin = code_disclosure()
-        kb.kb.clear('code_disclosure', 'code_disclosure')
+        kb.kb.cleanup(ignore_errors=True)
 
     def tearDown(self):
         self.plugin.end()
+        kb.kb.cleanup(ignore_errors=True)
 
     def _build_request_response(self, body, url=None, headers=None, method=None):
         url = url or URL('http://www.w4af.com/')

@@ -33,12 +33,13 @@ from w4af.plugins.grep.expect_ct import expect_ct
 class TestECTSecurity(unittest.TestCase):
 
     def setUp(self):
+        kb.kb.cleanup(ignore_errors=True)
         create_temp_dir()
         self.plugin = expect_ct()
 
     def tearDown(self):
         self.plugin.end()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_http_no_vuln(self):
         body = ''
