@@ -36,7 +36,7 @@ class BugReportWindow(SimpleBaseWindow, GithubBugReport):
     handled.py .
     """
 
-    MANUAL_BUG_REPORT = 'https://github.com/andresriancho/w3af/issues/new'
+    MANUAL_BUG_REPORT = 'https://github.com/w4af/w4af/issues/new'
 
     def __init__(self, w4af_core, title, tback, fname, plugins):
         # Before doing anything else, cleanup the report to remove any

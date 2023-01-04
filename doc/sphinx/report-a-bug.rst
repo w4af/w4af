@@ -10,7 +10,7 @@ Good bug reporting practices
 ----------------------------
 
 If you're using **the latest version of the framework** and find a bug, please
-`report it <https://github.com/andresriancho/w3af/issues/new>`_ including the
+`report it <https://github.com/w4af/w4af/issues/new>`_ including the
 following information:
 
  * Detailed steps to reproduce it
@@ -103,7 +103,7 @@ please make sure that:
    associated with the vulnerability. If you don't see that in the log, make
    sure the ``crawl.web_spider`` plugin is enabled.
 
-False negatives should be `reported just like bugs <https://github.com/andresriancho/w3af/issues/new>`_ , including all the same information.
+False negatives should be `reported just like bugs <https://github.com/w4af/w4af/issues/new>`_ , including all the same information.
 
 False positives
 ---------------
@@ -112,7 +112,7 @@ Nobody likes false positives, you go from the adrenaline of "The site is
 vulnerable to SQL injection!" to "Nope, false positive" in less than a minute.
 Not good for your heart.
 
-Please report the false positives `like bugs <https://github.com/andresriancho/w3af/issues/new>`_ ,
+Please report the false positives `like bugs <https://github.com/w4af/w4af/issues/new>`_ ,
 in our repository. Include as much information as possible, remember that we'll
 have to verify the false positive, write a unittest and then fix it.
 

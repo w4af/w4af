@@ -5,6 +5,7 @@
 * **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/w4af/w4af/issues).
 
 * If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/w4af/w4af/issues/new). Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
+Please also take a look at the [related docu page](https://w4af.readthedocs.io/en/latest/report-a-bug.html)
 
 #### **Did you write a patch that fixes a bug?**
 
