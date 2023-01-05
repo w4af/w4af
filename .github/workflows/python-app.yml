@@ -27,8 +27,6 @@ jobs:
         cache: 'pipenv'
     - name: Increase ulimit
       run: echo 'fs.file-max=1048576' | sudo tee -a /etc/sysctl.conf && sudo sysctl -p && ulimit -n 10000 && ulimit -a
-    - name: Install Platform Dependencies
-      run: sudo apt-get update && sudo apt-get install -y libicu-dev libssl-dev libffi-dev libsqlite3-dev libxml2-dev git
     - name: Install node packages
       run: npm install
     - name: Install pipenv
@@ -70,8 +68,6 @@ jobs:
       with:
         compose-file: "./w4af/tests/docker-compose.yml"
         services: ${{ matrix.group }}
-    - name: Install Platform Dependencies
-      run: sudo apt-get update && sudo apt-get install -y libicu-dev libssl-dev libffi-dev libsqlite3-dev libxml2-dev git
     - name: Install node packages
       run: npm install
     - name: Install pipenv
@@ -104,8 +100,6 @@ jobs:
       with:
         python-version: "3.10"
         cache: 'pipenv'
-    - name: Install Platform Dependencies
-      run: sudo apt-get update && sudo apt-get install -y libicu-dev libssl-dev libffi-dev libsqlite3-dev libxml2-dev git
     - name: Install node packages
       run: npm install
     - name: Install pipenv
@@ -138,8 +132,6 @@ jobs:
       with:
         python-version: "3.10"
         cache: 'pipenv'
-    - name: Install Platform Dependencies
-      run: sudo apt-get update && sudo apt-get install -y libicu-dev libssl-dev libffi-dev libsqlite3-dev libxml2-dev git
     - name: Install node packages
       run: npm install
     - name: Install pipenv
