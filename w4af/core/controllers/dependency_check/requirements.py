@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 from w4af.core.controllers.dependency_check.pip_dependency import PIPDependency
 
 CORE = 1
-GUI = 2
 
 CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
                      PIPDependency('github', 'PyGithub', '1.57'),
@@ -101,8 +100,3 @@ CORE_PIP_PACKAGES = [PIPDependency('pyclamd', 'pyClamd', '0.4.0'),
 
                      PIPDependency('nocasedict', 'nocasedict', '1.0.4')
                      ]
-
-GUI_PIP_EXTRAS = [PIPDependency('xdot', 'xdot', '1.2')]
-
-GUI_PIP_PACKAGES = CORE_PIP_PACKAGES[:]
-GUI_PIP_PACKAGES.extend(GUI_PIP_EXTRAS)

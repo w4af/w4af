@@ -19,7 +19,7 @@ along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from ..requirements import CORE_PIP_PACKAGES, GUI_PIP_PACKAGES, CORE, GUI
+from ..requirements import CORE_PIP_PACKAGES, CORE
 from ..external.retirejs import retirejs_is_installed
 
 
@@ -28,11 +28,9 @@ class Platform(object):
     Simple base class for defining platforms/operating systems for dependency
     checks.
     """
-    PIP_PACKAGES = {CORE: CORE_PIP_PACKAGES,
-                    GUI: GUI_PIP_PACKAGES}
+    PIP_PACKAGES = {CORE: CORE_PIP_PACKAGES}
 
-    SYSTEM_PACKAGES = {CORE: [],
-                       GUI: []}
+    SYSTEM_PACKAGES = {CORE: []}
 
     @staticmethod
     def is_current_platform():

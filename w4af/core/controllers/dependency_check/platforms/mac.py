@@ -25,7 +25,7 @@ import subprocess
 
 from w4af.core.controllers.dependency_check.pip_dependency import PIPDependency
 from w4af.core.controllers.dependency_check.platforms.base_platform import Platform
-from w4af.core.controllers.dependency_check.requirements import CORE_PIP_PACKAGES, GUI_PIP_EXTRAS, CORE, GUI
+from w4af.core.controllers.dependency_check.requirements import CORE_PIP_PACKAGES, CORE
 
 
 TWO_PYTHON_MSG = """\
@@ -60,22 +60,13 @@ class MacOSX(Platform):
                             'autoconf', 'automake', 'git-core', 'py27-pcapy',
                             'py27-libdnet', 'libffi']
 
-    GUI_SYSTEM_PACKAGES = CORE_SYSTEM_PACKAGES[:]
-    GUI_SYSTEM_PACKAGES.extend(['graphviz', 'py27-pygtksourceview',
-                                'py27-pygtk', 'py27-webkitgtk'])
-
-    SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES,
-                       GUI: GUI_SYSTEM_PACKAGES}
+    SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES}
 
     # pybloomfilter is broken in Mac OS X, so we don't require it
     # https://github.com/andresriancho/w3af/issues/485
     MAC_CORE_PIP_PACKAGES = CORE_PIP_PACKAGES[:]
 
-    MAC_GUI_PIP_PACKAGES = MAC_CORE_PIP_PACKAGES[:]
-    MAC_GUI_PIP_PACKAGES.extend(GUI_PIP_EXTRAS)
-
-    PIP_PACKAGES = {CORE: MAC_CORE_PIP_PACKAGES,
-                    GUI: MAC_GUI_PIP_PACKAGES}
+    PIP_PACKAGES = {CORE: MAC_CORE_PIP_PACKAGES}
 
     @staticmethod
     def is_current_platform():

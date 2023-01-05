@@ -23,7 +23,7 @@ import distro
 import subprocess
 
 from .base_platform import Platform
-from ..requirements import CORE, GUI
+from ..requirements import CORE
 
 
 class SuSE(Platform):
@@ -35,12 +35,7 @@ class SuSE(Platform):
                             'git', 'libxml2-devel', 'libxslt-devel',
                             'python-webkitgtk', 'libffi-devel']
 
-    GUI_SYSTEM_PACKAGES = CORE_SYSTEM_PACKAGES[:]
-    GUI_SYSTEM_PACKAGES.extend(['graphviz', 'python-gtksourceview',
-                                'python-gtk', 'python-webkitgtk'])
-
-    SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES,
-                       GUI: GUI_SYSTEM_PACKAGES}
+    SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES}
 
     @staticmethod
     def os_package_is_installed(package_name):

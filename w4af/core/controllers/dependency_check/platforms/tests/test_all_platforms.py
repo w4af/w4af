@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import unittest
 
 from ..current_platform import KNOWN_PLATFORMS
-from ..base_platform import CORE, GUI
+from ..base_platform import CORE
 
 
 class TestAllPlatforms(unittest.TestCase):
@@ -41,18 +41,13 @@ class TestAllPlatforms(unittest.TestCase):
 
     def test_core_and_gui_deps(self):
         for platform in KNOWN_PLATFORMS:
-            for dependency_set in {CORE, GUI}:
+            for dependency_set in {CORE}:
                 self.assertIn(dependency_set, platform.PIP_PACKAGES)
                 self.assertIn(dependency_set, platform.SYSTEM_PACKAGES)
 
-    def test_gui_includes_core(self):
-        for platform in KNOWN_PLATFORMS:
-            self.assertTrue(set(platform.PIP_PACKAGES[CORE]).issubset(platform.PIP_PACKAGES[GUI]))
-            self.assertTrue(set(platform.SYSTEM_PACKAGES[CORE]).issubset(platform.SYSTEM_PACKAGES[GUI]))
-
     def test_more_than_three_dependencies(self):
         for platform in KNOWN_PLATFORMS:
-            for dependency_set in {CORE, GUI}:
+            for dependency_set in {CORE}:
                 self.assertGreater(len(platform.PIP_PACKAGES[dependency_set]), 3)
 
     def test_os_package_is_installed(self):

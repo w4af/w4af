@@ -24,7 +24,7 @@ import unittest
 from unittest.mock import patch
 
 from ..dependency_check import dependency_check
-from ..platforms.base_platform import CORE, GUI
+from ..platforms.base_platform import CORE
 from ..platforms.default import DefaultPlatform
 from ..platforms.ubuntu1204 import Ubuntu1204
 from ..pip_dependency import PIPDependency
@@ -81,39 +81,6 @@ class TestDependencyCheck(unittest.TestCase):
             all_stdout = ''.join(k[1][0] for k in stdout_mock.method_calls)
             self.assertIn(self.MISSING_DEP_CMD, all_stdout)
 
-    def test_default_platform_gui(self):
-        """
-        Test that the dependency check works for gui + default platform when the
-        dependencies are met.
-        """
-        with patch(self.CURR_PLATFORM) as mock_curr_plat:
-            mock_curr_plat.return_value = DefaultPlatform()
-            must_exit = dependency_check(dependency_set=GUI,
-                                         exit_on_failure=False,
-                                         skip_external_commands=True)
-            self.assertFalse(must_exit)
-
-    def test_default_platform_gui_missing_deps(self):
-        """
-        Test that the dependency check works for gui + default platform when
-        there are missing PIP core dependencies.
-        """
-        with patch(self.CURR_PLATFORM) as mock_curr_plat,\
-        patch('sys.stdout') as stdout_mock:
-            default = DefaultPlatform()
-            default.PIP_PACKAGES = default.PIP_PACKAGES.copy()
-            default.PIP_PACKAGES[GUI] = default.PIP_PACKAGES[GUI][:]
-            default.PIP_PACKAGES[GUI].append(self.fake_rumba_dependency)
-
-            mock_curr_plat.return_value = default
-
-            must_exit = dependency_check(dependency_set=GUI,
-                                         exit_on_failure=False)
-            self.assertTrue(must_exit)
-
-            all_stdout = ''.join(k[1][0] for k in stdout_mock.method_calls)
-            self.assertIn(self.MISSING_DEP_CMD, all_stdout)
-
     def test_ubuntu1204_core(self):
         """
         Test that the dependency check works for core + ubuntu1204
@@ -124,15 +91,3 @@ class TestDependencyCheck(unittest.TestCase):
                                          exit_on_failure=False,
                                          skip_external_commands=True)
             self.assertFalse(must_exit)
-
-    def test_ubuntu1204_gui(self):
-        """
-        Test that the dependency check works for core + ubuntu1204
-        """
-        with patch(self.CURR_PLATFORM) as mock_curr_plat:
-            mock_curr_plat.return_value = Ubuntu1204()
-            must_exit = dependency_check(dependency_set=GUI,
-                                         exit_on_failure=False,
-                                         skip_external_commands=True)
-            self.assertFalse(must_exit)
-
