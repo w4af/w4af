@@ -19,12 +19,9 @@ along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from w4af.core.controllers.ci.only_ci_decorator import only_ci
-
 REQUIREMENTS_TXT = 'requirements.txt'
 
 
-@only_ci
 def generate_requirements_txt(failed_deps):
     """
     We want to generate a requirements.txt file which can be detected

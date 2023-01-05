@@ -28,7 +28,6 @@ import pytest
 from w4af.core.controllers.ci.moth import get_moth_http
 from w4af.core.controllers.ci.wavsep import get_wavsep_http
 from w4af.plugins.tests.helper import PluginTest, PluginConfig
-from w4af.core.controllers.ci.detect import is_running_on_ci
 from w4af.core.data.db.startup_cfg import StartUpConfig
 
 SCRIPT_PATH = '/tmp/script-1557.w4af'
@@ -100,7 +99,7 @@ class TestStrategy(PluginTest):
         URL_VULN_RE = re.compile('%s: "(.*?)"' % VULN_STRING)
         all_previous_vulns = []
 
-        loops = 2 if is_running_on_ci() else 10
+        loops = 10
 
         for i in range(loops):
             print(('Start run #%s' % i))

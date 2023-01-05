@@ -29,11 +29,8 @@ from w4af.core.controllers.dependency_check.pip_dependency import PIPDependency
 
 
 class TestGenerateTXT(unittest.TestCase):
-    
-    MOCK_TARGET = 'w4af.core.controllers.ci.only_ci_decorator.is_running_on_ci'
-    
-    @patch(MOCK_TARGET, return_value=True)
-    def test_generate_requirements_txt_empty(self, ci_mock):
+        
+    def test_generate_requirements_txt_empty(self):
         requirements_file = generate_requirements_txt([])
         
         with open(requirements_file) as reqs:
@@ -41,8 +38,7 @@ class TestGenerateTXT(unittest.TestCase):
         self.assertEqual(0, count)
         os.unlink(requirements_file)
 
-    @patch(MOCK_TARGET, return_value=True)
-    def test_generate_requirements_txt(self, ci_mock):
+    def test_generate_requirements_txt(self):
         EXPECTED = 'a==1.2.3\nc==3.2.1\n'
         requirements_file = generate_requirements_txt([PIPDependency('a', 'a', '1.2.3'),
                                                        PIPDependency('b', 'c', '3.2.1'),])

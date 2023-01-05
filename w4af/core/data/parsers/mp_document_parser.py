@@ -40,7 +40,6 @@ from w4af.core.controllers.profiling import start_profiling_no_core
 from w4af.core.controllers.threads.is_main_process import is_main_process
 from w4af.core.controllers.output_manager import log_sink_factory
 from w4af.core.controllers.exceptions import ScanMustStopException
-from w4af.core.controllers.ci.detect import is_running_on_ci
 from w4af.core.controllers.threads.decorators import apply_with_return_error
 from w4af.core.controllers.profiling.core_stats import core_profiling_is_enabled
 from w4af.core.controllers.profiling.memory_usage import user_wants_memory_profiling
@@ -81,7 +80,7 @@ class MultiProcessingDocumentParser(object):
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
     DEBUG = core_profiling_is_enabled()
-    MAX_WORKERS = 2 if is_running_on_ci() else int(multiprocessing.cpu_count() / 2) or 1
+    MAX_WORKERS = int(multiprocessing.cpu_count() / 2) or 1
 
     # Increasing the timeout when profiling is enabled seems to fix issue #9713
     #
