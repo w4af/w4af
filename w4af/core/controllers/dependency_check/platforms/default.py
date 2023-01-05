@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 from .base_platform import Platform
-from ..requirements import CORE, GUI
+from ..requirements import CORE
 
 
 class DefaultPlatform(Platform):
@@ -29,8 +29,7 @@ class DefaultPlatform(Platform):
     # Should never be used since we have an empty SYSTEM_PACKAGES
     PKG_MANAGER_CMD = ''
 
-    SYSTEM_PACKAGES = {CORE: [],
-                       GUI: []}
+    SYSTEM_PACKAGES = {CORE: []}
 
     @staticmethod
     def is_current_platform():

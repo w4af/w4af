@@ -27,8 +27,6 @@ jobs:
         cache: 'pipenv'
     - name: Increase ulimit
       run: echo 'fs.file-max=1048576' | sudo tee -a /etc/sysctl.conf && sudo sysctl -p && ulimit -n 10000 && ulimit -a
-    - name: Install Gtk
-      run: sudo apt-get update && sudo apt-get install -y libgirepository1.0-dev gir1.2-gtk-3.0 libgtk-3-dev gir1.2-pango-1.0 libpango1.0-dev gir1.2-gtksource-4 libgtksourceview-4-dev libicu-dev gir1.2-webkit2-4.0 libwebkit2gtk-4.0-dev graphviz libssl-dev libffi-dev libsqlite3-dev libxml2-dev git
     - name: Install node packages
       run: npm install
     - name: Install pipenv
@@ -38,10 +36,8 @@ jobs:
       run: |
         pipenv install
     - name: Core unittests
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        run: |
-          pipenv run pytest --cov=w4af --splits 8 --group ${{ matrix.group }} -m "not moth and not wavsep and not w4af_moth and not sqlmap and not mcir and not wivet and not phpmoth and not fails and not git and not gui and not integration and not ci_ignore and not slow and not wordpress and not modsecurity"
+      run: |
+        pipenv run pytest --cov=w4af --splits 8 --group ${{ matrix.group }} -m "not moth and not wavsep and not w4af_moth and not sqlmap and not mcir and not wivet and not phpmoth and not fails and not git and not gui and not integration and not ci_ignore and not slow and not wordpress and not modsecurity"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
@@ -72,8 +68,6 @@ jobs:
       with:
         compose-file: "./w4af/tests/docker-compose.yml"
         services: ${{ matrix.group }}
-    - name: Install Gtk
-      run: sudo apt-get update && sudo apt-get install -y libgirepository1.0-dev gir1.2-gtk-3.0 libgtk-3-dev gir1.2-pango-1.0 libpango1.0-dev gir1.2-gtksource-4 libgtksourceview-4-dev libicu-dev gir1.2-webkit2-4.0 libwebkit2gtk-4.0-dev graphviz libssl-dev libffi-dev libsqlite3-dev libxml2-dev git
     - name: Install node packages
       run: npm install
     - name: Install pipenv
@@ -83,10 +77,8 @@ jobs:
       run: |
         pipenv install
     - name: Integration tests
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        run: |
-          pipenv run pytest --cov=w4af -m "${{ matrix.group }} and not fails"
+      run: |
+        pipenv run pytest --cov=w4af -m "${{ matrix.group }} and not fails"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
@@ -108,8 +100,6 @@ jobs:
       with:
         python-version: "3.10"
         cache: 'pipenv'
-    - name: Install Gtk
-      run: sudo apt-get update && sudo apt-get install -y libgirepository1.0-dev gir1.2-gtk-3.0 libgtk-3-dev gir1.2-pango-1.0 libpango1.0-dev gir1.2-gtksource-4 libgtksourceview-4-dev libicu-dev gir1.2-webkit2-4.0 libwebkit2gtk-4.0-dev graphviz libssl-dev libffi-dev libsqlite3-dev libxml2-dev git
     - name: Install node packages
       run: npm install
     - name: Install pipenv
@@ -119,10 +109,8 @@ jobs:
       run: |
         pipenv install
     - name: Core unittests
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        run: |
-          pipenv run pytest --cov=w4af -m "slow_group${{matrix.group}}"
+      run: |
+        pipenv run pytest --cov=w4af -m "slow_group${{matrix.group}}"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
@@ -144,8 +132,6 @@ jobs:
       with:
         python-version: "3.10"
         cache: 'pipenv'
-    - name: Install Gtk
-      run: sudo apt-get update && sudo apt-get install -y libgirepository1.0-dev gir1.2-gtk-3.0 libgtk-3-dev gir1.2-pango-1.0 libpango1.0-dev gir1.2-gtksource-4 libgtksourceview-4-dev libicu-dev gir1.2-webkit2-4.0 libwebkit2gtk-4.0-dev graphviz libssl-dev libffi-dev libsqlite3-dev libxml2-dev git xvfb
     - name: Install node packages
       run: npm install
     - name: Install pipenv
@@ -161,7 +147,7 @@ jobs:
         continue_on_error: true
         max_attempts: 1
         command: |
-          xvfb-run --auto-servernum pipenv run pytest --cov=w4af -m "external_group${{matrix.group}}"
+          pipenv run pytest --cov=w4af -m "external_group${{matrix.group}}"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:

@@ -7,19 +7,12 @@ import sys
 import os
 import base64
 
-# Perform the GTK UI dependency check, this will verify that the current system
-# has all the modules required to run w4af (including the core dependencies)
-from w4af.core.ui.gui.dependency_check.dependency_check import dependency_check
-
 import w4af.core.controllers.output_manager as om
+from w4af.core.controllers.dependency_check.dependency_check import dependency_check
 
-      
+
 USAGE_DOC = '''
 w4af - Web Application Attack and Audit Framework
-
-WARNING: The w4af GUI is NOT CURRENTLY MAINTAINED, and is NOT WORKING.
-         If you wish nevertheless to run the GUI, pass the option
-        --i-am-a-developer.
 
 Usage:
 
@@ -40,10 +33,6 @@ Options:
     
     -p <profile> or --profile=<profile>
         Run with the selected <profile>
-
-    --i-am-a-developer
-        Run the gui even though it is unmaintained and not currently
-        working
 
 For more info visit https://w4af.readthedocs.io/
 '''    
@@ -68,8 +57,7 @@ def usage():
 
 def main():
     try:
-        long_options = ['help', 'no-update', 'force-update',
-            'profile=', 'i-am-a-developer']
+        long_options = ['help', 'no-update', 'force-update', 'profile=']
         opts, _ = getopt.getopt(sys.argv[1:], "ehnfp:", long_options)
     except getopt.GetoptError:
         # print help information and exit:
@@ -78,7 +66,6 @@ def main():
     
     profile = None
     doupdate = None
-    quit_with_warning = True
     
     for o, a in opts:
         if o in ("-e"):
@@ -89,8 +76,6 @@ def main():
         if o in ('-p', '--profile'):
             # selected profile
             profile = a
-        if o in ('--i-am-a-developer'):
-            quit_with_warning = False
         if o in ('-h', '--help'):
             usage()
             return 0
@@ -99,24 +84,10 @@ def main():
         elif o in ('-n', '--no-update'):
             doupdate = False
 
-    if quit_with_warning:
-        usage()
-        return 1
-
     dependency_check()
-    
 
-    # go with GTK, but first check about DISPLAY environment variable
-    if sys.platform != "win32":
-        display = os.getenv("DISPLAY")
-        if not display:
-            om.out.error("The DISPLAY environment variable is not set! You can"
-                         " not use any graphical program without it...")
-            return -1
-
-    from w4af.core.ui.gui.main import main as gui_main
-    gui_main(profile, doupdate)
-
+    from w4af.core.ui.api.main import main
+    sys.exit(main(launch_gui=True))
 
 def _main():
     _configure_output_manager()

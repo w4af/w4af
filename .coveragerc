@@ -2,6 +2,3 @@
 omit =
   # skip file that is created and deleted by unit tests
   */failing_spider.py
-  # skip gui
-  w4af_gui
-  w4af/core/ui/gui/*

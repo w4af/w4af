@@ -29,10 +29,10 @@ class Md4Wrapper:
     def digest(self):
         return self.md4digest.hexdigest().encode('utf-8')
 
-def hashlib_new_monkeypatch(algorithm, data_bytes):
+def hashlib_new_monkeypatch(algorithm, data_bytes=b'', **kwargs):
     if algorithm == 'md4':
         return Md4Wrapper(data_bytes)
-    return original_hashlib_new(algorithm, data_bytes)
+    return original_hashlib_new(algorithm, data_bytes, **kwargs)
 
 class AbstractNtlmAuthHandler(urllib.request.BaseHandler):
     """

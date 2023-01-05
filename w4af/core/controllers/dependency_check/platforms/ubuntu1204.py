@@ -23,7 +23,7 @@ import distro
 import subprocess
 
 from .base_platform import Platform
-from ..requirements import CORE, GUI
+from ..requirements import CORE
 
 from w4af.core.data.misc.encoding import smart_unicode
 
@@ -37,11 +37,7 @@ class Ubuntu1204(Platform):
                             'libsqlite3-dev', 'libssl-dev', 'git',
                             'libxml2-dev', 'libffi-dev']
 
-    GUI_SYSTEM_PACKAGES = CORE_SYSTEM_PACKAGES[:]
-    GUI_SYSTEM_PACKAGES.extend(['graphviz'])
-
-    SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES,
-                       GUI: GUI_SYSTEM_PACKAGES}
+    SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES}
 
     @staticmethod
     def os_package_is_installed(package_name):
