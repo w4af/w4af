@@ -8,9 +8,7 @@ import os
 import base64
 import re
 
-# Check if I have all needed dependencies
 from w4af.core.controllers.dependency_check.dependency_check import dependency_check
-dependency_check()
 
 from w4af.core.ui.console.console_ui import ConsoleUI
 from w4af.core.controllers.misc.get_w4af_version import get_w4af_version
@@ -28,6 +26,7 @@ Usage:
 
     ./w4af_console -h
     ./w4af_console -t
+    ./w4af_console -d
     ./w4af_console [-s <script_file>]
 
 Options:
@@ -37,6 +36,10 @@ Options:
 
     -s <script_file> or --script=<script_file>
         Run <script_file> script
+
+    -d or --dependency-check
+        Run the w4af dependency check to ensure required libraries
+        are installed
 
     -n or --no-update
         No update check will be made when starting. This option takes 
@@ -130,8 +133,8 @@ def main():
     try:
         long_options = ['script=', 'help', 'version', 'no-update',
                         'force-update', 'profile=', 'commit=',
-                        'profile-run', 'yes', 'target=']
-        opts, _ = getopt.getopt(sys.argv[1:], "ehvs:nfp:P:yt:", long_options)
+                        'profile-run', 'yes', 'dependency-check', 'target=']
+        opts, _ = getopt.getopt(sys.argv[1:], "ehvs:nfp:P:ydt:", long_options)
     except getopt.GetoptError:
         # Print help information and exit
         _usage()
@@ -159,6 +162,9 @@ def main():
         if o in ('-p', '--profile'):
             # selected profile
             profile = a
+        if o in ('-d', '--dependency-check'):
+            # run dependency check
+            dependency_check()
         if o in ('-h', '--help'):
             _usage()
             return 0
