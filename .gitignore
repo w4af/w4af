@@ -64,10 +64,6 @@ data.shelve
 top-1m.csv
 top-1m.csv.zip
 
-# docker build temp files
-/.dockerignore
-/Dockerfile
-
 # To make testing easier
 test.w4af
 output-w4af.txt
