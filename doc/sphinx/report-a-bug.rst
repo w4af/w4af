@@ -55,7 +55,7 @@ Getting the specific ``w4af`` version is easy using the ``--version`` command li
 	w4af - Web Application Attack and Audit Framework
 	Version: 1.5
 	Revision: 4d66c2040d - 17 Mar 2014 21:17
-	Branch: master
+	Branch: main
 	Local changes: Yes
 	Author: Andres Riancho and the w4af team.
 	user@box:~/w4af$ 
@@ -64,7 +64,7 @@ The output of the command is simple to understand, but lets go through it just i
 
  * ``Version: 1.5``: The w4af version number
  * ``Revision: 4d66c2040d - 17 Mar 2014 21:17``: If this line is present you've installed ``w4af`` by cloning from our repository. ``4d66c2040d`` is the SHA1 ID of the latest ``git`` commit your system knows about.
- * ``Branch: master``: The ``git`` branch your installation is running from. In most cases this should be one of ``master`` or ``develop``.
+ * ``Branch: main``: The ``git`` branch your installation is running from. In most cases this should be one of ``main`` or ``develop``.
  * ``Local changes: Yes``: Indicates if you've manually modified ``w4af``'s source code
 
 Just to make sure you're on the latest version run ``git pull`` inside the ``w4af`` directory making sure that ``Already up-to-date.`` appears:

@@ -10,7 +10,7 @@ HTTP response body. Parsing HTTP response bodies in a CPU intensive process, and
 different ``w4af`` plugins might want to parse the same response so it makes a
 lot of sense to use a cache in this situation.
 
-The `ParserCache <https://github.com/w4af/w4af/blob/master/w4af/core/data/parsers/parser_cache.py>`_
+The `ParserCache <https://github.com/w4af/w4af/blob/main/w4af/core/data/parsers/parser_cache.py>`_
 is a LRU cache which holds the items in memory to provide fast access. Some
 advanced users might note that the cache size is set to a constant (10 at the
 time of writing this documentation), which has these side effects:
