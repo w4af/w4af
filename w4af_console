@@ -148,11 +148,6 @@ def main():
     target_url = None
     
     for o, a in opts:
-        if o == "-e":
-            # easter egg
-            msg = 'R3JhY2lhcyBFdWdlIHBvciBiYW5jYXJtZSB0YW50YXMgaG9yYXMgZGUgZG'\
-                  'VzYXJyb2xsbywgdGUgYW1vIGdvcmRhIQ=='
-            print(base64.b64decode(msg))
         if o in ('-s', '--script'):
             script_file = a
         if o in ('-P', '--profile-run'):
