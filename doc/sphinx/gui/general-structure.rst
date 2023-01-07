@@ -1,6 +1,10 @@
 General structure
 =================
 
+.. warning::
+
+   The GTK GUI was removed and will be replaced by a webclient-GUI. The following docu is outdated.
+
 In this section the general structure of the w4af graphical user interface is
 explained. The following is the main window, the first image that you'll see
 from the system after it's completely loaded (during the load you'll see a

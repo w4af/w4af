@@ -1,6 +1,10 @@
 Configurations
 ==============
 
+.. warning::
+
+   The GTK GUI was removed and will be replaced by a webclient-GUI. The following docu is outdated.
+
 There are different configuration panels all across the w4af system. Here all of
 them are explained.
 

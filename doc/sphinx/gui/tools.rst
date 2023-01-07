@@ -1,6 +1,10 @@
 Tools
 =====
 
+.. warning::
+
+   The GTK GUI was removed and will be replaced by a webclient-GUI. The following docu is outdated.
+
 Apart from the w4af core functionality, that is to scan for vulnerabilities and
 exploit them, there are other tools that help you in the day by day work.
 

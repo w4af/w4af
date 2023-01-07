@@ -1,6 +1,10 @@
 Scanning
 ========
 
+.. warning::
+
+   The GTK GUI was removed and will be replaced by a webclient-GUI. The following docu is outdated.
+
 In this section is explained the different steps to configure, start and supervise
 a security scanning over a web site.
 

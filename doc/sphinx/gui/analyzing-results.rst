@@ -1,6 +1,10 @@
 Analyzing results
 =================
 
+.. warning::
+
+   The GTK GUI was removed and will be replaced by a webclient-GUI. The following docu is outdated.
+
 You can explore and analyze the scanning results after the scan process is completed (or before it's finished, because the system let's you work concurrently with that process). In this section I'll explain the different windows you have to work with the results.
 
 There's a complete tab for results in w4af, and as there're a lot of information to analyze, this tab is also divided in tabs, as you can check the Knowledge Base, see the site structure, or navigate through the individual requests and responses.
