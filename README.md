@@ -1,12 +1,11 @@
 [![Unit tests](https://github.com/w4af/w4af/actions/workflows/python-app.yml/badge.svg)](https://github.com/w4af/w4af/actions/workflows/python-app.yml)
 [![Code Coverage](https://codecov.io/gh/w4af/w4af/branch/main/graph/badge.svg?token=GCXS9IDNKM)](https://codecov.io/gh/w4af/w4af)
 [![License](https://img.shields.io/github/license/w4af/w4af.svg)](https://img.shields.io/github/license/w4af/w4af.svg)
+![Release](https://img.shields.io/badge/release-Alpha-blue)
 ## w4af - Web Advanced Application Attack and Audit Framework for Python3
 
 [w4af](https://w4af.readthedocs.io/en/latest/) is an [open source](https://www.gnu.org/licenses/gpl-2.0.txt)
-web application security scanner which helps developers and penetration testers
-identify and exploit vulnerabilities in their web applications.
-It is originally based on w3af.
+web application security scanner which helps developers and penetration testers identify and exploit vulnerabilities in their web applications. It is originally based on w3af and is currently in an early **alpha** development phase. We welcome early user experience and bug reports, but we don't make any warranties about the software - it's still a work in progress.
 
 The scanner is able to identify [200+ vulnerabilities](w4af/core/data/constants/vulns.py),
 including [Cross-Site Scripting](w4af/plugins/audit/xss.py),
@@ -15,45 +14,15 @@ including [Cross-Site Scripting](w4af/plugins/audit/xss.py),
 
 ## Documentation
 
-We recommend you to read the user's guide before starting to use w4af, there
+We recommend you to read the [user guide](https://w4af.readthedocs.io/en/latest/) before starting to use w4af, there
 are many FAQs, tips and tricks and other important pieces of information in
 the manual.
-[w4af](https://w4af.readthedocs.io/en/latest/)
-
-## Python3 Port Progress
-
-The command-line version of the tool is substantially working with Python 3.10.
-
-At time of writing, the core unit tests are running and passing, and some integration tests are working too.
-
-### Unit tests
-
-These unit tests should run without any integration environment (though some do rely on a live internet connection):
-
-```
-pytest -m "not moth and not fails and not git and not gui and not integration and not ci_ignore"
-```
-
-### Integration tests
-
-You can launch the integration environment with docker-compose:
-
-```
-./w4af/tests/add-test-routes.sh
-docker-compose -f ./w4af/tests/docker-compose.yml up
-```
-
-With that running, some integration tests are also passing:
-
-```
-pytest -m "w4af_moth and not fails"
-```
 
 ## Installation
 
 ### Python
 
-The project expects to use Python 3.10. The project's Python dependencies can be install with pipenv:
+The project expects to use Python 3.10. The project's Python dependencies can be installed by running pipenv in the project's root folder:
 
 ```
 python -m pip install --upgrade pipenv wheel
@@ -78,7 +47,31 @@ Use `pytest` to run the unit tests:
 $ pytest --help
 ```
 
-By default, pytest will run all tests, including tests that depend on internet connection, a clean git checkout, and a running integration environment. We will add more detailed information about how to run the tests as the porting work progresses.
+By default, pytest will run all tests, including tests that depend on internet connection, a clean git checkout, and a running integration environment.
+
+### Unit tests
+
+The unit tests should run without any integration environment (though some do rely on a live internet connection):
+
+```
+pytest -m "not moth and not wavsep and not w4af_moth and not sqlmap and not mcir and not wivet and not phpmoth and not fails and not git and not gui and not integration and not ci_ignore and not slow and not wordpress and not modsecurity"
+```
+
+### Integration tests
+
+You can launch the integration environment with docker-compose:
+
+```
+./w4af/tests/add-test-routes.sh
+docker-compose -f ./w4af/tests/docker-compose.yml up
+```
+
+With that running, the integration tests should also pass. Integration tests are tagged according to which environment they rely on - the tag of the test matches the label for the docker service in `docker-compose.yml`. This will be one of `moth`, `w4af_moth`, `sqlmap`, `mcir`, `wivet`, or `phpmoth`, for example:
+
+```
+docker-compose -f ./w4af/tests/docker-compose.yml up w4af_moth
+pytest -m "w4af_moth and not fails"
+```
 
 ### Building documentation
 
