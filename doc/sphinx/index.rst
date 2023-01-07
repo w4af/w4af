@@ -13,9 +13,9 @@ w4af is a complete environment for auditing and exploiting Web applications. Thi
 .. |w4af| 
    :scale: 50 %                          
    :target: https://w4af.net/            
-   :alt: w4af homepage                   
+   :alt: w4af homepage
 
-                                            
+
 +-----------------------------------------------------------------------------------------+---------------------+
 | `Github repository <https://github.com/w4af/w4af>`_                           		  |  |Github|           |
 +-----------------------------------------------------------------------------------------+---------------------+
