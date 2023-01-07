@@ -68,7 +68,7 @@ def get_w4af_version():
     """
     version_dict = get_w4af_version_as_dict()
     
-    return ('w4af - Web Application Attack and Audit Framework\n'
+    return ('w4af - Web Advanced Application Attack and Audit Framework\n'
             'Version: %(version)s\n'
             'Revision: %(revision)s\n'
             'Branch: %(branch)s\n'

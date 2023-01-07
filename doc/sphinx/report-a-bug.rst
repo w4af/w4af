@@ -52,7 +52,7 @@ Getting the specific ``w4af`` version is easy using the ``--version`` command li
 .. code-block:: none
 
 	user@box:~/w4af$ ./w4af_console --version
-	w4af - Web Application Attack and Audit Framework
+	w4af - Web Advanced Application Attack and Audit Framework
 	Version: 1.5
 	Revision: 4d66c2040d - 17 Mar 2014 21:17
 	Branch: main

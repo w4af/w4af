@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# w4af - Web application attack and audit framework documentation build configuration file, created by
+# w4af - Web Advanced Application Attack and Audit Framework documentation build configuration file, created by
 # sphinx-quickstart on Fri Mar  7 15:24:37 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -43,7 +43,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'w4af - Web application attack and audit framework'
+project = 'w4af - Web Advanced Application Attack and Audit Framework'
 copyright = '2022, w4af team'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -172,7 +172,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'w4af-Webapplicationattackandauditframeworkdoc'
+htmlhelp_basename = 'w4af-WebAdvancedApplicationAttackandAuditFrameworkdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -192,7 +192,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'w4af-Webapplicationattackandauditframework.tex', 'w4af - Web application attack and audit framework Documentation',
+  ('index', 'w4af-WebAdvancedApplicationAttackandAuditFramework.tex', 'w4af - Web Advanced Application Attack and Audit Framework Documentation',
    'Andres Riancho', 'manual'),
 ]
 
@@ -222,7 +222,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'w4af-webapplicationattackandauditframework', 'w4af - Web application attack and audit framework Documentation',
+    ('index', 'w4af-WebAdvancedApplicationAttackandAuditFramework', 'w4af - Web Advanced Application Attack and Audit Framework Documentation',
      ['Andres Riancho'], 1)
 ]
 
@@ -236,8 +236,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'w4af-Webapplicationattackandauditframework', 'w4af - Web application attack and audit framework Documentation',
-   'Andres Riancho', 'w4af-Webapplicationattackandauditframework', 'Web application security scanner',
+  ('index', 'w4af-WebAdvancedApplicationAttackandAuditFramework', 'w4af - Web Advanced Application Attack and Audit Framework Documentation',
+   'Andres Riancho', 'w4af-WebAdvancedApplicationAttackandAuditFramework', 'Web application security scanner',
    'Miscellaneous'),
 ]
 

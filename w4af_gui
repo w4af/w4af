@@ -12,7 +12,7 @@ from w4af.core.controllers.dependency_check.dependency_check import dependency_c
 
 
 USAGE_DOC = '''
-w4af - Web Application Attack and Audit Framework
+w4af - Web Advanced Application Attack and Audit Framework
 
 Usage:
 

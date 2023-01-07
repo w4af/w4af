@@ -20,7 +20,7 @@ URL_RE = re.compile(r'^([a-z]|[A-Z]|[0-9]|\.|-|_|~|\[|\]|#|\'|\(|\)|;|:|@|&|=|\+
 
 
 USAGE_DOC = """
-w4af - Web Application Attack and Audit Framework
+w4af - Web Advanced Application Attack and Audit Framework
 
 Usage:
 
