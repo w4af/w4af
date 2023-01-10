@@ -1,6 +1,10 @@
 w4af inside docker
 ==================
 
+.. warning::
+
+   This page still needs some update and might be outdated.
+
 Using ``w4af`` inside docker should be transparent for most use cases, this page
 documents the use cases which are complex to solve when docker is added to the
 mix.
