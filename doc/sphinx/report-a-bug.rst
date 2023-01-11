@@ -57,7 +57,7 @@ Getting the specific ``w4af`` version is easy using the ``--version`` command li
 	Revision: 4d66c2040d - 17 Mar 2014 21:17
 	Branch: main
 	Local changes: Yes
-	Author: Andres Riancho and the w4af team.
+	Author: The w4af team.
 	user@box:~/w4af$ 
 
 The output of the command is simple to understand, but lets go through it just in case:

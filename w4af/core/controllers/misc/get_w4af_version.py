@@ -73,7 +73,7 @@ def get_w4af_version():
             'Revision: %(revision)s\n'
             'Branch: %(branch)s\n'
             'Local changes: %(dirty)s\n'
-            'Author: Andres Riancho and the w4af team.') % version_dict
+            'Author: The w4af team.') % version_dict
 
 
 def get_w4af_version_minimal():

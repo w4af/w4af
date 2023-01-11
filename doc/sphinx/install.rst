@@ -47,48 +47,8 @@ The framework should work on all Python supported platforms.
 
 .. warning::
 
-   While in theory you can install w4af in Microsoft Windows, we don't recommend
+   While in theory you can install w4af in Microsoft Windows or Mac OS, we don't recommend
    nor support that installation process.
-
-
-
-Installation in Kali
---------------------
-
-.. warning::
-
-   Currently it is not possible to install w4af on kali as pygtk is not any more in the kali packages, see `here <https://pkg.kali.org/pkg/pygtk>`_. So the following instructions currently won't work. You could try building pygtk from source though. 
-
-The easiest way to install ``w4af`` in Kali is:
-
-.. code-block:: console
-
-    apt-get update
-    apt-get install -y w4af
-
-This will install the latest packaged version, which might not be the latest
-available from our repositories. If the latest version is needed these steps
-are recommended:
-
-.. code-block:: console
-
-    cd ~
-    apt-get update
-    apt-get install -y python-pip w4af
-    pip install --upgrade pip
-    git clone https://github.com/w4af/w4af.git
-    cd w4af
-    ./w4af_console
-    . /tmp/w4af_dependency_install.sh
-
-This will install the latest ``w4af`` at ``~/w4af/w4af_console`` and leave the
-packaged version un-touched.
-
-.. note::
-
-   There are two versions in your OS now:
-    * ``cd ~/w4af/ ; ./w4af_console`` will run the latest version
-    * ``w4af_console`` will run the one packaged in Kali
 
 Installing using Docker
 -----------------------
@@ -103,40 +63,9 @@ Once the docker installation is running these steps will yield a running
 
 .. code-block:: console
 
-    $ git clone https://github.com/w4af/w4af.git
-    $ cd w4af/extras/docker/scripts/
-    $ sudo ./w4af_console_docker
-    w4af>>>
+    docker run -it w4af/w4af:latest
 
-For advanced usage of ``w4af``'s docker container please read the documentation
-at the `docker registry hub <https://registry.hub.docker.com/u/andresriancho/w3af/>`_
-
-Installation in Mac OSX
------------------------
-In order to start the process, you need XCode and MacPorts installed.
-TODO: Update to python 3.10
-
-.. code-block:: console
-
-    sudo xcode-select --install
-    sudo port selfupdate
-    sudo port upgrade outdated
-    sudo port install python27
-    sudo port select python python27
-    sudo port install py27-pip 
-    sudo port install py27-libdnet git-core automake gcc48 py27-setuptools autoconf py27-pcapy
-    ./w4af_console
-    . /tmp/w4af_dependency_install.sh
-
-Those commands should allow you to run ``./w4af_console`` again without any issues,
-in order to run the GUI a new dependency set is required:
-
-.. code-block:: console
-
-    sudo port install py27-pygtk py27-pygtksourceview graphviz
-    sudo port install py27-webkitgtk
-    ./w4af_gui
-    . /tmp/w4af_dependency_install.sh
+For advanced usage of ``w4af``'s docker container please see Readme in subfolder extras/docker of the w4af-repo.
 
 Troubleshooting
 ---------------
@@ -168,34 +97,8 @@ install the dependency using the ``/tmp/w4af_dependency_install.sh`` command.
 Pay special attention to the output of that command, if installation fails
 you won't be able to run ``w4af``.
 
-It is important to notice that ``w4af`` requires specific versions of the
-third-party libraries. The specific versions required at ``/tmp/w4af_dependency_install.sh``
-need to match the ones you see in the output of ``pip freeze``. If the versions
-don't match you can always install a specific version using
-``pip install --upgrade futures==2.1.5``.
-
-w4af still says I have missing operating system dependencies, what should I do?
-_______________________________________________________________________________
-
-You will recognize this when this message appears: "please install the following
-operating system packages".
-
-Most likely you're using a Linux distribution that ``w4af`` doesn't know how to
-detect. *This doesn't mean that w4af won't work with your distribution!* It just
-means that our helper tool doesn't know how to create the
-``/tmp/w4af_dependency_install.sh`` script for you.
-
-What you need to do is:
-
- * Find a match between the Ubuntu package name given in the list and the one
- for your distribution
- * Install it
- * Run ``./w4af_console`` again. Repeat until fixed
-
-Please `create a ticket <https://github.com/w4af/w4af/issues/new>`_
-explaining the packages you installed, your distribution, etc. and we'll add
-the code necessary for others to be able to install ``w4af`` without going
-through any manual steps.
+..
+	It is important to notice that ``w4af`` requires specific versions of the third-party libraries. The specific versions required at ``/tmp/w4af_dependency_install.sh`` need to match the ones you see in the output of ``pip freeze``. If the versions don't match you can always install a specific version using ``pip install --upgrade futures==2.1.5``.
 
 
 How do I ask for support on installation issues?
@@ -205,6 +108,5 @@ You can `create a ticket <https://github.com/w4af/w4af/issues/new>`_
 containing the following information:
 
  * Your linux distribution (usually the contents of ``/etc/lsb-release`` will be enough)
- * The contents of the ``/tmp/w4af_dependency_install.sh`` file
  * The output of ``pip freeze``
  * The output of ``python --version``

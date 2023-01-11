@@ -18,14 +18,6 @@ The REST API can be started by running:
     $ ./w4af_api
      * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 
-Or it can also be run inside a docker container:
-
-.. code-block:: none
-
-    $ cd extras/docker/scripts/
-    $ ./w4af_api_docker
-     * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-
 Authentication
 --------------
 

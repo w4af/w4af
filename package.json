@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/andresriancho/w3af/issues"
+    "url": "https://github.com/w4af/w4af/issues"
   },
   "homepage": "https://github.com/w4af/w4af#readme",
   "dependencies": {
