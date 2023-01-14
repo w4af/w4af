@@ -134,6 +134,10 @@ need to change internal configuration parameters to fulfill their tasks.
 Running w4af with GTK user interface
 ------------------------------------
 
+.. warning::
+
+   The GTK GUI was removed and will be replaced by a webclient-GUI. The following part is outdated.
+
 The framework has also a graphical user interface that you can start by executing:
 
 .. code-block:: none
