@@ -34,7 +34,7 @@ jobs:
         python -m pip install --upgrade pipenv wheel
     - name: Install dependencies
       run: |
-        pipenv install
+        pipenv install --categories="packages dev-packages"
     - name: Core unittests
       run: |
         pipenv run pytest --cov=w4af --splits 8 --group ${{ matrix.group }} -m "not moth and not wavsep and not w4af_moth and not sqlmap and not mcir and not wivet and not phpmoth and not fails and not git and not gui and not integration and not ci_ignore and not slow and not wordpress and not modsecurity"
@@ -75,7 +75,7 @@ jobs:
         python -m pip install --upgrade pipenv wheel
     - name: Install dependencies
       run: |
-        pipenv install
+        pipenv install --categories="packages dev-packages"
     - name: Integration tests
       run: |
         pipenv run pytest --cov=w4af -m "${{ matrix.group }} and not fails"
@@ -107,7 +107,7 @@ jobs:
         python -m pip install --upgrade pipenv wheel
     - name: Install dependencies
       run: |
-        pipenv install
+        pipenv install --categories="packages dev-packages"
     - name: Core unittests
       run: |
         pipenv run pytest --cov=w4af -m "slow_group${{matrix.group}}"
@@ -139,7 +139,7 @@ jobs:
         python -m pip install --upgrade pipenv wheel
     - name: Install dependencies
       run: |
-        pipenv install
+        pipenv install --categories="packages dev-packages"
     - name: External tests
       uses: nick-fields/retry@v2
       with:
@@ -169,7 +169,7 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install --upgrade pipenv wheel
-          pipenv install
+          pipenv install --categories="packages dev-packages"
       - name: Download all artifacts
         # Downloads coverage1, coverage2, etc.
         uses: actions/download-artifact@v2
