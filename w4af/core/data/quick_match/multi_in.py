@@ -82,7 +82,7 @@ class MultiIn(object):
         if isinstance(target_str, str):
             target_was_string = True
         else:
-            target_str = target_str.decode(DEFAULT_ENCODING)
+            target_str = target_str.decode(encoding=DEFAULT_ENCODING, errors="ignore")
 
         def unwrap(output):
             if target_was_string:
