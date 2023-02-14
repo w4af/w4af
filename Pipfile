@@ -1,36 +1,35 @@
 [[source]]
-url = "https://pypi.python.org/simple"
+url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
 [packages]
 configparser = "*"
 distro = "*"
-pyClamd = "*"
-PyGithub = "*"
-GitPython = "*"
+pyclamd = "*"
+pygithub = "*"
+gitpython = "*"
 phply = "*"
 nltk = "*"
 chardet = "*"
 tblib = "*"
 pdfminer = "*"
-pyOpenSSL = "==22.1.0"
+pyopenssl = "*"
 ndg-httpsclient = "*"
 pyasn1 = "*"
 lxml = "*"
-scapy = "==2.5.0rc1"
+scapy = "*"
 cluster = "*"
 msgpack = "*"
 python-ntlm3 = "*"
-Jinja2 = "*"
-Markdown = "*"
+jinja2 = "*"
+markdown = "*"
 psutil = "*"
 ds-store = "*"
 termcolor = "*"
-PyYAML = "*"
+pyyaml = "*"
 tldextract = "*"
-Pebble = "*"
-acora = "*"
+pebble = "*"
 diff-match-patch = "*"
 bravado-core = "*"
 lz4 = "*"
@@ -40,53 +39,36 @@ xdot = "*"
 nocasedict = "*"
 urllib3 = "*"
 xunitparser = "*"
-pylint = "*"
 apispec = "*"
 memory-profiler = "*"
 marshmallow = "*"
 pypi-simple = "*"
 apispec-webframeworks = "*"
-Flask = "*"
+flask = "*"
 jellyfish = "*"
 yappi = "*"
-SOAPpy = "*"
+soappy = "*"
 ujson = "*"
 polyglot = "*"
 numpy = "*"
-PyICU = "*"
+pyicu = "*"
 pycld2 = "*"
-Morfessor = "*"
-coverage = "*"
+morfessor = "*"
+pillow = "*"
+bloom-filter2 = "*"
+vulndb = {ref = "bee4f4f5222741a8119e7e214de83b340d44fb27", git = "https://github.com/w4af/vulndb-python-sdk"}
+httpretty = {ref = "bugfix/remove-pyopenssl-deprecation-warning", git = "https://github.com/w4af/HTTPretty"}
+darts-util-lru = {git = "https://github.com/w4af/DartsPyLRU"}
+mitmproxy = {ref = "daeb6d94a98a8200cb9e9b6f107de1b54482d2ff", git = "https://github.com/w4af/mitmproxy"}
+netlib = {ref = "17ab850745c0c079cdbf1e4bdeef6a62798a29d6", git = "https://github.com/w4af/netlib"}
+
+[dev-packages]
+pylint = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-rerunfailures = "*"
 pytest-split = "*"
 pytest-timeout = "*"
-pillow = "*"
-bloom-filter2 = "*"
-
-[dev-packages]
 
 [requires]
-python_version = "3.10"
-
-[packages.vulndb]
-git = "https://github.com/w4af/vulndb-python-sdk"
-editable = true
-ref = "bee4f4f5222741a8119e7e214de83b340d44fb27"
-
-[packages.httpretty]
-git = "https://github.com/w4af/HTTPretty"
-ref = "bugfix/remove-pyopenssl-deprecation-warning"
-
-[packages.darts_util_lru]
-git = "https://github.com/w4af/DartsPyLRU"
-editable = true
-
-[packages.mitmproxy]
-git = "https://github.com/w4af/mitmproxy"
-ref = "daeb6d94a98a8200cb9e9b6f107de1b54482d2ff"
-
-[packages.netlib]
-git = "https://github.com/w4af/netlib"
-ref = "17ab850745c0c079cdbf1e4bdeef6a62798a29d6"
+python_version = "3.11"
