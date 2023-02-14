@@ -14,7 +14,7 @@ nltk = "*"
 chardet = "*"
 tblib = "*"
 pdfminer = "*"
-pyopenssl = "*"
+pyopenssl = "==22.1.0"
 ndg-httpsclient = "*"
 pyasn1 = "*"
 lxml = "*"
@@ -60,8 +60,8 @@ vulndb = {ref = "bee4f4f5222741a8119e7e214de83b340d44fb27", git = "https://githu
 httpretty = {ref = "bugfix/remove-pyopenssl-deprecation-warning", git = "https://github.com/w4af/HTTPretty"}
 darts-util-lru = {git = "https://github.com/w4af/DartsPyLRU"}
 mitmproxy = {ref = "daeb6d94a98a8200cb9e9b6f107de1b54482d2ff", git = "https://github.com/w4af/mitmproxy"}
-netlib = {ref = "17ab850745c0c079cdbf1e4bdeef6a62798a29d6", git = "https://github.com/w4af/netlib"}
 pyahocorasick = "*"
+netlib = {git = "https://github.com/w4af/netlib"}
 
 [dev-packages]
 pylint = "*"
