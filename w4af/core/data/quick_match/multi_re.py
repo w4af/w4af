@@ -61,6 +61,7 @@ class MultiRE(object):
         self._re_cache = dict()
         self._keyword_to_re = dict()
         self._regexes_with_no_keywords = list()
+        self._acora_initialized = False
         self._build()
 
     def _build(self):
@@ -108,6 +109,7 @@ class MultiRE(object):
             # keyword with the regular expression
             regex_keyword = regex_keyword.lower()
             self._acora.add_word(regex_keyword, regex_keyword)
+            self._acora_initialized = True
 
             regexes_matching_keyword = self._keyword_to_re.get(regex_keyword, [])
             regexes_matching_keyword.append(regex)
@@ -133,18 +135,19 @@ class MultiRE(object):
         seen = set()
         target_str = acora_query = target_str.lower()
 
-        for position, match in self._acora.iter_long(acora_query):
-            if match in seen:
-                continue
+        if self._acora_initialized:
+            for position, match in self._acora.iter_long(acora_query):
+                if match in seen:
+                    continue
 
-            seen.add(match)
+                seen.add(match)
 
-            for regex in self._keyword_to_re[match]:
-                compiled_regex = self._re_cache[regex]
+                for regex in self._keyword_to_re[match]:
+                    compiled_regex = self._re_cache[regex]
 
-                matchobj = compiled_regex.search(target_str)
-                if matchobj:
-                    yield self._create_output(matchobj, regex, compiled_regex)
+                    matchobj = compiled_regex.search(target_str)
+                    if matchobj:
+                        yield self._create_output(matchobj, regex, compiled_regex)
 
         #
         #   Match the regular expressions that don't have any keywords
