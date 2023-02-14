@@ -3,6 +3,9 @@
 
 name: Unit tests
 
+env:
+  PYCOV_COVERAGE_ENABLED: "1"
+
 on:
   push:
     branches: [ "**" ]

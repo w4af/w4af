@@ -38,6 +38,9 @@ def user_wants_cpu_profiling():
 
     return False
 
+def coverage_enabled():
+    coverage = os.environ.get('PYCOV_COVERAGE_ENABLED', None)
+    return coverage is not None
 
 def should_profile_cpu(wrapped):
     def inner():
