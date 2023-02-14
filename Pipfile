@@ -61,6 +61,7 @@ httpretty = {ref = "bugfix/remove-pyopenssl-deprecation-warning", git = "https:/
 darts-util-lru = {git = "https://github.com/w4af/DartsPyLRU"}
 mitmproxy = {ref = "daeb6d94a98a8200cb9e9b6f107de1b54482d2ff", git = "https://github.com/w4af/mitmproxy"}
 netlib = {ref = "17ab850745c0c079cdbf1e4bdeef6a62798a29d6", git = "https://github.com/w4af/netlib"}
+pyahocorasick = "*"
 
 [dev-packages]
 pylint = "*"
@@ -69,6 +70,7 @@ pytest-cov = "*"
 pytest-rerunfailures = "*"
 pytest-split = "*"
 pytest-timeout = "*"
+pyright = "*"
 
 [requires]
 python_version = "3.11"

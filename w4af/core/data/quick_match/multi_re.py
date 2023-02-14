@@ -20,14 +20,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
+from typing import List, Tuple, Any, Generator, Iterable
 
-from acora import AcoraBuilder, BytesAcora
+import ahocorasick
 from w4af.core.data.constants.encodings import DEFAULT_ENCODING
 from w4af.core.data.quick_match import esmre
 
 class MultiRE(object):
 
-    def __init__(self, regexes_or_assoc, re_compile_flags=0, hint_len=3):
+    def __init__(self,
+        regexes_or_assoc: Iterable[str]|Iterable[Tuple[str, Any]],
+        re_compile_flags: int = 0,
+        hint_len: int = 3):
         """
         :param re_compile_flags: The regular expression compilation flags
 
@@ -57,10 +61,10 @@ class MultiRE(object):
         self._re_cache = dict()
         self._keyword_to_re = dict()
         self._regexes_with_no_keywords = list()
-        self._acora = self._build()
+        self._build()
 
     def _build(self):
-        builder = AcoraBuilder()
+        self._acora = ahocorasick.Automaton()
 
         for idx, item in enumerate(self._regexes_or_assoc):
 
@@ -103,13 +107,13 @@ class MultiRE(object):
             # Add this keyword to the acora index, and also save a way to associate the
             # keyword with the regular expression
             regex_keyword = regex_keyword.lower()
-            builder.add(regex_keyword)
+            self._acora.add_word(regex_keyword, regex_keyword)
 
             regexes_matching_keyword = self._keyword_to_re.get(regex_keyword, [])
             regexes_matching_keyword.append(regex)
             self._keyword_to_re[regex_keyword] = regexes_matching_keyword
 
-        return builder.build()
+        self._acora.make_automaton()
 
     def query(self, target_str):
         """
@@ -128,10 +132,8 @@ class MultiRE(object):
         #
         seen = set()
         target_str = acora_query = target_str.lower()
-        if isinstance(self._acora, BytesAcora):
-            acora_query = target_str.encode(DEFAULT_ENCODING)
 
-        for match, position in self._acora.finditer(acora_query):
+        for position, match in self._acora.iter_long(acora_query):
             if match in seen:
                 continue
 

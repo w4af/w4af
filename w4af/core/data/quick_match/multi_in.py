@@ -19,13 +19,16 @@ along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from acora import AcoraBuilder
+from typing import List, Tuple, Any, Generator, Iterable
+
+import ahocorasick
+
 from w4af.core.data.constants.encodings import DEFAULT_ENCODING
 from w4af.core.data.misc.encoding import smart_unicode
 
 
 class MultiIn(object):
-    def __init__(self, keywords_or_assoc):
+    def __init__(self, keywords_or_assoc: Iterable[str]|Iterable[Tuple[str, Any]]):
         """
         :param keywords_or_assoc: A list with all the strings that we want
         to match against one or more strings using the "query" function.
@@ -44,34 +47,31 @@ class MultiIn(object):
         """
         self._keywords_or_assoc = keywords_or_assoc
         self._translator = dict()
-        self._acora = self._build()
+        self._build()
 
     def _build(self):
-        builder = AcoraBuilder()
-
+        self._acora = ahocorasick.Automaton()
         for idx, item in enumerate(self._keywords_or_assoc):
 
             if isinstance(item, tuple):
                 keyword = item[0]
-                keyword = keyword.encode(DEFAULT_ENCODING)
 
                 if keyword in self._translator:
                     raise ValueError('Duplicated keyword "%s"' % keyword)
 
                 self._translator[keyword] = item[1:]
 
-                builder.add(keyword)
+                self._acora.add_word(keyword, keyword)
             elif isinstance(item, str):
-                keyword = item.encode(DEFAULT_ENCODING)
-                builder.add(keyword)
+                self._acora.add_word(item, item)
             elif isinstance(item, bytes):
-                builder.add(item)
+                keyword = item.decode(DEFAULT_ENCODING, ignore_errors=True)
+                self._acora.add(item, keyword)
             else:
                 raise ValueError('Can NOT build MultiIn with provided values.')
+        self._acora.make_automaton()
 
-        return builder.build()
-
-    def query(self, target_str):
+    def query(self, target_str) -> Generator[Any, Any, List[str]|List[Tuple[str,Any]]]:
         """
         Run through all the keywords and identify them in target_str
 
@@ -81,19 +81,25 @@ class MultiIn(object):
         target_was_string = False
         if isinstance(target_str, str):
             target_was_string = True
-            target_str = target_str.encode(DEFAULT_ENCODING)
+        else:
+            target_str = target_str.decode(DEFAULT_ENCODING)
 
         def unwrap(output):
             if target_was_string:
                 if isinstance(output, bytes):
-                    return output.decode("utf-8")
+                    return output.decode(DEFAULT_ENCODING)
                 elif isinstance(output, list):
                     return [ unwrap(a) for a in output ]
                 return output
+            else:
+                if isinstance(output, str):
+                    return output.encode(DEFAULT_ENCODING)
+                elif isinstance(output, list):
+                    return [ unwrap(a) for a in output ]
 
         seen = set()
 
-        for match, position in self._acora.finditer(target_str):
+        for end_index, match in self._acora.iter_long(target_str):
             if match in seen:
                 continue
 
@@ -106,3 +112,5 @@ class MultiIn(object):
                 all_data = [match]
                 all_data.extend(extra_data)
                 yield unwrap(all_data)
+
+        return []
