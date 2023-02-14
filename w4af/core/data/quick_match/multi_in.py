@@ -65,7 +65,7 @@ class MultiIn(object):
             elif isinstance(item, str):
                 self._acora.add_word(item, item)
             elif isinstance(item, bytes):
-                keyword = item.decode(DEFAULT_ENCODING, ignore_errors=True)
+                keyword = item.decode(encoding=DEFAULT_ENCODING, errors="ignore")
                 self._acora.add(item, keyword)
             else:
                 raise ValueError('Can NOT build MultiIn with provided values.')

@@ -91,7 +91,7 @@ class MultiProcessingDocumentParser(object):
                          coverage_enabled())
 
     # in seconds
-    PARSER_TIMEOUT = 60 * 10 if PROFILING_ENABLED else 10
+    PARSER_TIMEOUT = 60 * 20 if PROFILING_ENABLED else 10
 
     # Document parsers can go crazy on memory usage when parsing some very
     # specific HTML / PDF documents. Sometimes when this happens the operating
