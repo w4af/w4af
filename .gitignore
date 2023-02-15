@@ -99,3 +99,6 @@ node_modules/
 
 # Ignore scan logs
 scan-logs/
+
+# Ignore profiler output
+prof/

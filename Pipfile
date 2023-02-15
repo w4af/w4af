@@ -71,6 +71,7 @@ pytest-rerunfailures = "*"
 pytest-split = "*"
 pytest-timeout = "*"
 pyright = "*"
+pytest-profiling = "*"
 
 [requires]
 python_version = "3.11"
