@@ -296,7 +296,7 @@ class MultipleTimeoutsTCPHandler(socketserver.BaseRequestHandler):
 
         # Handling of the vulnerability mock
         elif 'etc%2Fpasswd' in header:
-            body = b'Header %s Footer' % FILE_PATTERNS[0].encode("utf-8")
+            body = b'Header %s Footer' % FILE_PATTERNS[0]
             self.request.sendall(self.RESPONSE % (len(body), body))
 
         elif ' / ' in header:

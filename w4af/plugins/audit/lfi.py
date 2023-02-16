@@ -173,7 +173,7 @@ class lfi(AuditPlugin):
         #   Identify the vulnerability
         #
         for file_pattern_match in self._find_common_file_fragments(response):
-            if file_pattern_match not in mutant.get_original_response_body():
+            if file_pattern_match not in smart_str_ignore(mutant.get_original_response_body()):
                 
                 desc = 'Local File Inclusion was found at: %s'
                 desc %= mutant.found_at()
