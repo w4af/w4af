@@ -24,10 +24,6 @@ from w4af.core.controllers.dependency_check.pip_dependency import PIPDependency
 CORE = 1
 
 CORE_PIP_PACKAGES = [
-                     # acora speeds up string search, for regular expressions
-                     # we use esmre to extract the string literals from the re
-                     # and acora to match those against the target string
-                     PIPDependency('ahocorasick', 'pyahocorasick', '2.0.0'),
                      PIPDependency('bloom-filter2', 'bloom-filter2', '2.0.0'),
                      # OpenAPI documentation parser
                      PIPDependency('bravado_core', 'bravado-core', '5.17.1'),

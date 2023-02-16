@@ -62,6 +62,7 @@ darts-util-lru = {git = "https://github.com/w4af/DartsPyLRU"}
 mitmproxy = {ref = "daeb6d94a98a8200cb9e9b6f107de1b54482d2ff", git = "https://github.com/w4af/mitmproxy"}
 pyahocorasick = "*"
 netlib = {git = "https://github.com/w4af/netlib"}
+hyperscan = "*"
 
 [dev-packages]
 pylint = "*"

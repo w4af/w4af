@@ -20,16 +20,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
-from typing import List, Tuple, Any, Generator, Iterable
+from typing import List, Tuple, Any, Generator, Iterable, Optional
 
-import ahocorasick
+import hyperscan
 from w4af.core.data.constants.encodings import DEFAULT_ENCODING
-from w4af.core.data.quick_match import esmre
 
 class MultiRE(object):
 
     def __init__(self,
-        regexes_or_assoc: Iterable[str]|Iterable[Tuple[str, Any]],
+        regexes_or_assoc: Iterable[bytes]|Iterable[Tuple[bytes, Any]],
         re_compile_flags: int = 0,
         hint_len: int = 3):
         """
@@ -59,14 +58,15 @@ class MultiRE(object):
         self._hint_len = hint_len
         self._translator = dict()
         self._re_cache = dict()
-        self._keyword_to_re = dict()
-        self._regexes_with_no_keywords = list()
-        self._acora_initialized = False
+        self._original_re = dict()
         self._build()
 
     def _build(self):
-        self._acora = ahocorasick.Automaton()
+        self._hyperscan = hyperscan.Database()
 
+        regexps = []
+        flags = []
+        indexes = []
         for idx, item in enumerate(self._regexes_or_assoc):
 
             #
@@ -75,49 +75,28 @@ class MultiRE(object):
             #
             if isinstance(item, tuple):
                 regex = item[0]
-                self._re_cache[regex] = re.compile(regex, self._re_compile_flags)
+                self._re_cache[idx] = re.compile(regex, self._re_compile_flags)
 
                 if regex in self._translator:
                     raise ValueError('Duplicated regex "%s"' % regex)
 
-                self._translator[regex] = item[1:]
-            elif isinstance(item, str):
+                self._translator[idx] = item[1:]
+            elif isinstance(item, bytes):
                 regex = item
-                self._re_cache[regex] = re.compile(regex, self._re_compile_flags)
+                self._re_cache[idx] = re.compile(regex, self._re_compile_flags)
             else:
                 raise ValueError('Can NOT build MultiRE with provided values.')
 
-            #
-            #   Now we extract the string literals (longer than hint_len only) from
-            #   the regular expressions and populate the acora index
-            #
-            regex_hints = esmre.hints(regex)
-            regex_keywords = esmre.shortlist(regex_hints)
+            self._original_re[idx] = regex
+            regexps.append(regex)
+            flags.append(0)
+            indexes.append(idx)
 
-            if not regex_keywords:
-                self._regexes_with_no_keywords.append(regex)
-                continue
+        self._hyperscan.compile(
+            expressions=regexps, flags=flags, ids=indexes
+        )
 
-            # Get the longest one
-            regex_keyword = regex_keywords[0]
-
-            if len(regex_keyword) <= self._hint_len:
-                self._regexes_with_no_keywords.append(regex)
-                continue
-
-            # Add this keyword to the acora index, and also save a way to associate the
-            # keyword with the regular expression
-            regex_keyword = regex_keyword.lower()
-            self._acora.add_word(regex_keyword, regex_keyword)
-            self._acora_initialized = True
-
-            regexes_matching_keyword = self._keyword_to_re.get(regex_keyword, [])
-            regexes_matching_keyword.append(regex)
-            self._keyword_to_re[regex_keyword] = regexes_matching_keyword
-
-        self._acora.make_automaton()
-
-    def query(self, target_str):
+    def query(self, target_str: bytes) -> Generator[Any, Any, Tuple[re.Match, str, bytes]]:
         """
         Run through all the regular expressions and identify them in target_str.
 
@@ -133,38 +112,72 @@ class MultiRE(object):
         #   keywords are found in the target string by acora
         #
         seen = set()
-        target_str = acora_query = target_str.lower()
+        target_str = target_str.lower()
+        matches = []
 
-        if self._acora_initialized:
-            for position, match in self._acora.iter_long(acora_query):
-                if match in seen:
-                    continue
-
-                seen.add(match)
-
-                for regex in self._keyword_to_re[match]:
-                    compiled_regex = self._re_cache[regex]
-
-                    matchobj = compiled_regex.search(target_str)
-                    if matchobj:
-                        yield self._create_output(matchobj, regex, compiled_regex)
-
-        #
-        #   Match the regular expressions that don't have any keywords
-        #
-        for regex_without_keyword in self._regexes_with_no_keywords:
-            compiled_regex = self._re_cache[regex_without_keyword]
+        def on_match(
+            idx: int,
+            from_: int,
+            to: int,
+            flags: int,
+            context: Optional[Any] = None
+        ) -> Optional[bool]:
+            if idx in seen:
+                return
+            seen.add(idx)
+            compiled_regex = self._re_cache[idx]
 
             matchobj = compiled_regex.search(target_str)
             if matchobj:
-                yield self._create_output(matchobj, regex_without_keyword, compiled_regex)
+                matches.append(self._create_output(matchobj, idx, compiled_regex))
 
-    def _create_output(self, matchobj, regex, compiled_regex):
-        extra_data = self._translator.get(regex, None)
+        self._hyperscan.scan(target_str, match_event_handler=on_match)
+
+        yield from matches
+
+
+    def _create_output(self, matchobj, idx: int, compiled_regex):
+        extra_data = self._translator.get(idx, None)
+        regexp = self._original_re[idx]
 
         if extra_data is None:
-            return matchobj, regex, compiled_regex
+            return matchobj, regexp, compiled_regex
         else:
-            all_data = [matchobj, regex, compiled_regex]
+            all_data = [matchobj, regexp, compiled_regex]
             all_data.extend(extra_data)
             return all_data
+
+def convert_iterables_to_bytes(
+        input_: Iterable[str]|Iterable[Tuple[str, Any]]
+    ) -> Generator[Any, Any, bytes|Tuple[bytes, Any]]:
+    for item in input_:
+        if isinstance(item, str):
+            yield item.encode(DEFAULT_ENCODING)
+        else:
+            yield (item[0].encode(DEFAULT_ENCODING), item[1])
+
+class MultiREUnicode(MultiRE):
+
+    def __init__(self,
+        regexes_or_assoc: Iterable[str]|Iterable[Tuple[str, Any]],
+        re_compile_flags: int = 0,
+        hint_len: int = 3):
+        MultiRE.__init__(
+            self,
+            convert_iterables_to_bytes(regexes_or_assoc),
+            re_compile_flags,
+            hint_len)
+
+    def query(self, target_str: str) -> Generator[Any, Any, Tuple[re.Match, str, str]]:
+        target_str_bytes = target_str.encode(DEFAULT_ENCODING)
+        for item in MultiRE.query(self, target_str_bytes):
+            if isinstance(item, bytes):
+                yield item.decode(DEFAULT_ENCODING)
+                continue
+            new_parts = []
+            for part in item:
+                if isinstance(part, bytes):
+                    new_parts.append(part.decode(DEFAULT_ENCODING))
+                else:
+                    new_parts.append(part)
+            yield new_parts
