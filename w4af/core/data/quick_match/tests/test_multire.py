@@ -72,20 +72,18 @@ class MultiReTest(unittest.TestCase):
         self.assertEqual(rb'ab.*cdef', result[0][1])
 
     def test_re_with_obj(self):
-        re_list = [(rb'1234.*56', None, None), (rb'ab.*cdef', 1, 2)]
+        re_list = [(rb'1234.*56', None), (rb'ab.*cdef', 1)]
         mre = MultiRE(re_list)
 
         result = to_list(mre.query(b'1234A56'))
         self.assertEqual(1, len(result))
         self.assertEqual(rb'1234.*56', result[0][1])
         self.assertEqual(None, result[0][3])
-        self.assertEqual(None, result[0][4])
 
         result = to_list(mre.query(b'abAAAcdef'))
         self.assertEqual(1, len(result))
         self.assertEqual(rb'ab.*cdef', result[0][1])
         self.assertEqual(1, result[0][3])
-        self.assertEqual(2, result[0][4])
 
     def test_re_flags(self):
         re_list = [rb'12.*3456', rb'ab.*cdef']

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
 import re
-from typing import List, Tuple, Any, Generator, Iterable, Optional
+from typing import List, Tuple, Any, Generator, Iterable, Optional, Pattern, Match
 
 import hyperscan
 from w4af.core.data.constants.encodings import DEFAULT_ENCODING
@@ -28,7 +28,7 @@ from w4af.core.data.constants.encodings import DEFAULT_ENCODING
 class MultiRE(object):
 
     def __init__(self,
-        regexes_or_assoc: Iterable[bytes]|Iterable[Tuple[bytes, Any]],
+        regexes_or_assoc: Iterable[bytes|Tuple[bytes, Any]],
         re_compile_flags: int = 0,
         hint_len: int = 3):
         """
@@ -80,7 +80,7 @@ class MultiRE(object):
                 if regex in self._translator:
                     raise ValueError('Duplicated regex "%s"' % regex)
 
-                self._translator[idx] = item[1:]
+                self._translator[idx] = item[1]
             elif isinstance(item, bytes):
                 regex = item
                 self._re_cache[idx] = re.compile(regex, self._re_compile_flags)
@@ -96,7 +96,7 @@ class MultiRE(object):
             expressions=regexps, flags=flags, ids=indexes
         )
 
-    def query(self, target_str: bytes) -> Generator[Any, Any, Tuple[re.Match, str, bytes]]:
+    def query(self, target_str: bytes) -> Generator[Tuple[Match, str, bytes, Optional[Any]], None, None]:
         """
         Run through all the regular expressions and identify them in target_str.
 
@@ -136,48 +136,39 @@ class MultiRE(object):
         yield from matches
 
 
-    def _create_output(self, matchobj, idx: int, compiled_regex):
+    def _create_output(self, matchobj, idx: int, compiled_regex) -> Tuple[Match, str, Pattern, Optional[Any]]:
         extra_data = self._translator.get(idx, None)
         regexp = self._original_re[idx]
 
         if extra_data is None:
-            return matchobj, regexp, compiled_regex
+            return matchobj, regexp, compiled_regex, None
         else:
-            all_data = [matchobj, regexp, compiled_regex]
-            all_data.extend(extra_data)
-            return all_data
+            return (matchobj, regexp, compiled_regex, extra_data)
 
 def convert_iterables_to_bytes(
-        input_: Iterable[str]|Iterable[Tuple[str, Any]]
-    ) -> Generator[Any, Any, bytes|Tuple[bytes, Any]]:
-    for item in input_:
-        if isinstance(item, str):
-            yield item.encode(DEFAULT_ENCODING)
-        else:
-            yield (item[0].encode(DEFAULT_ENCODING), item[1])
+        item: str|Tuple[str, Any]
+    ) -> bytes|Tuple[bytes, Any]:
+    if isinstance(item, str):
+        return item.encode(DEFAULT_ENCODING)
+    else:
+        return (item[0].encode(DEFAULT_ENCODING), item[1])
 
 class MultiREUnicode(MultiRE):
 
     def __init__(self,
-        regexes_or_assoc: Iterable[str]|Iterable[Tuple[str, Any]],
+        regexes_or_assoc: Iterable[str|Tuple[str, Any]],
         re_compile_flags: int = 0,
         hint_len: int = 3):
         MultiRE.__init__(
             self,
-            convert_iterables_to_bytes(regexes_or_assoc),
+            map(convert_iterables_to_bytes, regexes_or_assoc),
             re_compile_flags,
             hint_len)
 
-    def query(self, target_str: str) -> Generator[Any, Any, Tuple[re.Match, str, str]]:
+    def query(self, target_str: str) -> Generator[str|Tuple[re.Match, str, str, Optional[Any]], None, None]:
         target_str_bytes = target_str.encode(DEFAULT_ENCODING)
         for item in MultiRE.query(self, target_str_bytes):
             if isinstance(item, bytes):
                 yield item.decode(DEFAULT_ENCODING)
                 continue
-            new_parts = []
-            for part in item:
-                if isinstance(part, bytes):
-                    new_parts.append(part.decode(DEFAULT_ENCODING))
-                else:
-                    new_parts.append(part)
-            yield new_parts
+            yield (item[0], item[1].decode(DEFAULT_ENCODING), item[2], item[3])
