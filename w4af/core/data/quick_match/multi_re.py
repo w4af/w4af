@@ -30,11 +30,9 @@ class MultiRE(object):
     def __init__(self,
         regexes_or_assoc: Iterable[bytes|Tuple[bytes, Any]],
         re_compile_flags: int = 0,
-        hint_len: int = 3):
+        literal = False):
         """
         :param re_compile_flags: The regular expression compilation flags
-
-        :param hint_len: Use only hints larger than hint_len to speed-up the search.
 
         :param regexes_or_assoc: A list with all the regular expressions that
                                  we want to match against one or more strings
@@ -53,9 +51,9 @@ class MultiRE(object):
                                 In the second case we'll return:
                                     [(match_obj, re_str_N, compiled_regex, objN),]
         """
+        self.literal = literal
         self._regexes_or_assoc = regexes_or_assoc
         self._re_compile_flags = re_compile_flags
-        self._hint_len = hint_len
         self._translator = dict()
         self._re_cache = dict()
         self._original_re = dict()
@@ -75,7 +73,8 @@ class MultiRE(object):
             #
             if isinstance(item, tuple):
                 regex = item[0]
-                self._re_cache[idx] = re.compile(regex, self._re_compile_flags)
+                if not self.literal:
+                    self._re_cache[idx] = re.compile(regex, self._re_compile_flags)
 
                 if regex in self._translator:
                     raise ValueError('Duplicated regex "%s"' % regex)
@@ -83,17 +82,19 @@ class MultiRE(object):
                 self._translator[idx] = item[1]
             elif isinstance(item, bytes):
                 regex = item
-                self._re_cache[idx] = re.compile(regex, self._re_compile_flags)
+                if not self.literal:
+                    self._re_cache[idx] = re.compile(regex, self._re_compile_flags)
             else:
                 raise ValueError('Can NOT build MultiRE with provided values.')
 
             self._original_re[idx] = regex
-            regexps.append(regex)
-            flags.append(0)
-            indexes.append(idx)
+            if regex not in regexps:
+                regexps.append(regex)
+                flags.append(0)
+                indexes.append(idx)
 
         self._hyperscan.compile(
-            expressions=regexps, flags=flags, ids=indexes
+            expressions=regexps, flags=flags, ids=indexes, literal=self.literal
         )
 
     def query(self, target_str: bytes) -> Generator[Tuple[Match, str, bytes, Optional[Any]], None, None]:
@@ -104,7 +105,7 @@ class MultiRE(object):
              * They do not have keywords
              * The keywords exist in the string
 
-        :param target_str: The target string where the keywords need to be match
+        :param target_str: The target string where the keywors need to be match
         :yield: (match_obj, re_str_N, compiled_regex)
         """
         #
@@ -158,12 +159,12 @@ class MultiREUnicode(MultiRE):
     def __init__(self,
         regexes_or_assoc: Iterable[str|Tuple[str, Any]],
         re_compile_flags: int = 0,
-        hint_len: int = 3):
+        literal=False):
         MultiRE.__init__(
             self,
             map(convert_iterables_to_bytes, regexes_or_assoc),
-            re_compile_flags,
-            hint_len)
+            re_compile_flags=re_compile_flags,
+            literal=literal)
 
     def query(self, target_str: str) -> Generator[str|Tuple[re.Match, str, str, Optional[Any]], None, None]:
         target_str_bytes = target_str.encode(DEFAULT_ENCODING)
