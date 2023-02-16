@@ -90,9 +90,6 @@ SOURCE_CODE = (
 BLACKLIST = {'xml', 'xpacket'}
 
 _multi_re = MultiRE(SOURCE_CODE, re.IGNORECASE | re.DOTALL, hint_len=2)
-if _multi_re._regexes_with_no_keywords != []:
-    print("Warning, possible performance issue in MultiRE", _multi_re._regexes_with_no_keywords)
-
 
 def contains_source_code(http_response):
     """

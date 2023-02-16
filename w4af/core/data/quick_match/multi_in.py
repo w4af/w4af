@@ -93,15 +93,23 @@ class MultiIn(MultiRE):
         else:
             return regexp, extra_data
 
+def convert_iterables_to_bytes(
+        item: str|Tuple[str, Any]
+    ) -> bytes|Tuple[bytes, Any]:
+    if isinstance(item, str):
+        return item.encode(DEFAULT_ENCODING)
+    else:
+        return (item[0].encode(DEFAULT_ENCODING), item[1])
+
 class MultiInUnicode(MultiIn):
 
     def __init__(self,
-        regexes_or_assoc: Iterable[str|Tuple[str, Any]]):
-        MultiREUnicode.__init__(
+        regexes_or_assoc: Iterable[str|Tuple[str, Any]],
+        re_compile_flags: int = 0,
+        literal=False):
+        MultiIn.__init__(
             self,
-            regexes_or_assoc,
-            re_compile_flags=0,
-            literal=True)
+            map(convert_iterables_to_bytes, regexes_or_assoc))
 
     def query(self, target_str: str) -> Generator[str|Tuple[str, Optional[Any]], None, None]:
         target_str_bytes = target_str.encode(DEFAULT_ENCODING)
@@ -109,4 +117,4 @@ class MultiInUnicode(MultiIn):
             if isinstance(item, bytes):
                 yield item.decode(DEFAULT_ENCODING)
                 continue
-            yield (item[0].decode(DEFAULT_ENCODING), item[1])
+            yield item[0].decode(DEFAULT_ENCODING), item[1]
