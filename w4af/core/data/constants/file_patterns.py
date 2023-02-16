@@ -21,27 +21,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 
 FILE_PATTERNS = (
-        "root:x:0:0:",
-        "daemon:x:1:1:",
-        ":/bin/bash",
-        ":/bin/sh",
+        b"root:x:0:0:",
+        b"daemon:x:1:1:",
+        b":/bin/bash",
+        b":/bin/sh",
 
         # /etc/passwd in AIX
-        "root:!:x:0:0:",
-        "daemon:!:x:1:1:",
-        ":usr/bin/ksh",
+        b"root:!:x:0:0:",
+        b"daemon:!:x:1:1:",
+        b":usr/bin/ksh",
 
         # boot.ini
-        "[boot loader]",
-        "default=multi(",
-        "[operating systems]",
+        b"[boot loader]",
+        b"default=multi(",
+        b"[operating systems]",
 
         # win.ini
-        "[fonts]",
+        b"[fonts]",
 
         # PHP script
-        "<?php",
+        b"<?php",
 
         # Executable script"
-        "#!/",
+        b"#!/",
     )

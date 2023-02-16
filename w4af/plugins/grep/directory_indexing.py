@@ -25,6 +25,7 @@ from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
 from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
 from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class directory_indexing(GrepPlugin):
@@ -35,19 +36,19 @@ class directory_indexing(GrepPlugin):
     """
 
     DIR_INDEXING = (
-        "<title>Index of /",
-        '<a href="?C=N;O=D">Name</a>',
-        '<A HREF="?M=A">Last modified</A>',
-        "Last modified</a>",
-        "Parent Directory</a>",
-        "Directory Listing for",
-        "<TITLE>Folder Listing.",
-        '<table summary="Directory Listing" ',
-        "- Browsing directory ",
+        b"<title>Index of /",
+        b'<a href="?C=N;O=D">Name</a>',
+        b'<A HREF="?M=A">Last modified</A>',
+        b"Last modified</a>",
+        b"Parent Directory</a>",
+        b"Directory Listing for",
+        b"<TITLE>Folder Listing.",
+        b'<table summary="Directory Listing" ',
+        b"- Browsing directory ",
         # IIS 6.0 and 7.0
-        '">[To Parent Directory]</a><br><br>',
+        b'">[To Parent Directory]</a><br><br>',
         # IIS 5.0
-        '<A HREF=".*?">.*?</A><br></pre><hr></body></html>'
+        b'<A HREF=".*?">.*?</A><br></pre><hr></body></html>'
     )
     _multi_in = MultiIn(DIR_INDEXING)
 
@@ -73,7 +74,7 @@ class directory_indexing(GrepPlugin):
         
         html_string = response.get_body()
 
-        for _ in self._multi_in.query(html_string):
+        for _ in self._multi_in.query(smart_str_ignore(html_string)):
             
             desc = 'The URL: "%s" has a directory indexing vulnerability.'
             desc = desc % response.get_url()

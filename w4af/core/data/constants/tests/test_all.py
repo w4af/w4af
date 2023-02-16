@@ -48,4 +48,4 @@ class TestAll(unittest.TestCase):
         self.assertEqual(IGNORED_PARAMETERS, IGNORED_PARAMETERS)
         self.assertEqual(VULNS, VULNS)
 
-        self.assertIn('root:x:0:0:', FILE_PATTERNS)
+        self.assertIn(b'root:x:0:0:', FILE_PATTERNS)

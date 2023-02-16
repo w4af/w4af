@@ -27,6 +27,7 @@ from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
 from w4af.core.data.fuzzer.fuzzer import create_mutants
 from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class mx_injection(AuditPlugin):
@@ -37,18 +38,18 @@ class mx_injection(AuditPlugin):
     MX_PAYLOADS = ['"', 'iDontExist', '']
 
     MX_ERRORS = (
-        'Unexpected extra arguments to Select',
-        'Bad or malformed request',
-        'Could not access the following folders',
+        b'Unexpected extra arguments to Select',
+        b'Bad or malformed request',
+        b'Could not access the following folders',
         # Removing! Too many false positives...
         # 'A000',
         # 'A001',
-        'Invalid mailbox name',
-        'To check for outside changes to the folder list go to the folders page',
-        'go to the folders page',
-        'Query: SELECT',
-        'Query: FETCH',
-        'IMAP command'
+        b'Invalid mailbox name',
+        b'To check for outside changes to the folder list go to the folders page',
+        b'go to the folders page',
+        b'Query: SELECT',
+        b'Query: FETCH',
+        b'IMAP command'
     )
     _multi_in = MultiIn(MX_ERRORS)
 
@@ -82,7 +83,7 @@ class mx_injection(AuditPlugin):
         if self._has_bug(mutant):
             return
 
-        for mx_error in self._multi_in.query(response.body):
+        for mx_error in self._multi_in.query(smart_str_ignore(response.body)):
             if mx_error in mutant.get_original_response_body():
                 continue
 

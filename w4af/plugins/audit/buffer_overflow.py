@@ -32,6 +32,7 @@ from w4af.core.data.fuzzer.fuzzer import create_mutants
 from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.kb.vuln import Vuln
 from w4af.core.data.kb.info import Info
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class buffer_overflow(AuditPlugin):
@@ -41,14 +42,14 @@ class buffer_overflow(AuditPlugin):
     """
 
     OVERFLOW_ERRORS = (
-        '*** stack smashing detected ***:',
-        'Backtrace:',
-        'Memory map:',
+        b'*** stack smashing detected ***:',
+        b'Backtrace:',
+        b'Memory map:',
         
         # Note that the lack of commas after the strings is intentional
-        '<html><head>\n<title>500 Internal Server Error</title>\n'
-        '</head><body>\n<h1>'
-        'Internal Server Error</h1>'
+        b'<html><head>\n<title>500 Internal Server Error</title>\n'
+        b'</head><body>\n<h1>'
+        b'Internal Server Error</h1>'
     )
 
     _multi_in = MultiIn(OVERFLOW_ERRORS)
@@ -145,7 +146,7 @@ class buffer_overflow(AuditPlugin):
         """
         Analyze results of the _send_mutant method.
         """
-        for error_str in self._multi_in.query(response.body):
+        for error_str in self._multi_in.query(smart_str_ignore(response.body)):
 
             if error_str in mutant.get_original_response_body():
                 continue

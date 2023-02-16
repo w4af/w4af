@@ -28,7 +28,7 @@ import w4af.core.controllers.output_manager as om
 import w4af.core.data.parsers.parser_cache as parser_cache
 import w4af.core.data.kb.knowledge_base as kb
 
-from w4af.core.data.quick_match.multi_in import MultiIn
+from w4af.core.data.quick_match.multi_in import MultiInUnicode
 from w4af.core.data.db.disk_dict import DiskDict
 from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
 from w4af.core.data.kb.info_set import InfoSet
@@ -71,7 +71,7 @@ class html_comments(GrepPlugin):
         'depósito', 'cartão', 'crédito', 'dados pessoais'
     )
 
-    _multi_in = MultiIn([' %s ' % w for w in INTERESTING_WORDS])
+    _multi_in = MultiInUnicode([' %s ' % w for w in INTERESTING_WORDS])
 
     def grep(self, request, response):
         """

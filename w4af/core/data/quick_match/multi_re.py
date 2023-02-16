@@ -25,6 +25,19 @@ from typing import List, Tuple, Any, Generator, Iterable, Optional, Pattern, Mat
 import hyperscan
 from w4af.core.data.constants.encodings import DEFAULT_ENCODING
 
+class MultiREException(Exception):
+    pass
+
+def convert_flags(python_re_flags: int) -> int:
+    res = 0
+    if python_re_flags & re.IGNORECASE != 0:
+        res |= hyperscan.CH_FLAG_CASELESS
+    if python_re_flags & re.DOTALL != 0:
+        res |= hyperscan.CH_FLAG_DOTALL
+    if python_re_flags - re.IGNORECASE - re.DOTALL > 0:
+        raise MultiREException("Unknown regular expression flag", python_re_flags)
+    return res
+
 class MultiRE(object):
 
     def __init__(self,
@@ -65,6 +78,7 @@ class MultiRE(object):
         regexps = []
         flags = []
         indexes = []
+        converted_flags = convert_flags(self._re_compile_flags)
         for idx, item in enumerate(self._regexes_or_assoc):
 
             #
@@ -90,7 +104,7 @@ class MultiRE(object):
             self._original_re[idx] = regex
             if regex not in regexps:
                 regexps.append(regex)
-                flags.append(0)
+                flags.append(converted_flags)
                 indexes.append(idx)
 
         self._hyperscan.compile(
@@ -113,7 +127,6 @@ class MultiRE(object):
         #   keywords are found in the target string by acora
         #
         seen = set()
-        target_str = target_str.lower()
         matches = []
 
         def on_match(

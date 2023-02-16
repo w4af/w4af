@@ -23,6 +23,7 @@ import re
 import string
 
 from w4af.core.data.quick_match.multi_re import MultiRE
+from w4af.core.data.misc.encoding import DEFAULT_ENCODING
 
 PHP = 'PHP'
 ASP = 'ASP'
@@ -37,9 +38,9 @@ GROOVY = 'Groovy'
 
 
 SOURCE_CODE = (
-    (r'<\?php .*?\?>', {PHP}),
-    (r'<\?php\n.*?\?>', {PHP}),       # These two are required for perf #2129
-    (r'<\?php\r.*?\?>', {PHP}),       # and are repeated over the list
+    (br'<\?php .*?\?>', {PHP}),
+    (br'<\?php\n.*?\?>', {PHP}),       # These two are required for perf #2129
+    (br'<\?php\r.*?\?>', {PHP}),       # and are repeated over the list
 
     # Need to review how to re-add these in the future
     # https://github.com/andresriancho/w3af/issues/2129
@@ -48,48 +49,48 @@ SOURCE_CODE = (
     #('<\?\n.*?\?>', {PHP}),
     #('<\?\r.*?\?>', {PHP}),
 
-    (r'<% .*?%>', {ASP, JSP}),
-    (r'<%\n.*?%>', {ASP, JSP}),
-    (r'<%\r.*?%>', {ASP, JSP}),
+    (br'<% .*?%>', {ASP, JSP}),
+    (br'<%\n.*?%>', {ASP, JSP}),
+    (br'<%\r.*?%>', {ASP, JSP}),
 
-    (r'<%@ .*?%>', {ASPX}),          # http://goo.gl/zEjHA4
-    (r'<%@\n.*?%>', {ASPX}),
-    (r'<%@\r.*?%>', {ASPX}),
+    (br'<%@ .*?%>', {ASPX}),          # http://goo.gl/zEjHA4
+    (br'<%@\n.*?%>', {ASPX}),
+    (br'<%@\r.*?%>', {ASPX}),
 
-    (r'<asp:.*?%>', {ASPX}),
-    (r'<jsp:.*?>', {JSP}),
+    (br'<asp:.*?%>', {ASPX}),
+    (br'<jsp:.*?>', {JSP}),
 
-    (r'<%! .*%>', {JSP}),
-    (r'<%!\n.*%>', {JSP}),
-    (r'<%!\r.*%>', {JSP}),
-    (r'<%=.*%>', {JSP, PHP, RUBY}),
+    (br'<%! .*%>', {JSP}),
+    (br'<%!\n.*%>', {JSP}),
+    (br'<%!\r.*%>', {JSP}),
+    (br'<%=.*%>', {JSP, PHP, RUBY}),
 
-    (r'<!--\s*%.*?%(--)?>', {PHP}),
-    (r'<!--\s*\?.*?\?(--)?>', {ASP, JSP}),
-    (r'<!--\s*jsp:.*?(--)?>', {JSP}),
+    (br'<!--\s*%.*?%(--)?>', {PHP}),
+    (br'<!--\s*\?.*?\?(--)?>', {ASP, JSP}),
+    (br'<!--\s*jsp:.*?(--)?>', {JSP}),
 
-    (r'#include <', {UNKNOWN}),
+    (br'#include <', {UNKNOWN}),
 
-    (r'#!/usr/', {SHELL}),
-    (r'#!/opt/', {SHELL}),
-    (r'#!/bin/', {SHELL}),
+    (br'#!/usr/', {SHELL}),
+    (br'#!/opt/', {SHELL}),
+    (br'#!/bin/', {SHELL}),
 
-    (r'(^|\W)import java\.', {JAVA}),
-    (r'(^|\W)public class \w{1,60}\s?\{\s.*\Wpublic', {JAVA}),
-    (r'(^|\W)package\s\w+\;', {JAVA}),
+    (br'(^|\W)import java\.', {JAVA}),
+    (br'(^|\W)public class \w{1,60}\s?\{\s.*\Wpublic', {JAVA}),
+    (br'(^|\W)package\s\w+\;', {JAVA}),
 
-    (r'<!--g:render', {GROOVY}),
+    (br'<!--g:render', {GROOVY}),
 
     # Python
-    (r'(^|\W)def .*?\(.*?\):(\n|\r)', {PYTHON}),
+    (br'(^|\W)def .*?\(.*?\):(\n|\r)', {PYTHON}),
 
     # Ruby
-    (r'(^|\W)class \w{1,60}\s*<?\s*[a-zA-Z0-9_:]{0,90}.*?\W(def|validates)\s.*?\send($|\W)', {RUBY}),
+    (br'(^|\W)class \w{1,60}\s*<?\s*[a-zA-Z0-9_:]{0,90}.*?\W(def|validates)\s.*?\send($|\W)', {RUBY}),
 )
 
-BLACKLIST = {'xml', 'xpacket'}
+BLACKLIST = {b'xml', b'xpacket'}
 
-_multi_re = MultiRE(SOURCE_CODE, re.IGNORECASE | re.DOTALL, hint_len=2)
+_multi_re = MultiRE(SOURCE_CODE, re.IGNORECASE | re.DOTALL)
 
 def contains_source_code(http_response):
     """
@@ -99,11 +100,8 @@ def contains_source_code(http_response):
                 - A tuple containing the programming language names
     """
     body = http_response.get_body()
-    if isinstance(body, bytes):
-        if http_response.charset is not None:
-            body = http_response.get_body().decode(http_response.charset, errors="ignore")
-        else:
-            body = http_response.decode('utf-8', errors="ignore")
+    if isinstance(body, str):
+        body = body.encode(DEFAULT_ENCODING)
 
     for match, _, _, lang in _multi_re.query(body):
 
@@ -145,7 +143,7 @@ def is_false_positive(http_response, match, detected_langs):
     ratio = 0.9
 
     for char in match_str:
-        if char in string.printable:
+        if char in string.printable.encode(DEFAULT_ENCODING):
             printable += 1
 
     if (printable / len(match_str)) < ratio:

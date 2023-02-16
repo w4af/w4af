@@ -98,7 +98,7 @@ class cross_domain_js(GrepPlugin):
         if script_domain == response_url.get_domain():
             return
 
-        for _ in self._secure_domain_multi_in.query(script_domain):
+        for _ in self._secure_domain_multi_in.query(smart_str_ignore(script_domain)):
             # Query the multi in to check if any if the domains we loaded
             # previously match against the script domain we found in the
             # HTML.
@@ -142,7 +142,7 @@ class cross_domain_js(GrepPlugin):
             return
 
         secure_js_domains = set()
-        with open(secure_js_file) as secure_js_domains_fh:
+        with open(secure_js_file, "rb") as secure_js_domains_fh:
             for domain in secure_js_domains_fh:
                 secure_js_domains.add(domain.strip())
 

@@ -85,13 +85,20 @@ class MultiReTest(unittest.TestCase):
         self.assertEqual(rb'ab.*cdef', result[0][1])
         self.assertEqual(1, result[0][3])
 
-    def test_re_flags(self):
+    def test_re_flags_ignorecase(self):
         re_list = [rb'12.*3456', rb'ab.*cdef']
         mre = MultiRE(re_list, re.IGNORECASE)
 
         result = to_list(mre.query(b'AB3Cdef'))
         self.assertEqual(1, len(result))
         self.assertEqual(rb'ab.*cdef', result[0][1])
+
+    def test_re_flags_not_ignorecase(self):
+        re_list = [rb'12.*3456', rb'ab.*cdef']
+        mre = MultiRE(re_list)
+
+        result = to_list(mre.query(b'AB3Cdef'))
+        self.assertEqual(0, len(result))
 
     def test_unicode_re(self):
         re_list = [r'ñandú', r'ýandex']
