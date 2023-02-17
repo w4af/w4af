@@ -29,7 +29,7 @@ import w4af.core.data.constants.severity as severity
 from w4af import ROOT_PATH
 from w4af.core.data.parsers.doc.url import URL
 from w4af.core.data.kb.vuln import Vuln
-from w4af.core.data.quick_match.multi_in import MultiIn
+from w4af.core.data.quick_match.multi_in import MultiInUnicode
 from w4af.core.data.request.fuzzable_request import FuzzableRequest
 from w4af.core.controllers.plugins.crawl_plugin import CrawlPlugin
 from w4af.core.controllers.exceptions import RunOnce, BaseFrameworkException
@@ -123,7 +123,7 @@ class phishtank(CrawlPlugin):
         try:
             with open(self.PHISHTANK_DB, 'r') as phishtank_db_fd:
                 pt_matches = []
-                multi_in = MultiIn(to_check)
+                multi_in = MultiInUnicode(to_check)
 
                 om.out.debug('Starting the phishtank CSV parsing.')
 
