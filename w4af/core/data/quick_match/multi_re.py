@@ -36,8 +36,10 @@ def convert_flags(python_re_flags: int) -> int:
         res |= hyperscan.CH_FLAG_CASELESS
     if python_re_flags & re.DOTALL != 0:
         res |= hyperscan.CH_FLAG_DOTALL
+    if python_re_flags & re.MULTILINE != 0:
+        res |= hyperscan.CH_FLAG_MULTILINE
     # pylint: enable=E1101
-    if python_re_flags - re.IGNORECASE - re.DOTALL > 0:
+    if python_re_flags & ~(re.IGNORECASE | re.DOTALL | re.MULTILINE) > 0:
         raise MultiREException("Unknown regular expression flag", python_re_flags)
     return res
 

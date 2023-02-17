@@ -52,7 +52,7 @@ class xxe(AuditPlugin):
 
     # TODO: replace once replace-branch is merged
     REMOTE_FILES = [
-        'https://raw.githubusercontent.com/codders/w3af-python3/main/w3af/tests/fixtures/xxe.txt'
+        'https://raw.githubusercontent.com/w4af/w4af/main/w4af/tests/fixtures/xxe.txt'
     ]
 
     # This is the only content stored in the https://w4af.net/xxe.txt file
