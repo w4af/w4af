@@ -254,7 +254,7 @@ class TestMPDocumentParser(unittest.TestCase):
                 self.assertIsInstance(parser._parser, HTMLParser)
 
     @pytest.mark.slow
-    @pytest.mark.slow_group4
+    @pytest.mark.slow_group1
     def test_parser_memory_usage_exceeded(self):
         """
         This makes sure that we stop parsing a document that exceeds our memory

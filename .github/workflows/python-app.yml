@@ -52,7 +52,7 @@ jobs:
 
     runs-on: ubuntu-latest
     needs: [test]
-    timeout-minutes: 40
+    timeout-minutes: 50
     strategy:
       matrix:
         group: [moth,w4af_moth,sqlmap,mcir,wivet,phpmoth]
