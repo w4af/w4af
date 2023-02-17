@@ -148,7 +148,7 @@ class buffer_overflow(AuditPlugin):
         """
         for error_str in self._multi_in.query(smart_str_ignore(response.body)):
 
-            if error_str in mutant.get_original_response_body():
+            if error_str in smart_str_ignore(mutant.get_original_response_body()):
                 continue
 
             if self._has_bug(mutant):

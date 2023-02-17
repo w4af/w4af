@@ -32,7 +32,7 @@ from w4af.core.data.misc.encoding import smart_str_ignore
 from w4af.core.data.fuzzer.fuzzer import create_mutants
 from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.kb.vuln import Vuln
-from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.misc.encoding import smart_unicode, DEFAULT_ENCODING
 
 
 class xxe(AuditPlugin):
@@ -50,7 +50,6 @@ class xxe(AuditPlugin):
         '/etc/passwd',
     ]
 
-    # TODO: replace once replace-branch is merged
     REMOTE_FILES = [
         'https://raw.githubusercontent.com/w4af/w4af/main/w4af/tests/fixtures/xxe.txt'
     ]
@@ -313,7 +312,7 @@ class xxe(AuditPlugin):
         for pattern_match in self._find_patterns(body):
 
             # Remove false positives
-            if pattern_match in orig_resp_body:
+            if pattern_match in smart_str_ignore(orig_resp_body):
                 continue
 
             # Only report vulnerabilities once
@@ -368,7 +367,7 @@ class xxe(AuditPlugin):
         :yield: All the patterns we find
         """
         if self.REMOTE_SUCCESS in smart_unicode(body):
-            yield self.REMOTE_SUCCESS
+            yield self.REMOTE_SUCCESS.encode(DEFAULT_ENCODING)
 
         for file_pattern_match in self.file_pattern_multi_in.query(smart_str_ignore(body)):
             yield file_pattern_match

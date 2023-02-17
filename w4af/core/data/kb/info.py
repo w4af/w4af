@@ -627,7 +627,7 @@ class Info(dict):
         """
         return self._string_matches
 
-    def add_to_highlight(self, *str_match):
+    def add_to_highlight(self, *str_match: str|bytes):
         for s in str_match:
             if not isinstance(s, (str, bytes)):
                 raise TypeError('Only able to highlight strings.')
