@@ -80,7 +80,8 @@ class MultiIn(MultiRE):
             seen.add(idx)
             matches.append(self._create_output(idx))
 
-        self._hyperscan.scan(target_str, match_event_handler=on_match)
+        with self._lock:
+            self._hyperscan.scan(target_str, match_event_handler=on_match)
 
         yield from matches
 
