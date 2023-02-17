@@ -84,7 +84,7 @@ class mx_injection(AuditPlugin):
             return
 
         for mx_error in self._multi_in.query(smart_str_ignore(response.body)):
-            if mx_error in mutant.get_original_response_body():
+            if mx_error in smart_str_ignore(mutant.get_original_response_body()):
                 continue
 
             desc = 'MX injection was found at: %s' % mutant.found_at()

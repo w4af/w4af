@@ -28,7 +28,7 @@ from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
 from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.fuzzer.fuzzer import create_mutants
 from w4af.core.data.kb.vuln import Vuln
-from w4af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 class ldapi(AuditPlugin):
@@ -111,7 +111,7 @@ class ldapi(AuditPlugin):
 
             ldap_error_list = self._find_ldap_error(response)
             for ldap_error_string in ldap_error_list:
-                if ldap_error_string not in mutant.get_original_response_body():
+                if ldap_error_string not in smart_str_ignore(mutant.get_original_response_body()):
                     
                     desc = 'LDAP injection was found at: %s' % mutant.found_at()
                     
@@ -136,7 +136,7 @@ class ldapi(AuditPlugin):
             msg = ('Found LDAP error string. The error returned by the web'
                    ' application is (only a fragment is shown): "%s". The error'
                    ' was found in response with ID %s')
-            om.out.information(msg % (match_string, response.id))
+            om.out.information(msg % (smart_unicode(match_string), response.id))
             res.append(match_string)
         return res
 

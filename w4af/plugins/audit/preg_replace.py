@@ -28,7 +28,7 @@ from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
 from w4af.core.data.fuzzer.fuzzer import create_mutants
 from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.kb.vuln import Vuln
-from w4af.core.data.misc.encoding import smart_str_ignore
+from w4af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 class preg_replace(AuditPlugin):
@@ -71,7 +71,7 @@ class preg_replace(AuditPlugin):
             return
 
         for preg_error_string in self._find_preg_error(response):
-            if preg_error_string in mutant.get_original_response_body():
+            if preg_error_string in smart_str_ignore(mutant.get_original_response_body()):
                 continue
 
             desc = 'Unsafe usage of preg_replace was found at: %s'
@@ -99,7 +99,7 @@ class preg_replace(AuditPlugin):
                    ' a fragment is shown): "%s", and was found in the'
                    ' response with id %s.')
 
-            om.out.information(msg % (error_match, response.id))
+            om.out.information(msg % (smart_unicode(error_match), response.id))
             res.append(error_match)
         return res
 
