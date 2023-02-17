@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import re
 from typing import List, Tuple, Any, Generator, Iterable, Optional, Pattern, Match
+from threading import Lock
 
 import hyperscan
 from w4af.core.data.constants.encodings import DEFAULT_ENCODING
@@ -30,10 +31,12 @@ class MultiREException(Exception):
 
 def convert_flags(python_re_flags: int) -> int:
     res = 0
+    # pylint: disable=E1101
     if python_re_flags & re.IGNORECASE != 0:
         res |= hyperscan.CH_FLAG_CASELESS
     if python_re_flags & re.DOTALL != 0:
         res |= hyperscan.CH_FLAG_DOTALL
+    # pylint: enable=E1101
     if python_re_flags - re.IGNORECASE - re.DOTALL > 0:
         raise MultiREException("Unknown regular expression flag", python_re_flags)
     return res
@@ -71,9 +74,12 @@ class MultiRE(object):
         self._re_cache = dict()
         self._original_re = dict()
         self._build()
+        self._lock = Lock()
 
     def _build(self):
+        # pylint: disable=E1101
         self._hyperscan = hyperscan.Database()
+        # pylint: enable=E1101
 
         regexps = []
         flags = []
@@ -145,7 +151,8 @@ class MultiRE(object):
             if matchobj:
                 matches.append(self._create_output(matchobj, idx, compiled_regex))
 
-        self._hyperscan.scan(target_str, match_event_handler=on_match)
+        with self._lock:
+            self._hyperscan.scan(target_str, match_event_handler=on_match)
 
         yield from matches
 
