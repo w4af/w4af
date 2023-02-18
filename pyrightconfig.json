@@ -2,7 +2,7 @@
   "include": [
     "w4af"
   ],
-  
+
   "exclude": [
     "w4af/plugins/attack/db/sqlmap",
   ],
