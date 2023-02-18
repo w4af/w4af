@@ -52,7 +52,7 @@ CORE_PIP_PACKAGES = [
                      PIPDependency('msgpack', 'msgpack', '1.0.4'),
                      PIPDependency('ndg', 'ndg-httpsclient', '0.5.1'),
                      PIPDependency('nltk', 'nltk', '3.8.1'),
-                     PIPDependency('nocasedict', 'nocasedict', '1.1.0'),
+                     PIPDependency('nocasedict', 'nocasedict', '1.0.4'),
                      PIPDependency('ntlm', 'python-ntlm3', '1.0.2'),
                      # For language detection
                      PIPDependency('numpy', 'numpy', '1.24.2'),
