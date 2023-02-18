@@ -155,10 +155,10 @@ class pluginsTypeMenu(menu):
         else:
             return self
 
-    def _enablePlugins(self, list):
+    def _enablePlugins(self, lst):
         enabled = copy.copy(self._w4af.plugins.get_enabled_plugins(self._name))
 
-        for plugin in list:
+        for plugin in lst:
             if plugin == '':
                 continue
             if plugin.startswith('!'):
@@ -176,7 +176,10 @@ class pluginsTypeMenu(menu):
                 elif plugin in enabled:
                     enabled.remove(plugin)
             elif plugin == 'all':
-                enabled = list(self._plugins.keys())
+                if isinstance(self._plugins, list):
+                    enabled = self._plugins
+                else:
+                    enabled = list(self._plugins.keys())
             elif plugin not in enabled:
                 enabled.append(plugin)
 
