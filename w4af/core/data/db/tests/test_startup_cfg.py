@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import os
 import unittest
 
+import tempfile
 from datetime import date, timedelta
 from unittest.mock import Mock
 
@@ -29,16 +30,19 @@ from w4af.core.controllers.misc.home_dir import get_home_dir
 
 class TestStartUpConfig(unittest.TestCase):
 
-    CFG_FILE = os.path.join(get_home_dir(), 'unittest-startup.conf')
+    def setUp(self):
+        self.config_dir = tempfile.mkdtemp(prefix=get_home_dir())
+        self.cfg_file = os.path.join(self.config_dir, 'unittest-startup.conf')
 
     def tearDown(self):
         try:
-            os.unlink(self.CFG_FILE)
+            os.unlink(self.cfg_file)
+            os.rmdir(self.config_dir)
         except:
             pass
 
     def test_save(self):
-        scfg = StartUpConfig(self.CFG_FILE)
+        scfg = StartUpConfig(self.cfg_file)
 
         scfg.last_upd = date.today()
         scfg.accepted_disclaimer = True
@@ -62,14 +66,14 @@ class TestStartUpConfig(unittest.TestCase):
         the actual file.
         """
         # Save
-        scfg = StartUpConfig(self.CFG_FILE)
+        scfg = StartUpConfig(self.cfg_file)
         scfg.last_upd = date.today()
         scfg.accepted_disclaimer = True
         scfg.last_commit_id = '3f4808082c1943f964669af1a1c94245bab09c61'
         scfg.save()
 
         # Load
-        scfg = StartUpConfig(self.CFG_FILE)
+        scfg = StartUpConfig(self.cfg_file)
         self.assertEqual(scfg.last_upd, date.today())
         self.assertEqual(scfg.accepted_disclaimer, True)
         self.assertEqual(scfg.last_commit_id, '3f4808082c1943f964669af1a1c94245bab09c61')
