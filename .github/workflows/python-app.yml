@@ -80,7 +80,7 @@ jobs:
         pipenv install --categories="packages dev-packages"
     - name: Integration tests
       run: |
-        pipenv run pytest --cov=w4af -n auto -m "${{ matrix.group }} and not fails"
+        pipenv run pytest --cov=w4af -m "${{ matrix.group }} and not fails"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
