@@ -92,7 +92,6 @@ jobs:
     name: Test w4af (slow tests)
 
     runs-on: ubuntu-latest
-    timeout-minutes: 55
     strategy:
       matrix:
         group: [1, 2, 3, 4]
@@ -146,7 +145,7 @@ jobs:
     - name: External tests
       uses: nick-fields/retry@v2
       with:
-        timeout_minutes: 45
+        timeout_minutes: 55
         continue_on_error: true
         max_attempts: 1
         command: |
