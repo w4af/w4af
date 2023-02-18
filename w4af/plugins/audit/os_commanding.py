@@ -117,7 +117,7 @@ class os_commanding(AuditPlugin):
 
         for file_pattern_match in self._multi_in.query(smart_str_ignore(response.get_body())):
 
-            if file_pattern_match in mutant.get_original_response_body():
+            if file_pattern_match in smart_str_ignore(mutant.get_original_response_body()):
                 continue
 
             # Search for the correct command and separator

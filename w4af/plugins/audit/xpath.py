@@ -109,7 +109,7 @@ class xpath(AuditPlugin):
 
         xpath_error_list = self._find_xpath_error(response)
         for xpath_error in xpath_error_list:
-            if xpath_error not in mutant.get_original_response_body():
+            if xpath_error not in smart_str_ignore(mutant.get_original_response_body()):
 
                 desc = 'XPATH injection was found at: %s' % mutant.found_at()
 
