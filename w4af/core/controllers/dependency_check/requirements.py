@@ -36,8 +36,8 @@ CORE_PIP_PACKAGES = [
                      PIPDependency('ds_store', 'ds-store', '1.3.1'),
                      # Only used by the REST API, but in the future the console
                      # and GUI will consume it so it's ok to put this here
-                     PIPDependency('Flask', 'Flask', '2.2.2'),
-                     PIPDependency('git.util', 'GitPython', '3.1.30'),
+                     PIPDependency('Flask', 'Flask', '2.2.3'),
+                     PIPDependency('git.util', 'GitPython', '3.1.31'),
                      PIPDependency('github', 'PyGithub', '1.57'),
                      PIPDependency('ipaddresses', 'ipaddresses', '0.0.2'),
                      PIPDependency('jinja2', 'Jinja2', '3.1.2'),
