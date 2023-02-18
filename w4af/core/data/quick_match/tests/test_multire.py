@@ -46,7 +46,6 @@ class MultiReTest(unittest.TestCase):
         mre = MultiRE(re_list)
 
         result = to_list(mre.query(b'4567 4567'))
-        print(result)
         self.assertEqual(1, len(result))
 
     def test_short(self):
@@ -109,7 +108,6 @@ class MultiReTest(unittest.TestCase):
         self.assertEqual([], result)
 
         result = to_list(mre.query('123 ñandú 345'))
-        print(result)
         self.assertEqual(1, len(result))
         self.assertEqual('ñandú', result[0][1])
 
@@ -118,7 +116,6 @@ class MultiReTest(unittest.TestCase):
         mre = MultiREUnicode(re_list)
 
         result = to_list(mre.query('abc321ñ'))
-        print(result)
         self.assertEqual(1, len(result))
         self.assertEqual('abc321', result[0][1])
 

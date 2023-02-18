@@ -60,7 +60,6 @@ class MultiInTest(unittest.TestCase):
         imi = MultiIn(in_list)
 
         result = to_list(imi.query(b'spam1234567890eggs'))
-        print(result)
         self.assertEqual(1, len(result))
         self.assertEqual(b'123456', result[0])
 
