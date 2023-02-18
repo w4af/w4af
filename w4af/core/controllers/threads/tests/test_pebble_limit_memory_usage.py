@@ -99,11 +99,13 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         #
         pool = self.get_pool_with_memlimit()
 
-        block_size = 1024 * 10
+        block_size = 1024 * 1024
         current_len = 0
 
         while True:
             current_len += block_size
+            with open("/tmp/log.txt", "a") as f:
+                f.write("Testing at %d" % current_len)
             future = pool.submit(use_memory_in_string, None, current_len)
             try:
                 future.result()
