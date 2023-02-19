@@ -17,7 +17,7 @@ jobs:
     name: Test w4af (not slow)
 
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     strategy:
       matrix:
         group: [1, 2, 3, 4]
@@ -45,6 +45,46 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: coverage${{ matrix.group }}
+        path: .coverage
+
+  integration_test_moth:
+    name: w4af integration tests with moth docker environments
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    strategy:
+      matrix:
+        group: [1,2]
+
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+        cache: 'pipenv'
+    - name: Add test routes
+      run: |
+        ./w4af/tests/add-test-routes.sh
+    - uses: isbang/compose-action@v1.3.2
+      with:
+        compose-file: "./w4af/tests/docker-compose.yml"
+        services: moth
+    - name: Install node packages
+      run: npm install
+    - name: Install pipenv
+      run: |
+        python -m pip install --upgrade pipenv wheel
+    - name: Install dependencies
+      run: |
+        pipenv install --categories="packages dev-packages"
+    - name: Integration tests
+      run: |
+        pipenv run pytest --cov=w4af --splits 4 --group ${{ matrix.group }} -m "moth and not fails"
+    - name: Upload coverage
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-moth-${{ matrix.group }}
         path: .coverage
 
   integration_test:
@@ -123,7 +163,7 @@ jobs:
     name: Test w4af (external tests)
 
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 25
     strategy:
       matrix:
         group: [1, 2, 3, 4]
@@ -145,7 +185,7 @@ jobs:
     - name: External tests
       uses: nick-fields/retry@v2
       with:
-        timeout_minutes: 50
+        timeout_minutes: 20
         continue_on_error: true
         max_attempts: 1
         command: |
