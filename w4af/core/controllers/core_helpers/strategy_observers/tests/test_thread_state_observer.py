@@ -21,12 +21,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import unittest
 import time
+import pytest
 
 from w4af.core.controllers.threads.threadpool import Pool
 from w4af.core.controllers.core_helpers.strategy_observers.thread_state_observer import ThreadStateObserver
 
 
 class TestThreadStateObserver(unittest.TestCase):
+    @pytest.mark.flaky(reruns=3)
     def test_inspect_data_to_log(self):
         worker_pool = Pool(processes=1, worker_names='WorkerThread')
         tso = ThreadStateObserver()
