@@ -161,7 +161,7 @@ class APIScanTest(IntegrationTest):
                                    verify=False)
         self.assertEqual(response.json(), {'message': 'Success'})
 
-        return scan_id
+        self.scan_id = scan_id
 
     def test_stop(self):
         profile, target_url = get_test_profile()
@@ -218,8 +218,10 @@ class APIScanTest(IntegrationTest):
             self.assertTrue(False, [ entry['message'] for entry in log_data ])
 
     def test_two_scans(self):
-        scan_id_0 = self.test_start_simple_scan()
-        scan_id_1 = self.test_start_simple_scan()
+        self.test_start_simple_scan()
+        scan_id_0 = self.scan_id
+        self.test_start_simple_scan()
+        scan_id_1 = self.scan_id
 
         self.assertEqual(scan_id_0, 0)
         self.assertEqual(scan_id_1, 1)
