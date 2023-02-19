@@ -40,7 +40,7 @@ jobs:
         pipenv install --categories="packages dev-packages"
     - name: Core unittests
       run: |
-        pipenv run pytest --cov=w4af -n auto --splits 8 --group ${{ matrix.group }} -m "not moth and not wavsep and not w4af_moth and not sqlmap and not mcir and not wivet and not phpmoth and not fails and not git and not gui and not integration and not ci_ignore and not slow and not wordpress and not modsecurity"
+        pipenv run pytest --cov=w4af -n auto --splits 4 --group ${{ matrix.group }} -m "not moth and not wavsep and not w4af_moth and not sqlmap and not mcir and not wivet and not phpmoth and not fails and not git and not gui and not integration and not ci_ignore and not slow and not wordpress and not modsecurity"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
