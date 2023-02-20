@@ -80,7 +80,7 @@ jobs:
         pipenv install --categories="packages dev-packages"
     - name: Integration tests
       run: |
-        pipenv run pytest --cov=w4af --splits 4 --group ${{ matrix.group }} -m "moth and not fails"
+        pipenv run pytest --cov=w4af --splits 2 --group ${{ matrix.group }} -m "moth and not fails"
     - name: Upload coverage
       uses: actions/upload-artifact@v3
       with:
@@ -94,7 +94,7 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        group: [moth,w4af_moth,sqlmap,mcir,wivet,phpmoth]
+        group: [w4af_moth,sqlmap,mcir,wivet,phpmoth]
 
 
     steps:
