@@ -31,6 +31,7 @@ from w4af.core.data.fuzzer.fuzzer import create_mutants
 from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.constants.file_patterns import FILE_PATTERNS
 from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class os_commanding(AuditPlugin):
@@ -114,9 +115,9 @@ class os_commanding(AuditPlugin):
         if self._has_bug(mutant):
             return
 
-        for file_pattern_match in self._multi_in.query(response.get_body()):
+        for file_pattern_match in self._multi_in.query(smart_str_ignore(response.get_body())):
 
-            if file_pattern_match in mutant.get_original_response_body():
+            if file_pattern_match in smart_str_ignore(mutant.get_original_response_body()):
                 continue
 
             # Search for the correct command and separator

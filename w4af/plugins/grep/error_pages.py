@@ -26,6 +26,7 @@ from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.quick_match.multi_re import MultiRE
 from w4af.core.data.kb.info import Info
 from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class error_pages(GrepPlugin):
@@ -36,109 +37,109 @@ class error_pages(GrepPlugin):
     """
 
     ERROR_PAGES = (
-        '<H1>Error page exception</H1>',
+        b'<H1>Error page exception</H1>',
 
         # This signature fires up also in default 404 pages of aspx which
         # generates a lot of noise, so ... disabling it
         # '<span><H1>Server Error in ',
 
-        '<h2> <i>Runtime Error</i> </h2></span>',
-        '<h2> <i>Access is denied</i> </h2></span>',
-        '<H3>Original Exception: </H3>',
-        'Server object error',
-        'invalid literal for int()',
-        'exceptions.ValueError',
+        b'<h2> <i>Runtime Error</i> </h2></span>',
+        b'<h2> <i>Access is denied</i> </h2></span>',
+        b'<H3>Original Exception: </H3>',
+        b'Server object error',
+        b'invalid literal for int()',
+        b'exceptions.ValueError',
 
-        '<font face="Arial" size=2>Type mismatch: ',
-        '[an error occurred while processing this directive]',
+        b'<font face="Arial" size=2>Type mismatch: ',
+        b'[an error occurred while processing this directive]',
 
-        '<HTML><HEAD><TITLE>Error Occurred While Processing Request</TITLE>'
-        '</HEAD><BODY><HR><H3>Error Occurred While Processing Request</H3><P>',
+        b'<HTML><HEAD><TITLE>Error Occurred While Processing Request</TITLE>'
+        b'</HEAD><BODY><HR><H3>Error Occurred While Processing Request</H3><P>',
 
         # VBScript
-        '<p>Microsoft VBScript runtime </font>',
-        "<font face=\"Arial\" size=2>error '800a000d'</font>",
+        b'<p>Microsoft VBScript runtime </font>',
+        b"<font face=\"Arial\" size=2>error '800a000d'</font>",
 
         # nwwcgi errors
-        '<TITLE>nwwcgi Error',
+        b'<TITLE>nwwcgi Error',
 
         # ASP error I found during a pentest, the ASP used a foxpro db, not a
         # SQL injection
-        '<font face="Arial" size=2>error \'800a0005\'</font>',
-        '<h2> <i>Runtime Error</i> </h2></span>',
+        b'<font face="Arial" size=2>error \'800a0005\'</font>',
+        b'<h2> <i>Runtime Error</i> </h2></span>',
         # Some error in ASP when using COM objects.
-        'Operation is not allowed when the object is closed.',
+        b'Operation is not allowed when the object is closed.',
         # An error when ASP tries to include something and it fails
-        '<p>Active Server Pages</font> <font face="Arial" size=2>error \'ASP 0126\'</font>',
+        b'<p>Active Server Pages</font> <font face="Arial" size=2>error \'ASP 0126\'</font>',
 
         # ASPX
-        '<b> Description: </b>An unhandled exception occurred during the execution of the'
-        ' current web request',
+        b'<b> Description: </b>An unhandled exception occurred during the execution of the'
+        b' current web request',
 
         # Struts
-        '] does not contain handler parameter named',
+        b'] does not contain handler parameter named',
 
         # PHP
-        '<b>Warning</b>: ',
-        'No row with the given identifier',
-        'open_basedir restriction in effect',
-        "eval()'d code</b> on line <b>",
-        "Cannot execute a blank command in",
-        "Fatal error</b>:  preg_replace",
-        "thrown in <b>",
-        "#0 {main}",
-        "Stack trace:",
-        "</b> on line <b>",
+        b'<b>Warning</b>: ',
+        b'No row with the given identifier',
+        b'open_basedir restriction in effect',
+        b"eval()'d code</b> on line <b>",
+        b"Cannot execute a blank command in",
+        b"Fatal error</b>:  preg_replace",
+        b"thrown in <b>",
+        b"#0 {main}",
+        b"Stack trace:",
+        b"</b> on line <b>",
 
         # python
-        "PythonHandler django.core.handlers.modpython",
-        "t = loader.get_template(template_name) # You need to create a 404.html template.",
-        '<h2>Traceback <span>(innermost last)</span></h2>',
+        b"PythonHandler django.core.handlers.modpython",
+        b"t = loader.get_template(template_name) # You need to create a 404.html template.",
+        b'<h2>Traceback <span>(innermost last)</span></h2>',
 
         # Java
-        '[java.lang.',
-        'class java.lang.',
-        'java.lang.NullPointerException',
-        'java.rmi.ServerException',
-        'at java.lang.',
+        b'[java.lang.',
+        b'class java.lang.',
+        b'java.lang.NullPointerException',
+        b'java.rmi.ServerException',
+        b'at java.lang.',
 
-        'onclick="toggle(\'full exception chain stacktrace\')"',
-        'at org.apache.catalina',
-        'at org.apache.coyote.',
-        'at org.apache.tomcat.',
-        'at org.apache.jasper.',
+        b'onclick="toggle(\'full exception chain stacktrace\')"',
+        b'at org.apache.catalina',
+        b'at org.apache.coyote.',
+        b'at org.apache.tomcat.',
+        b'at org.apache.jasper.',
 
         # https://github.com/andresriancho/w3af/issues/4001
-        '<html><head><title>Application Exception</title>',
+        b'<html><head><title>Application Exception</title>',
 
         # ruby
-        '<h1 class="error_title">Ruby on Rails application could not be started</h1>',
+        b'<h1 class="error_title">Ruby on Rails application could not be started</h1>',
 
         # Coldfusion
-        '<title>Error Occurred While Processing Request</title></head><body><p></p>',
-        '<HTML><HEAD><TITLE>Error Occurred While Processing Request</TITLE></HEAD><BODY><HR><H3>',
-        '<TR><TD><H4>Error Diagnostic Information</H4><P><P>',
+        b'<title>Error Occurred While Processing Request</title></head><body><p></p>',
+        b'<HTML><HEAD><TITLE>Error Occurred While Processing Request</TITLE></HEAD><BODY><HR><H3>',
+        b'<TR><TD><H4>Error Diagnostic Information</H4><P><P>',
 
-        '<li>Search the <a href="http://www.macromedia.com/support/coldfusion/" '
-        'target="new">Knowledge Base</a> to find a solution to your problem.</li>',
+        b'<li>Search the <a href="http://www.macromedia.com/support/coldfusion/" '
+        b'target="new">Knowledge Base</a> to find a solution to your problem.</li>',
 
         # http://www.programacion.net/asp/articulo/kbr_execute/
-        'Server.Execute Error',
+        b'Server.Execute Error',
 
         # IIS
-        '<h2 style="font:8pt/11pt verdana; color:000000">HTTP 403.6 - Forbidden: IP address rejected<br>',
-        '<TITLE>500 Internal Server Error</TITLE>',
+        b'<h2 style="font:8pt/11pt verdana; color:000000">HTTP 403.6 - Forbidden: IP address rejected<br>',
+        b'<TITLE>500 Internal Server Error</TITLE>',
     )
     _multi_in = MultiIn(ERROR_PAGES)
 
     VERSION_REGEX = (
-        (r'<address>(.*?)</address>', 'Apache'),
-        (r'<HR size="1" noshade="noshade"><h3>(.*?)</h3></body>',
+        (rb'<address>(.*?)</address>', 'Apache'),
+        (rb'<HR size="1" noshade="noshade"><h3>(.*?)</h3></body>',
          'Apache Tomcat'),
-        (r'<a href="http://www.microsoft.com/ContentRedirect.asp\?prd=iis&sbp=&pver=(.*?)&pid=&ID', 'IIS'),
+        (rb'<a href="http://www.microsoft.com/ContentRedirect.asp\?prd=iis&sbp=&pver=(.*?)&pid=&ID', 'IIS'),
 
         # <b>Version Information:</b>&nbsp;Microsoft .NET Framework Version:1.1.4322.2300; ASP.NET Version:1.1.4322.2300
-        (r'<b>Version Information:</b>&nbsp;(.*?)\n', 'ASP .NET')
+        (rb'<b>Version Information:</b>&nbsp;(.*?)\n', 'ASP .NET')
     )
     _multi_re = MultiRE(VERSION_REGEX)
 
@@ -177,7 +178,7 @@ class error_pages(GrepPlugin):
             if url == response.get_url():
                 return
 
-        for msg in self._multi_in.query(response.body):
+        for msg in self._multi_in.query(smart_str_ignore(response.body)):
             if self._avoid_report(request, response, msg):
                 continue
 
@@ -261,7 +262,7 @@ class error_pages(GrepPlugin):
         """
         if 400 < response.get_code() < 600:
 
-            for match, _, _, server in self._multi_re.query(response.body):
+            for match, _, _, server in self._multi_re.query(smart_str_ignore(response.body)):
                 match_string = match.group(0)
                 if match_string not in self._already_reported_versions:
                     # Save the info obj

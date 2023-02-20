@@ -85,7 +85,7 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         self.assertEqual(future.result(), usage)
         self.assertEqual(workers_before_test, list(pool._pool_manager.worker_manager.workers.keys())[:])
 
-    @pytest.mark.slow_group1
+    @pytest.mark.slow_group4
     @pytest.mark.slow
     def test_effective_kill_limit(self):
         #
@@ -99,11 +99,12 @@ class TestPebbleMemoryUsage(unittest.TestCase):
         #
         pool = self.get_pool_with_memlimit()
 
-        block_size = 1024 * 10
+        block_size = 1024 * 1024
         current_len = 0
 
         while True:
             current_len += block_size
+            block_size *= 2
             future = pool.submit(use_memory_in_string, None, current_len)
             try:
                 future.result()

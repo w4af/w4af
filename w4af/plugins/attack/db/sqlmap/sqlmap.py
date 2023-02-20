@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
+Copyright (c) 2006-2023 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -64,7 +64,6 @@ try:
     from lib.core.common import setPaths
     from lib.core.common import weAreFrozen
     from lib.core.convert import getUnicode
-    from lib.core.common import MKSTEMP_PREFIX
     from lib.core.common import setColor
     from lib.core.common import unhandledExceptionMessage
     from lib.core.compat import LooseVersion
@@ -73,6 +72,7 @@ try:
     from lib.core.data import conf
     from lib.core.data import kb
     from lib.core.datatype import OrderedSet
+    from lib.core.enums import MKSTEMP_PREFIX
     from lib.core.exception import SqlmapBaseException
     from lib.core.exception import SqlmapShellQuitException
     from lib.core.exception import SqlmapSilentQuitException
@@ -250,7 +250,10 @@ def main():
         raise SystemExit
 
     except KeyboardInterrupt:
-        print()
+        try:
+            print()
+        except IOError:
+            pass
 
     except EOFError:
         print()
@@ -492,6 +495,11 @@ def main():
             errMsg = "there has been a problem in enumeration. "
             errMsg += "Because of a considerable chance of false-positive case "
             errMsg += "you are advised to rerun with switch '--flush-session'"
+            logger.critical(errMsg)
+            raise SystemExit
+
+        elif "database disk image is malformed" in excMsg:
+            errMsg = "local session file seems to be malformed. Please rerun with '--flush-session'"
             logger.critical(errMsg)
             raise SystemExit
 

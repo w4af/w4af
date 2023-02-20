@@ -110,7 +110,6 @@ class TestSSLCertificate(PluginTest):
         self.assertEqual(len(invalid_ssl_cert), 0)
         self.assertEqual(len(invalid_ssl_connect), 0)
         self.assertEqual(len(ssl_v2), 0)
-        # taken from another branch for temporary fixing
         # I am deeply sorry for this. The certificate expires on a yearly basis
         # in February. Middle of February, the certificate really is ssl_soon_expire
         self.assertTrue((len(ssl_soon_expire) == 0) or (datetime.now().month == 2))

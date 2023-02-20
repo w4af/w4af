@@ -19,13 +19,19 @@ along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-from acora import AcoraBuilder
+from typing import List, Tuple, Any, Generator, Iterable, Optional
+
+import hyperscan
+
 from w4af.core.data.constants.encodings import DEFAULT_ENCODING
 from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.quick_match.multi_re import MultiRE, MultiREUnicode
 
 
-class MultiIn(object):
-    def __init__(self, keywords_or_assoc):
+class MultiIn(MultiRE):
+    def __init__(self,
+        keywords_or_assoc: Iterable[bytes|Tuple[bytes, Any]]
+        ):
         """
         :param keywords_or_assoc: A list with all the strings that we want
         to match against one or more strings using the "query" function.
@@ -42,67 +48,74 @@ class MultiIn(object):
         In the second case we'll return
             [[str_N, objN],]
         """
-        self._keywords_or_assoc = keywords_or_assoc
-        self._translator = dict()
-        self._acora = self._build()
+        MultiRE.__init__(self, keywords_or_assoc, re_compile_flags=0, literal=True)
 
-    def _build(self):
-        builder = AcoraBuilder()
-
-        for idx, item in enumerate(self._keywords_or_assoc):
-
-            if isinstance(item, tuple):
-                keyword = item[0]
-                keyword = keyword.encode(DEFAULT_ENCODING)
-
-                if keyword in self._translator:
-                    raise ValueError('Duplicated keyword "%s"' % keyword)
-
-                self._translator[keyword] = item[1:]
-
-                builder.add(keyword)
-            elif isinstance(item, str):
-                keyword = item.encode(DEFAULT_ENCODING)
-                builder.add(keyword)
-            elif isinstance(item, bytes):
-                builder.add(item)
-            else:
-                raise ValueError('Can NOT build MultiIn with provided values.')
-
-        return builder.build()
-
-    def query(self, target_str):
+    def query(self, target_str: bytes) -> Generator[Tuple[bytes, Optional[Any]], None, None]:
         """
-        Run through all the keywords and identify them in target_str
+        Run through all the regular expressions and identify them in target_str.
+
+        We'll only run the regular expressions if:
+             * They do not have keywords
+             * The keywords exist in the string
 
         :param target_str: The target string where the keywords need to be match
-        :yield: The matches (see __init__)
+        :yield: (match_obj, re_str_N, compiled_regex)
         """
-        target_was_string = False
-        if isinstance(target_str, str):
-            target_was_string = True
-            target_str = target_str.encode(DEFAULT_ENCODING)
-
-        def unwrap(output):
-            if target_was_string:
-                if isinstance(output, bytes):
-                    return output.decode("utf-8")
-                elif isinstance(output, list):
-                    return [ unwrap(a) for a in output ]
-                return output
-
+        #
+        #   Match the regular expressions that have keywords and those
+        #   keywords are found in the target string by acora
+        #
         seen = set()
+        matches = []
 
-        for match, position in self._acora.finditer(target_str):
-            if match in seen:
+        def on_match(
+            idx: int,
+            from_: int,
+            to: int,
+            flags: int,
+            context: Optional[Any] = None
+        ) -> Optional[bool]:
+            if idx in seen:
+                return
+            seen.add(idx)
+            matches.append(self._create_output(idx))
+
+        with self._lock:
+            self._hyperscan.scan(target_str, match_event_handler=on_match)
+
+        yield from matches
+
+    def _create_output(self, idx: int) -> Tuple[str, str, Optional[Any]]:
+        extra_data = self._translator.get(idx, None)
+        regexp = self._original_re[idx]
+
+        if extra_data is None:
+            return regexp
+        else:
+            return regexp, extra_data
+
+def convert_iterables_to_bytes(
+        item: str|Tuple[str, Any]
+    ) -> bytes|Tuple[bytes, Any]:
+    if isinstance(item, str):
+        return item.encode(DEFAULT_ENCODING)
+    else:
+        return (item[0].encode(DEFAULT_ENCODING), item[1])
+
+class MultiInUnicode(MultiIn):
+
+    def __init__(self,
+        regexes_or_assoc: Iterable[str|Tuple[str, Any]],
+        re_compile_flags: int = 0,
+        literal=False):
+        MultiIn.__init__(
+            self,
+            map(convert_iterables_to_bytes, regexes_or_assoc))
+
+    def query(self, target_str: str) -> Generator[str|Tuple[str, Optional[Any]], None, None]:
+        target_str_bytes = target_str.encode(DEFAULT_ENCODING)
+        for item in MultiIn.query(self, target_str_bytes):
+            if isinstance(item, bytes):
+                yield item.decode(DEFAULT_ENCODING)
                 continue
-
-            seen.add(match)
-            extra_data = self._translator.get(match, None)
-
-            if extra_data is None:
-                yield unwrap(match)
-            else:
-                all_data = [match]
-                all_data.extend(extra_data)
-                yield unwrap(all_data)
+            yield item[0].decode(DEFAULT_ENCODING), item[1]

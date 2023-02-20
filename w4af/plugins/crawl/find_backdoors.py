@@ -32,6 +32,7 @@ from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
 from w4af.core.data.kb.vuln import Vuln
 from w4af.core.data.request.fuzzable_request import FuzzableRequest
 from w4af.core.data.quick_match.multi_re import MultiRE
+from w4af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 class find_backdoors(CrawlPlugin):
@@ -57,17 +58,17 @@ class find_backdoors(CrawlPlugin):
                 return
 
             signatures = self._read_signatures()
-            self._signature_re = MultiRE(signatures, hint_len=2)
+            self._signature_re = MultiRE(signatures)
 
     def _read_signatures(self):
-        with open(self.SIGNATURE_DB) as sig_fh:
+        with open(self.SIGNATURE_DB, "rb") as sig_fh:
             for line in sig_fh:
                 line = line.strip()
 
                 if not line:
                     continue
 
-                if line.startswith('#'):
+                if line.startswith(b'#'):
                     continue
 
                 yield (line, 'Backdoor signature')
@@ -157,11 +158,11 @@ class find_backdoors(CrawlPlugin):
         :param response: HTTPResponse object
         :return: A bool value
         """
-        body_text = response.get_body()
+        body_text = smart_str_ignore(response.get_body())
         
         for match, _, _, _ in self._signature_re.query(body_text):
             match_string = match.group(0)
-            return match_string
+            return smart_unicode(match_string)
 
         return None
 

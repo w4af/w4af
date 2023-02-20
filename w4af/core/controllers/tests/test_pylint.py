@@ -55,7 +55,7 @@ class PylintRunner(unittest.TestCase):
         lint.Run(pylint_args, reporter=TextReporter(pylint_output), exit=False)
         return pylint_output
     
-    @pytest.mark.slow_group1
+    @pytest.mark.slow_group2
     @pytest.mark.slow
     def test_pylint_plugins(self):
         pylint_output = self.run_pylint('%s/plugins/' % ROOT_PATH)
@@ -76,7 +76,7 @@ class PylintRunner(unittest.TestCase):
         output = pylint_output.read()
         self.assertEqual(output, [], '\n'.join(output))
 
-    @pytest.mark.slow_group4
+    @pytest.mark.slow_group1
     @pytest.mark.slow
     def test_pylint_core_ui(self):
         pylint_output = self.run_pylint('%s/core/ui/' % ROOT_PATH)

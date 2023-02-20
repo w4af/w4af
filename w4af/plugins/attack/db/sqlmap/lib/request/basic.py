@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
+Copyright (c) 2006-2023 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -108,7 +108,7 @@ def forgeHeaders(items=None, base=None):
     if conf.cj:
         if HTTP_HEADER.COOKIE in headers:
             for cookie in conf.cj:
-                if cookie.domain_specified and not (conf.hostname or "").endswith(cookie.domain):
+                if cookie is None or cookie.domain_specified and not (conf.hostname or "").endswith(cookie.domain):
                     continue
 
                 if ("%s=" % getUnicode(cookie.name)) in getUnicode(headers[HTTP_HEADER.COOKIE]):
@@ -275,6 +275,8 @@ def decodePage(page, contentEncoding, contentType, percentDecode=True):
 
     >>> getText(decodePage(b"<html>foo&amp;bar</html>", None, "text/html; charset=utf-8"))
     '<html>foo&bar</html>'
+    >>> getText(decodePage(b"&#x9;", None, "text/html; charset=utf-8"))
+    '\\t'
     """
 
     if not page or (conf.nullConnection and len(page) < 2):
@@ -339,7 +341,7 @@ def decodePage(page, contentEncoding, contentType, percentDecode=True):
         if not kb.disableHtmlDecoding:
             # e.g. &#x9;&#195;&#235;&#224;&#226;&#224;
             if b"&#" in page:
-                page = re.sub(b"&#x([0-9a-f]{1,2});", lambda _: decodeHex(_.group(1) if len(_.group(1)) == 2 else "0%s" % _.group(1)), page)
+                page = re.sub(b"&#x([0-9a-f]{1,2});", lambda _: decodeHex(_.group(1) if len(_.group(1)) == 2 else b"0%s" % _.group(1)), page)
                 page = re.sub(b"&#(\\d{1,3});", lambda _: six.int2byte(int(_.group(1))) if int(_.group(1)) < 256 else _.group(0), page)
 
             # e.g. %20%28%29
@@ -399,13 +401,14 @@ def processResponse(page, responseHeaders, code=None, status=None):
     if not conf.skipWaf and kb.processResponseCounter < IDENTYWAF_PARSE_LIMIT:
         rawResponse = "%s %s %s\n%s\n%s" % (_http_client.HTTPConnection._http_vsn_str, code or "", status or "", "".join(getUnicode(responseHeaders.headers if responseHeaders else [])), page[:HEURISTIC_PAGE_SIZE_THRESHOLD])
 
-        identYwaf.non_blind.clear()
-        if identYwaf.non_blind_check(rawResponse, silent=True):
-            for waf in identYwaf.non_blind:
-                if waf not in kb.identifiedWafs:
-                    kb.identifiedWafs.add(waf)
-                    errMsg = "WAF/IPS identified as '%s'" % identYwaf.format_name(waf)
-                    singleTimeLogMessage(errMsg, logging.CRITICAL)
+        with kb.locks.identYwaf:
+            identYwaf.non_blind.clear()
+            if identYwaf.non_blind_check(rawResponse, silent=True):
+                for waf in set(identYwaf.non_blind):
+                    if waf not in kb.identifiedWafs:
+                        kb.identifiedWafs.add(waf)
+                        errMsg = "WAF/IPS identified as '%s'" % identYwaf.format_name(waf)
+                        singleTimeLogMessage(errMsg, logging.CRITICAL)
 
     if kb.originalPage is None:
         for regex in (EVENTVALIDATION_REGEX, VIEWSTATE_REGEX):

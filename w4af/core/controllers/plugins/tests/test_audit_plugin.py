@@ -54,7 +54,7 @@ class TestAuditPlugin(unittest.TestCase):
         
         self.assertGreaterEqual(len(vulns), 1, "Expected to find at least one vulnerability")
         for vuln in vulns:
-            self.assertEqual("syntax error", vuln['error'])
+            self.assertEqual(b"syntax error", vuln['error'])
             self.assertEqual("Unknown database", vuln['db'])
             self.assertEqual(target_url, str(vuln.get_url()))
 

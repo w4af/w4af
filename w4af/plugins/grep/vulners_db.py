@@ -29,7 +29,7 @@ import w4af.core.controllers.output_manager as om
 
 from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
 from w4af.core.data.bloomfilter.scalable_bloom import ScalableBloomFilter
-from w4af.core.data.quick_match.multi_re import MultiRE
+from w4af.core.data.quick_match.multi_re import MultiREUnicode
 from w4af.core.data.kb.vuln import Vuln
 from w4af.core.data.options.opt_factory import opt_factory
 from w4af.core.data.options.option_types import STRING
@@ -187,13 +187,18 @@ class vulners_db(GrepPlugin):
         # Adapt it for MultiRe structure [(regex,alias)] removing regex duplicated
         regex_aliases = collections.defaultdict(list)
         for software_name in self.rules_table:
-            regex_aliases[self.rules_table[software_name].get('regex')] += [software_name]
+            regex = self.rules_table[software_name].get('regex')
+            try:
+                MultiREUnicode([regex], re.IGNORECASE | re.MULTILINE)
+                regex_aliases[regex] += [software_name]
+            except Exception as e:
+                print("Skipping regex", regex)
 
         # Now create fast RE filter
         # Using re.IGNORECASE because w4af is modifying headers when making RAW dump.
         # Why so? Raw must be raw!
-        self._multi_re = MultiRE(((regex, regex_aliases.get(regex)) for regex in regex_aliases),
-                                 re.IGNORECASE)
+        self._multi_re = MultiREUnicode(((regex, regex_aliases.get(regex)) for regex in regex_aliases),
+                                 re.IGNORECASE | re.MULTILINE)
 
     def setup_vulners_api(self):
         try:

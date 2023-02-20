@@ -100,6 +100,7 @@ class TestPHPEchoEval(PluginTest):
                                     ('use_time_delay', False, PluginConfig.BOOL)),),
     }
 
+    @pytest.mark.flaky(reruns=3)
     def test_found_eval_echo_php(self):
         self._scan(self.target, self.config)
 

@@ -25,6 +25,7 @@ from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
 from w4af.core.data.kb.vuln import Vuln
 from w4af.core.data.kb.info import Info
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class keys(GrepPlugin):
@@ -44,38 +45,38 @@ class keys(GrepPlugin):
 
         KEY_FORMATS = (
             # RSA (PKCS1)
-            ('-----BEGIN RSA PRIVATE KEY-----', ('RSA-PRIVATE', PRIVATE)), 
-            ('-----BEGIN RSA PUBLIC KEY-----', ('RSA-PUBLIC', PUBLIC)),
-            ('ssh-rsa', ('RSA-PUBLIC', PUBLIC)),
+            (b'-----BEGIN RSA PRIVATE KEY-----', ('RSA-PRIVATE', PRIVATE)), 
+            (b'-----BEGIN RSA PUBLIC KEY-----', ('RSA-PUBLIC', PUBLIC)),
+            (b'ssh-rsa', ('RSA-PUBLIC', PUBLIC)),
             
             # DSA
-            ('-----BEGIN DSA PRIVATE KEY-----', ('DSA-PRIVATE', PRIVATE)),
-            ('-----BEGIN DSA PUBLIC KEY-----', ('DSA-PUBLIC', PUBLIC)),
-            ('ssh-dss', ('DSA-PUBLIC', PUBLIC)),
+            (b'-----BEGIN DSA PRIVATE KEY-----', ('DSA-PRIVATE', PRIVATE)),
+            (b'-----BEGIN DSA PUBLIC KEY-----', ('DSA-PUBLIC', PUBLIC)),
+            (b'ssh-dss', ('DSA-PUBLIC', PUBLIC)),
             
             # Elliptic Curve
-            ('-----BEGIN EC PRIVATE KEY-----', ('EC-PRIVATE', PRIVATE)),
-            ('-----BEGIN EC PUBLIC KEY-----', ('EC-PUBLIC', PUBLIC)),
-            ('ecdsa-sha2-nistp256', ('EC-PUBLIC', PUBLIC)),
+            (b'-----BEGIN EC PRIVATE KEY-----', ('EC-PRIVATE', PRIVATE)),
+            (b'-----BEGIN EC PUBLIC KEY-----', ('EC-PUBLIC', PUBLIC)),
+            (b'ecdsa-sha2-nistp256', ('EC-PUBLIC', PUBLIC)),
             
             # SSH2
-            ('---- BEGIN SSH2 PUBLIC KEY ----', ('SSH2-PRIVATE', PRIVATE)),
-            ('---- BEGIN SSH2 PRIVATE KEY ----', ('SSH2-PUBLIC', PUBLIC)),
+            (b'---- BEGIN SSH2 PUBLIC KEY ----', ('SSH2-PRIVATE', PRIVATE)),
+            (b'---- BEGIN SSH2 PRIVATE KEY ----', ('SSH2-PUBLIC', PUBLIC)),
 
             # ed25519 (OpenSSH)
-            ('-----BEGIN OPENSSH PRIVATE KEY-----', ('ED25519-SSH-PRIVATE', PRIVATE)),
-            ('-----BEGIN OPENSSH PUBLIC KEY-----', ('ED25519-SSH-PUBLIC', PUBLIC)),
-            ('ssh-ed25519', ('ED25519-SSH-PUBLIC', PUBLIC)),
+            (b'-----BEGIN OPENSSH PRIVATE KEY-----', ('ED25519-SSH-PRIVATE', PRIVATE)),
+            (b'-----BEGIN OPENSSH PUBLIC KEY-----', ('ED25519-SSH-PUBLIC', PUBLIC)),
+            (b'ssh-ed25519', ('ED25519-SSH-PUBLIC', PUBLIC)),
             
             # PKCS8
-            ('-----BEGIN PRIVATE KEY-----', ('PKCS8-PRIVATE', PRIVATE)),
-            ('-----BEGIN PUBLIC KEY-----', ('PKCS8-PUBLIC', PUBLIC)),
-            ('-----BEGIN ENCRYPTED PRIVATE KEY-----', ('PKCS8-ENCRYPTED-PRIVATE', PRIVATE)),
-            ('-----BEGIN ENCRYPTED PUBLIC KEY-----', ('PKCS8-ENCRYPTED-PUBLIC', PUBLIC)),
+            (b'-----BEGIN PRIVATE KEY-----', ('PKCS8-PRIVATE', PRIVATE)),
+            (b'-----BEGIN PUBLIC KEY-----', ('PKCS8-PUBLIC', PUBLIC)),
+            (b'-----BEGIN ENCRYPTED PRIVATE KEY-----', ('PKCS8-ENCRYPTED-PRIVATE', PRIVATE)),
+            (b'-----BEGIN ENCRYPTED PUBLIC KEY-----', ('PKCS8-ENCRYPTED-PUBLIC', PUBLIC)),
             
             # XML
-            ('<RSAKeyPair>', ('XML-RSA', PRIVATE)),
-            ('<RSAKeyValue>', ('.NET-XML-RSA', PUBLIC))
+            (b'<RSAKeyPair>', ('XML-RSA', PRIVATE)),
+            (b'<RSAKeyValue>', ('.NET-XML-RSA', PUBLIC))
         )        
 
         self._multi_in = MultiIn(KEY_FORMATS)
@@ -95,7 +96,7 @@ class keys(GrepPlugin):
         if not response.get_code() == 200:
             return
 
-        for _, (key, keypair_type) in self._multi_in.query(response.body):
+        for _, (key, keypair_type) in self._multi_in.query(smart_str_ignore(response.body)):
             desc = 'The URL: "%s" discloses a key of type: "%s"'
             desc %= (response.get_url(), key)
 

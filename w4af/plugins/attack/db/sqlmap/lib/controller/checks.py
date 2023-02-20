@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
+Copyright (c) 2006-2023 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -10,7 +10,6 @@ import logging
 import random
 import re
 import socket
-import subprocess
 import time
 
 from extra.beep.beep import beep
@@ -783,22 +782,8 @@ def checkSqlInjection(place, parameter, value):
                         injection.conf.regexp = conf.regexp
                         injection.conf.optimize = conf.optimize
 
-                        if not kb.alerted:
-                            if conf.beep:
-                                beep()
-
-                            if conf.alert:
-                                infoMsg = "executing alerting shell command(s) ('%s')" % conf.alert
-                                logger.info(infoMsg)
-
-                                try:
-                                    process = subprocess.Popen(conf.alert, shell=True)
-                                    process.wait()
-                                except Exception as ex:
-                                    errMsg = "error occurred while executing '%s' ('%s')" % (conf.alert, getSafeExString(ex))
-                                    logger.error(errMsg)
-
-                            kb.alerted = True
+                        if conf.beep:
+                            beep()
 
                         # There is no need to perform this test for other
                         # <where> tags
@@ -859,10 +844,8 @@ def checkSqlInjection(place, parameter, value):
         if not checkFalsePositives(injection):
             if conf.hostname in kb.vulnHosts:
                 kb.vulnHosts.remove(conf.hostname)
-
             if NOTE.FALSE_POSITIVE_OR_UNEXPLOITABLE not in injection.notes:
                 injection.notes.append(NOTE.FALSE_POSITIVE_OR_UNEXPLOITABLE)
-
     else:
         injection = None
 

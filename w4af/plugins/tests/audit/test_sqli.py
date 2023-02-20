@@ -50,7 +50,7 @@ class TestSQLI(PluginTest):
 
         # Now some tests around specific details of the found vuln
         vuln = vulns[0]
-        self.assertEqual("syntax error", vuln['error'])
+        self.assertEqual(b"syntax error", vuln['error'])
         self.assertEqual("Unknown database", vuln['db'])
         self.assertEqual(self.target_url, str(vuln.get_url()))
 

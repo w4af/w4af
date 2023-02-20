@@ -29,6 +29,7 @@ from w4af.core.controllers.plugins.audit_plugin import AuditPlugin
 from w4af.core.data.fuzzer.fuzzer import create_mutants
 from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.kb.vuln import Vuln
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class xpath(AuditPlugin):
@@ -38,39 +39,39 @@ class xpath(AuditPlugin):
     """
 
     XPATH_PATTERNS = (
-        'System.Xml.XPath.XPathException:',
-        'MS.Internal.Xml.',
-        'Unknown error in XPath',
-        'org.apache.xpath.XPath',
-        'A closing bracket expected in',
-        'An operand in Union Expression does not produce a node-set',
-        'Cannot convert expression to a number',
-        'Document Axis does not allow any context Location Steps',
-        'Empty Path Expression',
-        'DOMXPath::'
-        'Empty Relative Location Path',
-        'Empty Union Expression',
-        "Expected ')' in",
-        'Expected node test or name specification after axis operator',
-        'Incompatible XPath key',
-        'Incorrect Variable Binding',
-        'libxml2 library function failed',
-        'libxml2',
-        'Invalid predicate',
-        'Invalid expression',
-        'xmlsec library function',
-        'xmlsec',
-        "error '80004005'",
-        "A document must contain exactly one root element.",
-        '<font face="Arial" size=2>Expression must evaluate to a node-set.',
-        "Expected token ']'",
-        "<p>msxml4.dll</font>",
-        "<p>msxml3.dll</font>",
+        b'System.Xml.XPath.XPathException:',
+        b'MS.Internal.Xml.',
+        b'Unknown error in XPath',
+        b'org.apache.xpath.XPath',
+        b'A closing bracket expected in',
+        b'An operand in Union Expression does not produce a node-set',
+        b'Cannot convert expression to a number',
+        b'Document Axis does not allow any context Location Steps',
+        b'Empty Path Expression',
+        b'DOMXPath::'
+        b'Empty Relative Location Path',
+        b'Empty Union Expression',
+        b"Expected ')' in",
+        b'Expected node test or name specification after axis operator',
+        b'Incompatible XPath key',
+        b'Incorrect Variable Binding',
+        b'libxml2 library function failed',
+        b'libxml2',
+        b'Invalid predicate',
+        b'Invalid expression',
+        b'xmlsec library function',
+        b'xmlsec',
+        b"error '80004005'",
+        b"A document must contain exactly one root element.",
+        b'<font face="Arial" size=2>Expression must evaluate to a node-set.',
+        b"Expected token ']'",
+        b"<p>msxml4.dll</font>",
+        b"<p>msxml3.dll</font>",
 
         # Put this here cause i did not know if it was a sql injection
         # This error appears when you put wierd chars in a lotus notes document
         # search ( nsf files ).
-        '4005 Notes error: Query is not understandable',
+        b'4005 Notes error: Query is not understandable',
     )
     _multi_in = MultiIn(XPATH_PATTERNS)
 
@@ -108,7 +109,7 @@ class xpath(AuditPlugin):
 
         xpath_error_list = self._find_xpath_error(response)
         for xpath_error in xpath_error_list:
-            if xpath_error not in mutant.get_original_response_body():
+            if xpath_error not in smart_str_ignore(mutant.get_original_response_body()):
 
                 desc = 'XPATH injection was found at: %s' % mutant.found_at()
 
@@ -128,7 +129,7 @@ class xpath(AuditPlugin):
         :return: A list of errors found on the page
         """
         res = []
-        for xpath_error_match in self._multi_in.query(response.body):
+        for xpath_error_match in self._multi_in.query(smart_str_ignore(response.body)):
             msg = 'Found XPATH injection. The error showed by the web'\
                   ' application is (only a fragment is shown): "%s".'\
                   ' The error was found on response with id %s.'

@@ -32,7 +32,7 @@ from w4af.core.data.misc.encoding import smart_str_ignore
 from w4af.core.data.fuzzer.fuzzer import create_mutants
 from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.kb.vuln import Vuln
-from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.misc.encoding import smart_unicode, DEFAULT_ENCODING
 
 
 class xxe(AuditPlugin):
@@ -50,9 +50,8 @@ class xxe(AuditPlugin):
         '/etc/passwd',
     ]
 
-    # TODO: replace once replace-branch is merged
     REMOTE_FILES = [
-        'https://raw.githubusercontent.com/codders/w3af-python3/main/w3af/tests/fixtures/xxe.txt'
+        'https://raw.githubusercontent.com/w4af/w4af/main/w4af/tests/fixtures/xxe.txt'
     ]
 
     # This is the only content stored in the https://w4af.net/xxe.txt file
@@ -85,44 +84,44 @@ class xxe(AuditPlugin):
 
     XML_PARSER_ERRORS = [
         # PHP
-        'xmlParseEntityDecl',
-        'simplexml_load_string',
-        'xmlParseInternalSubset',
-        'DOCTYPE improperly terminated',
-        'Start tag expected',
-        'No declaration for attribute',
-        'No declaration for element',
+        b'xmlParseEntityDecl',
+        b'simplexml_load_string',
+        b'xmlParseInternalSubset',
+        b'DOCTYPE improperly terminated',
+        b'Start tag expected',
+        b'No declaration for attribute',
+        b'No declaration for element',
 
         # libxml and python
-        'failed to load external entity',
-        'Start tag expected',
-        'Invalid URI: file:///',
-        'Malformed declaration expecting version',
-        'Unicode strings with encoding',
+        b'failed to load external entity',
+        b'Start tag expected',
+        b'Invalid URI: file:///',
+        b'Malformed declaration expecting version',
+        b'Unicode strings with encoding',
 
         # java
-        'must be well-formed',
-        'Content is not allowed in prolog',
-        'org.xml.sax',
-        'SAXParseException',
-        'com.sun.org.apache.xerces',
+        b'must be well-formed',
+        b'Content is not allowed in prolog',
+        b'org.xml.sax',
+        b'SAXParseException',
+        b'com.sun.org.apache.xerces',
 
         # ruby
-        'ParseError',
-        'nokogiri',
-        'REXML',
+        b'ParseError',
+        b'nokogiri',
+        b'REXML',
 
         # golang
-        'XML syntax error on line',
-        'Error unmarshaling XML',
-        'conflicts with field',
-        'illegal character code'
+        b'XML syntax error on line',
+        b'Error unmarshaling XML',
+        b'conflicts with field',
+        b'illegal character code'
         
         # .NET
-        'XML Parsing Error',
-        'SyntaxError',
-        'no root element',
-        'not well-formed',
+        b'XML Parsing Error',
+        b'SyntaxError',
+        b'no root element',
+        b'not well-formed',
     ]
 
     MAX_XML_PARAM_MUTANTS = 5
@@ -313,7 +312,7 @@ class xxe(AuditPlugin):
         for pattern_match in self._find_patterns(body):
 
             # Remove false positives
-            if pattern_match in orig_resp_body:
+            if pattern_match in smart_str_ignore(orig_resp_body):
                 continue
 
             # Only report vulnerabilities once
@@ -336,7 +335,7 @@ class xxe(AuditPlugin):
         # but we still want to flag any parsing errors which might be
         # pointers to other (more complex to identify and exploit)
         # vulnerabilities
-        for parser_error in self.parser_errors_multi_in.query(body):
+        for parser_error in self.parser_errors_multi_in.query(smart_str_ignore(body)):
 
             # Do not report that we found an error when we already found
             # something with higher priority in the same mutant
@@ -368,9 +367,9 @@ class xxe(AuditPlugin):
         :yield: All the patterns we find
         """
         if self.REMOTE_SUCCESS in smart_unicode(body):
-            yield self.REMOTE_SUCCESS
+            yield self.REMOTE_SUCCESS.encode(DEFAULT_ENCODING)
 
-        for file_pattern_match in self.file_pattern_multi_in.query(smart_unicode(body)):
+        for file_pattern_match in self.file_pattern_multi_in.query(smart_str_ignore(body)):
             yield file_pattern_match
 
     def get_long_desc(self):

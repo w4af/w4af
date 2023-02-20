@@ -35,22 +35,22 @@ from w4af.core.data.constants.file_patterns import FILE_PATTERNS
 from w4af.core.data.misc.encoding import smart_str_ignore
 from w4af.core.data.kb.vuln import Vuln
 from w4af.core.data.kb.info import Info
-from w4af.core.data.misc.encoding import smart_unicode
+from w4af.core.data.misc.encoding import smart_unicode, smart_str_ignore
 
 
 FILE_OPEN_ERRORS = [# Java
-                    'java.io.FileNotFoundException:',
-                    'java.lang.Exception:',
-                    'java.lang.IllegalArgumentException:',
-                    'java.net.MalformedURLException:',
+                    b'java.io.FileNotFoundException:',
+                    b'java.lang.Exception:',
+                    b'java.lang.IllegalArgumentException:',
+                    b'java.net.MalformedURLException:',
 
                     # PHP
-                    'fread\\(\\):',
-                    'for inclusion \'\\(include_path=',
-                    'Failed opening required',
-                    '<b>Warning</b>:  file\\(',
-                    '<b>Warning</b>:  file_get_contents\\(',
-                    'open_basedir restriction in effect']
+                    b'fread\\(\\):',
+                    b'for inclusion \'\\(include_path=',
+                    b'Failed opening required',
+                    b'<b>Warning</b>:  file\\(',
+                    b'<b>Warning</b>:  file_get_contents\\(',
+                    b'open_basedir restriction in effect']
 
 
 class lfi(AuditPlugin):
@@ -173,7 +173,7 @@ class lfi(AuditPlugin):
         #   Identify the vulnerability
         #
         for file_pattern_match in self._find_common_file_fragments(response):
-            if file_pattern_match not in mutant.get_original_response_body():
+            if file_pattern_match not in smart_str_ignore(mutant.get_original_response_body()):
                 
                 desc = 'Local File Inclusion was found at: %s'
                 desc %= mutant.found_at()
@@ -233,7 +233,7 @@ class lfi(AuditPlugin):
         #   identified)
         #
         body = response.get_body()
-        for _, error_str, _ in self.file_read_error_multi_re.query(smart_unicode(body)):
+        for _, error_str, _ in self.file_read_error_multi_re.query(smart_str_ignore(body)):
             if error_str not in mutant.get_original_response_body():
                 desc = 'A file read error was found at: %s'
                 desc %= mutant.found_at()
@@ -255,7 +255,7 @@ class lfi(AuditPlugin):
         res = set()
         body = response.get_body()
 
-        for file_pattern_match in self.file_pattern_multi_in.query(smart_unicode(body)):
+        for file_pattern_match in self.file_pattern_multi_in.query(smart_str_ignore(body)):
             res.add(file_pattern_match)
 
         if len(res) == 1:

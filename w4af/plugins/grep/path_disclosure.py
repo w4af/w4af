@@ -28,6 +28,7 @@ from w4af.core.data.kb.vuln import Vuln
 from w4af.core.data.db.disk_list import DiskList
 from w4af.core.data.quick_match.multi_re import MultiRE
 from w4af.core.data.constants.common_directories import get_common_directories
+from w4af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 
 
 class path_disclosure(GrepPlugin):
@@ -54,11 +55,11 @@ class path_disclosure(GrepPlugin):
         all_signatures = []
 
         for common_directory in get_common_directories():
-            regex_string = r'[^A-Za-z0-9\._\-\\/\+~](%s.*?)[^A-Za-z0-9\._\-\\/\+~]'
-            regex_string = regex_string % common_directory
+            regex_string = br'[^A-Za-z0-9\._\-\\/\+~](%s.*?)[^A-Za-z0-9\._\-\\/\+~]'
+            regex_string = regex_string % common_directory.encode('utf-8')
             all_signatures.append(regex_string)
             
-        self._signature_re = MultiRE(all_signatures, hint_len=1)
+        self._signature_re = MultiRE(all_signatures)
 
     def grep(self, request, response):
         """
@@ -84,8 +85,8 @@ class path_disclosure(GrepPlugin):
         body_text = response.get_body()
         real_url = response.get_url().url_decode()
 
-        for match, _, _ in self._signature_re.query(body_text):
-            match_list.append(match.group(1))
+        for match, _, _ , _ in self._signature_re.query(smart_str_ignore(body_text)):
+            match_list.append(smart_unicode(match.group(1)))
 
         # Sort by the longest match, this is needed for filtering out
         # some false positives. Please read the note below.

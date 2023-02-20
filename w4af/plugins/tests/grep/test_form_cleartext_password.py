@@ -32,7 +32,7 @@ class TestFormCleartextPassword(unittest.TestCase):
 
     def setUp(self):
         self.plugin = form_cleartext_password()
-        kb.kb.clear('form_cleartext_password', 'form_cleartext_password')
+        kb.kb.cleanup(ignore_errors=True)
 
     def tearDown(self):
         self.plugin.end()

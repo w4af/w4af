@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
+Copyright (c) 2006-2023 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -9,6 +9,7 @@ from __future__ import division
 
 import os
 import re
+import subprocess
 import time
 
 from lib.controller.action import action
@@ -511,6 +512,23 @@ def start():
                         testSqlInj = True
                         paramKey = (conf.hostname, conf.path, place, parameter)
 
+                        if kb.processUserMarks:
+                            if testSqlInj and place not in (PLACE.CUSTOM_POST, PLACE.CUSTOM_HEADER):
+                                if kb.processNonCustom is None:
+                                    message = "other non-custom parameters found. "
+                                    message += "Do you want to process them too? [Y/n/q] "
+                                    choice = readInput(message, default='Y').upper()
+
+                                    if choice == 'Q':
+                                        raise SqlmapUserQuitException
+                                    else:
+                                        kb.processNonCustom = choice == 'Y'
+
+                                if not kb.processNonCustom:
+                                    infoMsg = "skipping %sparameter '%s'" % ("%s " % paramType if paramType != parameter else "", parameter)
+                                    logger.info(infoMsg)
+                                    continue
+
                         if paramKey in kb.testedParams:
                             testSqlInj = False
 
@@ -597,6 +615,19 @@ def start():
                                         injectable = True
 
                                         kb.injections.append(injection)
+
+                                        if not kb.alerted:
+                                            if conf.alert:
+                                                infoMsg = "executing alerting shell command(s) ('%s')" % conf.alert
+                                                logger.info(infoMsg)
+                                                try:
+                                                    process = subprocess.Popen(conf.alert, shell=True)
+                                                    process.wait()
+                                                except Exception as ex:
+                                                    errMsg = "error occurred while executing '%s' ('%s')" % (conf.alert, getSafeExString(ex))
+                                                    logger.error(errMsg)
+
+                                            kb.alerted = True
 
                                         # In case when user wants to end detection phase (Ctrl+C)
                                         if not proceed:

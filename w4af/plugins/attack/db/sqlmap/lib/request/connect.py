@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
+Copyright (c) 2006-2023 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -308,7 +308,7 @@ class Connect(object):
             threadData.lastRequestUID = kb.requestCounter
 
             if conf.proxyFreq:
-                if kb.requestCounter % conf.proxyFreq == 1:
+                if kb.requestCounter % conf.proxyFreq == 0:
                     conf.proxy = None
 
                     warnMsg = "changing proxy"
@@ -767,6 +767,11 @@ class Connect(object):
             if not multipart:
                 logger.log(CUSTOM_LOGGING.TRAFFIC_IN, responseMsg)
 
+            if code in conf.abortCode:
+                errMsg = "aborting due to detected HTTP code '%d'" % code
+                singleTimeLogMessage(errMsg, logging.CRITICAL)
+                raise SystemExit
+
             if ex.code not in (conf.ignoreCode or []):
                 if ex.code == _http_client.UNAUTHORIZED:
                     errMsg = "not authorized, try to provide right HTTP "
@@ -920,6 +925,12 @@ class Connect(object):
                     errMsg = "error occurred while running postprocess "
                     errMsg += "function '%s' ('%s')" % (function.__name__, getSafeExString(ex))
                     raise SqlmapGenericException(errMsg)
+
+            for _ in (getattr(conn, "redcode", None), code):
+                if _ is not None and _ in conf.abortCode:
+                    errMsg = "aborting due to detected HTTP code '%d'" % _
+                    singleTimeLogMessage(errMsg, logging.CRITICAL)
+                    raise SystemExit
 
             threadData.lastPage = page
             threadData.lastCode = code

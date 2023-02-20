@@ -3,7 +3,7 @@
 """
 vulnserver.py - Trivial SQLi vulnerable HTTP server (Note: for testing purposes)
 
-Copyright (c) 2006-2022 sqlmap developers (https://sqlmap.org/)
+Copyright (c) 2006-2023 sqlmap developers (https://sqlmap.org/)
 See the file 'LICENSE' for copying permission
 """
 
@@ -44,7 +44,8 @@ SCHEMA = """
     CREATE TABLE users (
         id INTEGER,
         name TEXT,
-        surname TEXT
+        surname TEXT,
+        PRIMARY KEY (id)
     );
     INSERT INTO users (id, name, surname) VALUES (1, 'luther', 'blisset');
     INSERT INTO users (id, name, surname) VALUES (2, 'fluffy', 'bunny');

@@ -44,7 +44,7 @@ from w4af.core.controllers.threads.decorators import apply_with_return_error
 from w4af.core.controllers.profiling.core_stats import core_profiling_is_enabled
 from w4af.core.controllers.profiling.memory_usage import user_wants_memory_profiling
 from w4af.core.controllers.profiling.pytracemalloc import user_wants_pytracemalloc
-from w4af.core.controllers.profiling.cpu_usage import user_wants_cpu_profiling
+from w4af.core.controllers.profiling.cpu_usage import user_wants_cpu_profiling, coverage_enabled
 from w4af.core.data.parsers.document_parser import DocumentParser
 from w4af.core.data.parsers.ipc.serialization import (write_object_to_temp_file,
                                                       write_http_response_to_temp_file,
@@ -87,10 +87,11 @@ class MultiProcessingDocumentParser(object):
     # https://github.com/andresriancho/w3af/issues/9713
     PROFILING_ENABLED = (user_wants_memory_profiling() or
                          user_wants_pytracemalloc() or
-                         user_wants_cpu_profiling())
+                         user_wants_cpu_profiling() or
+                         coverage_enabled())
 
     # in seconds
-    PARSER_TIMEOUT = 60 * 3 if PROFILING_ENABLED else 10
+    PARSER_TIMEOUT = 60 * 20 if PROFILING_ENABLED else 10
 
     # Document parsers can go crazy on memory usage when parsing some very
     # specific HTML / PDF documents. Sometimes when this happens the operating

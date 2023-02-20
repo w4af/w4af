@@ -27,6 +27,7 @@ import w4af.core.data.kb.knowledge_base as kb
 from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
 from w4af.core.data.quick_match.multi_re import MultiRE
 from w4af.core.data.kb.info import Info
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class http_in_body(GrepPlugin):
@@ -37,10 +38,10 @@ class http_in_body(GrepPlugin):
 
     HTTP = (
         # GET / HTTP/1.0
-        (r'[a-zA-Z]{3,6} .*? HTTP/1.[01]', 'REQUEST'),
+        (br'[a-zA-Z]{3,6} .*? HTTP/1.[01]', 'REQUEST'),
 
         # HTTP/1.1 200 OK
-        (r'HTTP/1.[01] [0-9][0-9][0-9] [a-zA-Z]*', 'RESPONSE')
+        (br'HTTP/1.[01] [0-9][0-9][0-9] [a-zA-Z]*', 'RESPONSE')
     )
     _multi_re = MultiRE(HTTP, re.IGNORECASE)
 
@@ -68,7 +69,7 @@ class http_in_body(GrepPlugin):
 
         uri = response.get_uri()
 
-        for match, _, _, reqres in self._multi_re.query(body_without_tags):
+        for match, _, _, reqres in self._multi_re.query(smart_str_ignore(body_without_tags)):
 
             if reqres == 'REQUEST':
                 desc = 'An HTTP request was found in the HTTP body of a response.'

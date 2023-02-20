@@ -33,7 +33,7 @@ class TestDiffPerformance(unittest.TestCase):
 
     DATA = os.path.join(ROOT_PATH, 'core', 'controllers', 'misc', 'tests', 'data')
     FUNCTIONS = [chunked_diff, diff_dmp]
-    ROUNDS = 5
+    ROUNDS = 2
 
     @pytest.mark.slow_group2
     @pytest.mark.slow

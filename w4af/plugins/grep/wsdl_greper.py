@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 from w4af.core.controllers.plugins.grep_plugin import GrepPlugin
 from w4af.core.data.quick_match.multi_in import MultiIn
 from w4af.core.data.kb.info import Info
+from w4af.core.data.misc.encoding import smart_str_ignore
 
 
 class wsdl_greper(GrepPlugin):
@@ -30,14 +31,14 @@ class wsdl_greper(GrepPlugin):
 
     :author: Andres Riancho (andres.riancho@gmail.com)
     """
-    WSDL_STRINGS = ('xs:int',
-                    'target_namespace',
-                    'soap:body',
-                    '/s:sequence',
-                    'wsdl:',
-                    'soapAction=',
+    WSDL_STRINGS = (b'xs:int',
+                    b'target_namespace',
+                    b'soap:body',
+                    b'/s:sequence',
+                    b'wsdl:',
+                    b'soapAction=',
                     # This isn't WSDL... but well...
-                    'xmlns="urn:uddi"', '<p>Hi there, this is an AXIS service!</p>')
+                    b'xmlns="urn:uddi"', b'<p>Hi there, this is an AXIS service!</p>')
 
     _multi_in = MultiIn(WSDL_STRINGS)
 
@@ -61,7 +62,7 @@ class wsdl_greper(GrepPlugin):
         self.analyze_disco(request, response)
     
     def analyze_wsdl(self, request, response):
-        for match in self._multi_in.query(response.body):
+        for match in self._multi_in.query(smart_str_ignore(response.body)):
             desc = ('The URL: "%s" is a Web Services Description Language'
                     ' page. This requires manual analysis to determine the'
                     ' security of the web service.')

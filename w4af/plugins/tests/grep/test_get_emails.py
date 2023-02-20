@@ -76,7 +76,7 @@ class TestGetEmails(PluginTest):
 class RawTestGetEmail(unittest.TestCase):
     def setUp(self):
         create_temp_dir()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         self.plugin = get_emails()
 
     def tearDown(self):
