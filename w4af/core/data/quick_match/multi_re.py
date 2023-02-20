@@ -127,7 +127,7 @@ class MultiRE(object):
              * They do not have keywords
              * The keywords exist in the string
 
-        :param target_str: The target string where the keywors need to be match
+        :param target_str: The target string where the keywords need to be match
         :yield: (match_obj, re_str_N, compiled_regex)
         """
         #

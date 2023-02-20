@@ -7,8 +7,8 @@ Prerequisites
 Make sure you have the following software ready before starting the installation:
 
  * Git client: ``sudo apt-get install git``
- * Python 3.10, which is installed by default in most systems
- * Pip version 22.x: ``sudo apt-get install python3-pip``
+ * Python 3.11, which is installed by default in most systems
+ * Pip version 23.x: ``sudo apt-get install python3-pip``
  * node-js
  * Optional: If you want python3 to launch when typing python: ``sudo apt-get install python-is-python``
 
