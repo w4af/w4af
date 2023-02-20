@@ -22,7 +22,7 @@ the manual.
 
 ### Python
 
-The project expects to use Python 3.10. The project's Python dependencies can be installed by running pipenv in the project's root folder:
+The project expects to use Python 3.11. The project's Python dependencies can be installed by running pipenv in the project's root folder:
 
 ```
 python -m pip install --upgrade pipenv wheel
