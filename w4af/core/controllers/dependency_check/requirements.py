@@ -29,7 +29,7 @@ CORE_PIP_PACKAGES = [
                      PIPDependency('bravado_core', 'bravado-core', '5.17.1'),
                      PIPDependency('chardet', 'chardet', '5.1.0'),
                      PIPDependency('cluster', 'cluster', '1.4.1.post3'),
-                     PIPDependency('darts.lib.utils', 'darts-util-lru', '0.5'),
+                     PIPDependency('darts.lib.utils', 'darts-util-lru', '0.5.1'),
                      # String diff by Google
                      PIPDependency('diff_match_patch', 'diff-match-patch', '20200713'),
                      # Added for the crawl.ds_store plugin
@@ -38,7 +38,7 @@ CORE_PIP_PACKAGES = [
                      # and GUI will consume it so it's ok to put this here
                      PIPDependency('Flask', 'Flask', '2.2.3'),
                      PIPDependency('git.util', 'GitPython', '3.1.31'),
-                     PIPDependency('github', 'PyGithub', '1.57'),
+                     PIPDependency('github', 'PyGithub', '1.58.0'),
                      PIPDependency('ipaddresses', 'ipaddresses', '0.0.2'),
                      PIPDependency('jinja2', 'Jinja2', '3.1.2'),
                      PIPDependency('lxml', 'lxml', '4.9.2'),

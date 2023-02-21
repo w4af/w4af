@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "22676827551f01f629ea0849cb956c8768ce3c4efc8360c6402bd40453c08327"
+            "sha256": "3af8408c85d23ab0ab1d0ba07bceff422562b7abd44cf8ac92859168df3ca4bc"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -338,8 +338,9 @@
             "version": "==38.0.4"
         },
         "darts-util-lru": {
+            "editable": true,
             "git": "https://github.com/w4af/DartsPyLRU",
-            "ref": "e88070ca1596f96135722cc69754f4de0b804045"
+            "ref": "95926f06782ba1f645993aa261fdda9833d4e8fb"
         },
         "defusedxml": {
             "hashes": [
@@ -408,7 +409,7 @@
             "hashes": [
                 "sha256:34a17436ed1e96697a86f9de3d15a3b0be01d8bc8de9c1dffd59fb8234ed5307"
             ],
-            "markers": "python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==0.18.3"
         },
         "gitdb": {
@@ -1223,11 +1224,11 @@
         },
         "pygithub": {
             "hashes": [
-                "sha256:5822febeac2391f1306c55a99af2bc8f86c8bf82ded000030cd02c18f31b731f",
-                "sha256:c273f252b278fb81f1769505cc6921bdb6791e1cebd6ac850cc97dad13c31ff3"
+                "sha256:b7bac601492a2b6c876ef326e4ffa3c1923e32707e415da76bfb8307ee8ffb7e",
+                "sha256:e325f5ca2c111d19dea2796c8f1e7ae11da77287007736582196341390d31d35"
             ],
             "index": "pypi",
-            "version": "==1.57"
+            "version": "==1.58.0"
         },
         "pyicu": {
             "hashes": [
@@ -1284,11 +1285,11 @@
         },
         "pypi-simple": {
             "hashes": [
-                "sha256:3dc2d802eb8ad8c7deca4682b3ffc87e9c32390ceea7979db1841ab48b975ddc",
-                "sha256:caa88cc2921deb60bc7da52c72f6cced0a3ed07cced989b255d6e26e4a379970"
+                "sha256:d393c23b841637e34038723291b4bcfd19e342ef47205e9eaa5fe4642ccd4763",
+                "sha256:f50bdf61b914ffa48c5cf2c3998552fad1ce285a71ae898f56342b338d4bf771"
             ],
             "index": "pypi",
-            "version": "==1.0.0"
+            "version": "==1.1.0"
         },
         "pyrsistent": {
             "hashes": [
@@ -1328,7 +1329,7 @@
                 "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86",
                 "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==2.8.2"
         },
         "python-ntlm3": {
@@ -1606,7 +1607,7 @@
                 "sha256:f9f72d2b539512f382a48cc9ad6cea2d3a572e71e92c40e03d2140041eeaa233",
                 "sha256:fc8df5831b645e96a318ea51a66ce6e2bb869eebc3fa9a860bbf67aecd270055"
             ],
-            "markers": "python_version >= '2.5' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.5' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==3.18.3"
         },
         "six": {
@@ -1614,7 +1615,7 @@
                 "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
                 "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
         },
         "smmap": {
@@ -2253,7 +2254,7 @@
                 "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
                 "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
         },
         "tomlkit": {
