@@ -29,15 +29,19 @@ from w4af.core.ui.api.utils.cli import process_cmd_args_config
 from w4af.core.ui.api.utils.digital_certificate import SSLCertificate
 
 
-def main(launch_gui=False):
+def main(launch_gui=False, interface_name="REST API"):
     """
-    Entry point for the REST API
+    Entry point for the REST API and the Web Interface
     :return: Zero if everything went well
     """
     try:
-        args = process_cmd_args_config(app)
+        args = process_cmd_args_config(interface_name, app)
     except argparse.ArgumentTypeError as ate:
         print(('%s' % ate))
+        return 1
+
+    if not args.developer_mode:
+        print(f"\nNot launching {interface_name} - set '--i-am-a-developer'")
         return 1
 
     # And finally start the app:

@@ -47,12 +47,12 @@ def parse_host_port(host, port):
     return host, int(port)
 
 
-def parse_arguments():
+def parse_arguments(interface_name: str) -> [str]:
     """
     Parses the command line arguments
     :return: The parse result from argparse
     """
-    parser = argparse.ArgumentParser(description='REST API for w4af',
+    parser = argparse.ArgumentParser(description=f"{interface_name} for w4af",
                                      formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument('host:port', action='store',
@@ -61,6 +61,12 @@ def parse_arguments():
                              '5000 will be used.',
                         default=False,
                         nargs='?')
+
+    parser.add_argument('--i-am-a-developer',
+                        dest="developer_mode",
+                        action="store_true",
+                        help="Run the script despite warnings that "
+                             "the code is not ready")
 
     parser.add_argument('--no-ssl',
                         dest="disable_ssl",
@@ -105,6 +111,9 @@ def parse_arguments():
 
     args = parser.parse_args()
 
+    if not args.developer_mode:
+        parser.print_help()
+
     try:
         args.host, args.port = getattr(args, 'host:port').split(':')
     except ValueError:
@@ -117,13 +126,13 @@ def parse_arguments():
     return args
 
 
-def process_cmd_args_config(app):
+def process_cmd_args_config(interface_name, app):
     """
     Handle/merge the command line arguments and configuration file
     :return: A configured app and the result of argparse'ing the sys.argv
     """
     # Error handling is done in main(), don't handle exceptions here
-    args = parse_arguments()
+    args = parse_arguments(interface_name)
 
     if args.config_file:
         try:
