@@ -57,7 +57,7 @@ class Testw4afAPI(unittest.TestCase):
             self.assertTrue(b"REST API for w4af" in stdout, stdout)
             signal.alarm(0)
         except TimeoutException:
-            timeout_handler()
+            timeout_handler(0, 0)
             
     def test_expect_developer_option(self):
         success = False
@@ -75,4 +75,4 @@ class Testw4afAPI(unittest.TestCase):
             success = True
             signal.alarm(0)
         except TimeoutException:
-            timeout_handler()
+            timeout_handler(0, 0)
