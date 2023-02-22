@@ -19,8 +19,9 @@ along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-import cgi
-import io
+from typing import Tuple
+import email.parser
+import re
 
 from w4af.core.data.misc.encoding import smart_str_ignore, smart_unicode
 from w4af.core.data.url.HTTPResponse import DEFAULT_CHARSET
@@ -30,6 +31,7 @@ from w4af.core.data.parsers.utils.form_params import FormParameters
 from w4af.core.data.parsers.utils.form_constants import (INPUT_TYPE_TEXT,
                                                          INPUT_TYPE_FILE)
 
+FIELD_PARTS_RE = re.compile(r"^([^=]+)=\"([^\"]*)\"$")
 
 class MultipartContainer(Form):
     """
@@ -52,6 +54,13 @@ class MultipartContainer(Form):
         conttype, header_name = headers.iget('content-type', '')
         return conttype.lower().startswith('multipart/form-data')
 
+    @staticmethod
+    def headers_to_string(headers):
+        result = b""
+        for key, value in headers.items():
+            result += smart_str_ignore(key) + b":" + smart_str_ignore(value) + b"\n"
+        return result + b"\n"
+
     @classmethod
     def from_postdata(cls, headers, post_data):
         if not MultipartContainer.content_type_matches(headers):
@@ -60,13 +69,13 @@ class MultipartContainer(Form):
         environ = {'REQUEST_METHOD': 'POST'}
 
         try:
-            fs = cgi.FieldStorage(fp=io.BytesIO(smart_str_ignore(post_data)),
-                                  headers=headers.to_dict(),
-                                  environ=environ)
+            parser = email.parser.BytesFeedParser()
+            header_data = MultipartContainer.headers_to_string(headers)
+            parser.feed(header_data)
+            parser.feed(smart_str_ignore(post_data))
+            message = parser.close()
         except ValueError:
             raise ValueError('Failed to create MultipartContainer.')
-        except Exception as e:
-            pass
         else:
             # Please note that the FormParameters is just a container for
             # the information.
@@ -78,21 +87,37 @@ class MultipartContainer(Form):
             # To make sure the web application properly decodes the request, we
             # also include the headers in get_headers() which include the
             # boundary
+            def extract_params(key_value: str) -> Tuple[str, str]:
+                match = FIELD_PARTS_RE.match(key_value)
+                if match is None:
+                    raise ValueError(f"Unable to parse multipart field: {key_value}")
+                return (match.group(1), match.group(2))
+
             form_params = FormParameters()
 
-            for key in fs.list:
-                if key.filename is None:
-                    attrs = {'type': INPUT_TYPE_TEXT,
-                             'name': key.name,
-                             'value': key.file.read()}
-                    form_params.add_field_by_attrs(attrs)
-                else:
+            for part in message.walk():
+                if part.get('Content-Disposition') is None:
+                    continue
+                dispo_parts = part.get('Content-Disposition').split("; ")
+                if dispo_parts[0] != "form-data":
+                    continue
+                dispo_parts = dispo_parts[1:]
+                keys = dict(map(extract_params, dispo_parts))
+                if "name" not in keys:
+                    continue
+
+                if "filename" in keys:
                     attrs = {'type': INPUT_TYPE_FILE,
-                             'name': key.name,
-                             'value': key.file.read(),
-                             'filename': key.filename}
+                             'name': keys["name"],
+                             'value': part.get_payload().encode("utf-8"),
+                             'filename': keys["filename"]}
                     form_params.add_field_by_attrs(attrs)
-                    form_params.set_file_name(key.name, key.filename)
+                    form_params.set_file_name(keys["name"], keys["filename"])
+                else:
+                    attrs = {'type': INPUT_TYPE_TEXT,
+                             'name': keys["name"],
+                             'value': part.get_payload()}
+                    form_params.add_field_by_attrs(attrs)
 
             return cls(form_params)
 
