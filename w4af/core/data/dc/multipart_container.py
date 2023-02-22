@@ -96,6 +96,9 @@ class MultipartContainer(Form):
             form_params = FormParameters()
 
             for part in message.walk():
+                if len(part.defects) > 0:
+                    defects = map(lambda defect: defect.__doc__, part.defects)
+                    raise ValueError("Multipart content had defects: %s" % "; ".join(defects))
                 if part.get('Content-Disposition') is None:
                     continue
                 dispo_parts = part.get('Content-Disposition').split("; ")
