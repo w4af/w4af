@@ -36,7 +36,6 @@ lz4 = "*"
 vulners = "*"
 ipaddresses = "*"
 xdot = "*"
-nocasedict = "==1.0.4"
 urllib3 = "*"
 xunitparser = "*"
 apispec = "*"
@@ -63,6 +62,7 @@ pyahocorasick = "*"
 netlib = {git = "https://github.com/w4af/netlib"}
 hyperscan = "*"
 darts-util-lru = {editable = true, ref = "95926f06782ba1f645993aa261fdda9833d4e8fb", git = "https://github.com/w4af/DartsPyLRU"}
+nocasedict = "*"
 
 [dev-packages]
 pylint = "*"

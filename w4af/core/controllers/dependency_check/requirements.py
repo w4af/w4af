@@ -52,7 +52,7 @@ CORE_PIP_PACKAGES = [
                      PIPDependency('msgpack', 'msgpack', '1.0.4'),
                      PIPDependency('ndg', 'ndg-httpsclient', '0.5.1'),
                      PIPDependency('nltk', 'nltk', '3.8.1'),
-                     PIPDependency('nocasedict', 'nocasedict', '1.0.4'),
+                     PIPDependency('nocasedict', 'nocasedict', '2.0.0'),
                      PIPDependency('ntlm', 'python-ntlm3', '1.0.2'),
                      # For language detection
                      PIPDependency('numpy', 'numpy', '1.24.2'),
@@ -80,6 +80,6 @@ CORE_PIP_PACKAGES = [
                      PIPDependency('tldextract', 'tldextract', '3.4.0'),
                      PIPDependency('vulndb', 'vulndb', '0.1.3'),
                      # Vulners API plugin needs this lib
-                     PIPDependency('vulners', 'vulners', '2.0.8'),
+                     PIPDependency('vulners', 'vulners', '2.0.9'),
                      PIPDependency('yaml', 'PyYAML', '6.0'),
                      ]
