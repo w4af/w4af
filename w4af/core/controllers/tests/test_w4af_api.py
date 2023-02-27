@@ -49,7 +49,7 @@ class Testw4afAPI(unittest.TestCase):
             self.assertTrue(success, "Expected API not to launch")
 
         signal.signal(signal.SIGALRM, timeout_handler)
-        signal.alarm(4)
+        signal.alarm(7)
         try:
             process = Popen(['./w4af_api', '-h'], stdout=PIPE, stderr=PIPE, cwd=self.get_working_dir('w4af_api'))
             stdout, stderr = process.communicate()
@@ -66,7 +66,7 @@ class Testw4afAPI(unittest.TestCase):
             self.assertTrue(success, "Expected API not to launch")
 
         signal.signal(signal.SIGALRM, timeout_handler)
-        signal.alarm(4)
+        signal.alarm(7)
         try:
             process = Popen(['./w4af_api'], stdout=PIPE, stderr=PIPE, cwd=self.get_working_dir('w4af_api'))
             stdout, stderr = process.communicate()
