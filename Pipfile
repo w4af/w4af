@@ -57,12 +57,12 @@ pillow = "*"
 bloom-filter2 = "*"
 vulndb = {ref = "bee4f4f5222741a8119e7e214de83b340d44fb27", git = "https://github.com/w4af/vulndb-python-sdk"}
 httpretty = {ref = "bugfix/remove-pyopenssl-deprecation-warning", git = "https://github.com/w4af/HTTPretty"}
-mitmproxy = {ref = "daeb6d94a98a8200cb9e9b6f107de1b54482d2ff", git = "https://github.com/w4af/mitmproxy"}
 pyahocorasick = "*"
 hyperscan = "*"
 darts-util-lru = {editable = true, ref = "95926f06782ba1f645993aa261fdda9833d4e8fb", git = "https://github.com/w4af/DartsPyLRU"}
 nocasedict = "*"
 netlib = {ref = "929ee00daf5feb924295341f1c69b05e91dc67eb", git = "https://github.com/w4af/netlib"}
+mitmproxy = {ref = "f39c393a6ba87feb366e0aac9b2f1460bb104494", git = "https://github.com/w4af/mitmproxy"}
 
 [dev-packages]
 pylint = "*"
