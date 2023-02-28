@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8adae17b5a0af2621b7a1a79d9870d55fd4b187d820e2a77bcde273920dd239f"
+            "sha256": "c25ebce4303f64a86c4a1cbb217cbfb0194ca5fa2c6729d1b4c31db4da0e5612"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -774,7 +774,7 @@
         },
         "mitmproxy": {
             "git": "https://github.com/w4af/mitmproxy",
-            "ref": "f39c393a6ba87feb366e0aac9b2f1460bb104494"
+            "ref": "7127c9f48b6171512f7c22a04a01943edd43a1cd"
         },
         "morfessor": {
             "hashes": [
