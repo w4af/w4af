@@ -39,7 +39,7 @@ class test_strange_http_codes(unittest.TestCase):
 
     def tearDown(self):
         self.plugin.end()
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
 
     def test_strange_http_codes(self):
         body = ''

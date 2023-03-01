@@ -32,7 +32,7 @@ from w4af.plugins.grep.strange_reason import strange_reason
 class TestStrangeReason(unittest.TestCase):
 
     def setUp(self):
-        kb.kb.cleanup()
+        kb.kb.cleanup(ignore_errors=True)
         self.plugin = strange_reason()
         self.url = URL('http://www.w4af.com/')
         self.headers = Headers([('content-type', 'text/html')])
