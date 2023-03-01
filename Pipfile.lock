@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "184865c13b3112242ff5222b608c3f22c76a9e675ba58dea3117e4a0431020db"
+            "sha256": "8adae17b5a0af2621b7a1a79d9870d55fd4b187d820e2a77bcde273920dd239f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -774,7 +774,7 @@
         },
         "mitmproxy": {
             "git": "https://github.com/w4af/mitmproxy",
-            "ref": "daeb6d94a98a8200cb9e9b6f107de1b54482d2ff"
+            "ref": "f39c393a6ba87feb366e0aac9b2f1460bb104494"
         },
         "morfessor": {
             "hashes": [
@@ -852,10 +852,11 @@
             "version": "==0.5.1"
         },
         "netlib": {
+            "git": "https://github.com/w4af/netlib",
             "hashes": [
                 "sha256:f2b986ed2fa0125a88975d3f904a111c95b2925c3f553f7b1fc991f25bf4915b"
             ],
-            "version": "==0.13.1"
+            "ref": "929ee00daf5feb924295341f1c69b05e91dc67eb"
         },
         "nltk": {
             "hashes": [
@@ -2190,11 +2191,11 @@
         },
         "pyright": {
             "hashes": [
-                "sha256:57d6e66381edd38160342abdaea195fc6af16059eabe7e0816f04d42748b2c36",
-                "sha256:fa8ef1da35071fe351ee214576665857ceafc96418a4550a48b1f577267d9ac0"
+                "sha256:51cc5f05807b1fb53f9f0e14736b8f772b500a3ba4e0edeb99727e68e700d9ea",
+                "sha256:6c3cd394473e55a516ebe443d02b83e63456ef29f052dcf8e64e7875c1418fa6"
             ],
             "index": "pypi",
-            "version": "==1.1.295"
+            "version": "==1.1.296"
         },
         "pytest": {
             "hashes": [
