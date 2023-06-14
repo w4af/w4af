@@ -32,10 +32,7 @@ class Ubuntu1204(Platform):
     PKG_MANAGER_CMD = 'sudo apt-get -y install'
     PIP_CMD = 'pip'
 
-    CORE_SYSTEM_PACKAGES = ['python3-pip', 'python3-dev',
-                            'python3-setuptools', 'build-essential',
-                            'libsqlite3-dev', 'libssl-dev', 'git',
-                            'libxml2-dev', 'libffi-dev']
+    CORE_SYSTEM_PACKAGES = ['git']
 
     SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES}
 
