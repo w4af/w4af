@@ -63,7 +63,7 @@ def factory(module_name, *args):
     except SyntaxError:
         # Useful for development
         raise
-    except ImportError:
+    except ImportError as ie:
         # Useful for development and users which failed to install all
         # dependencies
         #
@@ -73,6 +73,7 @@ def factory(module_name, *args):
                ' about how to install and debug dependency issues please browse'
                ' to http://docs.w4af.net/en/latest/install.html')
         print(msg)
+        print(ie)
 
         # Raise so the user sees the whole traceback
         raise

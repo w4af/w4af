@@ -40,9 +40,9 @@ def main(launch_gui=False, interface_name="REST API"):
         print(('%s' % ate))
         return 1
 
-    if not args.developer_mode:
-        print(f"\nNot launching {interface_name} - set '--i-am-a-developer'")
-        return 1
+    # if not args.developer_mode:
+    #     print(f"\nNot RUNNING {interface_name} - set '--i-am-a-developer'")
+    #     return 1
 
     # And finally start the app:
     proto = "http"

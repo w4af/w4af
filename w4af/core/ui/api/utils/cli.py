@@ -62,11 +62,11 @@ def parse_arguments(interface_name: str) -> [str]:
                         default=False,
                         nargs='?')
 
-    parser.add_argument('--i-am-a-developer',
-                        dest="developer_mode",
-                        action="store_true",
-                        help="Run the script despite warnings that "
-                             "the code is not ready")
+    # parser.add_argument('--i-am-a-developer',
+    #                     dest="developer_mode",
+    #                     action="store_true",
+    #                     help="Run the script despite warnings that "
+    #                          "the code is not ready")
 
     parser.add_argument('--no-ssl',
                         dest="disable_ssl",
@@ -111,8 +111,8 @@ def parse_arguments(interface_name: str) -> [str]:
 
     args = parser.parse_args()
 
-    if not args.developer_mode:
-        parser.print_help()
+    # if not args.developer_mode:
+    #     parser.print_help()
 
     try:
         args.host, args.port = getattr(args, 'host:port').split(':')

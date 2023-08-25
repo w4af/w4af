@@ -1,4 +1,4 @@
-FROM python:3.10-slim as base
+FROM python:3.11-slim as base
 
 # Setup env
 ENV LANG C.UTF-8
@@ -6,24 +6,19 @@ ENV LC_ALL C.UTF-8
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONFAULTHANDLER 1
 
-
-FROM base AS python-deps
-
-# Install pipenv and compilation dependencies
-RUN pip install pipenv
+# Install compilation dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  gcc g++ libicu-dev pkgconf git
+    gcc g++ libicu-dev pkgconf git
 
-# Install python dependencies in /.venv
-COPY Pipfile .
-COPY Pipfile.lock .
-RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
+# Copy requirements file and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Install node dependencies in /node_modules
 FROM base AS node-deps
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  npm nodejs
+    npm nodejs
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
@@ -31,18 +26,19 @@ RUN npm install
 # Build minimal runtime image
 FROM base AS runtime
 
-# Copy virtual env from python-deps stage
-COPY --from=python-deps /.venv /.venv
-ENV PATH="/.venv/bin:$PATH"
+# Copy virtual env from base stage
+COPY --from=base /usr/local /usr/local
+
+# Install additional runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  npm nodejs git
+    npm nodejs git
 
 # Create and switch to a new user
 RUN useradd --create-home w4af
 WORKDIR /home/w4af
 USER w4af
 
-# Install application into container
+# Copy application files and node modules
 COPY --chown=w4af . .
 COPY --from=node-deps /node_modules node_modules
 

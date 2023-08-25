@@ -28,12 +28,6 @@ from ..requirements import CORE
 class Ubuntu1804(Ubuntu1604):
     SYSTEM_NAME = 'Ubuntu 18.04'
 
-    CORE_SYSTEM_PACKAGES_18 = Ubuntu1604.CORE_SYSTEM_PACKAGES[:]
-    CORE_SYSTEM_PACKAGES_18.remove('libssl-dev')
-    CORE_SYSTEM_PACKAGES_18.append('libssl1.0-dev')
-	
-    SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES_18}
-
     def __init__(self):
         super(Ubuntu1804, self).__init__()
 
