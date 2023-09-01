@@ -27,6 +27,19 @@ from tempfile import tempdir
 from w4af.core.ui.api.db.master import SCANS
 import w4af.core.controllers.output_manager as om
 
+import re
+
+
+def validate_profile_file(profile_name):
+    pattern = r'^\w+\.pw4af$'
+    return bool(re.match(pattern, profile_name))
+
+
+def validate_file_exist(profile_name):
+    cwd = os.getcwd()
+    file_string = f"{cwd}/profiles/{profile_name}"
+    return os.path.exists(file_string)
+
 
 def get_scan_info_from_id(scan_id):
     return SCANS.get(scan_id, None)
@@ -46,6 +59,13 @@ def create_temp_profile(scan_profile):
     scan_profile_file = os.path.join(tempdir, '%s.pw4af' % uuid4())
     with open(scan_profile_file, 'w') as profile_fh:
         profile_fh.write(scan_profile)
+
+    
+
+    print("***************create_temp_profile*********************")
+    print(scan_profile_file)
+    print(tempdir)
+    print("***************create_temp_profile*********************")
 
     return scan_profile_file, tempdir
 
