@@ -83,13 +83,10 @@ def start_scan():
         if validate_file_exist(scan_profile):
             
             try:
-                profile_path = f"/profiles"
-                scan_profile_file_name = scan_profile
+                scan_profile_file_name = scan_profile.replace(".pw4af","")
 
-                w4af_core.profiles.use_profile("bruteforce",
+                w4af_core.profiles.use_profile(scan_profile_file_name,
                                            workdir=".")
-
-                print("******EXECUTING FILE********")
                 
             except BaseFrameworkException as bfe:
                 abort(400, str(bfe))
@@ -136,10 +133,6 @@ def start_scan():
     scan_info.profile_path = scan_profile_file_name
     scan_info.output = RESTAPIOutput()
     SCANS[scan_id] = scan_info
-
-    print("****************SCAN***********************")
-    print(scan_info)
-    print("****************SCAN***********************")
 
     #
     # Finally, start the scan in a different thread
