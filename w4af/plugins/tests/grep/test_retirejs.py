@@ -85,7 +85,8 @@ A JavaScript library with known vulnerabilities was identified at http://httpret
  - parseHTML() executes scripts in event handlers
  - jQuery before 3.4.0, as used in Drupal, Backdrop CMS, and other products, mishandles jQuery.extend(true, {}, ...) because of Object.prototype pollution
  - Regex in its jQuery.htmlPrefilter sometimes may introduce XSS
- - Regex in its jQuery.htmlPrefilter sometimes may introduce XSS
+ - passing HTML containing <option> elements from untrusted sources - even after sanitizing it - to one of jQuery's DOM manipulation methods (i.e. .html(), .append(), and others) may execute untrusted code.
+ - jQuery 1.x and 2.x are End-of-Life and no longer receiving security updates
 
 Consider updating to the latest stable release of the affected library.'''
 
