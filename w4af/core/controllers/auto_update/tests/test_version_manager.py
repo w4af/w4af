@@ -80,7 +80,7 @@ class TestVersionMgr(unittest.TestCase):
         end = '9c5f5614412dce67ac13411e1eebd754b4c6fb6a'
         
         changelog = ChangeLog(start, end)
-        
+        #TODO: dependencies are not managed any more by dependency_check, so this and the following tests needs to be adapted
         self.assertTrue(self.vmgr._added_new_dependencies(changelog))
         
     def test_not_added_new_dependencies(self):

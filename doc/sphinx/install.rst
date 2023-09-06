@@ -91,7 +91,7 @@ just follow these steps:
     futures==2.1.5
     $
 
-Replace ``futures`` with the library that is missing in your system. If the
+TODO: Needs to be reworked: Replace ``futures`` with the library that is missing in your system. If the
 ``pip freeze | grep futures`` command returns an empty result, you'll need to
 install the dependency using the ``/tmp/w4af_dependency_install.sh`` command.
 Pay special attention to the output of that command, if installation fails

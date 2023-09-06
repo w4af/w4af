@@ -219,8 +219,8 @@ class VersionMgr(object):
             # versions of py files in memory.
             self.reload_all_modules()
     
-            if self._added_new_dependencies(changelog):
-                self._notify(VersionMgr.ON_UPDATE_ADDED_DEP)
+            #TODO: rework: if self._added_new_dependencies(changelog):
+            #    self._notify(VersionMgr.ON_UPDATE_ADDED_DEP)
     
             # pylint: disable=E1102
             if self.callback_onupdate_show_log:
@@ -262,20 +262,6 @@ class VersionMgr(object):
         if observer_data is not None:      
             f, _msg = observer_data
             f(msg or _msg)
-
-    def _added_new_dependencies(self, changelog):
-        """
-        :return: True if the changelog shows any modifications to the
-                 dependency_check.py files.
-        """
-        dependency_controllers = ['dependency_check.py', 'requirements.py']
-
-        for commit in changelog.get_changes():
-            for action, filename in commit.changes:
-                for dependency_file in dependency_controllers:
-                    if filename.endswith(dependency_file) and action == 'M':
-                        return True
-        return False
 
     def _has_to_update(self):
         """

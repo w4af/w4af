@@ -127,7 +127,7 @@ def main():
     try:
         long_options = ['script=', 'help', 'version', 'no-update',
                         'force-update', 'profile=', 'commit=',
-                        'profile-run', 'yes', 'dependency-check', 'target=']
+                        'profile-run', 'yes', 'target=']
         opts, _ = getopt.getopt(sys.argv[1:], "ehvs:nfp:P:ydt:", long_options)
     except getopt.GetoptError:
         # Print help information and exit
