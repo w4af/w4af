@@ -8,8 +8,6 @@ import os
 import base64
 import re
 
-from w4af.core.controllers.dependency_check.dependency_check import dependency_check
-
 from w4af.core.ui.console.console_ui import ConsoleUI
 from w4af.core.controllers.misc.get_w4af_version import get_w4af_version
 import w4af.core.controllers.output_manager as om
@@ -36,10 +34,6 @@ Options:
 
     -s <script_file> or --script=<script_file>
         Run <script_file> script
-
-    -d or --dependency-check
-        Run the w4af dependency check to ensure required libraries
-        are installed
 
     -n or --no-update
         No update check will be made when starting. This option takes 
@@ -157,9 +151,6 @@ def main():
         if o in ('-p', '--profile'):
             # selected profile
             profile = a
-        if o in ('-d', '--dependency-check'):
-            # run dependency check
-            dependency_check()
         if o in ('-h', '--help'):
             _usage()
             return 0
