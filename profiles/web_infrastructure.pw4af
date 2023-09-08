@@ -65,23 +65,11 @@ use_colors = True
 
 [infrastructure.server_header]
 
-[infrastructure.shared_hosting]
-
-[infrastructure.fingerprint_os]
-
-[infrastructure.find_vhosts]
-
-[infrastructure.detect_reverse_proxy]
-
-[infrastructure.afd]
-
 [infrastructure.dns_wildcard]
 
 [infrastructure.server_status]
 
 [infrastructure.http_vs_https_dist]
-
-[infrastructure.detect_transparent_proxy]
 
 [infrastructure.find_jboss]
 
@@ -90,8 +78,6 @@ use_colors = True
 [infrastructure.domain_dot]
 
 [infrastructure.finger_pks]
-
-[infrastructure.fingerprint_WAF]
 
 [infrastructure.allowed_methods]
 run_once = True
