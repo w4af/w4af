@@ -115,8 +115,6 @@ def dependency_check(dependency_set=CORE, exit_on_failure=True, skip_external_co
         # False means: do not exit()
         return False
 
-    generate_requirements_txt(failed_deps)
-
     script_path = generate_helper_script(platform.PKG_MANAGER_CMD, os_packages,
                         external_commands)
 
