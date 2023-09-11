@@ -27,57 +27,11 @@ from w4af.core.data.db.startup_cfg import StartUpConfig
 from .utils import verify_python_version
 verify_python_version()
 
-try:
-    # Is pip even there?
-    import pip
-except ImportError:
-    print('We recommend you install pip before continuing.')
-    print('http://www.pip-installer.org/en/latest/installing.html')
-    sys.exit(1)
-
-try:
-    # We do this in order to check for old pip versions
-    from pip._vendor.packaging.version import Version
-except ImportError:
-    print('An old pip version was detected. We recommend a pip update'
-          ' before continuing:')
-    print('    sudo pip install --upgrade pip')
-    sys.exit(1)
-
 import pkg_resources
 
-from .helper_script import (generate_helper_script,
-                            generate_pip_install_non_git,
-                            generate_pip_install_git)
-from .helper_requirements_txt import generate_requirements_txt
+from .helper_script import generate_helper_script
 from .platforms.current_platform import get_current_platform
 from .platforms.base_platform import CORE
-
-
-def get_missing_pip_packages(platform, dependency_set):
-    """
-    Check for missing python modules
-    """
-    failed_deps = []
-
-    for w4af_req in platform.PIP_PACKAGES[dependency_set]:
-
-        # pylint: disable=E1133
-        for dist in pkg_resources.working_set:
-            if w4af_req.package_name.lower() == dist.project_name.lower():
-
-                w4af_req_version = str(Version(w4af_req.package_version))
-                dist_version = str(Version(dist.version))
-
-                if w4af_req_version == dist_version:
-                    # It's installed and the version matches!
-                    break
-        else:
-            failed_deps.append(w4af_req)
-        # pylint: enable=E1133
-
-    return failed_deps
-
 
 def get_missing_os_packages(platform, dependency_set):
     """
@@ -103,7 +57,7 @@ def get_missing_external_commands(platform):
     return platform.get_missing_external_commands()
 
 
-def write_instructions_to_console(platform, failed_deps, os_packages, script_path,
+def write_instructions_to_console(platform, os_packages, script_path,
                                   external_commands):
     #
     #    Report the missing system packages
@@ -119,38 +73,6 @@ def write_instructions_to_console(platform, failed_deps, os_packages, script_pat
                 '    %s %s\n')
         print((msg % (platform.SYSTEM_NAME, platform.PKG_MANAGER_CMD,
                      missing_pkgs)))
-
-    #
-    #    Report all missing python modules
-    #
-    if failed_deps:
-        # pylint: disable=E1101
-        msg = ('Your python installation needs the following modules'
-               ' to run w4af:\n')
-        msg += '    ' + ' '.join([fdep.module_name for fdep in failed_deps])
-        print(msg)
-        print('\n')
-        # pylint: enable=E1101
-
-        #
-        #    Report missing pip packages
-        #
-        not_git_pkgs = [fdep for fdep in failed_deps if not fdep.is_git]
-        git_pkgs = [fdep.git_src for fdep in failed_deps if fdep.is_git]
-
-        msg = ('After installing any missing operating system packages, use'
-               ' pip to install the remaining modules:\n')
-
-        if not_git_pkgs:
-            cmd = generate_pip_install_non_git(platform.PIP_CMD, not_git_pkgs)
-            msg += '    %s\n' % cmd
-
-        if git_pkgs:
-            for missing_git_pkg in git_pkgs:
-                msg += '    %s\n' % generate_pip_install_git(platform.PIP_CMD,
-                                                             missing_git_pkg)
-
-        print(msg)
 
     if external_commands:
         print('External programs used by w4af are not installed or were not found.'
@@ -180,7 +102,6 @@ def dependency_check(dependency_set=CORE, exit_on_failure=True, skip_external_co
 
     platform = get_current_platform()
 
-    failed_deps = get_missing_pip_packages(platform, dependency_set)
     os_packages = get_missing_os_packages(platform, dependency_set)
     if skip_external_commands:
         external_commands = []
@@ -190,17 +111,14 @@ def dependency_check(dependency_set=CORE, exit_on_failure=True, skip_external_co
     enable_warnings()
 
     # If everything is installed, just exit
-    if not failed_deps and not os_packages and not external_commands:
+    if not os_packages and not external_commands:
         # False means: do not exit()
         return False
 
-    generate_requirements_txt(failed_deps)
-
     script_path = generate_helper_script(platform.PKG_MANAGER_CMD, os_packages,
-                                         platform.PIP_CMD, failed_deps,
-                                         external_commands)
+                        external_commands)
 
-    write_instructions_to_console(platform, failed_deps, os_packages, script_path,
+    write_instructions_to_console(platform, os_packages, script_path,
                                   external_commands)
     
     if exit_on_failure:
