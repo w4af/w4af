@@ -36,8 +36,7 @@ def validate_profile_file(profile_name):
 
 
 def validate_file_exist(profile_name):
-    cwd = os.getcwd()
-    file_string = f"{cwd}/profiles/{profile_name}"
+    file_string = os.path.join("profiles", profile_name)
     return os.path.exists(file_string)
 
 
@@ -59,7 +58,6 @@ def create_temp_profile(scan_profile):
     scan_profile_file = os.path.join(tempdir, '%s.pw4af' % uuid4())
     with open(scan_profile_file, 'w') as profile_fh:
         profile_fh.write(scan_profile)
-        
     return scan_profile_file, tempdir
 
 
