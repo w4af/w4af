@@ -5,7 +5,7 @@
 ## w4af - Web Advanced Application Attack and Audit Framework for Python3
 
 [w4af](https://w4af.readthedocs.io/en/latest/) is an [open source](https://www.gnu.org/licenses/gpl-2.0.txt)
-web application security scanner which helps developers and penetration testers identify and exploit vulnerabilities in their web applications. It is originally based on w3af and is currently in an early **alpha** development phase. We welcome early user experience and bug reports, but we don't make any warranties about the software - it's still a work in progress.
+web application security scanner which helps developers and penetration testers identify and exploit vulnerabilities in their web applications. It is originally based on [w3af](https://github.com/andresriancho/w3af) and is currently in an early **alpha** development phase. We welcome early user experience and bug reports, but we don't make any warranties about the software - it's still a work in progress.
 
 The scanner is able to identify [200+ vulnerabilities](w4af/core/data/constants/vulns.py),
 including [Cross-Site Scripting](w4af/plugins/audit/xss.py),
