@@ -31,7 +31,9 @@ from w4af.core.ui.api.utils.scans import (get_scan_info_from_id,
                                           start_scan_helper,
                                           get_new_scan_id,
                                           create_temp_profile,
-                                          remove_temp_profile)
+                                          remove_temp_profile,
+                                          validate_file_exist,
+                                          validate_profile_file)
 from w4af.core.data.parsers.doc.url import URL
 from w4af.core.controllers.w4afCore import w4afCore
 from w4af.core.controllers.exceptions import BaseFrameworkException
@@ -74,16 +76,31 @@ def start_scan():
     # Before trying to start a new scan we verify that the scan profile is
     # valid and return an informative error if it's not
     #
-    scan_profile_file_name, profile_path = create_temp_profile(scan_profile)
     w4af_core = w4afCore()
+    if validate_profile_file(scan_profile):    
+        if validate_file_exist(scan_profile):
+            
+            try:
+                scan_profile_file_name = scan_profile.replace(".pw4af","")
 
-    try:
-        w4af_core.profiles.use_profile(scan_profile_file_name,
-                                       workdir=profile_path)
-    except BaseFrameworkException as bfe:
-        abort(400, str(bfe))
-    finally:
-        remove_temp_profile(scan_profile_file_name)
+                w4af_core.profiles.use_profile(scan_profile_file_name,
+                                           workdir=".")
+                
+            except BaseFrameworkException as bfe:
+                abort(400, str(bfe))
+            
+        else:
+            abort(404, "File doesn't exit")
+    else:
+        scan_profile_file_name, profile_path = create_temp_profile(scan_profile)
+
+        try:
+            w4af_core.profiles.use_profile(scan_profile_file_name,
+                                           workdir=profile_path)
+        except BaseFrameworkException as bfe:
+            abort(400, str(bfe))
+        finally:
+            remove_temp_profile(scan_profile_file_name)
 
     #
     # Now that we know that the profile is valid I verify the scan target info
