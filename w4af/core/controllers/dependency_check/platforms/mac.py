@@ -23,10 +23,8 @@ import sys
 import platform
 import subprocess
 
-from w4af.core.controllers.dependency_check.pip_dependency import PIPDependency
+from w4af.core.controllers.dependency_check.requirements import CORE
 from w4af.core.controllers.dependency_check.platforms.base_platform import Platform
-from w4af.core.controllers.dependency_check.requirements import CORE_PIP_PACKAGES, CORE
-
 
 TWO_PYTHON_MSG = """\
 It seems that your system has two different python installations: One provided
@@ -49,7 +47,6 @@ message "Device not configured".
 class MacOSX(Platform):
     SYSTEM_NAME = 'Mac OS X'
     PKG_MANAGER_CMD = 'sudo port install'
-    PIP_CMD = 'pip-2.7'
 
     #
     # Remember to use http://www.macports.org/ports.php to search for
@@ -61,12 +58,6 @@ class MacOSX(Platform):
                             'py27-libdnet', 'libffi']
 
     SYSTEM_PACKAGES = {CORE: CORE_SYSTEM_PACKAGES}
-
-    # pybloomfilter is broken in Mac OS X, so we don't require it
-    # https://github.com/andresriancho/w3af/issues/485
-    MAC_CORE_PIP_PACKAGES = CORE_PIP_PACKAGES[:]
-
-    PIP_PACKAGES = {CORE: MAC_CORE_PIP_PACKAGES}
 
     @staticmethod
     def is_current_platform():

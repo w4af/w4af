@@ -30,7 +30,9 @@ from .debian76 import Debian76
 from .debian78 import Debian78
 from .debian80 import Debian80
 from .debian11 import Debian11
+from .debian12 import Debian12
 from .debian_bookworm import DebianBookworm
+from .debian_trixie import DebianTrixie
 from .centos import CentOS
 from .centos65 import CentOS65
 from .fedora import Fedora
@@ -49,7 +51,9 @@ KNOWN_PLATFORMS = [
                    Debian78,
                    Debian80,
                    Debian11,
+                   Debian12,
                    DebianBookworm,
+                   DebianTrixie,
                    ElementaryOS02,
                    Fedora,
                    Kali,

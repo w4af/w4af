@@ -1,7 +1,7 @@
 """
-requirements.py
+debian11.py
 
-Copyright 2013 Andres Riancho
+Copyright 2022 Arthur Taylor
 
 This file is part of w4af, https://w4af.net/ .
 
@@ -19,4 +19,14 @@ along with w4af; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-CORE = 1
+import distro
+
+from .ubuntu1204 import Ubuntu1204
+
+
+class Debian12(Ubuntu1204):
+    SYSTEM_NAME = 'Debian 12'
+
+    @staticmethod
+    def is_current_platform():
+        return 'debian' == distro.id() and '12' == distro.version()

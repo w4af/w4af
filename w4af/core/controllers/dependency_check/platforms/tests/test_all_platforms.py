@@ -32,8 +32,8 @@ class TestAllPlatforms(unittest.TestCase):
         self.assertEqual(1, results.count(True), results)
 
     def test_attributes(self):
-        REQUIRED_ATTRS = ['PIP_PACKAGES', 'SYSTEM_PACKAGES', 'SYSTEM_NAME',
-                          'PKG_MANAGER_CMD', 'PIP_CMD']
+        REQUIRED_ATTRS = ['SYSTEM_PACKAGES', 'SYSTEM_NAME',
+                          'PKG_MANAGER_CMD']
 
         for required_attr in REQUIRED_ATTRS:
             for platform in KNOWN_PLATFORMS:
@@ -42,13 +42,7 @@ class TestAllPlatforms(unittest.TestCase):
     def test_core_and_gui_deps(self):
         for platform in KNOWN_PLATFORMS:
             for dependency_set in {CORE}:
-                self.assertIn(dependency_set, platform.PIP_PACKAGES)
                 self.assertIn(dependency_set, platform.SYSTEM_PACKAGES)
-
-    def test_more_than_three_dependencies(self):
-        for platform in KNOWN_PLATFORMS:
-            for dependency_set in {CORE}:
-                self.assertGreater(len(platform.PIP_PACKAGES[dependency_set]), 3)
 
     def test_os_package_is_installed(self):
         # Just looking for exceptions
