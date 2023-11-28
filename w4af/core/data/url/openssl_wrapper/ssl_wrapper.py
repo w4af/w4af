@@ -68,7 +68,7 @@ class SSLSocketFileWrapper(object):
         data, self._rbuf = self._rbuf[:i], self._rbuf[i:]
         return data
 
-    def read(self, amt):
+    def read(self, amt=0):
         while amt > len(self._rbuf):
             new = self._raw_read(self._rbufsize)
             if not new:
