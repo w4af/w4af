@@ -127,6 +127,7 @@ class TestRetireJS(PluginTest):
     }
 
     def test_is_vulnerable_detected(self):
+        self.maxDiff = None
         httpretty.register_uri('GET', RETIRE_DB_URL, body=RETIRE_DB)
         cfg = self._run_configs['cfg']
         self._scan(cfg['target'], cfg['plugins'])
