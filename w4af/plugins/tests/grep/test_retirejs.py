@@ -82,11 +82,11 @@ EXPECTED_VULN_DESC = '''\
 A JavaScript library with known vulnerabilities was identified at http://httpretty/js/jquery.js. The library was identified as "jquery" version 1.11.0 and has these known vulnerabilities:
 
  - 3rd party CORS request may execute
- - parseHTML() executes scripts in event handlers
- - jQuery before 3.4.0, as used in Drupal, Backdrop CMS, and other products, mishandles jQuery.extend(true, {}, ...) because of Object.prototype pollution
- - Regex in its jQuery.htmlPrefilter sometimes may introduce XSS
- - passing HTML containing <option> elements from untrusted sources - even after sanitizing it - to one of jQuery's DOM manipulation methods (i.e. .html(), .append(), and others) may execute untrusted code.
+ - 3rd party CORS request may execute
  - jQuery 1.x and 2.x are End-of-Life and no longer receiving security updates
+ - jQuery before 3.4.0, as used in Drupal, Backdrop CMS, and other products, mishandles jQuery.extend(true, {}, ...) because of Object.prototype pollution
+ - passing HTML containing <option> elements from untrusted sources - even after sanitizing it - to one of jQuery's DOM manipulation methods (i.e. .html(), .append(), and others) may execute untrusted code.
+ - Regex in its jQuery.htmlPrefilter sometimes may introduce XSS
 
 Consider updating to the latest stable release of the affected library.'''
 
