@@ -539,6 +539,9 @@ class URL(DiskItem):
                 except socket.error:
                     # neither IPv6
                     return False
+
+            finally:
+                socket.close()
         return True
 
     def get_net_location(self):

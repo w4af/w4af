@@ -70,5 +70,3 @@ extensions = gif,html,bmp,jpg,png,txt
 
 [audit.lfi]
 
-[crawl.web_spider]
-

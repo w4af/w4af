@@ -29,7 +29,6 @@ from w4af.core.controllers.exceptions import RunOnce
 from w4af.core.controllers.misc.decorators import runonce
 from w4af.core.data.kb.info import Info
 
-
 class detect_transparent_proxy(InfrastructurePlugin):
     """
     Find out if your ISP has a transparent proxy installed.
@@ -72,8 +71,8 @@ class detect_transparent_proxy(InfrastructurePlugin):
                 sock_obj.connect((ip_address, 80))
             except:
                 return False
-            else:
-                continue
+            finally:
+                sock_obj.close()  # Ensure the socket is closed
 
         return True
 
