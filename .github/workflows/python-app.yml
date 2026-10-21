@@ -23,8 +23,8 @@ jobs:
         group: [1, 2, 3, 4]
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
       with:
         python-version: "3.11"
         cache: 'pipenv'
@@ -58,8 +58,8 @@ jobs:
 
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
       with:
         python-version: "3.11"
         cache: 'pipenv'
@@ -98,8 +98,8 @@ jobs:
 
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
       with:
         python-version: "3.11"
         cache: 'pipenv'
@@ -137,8 +137,8 @@ jobs:
         group: [1, 2, 3, 4]
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
       with:
         python-version: "3.11"
         cache: 'pipenv'
@@ -169,8 +169,8 @@ jobs:
         group: [1, 2, 3, 4]
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
       with:
         python-version: "3.11"
         cache: 'pipenv'
@@ -202,9 +202,9 @@ jobs:
     needs: [test, slow_test, external_test, integration_test, integration_test_moth]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Set up Python 3.11
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
           cache: 'pipenv'
@@ -214,7 +214,7 @@ jobs:
           pipenv install --categories="packages dev-packages"
       - name: Download all artifacts
         # Downloads coverage1, coverage2, etc.
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v8
       - name: Run coverage
         run: |
           pipenv run coverage combine coverage*/.coverage*
